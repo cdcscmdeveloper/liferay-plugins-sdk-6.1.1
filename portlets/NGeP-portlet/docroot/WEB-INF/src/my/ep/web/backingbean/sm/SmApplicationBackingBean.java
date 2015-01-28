@@ -171,7 +171,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Renew session object by application type.
 	 * 
-	 * @param applicationType - the application type
+	 * @param applicationType
+	 *            - the application type
 	 */
 	public void renewSesionObjectByApplicationType(String applicationType) {
 		renewSesionObject();
@@ -282,7 +283,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Pre-render application for re-submission after finishing the answer questionnaire
+	 * Pre-render application for re-submission after finishing the answer
+	 * questionnaire
 	 */
 	public void prerenderApplicationForResubmission() {
 		log.info("**** Prerender Application *************");
@@ -381,11 +383,16 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Process draft application from BPM.
 	 * 
-	 * @param applicationType - the application type
-	 * @param fromBpm - boolean true ,if from task list and false , if application from screen
-	 * @param appl - SmAppl object
-	 * @param supp - SmSupplier object 
-	 *
+	 * @param applicationType
+	 *            - the application type
+	 * @param fromBpm
+	 *            - boolean true ,if from task list and false , if application
+	 *            from screen
+	 * @param appl
+	 *            - SmAppl object
+	 * @param supp
+	 *            - SmSupplier object
+	 * 
 	 */
 	public void processDraftApplication(String applicationType,
 			boolean fromBpm, SmAppl appl, SmSupplier supp) {
@@ -397,7 +404,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Proceed to application UI , click on proceed.
 	 * 
-	 * @param applicationType -  the application type
+	 * @param applicationType
+	 *            - the application type
 	 * @return the the redirect page
 	 */
 	public String proceedToApplication(String applicationType) {
@@ -418,10 +426,15 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Proceed to application from UI and also BPM task list.
 	 * 
-	 * @param applicationType - the application type
-	 * @param fromBpm - boolean true ,if from task list and false , if application from screen
-	 * @param appl - SmAppl object
-	 * @param supp - SmSupplier object 
+	 * @param applicationType
+	 *            - the application type
+	 * @param fromBpm
+	 *            - boolean true ,if from task list and false , if application
+	 *            from screen
+	 * @param appl
+	 *            - SmAppl object
+	 * @param supp
+	 *            - SmSupplier object
 	 * @return the redirect page
 	 */
 	public String proceedToApplication(String applicationType, boolean fromBpm,
@@ -613,8 +626,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setWithFederal(true);
+				// getManagedBean().getSmAppl().getSmCompanyBasic().setWithFederal(true);
 				// }
 			} else {
 				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(smAppl
@@ -738,7 +750,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Gets the current active work flow status.
 	 * 
-	 * @param applId -  the appl id
+	 * @param applId
+	 *            - the appl id
 	 * @return the SmWorkflowStatus
 	 */
 	private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
@@ -896,12 +909,17 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Validate and Update sm application.Mainly called when navigate from one page to other or save as draft i.e. triggred from task list
+	 * Validate and Update sm application.Mainly called when navigate from one
+	 * page to other or save as draft i.e. triggred from task list
 	 * 
-	 * @param applType - the appl type
-	 * @param currentPageType - the current page type
-	 * @param outputPageType - the output page type
-	 * @param isBpmSubmit -  is from task list
+	 * @param applType
+	 *            - the appl type
+	 * @param currentPageType
+	 *            - the current page type
+	 * @param outputPageType
+	 *            - the output page type
+	 * @param isBpmSubmit
+	 *            - is from task list
 	 * @param isBpmSubmit
 	 *            the is bpm submit
 	 */
@@ -911,14 +929,17 @@ public class SmApplicationBackingBean extends
 				isBpmSubmit);
 	}
 
-	
 	/**
-	 * Validate and Update sm application.Mainly called when navigate from one page to other or save as draft
+	 * Validate and Update sm application.Mainly called when navigate from one
+	 * page to other or save as draft
 	 * 
-	 * @param applType - the appl type
-	 * @param currentPageType - the current page type
-	 * @param outputPageType - the output page type
-	 * 	
+	 * @param applType
+	 *            - the appl type
+	 * @param currentPageType
+	 *            - the current page type
+	 * @param outputPageType
+	 *            - the output page type
+	 * 
 	 */
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
@@ -943,6 +964,10 @@ public class SmApplicationBackingBean extends
 				}
 
 			}
+		} else if (currentPageType
+				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+			SmApplicationUtil.validateCategoryOtherDesc(true, getManagedBean(),
+					currentTab);
 		}
 
 		if (currentPageType
@@ -969,12 +994,17 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Validate and Update sm application.Mainly called when navigate from one page to other or save as draft
+	 * Validate and Update sm application.Mainly called when navigate from one
+	 * page to other or save as draft
 	 * 
-	 * @param applType - the appl type
-	 * @param currentPageType - the current page type
-	 * @param outputPageType - the output page type
-	 * @param isBpmSubmit -  is from task list
+	 * @param applType
+	 *            - the appl type
+	 * @param currentPageType
+	 *            - the current page type
+	 * @param outputPageType
+	 *            - the output page type
+	 * @param isBpmSubmit
+	 *            - is from task list
 	 * @return true, if successful
 	 */
 	public boolean validateUpdateSmAppl(String applType,
@@ -1001,8 +1031,10 @@ public class SmApplicationBackingBean extends
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)
 					&& (buttonType
-							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_PREV) || buttonType
-							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME))) {
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_PREV)
+							|| buttonType
+									.equalsIgnoreCase(SupplierManagementConst.SM_APPL_BUTTON_TYPE_SAME)
+							|| currentTab > outputTab || currentTab == outputTab)) {
 				valid = SmApplicationUtil.validateCategoryOtherDesc(true,
 						getManagedBean(), currentTab);
 			} else {
@@ -1157,8 +1189,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Retrieve latest application after update.
 	 * 
-	 * @param currentPageType - the current page type
-	 * @param outputPageType - the output page type
+	 * @param currentPageType
+	 *            - the current page type
+	 * @param outputPageType
+	 *            - the output page type
 	 * @return true, if successful
 	 */
 	private boolean retriveLatestApplAfterUpdate(String currentPageType,
@@ -1234,8 +1268,9 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Gets the personnel info by id.
 	 * 
-	 * @param personnelId - Long ( personnel id)
-	 * @return SmPersonnel 
+	 * @param personnelId
+	 *            - Long ( personnel id)
+	 * @return SmPersonnel
 	 */
 	public SmPersonnel getPersonnelInfoById(Long personnelId) {
 		IPersonnelSO smPersonnelSO = null;
@@ -1347,8 +1382,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Validate before save.
 	 * 
-	 * @param applType-  the appl type
-	 * @param currentPageType - the current page type
+	 * @param applType
+	 *            - the appl type
+	 * @param currentPageType
+	 *            - the current page type
 	 * @return true, if valid
 	 */
 	private Boolean validateBeforeSave(String applType, String currentPageType) {
@@ -1490,9 +1527,12 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the tab value for the navigation i.e. count of the tab to navigate.
 	 * 
-	 * @param currentTab - int current tab value
-	 * @param outputTab - int output tab value
-	 * @param buttonType - String button type  prev,next or same
+	 * @param currentTab
+	 *            - int current tab value
+	 * @param outputTab
+	 *            - int output tab value
+	 * @param buttonType
+	 *            - String button type prev,next or same
 	 * 
 	 */
 	public void setTabValue(int currentTab, int outputTab, String buttonType) {
@@ -1504,8 +1544,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the tab value for the navigation i.e. count of the tab to navigate.
 	 * 
-	 * @param currentTab - int current tab value
-	 * @param outputTab - int output tab value
+	 * @param currentTab
+	 *            - int current tab value
+	 * @param outputTab
+	 *            - int output tab value
 	 */
 	public void setTabValue(int currentTab, int outputTab) {
 		log.info("**** SET TAB CALLED *******");
@@ -1516,9 +1558,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign review application page navigation counts for PO and Approver final steps.
+	 * Assign review application page navigation counts for PO and Approver
+	 * final steps.
 	 * 
-	 * @param navType - the nav type i.e. next or prev
+	 * @param navType
+	 *            - the nav type i.e. next or prev
 	 */
 	public void assignReviewSupportingNav(String navType) {
 		int currentPage = getManagedBean().getTabActiveIndex();
@@ -1539,9 +1583,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Ajax call to set the base or office facility selected i.e. owned or rented.
+	 * Ajax call to set the base or office facility selected i.e. owned or
+	 * rented.
 	 * 
-	 * @param e -AjaxBehaviorEvent object
+	 * @param e
+	 *            -AjaxBehaviorEvent object
 	 */
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
 		if (getManagedBean().getBasicCompanyFacility().getOwnershipType()
@@ -1610,7 +1656,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the facility default prices.
 	 * 
-	 * @param fac - SmFacility object
+	 * @param fac
+	 *            - SmFacility object
 	 */
 	private void setFacilityDefaultPrices(SmFacility fac) {
 		if (fac.getRentalRate() == null) {
@@ -1624,7 +1671,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Sets the previous facility values.
 	 * 
-	 * @param facilityBean - SmFacility object
+	 * @param facilityBean
+	 *            - SmFacility object
 	 */
 	private void setPreviousFacilityValues(SmFacility facilityBean) {
 		getManagedBean().setRentPrevVal(facilityBean.getRentalRate());
@@ -1635,7 +1683,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Reset facility values.
 	 * 
-	 * @param fac - SmFacility object
+	 * @param fac
+	 *            - SmFacility object
 	 */
 	private void resetFacilityValues(SmFacility fac) {
 		if (fac.getFacilityId() == null) {
@@ -1650,9 +1699,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Ajax call to assign selected personnel privilege 
+	 * Ajax call to assign selected personnel privilege
 	 * 
-	 * @param e - AjaxBehaviorEvent object
+	 * @param e
+	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		log.info("**** Enter Share Holder privilege ******");
@@ -1703,7 +1753,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Ajax call to assign selected personnel privilege by ep role.
 	 * 
-	 * @param e - AjaxBehaviorEvent object
+	 * @param e
+	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolder().getEpRole()
@@ -1729,7 +1780,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Ajax call to set approve or reject date for the selected category.
 	 * 
-	 * @param category - SmSupplierCategory
+	 * @param category
+	 *            - SmSupplierCategory
 	 */
 	public void assignCategoryApproveOrRejectDate(SmSupplierCategory category) {
 		if (getManagedBean().isPoUser()) {
@@ -1745,7 +1797,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Ajax call to set the application category selected.
 	 * 
-	 * @param e - AjaxBehaviorEvent object
+	 * @param e
+	 *            - AjaxBehaviorEvent object
 	 */
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
 		SmApplicationUtil.setApplicationCategorySelected(getManagedBean());
@@ -1754,7 +1807,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Ajax call to Assign documents verified value.
 	 * 
-	 * @param e - AjaxBehaviorEvent object
+	 * @param e
+	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignDocVerified(AjaxBehaviorEvent e) {
 		log.info(" *******Docs verified******88");
@@ -1838,7 +1892,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Reset application category type based on the selection to Normal or Special.
+	 * Reset application category type based on the selection to Normal or
+	 * Special.
 	 */
 	public void resetApplnCategoryType() {
 		log.info("********* Reset the Values ********");
@@ -1867,7 +1922,8 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Branches Start
 	/**
-	 * Add or update selected branch info to SmSupplierBranch list of the application.
+	 * Add or update selected branch info to SmSupplierBranch list of the
+	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
 		if (getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -1908,10 +1964,13 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected branch object to managed bean for editing the information.
+	 * Assign selected branch object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param branchBean - SmSupplierBranch object
-	 * @param index - int
+	 * @param branchBean
+	 *            - SmSupplierBranch object
+	 * @param index
+	 *            - int
 	 */
 	public void assignSelBranch(SmSupplierBranch branchBean, int index) {
 
@@ -1964,7 +2023,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the supplier branch information dialog
+	 * Cancel add or update functionality and close the supplier branch
+	 * information dialog
 	 */
 	public void assignCancelBranchBean() {
 		assignValReqdToFalse();
@@ -1973,7 +2033,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected branches from the SmSupplierBranch list of the application.
+	 * Delete or remove selected branches from the SmSupplierBranch list of the
+	 * application.
 	 */
 	public void deleteSelectedBranches() {
 		if (getManagedBean().getSelectedBranches().size() > 0) {
@@ -1993,7 +2054,8 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Associated Companies Start
 	/**
-	 * Add or update selected associated company info to SmAssociateCompany list of the application.
+	 * Add or update selected associated company info to SmAssociateCompany list
+	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
 		if (getManagedBean().getSmAppl().getSmAssociateCompanies()
@@ -2011,7 +2073,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the associated company information dialog
+	 * Cancel add or update functionality and close the associated company
+	 * information dialog
 	 */
 	public void cancelAssocCompanyFuntion() {
 		assignValReqdToFalse();
@@ -2020,9 +2083,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected associated company object to managed bean for editing the information.
+	 * Assign selected associated company object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param assocBean -SmAssociateCompany object
+	 * @param assocBean
+	 *            -SmAssociateCompany object
 	 */
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
 		assignStateDistAndCityForSelVal(assocBean.getSmAddress().getPmCountry()
@@ -2060,7 +2125,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected assocaiated companies from the SmAssociateCompany list of the application.
+	 * Delete or remove selected assocaiated companies from the
+	 * SmAssociateCompany list of the application.
 	 */
 	public void deleteSelectedAssocCompanies() {
 		log.info("*** Delete Assoc Companies ******* "
@@ -2082,7 +2148,8 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Certs Start
 	/**
-	 * Add or update selected certificate info to SmSupplierCert list of the application.
+	 * Add or update selected certificate info to SmSupplierCert list of the
+	 * application.
 	 * 
 	 * @throws ParseException
 	 *             the parse exception
@@ -2113,9 +2180,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected supplier cert object to managed bean for editing the information.
+	 * Assign selected supplier cert object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param certBean - SmSupplierCert object
+	 * @param certBean
+	 *            - SmSupplierCert object
 	 */
 	public void assignSelCert(SmSupplierCert certBean) {
 		getManagedBean().setSelectedCert(certBean);
@@ -2125,7 +2194,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the supplier cert information dialog
+	 * Cancel add or update functionality and close the supplier cert
+	 * information dialog
 	 */
 	public void cancelSupplierCertAction() {
 		assignValReqdToFalse();
@@ -2167,7 +2237,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected supplier certificates from the SmSupplierCert list of the application.
+	 * Delete or remove selected supplier certificates from the SmSupplierCert
+	 * list of the application.
 	 */
 	public void deleteSelectedCerts() {
 		if (getManagedBean().getSelectedCertList().size() > 0) {
@@ -2184,7 +2255,8 @@ public class SmApplicationBackingBean extends
 	// -- Process Certss End
 	// -- Process Assoc Bodies Start
 	/**
-	 * Add or update selected professional body info to SmAssociationBody List of the application.
+	 * Add or update selected professional body info to SmAssociationBody List
+	 * of the application.
 	 * 
 	 * @throws ParseException
 	 *             the parse exception
@@ -2219,7 +2291,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the professional body information dialog
+	 * Cancel add or update functionality and close the professional body
+	 * information dialog
 	 */
 	public void cancelSelProfBody() {
 		assignValReqdToFalse();
@@ -2228,9 +2301,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *  Assign selected professional body object to managed bean for editing the information.
+	 * Assign selected professional body object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param assocBean - SmAssociationBody object
+	 * @param assocBean
+	 *            - SmAssociationBody object
 	 */
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
@@ -2239,7 +2314,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *  Add or create a new SmAssociationBody object
+	 * Add or create a new SmAssociationBody object
 	 */
 	public void assignNewAssocBody() {
 		SmAssociationBody assocBean = new SmAssociationBody();
@@ -2251,7 +2326,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected professional bodies from the SmAssociationBody list of the application.
+	 * Delete or remove selected professional bodies from the SmAssociationBody
+	 * list of the application.
 	 */
 	public void deleteSelectedAssocBodies() {
 
@@ -2276,7 +2352,8 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Consultant or Contractor Company Experience Start
 	/**
-	 * Add or update selected project info to SmCompanyExperience list of the application.
+	 * Add or update selected project info to SmCompanyExperience list of the
+	 * application.
 	 */
 	public void addOrUpdateCompanyExperienceToSmAppl() {
 		if (getManagedBean().getSelectedCompanyExperience()
@@ -2322,7 +2399,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the company experience information dialog
+	 * Cancel add or update functionality and close the company experience
+	 * information dialog
 	 */
 	public void cancelCompExpFunctions() {
 		assignValReqdToFalse();
@@ -2339,9 +2417,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected company experience or project object to managed bean for editing the information.
+	 * Assign selected company experience or project object to managed bean for
+	 * editing the information.
 	 * 
-	 * @param consultantBean - SmCompanyExperience object
+	 * @param consultantBean
+	 *            - SmCompanyExperience object
 	 */
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
@@ -2381,7 +2461,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign new category object for select company experience or project.
 	 * 
-	 * @param exp - SmCompanyExperience object
+	 * @param exp
+	 *            - SmCompanyExperience object
 	 */
 	public void assignCategoryForCompExperience(SmCompanyExperience exp) {
 		getManagedBean().setSelectedCompanyExperience(exp);
@@ -2405,8 +2486,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Check for duplicate category in the same project.
 	 * 
-	 * @param expCat - SmCompanyExperienceCat object
-	 * @param exp - SmCompanyExperience object
+	 * @param expCat
+	 *            - SmCompanyExperienceCat object
+	 * @param exp
+	 *            - SmCompanyExperience object
 	 */
 	public void checkDuplicateCategoryForProject(SmCompanyExperienceCat expCat,
 			SmCompanyExperience exp) {
@@ -2433,7 +2516,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Delete selected category from company experience object.
 	 * 
-	 * @param exp -SmCompanyExperience object
+	 * @param exp
+	 *            -SmCompanyExperience object
 	 */
 	public void deleteSelectedCategoryFromCompanyExperience(
 			SmCompanyExperience exp) {
@@ -2502,7 +2586,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected company projects from the SmCompanyExperience list of the application.
+	 * Delete or remove selected company projects from the SmCompanyExperience
+	 * list of the application.
 	 */
 	public void deleteSelectedCompanyExperiences() {
 		if (getManagedBean().getSelectedCompanyExperiences().size() > 0) {
@@ -2524,7 +2609,8 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Equity Companies Start
 	/**
-	 * Add or update selected share holding company info to SmEquityCompany list of the application.
+	 * Add or update selected share holding company info to SmEquityCompany list
+	 * of the application.
 	 */
 	public void addOrUpdateEquityCompanyToSmAppl() {
 
@@ -2544,9 +2630,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected smEquityCompany object to managed bean for editing the information.
+	 * Assign selected smEquityCompany object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param equiCompBean -SmEquityCompany object
+	 * @param equiCompBean
+	 *            -SmEquityCompany object
 	 */
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
 		if (equiCompBean.getShareAmt() == null) {
@@ -2589,7 +2677,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected share holding or equity companies from the SmEquityCompany list of the application.
+	 * Delete or remove selected share holding or equity companies from the
+	 * SmEquityCompany list of the application.
 	 */
 	public void deleteSelectedEquiCompanies() {
 
@@ -2609,7 +2698,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the share holding company information dialog
+	 * Cancel add or update functionality and close the share holding company
+	 * information dialog
 	 */
 	public void cancelEquiCompFuntionc() {
 		assignValReqdToFalse();
@@ -2621,12 +2711,12 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Category Codes Start
 
-
 	/**
-	 * Ajax action performed when parent is changed on the screen
-	 * i.e. reset child and sub child category values 
+	 * Ajax action performed when parent is changed on the screen i.e. reset
+	 * child and sub child category values
 	 * 
-	 * @param e -AjaxBehaviorEvent object
+	 * @param e
+	 *            -AjaxBehaviorEvent object
 	 */
 	public void changeParentCategory(AjaxBehaviorEvent e) {
 		String selPmCatL1 = getManagedBean().getSelectedParentCat();
@@ -2657,10 +2747,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Ajax action performed when child category is changed on the screen
-	 * i.e. reset sub child category values 
+	 * Ajax action performed when child category is changed on the screen i.e.
+	 * reset sub child category values
 	 * 
-	 * @param e -AjaxBehaviorEvent object
+	 * @param e
+	 *            -AjaxBehaviorEvent object
 	 */
 	public void changeChildCategory(AjaxBehaviorEvent e) {
 		String selPmCatL2 = getManagedBean().getSelectedChildCat();
@@ -2692,40 +2783,40 @@ public class SmApplicationBackingBean extends
 	 * @param e
 	 *            the e
 	 */
-//	public void changeSubChildCategory(AjaxBehaviorEvent e) {
-//		String selPmCatL3 = getManagedBean().getSelectedSubChildCat();
-//		if (selPmCatL3 == null) {
-//			log.info(" --- Selected is a null --- ");
-//			PmCategoryL3 p3 = new PmCategoryL3();
-//			getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
-//		} else {
-//			for (PmCategoryL3 p3 : getManagedBean().getSelectedCategory()
-//					.getPmCategoryL2().getPmCategoryL3s()) {
-//				if (p3.getCategoryL3Code().equalsIgnoreCase(selPmCatL3)) {
-//					log.info("***** Selected Child is ********"
-//							+ p3.getCategoryL3Code() + " --- Name ----"
-//							+ p3.getCategoryName());
-//					if (p3.getCategoryL3Code().equals("1")) {
-//					} else if (p3.getCategoryL3Code().equals("2")) {
-//						getManagedBean().getSelectedManufacturer().setPmUom(
-//								new PmUom());
-//					} else if (p3.getCategoryL3Code().equals("3")) {
-//					} else {
-//					}
-//					getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
-//
-//				}
-//			}
-//		}
-//
-//	}
+	// public void changeSubChildCategory(AjaxBehaviorEvent e) {
+	// String selPmCatL3 = getManagedBean().getSelectedSubChildCat();
+	// if (selPmCatL3 == null) {
+	// log.info(" --- Selected is a null --- ");
+	// PmCategoryL3 p3 = new PmCategoryL3();
+	// getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
+	// } else {
+	// for (PmCategoryL3 p3 : getManagedBean().getSelectedCategory()
+	// .getPmCategoryL2().getPmCategoryL3s()) {
+	// if (p3.getCategoryL3Code().equalsIgnoreCase(selPmCatL3)) {
+	// log.info("***** Selected Child is ********"
+	// + p3.getCategoryL3Code() + " --- Name ----"
+	// + p3.getCategoryName());
+	// if (p3.getCategoryL3Code().equals("1")) {
+	// } else if (p3.getCategoryL3Code().equals("2")) {
+	// getManagedBean().getSelectedManufacturer().setPmUom(
+	// new PmUom());
+	// } else if (p3.getCategoryL3Code().equals("3")) {
+	// } else {
+	// }
+	// getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
+	//
+	// }
+	// }
+	// }
+	//
+	// }
 
-//	public void changeCatEntryModeValues(AjaxBehaviorEvent e) {
-//		// log.info("**** ENTER THE CHANGE OF CATEGORY TYPE **** "
-//		// + getManagedBean().getSelectedCategory().getEntryMode());
-//		resetSelectedCategoryParams();
-//
-//	}
+	// public void changeCatEntryModeValues(AjaxBehaviorEvent e) {
+	// // log.info("**** ENTER THE CHANGE OF CATEGORY TYPE **** "
+	// // + getManagedBean().getSelectedCategory().getEntryMode());
+	// resetSelectedCategoryParams();
+	//
+	// }
 
 	/**
 	 * Resetting all the existing values.
@@ -2783,7 +2874,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel save or update functionality and close the category codes information dialog
+	 * Cancel save or update functionality and close the category codes
+	 * information dialog
 	 */
 	public void cancelCategoryCodesSaveorUpdate() {
 		assignValReqdToFalse();
@@ -2792,7 +2884,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete selected category codes from the SmSupplierCategory list of the application.
+	 * Delete selected category codes from the SmSupplierCategory list of the
+	 * application.
 	 */
 	public void deleteSelectedCategoryCodes() {
 		SmApplicationUtil.checkCategoryPendingTransaction(getManagedBean()
@@ -2814,7 +2907,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Delete category codes.
 	 * 
-	 * @param categories - List of categories
+	 * @param categories
+	 *            - List of categories
 	 */
 	private void deleteCatCodes(List<SmSupplierCategory> categories) {
 		for (SmSupplierCategory category : categories) {
@@ -2832,7 +2926,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete selected category code(s) that are still pending approval from the SmSupplierCategory list of the application.
+	 * Delete selected category code(s) that are still pending approval from the
+	 * SmSupplierCategory list of the application.
 	 */
 	public void deleteSelectedPendingApprovalCategoryCodes() {
 		if (getManagedBean().getDeleteNewApplCategoryList() != null
@@ -2849,7 +2944,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Save selected category information into SmSupplierCategory list of the application.
+	 * Save selected category information into SmSupplierCategory list of the
+	 * application.
 	 */
 	public void saveSelectedCategory() {
 		boolean validCat = true;
@@ -2945,16 +3041,17 @@ public class SmApplicationBackingBean extends
 
 			if (!getManagedBean().getSmAppl().getApplType()
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-				RequestContext
-						.getCurrentInstance()
-						.execute(
-								"smCatCodesNonRenewApplDtWidVar.paginator.endLink.click()");
+				// RequestContext
+				// .getCurrentInstance()
+				// .execute(
+				// "smCatCodesNonRenewApplDtWidVar.paginator.endLink.click()");
 			} else {
-				RequestContext
-						.getCurrentInstance()
-						.execute(
-								"smCatCodesRenewApplDtWidVar.paginator.endLink.click()");
+				// RequestContext
+				// .getCurrentInstance()
+				// .execute(
+				// "smCatCodesRenewApplDtWidVar.paginator.endLink.click()");
 			}
+			saveOrUpdateAppl();
 			SmApplicationUtil.assignActiveCategoryList(getManagedBean());
 			assignValReqdToFalse();
 			// API FOR LIST OF OVERLAPPING CATEGORIES
@@ -2967,7 +3064,8 @@ public class SmApplicationBackingBean extends
 	// -- Process Category Codes End
 	// factory start
 	/**
-	 * Add or update selected factory info to SmFacility list of the application.
+	 * Add or update selected factory info to SmFacility list of the
+	 * application.
 	 */
 	public void addOrUpdateFactoryToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedFactoryFacility();
@@ -2990,7 +3088,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the factory information dialog
+	 * Cancel add or update functionality and close the factory information
+	 * dialog
 	 */
 	public void cancelFactorySaveorUpdate() {
 		assignValReqdToFalse();
@@ -3000,9 +3099,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected factory - facility object to managed bean for editing the information.
+	 * Assign selected factory - facility object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param facilityBean - SmFacility object
+	 * @param facilityBean
+	 *            - SmFacility object
 	 */
 	public void assignSelFactory(SmFacility facilityBean) {
 		log.info("******** Selected value ******"
@@ -3050,7 +3151,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Factory owner type selected on screen.
 	 * 
-	 * @param e -AjaxBehaviorEvent
+	 * @param e
+	 *            -AjaxBehaviorEvent
 	 */
 	public void factoryOwnerTypeSel(AjaxBehaviorEvent e) {
 		log.info("Selected Owner type === "
@@ -3059,7 +3161,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected factories from the SmFacility list of the application.
+	 * Delete or remove selected factories from the SmFacility list of the
+	 * application.
 	 */
 	public void deleteSelectedFactories() {
 		if (getManagedBean().getSelectedFactoryFacilities().size() > 0) {
@@ -3080,7 +3183,8 @@ public class SmApplicationBackingBean extends
 
 	// Dockyard start
 	/**
-	 * Add or update selected dockyard info to SmFacility list of the application.
+	 * Add or update selected dockyard info to SmFacility list of the
+	 * application.
 	 */
 	public void addOrUpdateDockYardToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
@@ -3103,7 +3207,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the dockyard information dialog
+	 * Cancel add or update functionality and close the dockyard information
+	 * dialog
 	 */
 	public void cancelDockyardSaveorUpdate() {
 		assignValReqdToFalse();
@@ -3113,9 +3218,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected dockyard - facility object to managed bean for editing the information.
+	 * Assign selected dockyard - facility object to managed bean for editing
+	 * the information.
 	 * 
-	 * @param facilityBean - SmFacility object
+	 * @param facilityBean
+	 *            - SmFacility object
 	 */
 	public void assignSelDockyard(SmFacility facilityBean) {
 		assignStateDistAndCityForSelVal(facilityBean.getSmAddress()
@@ -3161,7 +3268,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Dockyard owner type selected on screen.
 	 * 
-	 * @param e -AjaxBehaviorEvent
+	 * @param e
+	 *            -AjaxBehaviorEvent
 	 */
 	public void dockOwnerTypeSel(AjaxBehaviorEvent e) {
 		log.info("Selected Owner type === "
@@ -3170,7 +3278,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected dockyards from the SmFacility list of the application.
+	 * Delete or remove selected dockyards from the SmFacility list of the
+	 * application.
 	 */
 	public void deleteSelectedDocks() {
 
@@ -3191,7 +3300,8 @@ public class SmApplicationBackingBean extends
 	// Dockyard end
 	// Workshop start
 	/**
-	 * Add or update selected workshop info to SmFacility list of the application.
+	 * Add or update selected workshop info to SmFacility list of the
+	 * application.
 	 */
 	public void addOrUpdateWorkshopToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
@@ -3212,9 +3322,9 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
 	}
 
-
 	/**
-	 * Cancel add or update functionality and close the workshop information dialog
+	 * Cancel add or update functionality and close the workshop information
+	 * dialog
 	 */
 	public void cancelWorkShopSaveorUpdate() {
 		assignValReqdToFalse();
@@ -3224,9 +3334,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected workshop - facility object to managed bean for editing the information.
+	 * Assign selected workshop - facility object to managed bean for editing
+	 * the information.
 	 * 
-	 * @param facilityBean - SmFacility object
+	 * @param facilityBean
+	 *            - SmFacility object
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
 		assignStateDistAndCityForSelVal(facilityBean.getSmAddress()
@@ -3269,11 +3381,11 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("workShopDialog.show()");
 	}
 
-
 	/**
 	 * work shop owner type selected on screen.
 	 * 
-	 * @param e -AjaxBehaviorEvent
+	 * @param e
+	 *            -AjaxBehaviorEvent
 	 */
 	public void workShopOwnerTypeSel(AjaxBehaviorEvent e) {
 		log.info("Selected Owner type === "
@@ -3282,7 +3394,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected work shops from the SmFacility list of the application.
+	 * Delete or remove selected work shops from the SmFacility list of the
+	 * application.
 	 */
 	public void deleteSelectedWorkShops() {
 		if (getManagedBean().getSelectedWorkShopFacilities().size() > 0) {
@@ -3334,7 +3447,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected store - facility object to managed bean for editing the information.
+	 * Assign selected store - facility object to managed bean for editing the
+	 * information.
 	 * 
 	 * @param facilityBean
 	 *            the facility bean
@@ -3383,7 +3497,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Store owner type selected on screen.
 	 * 
-	 * @param e -AjaxBehaviorEvent
+	 * @param e
+	 *            -AjaxBehaviorEvent
 	 */
 	public void storeOwnerTypeSel(AjaxBehaviorEvent e) {
 		log.info("Selected Owner type === "
@@ -3392,7 +3507,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected stores from the SmFacility list of the application.
+	 * Delete or remove selected stores from the SmFacility list of the
+	 * application.
 	 */
 	public void deleteSelectedStores() {
 
@@ -3412,7 +3528,8 @@ public class SmApplicationBackingBean extends
 	// Store end
 	// manufacturer start
 	/**
-	 * Add or update selected bank info to SmManufacturingDtl list of the application.
+	 * Add or update selected bank info to SmManufacturingDtl list of the
+	 * application.
 	 */
 	public void addOrUpdateManufacturerToSmAppl() {
 		if (getManagedBean().getSelectedManufacturer().getPmUom().getUomId() != null) {
@@ -3442,7 +3559,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the manufacturer information dialog
+	 * Cancel add or update functionality and close the manufacturer information
+	 * dialog
 	 */
 	public void cancelManuSaveorUpdate() {
 		assignValReqdToFalse();
@@ -3451,9 +3569,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected manufacturer object to managed bean for editing the information.
+	 * Assign selected manufacturer object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param manBean - SmManufacturingDtl object
+	 * @param manBean
+	 *            - SmManufacturingDtl object
 	 */
 	public void assignSelManufacturer(SmManufacturingDtl manBean) {
 		getManagedBean().setSelectedManufacturer(manBean);
@@ -3482,7 +3602,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected manufactures from the SmManufacturingDtl list of the application.
+	 * Delete or remove selected manufactures from the SmManufacturingDtl list
+	 * of the application.
 	 */
 	public void deleteSelectedManufacturers() {
 
@@ -3503,7 +3624,8 @@ public class SmApplicationBackingBean extends
 
 	// machinery start
 	/**
-	 * Add or update selected machinery info to SmMachineDtls list of the application.
+	 * Add or update selected machinery info to SmMachineDtls list of the
+	 * application.
 	 */
 	public void addOrUpdateMachineToSmAppl() {
 
@@ -3524,7 +3646,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the machine dtl information dialog
+	 * Cancel add or update functionality and close the machine dtl information
+	 * dialog
 	 */
 	public void cancelMachineSaveorUpdate() {
 		assignValReqdToFalse();
@@ -3533,9 +3656,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected machine object to managed bean for editing the information.
+	 * Assign selected machine object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param macBean - SmMachineDtl object
+	 * @param macBean
+	 *            - SmMachineDtl object
 	 */
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setSelectedMachine(macBean);
@@ -3544,7 +3669,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *Add or create a new SmMachineDtl object
+	 * Add or create a new SmMachineDtl object
 	 */
 	public void assignNewMachineryBean() {
 		getManagedBean().setSelectedMachine(new SmMachineDtl());
@@ -3557,7 +3682,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected machinery from the SmMachineDtl list of the application.
+	 * Delete or remove selected machinery from the SmMachineDtl list of the
+	 * application.
 	 */
 	public void deleteSelectedMachinery() {
 
@@ -3723,7 +3849,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Update SmPersonnel record status .
 	 * 
-	 * @param smPersonnels - List of sm personnels
+	 * @param smPersonnels
+	 *            - List of sm personnels
 	 */
 	private void updatePersonnelRecordStatus(List<SmPersonnel> smPersonnels) {
 		if (smPersonnels != null && !smPersonnels.isEmpty()) {
@@ -3747,7 +3874,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * To redirect from personnel information page the main screen when click Back.
+	 * To redirect from personnel information page the main screen when click
+	 * Back.
 	 */
 	public void backFromPersonnelPage() {
 		log.info("*** Back to perssonel page ******");
@@ -3804,9 +3932,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected SmPersonnel object to managed bean for editing the information.
+	 * Assign selected SmPersonnel object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param shareHolderBean - SmPersonnel object
+	 * @param shareHolderBean
+	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
 		// if (!getManagedBean().getSmAppl().getApplType()
@@ -3933,7 +4063,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Getys Authorized Personnel Account Status
 	 * 
-	 * @param shareHolderBean - SmPersonnel object
+	 * @param shareHolderBean
+	 *            - SmPersonnel object
 	 */
 	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel) {
 		String accStatus = "";
@@ -3970,7 +4101,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Adds or update addresses information to the selected SmPersonnel
 	 * 
-	 * @param shareHolderBean - SmPersonnel object
+	 * @param shareHolderBean
+	 *            - SmPersonnel object
 	 * @throws ParseException
 	 *             the parse exception
 	 */
@@ -4088,7 +4220,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Add or create a new SmPersonnel bank object
 	 * 
-	 * @param personelType - the personel type to define equity or not
+	 * @param personelType
+	 *            - the personel type to define equity or not
 	 */
 	public void assignNewShareHolder(String personelType) {
 		log.info("********* assignNewShareHolder *****");
@@ -4169,9 +4302,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected personnel from the SmPeronnel list of the application.
+	 * Delete or remove selected personnel from the SmPeronnel list of the
+	 * application.
 	 * 
-	 * @param personType - the person type
+	 * @param personType
+	 *            - the person type
 	 */
 	public void deleteSelectedShareHolders(String personType) {
 		boolean existAsBankSignatory = false;
@@ -4192,13 +4327,13 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmAppl().getSmSupplierBranches())) {
 				existAsBranchPoc = true;
 			}
-			
-			if(existAsBankSignatory && existAsBranchPoc){
+
+			if (existAsBankSignatory && existAsBranchPoc) {
 				throw new EpException(MessageConst.ERROR_722588);
-			}else{
-				if(existAsBankSignatory){
+			} else {
+				if (existAsBankSignatory) {
 					throw new EpException(MessageConst.ERROR_722585);
-				}else if(existAsBranchPoc){
+				} else if (existAsBranchPoc) {
 					throw new EpException(MessageConst.ERROR_722586);
 				}
 			}
@@ -4237,7 +4372,7 @@ public class SmApplicationBackingBean extends
 	// -- Process Share Holder Personnel End
 	// -- Process Common for both Personnel and Share Holder Start --
 	/**
-	 *  Add or create a new sm staff experience object
+	 * Add or create a new sm staff experience object
 	 */
 	public void addShrHldrJobFunction() {
 		log.info("******* getManagedBean().getSelectedShareHolder() **********"
@@ -4251,9 +4386,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected job function - SmStaffExperience object to managed bean for editing the information.
+	 * Assign selected job function - SmStaffExperience object to managed bean
+	 * for editing the information.
 	 * 
-	 * @param exp - SmStaffExperience object
+	 * @param exp
+	 *            - SmStaffExperience object
 	 */
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
 		log.info("*********** Selected value *********" + exp.getDesignation());
@@ -4268,7 +4405,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Add or update selected job function info to SmStaffExperience  list of the selected SmPersonnel.
+	 * Add or update selected job function info to SmStaffExperience list of the
+	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateJobFunctions() {
 
@@ -4297,7 +4435,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the job function information dialog
+	 * Cancel add or update functionality and close the job function information
+	 * dialog
 	 */
 	public void cancelJobFunctions() {
 		assignValReqdToFalse();
@@ -4308,7 +4447,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected job functions from the SmStaffExperience list of the selected SmPersonnel
+	 * Delete or remove selected job functions from the SmStaffExperience list
+	 * of the selected SmPersonnel
 	 */
 	public void deleteSelectedShrHldrJobFunction() {
 		log.info(" ******* The is size of job holders is ********* "
@@ -4341,9 +4481,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected related company - SmRelatedCompany object to managed bean for editing the information.
+	 * Assign selected related company - SmRelatedCompany object to managed bean
+	 * for editing the information.
 	 * 
-	 * @param com -SmRelatedCompany object
+	 * @param com
+	 *            -SmRelatedCompany object
 	 */
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
 		getManagedBean().setSelectedRelatedCompany(com);
@@ -4356,7 +4498,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *  Add or update selected related company info to SmRelatedCompany  list of the selected SmPersonnel.
+	 * Add or update selected related company info to SmRelatedCompany list of
+	 * the selected SmPersonnel.
 	 */
 	public void addOrUpdateRelatedCompanies() {
 		if (getManagedBean().getSelectedShareHolder().getSmRelatedCompanies()
@@ -4375,7 +4518,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected related companies from the SmRelatedCompany list of the selected SmPersonnel
+	 * Delete or remove selected related companies from the SmRelatedCompany
+	 * list of the selected SmPersonnel
 	 */
 	public void deleteSelectedShrHldrRelatedCompanies() {
 
@@ -4395,7 +4539,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the related company information dialog
+	 * Cancel add or update functionality and close the related company
+	 * information dialog
 	 */
 	public void cancelShrHldrRelatedCompanies() {
 		assignValReqdToFalse();
@@ -4404,7 +4549,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *  Add or create a new staff academics object for selected Smpersonnel
+	 * Add or create a new staff academics object for selected Smpersonnel
 	 */
 	public void addShrHldrAcademicQualification() {
 
@@ -4418,9 +4563,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected staff academics - SmStaffAcademic object to managed bean for editing the information.
+	 * Assign selected staff academics - SmStaffAcademic object to managed bean
+	 * for editing the information.
 	 * 
-	 * @param aca -SmStaffAcademic
+	 * @param aca
+	 *            -SmStaffAcademic
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
 		getManagedBean().setSelectedStaffAcademic(aca);
@@ -4434,7 +4581,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected records from the SmStaffAcademics list of the selected SmPersonnel.
+	 * Delete or remove selected records from the SmStaffAcademics list of the
+	 * selected SmPersonnel.
 	 */
 	public void deleteSelectedShrHldrAcademics() {
 		if (getManagedBean().getSelectedShrHldrAcademics().size() > 0) {
@@ -4453,7 +4601,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Cancel add or update functionality and close the staff academics information dialog
+	 * Cancel add or update functionality and close the staff academics
+	 * information dialog
 	 */
 	public void cancelShrHldrAcademic() {
 		assignValReqdToFalse();
@@ -4462,7 +4611,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *  Add or update selected staff academics info to SmStaffAcademic  list of the selected SmPersonnel.
+	 * Add or update selected staff academics info to SmStaffAcademic list of
+	 * the selected SmPersonnel.
 	 */
 	public void addOrUpdateShrHldrAcademic() {
 		for (PmEduField edu : getManagedBean().getEduFieldList()) {
@@ -4541,9 +4691,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected professional body - SmAssocication object to managed bean for editing the information.
+	 * Assign selected professional body - SmAssocication object to managed bean
+	 * for editing the information.
 	 * 
-	 * @param asb -SmAssociationBody object
+	 * @param asb
+	 *            -SmAssociationBody object
 	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		getManagedBean().setSelectedStfPrfBdy(asb);
@@ -4558,7 +4710,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 *  Cancel add or update functionality and close the professionl body information dialog
+	 * Cancel add or update functionality and close the professionl body
+	 * information dialog
 	 */
 	public void cancelShrHldrProfBody() {
 		assignValReqdToFalse();
@@ -4569,7 +4722,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Add or update selected prof body info to SmAssocationBody list of the selected SmPersonnel.
+	 * Add or update selected prof body info to SmAssocationBody list of the
+	 * selected SmPersonnel.
 	 */
 	public void addOrUpdateShrHldrProfBody() {
 		for (PmCertBody cert : getManagedBean().getProfBodyLs()) {
@@ -4596,7 +4750,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected prof bodies from the SmAssocationBody list of the selected SmPersonnel.
+	 * Delete or remove selected prof bodies from the SmAssocationBody list of
+	 * the selected SmPersonnel.
 	 */
 	public void deleteSelectedShrHldrProfBodies() {
 		if (getManagedBean().getSelectedShrHldrProfBodies().size() > 0) {
@@ -4616,7 +4771,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign personnel for sm supplier branch.
 	 * 
-	 * @param brn - SmSupplierBranch object
+	 * @param brn
+	 *            - SmSupplierBranch object
 	 */
 	public void assignPersonForBranch(SmSupplierBranch brn) {
 		SmSupplierBranch br = new SmSupplierBranch();
@@ -4637,7 +4793,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign selected personnel identity type.
 	 * 
-	 * @param e - AjaxBehaviorEvent
+	 * @param e
+	 *            - AjaxBehaviorEvent
 	 */
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
@@ -4660,7 +4817,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign selected personnel nationality.
 	 * 
-	 * @param e - AjaxBehaviorEvent
+	 * @param e
+	 *            - AjaxBehaviorEvent
 	 */
 	public void assignPersonNationality(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolder().getPmCountry()
@@ -4683,9 +4841,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Assign selected personnel object to managed bean for editing the information.
+	 * Assign selected personnel object to managed bean for editing the
+	 * information.
 	 * 
-	 * @param shareHolderBean - SmPersonnel object
+	 * @param shareHolderBean
+	 *            - SmPersonnel object
 	 */
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 
@@ -5004,7 +5164,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Assign selected bank object to managed bean for editing the information.
 	 * 
-	 * @param shareBankBean - SmSupplierBank object
+	 * @param shareBankBean
+	 *            - SmSupplierBank object
 	 */
 	public void assignSelBank(SmSupplierBank shareBankBean) {
 		getManagedBean().setChequeSingPerId(null);
@@ -5048,7 +5209,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Delete or remove selected banks from the SmSupplierBank list of the application.
+	 * Delete or remove selected banks from the SmSupplierBank list of the
+	 * application.
 	 */
 	public void deleteSelectedBanks() {
 		if (getManagedBean().getSelectedBanks().size() > 0) {
@@ -5069,7 +5231,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * View signatories for selected SmSupplierBank.
 	 * 
-	 * @param signAcctBean -SmSupplierBank object
+	 * @param signAcctBean
+	 *            -SmSupplierBank object
 	 */
 	public void viewSignatories(SmSupplierBank signAcctBean) {
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
@@ -5194,7 +5357,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Resubmit sm application inquiry to bpm.
 	 * 
-	 * @param applType - the appl type
+	 * @param applType
+	 *            - the appl type
 	 * @return the redirect page
 	 */
 	public String resubmitSmApplInquiryToBpm(String applType) {
@@ -5212,7 +5376,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Submit sm application to bpm and save the latest information to DB.
 	 * 
-	 * @param applType - the appl type
+	 * @param applType
+	 *            - the appl type
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
@@ -5453,8 +5618,10 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Save the application as draft in DB and Intialize bpm if required.
 	 * 
-	 * @param applType - the appl type
-	 * @param currentPageType - the current page type
+	 * @param applType
+	 *            - the appl type
+	 * @param currentPageType
+	 *            - the current page type
 	 * @return the redirect page
 	 */
 	public String saveApplicationAsDraft(String applType, String currentPageType) {
@@ -5509,7 +5676,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Save the application as draft in DB and Intialize bpm if required.
 	 * 
-	 * @param currentPageType - the current page type
+	 * @param currentPageType
+	 *            - the current page type
 	 * @return true, if successful
 	 */
 	private boolean intializeSaveDraftBpm(String currentPageType) {
@@ -8262,7 +8430,7 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
-	
+
 	/**
 	 * Get valid epRole list for personnel
 	 * 
@@ -8290,7 +8458,6 @@ public class SmApplicationBackingBean extends
 		}
 		return ePRoleList;
 	}
-	
 
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
