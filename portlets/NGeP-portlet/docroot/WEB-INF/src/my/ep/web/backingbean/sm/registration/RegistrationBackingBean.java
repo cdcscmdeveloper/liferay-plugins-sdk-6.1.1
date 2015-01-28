@@ -274,6 +274,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 		
+		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)){
+			compBasic.setWithFederal(true);
+		} 
+		
 		return firstUserRegistration;
 	}
 
