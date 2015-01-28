@@ -152,10 +152,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					}
 				}
 				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_STORE)){
-					printingAddress.add(smSvAddress);
+					//printingAddress.add(smSvAddress);
+					readMaterialAddress.add(smSvAddress);
 					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_PRINTING)==null){
 						getManagedBean().getSmSvFacilityMap().put(SupplierManagementConst.CAT_TYPE_PRINTING, resDTO.getSmFacility());
 					}
+				}else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)){
+					printingAddress.add(smSvAddress);
+					manufacturingAddress.add(smSvAddress);
 				}
 				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)){
 					workshopAddress.add(smSvAddress);
@@ -181,8 +185,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 				else{
 					insuranceAddress.add(smSvAddress);
-					manufacturingAddress.add(smSvAddress);
-					readMaterialAddress.add(smSvAddress);
+					//manufacturingAddress.add(smSvAddress);
+					//readMaterialAddress.add(smSvAddress);
 				}
 			}
 		}
@@ -254,7 +258,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void retrieveSiteVisitInfo(String viewMode){
 		//this.getManagedBean().setAppId(1257118);
 		//this.getManagedBean().setAppId(1257442);
-		//this.getManagedBean().setAppId(1257394);
+		//this.getManagedBean().setAppId(1257676); //FT
+		
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
