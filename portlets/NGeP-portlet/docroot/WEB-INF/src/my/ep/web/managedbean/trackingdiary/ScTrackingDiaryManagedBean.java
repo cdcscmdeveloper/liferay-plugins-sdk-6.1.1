@@ -77,16 +77,14 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 				log.debug("pageChangeListener");
 			}
 			try {
-//				if(null == getSearchTrasactionType()){ 
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}else if(null ==getSearchViewType() ){
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}
+				if(null == getSearchDocumentType()){ 
+					throw new EpException(MessageConst.ERROR_740023);
+				}
 				System.out.println("ISearchResultBean<ScRequestNote>");
 	
 				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
 					System.out.println("transactionType");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocumentType()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentType()));
 				}
 				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
 					System.out.println("getSearchDocumentNo"+ getSearchDocumentNo());
@@ -94,7 +92,7 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 				}
 				if(getSearchStatusId()!=null) {
 					System.out.println("getSearchStatusId");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_LIKE.value(),getSearchStatusId()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),getSearchStatusId()));
 				}
 				if(getSearchDocumentFromDuration()!=null && getSearchDocumentToDuration()!=null) {
 					System.out.println("getSearchDocumentFromDuration");
@@ -171,14 +169,14 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setScRNDocumentDataModel(IPagingDataModel<Object[]> scRNDocumentDataModel) {
 		this.scRNDocumentDataModel = scRNDocumentDataModel;
 	}
-	Object[] scObj = new Object[6];
-	public Object[] getScObj() {
-		return scObj;
-	}
-
-	public void setScObj(Object[] scObj) {
-		this.scObj = scObj;
-	}
+//	Object[] scObj = new Object[6];
+//	public Object[] getScObj() {
+//		return scObj;
+//	}
+//
+//	public void setScObj(Object[] scObj) {
+//		this.scObj = scObj;
+//	}
 
 	public String getSearchDocNo() {
 		return searchDocNo;
