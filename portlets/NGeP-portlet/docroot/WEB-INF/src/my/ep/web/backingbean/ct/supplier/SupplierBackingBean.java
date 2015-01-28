@@ -1262,4 +1262,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			return saveFactoringRequest(outcome);
 		}
 	}
+    
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
 }
