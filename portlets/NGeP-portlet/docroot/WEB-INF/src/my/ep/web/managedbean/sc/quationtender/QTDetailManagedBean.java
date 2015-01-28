@@ -406,6 +406,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private Date today = new Date();
 
+	// Briefing Attendance
+	private List<SmMofAccount> mofAccounts;
+	
 	// Schedule & Contact Information
 	private List<ScQtContactPerson> pmuserContactpersonList;
 	private List<ScQtContactPerson> selectedpmuserContactpersonList;
@@ -2854,6 +2857,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setMarkDeletedScQtDocReportList(
 			List<ScQtDocReport> markDeletedScQtDocReportList) {
 		this.markDeletedScQtDocReportList = markDeletedScQtDocReportList;
+	}
+
+	public List<SmMofAccount> getMofAccounts() {
+		return mofAccounts;
+	}
+
+	public void setMofAccounts(List<SmMofAccount> mofAccounts) {
+		this.mofAccounts = mofAccounts;
 	}
 
 }
