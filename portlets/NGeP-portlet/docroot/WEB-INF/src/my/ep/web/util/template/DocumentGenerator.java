@@ -69,7 +69,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		debugLogger("getHtmlFromVelocity");
 		log.info("velocityTemplate: " + velocityTemplate);
 		log.info("context: " + context);
-    	Template template = Velocity.getTemplate("/templates" + velocityTemplate);
+    	Template template = Velocity.getTemplate("templates" + velocityTemplate);
     	log.info("template: " + template);
     	
     	StringWriter output = new StringWriter();
