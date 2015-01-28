@@ -32,18 +32,18 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.PHIS_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.PHIS_INTEGRATION_JOB_GROUP),
 						PhisBatchIntegrationJob.class, CmSchedulerConstants.PHIS_INTEGRATION_CONTINUOUS_JOB_DESC,
-						"0 0 8,20 * * ?");
+						"0 0 0/1 * * ?");
 				//GFMAS Integration Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_INTEGRATION_JOB_GROUP),
 						GfmasBatchIntegrationJob.class, CmSchedulerConstants.GFMAS_INTEGRATION_CONTINUOUS_JOB_DESC,
-						"0 0 9,21 * * ?");
+						"0 0 0/1 * * ?");
 				//PHIS Integration Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
 						EperundingBatchIntegrationJob.class, CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
-						"0 0 7,19 * * ?");
+						"0 0 0/1 * * ?");
 	}
 }
