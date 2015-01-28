@@ -171,6 +171,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private boolean selectedAllChargeItem;
 	private String className="@(.myPrClassName)";
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
+	private boolean selectAllCheckbox;
 	
 	/**
 	 * @return the className
@@ -1562,6 +1563,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		//reset the checkboxes already selected.
 		resetSelectedTreeNodes();
 		getManagedBean().setChargeLinePanel(false);
+		setSelectAllCheckbox(false);
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
 		if(null!=selectedNode){
@@ -1639,27 +1641,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSubSetiaList(new ArrayList<PmSubSetia>());
 		
 		RequestContext.getCurrentInstance().execute("applyBulkCharge.show()");
-	}
-	
-	public void selectAllCheckboxSelect(AjaxBehaviorEvent e){
-		//boolean checkValue=(boolean)e.getComponent().getAttributes().get("value")
-		if((boolean) e.getComponent().getAttributes().get("value")){
-			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				if(null!=deliveryAddress){
-					deliveryAddress.setSelectedAddressRowDelete(true);
-				}
-			}
-			getManagedBean().setDeleteButtonHide(false);
-			
-		}else{
-			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				if(null!=deliveryAddress){
-					deliveryAddress.setSelectedAddressRowDelete(false);
-				}
-			}
-			getManagedBean().setDeleteButtonHide(true);
-			
-		}
 	}
 	
 	public void chargeLineApply() {
@@ -1891,11 +1872,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private void updateSelectedTreeNodes() {
 		List<TreeNode> selectedNodes=new ArrayList<TreeNode>();
 		TreeNode root=getManagedBean().getChargeLineItemRoot();
+		setSelectAllCheckbox(true);
 		for(TreeNode node:root.getChildren()){
 			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
 			if(addr.isSelectedChargeItem()){
-				//System.out.println("in update methos check ");
 				selectedNodes.add(node);
+			}else{
+				setSelectAllCheckbox(false);
 			}
 		}
 		
@@ -2502,6 +2485,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		} 
 	}
 	
+	public void selectAllCheckboxes(){
+		onNodeUnSelect();
+		getManagedBean().setProgramLov(false);
+		getManagedBean().setProjectLov(false);
+		boolean checkValue=isSelectAllCheckbox();
+		TreeNode root=getManagedBean().getChargeLineItemRoot();
+		for(TreeNode node:root.getChildren()){
+			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
+			addr.setSelectedChargeItem(checkValue);
+		}
+		if(checkValue==true){
+			getManagedBean().setChargeLinePanel(true);
+		}else{
+			getManagedBean().setChargeLinePanel(false);
+		}
+	}
+	
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -2751,4 +2751,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getUnitOfMeasurementDataModel().resetData();
 		unitOfMeasurementDataModel.reloadData();		
 	}
+
+	/**
+	 * @return the selectAllCheckbox
+	 */
+	public boolean isSelectAllCheckbox() {
+		return selectAllCheckbox;
+	}
+
+	/**
+	 * @param selectAllCheckbox the selectAllCheckbox to set
+	 */
+	public void setSelectAllCheckbox(boolean selectAllCheckbox) {
+		this.selectAllCheckbox = selectAllCheckbox;
+	}
+	
 }
