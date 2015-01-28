@@ -905,7 +905,6 @@ public class FileUtility {
 
 		String FILE_NAME;
 		SimpleDateFormat dt1 = new SimpleDateFormat("yyyMMdd");
-		System.out.println(dt1.format(new Date()));
 
 		String DATE = dt1.format(new Date());
 
