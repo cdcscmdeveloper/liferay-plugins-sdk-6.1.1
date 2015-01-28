@@ -32,7 +32,8 @@
 			             mindate="#{suspensionBackingBean.currentDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			              readonlyInput="true" navigator="true"
 			             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-			             <p:ajax event="dateSelect" process="@this" update="agencyDateExp" />
+			             <p:ajax event="dateSelect" process="@this" 
+			               onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  update="agencyDateExp" />
 			       </p:calendar>
 		       </p:column> 	
 	    
