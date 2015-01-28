@@ -5613,8 +5613,11 @@ public class SpecificationBackingBean extends
 				// toBeRemoveList.add(this.getManagedBean().getCheckListScore());
 				if (null != this.getManagedBean().getCheckListScore()
 						&& !this.getManagedBean().getCheckListScore().isEmpty()) {
+
 					toBeRemoveList.addAll(this.getManagedBean()
 							.getCheckListScore());
+					this.getManagedBean().setCheckListScore(
+							new ArrayList<ScQtCheckListScore>());
 				}
 			} else {
 				toBeRemoveList.add(this.getManagedBean()
@@ -5644,6 +5647,8 @@ public class SpecificationBackingBean extends
 								.isEmpty()) {
 					toBeRemoveList.addAll(this.getManagedBean()
 							.getScoringForYears());
+					this.getManagedBean().setScoringForYears(
+							new ArrayList<ScQtCheckListScore>());
 				}
 			} else {
 				toBeRemoveList.add(this.getManagedBean()
