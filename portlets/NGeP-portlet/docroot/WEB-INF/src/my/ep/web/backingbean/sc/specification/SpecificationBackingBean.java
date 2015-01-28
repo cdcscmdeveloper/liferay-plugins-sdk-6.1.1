@@ -1375,7 +1375,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 				specReqDTO.setScQt(scQtTechScore);
 				specSo.validateSCScoreSettings(specReqDTO);
-				//specSo.validateSpecOfferPrice(specReqDTO);
+				// specSo.validateSpecOfferPrice(specReqDTO);
 
 			}
 
@@ -1456,7 +1456,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 				specReqDTO.setScQt(scQtFinScore);
 				specSo.validateSCScoreSettings(specReqDTO);
-				//specSo.validateSpecOfferPrice(specReqDTO);
+				// specSo.validateSpecOfferPrice(specReqDTO);
 			}
 			break;
 		case 6:
@@ -7672,12 +7672,20 @@ public class SpecificationBackingBean extends
 					.getChecklistScoreType()));
 			if (prevSpecScoring != null) {
 				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
-				if (null != prevRangeTo && prevRangeTo.intValue() == 0) {
-					throw new EpException(
-							"To Value Canot be Zero Must be Greater Then from Value");
-				}
+				/*
+				 * if (null != prevRangeTo && prevRangeTo.intValue() == 0) {
+				 * throw new EpException(
+				 * "To Value Canot be Zero Must be Greater Then from Value"); }
+				 */
 				if (prevRangeTo != null) {
-					score.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(1)));
+					if (criteriaType.equalsIgnoreCase("50")
+							|| criteriaType.equalsIgnoreCase("60")) {
+						score.setRangeFrom(prevRangeTo.add(BigDecimal
+								.valueOf(0.01)));
+					} else {
+						score.setRangeFrom(prevRangeTo.add(BigDecimal
+								.valueOf(1)));
+					}
 				}
 			}
 			checkListScore.add(score);
@@ -7709,10 +7717,11 @@ public class SpecificationBackingBean extends
 					.getChecklistScoreType()));
 			if (prevSpecScoring != null) {
 				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
-				if (null != prevRangeTo && prevRangeTo.intValue() == 0) {
-					throw new EpException(
-							"To Value Canot be Zero Must be Greater Then from Value");
-				}
+				/*
+				 * if (null != prevRangeTo && prevRangeTo.intValue() == 0) {
+				 * throw new EpException(
+				 * "To Value Canot be Zero Must be Greater Then from Value"); }
+				 */
 				if (prevRangeTo != null) {
 					score.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(1)));
 				}
