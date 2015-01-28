@@ -8,12 +8,18 @@
 
 	<ui:fragment rendered="#{bsvDetails.scQtBsv.sameBsv}">
 		<p:panel header="Briefing And Site Visit Details" toggleable="true">
-			<div>
+			<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
 				<h:outputText value="* All Attandence required for Briefing"
-					rendered="#{bsvDetails.scQtBsv.allBriefingReq}" />
+					rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
+					style="font-weight:bold;text-align: left;" />
 
-			</div>
-			<p:spacer width="30px"></p:spacer>
+				<h:outputText
+					value="* At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
+					rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
+					style="font-weight:bold;text-align: left;" />
+
+			</h:panelGroup>
+
 			<p:dataTable id="samebsvdtls" var="brfsitdtl"
 				value="#{bsvDetails.briefingList}" style="width:100%">
 				<ac:paginator for="samebsvdtls"></ac:paginator>
@@ -73,12 +79,20 @@
 	</ui:fragment>
 	<ui:fragment rendered="#{!bsvDetails.scQtBsv.sameBsv}">
 
-		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
-			<h:outputText value="* All Attandence required for Briefing"
-				rendered="#{bsvDetails.scQtBsv.allBriefingReq}" />
 
-			<p:spacer width="30px;">
-			</p:spacer>
+		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
+			<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
+				<h:outputText value="* All Attandence required for Briefing"
+					rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
+					style="font-weight:bold;text-align: left;" />
+
+
+				<h:outputText
+					value="* At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing"
+					rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
+					style="font-weight:bold;text-align: left;" />
+
+			</h:panelGroup>
 			<p:dataTable id="brfsitdtl" var="brfsitdtl"
 				value="#{bsvDetails.briefingList}" style="width:100%">
 				<ac:paginator for="brfsitdtl"></ac:paginator>
@@ -134,7 +148,16 @@
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
+			<h:panelGroup rendered="#{!bsvDetails.sitevisitList.isEmpty()}">
+				<h:outputText value="* All Attandence required for SiteVisit"
+					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}" />
 
+
+				<h:outputText
+					value="At Least #{bsvDetails.scQtBsv.minSiteVisitAttend} Attandence required for SiteVisit"
+					rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}" />
+
+			</h:panelGroup>
 			<p:dataTable id="sitevisitDtls" var="sitevisitDtls"
 				value="#{bsvDetails.sitevisitList}" style="width:100%">
 				<ac:paginator for="sitevisitDtls"></ac:paginator>
