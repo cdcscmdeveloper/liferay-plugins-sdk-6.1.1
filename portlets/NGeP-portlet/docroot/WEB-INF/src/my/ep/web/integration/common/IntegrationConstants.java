@@ -31,6 +31,7 @@ public class IntegrationConstants {
 //	public static final String ENCRYPTED_FILE_PATH="C:/Integration/Encryption/encrypt/";
 	
 	public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
+//	public static final String DECRYPTED_FILE_PATH="C:/Integration/Encryption/decrypt/";
 
 	public static final String SFTP_HOST = "192.168.62.15";
 	public static final int SFTP_PORT = 22;// Integer.parseInt("22");
@@ -38,7 +39,7 @@ public class IntegrationConstants {
 	public static final String SFTP_PASS = "welcome1";
 	
 	public static final String GMAS_PUBLIC_KEY_PATH = "NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id";
-	public static final String GMAS_PRIVATE_KEY_PATH = "NGeP-portlet/encryptionKeys/privatekey";
+	public static final String GMAS_PRIVATE_KEY_PATH = "NGeP-portlet.war/encryptionKeys/privatekey";
 
 	public static final String GMAS_PASS_PHASE = "eperolehanpsstg";
 	

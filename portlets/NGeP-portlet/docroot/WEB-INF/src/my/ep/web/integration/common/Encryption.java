@@ -54,15 +54,32 @@ public class Encryption {
 	}
 
 	// decrypt gmass
-	public void decryptGmas(File inFilePath, File outFilePath) {
+	public void decryptGmas(String inFilePath, String outFilePath) {
+		System.out.println("inFilePath :"+inFilePath);
+		System.out.println("outFilePath :"+outFilePath);
+		
+		File inFile = new File(inFilePath);
+		File outFile = new File(outFilePath);
+		
+		
+		URL resource = getClass().getResource(".");
+		String path = resource.getPath();
+		
+		System.out.println("path value with (.) :"+path);
+		
+		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
+		
+		String encryptKey = substring+IntegrationConstants.GMAS_PRIVATE_KEY_PATH;
+		
+		System.out.println("decrpt :"+encryptKey);
 
 		try {
 			String decrypted = PGPProcessor.decryptContent(
-					readFileContents(inFilePath),
-					IntegrationConstants.GMAS_PRIVATE_KEY_PATH,
+					readFileContents(inFile),
+					encryptKey,
 					IntegrationConstants.GMAS_PASS_PHASE);
 
-			createFile(outFilePath, decrypted);
+			createFile(outFile, decrypted);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

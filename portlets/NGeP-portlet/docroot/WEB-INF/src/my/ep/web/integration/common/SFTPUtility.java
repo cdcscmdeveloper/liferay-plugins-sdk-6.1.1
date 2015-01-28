@@ -32,7 +32,7 @@ public class SFTPUtility {
 	  String localFilePath ="C:/Integration/18012014/1000APOVE40000120141003001.GPG"; 
 	   String	  remoteTempFilePath = "/FakeRemoteTempPath/FakeRemoteTempFile.txt"; */
 	  SFTPUtility sftpUtility = new SFTPUtility();
-	  System.out.println("File Name :"+sftpUtility.findFileNameInDirectory(IntegrationConstants.PHIS_UPLOAD_DIR, "PHS-030"));
+	//  System.out.println("File Name :"+sftpUtility.findFileNameInDirectory(IntegrationConstants.PHIS_UPLOAD_DIR, "PHS-030"));
 	 /* sftpUtility.upload(localFilePath, remoteFilePath); 
 	  sftpUtility.exist(remoteFilePath); 
 	  sftpUtility.download(localFilePath,remoteFilePath); 
@@ -323,8 +323,8 @@ public class SFTPUtility {
 						fileName = exists[i].getName().toString();
 						String subFile = fileName.substring(52);
 						
-						if(subFile.contains(serviceId)){
-							subFile.contains(getDateStringValue());
+						if(subFile.contains(getDateStringValue())){
+							subFile.contains(serviceId);
 							return subFile;
 						}
 					}
