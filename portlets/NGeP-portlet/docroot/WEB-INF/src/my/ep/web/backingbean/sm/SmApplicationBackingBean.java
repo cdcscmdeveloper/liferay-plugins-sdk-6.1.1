@@ -8289,6 +8289,7 @@ public class SmApplicationBackingBean extends
 			ePRoleList.remove(roleToRemove);
 		}
 		return ePRoleList;
+	}
 	
 
 	// private void generateSuppDocPdfFile(VelocityContext context)
