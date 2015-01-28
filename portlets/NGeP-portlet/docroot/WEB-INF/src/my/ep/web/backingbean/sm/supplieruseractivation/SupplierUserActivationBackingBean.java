@@ -335,7 +335,7 @@ public class SupplierUserActivationBackingBean extends
 				}
 			} 
 			
-			//add personnel in latest approved
+			//add personnel same identificationNo by supplierid
 			resDTO = personnelSO
 					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
 			if (resDTO.getSmPersonnelList() != null
