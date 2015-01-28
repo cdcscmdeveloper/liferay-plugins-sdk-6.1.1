@@ -52,7 +52,6 @@ import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.SimpleQuoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -208,6 +207,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean supplierNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean contractNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean physicalContractNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean circularNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean natureOfBusinessFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
@@ -239,6 +239,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					&&StringUtils.isBlank((String)itemCodeFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)supplierNameFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)contractNoFilterBean.getSearchValue())
+					&&StringUtils.isBlank((String)physicalContractNoFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)circularNoFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)mofNoFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)epNoFilterBean.getSearchValue())
@@ -277,6 +278,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					contractNoFilterBean.setSearchField("contractNo");
 					contractNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(contractNoFilterBean);
+				}
+				
+				if (StringUtils.isNotBlank((String)physicalContractNoFilterBean.getSearchValue())) {
+					physicalContractNoFilterBean.setSearchField("contractPhysicalNo");
+					physicalContractNoFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(physicalContractNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue())) {
@@ -435,6 +442,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 		if (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+		
+		if (StringUtils.isNotBlank((String)physicalContractNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
@@ -1550,6 +1561,17 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setPriceTypeTariff(boolean priceTypeTariff) {
 		this.priceTypeTariff = priceTypeTariff;
+	}
+
+
+	public SearchFilterBean getPhysicalContractNoFilterBean() {
+		return physicalContractNoFilterBean;
+	}
+
+
+	public void setPhysicalContractNoFilterBean(
+			SearchFilterBean physicalContractNoFilterBean) {
+		this.physicalContractNoFilterBean = physicalContractNoFilterBean;
 	}
 
 	
