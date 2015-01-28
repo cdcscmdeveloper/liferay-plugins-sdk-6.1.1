@@ -346,9 +346,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctComplete;
 	private String ctGroupOne;
 	private String ctGroupTwo;
+	private String ctProductService;
 	
 	
 	
+	public String getCtProductService() {
+		return ctProductService;
+	}
+	public void setCtProductService(String ctProductService) {
+		this.ctProductService = ctProductService;
+	}
 	public String getCtGroupOne() {
 		return ctGroupOne;
 	}
@@ -2079,9 +2086,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getCtGroupTwo()!=null)&&(this.getCtGroupTwo()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCtGroupTwoVar(ReportConst.CT_AMP_GROUP_EQ+this.getCtGroupTwo());
 			}
+			if((this.getCtProductService()!=null)&&(this.getCtProductService()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCtProductServiceVar(ReportConst.CT_AMP_PPRODUCTSERVICE_EQ+this.getCtProductService());
+			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtCompleteVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtGroupOneVar()+rptGenBean.getCtGroupTwoVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtCompleteVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtGroupOneVar()+rptGenBean.getCtGroupTwoVar()+rptGenBean.getCtProductServiceVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
@@ -2835,6 +2845,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setCtAgreement(null);	
 		this.setCtStatus(null);	
 		this.setCtComplete(null);
+		this.setCtGroupOne(null);
+		this.setCtGroupTwo(null);
+		this.setCtProductService(null);
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
 		this.setFlGroupThree(null);
