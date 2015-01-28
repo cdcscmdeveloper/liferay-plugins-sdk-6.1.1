@@ -164,27 +164,30 @@
 						<f:selectItems value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
-
-				<h:column>
-					<p:outputLabel value="#{lbl['lbl.sc.reevaluation.required.for']}" />
-				</h:column>
-				<h:column>
-					<div style="float:left; display:inline-block;">
-						<p:selectBooleanCheckbox id="reEvaluateReqForTech" 
-								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"/>		
-						<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
-					</div>
-				</h:column>
 				
-				<h:column>
-				</h:column>
-				<h:column>
-					<div style="float:left; display:inline-block;">
-						<p:selectBooleanCheckbox id="reEvaluateReqForFin" 
-							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" />	
-						<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
-					</div>									
-				</h:column>
+				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq '2'}">
+					<h:column>
+						<p:outputLabel value="#{lbl['lbl.sc.reevaluation.required.for']}" />
+					</h:column>
+					<h:column>
+						<div style="float:left; display:inline-block;">
+							<p:selectBooleanCheckbox id="reEvaluateReqForTech" 
+									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"/>		
+							<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
+						</div>
+					</h:column>
+					
+					<h:column>
+					</h:column>
+					<h:column>
+						<div style="float:left; display:inline-block;">
+							<p:selectBooleanCheckbox id="reEvaluateReqForFin" 
+								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" />	
+							<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
+						</div>									
+					</h:column>
+				</c:if>
+				
 			</h:panelGrid>
 		</p:outputPanel>
 		
