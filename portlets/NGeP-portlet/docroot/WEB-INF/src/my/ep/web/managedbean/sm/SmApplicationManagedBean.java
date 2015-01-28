@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -333,6 +334,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String applnRejectionRemarks;
 	private String applnOverLapRemarks;
 	private String poToSvcRmrk;
+	
+	private PmDigiSign pmDigiSign;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2558,4 +2561,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPrevApprovedPersonnels(List<SmPersonnel> prevApprovedPersonnels) {
 		this.prevApprovedPersonnels = prevApprovedPersonnels;
 	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+	
 }
