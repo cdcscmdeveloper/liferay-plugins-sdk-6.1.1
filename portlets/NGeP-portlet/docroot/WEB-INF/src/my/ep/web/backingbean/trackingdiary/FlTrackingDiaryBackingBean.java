@@ -27,6 +27,7 @@ import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.VCtDocument;
+import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -109,33 +110,33 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		
 		// reset everything to false
 		//this.getManagedBean().setCheckDocNo(true);
-		if(id!=null && id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
-			this.getManagedBean().setCheckDocType(true);
-		}else{
-			this.getManagedBean().setCheckDocType(false);
-		}
+//		if(id!=null && id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+//			this.getManagedBean().setCheckDocType(true);
+//		}else{
+//			this.getManagedBean().setCheckDocType(false);
+//		}
 		
 //		this.getManagedBean().setCheckPoDocType(false);
 //		this.getManagedBean().setCheckDoDocType(false);
 //		this.getManagedBean().setCheckInDocType(false);
 //		this.getManagedBean().setCheckDoInDocType(false);
-		reset();
+//		reset();
 		
 		if(id!=null) {
 			/*if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
 			}else */
-			if(getManagedBean().getSearchOrderType().equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
-				this.getManagedBean().setCheckDocType(true);
-			}
-			if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				this.getManagedBean().setCheckPoDocType(true);
-				getProcurementTypeList();
-			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
-				this.getManagedBean().setCheckDoDocType(true);
-			}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
-				this.getManagedBean().setCheckInDocType(true);
-			}
+//			if(getManagedBean().getSearchOrderType().equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+//				this.getManagedBean().setCheckDocType(true);
+//			}
+//			if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+//				this.getManagedBean().setCheckPoDocType(true);
+////				getProcurementTypeList();
+//			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
+//				this.getManagedBean().setCheckDoDocType(true);
+//			}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
+//				this.getManagedBean().setCheckInDocType(true);
+//			}
 		}
 		getManagedBean().setSearchDocType(id);
 	}
@@ -146,19 +147,31 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 
 		// reset everything to false
 		//this.getManagedBean().setCheckDocNo(false);
-		this.getManagedBean().setCheckDocType(false);
-		this.getManagedBean().setCheckPoDocType(false);
-		this.getManagedBean().setCheckDoDocType(false);
-		this.getManagedBean().setCheckInDocType(false);
-		this.getManagedBean().setCheckDoInDocType(false);
-		reset();
+//		this.getManagedBean().setCheckDocType(false);
+//		this.getManagedBean().setCheckPoDocType(false);
+//		this.getManagedBean().setCheckDoDocType(false);
+//		this.getManagedBean().setCheckInDocType(false);
+//		this.getManagedBean().setCheckDoInDocType(false);
+		resetSearchCriteria();
 		if(id!=null) {
 			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
-				System.out.println("selectedOrderType()====================================: "+id);
-		this.getManagedBean().setCheckDocType(true);
+//				this.getManagedBean().setCheckDocType(true);
 			}	
 		}
 		
+		
+	}
+	private void resetSearchCriteria() {
+		getManagedBean().setSearchDocNo(null);
+		getManagedBean().setStatusDescId(null);
+		getManagedBean().setSearchSuppName(null);
+		getManagedBean().setSearchSuppDoRef(null);
+		getManagedBean().setSearchSuppInvRef(null);
+		getManagedBean().setSearchLoaNo(null);
+		getManagedBean().setSearchContractNo(null);
+		getManagedBean().setSearchOrderNo(null);
+		getManagedBean().setSearchPhysContractNo(null);
+		getManagedBean().setSearchPhysLoaNo(null);
 	}
 	
 	public void reset(){
@@ -173,15 +186,15 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		renewSesionObject();
 	}
 	
-	public void getProcurementTypeList(){
-		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setLanguageCode("en");
-		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-		resDTO.getParameterDescList();
-		getManagedBean().setProcurementTypeList(resDTO.getParameterDescList());
-	}
+//	public void getProcurementTypeList(){
+//		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+//		ParameterReqDTO reqDTO = new ParameterReqDTO();
+//		reqDTO.setLanguageCode("en");
+//		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+//		ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+//		resDTO.getParameterDescList();
+//		getManagedBean().setProcurementTypeList(resDTO.getParameterDescList());
+//	}
 
 	
 	private List<String> getDocTypeListByRole() {
@@ -210,6 +223,13 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getManagedBean().getSearchOrderType())) {
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
@@ -231,14 +251,21 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 		}
-			flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-			flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-			flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-			flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-			flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
-			flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+//			flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+//			flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+//			flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+//			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+//			flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+//			flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
+//			flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 		return flDocTypes;
 	}
 	
@@ -256,8 +283,8 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));
-			System.out.println("TrackingDiaryReqDTO" + getManagedBean().getSearchContractNo());
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocNo()));
+			System.out.println("Fl TrackingDiary docNo " + getManagedBean().getvFlDocument().getDocNo());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -279,11 +306,20 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		return NAV_TO_FL_SEARCH;
 	}
 
-	public String goToTrackingDiarySearch(VCtDocument vCtDocument) {
+	public String goToTrackingDiarySearch(VFlDocument vFlDocument) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-//		getManagedBean().setSmSupplier(smSupplier);
+		getManagedBean().setvFlDocument(vFlDocument);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+
+	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
+		return searchTrackingDiaryDataModel;
+	}
+
+	public void setSearchTrackingDiaryDataModel(
+			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
+		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
 	
 }
