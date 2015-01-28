@@ -1042,16 +1042,31 @@ public class SmApplicationUtil {
 		SmAppl appl = managedBean.getSmAppl();
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
 			for (SmSupplierCategory category : appl.getSmSupplierCategories()) {
 				if (category.getPmCategoryL3().getCategoryL3Code()
 						.equalsIgnoreCase("99")) {
 					if (category.getOtherDesc() != null
 							&& category.getOtherDesc().isEmpty()) {
+						sb.append("<br/>")
+								.append(++i)
+								.append(".) ")
+								.append(category.getPmCategoryL1()
+										.getCategoryL1Code())
+								.append(category.getPmCategoryL2()
+										.getCategoryL2Code())
+								.append(category.getPmCategoryL3()
+										.getCategoryL3Code());
 						validSave = false;
-						setNavigationBackToCurrentPage(currentTab, managedBean);
-						throw new EpException(MessageConst.ERROR_722514);
 					}
 				}
+			}
+			if (!validSave) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				System.out.println("*** Value **** " + sb.toString());
+				throw new EpException(MessageConst.ERROR_722514,
+						new String[] { sb.toString() });
 			}
 		}
 		return validSave;
