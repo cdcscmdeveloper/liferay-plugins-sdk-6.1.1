@@ -21,8 +21,14 @@
 				listener="#{contractRequestBackingBean.onNodeUnSelect()}"
 				update="chargeLineTbl,@(.chargeLineSection)"></p:ajax>
 			<p:column>
-				<f:facet name="footer">
-					<h:outputText value=""></h:outputText>			
+				<f:facet name="header">
+					<h:outputText value=" " />
+					<p:spacer width="15" />
+					<h:selectBooleanCheckbox 
+						onclick="goToSelectAll()"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+						value="#{contractRequestBackingBean.selectAllCheckbox}">
+					</h:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
@@ -31,7 +37,7 @@
 					styleClass="myCustomChekBox">
 					<p:ajax event="change"
 					listener="#{contractRequestBackingBean.selectCheckbox}"
-					update="@(.chargeLineSection)"/>	
+					update="chargeLineTbl,@(.chargeLineSection)"/>	
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column>
@@ -128,7 +134,9 @@
 						title="Query" />
 			</p:commandLink>
 			</p:column>
-		</p:treeTable>		
+		</p:treeTable>
+		<p:remoteCommand action="#{contractRequestBackingBean.selectAllCheckboxes}"
+				name="goToSelectAll" update="chargeLineTbl,@(.chargeLineSection)"/>		
 		<br />
 		<br />
 		<br />
