@@ -1990,6 +1990,7 @@ table.ppTwoTable td {
 
 .gtBudgetAmt, .gtPlanAmt, .gtEstAmt, .gtNonAllocAmt{
 	padding:0;
+	float:right;
 }
 
 .amountRight{
