@@ -168,7 +168,7 @@ public class OrganisationBackingBean extends
 		PmOrgProfile orgProifle= new PmOrgProfile();			
 		orgProifle.setPmOrgValidity(new PmOrgValidity());
 		getManagedBean().setOfficeAddress(PmCommonUtil.getNewPmAddress());		
-		getManagedBean().setOfficeContactPerson(new PmContact());
+		//getManagedBean().setOfficeContactPerson(new PmContact());
 		
 		getManagedBean().setOrgType(null);		
 		getManagedBean().setPmFinancialAcc(new ArrayList<PmFinancialAcc>());
@@ -394,6 +394,7 @@ public class OrganisationBackingBean extends
 		List<PmAddressType> orgAddressTypes = getManagedBean().getOrgProfile().getPmAddressTypes();
 
 		boolean addrExist = false;
+		boolean contactExist= false;
 		if (orgAddressTypes != null && !orgAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : orgAddressTypes) {
 				
@@ -405,8 +406,9 @@ public class OrganisationBackingBean extends
 				if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(pmAddressType.getPmContacts().get(0));
 					log.info("Contact Exist");
+					contactExist= true;
 				} 
-				else{					
+				if(!contactExist){					
 					log.info("Contact not Exist");
 					List<PmContact> contactLst = new ArrayList<PmContact>();
 					getManagedBean().setOfficeContactPerson(new PmContact());
