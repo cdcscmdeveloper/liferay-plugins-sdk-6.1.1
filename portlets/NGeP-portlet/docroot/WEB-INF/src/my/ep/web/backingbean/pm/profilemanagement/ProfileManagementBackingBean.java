@@ -1231,10 +1231,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if(this.getManagedBean().getFileEventMapper()==null){
 					this.getManagedBean().setFileEventMapper(new HashMap<PmUserAttachment, FileUploadEvent>());
 				}
+				String loginId = this.getManagedBean().getSelectedUser().getLoginId();
 				UploadedFile item = event.getFile();
 			    PmUserAttachment attachment = new PmUserAttachment();
 				attachment.setFileName(item.getFileName());
-				attachment.setFilePath(PmCommonUtil.getUploadPath(item.getFileName()));
+				attachment.setFilePath(PmCommonUtil.getUploadPath(loginId, item.getFileName()));
 				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
