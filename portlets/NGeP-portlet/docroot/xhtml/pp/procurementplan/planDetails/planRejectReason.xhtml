@@ -19,10 +19,10 @@
 			rowIndexVar="reasonIndex" columns="1" >
 			<table class="ppRmkTable">
 				<tr>
-					<th rowspan="2" valign="top">
+					<th rowspan="2" valign="top" style="width:15%;">
 						<h:graphicImage styleClass="smallUserImage" value="#{pPlanBackingBean.userImagePathWithDefaultImage(reason.userId)}" />
 					</th>
-					<td>
+					<td style="width:85%;white-space:normal;">
 						<h:outputText value="#{reason.createdUsername}"/>,
 						<h:outputText id="reasonDate" value="#{reason.changedDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
