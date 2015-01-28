@@ -1,6 +1,5 @@
 package my.ep.web.integration.common;
 
-import java.io.File;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -211,20 +210,20 @@ public class GfmasIntegration {
 	}
 
 	public void masterDataVendorGfmasInbound() {
+		System.out.println("inside masterDataVendorGfmasInbound");
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"");
+
+		String fileName = null;//sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "APOVE");
 		ISupplierSearchSO supplierSearchSO = BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 		if (osbUtility.osbServiceCallInBound("GFM-370")) {
-			
-		//	find out the file name here
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "APOVE");
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH+fileName,IntegrationConstants.GMAS_DOWNLOAD+fileName)) {
+				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD+fileName, IntegrationConstants.GMAS_ARCHIVE+fileName);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
-				List<MasterDataVendor> dataVendors = fileUtility
-						.masterDataVendorFileInPutStream(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH+fileName, IntegrationConstants.DECRYPTED_FILE_PATH+fileName);
+				List<MasterDataVendor> dataVendors = fileUtility.masterDataVendorFileInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
 				SupplierSearchReqDTO reqDTO = null;
 				SmSupplier smSupplier = null;
 
@@ -242,8 +241,9 @@ public class GfmasIntegration {
 				
 			}
 
+		}else{
+			System.out.println("file not available in soa integration server");
 		}
-
 	}
 	public void masterDataVendorGfmasOutbound() {
 		String processId ="APIVE"; 
@@ -256,7 +256,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH,  IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<AgOffice> agOfficeList = fileUtility
 						.pejabatPerakaunanFileInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				AgOfficeReqDTO reqDTO = null;
@@ -288,7 +288,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<AgCtrlOfficer> agOfficeList = fileUtility
 						.pegawaiPengawalInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				AgOfficeReqDTO reqDTO = null;
@@ -317,7 +317,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<VotFund> votList = fileUtility.votInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
@@ -355,7 +355,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<VotFund> votList = fileUtility.votDanaInPutStream(IntegrationConstants.FILE_PATH + fileName);
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
@@ -383,7 +383,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<ProgramActivity> votList = fileUtility.programAktiviti(IntegrationConstants.FILE_PATH + fileName);
 				ProgramActivityReqDTO reqDTO = null;
 				PmPrgActivity prgActivity = null;
@@ -416,7 +416,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<Project> projectList = fileUtility.project(IntegrationConstants.FILE_PATH + fileName);
 				ProjectSetiaReqDTO reqDTO = null;
 				PmProject pmProject = null;
@@ -444,7 +444,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<GlAccount> glAccountList = fileUtility.kodAkaun(IntegrationConstants.FILE_PATH + fileName);
 				GlAccountReqDTO reqDTO = null;
 				PmGlAccount glAccount = null;
@@ -472,7 +472,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<PtjGroup> glAccountList = fileUtility.kumpulanPTJ(IntegrationConstants.FILE_PATH + fileName);
 				PtjGroupReqDTO reqDTO = null;
 				PmPtjGroup ptjGroup = null;
@@ -500,7 +500,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<OrgProfile> orgProfileList = fileUtility.masterDatePTJ(IntegrationConstants.FILE_PATH + fileName);
 				OrgProfileReqDTO reqDTO = null;
 				PmOrgProfile pmOrgProfile = null;
@@ -528,7 +528,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<BankAccountInformation> bankList = fileUtility.kodBank(IntegrationConstants.FILE_PATH + fileName);
 				FinancialOrgReqDTO reqDTO = null;
 				PmFinancialOrg pmFinancialOrg = null;
@@ -556,7 +556,7 @@ public class GfmasIntegration {
 			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
 			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(new File(IntegrationConstants.ENCRYPTED_FILE_PATH), new File(IntegrationConstants.DECRYPTED_FILE_PATH));
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo(IntegrationConstants.FILE_PATH + fileName);
 				FLOsbReqDTO reqDTO = null;
 				
