@@ -77,7 +77,6 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
-import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
@@ -383,6 +382,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+					// If there is only one bank account (under the specific branch), the data for Bank Name/Account No will be defaulted to this value
+					List<SelectItem> bankAccountList = getPopulateBankAccountList();
+					if((getManagedBean().getInvoice().getAccountNo()==null || getManagedBean().getInvoice().getAccountNo().length()==0) && bankAccountList.size()==1) {
+						getManagedBean().getInvoice().setAccountNo(bankAccountList.get(0).getValue().toString());
+					}
 				} else {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo());
 					//FD during Invoice Submission
