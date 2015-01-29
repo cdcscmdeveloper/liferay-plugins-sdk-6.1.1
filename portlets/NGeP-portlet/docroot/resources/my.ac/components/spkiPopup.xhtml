@@ -45,7 +45,7 @@
            <p:inputText value="#{spkiBackingBean.challsAnswer}" />
         
             <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-            <p:password binding="#{pin1}" id="password"  />
+            <p:password binding="#{pin1}" id="password" value="#{spkiBackingBean.password}"  />
  			<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" />        
 		</h:panelGrid></span>
     </p:dialog>
