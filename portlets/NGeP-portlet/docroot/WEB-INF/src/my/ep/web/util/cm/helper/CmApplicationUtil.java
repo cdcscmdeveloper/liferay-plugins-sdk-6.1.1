@@ -34,10 +34,8 @@ public class CmApplicationUtil {
 		PmUser user = new FacesScopes().getUserSessionBean();
 		trckVO.setActionDesc(actionDesc);
 		trckVO.setActionedBy(user != null ? user.getUserId() : null);
-		trckVO.setActionedByRole(getUserRoleValue());		
-		trckVO.setDocId(cmRequestCode.getRequestId());		
-		trckVO.setDocType(CmConst.CD_DocType);
-		trckVO.setDocNo(cmRequestCode.getDocNo());
+		trckVO.setActionedByRole(getUserRoleValue());				
+		trckVO.setDocType(CmConst.CD_DocType);	
 		trckVO.setGroupId(null);
 		trckVO.setStatus(status);
 		trckVO.setGroupDocType(null);
