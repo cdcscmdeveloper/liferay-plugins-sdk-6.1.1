@@ -28,7 +28,7 @@ public class CmApplicationUtil {
 		return trckVO;
 	}
 	
-	public static CmTrackingDairyVO assignTrackingDairyValuesForUNSPSCExtension(CmRequestCode cmRequestCode, String actionDesc,
+	public static CmTrackingDairyVO assignTrackingDiaryValuesForUNSPSCExtension(CmRequestCode cmRequestCode, String actionDesc,
 			PmStatus status) {
 		CmTrackingDairyVO trckVO = new CmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();

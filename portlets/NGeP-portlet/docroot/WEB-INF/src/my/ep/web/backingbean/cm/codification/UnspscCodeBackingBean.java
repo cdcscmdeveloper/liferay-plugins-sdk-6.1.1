@@ -219,7 +219,7 @@ public class UnspscCodeBackingBean extends
 			if (action.equalsIgnoreCase("SUBMIT")) {				
 				if (this.getManagedBean().getRequestCode().isBrandNew()) {					
 					log.info("Tracking diary for UNSPSC Code---submitForRequest()");
-					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValuesForUNSPSCExtension(this.getManagedBean().getRequestCode(),CmConst.UNSPSC_CODE_REQUEST, new PmStatus()));
+					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(this.getManagedBean().getRequestCode(),CmConst.UNSPSC_CODE_REQUEST, new PmStatus()));
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
 										
                     if(resDTO.isSuccessful()){
@@ -1505,7 +1505,7 @@ public class UnspscCodeBackingBean extends
 		
 		log.info("Tracking diary for Extension Code---submitToBPM()");
 		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
-		    reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValuesForUNSPSCExtension(code,CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));		
+		    reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(code,CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));		
 	    }
 		
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
