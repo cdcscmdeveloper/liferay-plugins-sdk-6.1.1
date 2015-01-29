@@ -1397,8 +1397,7 @@ public class SmPersonnelBackingBean extends
 			PersonnelResDTO resDTO = smPersonnelSO
 					.retrieveDraftPersonnelByIdentificationNoAndSupplierId(reqDTO);
 			if(resDTO.getSmPersonnel()!=null){
-				throw new EpException(MessageConst.ERROR_722589,
-						new String[] { smPersonnel.getIdentificationNo() });
+				throw new EpException(MessageConst.ERROR_722589);
 			}
 		}
 	}
