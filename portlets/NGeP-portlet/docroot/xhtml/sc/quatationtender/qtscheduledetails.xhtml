@@ -32,6 +32,18 @@
 						</table>
 					</h:panelGroup></td>
 			</tr>
+			<c:if
+				test="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired eq 'true'}">
+				<tr>
+					<td><p:outputLabel value="Briefing/SiteVisit Date" /></td>
+					<td><p:inputText id="bsvDate"
+						value="#{qTScheduleDetailBackingBean.managedBean.bsvDate}"
+						readonly="true" disabled="true" style="margin-top:5px" size="14">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+				</tr>
+			</c:if>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
 				<td><p:inputText
