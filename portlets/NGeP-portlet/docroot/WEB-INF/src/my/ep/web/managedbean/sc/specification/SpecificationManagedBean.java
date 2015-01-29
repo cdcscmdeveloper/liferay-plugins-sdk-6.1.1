@@ -329,6 +329,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private int technicalSpecCount;
 	private int financialSpecCount;
 	private List<SelectItem> bankyearsList;
+	
+	private boolean newTemplateSpec;
 
 	/**
 	 * @return the specComplete
@@ -3329,6 +3331,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setBankyearsList(List<SelectItem> bankyearsList) {
 		this.bankyearsList = bankyearsList;
+	}
+
+	/**
+	 * @return the newTemplateSpec
+	 */
+	public boolean isNewTemplateSpec() {
+		return newTemplateSpec;
+	}
+
+	/**
+	 * @param newTemplateSpec the newTemplateSpec to set
+	 */
+	public void setNewTemplateSpec(boolean newTemplateSpec) {
+		this.newTemplateSpec = newTemplateSpec;
 	}
 
 }
