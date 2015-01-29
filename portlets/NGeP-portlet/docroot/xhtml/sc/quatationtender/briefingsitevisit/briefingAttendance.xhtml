@@ -24,6 +24,12 @@
 							style="float:left;"
 							action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
 					</p:column>
+
+					<p:column width="100%" style="text-align:right">
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							process="@form"
+							action="#{bsvAttendanceBackingBean.saveBsvRegistarionFromMaintanceFlow}" />
+					</p:column>
 				</p:row>
 			</p:panelGrid>
 		</p:panel>

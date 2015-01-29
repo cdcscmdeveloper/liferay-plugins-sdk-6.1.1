@@ -568,6 +568,7 @@ public class QTCommitteBackingBean extends
 						}
 					}
 					tabs.get(beanCount).getMembers().addAll(memberList);
+
 				}
 
 			}
@@ -580,7 +581,10 @@ public class QTCommitteBackingBean extends
 						.addAll(tabs.get(i).getMembers());
 				Collections.sort(tabs.get(i).getScQtCommittee()
 						.getScCommittee().getScCommitteeMembers());
-
+				tabs.get(i)
+						.getScQtCommittee()
+						.getScCommittee()
+						.setApprovalReq(isApprovalReq(tabs.get(i).getMembers()));
 				tabs.get(i).getMembers().clear();
 			}
 		}
@@ -758,6 +762,9 @@ public class QTCommitteBackingBean extends
 						tabBean.getScQtCommittee().getScCommittee()
 								.setScCommitteeMembers(committeeMembersList);
 					}
+					tabBean.getScQtCommittee()
+							.getScCommittee()
+							.setApprovalReq(isApprovalReq(committeeMembersList));
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
 					this.getManagedBean().setToBeDelCommitteMemebers(null);
@@ -978,6 +985,8 @@ public class QTCommitteBackingBean extends
 
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		java.util.Collections.sort(scCommittee.getScCommitteeMembers());
+		scCommittee.setApprovalReq(isApprovalReq(scCommittee
+				.getScCommitteeMembers()));
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
 		// Specification Committee validation
@@ -1263,6 +1272,16 @@ public class QTCommitteBackingBean extends
 		 * selectedList.get(i).setDeleted(true);
 		 * members.add(selectedList.get(i)); } } bean.setMembers(members);
 		 */
+		if (null == bean.getScQtCommittee().getScCommittee()
+				.getScCommitteeMembers()
+				|| bean.getScQtCommittee().getScCommittee()
+						.getScCommitteeMembers().isEmpty()) {
+			if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+					.equalsIgnoreCase(bean.getScQtCommittee().getScCommittee()
+							.getCommitteeType().getParameterCode())) {
+				bean.getScQtCommittee().getScCommittee().setApprovalReq(false);
+			}
+		}
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
@@ -1318,4 +1337,65 @@ public class QTCommitteBackingBean extends
 		}
 
 	}
+
+	private boolean isApprovalReq(List<ScCommitteeMember> members) {
+		if (!isChairpersonRequired(members) && !isSecretaryRequired(members)
+				&& !isAtleastOneMemebersReq(members)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isChairpersonRequired(List<ScCommitteeMember> commMembers) {
+		int count = 0;
+		for (ScCommitteeMember committeeMember : commMembers) {
+			String memberRole = committeeMember.getMemberRole()
+					.getParameterCode();
+			if (SourcingConstants.MEMBER_ROLE_CHAIRPERSON
+					.equalsIgnoreCase(memberRole)) {
+				count++;
+				break;
+			}
+		}
+		if (count == 0) {
+			return true;
+			// At least one chairperson are required for appoint committee
+		}
+		return false;
+	}
+
+	private boolean isSecretaryRequired(List<ScCommitteeMember> commMembers) {
+		int count = 0;
+		for (ScCommitteeMember committeeMember : commMembers) {
+			String memberRole = committeeMember.getMemberRole()
+					.getParameterCode();
+			if (SourcingConstants.MEMBER_ROLE_SECRATARY
+					.equalsIgnoreCase(memberRole)) {
+				count++;
+				break;
+			}
+		}
+		if (count == 0) {
+			return true;
+			// At least one secretary are required for appoint committee
+		}
+		return false;
+	}
+
+	private boolean isAtleastOneMemebersReq(List<ScCommitteeMember> commMembers) {
+		int i = 0;
+		for (ScCommitteeMember committeeMember : commMembers) {
+			String memberRole = committeeMember.getMemberRole()
+					.getParameterCode();
+			if (SourcingConstants.MEMBER_ROLE_MEMBER
+					.equalsIgnoreCase(memberRole)) {
+				i++;
+				if (i >= 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 }
