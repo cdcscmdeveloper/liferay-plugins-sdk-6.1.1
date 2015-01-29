@@ -9449,56 +9449,30 @@ public class SpecificationBackingBean extends
 
 	}
 
-	/*
-	 * public void specOfferpriceItemFromVarieance(ScQtScoreOfferPrice
-	 * offerPrice) { if (null != offerPrice) { if (null ==
-	 * offerPrice.getFromVariance() || offerPrice.getFromVariance().intValue()
-	 * <= 0) { throw new EpException(MessageConst.ERROR_760226); }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * public void specOfferpriceItemToVarieance(ScQtScoreOfferPrice offerPrice)
-	 * { if (null != offerPrice) { if (null == offerPrice.getToVariance() ||
-	 * offerPrice.getToVariance().intValue() <= 0) { throw new
-	 * EpException(MessageConst.ERROR_760227); }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * public void specOfferpriceItemBelowScore(ScQtScoreOfferPrice offerPrice)
-	 * { if (null != offerPrice) { if (null == offerPrice.getBelowScore() ||
-	 * offerPrice.getBelowScore().intValue() <= 0) { throw new
-	 * EpException(MessageConst.ERROR_760218); }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * public void specOfferpriceItemAboveScore(ScQtScoreOfferPrice offerPrice)
-	 * { if (null != offerPrice) {
-	 * 
-	 * if (null == offerPrice.getAboveScore() ||
-	 * offerPrice.getAboveScore().intValue() <= 0) { throw new
-	 * EpException(MessageConst.ERROR_760219); } }
-	 * 
-	 * }
-	 */
-
 	public void checkTechnicalPassingScore(
 			ScQtScoreSetting technicalScoreSetting) {
 		if (null != technicalScoreSetting) {
-
-			if (null == technicalScoreSetting.getPassingScore()
-					|| technicalScoreSetting.getPassingScore().intValue() < 0) {
-				this.getManagedBean().setActiveIndex(4);
-				throw new EpException(MessageConst.ERROR_760172);
-			} else if (null != technicalScoreSetting.getPassingScore()
-					&& technicalScoreSetting.getPassingScore().intValue() > 100) {
-				this.getManagedBean().setActiveIndex(4);
-				throw new EpException(MessageConst.ERROR_760142);
+			if (this.getManagedBean().getScQt().getEvaluationType()
+					.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)) {
+				if (null == technicalScoreSetting.getPassingScore()
+						|| technicalScoreSetting.getPassingScore().intValue() < 0) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_760172);
+				} else if (null != technicalScoreSetting.getPassingScore()
+						&& technicalScoreSetting.getPassingScore().intValue() > 100) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_760142);
+				}
+			} else {
+				if (null == technicalScoreSetting.getPassingScore()
+						|| technicalScoreSetting.getPassingScore().intValue() <= 0) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_760234);
+				} else if (null != technicalScoreSetting.getPassingScore()
+						&& technicalScoreSetting.getPassingScore().intValue() > 100) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_760142);
+				}
 			}
 		}
 
@@ -10449,10 +10423,19 @@ public class SpecificationBackingBean extends
 								.setPassingScore(new BigDecimal(0));
 					}
 				} else {
+					if (scQt.getEvaluationType().equalsIgnoreCase(
+							QTConstants.EVALUATION_TWO_TIER)) {
+						if (technicalScoreSetting.getPassingScore().intValue() <= 0) {
+							this.getManagedBean().setActiveIndex(4);
+							throw new EpException(MessageConst.ERROR_760234);
+						}
 
-					if (technicalScoreSetting.getPassingScore().intValue() < 0) {
-						this.getManagedBean().setActiveIndex(4);
-						throw new EpException(MessageConst.ERROR_760172);
+					} else {
+
+						if (technicalScoreSetting.getPassingScore().intValue() < 0) {
+							this.getManagedBean().setActiveIndex(4);
+							throw new EpException(MessageConst.ERROR_760172);
+						}
 					}
 
 				}
