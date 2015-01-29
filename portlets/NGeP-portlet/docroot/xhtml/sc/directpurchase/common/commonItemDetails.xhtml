@@ -110,7 +110,7 @@
 					</h:commandLink> 
 					</h:panelGroup>
 				</p:column>
-                <p:column>
+                <p:column style="width:20%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"/>
@@ -118,7 +118,7 @@
 					
 				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;margin-right: -12px;">	
 					   <p:row>
-			            <p:column  styleClass="ppPanelGrid" style="border:none !important;width:10%;padding-left: 0px;padding-right: 0px;">
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important;width:10%;padding-left: 0px;">
 			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
@@ -201,7 +201,7 @@
 						</h:panelGroup>
 					</h:panelGroup>
 				</p:column>
-				<p:column  style="width:8%; white-space: normal;">
+				<p:column  style="width:6%; white-space: normal;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" />
