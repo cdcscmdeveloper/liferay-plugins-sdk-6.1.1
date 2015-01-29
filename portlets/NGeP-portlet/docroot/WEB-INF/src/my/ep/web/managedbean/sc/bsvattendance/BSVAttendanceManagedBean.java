@@ -51,6 +51,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private List<SmMofAccount> mofAccounts;
 	private String bsvZoneindx="0";
 	
+	private List<ScQtBsvRegistration> toBeDeletedRegistartions;
 	
 	
 
@@ -185,6 +186,15 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 
 	public void setBsvZoneindx(String bsvZoneindx) {
 		this.bsvZoneindx = bsvZoneindx;
+	}
+
+	public List<ScQtBsvRegistration> getToBeDeletedRegistartions() {
+		return toBeDeletedRegistartions;
+	}
+
+	public void setToBeDeletedRegistartions(
+			List<ScQtBsvRegistration> toBeDeletedRegistartions) {
+		this.toBeDeletedRegistartions = toBeDeletedRegistartions;
 	}
 
 	
