@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.template;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.Properties;
@@ -15,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -30,6 +32,17 @@ public class DocumentGenerator {
 private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	
 	private static DocumentGenerator instance;
+	private static VelocityEngine ve;
+	
+	private static VelocityEngine getVelocityEngine() throws Exception {
+		if(ve==null) {
+			ve = new VelocityEngine();
+			ve.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
+			ve.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
+			ve.init();
+		}
+		return ve;
+	}
 	
 	/**
 	 * Get singleton of DocumentGenerator
@@ -69,7 +82,14 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		debugLogger("getHtmlFromVelocity");
 		log.info("velocityTemplate: " + velocityTemplate);
 		log.info("context: " + context);
-    	Template template = Velocity.getTemplate("templates" + velocityTemplate);
+        
+        final String templatePath = "templates" + velocityTemplate;
+        InputStream input = this.getClass().getClassLoader().getResourceAsStream(templatePath);
+        if (input == null) {
+            System.err.println("Template file doesn't exist");
+        }
+		
+    	Template template = getVelocityEngine().getTemplate("templates" + velocityTemplate);
     	log.info("template: " + template);
     	
     	StringWriter output = new StringWriter();
