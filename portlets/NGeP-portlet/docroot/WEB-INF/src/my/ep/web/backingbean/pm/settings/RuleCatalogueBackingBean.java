@@ -45,6 +45,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmLanguage;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
@@ -81,27 +82,27 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public RuleCatalogueBackingBean() {
-//		System.out
-//				.println("........in constructor of RuleCatalogueBackingBean........");
-//		IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
-//				.getInstance().getServiceObject("pm", IFeeExemptionSO.class);
-//		// PmFeeExemption fee = new PmFeeExemption();
-//		FeeExemptionReqDTO req = new FeeExemptionReqDTO();
+		// System.out
+		// .println("........in constructor of RuleCatalogueBackingBean........");
+		// IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
+		// .getInstance().getServiceObject("pm", IFeeExemptionSO.class);
+		// // PmFeeExemption fee = new PmFeeExemption();
+		// FeeExemptionReqDTO req = new FeeExemptionReqDTO();
 		// req.setFeeExemption(fee);
 		// feeSO.insertFeeExemption(req);
-//		List<PmFeeExemption> list = feeSO.getFeeExemptionsForOrgAndItem(req)
-//				.getFeeExemptions();
-//		log.info("....................list.get(1).getFeeExemptionId()="
-//				+ list.get(1).getFeeExemptionId());
-//		req.setFeeExemption(list.get(1));
-//		feeSO.deleteFeeExemption(req);
+		// List<PmFeeExemption> list = feeSO.getFeeExemptionsForOrgAndItem(req)
+		// .getFeeExemptions();
+		// log.info("....................list.get(1).getFeeExemptionId()="
+		// + list.get(1).getFeeExemptionId());
+		// req.setFeeExemption(list.get(1));
+		// feeSO.deleteFeeExemption(req);
 		// IRuleSO ruleSO = null;
-//        FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-//		 reqDTO.setOrgProfileId(594L);
-//        reqDTO.setRequestItemId(2274L);
-//        reqDTO.setContractId(4592L);
-//		
-//		FeeExemptionResDTO resDTO = feeSO.checkForFeeException(reqDTO);
+		// FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+		// reqDTO.setOrgProfileId(594L);
+		// reqDTO.setRequestItemId(2274L);
+		// reqDTO.setContractId(4592L);
+		//
+		// FeeExemptionResDTO resDTO = feeSO.checkForFeeException(reqDTO);
 		// try {
 		// boolean result = false;
 		// // ruleSO = (IRuleSO)
@@ -332,12 +333,13 @@ public class RuleCatalogueBackingBean extends
 
 			// this.getManagedBean().setFeeExemptionIndex(2);
 			// ////////////getting Thresholds////////////////////////////
-			if(this.getManagedBean().getSelectedConfigGeneral().getIsGeneralThreshold() == 0){
+			if (this.getManagedBean().getSelectedConfigGeneral()
+					.getIsGeneralThreshold() == 0) {
 				retrieveOrgProfileList();
 			}
 			IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
-					.getInstance()
-					.getServiceObject("pm", IOperationalThresholdSO.class);
+					.getInstance().getServiceObject("pm",
+							IOperationalThresholdSO.class);
 
 			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
 			ThresholdResDTO resTDTO = null;
@@ -347,10 +349,9 @@ public class RuleCatalogueBackingBean extends
 			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
 
 			for (PmThreshold threshold : resTDTO.getThresholdList()) {
-				this.getManagedBean().getThresholds()
-						.add(threshold);
+				this.getManagedBean().getThresholds().add(threshold);
 			}
-			
+
 			System.out
 					.println("...................resTDTO.getThresholdList().size()="
 							+ resTDTO.getThresholdList().size());
@@ -418,7 +419,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void fromValueUpdate(int index,
-			List<PmConfigRuleValue> ruleTypeValueList, Long fromValue) {
+			List<PmConfigRuleValue> ruleTypeValueList, Double fromValue) {
 		log.info("................fromValueUpdate...............");
 		if (fromValue != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
@@ -433,7 +434,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void toValueUpdate(int index,
-			List<PmConfigRuleValue> ruleTypeValueList, Long toValue) {
+			List<PmConfigRuleValue> ruleTypeValueList, Double toValue) {
 		log.info("................toValueUpdate...............");
 		if (toValue != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
@@ -643,13 +644,14 @@ public class RuleCatalogueBackingBean extends
 	public void addMoreRuleValue() {
 		log.info(".................addMoreRuleValue...................");
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
-		log.info("...................newRuleValue.getRuleValue()="+newRuleValue.getRuleValue());
+		log.info("...................newRuleValue.getRuleValue()="
+				+ newRuleValue.getRuleValue());
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(new Date());
 
 		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 				.getParameterCode().equals("C")) {
-			newRuleValue.setCategoryL3Id(new PmCategoryL3());   // make sure to
+			newRuleValue.setCategoryL3Id(new PmCategoryL3()); // make sure to
 																// delete the
 																// new obj
 																// before update
@@ -661,7 +663,6 @@ public class RuleCatalogueBackingBean extends
 				.getConfigRuleValues().size();
 		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.add(index, newRuleValue);
-	
 
 	}
 
@@ -716,17 +717,20 @@ public class RuleCatalogueBackingBean extends
 				.remove(deletedExemption);
 
 	}
-	
+
 	public void deleteOperationalThreshold(int rowIndex) {
 		log.info(".................deleteOperationalThreshold...................");
-		PmThreshold deletedThreshold = this.getManagedBean()
-				.getThresholds().get(rowIndex);
+		PmThreshold deletedThreshold = this.getManagedBean().getThresholds()
+				.get(rowIndex);
 		deletedThreshold.setDeleted(true);
-		this.getManagedBean().getDeletedThresholds()
-				.add(deletedThreshold);// should added to original list before
-										// save
-		this.getManagedBean().getThresholds()
-				.remove(deletedThreshold);
+		this.getManagedBean().getDeletedThresholds().add(deletedThreshold);// should
+																			// added
+																			// to
+																			// original
+																			// list
+																			// before
+																			// save
+		this.getManagedBean().getThresholds().remove(deletedThreshold);
 
 	}
 
@@ -802,117 +806,46 @@ public class RuleCatalogueBackingBean extends
 						// throw required msg
 						throw new EpException(MessageConst.ERROR_770133,
 								new String[] {});
-						// ruleTypeValue.setCategoryL3Id(null);
+
 					}
 				}
 			}
-			// set System date for those Expire date not selected
-			Date currentDate = new Date();
-			for (PmConfigRuleValue ruleTypeValue : ruleType
-					.getConfigRuleValues()) {
-
-//				if (ruleTypeValue.isBrandNew()
-//						&& ruleTypeValue.getExpDate() == null) {
-//					ruleTypeValue.setExpDate(currentDate);
-//				}
-				// if (!isValidDateRange(ruleTypeValue.getEffDate(),
-				// ruleTypeValue.getExpDate())) {
-				// throw new EpException(MessageConst.ERROR_770111,
-				// new String[] { ruleType.getRuleTypeDesc() });
-				// }
-
-			}
-			// TODO validation check/ Date overlapping
-			// boolean dateOverlaped = false;
-			// log.info("........................ruleType.getConfigRuleValues().size()="+ruleType.getConfigRuleValues().size());
+			// check validation
 			for (int i = 0; i < ruleType.getConfigRuleValues().size(); i++) {
 
 				PmConfigRuleValue baseValueToCompare = ruleType
 						.getConfigRuleValues().get(i);
+				if(baseValueToCompare.getRecordStatusFlg() == 0){//if is inActive one go to next record
+					continue;
+				}
 				log.info(".........................baseValueToCompare.getRuleValue()="
 						+ baseValueToCompare.getRuleValue());
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
 					PmConfigRuleValue value = ruleType.getConfigRuleValues()
 							.get(j);
+					if(value.getRecordStatusFlg() == 0){//if is inActive one go to next record
+						continue;
+					}
 					log.info(".........................second.value.getRuleValue()="
 							+ value.getRuleValue());
-					if (ruleType.getRuleDataTypeId().getParameterCode()
-							.equals("C")) {
-						log.info(".........................baseValueToCompare.getCategoryL3Id().getCategoryL3Id()="
-								+ baseValueToCompare.getCategoryL3Id()
-										.getCategoryL3Id());
-						log.info(".........................value.getCategoryL3Id().getCategoryL3Id()="
-								+ value.getCategoryL3Id().getCategoryL3Id());
-						if (value.getCategoryL3Id().getCategoryL3Id() == baseValueToCompare
-								.getCategoryL3Id().getCategoryL3Id()) {
-							log.info("..............is overlapped= "
-									+ isDateOverlaped(
-											baseValueToCompare.getEffDate(),
-											baseValueToCompare.getExpDate(),
-											value.getEffDate(),
-											value.getExpDate()));
-							if (isDateOverlaped(
-									baseValueToCompare.getEffDate(),
-									baseValueToCompare.getExpDate(),
-									value.getEffDate(), value.getExpDate())) {
-								log.info("................befor throw exeption for category...................");
-								log.info("............ value.getCategoryL3Id()="
-										+ value.getCategoryL3Id());
-								// hit error and return
-								throw new EpException(
-										MessageConst.ERROR_770110,
-										new String[] { ruleType
-												.getRuleTypeDesc() });
-							}
 
+					if (!ruleValueValidation(baseValueToCompare, value,
+							ruleType.getRuleDataTypeId(),
+							ruleType.getValidationType())) {
+						log.info("................befor throw exeption for category...................");
+						// hit error and return
+						switch(ruleType.getValidationType()){
+						case '1' : throw new EpException(MessageConst.ERROR_770109,
+					        	new String[] { ruleType.getRuleTypeDesc() });
+						case '2' : throw new EpException(MessageConst.ERROR_770110,
+							        	new String[] { ruleType.getRuleTypeDesc() });		           
+						case '3' : throw new EpException(MessageConst.ERROR_770154,
+					        	new String[] { ruleType.getRuleTypeDesc() });
 						}
-
-					} else if (ruleType.getRuleDataTypeId().getParameterCode()
-							.equals("M")) {
-
-						log.info(".........................baseValueToCompare.getRuleValue()="
-								+ baseValueToCompare.getRuleValue());
-						log.info(".........................value.getRuleValue()="
-								+ value.getRuleValue());
-						if (value.getRuleValue() == baseValueToCompare
-								.getRuleValue()) {
-							log.info("..............is overlapped= "
-									+ isDateOverlaped(
-											baseValueToCompare.getEffDate(),
-											baseValueToCompare.getExpDate(),
-											value.getEffDate(),
-											value.getExpDate()));
-							if (isDateOverlaped(
-									baseValueToCompare.getEffDate(),
-									baseValueToCompare.getExpDate(),
-									value.getEffDate(), value.getExpDate())) {
-								log.info("................befor throw exeption for Parameter code rule type...................");
-								log.info("............ value.getRuleValue()="
-										+ value.getRuleValue());
-								// hit error and return
-								throw new EpException(
-										MessageConst.ERROR_770110,
-										new String[] { ruleType
-												.getRuleTypeDesc() });
-							}
-
-						}
-					} else {// if it's amount or percentage shouldn't be
-
-						// overlapped
-						// log.info("..............is overlapped= "+isDateOverlaped(
-						// baseValueToCompare.getEffDate(),
-						// baseValueToCompare.getExpDate(),
-						// value.getEffDate(), value.getExpDate()));
-						if (isDateOverlaped(baseValueToCompare.getEffDate(),
-								baseValueToCompare.getExpDate(),
-								value.getEffDate(), value.getExpDate())) {
-							// log.info("................before throw exception...................");
-							// hit error and return
-							throw new EpException(MessageConst.ERROR_770109,
-									new String[] { ruleType.getRuleTypeDesc() });
-						}
+						
 					}
+
+					// }
 
 				}
 			}
@@ -928,7 +861,7 @@ public class RuleCatalogueBackingBean extends
 			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
 			// retrive updated list
-			
+
 			RuleConfigHelper.getInstance().relodeRuleTypeValueMaps();
 			this.getManagedBean().setConfigRuleList(
 					RuleConfigHelper.getInstance().getRuleTypeList());
@@ -977,27 +910,85 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 
+	private boolean ruleValueValidation(PmConfigRuleValue firstRuleValue,
+			PmConfigRuleValue secondRuleValue, PmParameter RuleDataTypeId,
+			char validationType) {
+		boolean validationResult = false;
+		boolean isValuesEqual = false;
+		if (validationType == '1') {// EffectiveDate validation
+			validationResult = !isDateOverlaped(firstRuleValue.getEffDate(),
+					firstRuleValue.getExpDate(), secondRuleValue.getEffDate(),
+					secondRuleValue.getExpDate());
+		} else if (validationType == '2') {// EffectiveDate +value validation
+			
+			if (RuleDataTypeId.getParameterCode().equalsIgnoreCase("c")) {
+				if (firstRuleValue.getCategoryDisplayValue().equals(secondRuleValue
+						.getCategoryDisplayValue()))
+					isValuesEqual = true;
+			} else {
+				if (firstRuleValue.getRuleValue().equals(
+						secondRuleValue.getRuleValue()))
+					isValuesEqual = true;
+
+			}
+			if (isValuesEqual) {
+				validationResult = !isDateOverlaped(firstRuleValue.getEffDate(),
+						firstRuleValue.getExpDate(),
+						secondRuleValue.getEffDate(),
+						secondRuleValue.getExpDate());
+			} else {
+				validationResult = true;
+			}
+
+		} else {// validationType == '3' , //EffectiveDate + value + Range
+				// validation
+			if (firstRuleValue.getRuleValue().equals(
+					secondRuleValue.getRuleValue())){
+				isValuesEqual = true;
+			}
+			if (isValuesEqual) {
+				validationResult = !(isRangeOverlaped(
+						firstRuleValue.getFromValue(),
+						firstRuleValue.getToValue(),
+						secondRuleValue.getFromValue(),
+						secondRuleValue.getToValue()) && isDateOverlaped(
+						firstRuleValue.getEffDate(),
+						firstRuleValue.getExpDate(),
+						secondRuleValue.getEffDate(),
+						secondRuleValue.getExpDate()));
+			} else {
+				validationResult = true;
+			}
+		}
+		return validationResult;
+	}
+
+	boolean isRangeOverlaped(Double fromValue1, Double toValue1,
+			Double fromValue2, Double toValue2) {
+//		if (toValue1 == null) {
+//			return fromValue1 <= toValue2;
+//
+//		}
+//		if (toValue2 == null) {
+//			return fromValue2 <= toValue1;
+//
+//		}
+		return fromValue1 <= toValue2 && fromValue2 <= toValue1;
+	}
+
 	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
-		// log.info("..................start1.getTime()="+start1.getTime());
-		// log.info("..................end2.getTime()="+end2.getTime());
-		// log.info(".................start2.getTime()="+start2.getTime());
-		// log.info("..................end1.getTime()="+end1.getTime());
-		// log.info(".................start1.getTime() <= end2.getTime()="+(start1.getTime()
-		// <= end2.getTime()));
-		// log.info("................start2.getTime() <= end1.getTime()="+(start2.getTime()
-		// <= end1.getTime()));
-//		Date currentDate = new Date();
+
 		if (end1 == null && end2 == null) {
 
 			return true;
 		}
 		if (end1 == null) {
 			return start1.getTime() <= end2.getTime();
-					
+
 		}
 		if (end2 == null) {
 			return start2.getTime() <= end1.getTime();
-					
+
 		}
 		return start1.getTime() <= end2.getTime()
 				&& start2.getTime() <= end1.getTime();
@@ -1046,7 +1037,7 @@ public class RuleCatalogueBackingBean extends
 					ex.setItemId(new CmItem());
 				}
 			}
-		
+
 			// hit error and return
 			throw new EpException(MessageConst.ERROR_770112, new String[] {});
 		}
@@ -1067,7 +1058,7 @@ public class RuleCatalogueBackingBean extends
 					.getServiceObject("pm", IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 			reqDTO.setFeeExemptionList(exemptionList);
-		
+
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
 			// retrieve
@@ -1106,7 +1097,7 @@ public class RuleCatalogueBackingBean extends
 		boolean result = false;
 
 		for (int i = 0; i < feeExemptionList.size(); i++) {
-			 log.info("...................first loop");
+			log.info("...................first loop");
 			PmFeeExemption baseExemption = feeExemptionList.get(i);
 			if (baseExemption.getRecordStatusFlg() == 0) {
 				// if record inactive choose next one
@@ -1114,13 +1105,13 @@ public class RuleCatalogueBackingBean extends
 			}
 			// log.info(".................after continue..in..first loop");
 			for (int j = i + 1; j <= (feeExemptionList.size() - 1); j++) {
-				 log.info("...................second loop");
+				log.info("...................second loop");
 				PmFeeExemption ex = feeExemptionList.get(j);
 				if (ex.getRecordStatusFlg() == 0) {
 					// if record inactive choose next one
 					continue;
 				}
-				 log.info(".................after continiue..in..second loop");
+				log.info(".................after continiue..in..second loop");
 				//
 
 				if ((ex.getFeeExemptionType().equals("1") && ex
@@ -1272,21 +1263,20 @@ public class RuleCatalogueBackingBean extends
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addMoreOperationalThreshod() {
 		log.info(".................addMoreOperationalThreshod...................");
-		if(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId() == null){
-			//hit required msg and return
+		if (this.getManagedBean().getSelectedOrgProfile().getOrgProfileId() == null) {
+			// hit required msg and return
 			throw new EpException(MessageConst.ERROR_770153, new String[] {});
-		}else{
+		} else {
 			PmThreshold newThreshold = new PmThreshold();
 			newThreshold.setEffDate(new Date());
-			newThreshold.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile());		
+			newThreshold.setOrgProfileId(this.getManagedBean()
+					.getSelectedOrgProfile());
 
-		int index = this.getManagedBean().getThresholds()
-				.size();
-		this.getManagedBean().getThresholds()
-				.add(index, newThreshold);
+			int index = this.getManagedBean().getThresholds().size();
+			this.getManagedBean().getThresholds().add(index, newThreshold);
 		}
 
 	}
@@ -1474,8 +1464,8 @@ public class RuleCatalogueBackingBean extends
 	// KPIResDTO resDTO = kpiSO.getKpiValuesDocyType(reqDTO);
 	// this.getManagedBean().setKpiStatusList(resDTO.getKpiStatusList());
 	// }
-   public void saveOperationalThreshold(){
-	   log.info("..............saveFeeExemptionForOrgItem..............");
+	public void saveOperationalThreshold() {
+		log.info("..............saveFeeExemptionForOrgItem..............");
 		List<PmThreshold> thresholdList = new ArrayList<PmThreshold>();
 		thresholdList.addAll(this.getManagedBean().getThresholds());
 
@@ -1491,47 +1481,45 @@ public class RuleCatalogueBackingBean extends
 				PmThreshold value = thresholdList.get(j);
 				log.info(".........................second.value.thresholdList.get(j)="
 						+ thresholdList.get(j));
-			
-		if (isDateOverlaped(
-				baseValueToCompare.getEffDate(),
-				baseValueToCompare.getExpDate(),
-				value.getEffDate(), value.getExpDate())) {
-			// hit error and return
-			throw new EpException(
-					MessageConst.ERROR_770152,
-					new String[] {});
-		}
-//			for (PmThreshold th : thresholdList) {
-//				if (th.getOrgProfileId() == null) {
-//					th.setOrgProfileId(new PmOrgProfile());
-//				}
-//			}
-		
-			
-		}
+
+				if (isDateOverlaped(baseValueToCompare.getEffDate(),
+						baseValueToCompare.getExpDate(), value.getEffDate(),
+						value.getExpDate())) {
+					// hit error and return
+					throw new EpException(MessageConst.ERROR_770152,
+							new String[] {});
+				}
+				// for (PmThreshold th : thresholdList) {
+				// if (th.getOrgProfileId() == null) {
+				// th.setOrgProfileId(new PmOrgProfile());
+				// }
+				// }
+
+			}
 		}
 		// add deleted list before update
-			thresholdList.addAll(this.getManagedBean().getDeletedThresholds());
-		
+		thresholdList.addAll(this.getManagedBean().getDeletedThresholds());
+
 		IOperationalThresholdSO thresholdSO = null;
 		try {
-			thresholdSO = (IOperationalThresholdSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IOperationalThresholdSO.class);
+			thresholdSO = (IOperationalThresholdSO) BusinessDelegate
+					.getInstance().getServiceObject("pm",
+							IOperationalThresholdSO.class);
 			ThresholdReqDTO reqDTO = new ThresholdReqDTO();
 			reqDTO.setThresholdList(thresholdList);
-		
+
 			ThresholdResDTO resDTO = thresholdSO
 					.updateOperationalThresholdList(reqDTO);
 			// retrieve current list again
 			this.getManagedBean().getThresholds().clear();
 			this.getManagedBean().getDeletedThresholds().clear();
 			reqDTO = new ThresholdReqDTO();
-			reqDTO.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
+			reqDTO.setOrgProfileId(this.getManagedBean()
+					.getSelectedOrgProfile().getOrgProfileId());
 			resDTO = thresholdSO.getOperationalThresholds(reqDTO);
-			for (PmThreshold thresh : resDTO.getThresholdList())  {
-				
-				this.getManagedBean().getThresholds()
-						.add(thresh);
+			for (PmThreshold thresh : resDTO.getThresholdList()) {
+
+				this.getManagedBean().getThresholds().add(thresh);
 			}
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -1548,66 +1536,69 @@ public class RuleCatalogueBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-   }
-   
-   private void retrieveOrgProfileList() {
+	}
+
+	private void retrieveOrgProfileList() {
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();		
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileListByMinistry(reqDTO);
 		this.getManagedBean().setOrgProfileList(resDTO.getOrgProfileList());
-		for(PmOrgProfile orgprofile:resDTO.getOrgProfileList()){
-			log.info("....................orgprofile.getOrgProfileId()="+orgprofile.getOrgProfileId());
+		for (PmOrgProfile orgprofile : resDTO.getOrgProfileList()) {
+			log.info("....................orgprofile.getOrgProfileId()="
+					+ orgprofile.getOrgProfileId());
 		}
 	}
-   
-   public void ministeryChangeListener(){
-	   log.info("inside ministeryChangeListener");
+
+	public void ministeryChangeListener() {
+		log.info("inside ministeryChangeListener");
 		IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject("pm", IOperationalThresholdSO.class);
-		
+				.getInstance().getServiceObject("pm",
+						IOperationalThresholdSO.class);
+
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject("pm", IOrgProfileSO.class);
+				.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 
 		OrgProfileReqDTO pReqDTO = new OrgProfileReqDTO();
 		OrgProfileResDTO pResDTO = null;
-		//get selected ministry from DB
-		if(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId() != null){
-		    pReqDTO.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
-		    pResDTO = orgProfileSO.retrieveOrgProfileByProfileId(pReqDTO);
-		    this.getManagedBean().setSelectedOrgProfile(pResDTO.getPmOrgProfile());
+		// get selected ministry from DB
+		if (this.getManagedBean().getSelectedOrgProfile().getOrgProfileId() != null) {
+			pReqDTO.setOrgProfileId(this.getManagedBean()
+					.getSelectedOrgProfile().getOrgProfileId());
+			pResDTO = orgProfileSO.retrieveOrgProfileByProfileId(pReqDTO);
+			this.getManagedBean().setSelectedOrgProfile(
+					pResDTO.getPmOrgProfile());
 		}
 		ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
 		ThresholdResDTO resTDTO = null;
-		log.info(".....this.getManagedBean().getSelectedOrgProfile().getOrgProfileId()="+this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
-//		if(this.getManagedBean().getSelectedOrgProfile() != null){
-	    	reqTDTO.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId());
-//		}
+		log.info(".....this.getManagedBean().getSelectedOrgProfile().getOrgProfileId()="
+				+ this.getManagedBean().getSelectedOrgProfile()
+						.getOrgProfileId());
+		// if(this.getManagedBean().getSelectedOrgProfile() != null){
+		reqTDTO.setOrgProfileId(this.getManagedBean().getSelectedOrgProfile()
+				.getOrgProfileId());
+		// }
 		this.getManagedBean().getThresholds().clear();
 		this.getManagedBean().getDeletedThresholds().clear();
 		resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
 
 		for (PmThreshold threshold : resTDTO.getThresholdList()) {
 			if (threshold.getOrgProfileId() == null) {// TODO: clear it before
-												// updating the threshold list
+				// updating the threshold list
 				threshold.setOrgProfileId(new PmOrgProfile());
 			}
-			this.getManagedBean().getThresholds()
-					.add(threshold);
+			this.getManagedBean().getThresholds().add(threshold);
 		}
-		if(resTDTO.getThresholdList().size() == 0){
+		if (resTDTO.getThresholdList().size() == 0) {
 			this.getManagedBean().setThresholds(null);
 		}
 		System.out
 				.println("...................resTDTO.getThresholdList().size()="
 						+ resTDTO.getThresholdList().size());
 
-	   
-   }
+	}
 
 }

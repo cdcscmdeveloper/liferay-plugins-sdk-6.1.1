@@ -121,11 +121,12 @@
 		</p:column>
 
 		<p:column width="15%"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
+			validator="#{webappBean.checkFloatField}" validatorMessage="Value of ToValue should be a Float!">
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
-			                	</f:facet>
+			</f:facet>
 			<p:inputText value="#{typeValueObj.fromValue}" size="15" id="fromValueId" disabled="#{!(typeValueObj.brandNew)}" >
 				 <p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
@@ -133,7 +134,8 @@
 		</p:column>
 
 		<p:column width="15%"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
+			validator="#{webappBean.checkFloatField}" validatorMessage="Value of FromValue should be a Float!">
 			<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
@@ -146,10 +148,10 @@
 		<p:column width="30%"
 			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
 			<f:facet name="header">
-				                	#{lbl['lbl.pm.desc']}
-		                		</f:facet>
-		                		#{typeValueObj.categoryL3Id.categoryName}
-							</p:column>
+	             	#{lbl['lbl.pm.desc']}
+		       </f:facet>
+		      	#{typeValueObj.categoryL3Id.categoryName}
+		</p:column>
 
 		<p:column>
 			<f:facet name="header">
