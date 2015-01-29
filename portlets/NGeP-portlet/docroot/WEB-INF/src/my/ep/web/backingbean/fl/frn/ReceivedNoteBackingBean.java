@@ -517,5 +517,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		else 
 			return null;
 	}
+	
+	public double getRemainingQuantity(FlFulfilmentNoteItem flFulfilmentNoteItem) {
+		double orderQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().doubleValue();
+		double receivedQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getReceivedQty().doubleValue();
+		return orderQty - receivedQty - flFulfilmentNoteItem.getReceivedQty().doubleValue();	
+	}
 
 }
