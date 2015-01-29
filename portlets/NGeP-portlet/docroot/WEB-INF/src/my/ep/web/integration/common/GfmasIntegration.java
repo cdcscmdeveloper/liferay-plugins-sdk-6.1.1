@@ -21,31 +21,46 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.osb.fl.FLOsbReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.ptjgroup.PtjGroupReqDTO;
 import my.ep.dto.pm.authorization.ptjgroup.PtjGroupResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.common.PmAgCtrlOfficer;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmPtjGroup;
+import my.ep.persistence.entity.pm.common.PmSetia;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
 import my.ep.web.integration.gfmas.BankAccountInformation;
@@ -65,45 +80,42 @@ import my.ep.web.integration.gfmas.masterdatamateriainfo.MasterDataMaterialInfoR
 import my.ep.web.integration.gfmas.masterdatamateriainfo.RqHeader_Type;
 import my.ep.web.integration.gfmas.masterdatamateriainfo.RqUID_Type;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 public class GfmasIntegration {
-	
+
 	FileUtility fileUtility = new FileUtility();
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
-	IAgOfficeSO agOfficeSO = BusinessDelegate.getInstance()
+	
+	IAgOfficeSO agOfficeSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IAgOfficeSO.class);
+	IVotFundSO votFundSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
+	IProgramActivitySO programActivitySO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IAgOfficeSO.class);
-	IVotFundSO votFundSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IVotFundSO.class);
-	IProgramActivitySO programActivitySO = BusinessDelegate
-			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProgramActivitySO.class);
 	IProjectSetiaSO projectSetiaSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProjectSetiaSO.class);
-	IGlAccountSO glAccountSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IGlAccountSO.class);
-	IPtjGroupSO ptgGroupSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IPtjGroupSO.class);
+	IGlAccountSO glAccountSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IGlAccountSO.class);
+	IPtjGroupSO ptgGroupSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IPtjGroupSO.class);
 	IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 	IFinancialOrgSO financialOrgSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
-	IParameterSO parameterSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IParameterSO.class);
-	IFLOsbSO flOsbSO = BusinessDelegate
-			.getInstance()
-			.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFLOsbSO.class);
+	IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	IFLOsbSO flOsbSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.ORDER_FULFILLMENT, IFLOsbSO.class);
 
 	public void masterDataMaterialInfoGfmas() {
-		List<MasterDataMaterialInfo> materilInfoList = fileUtility.setMasterDataMaterialInfo();
+		List<MasterDataMaterialInfo> materilInfoList = fileUtility
+				.setMasterDataMaterialInfo();
 
 		EPMFRq_Type epmfRq_Type = new EPMFRq_Type();
 		RqHeader_Type rqHeader_Type = new RqHeader_Type();
@@ -212,18 +224,25 @@ public class GfmasIntegration {
 	public void masterDataVendorGfmasInbound() {
 		System.out.println("inside masterDataVendorGfmasInbound");
 
-
-		String fileName = null;//sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "APOVE");
-		ISupplierSearchSO supplierSearchSO = BusinessDelegate
-				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+		String fileName = null;// sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,
+								// "APOVE");
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISupplierSearchSO.class);
 
 		if (osbUtility.osbServiceCallInBound("GFM-370")) {
-			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "APOVE");
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH+fileName,IntegrationConstants.GMAS_DOWNLOAD+fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD+fileName, IntegrationConstants.GMAS_ARCHIVE+fileName);
+			fileName = sftpUtility.findFileNameInDirectory(
+					IntegrationConstants.GMAS_DOWNLOAD, "APOVE");
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
+					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
+						IntegrationConstants.GMAS_ARCHIVE + fileName);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH+fileName, IntegrationConstants.DECRYPTED_FILE_PATH+fileName);
-				List<MasterDataVendor> dataVendors = fileUtility.masterDataVendorFileInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
+						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
+						+ fileName);
+				List<MasterDataVendor> dataVendors = fileUtility
+						.masterDataVendorFileInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH
+								+ fileName);
 				SupplierSearchReqDTO reqDTO = null;
 				SmSupplier smSupplier = null;
 
@@ -238,27 +257,30 @@ public class GfmasIntegration {
 					supplierSearchSO.saveOrUpdateSmSupplier(reqDTO);
 
 				}
-				
+
 			}
 
-		}else{
+		} else {
 			System.out.println("file not available in soa integration server");
 		}
 	}
-	public void masterDataVendorGfmasOutbound() {
-		String processId ="APIVE"; 
-		
-	}
+
+
 	public void pejabatPerakaunanGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLBAC");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLBAC");
 		if (osbUtility.osbServiceCallInBound("GFM-190")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH,  IntegrationConstants.DECRYPTED_FILE_PATH);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<AgOffice> agOfficeList = fileUtility
-						.pejabatPerakaunanFileInPutStream(IntegrationConstants.FILE_PATH + fileName);
+						.pejabatPerakaunanFileInPutStream(IntegrationConstants.FILE_PATH
+								+ fileName);
 				AgOfficeReqDTO reqDTO = null;
 				PmAgOffice agOffice = null;
 
@@ -267,30 +289,37 @@ public class GfmasIntegration {
 					agOffice = new PmAgOffice();
 					agOffice.setOfficeCode(office.getCode());
 					agOffice.setOfficeName(office.getDescription());
-					agOffice.setEffDate(new Timestamp(System.currentTimeMillis()));
-					//agOffice.setExpDate((Timestamp) new Date());
+					agOffice.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
 					agOffice.setCreatedBy(1L);
-					agOffice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					agOffice.setRecordStatusFlg(1);					
+					agOffice.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					agOffice.setRecordStatusFlg(1);
 					reqDTO.setAgOffice(agOffice);
 					agOfficeSO.saveOrUpdateAgOffice(reqDTO);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void pegawaiPengawalGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLSEG");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLSEG");
 		if (osbUtility.osbServiceCallInBound("GFM-200")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<AgCtrlOfficer> agOfficeList = fileUtility
-						.pegawaiPengawalInPutStream(IntegrationConstants.FILE_PATH + fileName);
+						.pegawaiPengawalInPutStream(IntegrationConstants.FILE_PATH
+								+ fileName);
 				AgOfficeReqDTO reqDTO = null;
 				PmAgCtrlOfficer agControlOfficer = null;
 
@@ -299,26 +328,37 @@ public class GfmasIntegration {
 					agControlOfficer = new PmAgCtrlOfficer();
 					agControlOfficer.setCtrlOfficerCode(office.getCode());
 					agControlOfficer.setDescription(office.getDescription());
-					agControlOfficer.setExpDate((Timestamp) new Date());
-					agControlOfficer.setChangedBy(IntegrationConstants.CHANGED_BY);
+					agControlOfficer.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
+					agControlOfficer.setCreatedBy(1L);
+					agControlOfficer.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					agControlOfficer.setRecordStatusFlg(1);
 					reqDTO.setAgControlOfficer(agControlOfficer);
 					agOfficeSO.saveOrUpdatePmAgCtrlOfficer(reqDTO);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void votGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLVOT");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLVOT");
 		if (osbUtility.osbServiceCallInBound("GFM-210")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<VotFund> votList = fileUtility.votInPutStream(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<VotFund> votList = fileUtility
+						.votInPutStream(IntegrationConstants.FILE_PATH
+								+ fileName);
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
 
@@ -336,27 +376,37 @@ public class GfmasIntegration {
 							.getPtjGroupId());
 					pmVot.setVotFundCode(vot.getCode());
 					pmVot.setDescription(vot.getDescription());
+					pmVot.setEffDate(new Timestamp(System.currentTimeMillis()));
 					pmVot.setPmPtjGroup(pmPtjGroup);
-					pmVot.setExpDate((Timestamp) new Date());
-					pmVot.setChangedBy(IntegrationConstants.CHANGED_BY);
+					pmVot.setCreatedBy(1L);
+					pmVot.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					pmVot.setRecordStatusFlg(1);
 					reqDTO.setVotFund(pmVot);
 					votFundSO.saveOrUpdateVotFund(reqDTO);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void votDanaGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLDNA");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLDNA");
 		if (osbUtility.osbServiceCallInBound("GFM-220")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<VotFund> votList = fileUtility.votDanaInPutStream(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<VotFund> votList = fileUtility
+						.votDanaInPutStream(IntegrationConstants.FILE_PATH
+								+ fileName);
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
 
@@ -365,59 +415,81 @@ public class GfmasIntegration {
 					pmVot = new PmVotFund();
 					pmVot.setVotFundCode(vot.getCode());
 					pmVot.setDescription(vot.getDescription());
-					pmVot.setExpDate((Timestamp) new Date());
-					pmVot.setChangedBy(IntegrationConstants.CHANGED_BY);
+					pmVot.setVotFundType("A");
+					pmVot.setEffDate(new Timestamp(System.currentTimeMillis()));
+					pmVot.setCreatedBy(1L);
+					pmVot.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					pmVot.setRecordStatusFlg(1);
 					reqDTO.setVotFund(pmVot);
 					votFundSO.saveOrUpdateVotFund(reqDTO);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void programAktivitiGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPRG");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLPRG");
 		if (osbUtility.osbServiceCallInBound("GFM-230")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<ProgramActivity> votList = fileUtility.programAktiviti(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<ProgramActivity> votList = fileUtility
+						.programAktiviti(IntegrationConstants.FILE_PATH
+								+ fileName);
 				ProgramActivityReqDTO reqDTO = null;
 				PmPrgActivity prgActivity = null;
 
 				for (ProgramActivity programActivity : votList) {
 					reqDTO = new ProgramActivityReqDTO();
 					prgActivity = new PmPrgActivity();
-					VotFundReqDTO votreqDTO = new VotFundReqDTO();					
+					VotFundReqDTO votreqDTO = new VotFundReqDTO();
 					votreqDTO.setVotFundCode(programActivity.getVotCode());
 					VotFundResDTO restDTO = votFundSO
 							.retrieveVotFundByVotCode(votreqDTO);
 					prgActivity.setPmVotFund(restDTO.getPmVotFund());
 					prgActivity.setPrgActivityCode(programActivity.getCode());
-					prgActivity.setDescription(programActivity.getDescription());
-					prgActivity.setExpDate((Timestamp) new Date());
-					prgActivity.setChangedBy(IntegrationConstants.CHANGED_BY);
+					prgActivity
+							.setDescription(programActivity.getDescription());
+					prgActivity.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
+					prgActivity.setCreatedBy(1L);
+					prgActivity.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					prgActivity.setRecordStatusFlg(1);
 					reqDTO.setPrgActivity(prgActivity);
 					programActivitySO.saveOrUpdatePrgActivity(reqDTO);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void projectGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPRJ");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLPRJ");
 		if (osbUtility.osbServiceCallInBound("GFM-240")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<Project> projectList = fileUtility.project(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<Project> projectList = fileUtility
+						.project(IntegrationConstants.FILE_PATH + fileName);
 				ProjectSetiaReqDTO reqDTO = null;
 				PmProject pmProject = null;
 
@@ -426,26 +498,76 @@ public class GfmasIntegration {
 					pmProject = new PmProject();
 					pmProject.setProjectCode(project.getCode());
 					pmProject.setDescription(project.getDescription());
-					pmProject.setExpDate((Timestamp) new Date());
-					pmProject.setChangedBy(IntegrationConstants.CHANGED_BY);
+					VotFundReqDTO votreqDTO = new VotFundReqDTO();
+					votreqDTO.setVotFundCode(project.getVotCode());
+					VotFundResDTO votresDTO = votFundSO
+							.retrieveVotFundByVotCode(votreqDTO);
+					pmProject.setPmVotFund(votresDTO.getPmVotFund());
+					pmProject.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
+					pmProject.setCreatedBy(1L);
+					pmProject.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					pmProject.setRecordStatusFlg(1);
 					reqDTO.setProject(pmProject);
-					projectSetiaSO.saveOrUpdateProject(reqDTO);
+					ProjectSetiaResDTO resDTO = projectSetiaSO
+							.saveOrUpdateProject(reqDTO);
+					PmSetia setia = new PmSetia();
+					setia.setPmProject(resDTO.getPmProject());
+					setia.setSetiaCode(project.getSetiaCode());
+					setia.setDescription(project.getDescription());
+					setia.setEffDate(new Timestamp(System.currentTimeMillis()));
+					setia.setRecordStatusFlg(1);
+					setia.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					setia.setChangedBy(1L);
+					setia.setCreatedBy(1L);
+					reqDTO.setSetia(setia);
+					ProjectSetiaResDTO setiaresDTO = projectSetiaSO
+							.saveOrUpdateSetia(reqDTO);
+					setiaresDTO.setSuccessful(true);
+					reqDTO.setSetia(setia);
+					PmSubSetia subSitia = new PmSubSetia();
+					subSitia.setPmSetia(setiaresDTO.getPmSetia());
+					subSitia.setSubSetiaCode(project.getSubSetiaCode());
+					subSitia.setDescription(project.getDescription());
+					PmParameter paymentType = new PmParameter();
+					paymentType.setParameterCode("");
+					subSitia.setFinancingType(paymentType);
+					subSitia.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
+					subSitia.setRecordStatusFlg(1);
+					subSitia.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					subSitia.setChangedBy(1L);
+					subSitia.setCreatedBy(1L);
+
+					reqDTO.setSubSetia(subSitia);
+					ProjectSetiaResDTO subresDTO = projectSetiaSO
+							.saveOrUpdateSubSetia(reqDTO);
+					subresDTO.setSuccessful(true);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void kodAkaunGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLGLC");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLGLC");
 		if (osbUtility.osbServiceCallInBound("GFM-260")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<GlAccount> glAccountList = fileUtility.kodAkaun(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<GlAccount> glAccountList = fileUtility
+						.kodAkaun(IntegrationConstants.FILE_PATH + fileName);
 				GlAccountReqDTO reqDTO = null;
 				PmGlAccount glAccount = null;
 
@@ -454,26 +576,48 @@ public class GfmasIntegration {
 					glAccount = new PmGlAccount();
 					glAccount.setGlAccCode(account.getCode());
 					glAccount.setDescription(account.getDescription());
-					glAccount.setExpDate((Timestamp) new Date());
-					glAccount.setChangedBy(IntegrationConstants.CHANGED_BY);
+					if (!account.getPtjCode().equalsIgnoreCase("00")) {
+						PtjGroupReqDTO ptjReqDTO = new PtjGroupReqDTO();
+
+						ptjReqDTO.setPtjGroupCode(account.getPtjCode());
+						PtjGroupResDTO ptjResDTO = ptgGroupSO
+								.retrievePtjGroupByCode(ptjReqDTO);
+						PmPtjGroup pmPtjGroup = new PmPtjGroup();
+						pmPtjGroup.setPtjGroupId(ptjResDTO.getPtjGroup().get(0)
+								.getPtjGroupId());
+						glAccount.setPmPtjGroup(pmPtjGroup);
+					}
+					glAccount.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
+					glAccount.setRecordStatusFlg(1);
+					glAccount.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					glAccount.setChangedBy(1L);
+					glAccount.setCreatedBy(1L);
 					reqDTO.setGlAccount(glAccount);
 					glAccountSO.saveOrUpdateGlAccount(reqDTO);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void kumpulanPtjGfmasInbound() {
-		
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPCG");
+
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLPCG");
 		if (osbUtility.osbServiceCallInBound("GFM-270")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<PtjGroup> glAccountList = fileUtility.kumpulanPTJ(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<PtjGroup> glAccountList = fileUtility
+						.kumpulanPTJ(IntegrationConstants.FILE_PATH + fileName);
 				PtjGroupReqDTO reqDTO = null;
 				PmPtjGroup ptjGroup = null;
 
@@ -482,98 +626,205 @@ public class GfmasIntegration {
 					ptjGroup = new PmPtjGroup();
 					ptjGroup.setGroupCode(group.getCode());
 					ptjGroup.setGroupName(group.getDescription());
-					ptjGroup.setExpDate((Timestamp) new Date());
-					ptjGroup.setChangedBy(IntegrationConstants.CHANGED_BY);
+					ptjGroup.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
+					ptjGroup.setRecordStatusFlg(1);
+					ptjGroup.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					ptjGroup.setChangedBy(1L);
+					ptjGroup.setCreatedBy(1L);
 					reqDTO.setPmPtjGroup(ptjGroup);
 					ptgGroupSO.saveOrUpdatePtjGroup(reqDTO);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void masterDataPtjGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"GLPTJ");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "GLPTJ");
 		if (osbUtility.osbServiceCallInBound("GFM-280")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<OrgProfile> orgProfileList = fileUtility.masterDatePTJ(IntegrationConstants.FILE_PATH + fileName);
-				OrgProfileReqDTO reqDTO = null;
-				PmOrgProfile pmOrgProfile = null;
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<OrgProfile> orgProfileList = fileUtility
+						.masterDatePTJ(IntegrationConstants.FILE_PATH
+								+ fileName);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				PmOrgProfile pmOrgProfile = new PmOrgProfile();
 
 				for (OrgProfile orgProfile : orgProfileList) {
-					reqDTO = new OrgProfileReqDTO();
-					pmOrgProfile = new PmOrgProfile();
-					pmOrgProfile.getPmOrgValidity().setOrgCode(orgProfile.getCode());
-					//pmOrgProfile.setGroupName(group.getDescription());
-					//pmOrgProfile.setExpDate((Timestamp) new Date());
-					pmOrgProfile.setChangedBy(IntegrationConstants.CHANGED_BY);
+
+					PmOrgValidity orgValidity = new PmOrgValidity();
+					orgValidity.setOrgCode(orgProfile.getCode());
+					orgValidity.setOrgName(orgProfile.getDescription());
+					orgValidity.setEffDate(new Timestamp(System
+							.currentTimeMillis()));
+					orgValidity.setRecordStatusFlg(1);
+					orgValidity.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					orgValidity.setChangedBy(1L);
+					orgValidity.setCreatedBy(1L);
+					orgValidity.setBrandNew(true);
+
+					orgValidity.setPmOrgProfile(pmOrgProfile);
+					pmOrgProfile.setPmOrgValidity(orgValidity);
+					PtjGroupReqDTO prtReqDTO = new PtjGroupReqDTO();
+					prtReqDTO.setPtjGroupCode(orgProfile.getPtjCode());
+					PtjGroupResDTO dto = ptgGroupSO
+							.retrievePtjGroupByCode(prtReqDTO);
+					PmPtjGroup ptjGroup = new PmPtjGroup();
+					ptjGroup = dto.getPmPtjGroup();
+					pmOrgProfile.setPmPtjGroup(ptjGroup);
+					AgOfficeReqDTO agOfficeReqDTO = new AgOfficeReqDTO();
+					AgOfficeReqDTO agCtrOfficeReqDTO = new AgOfficeReqDTO();
+					agCtrOfficeReqDTO.setAgOfficerCode(orgProfile
+							.getCtrOfficerCode());
+					agOfficeReqDTO.setAgOfficerCode(orgProfile
+							.getAgOfficeCode());
+					AgOfficeResDTO agOfficers = agOfficeSO
+							.retrieveAgOfficerByOfficerCode(agCtrOfficeReqDTO);
+					AgOfficeResDTO agOfficee = agOfficeSO
+							.retrieveAgOfficeByOfficeCode(agOfficeReqDTO);
+
+					List<PmAgCtrlOfficer> agOfficer = agOfficers
+							.getAgControlOfficerList();
+					List<PmAgOffice> agOffice = agOfficee.getAgOfficeList();
+
+					System.out.println("AgOfficerID:"
+							+ agOfficer.get(0).getAgCtrlOfficerId());
+					System.out.println("AgOfficeid"
+							+ agOffice.get(0).getOfficeName());
+					// agOfficer = agOfficers.getAgControlOfficer();
+					// System.out.println("AgOfficerID :::"+agOfficers.getAgControlOfficer().getAgCtrlOfficerId());
+					// orgProfile.setPmAgCtrlOfficer(agOfficer);
+					// orgProfile.setPmAgOffice(agOffice);
+
+					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+					parameterReqDTO
+							.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
+					parameterReqDTO
+							.setParameterCode(ParameterConst.ORG_TYPE_PTJ);
+					ParameterResDTO parameterResDTO = parameterSO
+							.retrieveParameterByTypeAndCode(parameterReqDTO);
+
+					pmOrgProfile.setOrgTypeCode(parameterResDTO
+							.getPmParameter());
+					pmOrgProfile.setRecordStatusFlg(1);
+					pmOrgProfile.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					pmOrgProfile.setChangedBy(1L);
+					pmOrgProfile.setCreatedBy(1L);
+					pmOrgProfile.setBrandNew(true);
 					reqDTO.setPmOrgProfile(pmOrgProfile);
-					orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
+					OrgProfileResDTO resDTO = orgProfileSO
+							.saveOrUpdateOrgProfile(reqDTO);
+					resDTO.setSuccessful(true);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void kodBankGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"CMBNK");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "CMBNK");
 		if (osbUtility.osbServiceCallInBound("GFM-360")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH, IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<BankAccountInformation> bankList = fileUtility.kodBank(IntegrationConstants.FILE_PATH + fileName);
-				FinancialOrgReqDTO reqDTO = null;
-				PmFinancialOrg pmFinancialOrg = null;
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<BankAccountInformation> bankList = fileUtility
+						.kodBank(IntegrationConstants.FILE_PATH + fileName);
 
 				for (BankAccountInformation bank : bankList) {
-					reqDTO = new FinancialOrgReqDTO();
-					pmFinancialOrg = new PmFinancialOrg();
-					pmFinancialOrg.setFinOrgName(bank.getBankName());
-					//pmOrgProfile.setGroupName(group.getDescription());
-					//pmOrgProfile.setExpDate((Timestamp) new Date());
-					pmFinancialOrg.setChangedBy(IntegrationConstants.CHANGED_BY);
-					reqDTO.setPmFinancialOrg(pmFinancialOrg);
-					financialOrgSO.saveOrUpdateFinancialOrg(reqDTO);
+					FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+					PmCountry defaultCountry = PmCommonUtil
+							.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+
+					PmFinancialOrg financialOrg = new PmFinancialOrg();
+					financialOrg.setFinOrgName(bank.getBankName());
+					financialOrg.setPmCountry(defaultCountry);
+					List<PmFinancialSvc> financialServiceList = new ArrayList<PmFinancialSvc>();
+					PmFinancialSvc financialService = new PmFinancialSvc();
+					financialService.setBankCode(bank.getSwiftCode());
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IParameterSO.class);
+					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+					// parameterReqDTO.setParameterType(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
+					parameterReqDTO
+							.setParameterCode(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
+					ParameterResDTO parameterResDTO = parameterSO
+							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					financialService.setServiceTypeCode(parameterResDTO
+							.getPmParameter());
+					financialService.setRecordStatusFlg(1);
+					financialService.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					financialService.setChangedBy(1L);
+					financialService.setCreatedBy(1L);
+					financialService.setBrandNew(true);
+					financialServiceList.add(financialService);
+					financialOrg.setRecordStatusFlg(1);
+					financialOrg.setCreatedDate(new Timestamp(System
+							.currentTimeMillis()));
+					financialOrg.setChangedBy(1L);
+					financialOrg.setCreatedBy(1L);
+					financialOrg.setBrandNew(true);
+					financialOrg.setPmFinancialSvcs(financialServiceList);
+					financialService.setPmFinancialOrg(financialOrg);
+					reqDTO.setPmFinancialOrg(financialOrg);
+					FinancialOrgResDTO resDTO = financialOrgSO
+							.saveOrUpdateFinancialOrg(reqDTO);
+					resDTO.setSuccessful(true);
 
 				}
-				
+
 			}
 
 		}
 	}
+
 	public void paymentGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,"AP511");
+		String fileName = sftpUtility.findFileNameInDirectory(
+				IntegrationConstants.GMAS_DOWNLOAD, "AP511");
 		if (osbUtility.osbServiceCallInBound("GFM-140")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.GMAS_DOWNLOAD)) {
-			//	sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
+			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH,
+					IntegrationConstants.GMAS_DOWNLOAD)) {
+				// sftpUtility.move(remoteSrcFilePath, remoteDestFilePath);
 				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH,IntegrationConstants.DECRYPTED_FILE_PATH);
-				List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo(IntegrationConstants.FILE_PATH + fileName);
+				encryption.decryptGmas(
+						IntegrationConstants.ENCRYPTED_FILE_PATH,
+						IntegrationConstants.DECRYPTED_FILE_PATH);
+				List<PaymentInfo> paymentInfoList = fileUtility
+						.paymentInfo(IntegrationConstants.FILE_PATH + fileName);
 				FLOsbReqDTO reqDTO = null;
-				
 
 				for (PaymentInfo bank : paymentInfoList) {
-					reqDTO = new FLOsbReqDTO();
-					
-					
-					
-					reqDTO.setInvoiceNoList(new String[]{"10000004371400210"});
-					//reqDTO.setInvoiceNoList(new String[] { bank.getInoviceNumber() });
+					reqDTO = new FLOsbReqDTO();				
+					reqDTO.setInvoiceNoList(bank.getInvoiceNoList());
 					reqDTO.setPaymentDate(bank.getPaymentDate());
-					//reqDTO.setPaymentRefNo(row.getPaymentRefNum());
+					reqDTO.setPaymentRefNo(bank.getPaymentRefNo());
 					flOsbSO.updatePaymentDetails(reqDTO);
-
 				}
-				
+
 			}
 
 		}
