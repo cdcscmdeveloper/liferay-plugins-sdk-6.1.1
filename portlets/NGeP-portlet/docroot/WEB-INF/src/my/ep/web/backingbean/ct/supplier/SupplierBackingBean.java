@@ -30,6 +30,9 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
@@ -79,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -242,7 +246,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				      ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 				      docType = ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT;
 				      ctReqDTO.setDocType(docType);
-				      getManagedBean().setContractVerId(ctReqDTO.getContractVerId());
 				       
 				       userReqDTO = new UserReqDTO();
 				       userReqDTO.setUserId(new Long(dataType.getSupplier().getUserId()));
@@ -321,55 +324,59 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		   ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
     }
     
-	public SelectItem[] getPopulateContractList() {
-		
-		      if(getManagedBean().getPopulateContractList() == null) {
-		    	   
-		    	     IContractSupplierSO supplierSO = null;
-	     	         ContractSupplierReqDTO reqDTO = null;
-	     	         ContractSupplierResDTO resDTO = null;
-	     	         SelectItem[] items = null;
-	     	         
-	     	        ISupplierSearchSO supplierSearchSO = null;
-		            SupplierSearchReqDTO supplierReqDTO = null;
-		            SupplierSearchResDTO supplierResDTO = null;
-		     
-		            try {
-		       
-		            	        supplierReqDTO = new SupplierSearchReqDTO();
-		         		        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		         		        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
-                                supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-                                if(supplierResDTO.getResultBean() != null && supplierResDTO.getResultBean().getResultList() != null 
-                                		&& !supplierResDTO.getResultBean().getResultList().isEmpty()) { 
-		         		        List<Long> supplierIdList = new ArrayList<Long>();
-		         		        for(SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
-		         		              	supplierIdList.add(supplier.getSupplierId());
-		         		        }
-		         		        
-		                    int i =1;
-		        	        reqDTO = new ContractSupplierReqDTO();
-		        	        reqDTO.setSupplierIds(supplierIdList);
-		        	        supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-				            resDTO = supplierSO.retrieveSupplierContract(reqDTO);
-				            List<CtContract> list = resDTO.getContractList();
-				            items = new SelectItem[list.size() + 1];
-				            items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				            for (CtContract obj : list) {
-				          	     items[i++] = new SelectItem(obj.getCurrentContractVer().getContractVerId(), obj.getContractNo());
-				        	} 
-                           }getManagedBean().setPopulateContractList(items);
-		             } finally {
-		         	supplierSO = null;
-		         	reqDTO = null;
-		 		    resDTO = null;
-		 		    supplierSearchSO = null;
-		            supplierReqDTO = null;
-		            supplierResDTO = null;
-		         }
-		     } 
-		     return getManagedBean().getPopulateContractList();
-	    }
+    public void searchContractLoa() {
+    	IContractSupplierSO supplierSO = null;
+    	ContractSupplierReqDTO reqDTO = null;
+    	ContractSupplierResDTO resDTO = null;
+  	  	ISupplierSearchSO supplierSearchSO = null;
+  	  	SupplierSearchReqDTO supplierReqDTO = null;
+  	  	SupplierSearchResDTO supplierResDTO = null;
+	     
+        try {
+        	supplierReqDTO = new SupplierSearchReqDTO();
+	        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+	        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+	        supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+	        
+         	if(supplierResDTO.getResultBean() != null && supplierResDTO.getResultBean().getResultList() != null 
+         			&& !supplierResDTO.getResultBean().getResultList().isEmpty()) { 
+         		List<Long> supplierIdList = new ArrayList<Long>();
+         		for(SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
+         			supplierIdList.add(supplier.getSupplierId());
+         		}
+     		        
+    	        reqDTO = new ContractSupplierReqDTO();
+    	        reqDTO.setSupplierIds(supplierIdList);
+    	        
+    	        ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
+    	        if(getManagedBean().getContractLoa() != null && getManagedBean().getContractLoaSearchValues() != null){    	        	
+    	        	
+					if(getManagedBean().getContractLoa().equalsIgnoreCase("contract")){
+						SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getContractLoaSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
+					
+					}else if(getManagedBean().getContractLoa().equalsIgnoreCase("loa")){
+						SearchFilterBean filterBean = new SearchFilterBean("loa.loaNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getContractLoaSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
+					}
+				} 
+    	        
+				reqDTO.setContractSearchBean(searchBean);
+    	        supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+	            resDTO = supplierSO.retrieveSupplierContract(reqDTO);
+	            getManagedBean().setContractList(resDTO.getContractList());
+         	}
+        } finally {
+        	supplierSO = null;
+         	reqDTO = null;
+ 		    resDTO = null;
+ 		    supplierSearchSO = null;
+            supplierReqDTO = null;
+            supplierResDTO = null;
+         }
+	}
 
 	public void changeContractActionListener() {
 		
@@ -378,11 +385,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    ContractResDTO resDTO   = null;
 		    try {
 			 
-		    	    if (getManagedBean().getContractVerId() != null) {
+		    	    if (getManagedBean().getSelectedContract() != null) {
 				            contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				     
 				            reqDTO = new ContractReqDTO();
-				            reqDTO.setContractVerId(getManagedBean().getContractVerId());
+				            reqDTO.setContractVerId(getManagedBean().getSelectedContract().getCurrentContractVer().getContractVerId());
 			 	            reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 				            reqDTO.setUpdateAction(true);
 				            
@@ -786,10 +793,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    ContractResDTO resDTO = null;
 	    	try {
 			
-	    		    if (getManagedBean().getLoaId() != null) {
+	    		    if (getManagedBean().getSelectedContract() != null) {
 				           reqDTO = new ContractReqDTO();
 				           contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				           reqDTO.setLoaId(getManagedBean().getLoaId());
+				           reqDTO.setLoaId(getManagedBean().getSelectedContract().getLoa().getLoaId());
 				         
 				           resDTO = contractSO.retrieveFactoringDetailsByLoaId(reqDTO);
 			          	   if(resDTO.isSuccessful()) {
@@ -885,64 +892,71 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
 	}
-	
-	public SelectItem[]  getContractSupplierLoa() {
-		
-		       if(getManagedBean().getContractSupplierLoa() == null) {
-		               SelectItem[] items = null;
-		               IContractSupplierSO contractSupplierSO = null;
-		               ContractSupplierResDTO contractSupplierResDTO = null;
-		               ContractSupplierReqDTO contractSupplierReqDTO = null;
-		               ISupplierSearchSO supplierSearchSO = null;
-		               SupplierSearchReqDTO supplierReqDTO = null;
-		               SupplierSearchResDTO supplierResDTO = null;
-		     
-		               try {
-		       
-		            	        supplierReqDTO = new SupplierSearchReqDTO();
-		         		        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		         		        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
-                                supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-                                if(supplierResDTO.getResultBean() != null && supplierResDTO.getResultBean().getResultList() != null 
-                                		&& !supplierResDTO.getResultBean().getResultList().isEmpty()) { 
-		         		
-		         		        List<Long> supplierIdList = new ArrayList<Long>();
-		         		        for(SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
-		         		              	supplierIdList.add(supplier.getSupplierId());
-		         		        }
-		         		        
-		                          contractSupplierReqDTO = new ContractSupplierReqDTO();
-		                          contractSupplierReqDTO.setSupplierIds(supplierIdList);
-			                      contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
-		                          contractSupplierResDTO = contractSupplierSO.retrieveSupplierLoaWithContract(contractSupplierReqDTO);
-		                          List<CtContract> list = contractSupplierResDTO.getContractList();
-		                          List<CtContract> contractList = new ArrayList<CtContract>();
-			                       for (CtContract contractLoa : list) {  
-			                    	   ContractSupplierResDTO ctSupplierResDTO = contractSupplierSO.retrieveFactoringByLoaId(contractLoa.getLoa().getLoaId());
-			                    	   if(ctSupplierResDTO.getFactoring() != null && ctSupplierResDTO.getFactoring().getStatus() != null &&
-			                    			   ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() !=  ContractStatusConst.RF_COMPLETE.longValue()) {
-			                   		         continue;
-			                    	    } contractList.add(contractLoa);
-			                    	} 
-			                       items = new SelectItem[contractList.size()+1];
-				                    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				                    int i = 1;
-				                    for (CtContract ctLoalist : contractList) {  
-	                         	       items[i++] = new SelectItem(ctLoalist.getLoa().getLoaId(), ctLoalist.getLoa().getLoaNo());
-				                    }  
-                                }
-		                      getManagedBean().setContractSupplierLoa(items);
-		               } finally {
-		                    contractSupplierResDTO = null;
-		                    contractSupplierSO = null;
-		                    contractSupplierReqDTO = null;
-		                    supplierSearchSO = null;
-				            supplierReqDTO = null;
-				            supplierResDTO = null;
-				       }
-		         }  
-		         return getManagedBean().getContractSupplierLoa();
-	   }
+    
+    public void searchContractSupplierLoa() {
+    	IContractSupplierSO contractSupplierSO = null;
+        ContractSupplierResDTO contractSupplierResDTO = null;
+        ContractSupplierReqDTO contractSupplierReqDTO = null;
+        ISupplierSearchSO supplierSearchSO = null;
+        SupplierSearchReqDTO supplierReqDTO = null;
+        SupplierSearchResDTO supplierResDTO = null;
+
+        try {
+        	supplierReqDTO = new SupplierSearchReqDTO();
+	        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+	        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+	        supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+	        if(supplierResDTO.getResultBean() != null && supplierResDTO.getResultBean().getResultList() != null 
+	        		&& !supplierResDTO.getResultBean().getResultList().isEmpty()) { 
+  		
+	        	List<Long> supplierIdList = new ArrayList<Long>();
+  		        for(SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
+  		              	supplierIdList.add(supplier.getSupplierId());
+  		        }
+  		        
+  		        contractSupplierReqDTO = new ContractSupplierReqDTO();
+  		        contractSupplierReqDTO.setSupplierIds(supplierIdList);
+  		        
+  		        ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
+  		        if(getManagedBean().getContractLoa() != null && getManagedBean().getContractLoaSearchValues() != null){    	        	
+  	        	
+					if(getManagedBean().getContractLoa().equalsIgnoreCase("contract")){
+						SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getContractLoaSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
+					
+					}else if(getManagedBean().getContractLoa().equalsIgnoreCase("loa")){
+						SearchFilterBean filterBean = new SearchFilterBean("loa.loaNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getContractLoaSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
+					}
+				} 
+  	        
+  		        contractSupplierReqDTO.setContractSearchBean(searchBean);  		        
+  		        contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+  		        contractSupplierResDTO = contractSupplierSO.retrieveSupplierLoaWithContract(contractSupplierReqDTO);
+                   
+  		        List<CtContract> list = contractSupplierResDTO.getContractList();
+  		        List<CtContract> contractList = new ArrayList<CtContract>();
+  		        for (CtContract contractLoa : list) {  
+  		        	ContractSupplierResDTO ctSupplierResDTO = contractSupplierSO.retrieveFactoringByLoaId(contractLoa.getLoa().getLoaId());
+  		        	if(ctSupplierResDTO.getFactoring() != null && ctSupplierResDTO.getFactoring().getStatus() != null &&
+  		        			ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() !=  ContractStatusConst.RF_COMPLETE.longValue()) {
+  		        		continue;
+                	} 
+  		        	contractList.add(contractLoa);
+  		        }
+  		        getManagedBean().setContractList(contractList); 
+	        }
+        } finally {
+        	contractSupplierResDTO = null;
+        	contractSupplierSO = null;
+        	contractSupplierReqDTO = null;
+        	supplierSearchSO = null;
+        	supplierReqDTO = null;
+        	supplierResDTO = null;
+        }
+	}
 	
 	public String getFactoringCompany() {
 		if(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
@@ -953,7 +967,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	public boolean isLetterGenerated() {
-		if ((getManagedBean().getLoaId() != null || (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) && getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()  != null && 
+		if ((getManagedBean().getSelectedContract() != null || (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) && getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()  != null && 
 				getManagedBean().getAccountNo() != null && getManagedBean().getFactoring().getAuthRefNo() != null && 
 				getManagedBean().getFactoring().getEffDate() != null && getManagedBean().getFactoring().getExpDate() != null)
 			return true;
@@ -1266,5 +1280,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
+	}
+    
+    public void resetContractLoa(){
+		getManagedBean().setContractLoa("contract");	
+		getManagedBean().setContractLoaSearchValues(null);
+		getManagedBean().setContractList(null);	
+		getManagedBean().setSelectedContract(null);	
 	}
 }
