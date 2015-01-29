@@ -4126,7 +4126,7 @@ public class SmApplicationBackingBean extends
 			} else {
 				if (SmCommonUtil.isPersonnelAlreadyDeactivate(smPersonnel)) {
 					accStatus = SmCommonUtil.getMessage(
-							"lbl.sm.activation.status.pending", null);
+							"lbl.sm.activation.status.activated", null);
 				} else {
 					accStatus = SmCommonUtil.getMessage(
 							"lbl.sm.activation.status.activated", null);
