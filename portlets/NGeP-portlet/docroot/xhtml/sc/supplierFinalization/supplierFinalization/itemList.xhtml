@@ -16,17 +16,17 @@
 
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 		<p:dataTable id="itemListTbl" var="item"
-			value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtRecommends}"
+			value="#{suppFinalizationBackingBean.managedBean.itemList}"
 			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 
 			<p:ajax event="rowSelect" 
 				listener="#{suppFinalizationBackingBean.selectItemEvent}"
-				update="@([id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])" />
+				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
 				
-			<p:ajax event="rowUnselect"
+			<p:ajax event="rowUnselect" 
 				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
-				update="@([itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
+				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
 				
 			<p:column style="width:2%;">
 				<f:facet name="header">
