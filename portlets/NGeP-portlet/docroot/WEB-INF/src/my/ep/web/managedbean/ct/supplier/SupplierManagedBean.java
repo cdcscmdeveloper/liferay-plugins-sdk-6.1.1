@@ -51,7 +51,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	private Long loaId;
 	private int selectedIndex;
-	private Long contractVerId;
 
 	private String loaNo;
 	private String contractNo;
@@ -83,9 +82,11 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
 	private boolean viewOnly = false;
-	private SelectItem[] contractSupplierLoa;
 	private SelectItem[] listOfFinancialOrg;
 	private SelectItem[] populateContractList;
+	private String contractLoa;
+	private String contractLoaSearchValues;
+	private CtContract selectedContract;
 
 	private PmDigiSign pmDigiSign;
 	private boolean autoUpdate;
@@ -274,14 +275,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.loaId = loaId;
 	}
 
-	public Long getContractVerId() {
-		return contractVerId;
-	}
-
-	public void setContractVerId(Long contractVerId) {
-		this.contractVerId = contractVerId;
-	}
-
 	public Map<Long, String> getFactoringCompMap() {
 		if (factoringCompMap == null) {
 			factoringCompMap = new HashMap<Long, String>();
@@ -396,14 +389,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.userMap = userMap;
 	}
 
-	public SelectItem[] getContractSupplierLoa() {
-		return contractSupplierLoa;
-	}
-
-	public void setContractSupplierLoa(SelectItem[] contractSupplierLoa) {
-		this.contractSupplierLoa = contractSupplierLoa;
-	}
-
 	public SelectItem[] getListOfFinancialOrg() {
 		return listOfFinancialOrg;
 	}
@@ -474,5 +459,29 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
-	}	
+	}
+
+	public String getContractLoa() {
+		return contractLoa;
+	}
+
+	public void setContractLoa(String contractLoa) {
+		this.contractLoa = contractLoa;
+	}
+
+	public String getContractLoaSearchValues() {
+		return contractLoaSearchValues;
+	}
+
+	public void setContractLoaSearchValues(String contractLoaSearchValues) {
+		this.contractLoaSearchValues = contractLoaSearchValues;
+	}
+
+	public CtContract getSelectedContract() {
+		return selectedContract;
+	}
+
+	public void setSelectedContract(CtContract selectedContract) {
+		this.selectedContract = selectedContract;
+	}
 }
