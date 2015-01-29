@@ -1,4 +1,4 @@
-#include("/sm/sitevisit/shared/header.vm")
+#include("templates/sm/sitevisit/shared/header.vm")
 
 <table width='100%'>
 	<tr align='center' style="background-color: #3366ff;">
@@ -9,34 +9,34 @@
     <tr><td><br /></td></tr>
 </table>
     #if($templateCode == "I" || $templateCode == "BP" || $templateCode == "RM" || $templateCode == "A" || $templateCode == "PG")
-    	#parse("/sm/sitevisit/shared/category-applicable.vm")
+    	#parse("templates/sm/sitevisit/shared/category-applicable.vm")
     #elseif($templateCode == "L" || $templateCode == "B")
-    	#parse("/sm/sitevisit/shared/commLicenseInsurance.vm")
+    	#parse("templates/sm/sitevisit/shared/commLicenseInsurance.vm")
     	<br /><br />
-    	#parse("/sm/sitevisit/shared/premiseLocation.vm")
+    	#parse("templates/sm/sitevisit/shared/premiseLocation.vm")
     	<br /><br />
-		#parse("/sm/sitevisit/shared/equipmentMaintenanceBeating.vm")
+		#parse("templates/sm/sitevisit/shared/equipmentMaintenanceBeating.vm")
 		<br /><br />
 		
 		#if($templateCode == "B")
-			#parse("/sm/sitevisit/shared/workshop_worker.vm")
+			#parse("templates/sm/sitevisit/shared/workshop_worker.vm")
 			<br /><br />
 		#end
 		
-		#parse("/sm/sitevisit/shared/machine.vm")
+		#parse("templates/sm/sitevisit/shared/machine.vm")
     #elseif($templateCode == "M")
-    	#parse("/sm/sitevisit/shared/manufacturing-documents.vm")
+    	#parse("templates/sm/sitevisit/shared/manufacturing-documents.vm")
     	<br /><br />
-    	#parse("/sm/sitevisit/shared/manufacturing-additional-documents.vm")
+    	#parse("templates/sm/sitevisit/shared/manufacturing-additional-documents.vm")
     	<br /><br />
-    	#parse("/sm/sitevisit/shared/manufacturing-machine.vm")
+    	#parse("templates/sm/sitevisit/shared/manufacturing-machine.vm")
     	
     #elseif($templateCode == "PC")
-    	#parse("/sm/sitevisit/shared/printing_license_insurance.vm")
+    	#parse("templates/sm/sitevisit/shared/printing_license_insurance.vm")
     	<br /><br />
-    	#parse("/sm/sitevisit/shared/printing_premise_location.vm")
+    	#parse("templates/sm/sitevisit/shared/printing_premise_location.vm")
     	<br /><br />
-    	#parse("/sm/sitevisit/shared/printing_accessories.vm")
+    	#parse("templates/sm/sitevisit/shared/printing_accessories.vm")
     #end
 
-#include("/sm/sitevisit/shared/footer.vm")
+#include("templates/sm/sitevisit/shared/footer.vm")
