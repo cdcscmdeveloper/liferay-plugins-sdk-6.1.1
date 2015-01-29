@@ -522,7 +522,7 @@ public class BSVAttendanceBackingBean extends
 							this.getManagedBean()
 									.getSelectedbriefRegistration()
 									.getSupplier().getCompanyName())) {
-
+				registrations.get(i).setBsvAttendance(null);
 				registrations.remove(i);
 				break;
 			}
@@ -530,6 +530,9 @@ public class BSVAttendanceBackingBean extends
 
 		this.getManagedBean().setBriefingRegistrationList(registrations);
 		this.getManagedBean().setBriefingAttendanceList(null);
+		this.getManagedBean().getSelectedbriefRegistration()
+				.setBsvAttendance(null);
+
 	}
 
 	public void showLocationDtls(ScQtBsvDtl briefing) {
@@ -656,7 +659,7 @@ public class BSVAttendanceBackingBean extends
 	private void getregistrationDetails(ScQtBsvDtl briefing) {
 		this.getManagedBean().setBriefingAttendanceList(null);
 		IQTBriefingSO qTBriefingSO = null;
-
+		this.getManagedBean().setSelectedbriefRegistration(null);
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);

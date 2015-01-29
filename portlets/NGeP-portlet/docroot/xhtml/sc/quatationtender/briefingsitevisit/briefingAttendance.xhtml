@@ -20,7 +20,8 @@
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
 					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+						<p:commandButton value="#{lbl['lbl.btn.back']}"
+							style="float:left;"
 							action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
 					</p:column>
 				</p:row>
@@ -32,164 +33,16 @@
 				<tr>
 					<td style="width: 10%"><h:outputLabel value="Briefing:" /></td>
 					<td style="width: 30%" class="header-info-text">
-						#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}</td>
+						#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDesc}</td>
 					<td style="width: 20%"><h:outputLabel value="Date/Time:" /></td>
 					<td style="width: 30%" class="header-info-text">
-						#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}}</td>
+						#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDate}</td>
 
 				</tr>
 			</table>
 		</p:panel>
 
-		<p:panel header="Supplier List" toggleable="true" id="attRegPnl">
-			<ac:lovPopup />
-			<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
-				value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingRegistrationList}"
-				selection="#{qTBriefingSiteVisitBackingBean.managedBean.selectedbriefRegistration}"
-				rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
-				<p:ajax event="rowSelect"
-					listener="#{qTBriefingSiteVisitBackingBean.onRowSelect}"
-					update=":form:attendanceDetailstbl"
-					process1="@this :form:attendanceDetailstbl" />
-
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
-					<h:outputText
-						value="#{scQtBriefReg.supplier.smMofAccounts[0].mofNo}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
-					<h:outputText value="#{scQtBriefReg.supplier.companyName}" />
-				</p:column>
-			</p:dataTable>
-
-			<div>
-				<table style="width: 100%">
-					<tr>
-						<td class="TableFieldLeft" width="80%"></td>
-						<td>
-							<table>
-								<tr>
-									<td class="TableFieldLeft"><ac:lov id="supplier"
-											lovId="SM_SUPPLIER_MOFNO"
-											postUpdateListener="qTBriefingSiteVisitBackingBean.bsvRegistationListner(qTBriefingSiteVisitBackingBean.managedBean.mofAccounts)"
-											headerText="Supplier MOF No Lov"
-											buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
-											saveObject="qTBriefingSiteVisitBackingBean.managedBean.mofAccounts"
-											update="@form" /></td>
-
-									<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
-											process="@this,complisttbl" partialSubmit="true"
-											update="@all"
-											action="#{qTBriefingSiteVisitBackingBean.deleteSupplierDetails}" />
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</p:panel>
-
-		<p:panel header="Supplier Attendence List" toggleable="true"
-			id="attlistforCompId">
-			<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
-				value="#{qTBriefingSiteVisitBackingBean.managedBean.selectedbriefRegistration.bsvAttendance}"
-				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
-				selection="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBriefingAttendance}"
-				selectionMode="single" style="width:100%">
-
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
-
-						</p:column>
-						<p:column
-							headerText="#{lbl['lbl.sc.bsv.attendance.authorizedperson']}">
-
-						</p:column>
-
-						<p:column
-							headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
-
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
-
-						</p:column>
-
-
-						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
-
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.qt.bsc.attendance']}">
-
-						</p:column>
-					</p:row>
-				</p:columnGroup>
-				<p:column style="width:22%;white-space: normal;">
-					<h:outputText value="#{scQtBriefAttendace.name}"
-						rendered="#{scQtBriefAttendace.authorized}" />
-					<p:inputText value="#{scQtBriefAttendace.name}"
-						rendered="#{!scQtBriefAttendace.authorized}">
-						<p:ajax event="blur" process="@this" partialSubmit="true"
-							update="@this"></p:ajax>
-					</p:inputText>
-				</p:column>
-				<p:column style="width:6%;white-space: normal;">
-					<h:outputLabel
-						value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
-
-				</p:column>
-				<p:column style="width:22%;white-space: normal;">
-					<h:outputText value="#{scQtBriefAttendace.icPassPort}"
-						rendered="#{scQtBriefAttendace.authorized}" />
-					<p:inputText value="#{scQtBriefAttendace.icPassPort}"
-						rendered="#{!scQtBriefAttendace.authorized}">
-						<p:ajax event="blur" process="@this" partialSubmit="true"
-							update="@this"></p:ajax>
-					</p:inputText>
-
-				</p:column>
-				<p:column style="width:22%;white-space: normal;">
-					<h:outputText value="#{scQtBriefAttendace.contactNo}"
-						rendered="#{scQtBriefAttendace.authorized}" />
-					<p:inputText value="#{scQtBriefAttendace.contactNo}"
-						rendered="#{!scQtBriefAttendace.authorized}">
-						<p:ajax event="blur" process="@this" partialSubmit="true"
-							update="@this"></p:ajax>
-					</p:inputText>
-				</p:column>
-				<p:column style="width:22%;white-space: normal;">
-					<h:outputText value="#{scQtBriefAttendace.email}"
-						rendered="#{scQtBriefAttendace.authorized}" />
-					<p:inputText value="#{scQtBriefAttendace.email}"
-						rendered="#{!scQtBriefAttendace.authorized}">
-						<p:ajax event="blur" process="@this" partialSubmit="true"
-							update="@this"></p:ajax>
-					</p:inputText>
-				</p:column>
-				<p:column style="width:6%;white-space: normal;">
-					<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
-						disabled="#{!scQtBriefAttendace.authorized}">
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@this"></p:ajax>
-					</p:selectBooleanCheckbox>
-
-
-				</p:column>
-			</p:dataTable>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this,attendanceDetailstbl" partialSubmit="true"
-					update="attendanceDetailstbl"
-					action="#{qTBriefingSiteVisitBackingBean.addAttendanceForBSV}" />
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					process="@this,attendanceDetailstbl" partialSubmit="true"
-					update="attendanceDetailstbl"
-					action="#{qTBriefingSiteVisitBackingBean.deleteBsvAttandances}" />
-			</div>
-		</p:panel>
+		<ui:include src="/xhtml/sc/bsvattendance/addRegistrationdetails.xhtml"></ui:include>
 
 	</ui:define>
 </ui:composition>
