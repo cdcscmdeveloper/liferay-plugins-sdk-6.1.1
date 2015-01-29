@@ -849,7 +849,7 @@ public class SmApplicationBackingBean extends
 	/**
 	 * To open the confirmation dialog box for cancel registration with MOF
 	 */
-	public void onDisplayConfirm() {
+	public void onDisplayConfirmCanceMofRegistration() {
 		Locale locale = new FacesScopes().getUserLocale();
 		StringBuffer sb = new StringBuffer();
 		boolean valid = true;
@@ -872,7 +872,10 @@ public class SmApplicationBackingBean extends
 		if (!valid) {
 			throw new EpException(sb.toString());
 		} else {
-			RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
+			//RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
+			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			spkiBackingBean.getChallengeQuestions();
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
 
@@ -5513,8 +5516,12 @@ public class SmApplicationBackingBean extends
 			pmDigiSign.setSignedData(signedData);
 			this.getManagedBean().setPmDigiSign(pmDigiSign);			
 		}
-				
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
+			log.info(" *** This is cancellation application **** ");
+		return submitCancelMofApplToBpm();	
+		}else{
 		return submitSmApplToBpm(applType);
+		}
 	}
 	
 	
