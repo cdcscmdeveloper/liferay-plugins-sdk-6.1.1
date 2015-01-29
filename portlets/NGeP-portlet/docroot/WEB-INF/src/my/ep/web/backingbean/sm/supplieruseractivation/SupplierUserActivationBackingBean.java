@@ -326,15 +326,6 @@ public class SupplierUserActivationBackingBean extends
 			reqDTO.setDraftApplId(draftApplId);
 			PersonnelResDTO resDTO = null;
 			
-			//add personnel in draft
-			if (draftApplId != null) {
-				resDTO = personnelSO
-						.retrieveMofDraftPersonnelByIdentificationNoAndSupplierIdAndApplType(reqDTO);
-				if (resDTO.getSmPersonnel() != null) {
-					smPersonnelList.add(resDTO.getSmPersonnel());
-				}
-			} 
-			
 			//add personnel same identificationNo by supplierid
 			resDTO = personnelSO
 					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
