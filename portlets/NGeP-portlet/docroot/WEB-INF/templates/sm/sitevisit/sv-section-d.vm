@@ -1,4 +1,4 @@
-#include("/sm/sitevisit/shared/header.vm")
+#include("templates/sm/sitevisit/shared/header.vm")
 
 <table width='100%'>
 	<tr align='center' style="background-color: #3366ff;">
@@ -10,9 +10,9 @@
 </table>
 
 #if($templateCode == "I" || $templateCode == "BP" || $templateCode == "RM" || $templateCode == "A" || $templateCode == "PG")
-	#parse("/sm/sitevisit/shared/recommendation.vm")
+	#parse("templates/sm/sitevisit/shared/recommendation.vm")
 #elseif($templateCode == "L" || $templateCode == "B" || $templateCode == "M" || $templateCode == "PC")
-	#parse("/sm/sitevisit/shared/category-applicable.vm")
+	#parse("templates/sm/sitevisit/shared/category-applicable.vm")
 #end
 
-#include("/sm/sitevisit/shared/footer.vm")
+#include("templates/sm/sitevisit/shared/footer.vm")
