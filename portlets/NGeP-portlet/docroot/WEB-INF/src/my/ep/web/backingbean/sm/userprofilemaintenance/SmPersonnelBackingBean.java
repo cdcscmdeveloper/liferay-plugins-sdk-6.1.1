@@ -1366,24 +1366,6 @@ public class SmPersonnelBackingBean extends
 
 	private void validatePersonnelBeforeSave(SmPersonnel smPersonnel) {
 
-		if (getManagedBean().isUpgradeMofDraftAppl()) {
-			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IPersonnelSO.class);
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
-			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier()
-					.getSupplierId());
-
-			PersonnelResDTO resDTO = smPersonnelSO
-					.retrieveDraftPersonnelByIdentificationNoAndSupplierId(reqDTO);
-			if(resDTO.getSmPersonnel()!=null){
-				throw new EpException(MessageConst.ERROR_722589,
-						new String[] { smPersonnel.getIdentificationNo() });
-			}
-		}
-
 		if (smPersonnel.getIdentificationType().getParameterCode()
 				.equalsIgnoreCase("I")) {
 			if (smPersonnel.getIdentificationNo().length() != 12) {
@@ -1399,6 +1381,24 @@ public class SmPersonnelBackingBean extends
 				throw new EpException(MessageConst.ERROR_722524,
 						new String[] { smPersonnel.getIdentificationNo() });
 
+			}
+		}
+		
+		if (getManagedBean().isUpgradeMofDraftAppl()) {
+			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
+			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier()
+					.getSupplierId());
+
+			PersonnelResDTO resDTO = smPersonnelSO
+					.retrieveDraftPersonnelByIdentificationNoAndSupplierId(reqDTO);
+			if(resDTO.getSmPersonnel()!=null){
+				throw new EpException(MessageConst.ERROR_722589,
+						new String[] { smPersonnel.getIdentificationNo() });
 			}
 		}
 	}
