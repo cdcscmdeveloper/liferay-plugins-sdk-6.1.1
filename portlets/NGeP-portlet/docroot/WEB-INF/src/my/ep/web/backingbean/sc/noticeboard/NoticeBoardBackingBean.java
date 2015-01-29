@@ -1310,6 +1310,7 @@ public class NoticeBoardBackingBean extends
 		if (CollectionUtils.isNotEmpty(attandance)) {
 			for (ScQtBsvAttendance attendance : attandance) {
 				if (attendance.isPreRegisterd()) {
+					attendance.setAttended(true);
 					preRegisterdAttandance.add(attendance);
 				}
 			}
