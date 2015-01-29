@@ -402,7 +402,7 @@ public class OrganisationBackingBean extends
 					this.getManagedBean().setOfficeAddress(pmAddressType.getPmAddress());
 					addrExist = true;
 					log.info("Address Exist");
-				}				
+							
 				if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(pmAddressType.getPmContacts().get(0));
 					log.info("Contact Exist");
@@ -416,6 +416,7 @@ public class OrganisationBackingBean extends
 					contact.setPmAddressType(pmAddressType);
 					contactLst.add(contact);
 					pmAddressType.setPmContacts(contactLst);
+				}
 				}
 			}
 		}
