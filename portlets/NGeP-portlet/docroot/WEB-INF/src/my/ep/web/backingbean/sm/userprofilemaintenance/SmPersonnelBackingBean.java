@@ -374,6 +374,8 @@ public class SmPersonnelBackingBean extends
 				&& !resDTO.getSmPersonnelList().isEmpty()) {
 			getManagedBean().setSmPersonnelList(resDTO.getSmPersonnelList());
 		}
+		
+		getManagedBean().setDeactivatePersonnel(false);
 
 	}
 
@@ -1099,9 +1101,7 @@ public class SmPersonnelBackingBean extends
 				getManagedBean().setDisableAddNewUser(
 						validatePersonLimit(getManagedBean().getSmSupplier()));
 			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				if (getManagedBean().getBasicSmPersonnel().getEpRole() != null
-						&& StringUtils.isNotBlank(getManagedBean()
-								.getBasicSmPersonnel().getEpRole())) {
+				if (!getManagedBean().isDeactivatePersonnel()) {
 					String[] params = { getManagedBean().getBasicSmPersonnel()
 							.getName() };
 					getManagedBean().setDeactivateTerminateConfirmMsg(
@@ -1111,6 +1111,7 @@ public class SmPersonnelBackingBean extends
 					RequestContext.getCurrentInstance().execute(
 							"confirmDialog.show()");
 				} else {
+					getManagedBean().getBasicSmPersonnel().setEpRole(null);
 					updateUser(getManagedBean().getBasicSmPersonnel(), fc);
 					initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 					getManagedBean().setDisableAddNewUser(
