@@ -120,6 +120,7 @@ public class SupplierManagementConst {
 	public static final String STYPE_BASIC = "B";
 	public static final String ACC_BASIC = "O";
 	public static final String ACC_MOF = "N";
+	public static final String ACC_BASIC_REACTIVATE = "R";
 	public static final String PERM_ADD = "I";
 	public static final String BUS_ADD = "C";
 	public static final String RES_ADD = "R";
