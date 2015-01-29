@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.util.ArrayList;
+import my.ep.web.util.cm.helper.CmApplicationUtil;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
