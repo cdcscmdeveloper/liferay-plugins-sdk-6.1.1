@@ -49,6 +49,8 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -272,6 +274,7 @@ public class SmPersonnelBackingBean extends
 
 	public String navigateToAddNewUserPage() {
 		getManagedBean().setEditMode(false);
+		getManagedBean().setDeactivatePersonnel(false);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		removeEPRole();
 		buildRoleList();
@@ -382,6 +385,7 @@ public class SmPersonnelBackingBean extends
 		validateAccountStatus();
 		setDisabledActivateDeactivateRadioButton();
 		setPersonnelViewOnlyData(getManagedBean().getBasicSmPersonnel());
+		setDeactivateEpRole(getManagedBean().getBasicSmPersonnel());
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(
 					getManagedBean().getBasicSmPersonnelMailingAddress()
@@ -1888,5 +1892,43 @@ public class SmPersonnelBackingBean extends
 			responseDTO = null;
 		}
 		return retVal;
+	}
+
+	private void setDeactivateEpRole(SmPersonnel personnel) {
+		getManagedBean().setDeactivatePersonnel(false);
+		if (personnel != null && personnel.getEpRole() == null
+				&& StringUtils.isBlank(personnel.getEpRole())
+				&& personnel.getPmUser() != null
+				&& personnel.getPmUser().getPmUserOrgs() != null
+				&& !personnel.getPmUser().getPmUserOrgs().isEmpty()) {
+			getManagedBean().setDeactivatePersonnel(true);
+			List<PmUserOrg> pmUserOrgs = personnel.getPmUser().getPmUserOrgs();
+			PmUserOrg pmUserOrg = new PmUserOrg();
+			for (PmUserOrg org : pmUserOrgs) {
+				if (org.getPmOrgProfile().getOrgTypeCode().getParameterCode()
+						.equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
+					pmUserOrg = org;
+					break;
+				}
+			}
+			if (pmUserOrg != null && pmUserOrg.getPmUserRoles() != null
+					&& !pmUserOrg.getPmUserRoles().isEmpty()) {
+				for (PmUserRole pmUserRole : pmUserOrg.getPmUserRoles()) {
+					if (pmUserRole.getPmRole().getRoleCode()
+							.equals(RoleCode.BASIC_SUPPLIER_USER.value())
+							|| pmUserRole
+									.getPmRole()
+									.getRoleCode()
+									.equals(RoleCode.BASIC_SUPPLIER_ADMIN
+											.value())
+							|| pmUserRole.getPmRole().getRoleCode()
+									.equals(RoleCode.CM_USER.value())) {
+						personnel.setEpRole(pmUserRole.getPmRole()
+								.getRoleCode());
+						break;
+					}
+				}
+			}
+		}
 	}
 }

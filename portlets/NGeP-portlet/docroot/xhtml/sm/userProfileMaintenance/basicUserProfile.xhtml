@@ -49,13 +49,25 @@
 						<td><p:selectOneRadio id="accountstatus" required="false"
 								value="#{smPersonnelBackingBean.managedBean.accountStatus}" disabled="#{smPersonnelBackingBean.managedBean.disabledActivateAndDeactivate}"
 								rendered="#{smPersonnelBackingBean.managedBean.editMode}">
-								<f:selectItem itemLabel="#{empty smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole?lbl['lbl.sm.accountstatus.reactivate']:lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
+								<f:selectItem itemLabel="#{smPersonnelBackingBean.managedBean.deactivatePersonnel?lbl['lbl.sm.accountstatus.reactivate']:lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
 								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.terminate']}" itemValue="9" />
 								<p:ajax update="UserProfile" event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeAccntStatus}" />
 							</p:selectOneRadio></td>
 					
 					</tr>
+					<p:outputPanel rendered="#{smPersonnelBackingBean.managedBean.accountStatus eq 9}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.reason.termination']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:inputTextarea autoResize="true" cols="41" id="terminateReasonId"
+									maxlength="200" required="true" label="#{lbl['lbl.sm.reason.termination']}"
+									value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.addnlPersonnelJustification}" />
+								<p:message id="terminateReasonMsg"
+								for="terminateReasonId" showSummary="true" showDetail="false"
+								display="icon" />
+							</td>
+						</tr>
+					</p:outputPanel>
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
@@ -198,8 +210,10 @@
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
 								style="width: 207px;margin-bottom: 5px;" required="true" 
-								disabled="#{(smPersonnelBackingBean.managedBean.editMode and (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER' 
-								or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER'))}">
+								disabled="#{(smPersonnelBackingBean.managedBean.editMode 
+								and (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' 
+								or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER' )) 
+								or smPersonnelBackingBean.managedBean.deactivatePersonnel}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
 								<p:ajax event="change" partialSubmit="true" process="basicBURole" update="softCertId, contrSignId, contrSignSelDropDownId" />
