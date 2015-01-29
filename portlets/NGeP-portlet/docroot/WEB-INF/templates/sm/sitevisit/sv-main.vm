@@ -1,4 +1,4 @@
-#include("/sm/sitevisit/shared/header.vm")
+#include("templates/sm/sitevisit/shared/header.vm")
 
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
@@ -233,4 +233,4 @@
 			<td>Date:</td>
 		</tr>
 	</table>
-#include("/sm/sitevisit/shared/footer.vm")
+#include("templates/sm/sitevisit/shared/footer.vm")
