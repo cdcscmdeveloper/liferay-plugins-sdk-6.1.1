@@ -39,7 +39,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				//};
 	            break;
 	        case ReportConst.LST_APPR_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setCmSupplOrAdminView(true);			
+	        	//rptGenBean.setCmSupplOrAdminView(true);			
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
 				rptGenBean.setCmExtentionCodeView(true);			
@@ -54,7 +54,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				//};
 	            break;
 	        case ReportConst.LST_REJ_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setCmSupplOrAdminView(true);			
+	        	//rptGenBean.setCmSupplOrAdminView(true);			
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
 				rptGenBean.setCmExtentionCodeView(true);			
@@ -67,7 +67,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				//};
 	            break;
 	        case ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setCmSupplOrAdminView(true);			
+	        	//rptGenBean.setCmSupplOrAdminView(true);			
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
 				rptGenBean.setCmExtentionCodeView(true);			
@@ -115,7 +115,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmSupplOrAdminView(true);					
+				//rptGenBean.setCmSupplOrAdminView(true);					
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
@@ -127,7 +127,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmSupplOrAdminView(true);					
+				//rptGenBean.setCmSupplOrAdminView(true);					
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
