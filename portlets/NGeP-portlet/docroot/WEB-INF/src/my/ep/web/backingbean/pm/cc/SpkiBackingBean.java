@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -259,67 +260,73 @@ public class SpkiBackingBean {
 	    debugLogger("========================: "+pmDigiSign.getSignedData());
 
 		}
-	public void RequestChangePIN() throws IOException, PortalException, SystemException {
-//	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
-//	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
+	public void setChallengeQues1(String challengeQues1) {
+		this.challengeQues1 = challengeQues1;
+	}
 
-//        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
+
+	public void RequestChangePIN() throws IOException, PortalException, SystemException {
+
+//      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
 	    FacesScopes facesScope = new FacesScopes();
-	    Long userId = facesScope.getUserSessionBean().getUserId();
-	    byte[] token = generateSecurityToken().getBytes(); 
+//	    Long userId = facesScope.getUserSessionBean().getUserId();
+	    String userId = "800808081011"; 
+	    String token = generateSecurityToken(); 
+//		byte[] encodedToken = Base64.encode(token);
+//		System.err.println("token" +token);
+//		System.err.println("tokens" +encodedToken);
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		externalContext.redirect("https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx");
-//	    Long userId = (Long) MDC.get(LogKey.USER_ID);
-		byte[] encoded = Base64.encode(token);
-        
-	
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID="+userId+"&token=" + token;
+		        
+		String encodedUrl = URLEncoder.encode(url, "UTF-8");
+		 
+		externalContext.redirect(url);
+		System.out.println("Encoded URL " + encodedUrl);
+	 
 	}
 	
-//	public static void main(String[] args) {
-//		try{
-//			// Create property file
-//			File f = new File("kmc.properties");
-//			// Create KMCClient with the property file
-//			KMCClient client = KMCClientFactory.getInstance(f);
-//
-//			// Request service for user selected question for authentication
-//			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
-////			List<String> challs = null;
-//			switch(res.getStatusCode())
-//			{
-//			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-//				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-//				// show to the user to allow user answer the challenge
-////				setChallengeQues1(challs.get(0));
-//				for(int i = 0 ; i < challs.size() ; i ++)
-//				{
-//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
-//				}
-//				
-//				break;
-//
-//				default:
-//				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-//				return;
-//			}
-//
-//			if(challs.size() == 0)
-//			{
-//				System.err.println("No challanges found for the user! Data signing failed!");
-//				return;
-//			}
-//				
-//		} catch (Exception ex)
-//		{
-//			ex.printStackTrace();
-//		}
-//	}
+	public static void main(String[] args) {
+		try{
+			// Create property file
+			File f = new File("kmc.properties");
+			// Create KMCClient with the property file
+			KMCClient client = KMCClientFactory.getInstance(f);
+
+			// Request service for user selected question for authentication
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
+//			List<String> challs = null;
+			switch(res.getStatusCode())
+			{
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+				// show to the user to allow user answer the challenge
+//				setChallengeQues1(challs.get(0));
+				for(int i = 0 ; i < challs.size() ; i ++)
+				{
+					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
+				}
+				
+				break;
+
+				default:
+				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+				return;
+			}
+
+			if(challs.size() == 0)
+			{
+				System.err.println("No challanges found for the user! Data signing failed!");
+				return;
+			}
+				
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 
 	public String getChallengeQues1() {
 		return challengeQues1;
-	}
-	public void setChallengeQues1(String challengeQues1) {
-		this.challengeQues1 = challengeQues1;
 	}
 	public String getChallsAnswer() {
 		return challsAnswer;
