@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 	<ui:define name="contentSection">
@@ -56,9 +57,12 @@
 				</tr>
 			</table>
 			<div align="center">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					action="#{backingBean.onDisplayConfirm}" partialSubmit="true"
-					update="@([id$=Msg])" />
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+					action="#{backingBean.onDisplayConfirmCanceMofRegistration}"
+					update="spkiPopup,@([id$=Msg])"/>
+				<ac:spkiPopup id="spkiPopup"
+					postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForCancel)}" />
+
 			</div>
 		</p:panel>
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
