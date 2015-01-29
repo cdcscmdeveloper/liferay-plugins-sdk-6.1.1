@@ -6,6 +6,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import org.apache.log4j.Logger;
 
 
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -36,6 +37,7 @@ public class ReviewCatalogueBackingBean extends
 
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
+	private static Logger log = Logger.getLogger(ReviewCatalogueBackingBean.class);
 
 /*	public ReviewCatalogueBackingBean() {
 
@@ -128,7 +130,7 @@ public class ReviewCatalogueBackingBean extends
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
+		log.info("start of approveCatalogueItem ");
 		CatalogueBackingBean bb = new CatalogueBackingBean();
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
@@ -137,8 +139,7 @@ public class ReviewCatalogueBackingBean extends
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
 
 		reqDTO.getSaveSupplierItems().add(
-				bb.getManagedBean().getSelectedMaintainItem());
-		
+				bb.getManagedBean().getSelectedMaintainItem());		
 		log.info("Tracking diary for approveCatalogueItem items");
 		reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
 				getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,new Pmstatus()));
