@@ -125,6 +125,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResultDtl> recommendedItemSupplierList; 
 	private List<ScQtEvaluationResult> unRecommendedSupplierList;
 	private List<ScQtRecommend> selectedRecommendList; 
+	private List<ScQtRecommend> itemList;
 	private List<SmSupplier> awardSupplierList; 
 	
 	private Map<TplSpecZoneDtl, List<ScQtEvaluationResult>> shortlistedSupppliersByZone;
@@ -998,6 +999,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
 		this.selectedRecommendList = selectedRecommendList;
+	}
+
+	/**
+	 * @return the itemList
+	 */
+	public List<ScQtRecommend> getItemList() {
+		return itemList;
+	}
+
+	/**
+	 * @param itemList the itemList to set
+	 */
+	public void setItemList(List<ScQtRecommend> itemList) {
+		this.itemList = itemList;
 	}
 
 	/**
