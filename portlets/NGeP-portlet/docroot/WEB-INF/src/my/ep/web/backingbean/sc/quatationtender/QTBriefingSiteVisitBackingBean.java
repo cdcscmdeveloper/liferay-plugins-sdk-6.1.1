@@ -39,6 +39,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.backingbean.sc.bsvattendance.BSVAttendanceBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -327,35 +328,8 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 
 	public String gotoAttandanceDtl(ScQtBsvDtl scQtBriefing) {
-		debugLogger("gotoAttandanceDtl");
-		IQTBriefingSO qTBriefingSO = null;
-		try {
-			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-			if (scQtBriefing != null) {
-				this.getManagedBean().setQtBriefing(scQtBriefing);
-				BriefingReqDTO reqDTO = new BriefingReqDTO();
-
-				reqDTO.setQtBriefingId(scQtBriefing.getQtBsvDtlId());
-
-				BriefingResDTO resDTO = qTBriefingSO
-						.retrieveBriefingRegistrationList(reqDTO);
-
-				List<ScQtBsvRegistration> briefRegList = resDTO
-						.getBriefingRegResultBean().getResultList();
-
-				List<ScQtBsvRegistration> registrationList = new ArrayList<ScQtBsvRegistration>();
-				for (ScQtBsvRegistration scqtbriefReg : briefRegList) {
-					registrationList.add(scqtbriefReg);
-				}
-				this.getManagedBean().setBriefingRegistrationList(
-						registrationList);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			qTBriefingSO = null;
-		}
+		BSVAttendanceBackingBean attendanceBackingBean= new BSVAttendanceBackingBean();
+		attendanceBackingBean.registerSupplier(scQtBriefing);
 		return NAV_TO_BSV_ATTENDANCE_PAGE + "?faces-redirect=true";
 	}
 

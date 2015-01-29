@@ -14,7 +14,7 @@
 					style="font-weight:bold;text-align: left;" />
 
 				<h:outputText
-					value="* At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
+					value="At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
 					rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
@@ -88,7 +88,7 @@
 
 
 				<h:outputText
-					value="* At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing"
+					value="At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing"
 					rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
@@ -150,12 +150,14 @@
 		<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
 			<h:panelGroup rendered="#{!bsvDetails.sitevisitList.isEmpty()}">
 				<h:outputText value="* All Attandence required for SiteVisit"
-					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}" />
+					rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}"
+					style="font-weight:bold;text-align: left;" />
 
 
 				<h:outputText
 					value="At Least #{bsvDetails.scQtBsv.minSiteVisitAttend} Attandence required for SiteVisit"
-					rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}" />
+					rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}"
+					style="font-weight:bold;text-align: left;" />
 
 			</h:panelGroup>
 			<p:dataTable id="sitevisitDtls" var="sitevisitDtls"
