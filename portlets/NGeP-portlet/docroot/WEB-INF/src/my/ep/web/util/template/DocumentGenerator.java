@@ -39,6 +39,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			ve = new VelocityEngine();
 			ve.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
 			ve.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
+			ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
 			ve.init();
 		}
 		return ve;
