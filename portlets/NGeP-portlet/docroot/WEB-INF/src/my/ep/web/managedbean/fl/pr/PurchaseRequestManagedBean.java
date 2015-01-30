@@ -271,6 +271,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String measurementCodes;	
 	private String measurementNames;
 	
+	private boolean flDocMaintain = false;
+	
 /**
 	 * @return the chargeLineItemRoot
 	 */
@@ -2283,6 +2285,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setMeasurementNames(String measurementNames) {
 		this.measurementNames = measurementNames;
+	}
+
+	/**
+	 * @return the flDocMaintain
+	 */
+	public boolean isFlDocMaintain() {
+		return flDocMaintain;
+	}
+
+	/**
+	 * @param flDocMaintain the flDocMaintain to set
+	 */
+	public void setFlDocMaintain(boolean flDocMaintain) {
+		this.flDocMaintain = flDocMaintain;
 	}
 
 }
