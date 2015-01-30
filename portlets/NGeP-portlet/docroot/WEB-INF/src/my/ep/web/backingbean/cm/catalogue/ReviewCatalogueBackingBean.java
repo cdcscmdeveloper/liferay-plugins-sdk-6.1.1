@@ -144,7 +144,7 @@ public class ReviewCatalogueBackingBean extends
 		log.info("Tracking diary for approveCatalogueItem items");		
 		
 		reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
-				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,new Pmstatus()));
+				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,null));
 		   
 
 		try {
