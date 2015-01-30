@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 
-import my.ep.pgp.PGPProcessor;
-
 public class Encryption {
 
 	public void encryptGmas(String inFilePath, String outFilePath,String fileName,String processId) {
