@@ -769,13 +769,14 @@ public class PpCommonUtil {
 		sb.append(plan.getOrgProfile().getPmOrgValidity().getOrgName());
 		sb.append(" ");
 		sb.append(plan.getPlanYear());
-
+		/*
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(plan.getPlanType().getParameterCode())){
-//			sb.append(" ");
+			sb.append(" ");
 		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(plan.getPlanType().getParameterCode())){
 			sb.append(" ");
 			sb.append(ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.VOT_TYPE, plan.getVotFundType().getParameterCode()));
 		}
+		*/
 		System.out.println(sb.toString());
 	    return sb.toString();
 	}
