@@ -501,7 +501,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		   FacesContext facesContext = FacesContext.getCurrentInstance();
 		   getManagedBean().setFinalListOfSideMenu( new ArrayList<String>());
 		
-		   if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+		   if(getManagedBean().getCtContract().getContractType() != null 
+				   && getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 		    	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
 			      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuAgency);
 			      if(getManagedBean().getCtContract().isZonalPricing()) {
