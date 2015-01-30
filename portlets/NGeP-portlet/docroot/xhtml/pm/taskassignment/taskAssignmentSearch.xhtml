@@ -18,7 +18,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:selectOneMenu value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}" 
 						styleClass="ppDropDownWidthM" id="somOrgType"   
 						label="#{lbl['lbl.pm.ta.org.type.name']}">  
-						<f:selectItems value="#{profileManagementBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, taskAssignBackingBean.orgTypeSearchBean)}" />   
+						<f:selectItems value="#{taskAssignBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, taskAssignBackingBean.orgTypeSearchBean)}" />   
 				     	<p:ajax event="change" listener="#{taskAssignBackingBean.changeOrgType()}" 
 				     		update=":form:pTaskAssignSearch"/> 
 		            </p:selectOneMenu>	
