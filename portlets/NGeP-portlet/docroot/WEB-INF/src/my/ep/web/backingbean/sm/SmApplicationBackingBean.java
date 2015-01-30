@@ -872,8 +872,8 @@ public class SmApplicationBackingBean extends
 		if (!valid) {
 			throw new EpException(sb.toString());
 		} else {
-			//RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
-			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			// RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
+			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			spkiBackingBean.getChallengeQuestions();
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
@@ -999,26 +999,26 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getCurrentPageType());
 	}
 
+	public void updateSmAppl(PmDigiSign pmDigiSign, String applType,
+			String currentPageType, String outputPageType) {
 
-	
-	public void updateSmAppl(PmDigiSign  pmDigiSign, String applType, String currentPageType,
-			String outputPageType) {
-		
 		if (pmDigiSign != null) {
-			updateSpkiDigiSignData(pmDigiSign, "SR", 
-					this.getManagedBean().getSmAppl().getApplId(), this.getManagedBean().getSmAppl().getApplNo(), prepareOriginalText());
-			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-			String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
+			updateSpkiDigiSignData(pmDigiSign, "SR", this.getManagedBean()
+					.getSmAppl().getApplId(), this.getManagedBean().getSmAppl()
+					.getApplNo(), prepareOriginalText());
+			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+			String signedData = spkiBackingBean
+					.spkiSignTransaction(prepareOriginalText());
 			log.info("signedData: " + signedData);
-			
+
 			pmDigiSign.setSignedData(signedData);
-			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		updateSmAppl(applType, currentPageType, outputPageType);
 	}
-	
-	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign,
-			String docType, Long docId, String docNumber, String textBeforeSign) {
+
+	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
+			Long docId, String docNumber, String textBeforeSign) {
 		FacesScopes facesScope = new FacesScopes();
 		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
@@ -1029,22 +1029,24 @@ public class SmApplicationBackingBean extends
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOrginalData(textBeforeSign);
 	}
-	
+
 	/**
 	 * text to be signed for SM: applNo + userId (IC or password) + epNo
+	 * 
 	 * @return
 	 */
 	private String prepareOriginalText() {
-		
+
 		String applNo = this.getManagedBean().getSmAppl().getApplNo();
-		String userIdentificationNo = new FacesScopes().getUserSessionBean().getIdentificationNo();
+		String userIdentificationNo = new FacesScopes().getUserSessionBean()
+				.getIdentificationNo();
 		String epNo = this.getManagedBean().getSmSupplier().getEpNo();
-		
+
 		String originalText = applNo + "|" + userIdentificationNo + "|" + epNo;
 		log.info("originalText: " + originalText);
 		return originalText;
 	}
-	
+
 	/**
 	 * Validate and Update sm application.Mainly called when navigate from one
 	 * page to other or save as draft
@@ -1818,9 +1820,10 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
 						0);
-			}else{
+			} else {
 				getManagedBean().getSelectedShareHolder().setSoftcertFlg(2);
-				getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
+				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
+						0);
 			}
 		} else if (!getManagedBean().getSelectedShareHolder().getEpRole()
 				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
@@ -4119,21 +4122,23 @@ public class SmApplicationBackingBean extends
 	 * @param shareHolderBean
 	 *            - SmPersonnel object
 	 */
-	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel) {
+	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel,
+			SmSupplier smSupplier) {
 		String accStatus = "";
-		if (smPersonnel.getEpRole() != null
-				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
-			if (smPersonnel.getPmUser() == null) {
+		if (smSupplier != null
+				&& smSupplier.getSupplierId() != null
+				&& smPersonnel.getEpRole() != null
+				&& StringUtils.isNotBlank(smPersonnel.getEpRole())
+				&& smPersonnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+
+			if (SmApplicationUtil.isLatestApprovedPersonnelAlreadyAuthorized(
+					smPersonnel.getIdentificationNo(),
+					smSupplier.getSupplierId())) {
+				accStatus = SmCommonUtil.getMessage(
+						"lbl.sm.activation.status.activated", null);
+			} else {
 				accStatus = SmCommonUtil.getMessage(
 						"lbl.sm.activation.status.pending", null);
-			} else {
-				if (SmCommonUtil.isPersonnelAlreadyDeactivate(smPersonnel)) {
-					accStatus = SmCommonUtil.getMessage(
-							"lbl.sm.activation.status.activated", null);
-				} else {
-					accStatus = SmCommonUtil.getMessage(
-							"lbl.sm.activation.status.activated", null);
-				}
 			}
 		}
 		return accStatus;
@@ -5391,11 +5396,11 @@ public class SmApplicationBackingBean extends
 				// }
 
 			}
-			
-			if(this.getManagedBean().getPmDigiSign() != null) {
+
+			if (this.getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
-			
+
 			@SuppressWarnings("unused")
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -5504,27 +5509,28 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String submitSmApplToBpm(PmDigiSign pmDigiSign, String applType) {
-		
+
 		if (pmDigiSign != null) {
-			updateSpkiDigiSignData(pmDigiSign, "SR", 
-					this.getManagedBean().getSmAppl().getApplId(), this.getManagedBean().getSmAppl().getApplNo(), prepareOriginalText());
-			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			updateSpkiDigiSignData(pmDigiSign, "SR", this.getManagedBean()
+					.getSmAppl().getApplId(), this.getManagedBean().getSmAppl()
+					.getApplNo(), prepareOriginalText());
+			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			log.info("spkiBackingBean: " + spkiBackingBean);
-			String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
+			String signedData = spkiBackingBean
+					.spkiSignTransaction(prepareOriginalText());
 			log.info("signedData: " + signedData);
-			
+
 			pmDigiSign.setSignedData(signedData);
-			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
-		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
+		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			log.info(" *** This is cancellation application **** ");
-		return submitCancelMofApplToBpm();	
-		}else{
-		return submitSmApplToBpm(applType);
+			return submitCancelMofApplToBpm();
+		} else {
+			return submitSmApplToBpm(applType);
 		}
 	}
-	
-	
+
 	/**
 	 * Submit cancel mof application to bpm and update the DB.
 	 * 
