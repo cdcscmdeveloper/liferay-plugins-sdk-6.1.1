@@ -245,7 +245,9 @@ public class ReportsGenerateBean {
 		private boolean ctGroupOneView = false;
 		private boolean ctGroupTwoView = false;
 		private boolean ctProductServiceView = false;
-		
+		private boolean ctLoanNoView = false;
+		private boolean ctMinistryView = false;
+		private boolean ctPtjView = false;
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -402,6 +404,9 @@ public class ReportsGenerateBean {
 		private String ctGroupOneVar=ReportConst.EMPTY_VAL;
 		private String ctGroupTwoVar=ReportConst.EMPTY_VAL;
 		private String ctProductServiceVar=ReportConst.EMPTY_VAL;
+		private String ctLoanNoVar=ReportConst.EMPTY_VAL;
+		private String ctMinistryVar=ReportConst.EMPTY_VAL;
+		private String ctPtjVar=ReportConst.EMPTY_VAL;
 		//ct
 		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
 		private String flContractRequestVar=ReportConst.EMPTY_VAL;
@@ -426,6 +431,42 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public boolean isCtMinistryView() {
+			return ctMinistryView;
+		}
+		public void setCtMinistryView(boolean ctMinistryView) {
+			this.ctMinistryView = ctMinistryView;
+		}
+		public boolean isCtPtjView() {
+			return ctPtjView;
+		}
+		public void setCtPtjView(boolean ctPtjView) {
+			this.ctPtjView = ctPtjView;
+		}
+		public String getCtMinistryVar() {
+			return ctMinistryVar;
+		}
+		public void setCtMinistryVar(String ctMinistryVar) {
+			this.ctMinistryVar = ctMinistryVar;
+		}
+		public String getCtPtjVar() {
+			return ctPtjVar;
+		}
+		public void setCtPtjVar(String ctPtjVar) {
+			this.ctPtjVar = ctPtjVar;
+		}
+		public boolean isCtLoanNoView() {
+			return ctLoanNoView;
+		}
+		public void setCtLoanNoView(boolean ctLoanNoView) {
+			this.ctLoanNoView = ctLoanNoView;
+		}
+		public String getCtLoanNoVar() {
+			return ctLoanNoVar;
+		}
+		public void setCtLoanNoVar(String ctLoanNoVar) {
+			this.ctLoanNoVar = ctLoanNoVar;
+		}
 		public boolean isCtProductServiceView() {
 			return ctProductServiceView;
 		}
