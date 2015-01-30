@@ -4174,7 +4174,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) {
 				csiList.add(csi);
 				reqDTO.setSupplierId(csi.getSupplierId());				
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,CmConst.SUPPLIER_ITEM_APPROVED, new PmStatus()));
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED, new PmStatus()));
 			}			
 			try {
 				catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
