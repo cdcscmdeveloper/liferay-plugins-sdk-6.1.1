@@ -1548,8 +1548,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					contractValue = contractValue.add(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
 				}				
 				context.put("newContractValue", amountDF.format(contractValue));
-			
-				context.put("fulfillmentType", getParameterDesc(getManagedBean().getCtContract().getFulfillmentType()));
+				String fulfilmentType = getParameterDesc(getManagedBean().getCtContract().getFulfillmentType());
+				fulfilmentType = fulfilmentType.replaceAll("&", "&#38;");
+				context.put("fulfillmentType", fulfilmentType);
 				context.put("referAttachment", "Refer Attachment");
 				
 				double deductionAmount = 0;
