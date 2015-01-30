@@ -30,6 +30,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.ReviewCatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 
 @ManagedBean(name = "reviewCatBackingBean")
 @RequestScoped
@@ -143,10 +144,10 @@ public class ReviewCatalogueBackingBean extends
 				bb.getManagedBean().getSelectedMaintainItem());		
 		log.info("Tracking diary for approveCatalogueItem items");		
 		
-		reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
+		reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
+		reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(
 				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,null));
-		   
-
+		
 		try {
 			catalogueSO.updateSupplierItem(reqDTO);
 		} catch (Exception e) {
