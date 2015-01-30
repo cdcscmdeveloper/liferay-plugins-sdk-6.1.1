@@ -135,10 +135,13 @@
 					</td>
 					
 					<td class="tdContent">
-						<p:selectOneRadio id="bumiId" required="#{!empty param['disableValidation']}" value="#{registrationBackingBean.managedBean.smPersonnel.bumiFlg}">
+						<p:selectOneRadio id="bumiId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.bumi']}"
+							value="#{registrationBackingBean.managedBean.smPersonnel.bumiFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-						</p:selectOneRadio></td>
+						</p:selectOneRadio>
+						<p:message id="bumiIdMsg" for="bumiId" showSummary="true" showDetail="false" display="icon" />
+					</td>
 					
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.person.religion']}" />
@@ -146,10 +149,12 @@
 					</td>
 					
 					<td class="tdContent">
-						<p:selectOneRadio id="religionId" required="#{!empty param['disableValidation']}" value="#{registrationBackingBean.managedBean.smPersonnel.muslimFlg}">
+						<p:selectOneRadio id="religionId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.religion']}"
+							value="#{registrationBackingBean.managedBean.smPersonnel.muslimFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
 						</p:selectOneRadio>
+						<p:message id="religionIdMsg" for="religionId" showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
 				
