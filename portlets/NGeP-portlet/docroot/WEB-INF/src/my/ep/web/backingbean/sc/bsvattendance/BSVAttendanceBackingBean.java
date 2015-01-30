@@ -352,6 +352,7 @@ public class BSVAttendanceBackingBean extends
 
 				retrieveBriefingSiteVisitList(qtId);
 				url = previousPage + ".xhtml?faces-redirect=true";
+				return url;
 			}
 			if (resDTO.isSuccessful()
 					&& SourcingConstants.SAVE.equalsIgnoreCase(flowType)) {
@@ -382,14 +383,12 @@ public class BSVAttendanceBackingBean extends
 														new FacesScopes()
 																.getUserLocale())));
 
-			} else {
-				url = this.getManagedBean().getPreviousPage();
-			}
+			} 
 		} finally {
 			qTBriefingSO = null;
 		}
 
-		return url;
+		return "";
 
 	}
 
