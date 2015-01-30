@@ -131,7 +131,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-					rptGenBean.setCmItemTypeView(true);
+					//rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmCompanyNameView(true);
 					rptGenBean.setCmRegistrationTypeView(true);					
 				//};
@@ -153,7 +153,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-					rptGenBean.setCmItemTypeView(true);
+					//rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmCompanyNameView(true);
 					rptGenBean.setCmRegistrationTypeView(true);					
 				//};
