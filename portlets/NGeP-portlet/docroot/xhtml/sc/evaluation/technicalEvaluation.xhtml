@@ -54,11 +54,11 @@
 					<ui:fragment rendered="#{technicalEvaluate.scoringReq eq 'false'}">
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate)}" />
+							action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate,index,'ET')}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{technicalEvaluate.scoringReq ne 'false'}">
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
-							action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate)}"
+							action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate,index,'ET')}"
 							process="@this" partialSubmit="true" />
 					</ui:fragment>
 

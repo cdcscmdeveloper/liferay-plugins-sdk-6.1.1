@@ -19,7 +19,7 @@
 			mode="advanced" id="dlgsuploadids"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="bpkremarksupDtls" oncomplete="supportAttachDlg.hide()">
+			update="@form" oncomplete="supportAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 
@@ -47,7 +47,7 @@
 			mode="advanced" id="demodlgsuploadids"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="demoremarksupdtls" oncomplete="demoAttachDlg.hide()">
+			update="@form" oncomplete="demoAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 

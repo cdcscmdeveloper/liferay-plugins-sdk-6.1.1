@@ -21,7 +21,7 @@
 
 
 				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
-					style="width:70%;white-space: normal;">
+					style="width:55%;white-space: normal;">
 
 					<h:outputText value="#{financialEval.title}"></h:outputText>
 
@@ -37,17 +37,25 @@
 
 				</p:column>
 
+				<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
+					style="width:15%;white-space: normal;">
+
+
+					<h:outputText
+						value="#{evaluationBackingBean.getStatusDescById(financialEval.pmEvalStatus.statusId)}"></h:outputText>
+
+				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 					style="width:10%">
 					<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval)}" />
+							action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{financialEval.scoringReq ne 'false'}">
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval)}" />
+							action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 					</ui:fragment>
 
 
