@@ -4179,6 +4179,7 @@ public class SmApplicationUtil {
 	 */
 	public static void handleShowOrHideFacilityPanels(
 			SmApplicationManagedBean managedBean) {
+		log.info("**** Enter handleShowOrHideFacilityPanels **********");
 		managedBean.setShowDockyardPanel(false);
 		managedBean.setShowStorePanel(false);
 		managedBean.setShowFactoryPanel(false);
@@ -4189,18 +4190,25 @@ public class SmApplicationUtil {
 					&& cat.getPmCategoryL3() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode()
-							.getParameterId() != null) {
-				Long catTypeId = cat.getPmCategoryL3().getCategoryTypeCode()
-						.getParameterId();
-				if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_MANUFACTURING
-						|| catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_PRINTING) {
+							.getParameterId() != null
+					&& cat.getRecordStatusFlg() != null
+					&& cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				String facType = "";
+				if (cat.getPmCategoryL3().getFacilityType() != null) {
+					facType = cat.getPmCategoryL3().getFacilityType();
+				}
+				if (facType
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
 					managedBean.setShowFactoryPanel(true);
-				} else if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_TRANSPORTATION) {
+				} else if (facType
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
 					managedBean.setShowStorePanel(true);
-				} else if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_WORKSHOP) {
+				} else if (facType
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
 					managedBean.setShowWorkShopPanel(true);
-				} else if (catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_DOCKYARD
-						|| catTypeId == SupplierManagementConst.CATEGORY_TYPE_ID_READING) {
+				} else if (facType
+						.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
 					managedBean.setShowDockyardPanel(true);
 				}
 			}
