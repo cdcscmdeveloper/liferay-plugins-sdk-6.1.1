@@ -3908,7 +3908,8 @@ public class SmApplicationBackingBean extends
 	 * @param smPersonnels
 	 *            - List of sm personnels
 	 */
-	private void updatePersonnelRecordStatus(List<SmPersonnel> smPersonnels) {
+	private void updatePersonnelRecordStatus(List<SmPersonnel> smPersonnels,
+			SmSupplier smSupplier) {
 		if (smPersonnels != null && !smPersonnels.isEmpty()) {
 			for (SmPersonnel smPersonnel : smPersonnels) {
 				if (smPersonnel.getAuthorizedFlg() == 0) {
@@ -3918,9 +3919,13 @@ public class SmApplicationBackingBean extends
 					smPersonnel
 							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				} else {
-					if (smPersonnel.getPmUser() == null
-							&& smPersonnel.getEpRole() != null
-							&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
+					if (SmApplicationUtil
+							.isLatestApprovedPersonnelAlreadyAuthorized(
+									smPersonnel.getIdentificationNo(),
+									smSupplier.getSupplierId())) {
+						smPersonnel
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					} else {
 						smPersonnel
 								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 					}
