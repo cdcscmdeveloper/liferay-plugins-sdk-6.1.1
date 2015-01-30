@@ -2748,7 +2748,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>smRequestActivation</portlet-name>
-		<display-name>Request Activation Email</display-name>
+		<display-name>Resend Activation Email</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -2764,7 +2764,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Request Activation Email</title>
+			<title>Resend Activation Email</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
