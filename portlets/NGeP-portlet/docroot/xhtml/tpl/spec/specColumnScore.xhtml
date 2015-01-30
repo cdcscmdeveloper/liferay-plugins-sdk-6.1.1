@@ -36,7 +36,7 @@
 				label="#{lbl['lbl.tpl.spec.content.user.score']}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
 				<f:attribute name="min" value="0" />
-				<f:attribute name="max" value="#{tplSpecAnswer.tplSpecQuestion.maxScore.toString()}" />
+				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg" />
 			</p:inputText>
 			 / 
