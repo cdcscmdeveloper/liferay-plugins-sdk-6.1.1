@@ -3859,7 +3859,7 @@ public class SmApplicationBackingBean extends
 
 			}
 			updatePersonnelRecordStatus(getManagedBean().getSmAppl()
-					.getSmPersonnels());
+					.getSmPersonnels(),getManagedBean().getSmSupplier());
 			saveOrUpdateAppl();
 			SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
 					getManagedBean().getSmAppl(), getManagedBean()
