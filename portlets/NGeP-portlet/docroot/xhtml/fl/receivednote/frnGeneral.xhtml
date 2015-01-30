@@ -21,12 +21,29 @@
 						style=" margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="59" id="ptjGroup"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputText size="59" id="controlOff"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputText size="7" disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="40" id="preparedPtj"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.flFulfilmentOrder.docNo}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -44,10 +61,6 @@
 					<p:spacer width="5" /> <p:inputText size="40" id="chargePtj"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.flFulfilmentOrder.docNo}"></p:inputText>
-				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
