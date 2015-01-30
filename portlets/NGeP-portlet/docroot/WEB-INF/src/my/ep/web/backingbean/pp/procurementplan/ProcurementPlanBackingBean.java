@@ -1730,9 +1730,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private void getAllEpItem(PpPlan plan){
 		log.info("getAllEpItem");
 		addEpItemToPlan(plan, this.getManagedBean().getEpItemsB());
-//			addEpItemToPlan(plan, this.getManagedBean().getEpItemsT());
-//			addEpItemToPlan(plan, this.getManagedBean().getEpItemsP());
-//			addEpItemToPlan(plan, this.getManagedBean().getEpItemsS());
+		addEpItemToPlan(plan, this.getManagedBean().getEpItemsT());
+		addEpItemToPlan(plan, this.getManagedBean().getEpItemsP());
+		addEpItemToPlan(plan, this.getManagedBean().getEpItemsS());
 		addEpItemToPlan(plan, this.getManagedBean().getEpItemsH());
 
 	}
