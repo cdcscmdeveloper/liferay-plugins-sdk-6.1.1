@@ -3338,11 +3338,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().getSelectedMaintainItem().setRecordStatusFlg(1);
 			
 			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());			
-			log.info("Tracking diary for catalog published items");
+			log.info("Tracking diary for to publish the catalog items");
 			
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
-			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));
-						
+			
+			if(this.getManagedBean().getSelectedMaintainItem().isReviewRequired())
+			{
+			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,new PmStatus()));
+			}
+			else{
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));
+			 }
 			/*reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
 					this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));*/
 			
