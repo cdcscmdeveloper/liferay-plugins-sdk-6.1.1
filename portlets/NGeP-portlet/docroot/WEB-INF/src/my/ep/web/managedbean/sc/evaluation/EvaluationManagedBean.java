@@ -214,6 +214,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean evaluationStageStatusHide=true;
 	private List<TplSpecScoring> specItemScoringList;
 	private int complianceCheckListIndex=-1;
+	private String evaluationCheckListType;
+	private int evaluationCheckListIndex=-1;
+	private String evaluationTechnicalFinancialType;
   
 	/**
 	 * @return the today
@@ -2105,6 +2108,49 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setComplianceCheckListIndex(int complianceCheckListIndex) {
 		this.complianceCheckListIndex = complianceCheckListIndex;
+	}
+
+	/**
+	 * @return the evaluationCheckListType
+	 */
+	public String getEvaluationCheckListType() {
+		return evaluationCheckListType;
+	}
+
+	/**
+	 * @param evaluationCheckListType the evaluationCheckListType to set
+	 */
+	public void setEvaluationCheckListType(String evaluationCheckListType) {
+		this.evaluationCheckListType = evaluationCheckListType;
+	}
+
+	/**
+	 * @return the evaluationCheckListIndex
+	 */
+	public int getEvaluationCheckListIndex() {
+		return evaluationCheckListIndex;
+	}
+
+	/**
+	 * @param evaluationCheckListIndex the evaluationCheckListIndex to set
+	 */
+	public void setEvaluationCheckListIndex(int evaluationCheckListIndex) {
+		this.evaluationCheckListIndex = evaluationCheckListIndex;
+	}
+
+	/**
+	 * @return the evaluationTechnicalFinancialType
+	 */
+	public String getEvaluationTechnicalFinancialType() {
+		return evaluationTechnicalFinancialType;
+	}
+
+	/**
+	 * @param evaluationTechnicalFinancialType the evaluationTechnicalFinancialType to set
+	 */
+	public void setEvaluationTechnicalFinancialType(
+			String evaluationTechnicalFinancialType) {
+		this.evaluationTechnicalFinancialType = evaluationTechnicalFinancialType;
 	}
 
 	
