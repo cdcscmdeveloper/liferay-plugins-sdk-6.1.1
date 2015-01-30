@@ -7,6 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.factory.details']}" toggleable="true"
+		rendered="#{backingBean.managedBean.showFactoryPanel}"
 		id="smFacilityFactoryDtPanel">
 
 		<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
