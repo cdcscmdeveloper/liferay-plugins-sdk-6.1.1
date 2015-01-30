@@ -140,7 +140,7 @@ public class SpkiBackingBean {
 		try{
 			KMCClient client = KMCClientFactory.getInstance(f);
 			
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken("UserID", "ORG123"));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken("890101011234", "eP-1400J005d"));
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -264,25 +264,73 @@ public class SpkiBackingBean {
 		this.challengeQues1 = challengeQues1;
 	}
 
-
 	public void RequestChangePIN() throws IOException, PortalException, SystemException {
-
-//      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
 	    FacesScopes facesScope = new FacesScopes();
-//	    Long userId = facesScope.getUserSessionBean().getUserId();
-	    String userId = "800808081011"; 
+//	    Long userId = facesScope.getUserSessionBean().getIdentificationNo();
+	    String userId = "890101011234"; 
+	    String orgId = "eP-1400J005d"; 
 	    String token = generateSecurityToken(); 
-//		byte[] encodedToken = Base64.encode(token);
-//		System.err.println("token" +token);
-//		System.err.println("tokens" +encodedToken);
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID="+userId+"&token=" + token;
-		        
-		String encodedUrl = URLEncoder.encode(url, "UTF-8");
-		 
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID="+userId+"&orgid=eP-1400J005d"+ "&token=" + encodedtoken;
 		externalContext.redirect(url);
-		System.out.println("Encoded URL " + encodedUrl);
-	 
+		System.out.println("Encoded encodedtoken " + encodedtoken);
+		System.out.println("Encoded URL " + url4);	 
+	}
+	
+	public void RequestChallRespUpdate() throws IOException, PortalException, SystemException {
+	    FacesScopes facesScope = new FacesScopes();
+//	    Long userId = facesScope.getUserSessionBean().getIdentificationNo();
+	    String userId = "890101011234"; 
+	    String orgId = "eP-1400J005d"; 
+	    String token = generateSecurityToken(); 
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID="+userId+"&orgid=eP-1400J005d"+ "&token=" + encodedtoken;
+		externalContext.redirect(url2);
+		System.out.println("Encoded encodedtoken " + encodedtoken);
+		System.out.println("Encoded URL " + url4);	 
+	}
+	
+	public void RequestResetPIN() throws IOException, PortalException, SystemException {
+	    FacesScopes facesScope = new FacesScopes();
+//	    Long userId = facesScope.getUserSessionBean().getIdentificationNo();
+//	    Long userId = facesScope.getUserSessionBean().getEmail();
+	    String userId = "890101011234"; 
+	    String orgId = "eP-1400J005d"; 
+	    String token = generateSecurityToken(); 
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="+userId+"&email=TEST.YAZID@YAHOO.COM" + "&token=" + encodedtoken;
+		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID="+userId+"&orgid=eP-1400J005d"+ "&token=" + encodedtoken;
+		externalContext.redirect(url3);
+		System.out.println("Encoded encodedtoken " + encodedtoken);
+		System.out.println("Encoded URL " + url3);	 
+	}
+	
+	public void RequestRevokeCert() throws IOException, PortalException, SystemException {
+	    FacesScopes facesScope = new FacesScopes();
+//	    Long userId = facesScope.getUserSessionBean().getIdentificationNo();
+	    String userId = "890101011234"; 
+	    String orgId = "eP-1400J005d"; 
+	    String token = generateSecurityToken(); 
+		String encodedtoken = URLEncoder.encode(token, "UTF-8");
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID="+userId+"&orgid=eP-1400J005d"+ "&token=" + encodedtoken;
+		externalContext.redirect(url4);
+		System.out.println("Encoded encodedtoken " + encodedtoken);
+		System.out.println("Encoded URL " + url4);	 
 	}
 	
 	public static void main(String[] args) {
