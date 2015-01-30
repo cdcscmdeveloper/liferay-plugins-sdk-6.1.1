@@ -562,7 +562,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				}
 			}
 			if(isApprover && ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
-				generateCompleteUsers(pmUsers, task);
+				generateCompleteUsers(pmUsers, task, userId);
 			}
 			/* 27 Jan 2014
 			if(isApprover){
@@ -582,7 +582,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 * @param pmUsers
 	 * @param task
 	 */
-	private void generateCompleteUsers(List<PmUser> pmUsers, WorklistItemVO task){
+	private void generateCompleteUsers(List<PmUser> pmUsers, WorklistItemVO task, Long selectedUserId){
 		log.info("generateCompleteUsers");
 		String moduleCode = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue()).getModuleCode();
 		log.info("moduleCode: " + moduleCode);
@@ -603,6 +603,26 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		if(selectedApprovers!=null && !selectedApprovers.isEmpty()){
 			log.info("add approvers to list");
 			pmUsers.addAll(selectedApprovers);
+			removeSelectedUser(pmUsers, selectedUserId);
+		}
+	}
+	
+	/**
+	 * remove selected user from list
+	 * @param pmUsers
+	 * @param selectedUserId
+	 */
+	private void removeSelectedUser(List<PmUser> pmUsers, Long selectedUserId){
+		log.info("removeSelectedUser");
+		PmUser selectedUser = null;
+		for(PmUser pmUser:pmUsers){
+			if(pmUser.getUserId().equals(selectedUserId)){
+				selectedUser = pmUser;
+			}
+		}
+		
+		if(selectedUser!=null){
+			pmUsers.remove(selectedUser);
 		}
 	}
 
