@@ -582,7 +582,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		      getManagedBean().setCommittetype(getCommitteTye());
 		      getManagedBean().setDisableAmendDetails(false);
 		      if(getManagedBean().getTaskName() != null && 
-		    		  (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+		    		  (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)
+		    		  		   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
 		    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
 		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
 		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
