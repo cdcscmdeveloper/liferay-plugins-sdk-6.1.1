@@ -35,7 +35,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</p:inputText>
 
 	   	<p:dataTable id="dtExpenditurePlanT" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
+		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsT}"
 		     rowIndexVar="index" rowKey="#{epItem}">
 			<ac:paginator for="dtExpenditurePlanT" />
 	    	<p:columnGroup type="header">
@@ -198,21 +198,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column>
 					   	<f:facet name="footer">
-				     		<h:outputText  id="gtBudgetAmtT" value="#{pPlanBackingBean.managedBean.epTotalBudget}" styleClass="gtBudgetAmtT">
+				     		<h:outputText  id="gtBudgetAmtT" value="#{pPlanBackingBean.managedBean.epTotalBudgetT}" styleClass="gtBudgetAmtT">
 			     				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				     		</h:outputText>
 					    </f:facet>
 					</p:column>
 					<p:column>
 					 	<f:facet name="footer">
-					     	<h:outputText  id="gtPlanAmtT" value="#{pPlanBackingBean.managedBean.epTotalPlan}" styleClass="gtPlanAmtT">
+					     	<h:outputText  id="gtPlanAmtT" value="#{pPlanBackingBean.managedBean.epTotalPlanT}" styleClass="gtPlanAmtT">
 					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					     	</h:outputText>
 					    </f:facet>
 					</p:column>
 					 <p:column>
 					 	<f:facet name="footer">
-					     	<h:outputText  id="gtNonAllocAmtT" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}" styleClass="gtNonAllocAmtT" >
+					     	<h:outputText  id="gtNonAllocAmtT" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocT}" styleClass="gtNonAllocAmtT" >
 					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					     	</h:outputText>
 					    </f:facet>
