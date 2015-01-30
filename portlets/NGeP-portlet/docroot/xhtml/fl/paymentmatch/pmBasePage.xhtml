@@ -19,6 +19,7 @@
 		<ac:gpkiPopup 
 			textBeforeSign="#{paymentMatchBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{paymentMatchBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{paymentMatchBackingBean.enableAutoUpdate()}" 
 		/>	
 		<f:event listener="#{paymentMatchBackingBean.preRenderView}"
 			type="preRenderView" />

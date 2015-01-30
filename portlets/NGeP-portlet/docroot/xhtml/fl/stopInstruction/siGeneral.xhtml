@@ -22,6 +22,20 @@
 				</td>						
 			</tr>
 			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="54" id="ptjGroup"
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputText size="54" id="controlOff"
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td>
 					<p:inputText size="8" id="preparedOrgProfileId" disabled="true"

@@ -23,6 +23,20 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="66" id="ptjGroup"
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputText size="66" id="controlOff"
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
 				<td style="width: 142px;"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputText size="8" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />

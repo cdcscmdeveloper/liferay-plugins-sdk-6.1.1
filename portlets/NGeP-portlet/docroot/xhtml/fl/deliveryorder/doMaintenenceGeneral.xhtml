@@ -21,6 +21,20 @@
 					<h:outputText value="" /></td>
 			</tr>
 			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="53" id="ptjGroupMaint"
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputText size="53" id="controlOffMaint"
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputText size="5" id="dopreparedOrgProfileId"
 						disabled="true"
