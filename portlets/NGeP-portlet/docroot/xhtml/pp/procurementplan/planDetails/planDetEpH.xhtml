@@ -15,29 +15,29 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			hiddenGtBudgetAmt, hiddenGtPlanAmt, hiddenGtNonAllocAmt - the class name of calculated value in hidden fields
 		*/
 		function updateEpFooter(){
-			document.getElementsByClassName('gtBudgetAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtBudgetAmt')[0].value;
-			document.getElementsByClassName('gtPlanAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtPlanAmt')[0].value;
-			document.getElementsByClassName('gtNonAllocAmt')[0].innerHTML = document.getElementsByClassName('hiddenGtNonAllocAmt')[0].value;
+			document.getElementsByClassName('gtBudgetAmtH')[0].innerHTML = document.getElementsByClassName('hiddenGtBudgetAmtH')[0].value;
+			document.getElementsByClassName('gtPlanAmtH')[0].innerHTML = document.getElementsByClassName('hiddenGtPlanAmtH')[0].value;
+			document.getElementsByClassName('gtNonAllocAmtH')[0].innerHTML = document.getElementsByClassName('hiddenGtNonAllocAmtH')[0].value;
 			
 		}
 			
  	</script>
-	<p:outputPanel id="opPlanEpH">
+	<p:panel id="opPlanEpH" header="#{lbl['lbl.pp.plan.details.h']}" toggleable="true">
 	<br/>
-		<p:inputText style="display:none" id="hiddenGtBudgetAmt" styleClass="hiddenGtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudgetH}">
+		<p:inputText style="display:none" id="hiddenGtBudgetAmtH" styleClass="hiddenGtBudgetAmtH" value="#{pPlanBackingBean.managedBean.epTotalBudgetH}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
-		<p:inputText style="display:none" id="hiddenGtPlanAmt" styleClass="hiddenGtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlanH}">
+		<p:inputText style="display:none" id="hiddenGtPlanAmtH" styleClass="hiddenGtPlanAmtH" value="#{pPlanBackingBean.managedBean.epTotalPlanH}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
-		<p:inputText style="display:none" id="hiddenGtNonAllocAmt" styleClass="hiddenGtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocH}">
+		<p:inputText style="display:none" id="hiddenGtNonAllocAmtH" styleClass="hiddenGtNonAllocAmtH" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocH}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
 
-	   	<p:dataTable id="dtExpenditurePlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+	   	<p:dataTable id="dtExpenditurePlanH" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsH}"
 		     rowIndexVar="index" rowKey="#{epItem}">
-			<ac:paginator for="dtProcurementPlan" />
+			<ac:paginator for="dtExpenditurePlanH" />
 	    	<p:columnGroup type="header">
 				<p:row>
 				 	<p:column  style="width:2%" />
@@ -198,21 +198,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column>
 					   	<f:facet name="footer">
-				     		<h:outputText  id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudgetH}" styleClass="gtBudgetAmt">
+				     		<h:outputText  id="gtBudgetAmtH" value="#{pPlanBackingBean.managedBean.epTotalBudgetH}" styleClass="gtBudgetAmtH">
 			     				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				     		</h:outputText>
 					    </f:facet>
 					</p:column>
 					<p:column>
 					 	<f:facet name="footer">
-					     	<h:outputText  id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlanH}" styleClass="gtPlanAmt">
+					     	<h:outputText  id="gtPlanAmtH" value="#{pPlanBackingBean.managedBean.epTotalPlanH}" styleClass="gtPlanAmtH">
 					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					     	</h:outputText>
 					    </f:facet>
 					</p:column>
 					 <p:column>
 					 	<f:facet name="footer">
-					     	<h:outputText  id="gtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocH}" styleClass="gtNonAllocAmt" >
+					     	<h:outputText  id="gtNonAllocAmtH" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocH}" styleClass="gtNonAllocAmtH" >
 					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					     	</h:outputText>
 					    </f:facet>
@@ -238,16 +238,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<br/>
        	<br/>
 		<div class="ppRightBtn">
-		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlan" 
+		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanH" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
 		 		process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votAmanah)}"/>
 			&#160;
-			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlan" 
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlanH" 
 				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votAmanah)}"
 				
 			/> 
 		</div>
-	</p:outputPanel>
-	<ac:lovPopup /> 	
+	</p:panel>	
 	
 </ui:composition>
