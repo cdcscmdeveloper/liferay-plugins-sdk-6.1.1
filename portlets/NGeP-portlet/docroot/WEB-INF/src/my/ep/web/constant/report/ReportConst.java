@@ -581,6 +581,9 @@ public class ReportConst {
 	public static final String CT_GROUP_VAL_INACTIVE = "INACTIVE";
 	public static final String CT_AMP_COMPLETE_EQ = "&PCOMPLETE=";
 	public static final String CT_AMP_PPRODUCTSERVICE_EQ = "&PPRODUCTSERVICE=";
+	public static final String CT_AMP_PLOANO_EQ = "&PLOANO=";
+	public static final String CT_AMP_PMINISTRY_EQ = "&PMINISTRY=";
+	public static final String CT_AMP_PPTJNAME_EQ = "&PPTJNAME=";
 	
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";

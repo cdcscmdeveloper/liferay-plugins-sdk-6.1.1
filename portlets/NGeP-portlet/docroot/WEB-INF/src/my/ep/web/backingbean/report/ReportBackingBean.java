@@ -96,7 +96,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private List<SelectItem> scQuotationList = new ArrayList<SelectItem>();	
 	private List<SelectItem> scTenderList = new ArrayList<SelectItem>();	
 	private List<SelectItem> scRstrctdTndrList = new ArrayList<SelectItem>();
-	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();		
+	private List<SelectItem> scMonthList = new ArrayList<SelectItem>();
+	
+	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();	
+	private List<SelectItem> statusList = new ArrayList<SelectItem>();	
+	private List<SelectItem> ministryList = new ArrayList<SelectItem>();
+	private List<SelectItem> ptjList = new ArrayList<SelectItem>();	
+	private List<String> loanList = new ArrayList<String>();
+	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
 	FLReportBackingBean flReportBackingBean;
@@ -162,6 +169,38 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setOrgProfileList(List<String> orgProfileList) {
 		this.orgProfileList = orgProfileList;
+	}
+	
+	
+	public List<String> getLoanList() {
+		return loanList;
+	}
+	public void setLoanList(List<String> loanList) {
+		this.loanList = loanList;
+	}
+	public List<SelectItem> getRequisitionerList() {
+		return requisitionerList;
+	}
+	public void setRequisitionerList(List<SelectItem> requisitionerList) {
+		this.requisitionerList = requisitionerList;
+	}
+	public List<SelectItem> getStatusList() {
+		return statusList;
+	}
+	public void setStatusList(List<SelectItem> statusList) {
+		this.statusList = statusList;
+	}
+	public List<SelectItem> getMinistryList() {
+		return ministryList;
+	}
+	public void setMinistryList(List<SelectItem> ministryList) {
+		this.ministryList = ministryList;
+	}
+	public List<SelectItem> getPtjList() {
+		return ptjList;
+	}
+	public void setPtjList(List<SelectItem> ptjList) {
+		this.ptjList = ptjList;
 	}
 	private String localToDateVar;
 	private String userId;
@@ -347,9 +386,29 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctGroupOne;
 	private String ctGroupTwo;
 	private String ctProductService;
+	private String ctLoanNo;
+	private String ctMinistry;
+	private String ctPtj;
 	
 	
-	
+	public String getCtMinistry() {
+		return ctMinistry;
+	}
+	public void setCtMinistry(String ctMinistry) {
+		this.ctMinistry = ctMinistry;
+	}
+	public String getCtPtj() {
+		return ctPtj;
+	}
+	public void setCtPtj(String ctPtj) {
+		this.ctPtj = ctPtj;
+	}
+	public String getCtLoanNo() {
+		return ctLoanNo;
+	}
+	public void setCtLoanNo(String ctLoanNo) {
+		this.ctLoanNo = ctLoanNo;
+	}
 	public String getCtProductService() {
 		return ctProductService;
 	}
@@ -1663,8 +1722,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				}
 			}
 		}
+		
 		return authoriztionList;
-	}	
+	}
+	public void retrieveMinistryByUserId() {
+		userId = new FacesScopes().getUserSessionBean().getUserId().toString();
+		lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(getManagedBean().getModuleValue(), IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode(ReportConst.ENG_LANG);
+		UserResDTO userResDTO = userSO.retrieveUserListByOrgProfileId(reqDTO);
+	}
 	/*
 	 *Enable  criteria variables by report name 
 	 */
@@ -2044,7 +2113,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Generate CT module report  
 	 */	
 	public void generateCTReport(){	
-		if(((this.getCtContractNo()!=null)&&(this.getCtContractNo()!=ReportConst.EMPTY_VAL))||((this.getCtAgreement()!=null)&&(this.getCtAgreement()!=ReportConst.EMPTY_VAL))||((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL))||((this.getCtComplete()!=null)&&(this.getCtComplete()!=ReportConst.EMPTY_VAL))||((getFromDate()!=null)&&(getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getToDate()!=null)&&(getToDate().toString()!=ReportConst.EMPTY_VAL))){			
+		if(((this.getCtLoanNo()!=null)&&(this.getCtLoanNo()!=ReportConst.EMPTY_VAL))||((this.getCtMinistry()!=null)&&(this.getCtMinistry()!=ReportConst.EMPTY_VAL))||((this.getCtPtj()!=null)&&(this.getCtPtj()!=ReportConst.EMPTY_VAL))||((this.getCtContractNo()!=null)&&(this.getCtContractNo()!=ReportConst.EMPTY_VAL))||((this.getCtAgreement()!=null)&&(this.getCtAgreement()!=ReportConst.EMPTY_VAL))||((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL))||((this.getCtComplete()!=null)&&(this.getCtComplete()!=ReportConst.EMPTY_VAL))||((getFromDate()!=null)&&(getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getToDate()!=null)&&(getToDate().toString()!=ReportConst.EMPTY_VAL))){			
 			if((this.getCtStatus()!=null)&&(this.getCtStatus()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCtStatusVar(ReportConst.CT_AMP_STATUS_EQ+this.getCtStatus());
 			}
@@ -2089,9 +2158,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getCtProductService()!=null)&&(this.getCtProductService()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCtProductServiceVar(ReportConst.CT_AMP_PPRODUCTSERVICE_EQ+this.getCtProductService());
 			}
+			if((this.getCtLoanNo()!=null)&&(this.getCtLoanNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCtLoanNoVar(ReportConst.CT_AMP_PLOANO_EQ+this.getCtLoanNo());
+			}
+			if((this.getCtMinistry()!=null)&&(this.getCtMinistry()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ+this.getCtMinistry());
+			}
+			if((this.getCtPtj()!=null)&&(this.getCtPtj()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCtPtjVar(ReportConst.CT_AMP_PPTJNAME_EQ+this.getCtPtj());
+			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtCompleteVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtGroupOneVar()+rptGenBean.getCtGroupTwoVar()+rptGenBean.getCtProductServiceVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getCtContractNoVar()+rptGenBean.getCtAgreementVar()+rptGenBean.getCtStatusVar()+rptGenBean.getCtCompleteVar()+rptGenBean.getCtContrMontrStatusVar()+rptGenBean.getCtGroupOneVar()+rptGenBean.getCtGroupTwoVar()+rptGenBean.getCtProductServiceVar()+rptGenBean.getCtMinistryVar()+rptGenBean.getCtPtjVar()+rptGenBean.getCtLoanNoVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
@@ -2848,6 +2926,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setCtGroupOne(null);
 		this.setCtGroupTwo(null);
 		this.setCtProductService(null);
+		this.setCtLoanNo(null);
+		this.setCtMinistry(null);
+		this.setCtPtj(null);
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
 		this.setFlGroupThree(null);

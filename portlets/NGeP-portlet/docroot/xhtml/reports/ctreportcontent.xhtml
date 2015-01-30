@@ -82,7 +82,21 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.service']}" itemValue="#{lbl['lbl.rpt.service']}"></f:selectItem>																				
 									</p:selectOneMenu>
 								  </c:if>
-								   			 			
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctLoanNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.loanno']}" style="margin-top:5px;width:160px;" />									
+									<p:inputText value="#{reportBackingBean.ctLoanNo}" style="margin-top:5px;width:290px;">	
+									</p:inputText>	
+								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
+									<p:inputText value="#{reportBackingBean.ctMinistry}" style="margin-top:5px;width:290px;">
+									</p:inputText>		
+								  </c:if>
+								   <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctPtjView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
+									<p:inputText value="#{reportBackingBean.ctPtj}" style="margin-top:5px;width:290px;">
+									</p:inputText>		
+								  </c:if> 			 			
 							    </h:panelGrid>							    
 						    </td>
 						  </tr>							  
