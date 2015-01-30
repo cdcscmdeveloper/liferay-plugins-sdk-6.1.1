@@ -141,16 +141,11 @@ public class ReviewCatalogueBackingBean extends
 
 		reqDTO.getSaveSupplierItems().add(
 				bb.getManagedBean().getSelectedMaintainItem());		
-		log.info("Tracking diary for approveCatalogueItem items");
+		log.info("Tracking diary for approveCatalogueItem items");		
 		
-		if(getManagedBean().getSelectedMaintainItem().isReviewRequired())
-		{
 		reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
-				getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,new Pmstatus()));
-		}else {  
-		     reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDairyValues(
-				getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new Pmstatus()));
-		}   
+				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,new Pmstatus()));
+		   
 
 		try {
 			catalogueSO.updateSupplierItem(reqDTO);
