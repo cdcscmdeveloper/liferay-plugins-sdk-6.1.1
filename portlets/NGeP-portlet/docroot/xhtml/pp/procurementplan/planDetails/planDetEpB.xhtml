@@ -22,20 +22,20 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		}
 			
  	</script>
-	<p:outputPanel id="opPlanEp">
+	<p:outputPanel id="opPlanEpB">
 	<br/>
-		<p:inputText style="display:none" id="hiddenGtBudgetAmt" styleClass="hiddenGtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}">
+		<p:inputText style="display:none" id="hiddenGtBudgetAmt" styleClass="hiddenGtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudgetB}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
-		<p:inputText style="display:none" id="hiddenGtPlanAmt" styleClass="hiddenGtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}">
+		<p:inputText style="display:none" id="hiddenGtPlanAmt" styleClass="hiddenGtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlanB}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
-		<p:inputText style="display:none" id="hiddenGtNonAllocAmt" styleClass="hiddenGtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}">
+		<p:inputText style="display:none" id="hiddenGtNonAllocAmt" styleClass="hiddenGtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocB}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
 
 	   	<p:dataTable id="dtExpenditurePlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
+		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsB}"
 		     rowIndexVar="index" rowKey="#{epItem}">
 			<ac:paginator for="dtProcurementPlan" />
 	    	<p:columnGroup type="header">
@@ -113,7 +113,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            	readonly="true" 
 					headerText="#{lbl['lbl.pp.goso.code']}"
 					value="#{epItem.pmGlAccount.glAccCode}" 
-					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmGlAccount"
+					saveObject="pPlanBackingBean.managedBean.epItemsB[#{index}].pmGlAccount"
 					conditionField="recordStatus^1" 
 				/>
    		
@@ -127,7 +127,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			id="itBudgetAmt" styleClass="amountRight" label="#{lbl['lbl.pp.total.approved.budget']}" 
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votMengurus)}"
 		  				update=":form:hiddenGtBudgetAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt, itBudgetAmt" oncomplete="updateEpFooter();" 
 		  				 />
 		  		</p:inputText>
@@ -138,7 +138,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			id="itPlanAmt" styleClass="amountRight" label="#{lbl['lbl.pp.budget.spend.ep']}"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votMengurus)}"
 		  				update=":form:hiddenGtPlanAmt, :form:hiddenGtNonAllocAmt, otNonAllocAmt, itPlanAmt" oncomplete="updateEpFooter();"   />
 		  		</p:inputText>
 		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
@@ -198,21 +198,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</p:column>
 					<p:column>
 					   	<f:facet name="footer">
-				     		<h:outputText  id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudget}" styleClass="gtBudgetAmt">
+				     		<h:outputText  id="gtBudgetAmt" value="#{pPlanBackingBean.managedBean.epTotalBudgetB}" styleClass="gtBudgetAmt">
 			     				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				     		</h:outputText>
 					    </f:facet>
 					</p:column>
 					<p:column>
 					 	<f:facet name="footer">
-					     	<h:outputText  id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlan}" styleClass="gtPlanAmt">
+					     	<h:outputText  id="gtPlanAmt" value="#{pPlanBackingBean.managedBean.epTotalPlanB}" styleClass="gtPlanAmt">
 					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					     	</h:outputText>
 					    </f:facet>
 					</p:column>
 					 <p:column>
 					 	<f:facet name="footer">
-					     	<h:outputText  id="gtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAlloc}" styleClass="gtNonAllocAmt" >
+					     	<h:outputText  id="gtNonAllocAmt" value="#{pPlanBackingBean.managedBean.epTotalNonEpAllocB}" styleClass="gtNonAllocAmt" >
 					     		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					     	</h:outputText>
 					    </f:facet>
@@ -240,10 +240,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<div class="ppRightBtn">
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlan" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
-		 		process="@this" action="#{pPlanBackingBean.addEpItemDet()}"/>
+		 		process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votMengurus)}"/>
 			&#160;
 			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlan" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet()}"
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votMengurus)}"
 				
 			/> 
 		</div>
