@@ -12437,11 +12437,7 @@ public class SpecificationBackingBean extends
 							}
 							
 							if (!finspec) {
-								if(isNewTplSpec){
-									finanicialCheckLists.add(newTplSpecIndex, checkList);
-								}else{
-									finanicialCheckLists.add(currIndex,checkList);
-								}
+								finanicialCheckLists.add(currIndex,checkList);
 							}
 							
 						} else {
