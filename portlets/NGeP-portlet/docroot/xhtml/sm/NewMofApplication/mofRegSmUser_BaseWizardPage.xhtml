@@ -225,11 +225,24 @@
 												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 												update=":form" style="margin-bottom:5px;" />
 											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-												<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
-													onstart="blockWidget.show()"
-													oncomplete="blockWidget.hide()"
-													action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
-													style="margin-bottom:5px;" />
+												<c:choose>
+													<c:when
+														test="#{backingBean.managedBean.overLappedCategoryExists}">
+														<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
+															action="#{spkiBackingBean.getChallengeQuestions}"
+															update="spkiPopup" oncomplete="spki_dlg.show();" />
+														<ac:spkiPopup id="spkiPopup"
+															postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
+													</c:when>
+													<c:otherwise>
+														<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide()"
+															action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
+															style="margin-bottom:5px;" />
+													</c:otherwise>
+												</c:choose>
+
 											</c:if>
 										</div>
 									</td>
@@ -257,11 +270,23 @@
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 													update=":form" style="margin-bottom:5px;" />
 												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-													<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
-														onstart="blockWidget.show()"
-														oncomplete="blockWidget.hide()"
-														action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
-														style="margin-bottom:5px;" />
+													<c:choose>
+														<c:when
+															test="#{backingBean.managedBean.overLappedCategoryExists}">
+															<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
+																action="#{spkiBackingBean.getChallengeQuestions}"
+																update="spkiPopup" oncomplete="spki_dlg.show();" />
+															<ac:spkiPopup id="spkiPopup"
+																postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
+														</c:when>
+														<c:otherwise>
+															<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
+																onstart="blockWidget.show()"
+																oncomplete="blockWidget.hide()"
+																action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
+																style="margin-bottom:5px;" />
+														</c:otherwise>
+													</c:choose>
 
 												</c:if>
 											</div>
