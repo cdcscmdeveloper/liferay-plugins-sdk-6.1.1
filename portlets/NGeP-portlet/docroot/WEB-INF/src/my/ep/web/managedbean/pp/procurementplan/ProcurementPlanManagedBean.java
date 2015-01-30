@@ -9,7 +9,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
@@ -49,8 +48,30 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private Long bpmStatusId;
 	private String invitationYear;
 	
+	private List <PpExpenditureItem> epItemsB;
+	private BigDecimal epTotalBudgetB;
+	private BigDecimal epTotalPlanB;
+	private BigDecimal epTotalNonEpAllocB;
+	private List <PpExpenditureItem> epItemsT;
+	private BigDecimal epTotalBudgetT;
+	private BigDecimal epTotalPlanT;
+	private BigDecimal epTotalNonEpAllocT;
+	private List <PpExpenditureItem> epItemsP;
+	private BigDecimal epTotalBudgetP;
+	private BigDecimal epTotalPlanP;
+	private BigDecimal epTotalNonEpAllocP;
+	private List <PpExpenditureItem> epItemsS;
+	private BigDecimal epTotalBudgetS;
+	private BigDecimal epTotalPlanS;
+	private BigDecimal epTotalNonEpAllocS;
+	private List <PpExpenditureItem> epItemsH;
+	private BigDecimal epTotalBudgetH;
+	private BigDecimal epTotalPlanH;
+	private BigDecimal epTotalNonEpAllocH;
+	
+	
 	private PpPlan selectedPlan;
-	private List<PpExpenditureItem> deleteEpItems;
+//	private List<PpExpenditureItem> deleteEpItems;
 	private List<PpProcurementItem> deletePpItems;
 	private DualListModel<PmUser> approverModel;
 	private DualListModel<PmUser> verifierModel;
@@ -65,14 +86,81 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private List<PpRemark> selectedRemarks;
 	private List<PpRemark> selectedJustifications;
 	private List<PpRemark> selectedItemRemarks;
-	private BigDecimal epTotalBudget;
-	private BigDecimal epTotalPlan;
-	private BigDecimal epTotalNonEpAlloc;
 	private BigDecimal ppTotalEst;
 	
 	
 
 
+
+	/**
+	 * @return the epItemsB
+	 */
+	public List<PpExpenditureItem> getEpItemsB() {
+		return epItemsB;
+	}
+
+	/**
+	 * @param epItemsB the epItemsB to set
+	 */
+	public void setEpItemsB(List<PpExpenditureItem> epItemsB) {
+		this.epItemsB = epItemsB;
+	}
+
+	/**
+	 * @return the epItemsT
+	 */
+	public List<PpExpenditureItem> getEpItemsT() {
+		return epItemsT;
+	}
+
+	/**
+	 * @param epItemsT the epItemsT to set
+	 */
+	public void setEpItemsT(List<PpExpenditureItem> epItemsT) {
+		this.epItemsT = epItemsT;
+	}
+
+	/**
+	 * @return the epItemsP
+	 */
+	public List<PpExpenditureItem> getEpItemsP() {
+		return epItemsP;
+	}
+
+	/**
+	 * @param epItemsP the epItemsP to set
+	 */
+	public void setEpItemsP(List<PpExpenditureItem> epItemsP) {
+		this.epItemsP = epItemsP;
+	}
+
+	/**
+	 * @return the epItemsS
+	 */
+	public List<PpExpenditureItem> getEpItemsS() {
+		return epItemsS;
+	}
+
+	/**
+	 * @param epItemsS the epItemsS to set
+	 */
+	public void setEpItemsS(List<PpExpenditureItem> epItemsS) {
+		this.epItemsS = epItemsS;
+	}
+
+	/**
+	 * @return the epItemsH
+	 */
+	public List<PpExpenditureItem> getEpItemsH() {
+		return epItemsH;
+	}
+
+	/**
+	 * @param epItemsH the epItemsH to set
+	 */
+	public void setEpItemsH(List<PpExpenditureItem> epItemsH) {
+		this.epItemsH = epItemsH;
+	}
 
 	/**
 	 * @return the approvedPlan
@@ -372,19 +460,19 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.verifierModel = verifierModel;
 	}
 
-	/**
-	 * @return the deleteEpItems
-	 */
-	public List<PpExpenditureItem> getDeleteEpItems() {
-		return deleteEpItems;
-	}
-
-	/**
-	 * @param deleteEpItems the deleteEpItems to set
-	 */
-	public void setDeleteEpItems(List<PpExpenditureItem> deleteEpItems) {
-		this.deleteEpItems = deleteEpItems;
-	}
+//	/**
+//	 * @return the deleteEpItems
+//	 */
+//	public List<PpExpenditureItem> getDeleteEpItems() {
+//		return deleteEpItems;
+//	}
+//
+//	/**
+//	 * @param deleteEpItems the deleteEpItems to set
+//	 */
+//	public void setDeleteEpItems(List<PpExpenditureItem> deleteEpItems) {
+//		this.deleteEpItems = deleteEpItems;
+//	}
 
 	/**
 	 * @return the deletePpItems
@@ -475,54 +563,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 
 	/**
-	 * @return the epTotalBudget
-	 */
-	public BigDecimal getEpTotalBudget() {
-		if(epTotalBudget==null)
-			epTotalBudget = new BigDecimal(0);
-		return epTotalBudget;
-	}
-
-	/**
-	 * @param epTotalBudget the epTotalBudget to set
-	 */
-	public void setEpTotalBudget(BigDecimal epTotalBudget) {
-		this.epTotalBudget = epTotalBudget;
-	}
-
-	/**
-	 * @return the epTotalPlan
-	 */
-	public BigDecimal getEpTotalPlan() {
-		if(epTotalPlan==null)
-			epTotalPlan = new BigDecimal(0);
-		return epTotalPlan;
-	}
-
-	/**
-	 * @param epTotalPlan the epTotalPlan to set
-	 */
-	public void setEpTotalPlan(BigDecimal epTotalPlan) {
-		this.epTotalPlan = epTotalPlan;
-	}
-
-	/**
-	 * @return the epTotalNonEpAlloc
-	 */
-	public BigDecimal getEpTotalNonEpAlloc() {
-		if(epTotalNonEpAlloc==null)
-			epTotalNonEpAlloc = new BigDecimal(0);
-		return epTotalNonEpAlloc;
-	}
-
-	/**
-	 * @param epTotalNonEpAlloc the epTotalNonEpAlloc to set
-	 */
-	public void setEpTotalNonEpAlloc(BigDecimal epTotalNonEpAlloc) {
-		this.epTotalNonEpAlloc = epTotalNonEpAlloc;
-	}
-
-	/**
 	 * @return the ppTotalEst
 	 */
 	public BigDecimal getPpTotalEst() {
@@ -580,12 +620,244 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.selectedJustificationDesc = selectedJustificationDesc;
 	}
 
-	
+	/**
+	 * @return the epTotalBudgetB
+	 */
+	public BigDecimal getEpTotalBudgetB() {
+		if(epTotalBudgetB==null)
+			epTotalBudgetB = new BigDecimal(0);
+		return epTotalBudgetB;
+	}
 
+	/**
+	 * @param epTotalBudgetB the epTotalBudgetB to set
+	 */
+	public void setEpTotalBudgetB(BigDecimal epTotalBudgetB) {
+		this.epTotalBudgetB = epTotalBudgetB;
+	}
 
+	/**
+	 * @return the epTotalPlanB
+	 */
+	public BigDecimal getEpTotalPlanB() {
+		if(epTotalPlanB==null)
+			epTotalPlanB = new BigDecimal(0);
+		return epTotalPlanB;
+	}
 
+	/**
+	 * @param epTotalPlanB the epTotalPlanB to set
+	 */
+	public void setEpTotalPlanB(BigDecimal epTotalPlanB) {
+		this.epTotalPlanB = epTotalPlanB;
+	}
 
-	
-	
+	/**
+	 * @return the epTotalNonEpAllocB
+	 */
+	public BigDecimal getEpTotalNonEpAllocB() {
+		if(epTotalNonEpAllocB==null)
+			epTotalNonEpAllocB = new BigDecimal(0);
+		return epTotalNonEpAllocB;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocB the epTotalNonEpAllocB to set
+	 */
+	public void setEpTotalNonEpAllocB(BigDecimal epTotalNonEpAllocB) {
+		this.epTotalNonEpAllocB = epTotalNonEpAllocB;
+	}
+
+	/**
+	 * @return the epTotalBudgetT
+	 */
+	public BigDecimal getEpTotalBudgetT() {
+		if(epTotalBudgetT==null)
+			epTotalBudgetT = new BigDecimal(0);
+		return epTotalBudgetT;
+	}
+
+	/**
+	 * @param epTotalBudgetT the epTotalBudgetT to set
+	 */
+	public void setEpTotalBudgetT(BigDecimal epTotalBudgetT) {
+		this.epTotalBudgetT = epTotalBudgetT;
+	}
+
+	/**
+	 * @return the epTotalPlanT
+	 */
+	public BigDecimal getEpTotalPlanT() {
+		if(epTotalPlanT==null)
+			epTotalPlanT = new BigDecimal(0);
+		return epTotalPlanT;
+	}
+
+	/**
+	 * @param epTotalPlanT the epTotalPlanT to set
+	 */
+	public void setEpTotalPlanT(BigDecimal epTotalPlanT) {
+		this.epTotalPlanT = epTotalPlanT;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocT
+	 */
+	public BigDecimal getEpTotalNonEpAllocT() {
+		if(epTotalNonEpAllocT==null)
+			epTotalNonEpAllocT = new BigDecimal(0);
+		return epTotalNonEpAllocT;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocT the epTotalNonEpAllocT to set
+	 */
+	public void setEpTotalNonEpAllocT(BigDecimal epTotalNonEpAllocT) {
+		this.epTotalNonEpAllocT = epTotalNonEpAllocT;
+	}
+
+	/**
+	 * @return the epTotalBudgetP
+	 */
+	public BigDecimal getEpTotalBudgetP() {
+		if(epTotalBudgetP==null)
+			epTotalBudgetP = new BigDecimal(0);
+		return epTotalBudgetP;
+	}
+
+	/**
+	 * @param epTotalBudgetP the epTotalBudgetP to set
+	 */
+	public void setEpTotalBudgetP(BigDecimal epTotalBudgetP) {
+		this.epTotalBudgetP = epTotalBudgetP;
+	}
+
+	/**
+	 * @return the epTotalPlanP
+	 */
+	public BigDecimal getEpTotalPlanP() {
+		if(epTotalPlanP==null)
+			epTotalPlanP = new BigDecimal(0);
+		return epTotalPlanP;
+	}
+
+	/**
+	 * @param epTotalPlanP the epTotalPlanP to set
+	 */
+	public void setEpTotalPlanP(BigDecimal epTotalPlanP) {
+		this.epTotalPlanP = epTotalPlanP;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocP
+	 */
+	public BigDecimal getEpTotalNonEpAllocP() {
+		if(epTotalNonEpAllocP==null)
+			epTotalNonEpAllocP = new BigDecimal(0);
+		return epTotalNonEpAllocP;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocP the epTotalNonEpAllocP to set
+	 */
+	public void setEpTotalNonEpAllocP(BigDecimal epTotalNonEpAllocP) {
+		this.epTotalNonEpAllocP = epTotalNonEpAllocP;
+	}
+
+	/**
+	 * @return the epTotalBudgetS
+	 */
+	public BigDecimal getEpTotalBudgetS() {
+		if(epTotalBudgetS==null)
+			epTotalBudgetS = new BigDecimal(0);
+		return epTotalBudgetS;
+	}
+
+	/**
+	 * @param epTotalBudgetS the epTotalBudgetS to set
+	 */
+	public void setEpTotalBudgetS(BigDecimal epTotalBudgetS) {
+		this.epTotalBudgetS = epTotalBudgetS;
+	}
+
+	/**
+	 * @return the epTotalPlanS
+	 */
+	public BigDecimal getEpTotalPlanS() {
+		if(epTotalPlanS==null)
+			epTotalPlanS = new BigDecimal(0);
+		return epTotalPlanS;
+	}
+
+	/**
+	 * @param epTotalPlanS the epTotalPlanS to set
+	 */
+	public void setEpTotalPlanS(BigDecimal epTotalPlanS) {
+		this.epTotalPlanS = epTotalPlanS;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocS
+	 */
+	public BigDecimal getEpTotalNonEpAllocS() {
+		if(epTotalNonEpAllocS==null)
+			epTotalNonEpAllocS = new BigDecimal(0);
+		return epTotalNonEpAllocS;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocS the epTotalNonEpAllocS to set
+	 */
+	public void setEpTotalNonEpAllocS(BigDecimal epTotalNonEpAllocS) {
+		this.epTotalNonEpAllocS = epTotalNonEpAllocS;
+	}
+
+	/**
+	 * @return the epTotalBudgetH
+	 */
+	public BigDecimal getEpTotalBudgetH() {
+		if(epTotalBudgetH==null)
+			epTotalBudgetH = new BigDecimal(0);
+		return epTotalBudgetH;
+	}
+
+	/**
+	 * @param epTotalBudgetH the epTotalBudgetH to set
+	 */
+	public void setEpTotalBudgetH(BigDecimal epTotalBudgetH) {
+		this.epTotalBudgetH = epTotalBudgetH;
+	}
+
+	/**
+	 * @return the epTotalPlanH
+	 */
+	public BigDecimal getEpTotalPlanH() {
+		if(epTotalPlanH==null)
+			epTotalPlanH = new BigDecimal(0);
+		return epTotalPlanH;
+	}
+
+	/**
+	 * @param epTotalPlanH the epTotalPlanH to set
+	 */
+	public void setEpTotalPlanH(BigDecimal epTotalPlanH) {
+		this.epTotalPlanH = epTotalPlanH;
+	}
+
+	/**
+	 * @return the epTotalNonEpAllocH
+	 */
+	public BigDecimal getEpTotalNonEpAllocH() {
+		if(epTotalNonEpAllocH==null)
+			epTotalNonEpAllocH = new BigDecimal(0);
+		return epTotalNonEpAllocH;
+	}
+
+	/**
+	 * @param epTotalNonEpAllocH the epTotalNonEpAllocH to set
+	 */
+	public void setEpTotalNonEpAllocH(BigDecimal epTotalNonEpAllocH) {
+		this.epTotalNonEpAllocH = epTotalNonEpAllocH;
+	}
 
 }
