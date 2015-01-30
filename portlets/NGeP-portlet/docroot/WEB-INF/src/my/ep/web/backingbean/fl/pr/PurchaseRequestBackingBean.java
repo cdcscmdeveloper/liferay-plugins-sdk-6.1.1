@@ -1252,7 +1252,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			Object obj = res.getPojo();
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
 			
-			//TODO flError have been implemented for current will be commented first
 			if(flPurchaseOrd.getOrderDetails().getErrorId() != null && flPurchaseOrd.getOrderDetails().getErrorId() > 0){
 				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 				errReq.setErrorId(flPurchaseOrd.getOrderDetails().getErrorId());
@@ -1281,7 +1280,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			setFulfilmentRequestField(resDTO);
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");//TODO once flError implemented ?faces-redirect=true removed
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");
 	}
 
 	public void calculateSubTotal(BigDecimal quantity){
