@@ -219,12 +219,19 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			PurchaseRequestBackingBean PrBB=new PurchaseRequestBackingBean();
+			PrBB.getManagedBean().setSubmitButtonStatus(false);
 			PrBB.getManagedBean().setDocProcess(docType);
 			PrBB.getManagedBean().setButtonVal(buttonVal);
 			PrBB.getManagedBean().setFlDocId(flDocId);
 			if(null!=buttonVal && !"".equals(buttonVal)){
 				PrBB.getManagedBean().setSubmitButtonStatus(false);
 			}
+			if(Long.parseLong(statusDesc)==FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION){
+				PrBB.getManagedBean().setFlDocMaintain(false);
+			}else{
+				PrBB.getManagedBean().setFlDocMaintain(true);
+			}
+			
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
