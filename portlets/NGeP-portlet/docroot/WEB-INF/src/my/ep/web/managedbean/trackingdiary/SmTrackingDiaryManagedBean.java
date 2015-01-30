@@ -54,6 +54,8 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 						.getServiceObject("sm", ISupplierSearchSO.class);
 
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+				reqDTO.setSearchBean(searchBean);
+				
 				if(getMOFAccountNo()!=null && getMOFAccountNo()!="") {
 					System.out.println("getMOFAccountNo");
 					reqDTO.setMofAccountNo(getMOFAccountNo());
