@@ -164,7 +164,8 @@
 			                  eq ParameterConst.priceTypeZonalStandard}">
 			                
 			                   <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
 			                   </p:column>    
 			            
 			                   <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
@@ -189,8 +190,9 @@
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			                  eq ParameterConst.priceTypeZonalTier}">
 			                 <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
-			                      <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" />
-			                 </p:column> 
+			                          <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                   </p:column> 
 			                 <p:column style="text-align: right;">
 					             <f:facet name="header">
 									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
@@ -286,8 +288,9 @@
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			                eq ParameterConst.priceTypeZonalTariff}">            
 			                <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
-			                     <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" />
-			                 </p:column> 
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                  </p:column> 
 			            
 			                 <p:column style="text-align: right;">
 					             <f:facet name="header">
