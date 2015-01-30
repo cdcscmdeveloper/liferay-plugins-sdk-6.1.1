@@ -4577,5 +4577,37 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	/**
+	 * Get whether latest approved personnel is authorized
+	 * 
+	 * @param identificationNo, supplierId
+	 *            - String identificationNo
+	 *            - Long supplierId
+	 */
+	public static boolean isLatestApprovedPersonnelAlreadyAuthorized(
+			String identificationNo, Long supplierId) {
+		boolean isAlreadyActivate = false;
+		try {
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setIdentificationNo(identificationNo);
+			reqDTO.setSmSupplierId(supplierId);
+			PersonnelResDTO resDTO = personnelSO
+					.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
+			if (resDTO.getSmPersonnel() != null
+					&& (resDTO.getSmPersonnel().getEpRole() != null || StringUtils
+							.isNotBlank(resDTO.getSmPersonnel().getEpRole()))
+					&& resDTO.getSmPersonnel().getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& resDTO.getSmPersonnel().getPmUser() != null) {
+				isAlreadyActivate = true;
+			}
+		} catch (Exception ex) {
+			log.info("Error in isLatestApprovedPersonnelAlreadyAuthorized:"
+					+ ex.getMessage());
+		}
+		return isAlreadyActivate;
+	}
 
 }
