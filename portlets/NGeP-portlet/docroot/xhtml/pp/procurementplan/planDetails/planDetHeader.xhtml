@@ -24,7 +24,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					>
 						<f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
 					<p:ajax event="change" listener="#{pPlanBackingBean.changePlanType(pPlanBackingBean.managedBean.selectedPlan.planType.parameterId)}" 
-						update=":form:pPlanDet, :form:pPlanActor, somVotType, somPlanYear"/>
+						update=":form:pPlanDet, :form:pPlanActor, somPlanYear"/>
 				</p:selectOneMenu>
 				<p:message id="somPlanTypeMsg" for="somPlanType" display="icon" />
 			</td>
@@ -65,38 +65,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				
 			</td>
 		</tr>
-		<p:outputPanel id="opEP" rendered="#{pPlanBackingBean.managedBean.modeEditable}">
-			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.vot.amanah.type']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</th>
-				<td>
-	
-					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotType" 
-						required="#{!empty param['disableValidation'] and pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
-						disabled="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew 
-							or pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure
-							or pPlanBackingBean.managedBean.selectedPlan.planYear == null}"
-						label="#{lbl['lbl.pp.vot.amanah.type']}"
-						value="#{pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId}"
-					>
-						<f:selectItems value="#{pPlanBackingBean.getPlanVotTypeOptions(pPlanBackingBean.managedBean.selectedPlan.brandNew)}"/>
-						<p:ajax event="change" listener="#{pPlanBackingBean.changeVotType(pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId)}" />
-					</p:selectOneMenu>
-					&#160;&#160;  
-					<p:graphicImage id="giVotType" value="/css/images/design/tooltips.png" />
-					<p:tooltip for="giVotType" value="#{lbl['lbl.pp.vottype.tooltip']}" showEffect="fade" hideEffect="fade" />
-					<p:message id="somVotTypeMsg" for="somVotType" display="icon" />
-				</td>
-				<th>
-					
-				</th>
-				<td>
-					
-				</td>
-			</tr>
-		</p:outputPanel>
 		<tr>
 			<th>
 				&nbsp;
