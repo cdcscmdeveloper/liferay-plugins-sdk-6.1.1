@@ -3004,112 +3004,110 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    final String templatePath = "templates" + ContractConst.DOCPATH_CT_LOA_JADUAL_HARGA;
 		    InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
 		    if (inputStream != null) {
-		            
-		    
-			XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
-	     
-	        Sheet productSheet =null;
-	        Sheet serviceSheet = null;
-	        boolean emptyProductList = false;
-	        Row row = null;
-	        int rowIndex = 0;
-	        int cellIndex = 0;
-	        boolean zoneExist = false;
-	        if(!CollectionUtils.isEmpty(productList)){
-	        	rowIndex = 0;
-	        	productSheet = wb.getSheetAt(0);
-	        	wb.setSheetName(0, "ProductSheet");
-	        	for(JadualHargaBean product : productList){
-	        		if(!product.getZone().equals("N/A")){
-	        			zoneExist = true;
-	        			break;
-	        		}
-	        	}
-	        	for(JadualHargaBean product : productList){
-	        		rowIndex ++;
-	        		cellIndex =0;
-	        		row = productSheet.createRow(rowIndex);
-	        		row.createCell(cellIndex++).setCellValue(product.getZone());
-	        		row.createCell(cellIndex++).setCellValue(product.getItem());
-	        		row.createCell(cellIndex++).setCellValue(product.getUom());
-	        		row.createCell(cellIndex++).setCellValue(product.getTier());
-	        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
-	        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
-	        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
-	        		//row.createCell(cellIndex++).setCellValue(product.getTotalAmount());	 
-	        	}
-	            //Auto size all the columns
-		        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
-		        	productSheet.autoSizeColumn(x);
+				XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
+		     
+		        Sheet productSheet =null;
+		        Sheet serviceSheet = null;
+		        boolean emptyProductList = false;
+		        Row row = null;
+		        int rowIndex = 0;
+		        int cellIndex = 0;
+		        boolean zoneExist = false;
+		        if(!CollectionUtils.isEmpty(productList)){
+		        	rowIndex = 0;
+		        	productSheet = wb.getSheetAt(0);
+		        	wb.setSheetName(0, "ProductSheet");
+		        	for(JadualHargaBean product : productList){
+		        		if(!product.getZone().equals("N/A")){
+		        			zoneExist = true;
+		        			break;
+		        		}
+		        	}
+		        	for(JadualHargaBean product : productList){
+		        		rowIndex ++;
+		        		cellIndex =0;
+		        		row = productSheet.createRow(rowIndex);
+		        		row.createCell(cellIndex++).setCellValue(product.getZone());
+		        		row.createCell(cellIndex++).setCellValue(product.getItem());
+		        		row.createCell(cellIndex++).setCellValue(product.getUom());
+		        		row.createCell(cellIndex++).setCellValue(product.getTier());
+		        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
+		        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
+		        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
+		        		//row.createCell(cellIndex++).setCellValue(product.getTotalAmount());	 
+		        	}
+		            //Auto size all the columns
+			        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
+			        	productSheet.autoSizeColumn(x);
+			        }
+			        //Hide column by price type
+			        productSheet.setColumnHidden(3, true);
+			        productSheet.setColumnHidden(4, true);
+		        	if(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) 
+		        		|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+		        		productSheet.setColumnHidden(3, false);
+		        		productSheet.setColumnHidden(4, false);
+		        	}
+		        	if(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) 
+		        		|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+				        productSheet.setColumnHidden(3, false);
+		        	}
+		        	// Hide zone column if all N/A
+		        	if(!zoneExist){
+		        		productSheet.setColumnHidden(0, true);
+		        	}
+		        }else{
+		        	wb.removeSheetAt(0);
+		        	emptyProductList = true;
 		        }
-		        //Hide column by price type
-		        productSheet.setColumnHidden(3, true);
-		        productSheet.setColumnHidden(4, true);
-	        	if(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) 
-	        		|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-	        		productSheet.setColumnHidden(3, false);
-	        		productSheet.setColumnHidden(4, false);
-	        	}
-	        	if(productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) 
-	        		|| productList.get(0).getPriceType().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
-			        productSheet.setColumnHidden(3, false);
-	        	}
-	        	// Hide zone column if all N/A
-	        	if(!zoneExist){
-	        		productSheet.setColumnHidden(0, true);
-	        	}
-	        }else{
-	        	wb.removeSheetAt(0);
-	        	emptyProductList = true;
-	        }
-	        
-	        if(!CollectionUtils.isEmpty(serviceList)){
-	        	rowIndex = 0;
-	        	if(emptyProductList){
-	        		serviceSheet = wb.getSheetAt(0);
-	        		wb.setSheetName(0, "ServiceSheet");
-	        	}else{
-	        		serviceSheet = wb.getSheetAt(1);
-	        		wb.setSheetName(1, "ServiceSheet");
-	        	}
-	        	
-	          	for(JadualHargaBean service : serviceList){
-	        		if(!service.getZone().equals("N/A")){
-	        			zoneExist = true;
-	        			break;
-	        		}
-	        	}
-	          	
-	        	for(JadualHargaBean service : serviceList){
-	        		rowIndex ++;
-	        		cellIndex =0;
-	        		row = serviceSheet.createRow(rowIndex);
-	        		row.createCell(cellIndex++).setCellValue(service.getZone());
-	        		row.createCell(cellIndex++).setCellValue(service.getItem());
-	        		row.createCell(cellIndex++).setCellValue(service.getUom());
-	        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
-	        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
-	        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
-	        		row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
-	        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
-	        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
-	        		//row.createCell(cellIndex++).setCellValue(service.getTotalAmount());
-	        	}
-	        	 for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
-	 	        	serviceSheet.autoSizeColumn(x);
-	 	        }
-	        	// Hide zone column if all N/A
-	        	if(!zoneExist){
-	        		 serviceSheet.setColumnHidden(0, true);
+		        
+		        if(!CollectionUtils.isEmpty(serviceList)){
+		        	rowIndex = 0;
+		        	if(emptyProductList){
+		        		serviceSheet = wb.getSheetAt(0);
+		        		wb.setSheetName(0, "ServiceSheet");
+		        	}else{
+		        		serviceSheet = wb.getSheetAt(1);
+		        		wb.setSheetName(1, "ServiceSheet");
+		        	}
+		        	
+		          	for(JadualHargaBean service : serviceList){
+		        		if(!service.getZone().equals("N/A")){
+		        			zoneExist = true;
+		        			break;
+		        		}
+		        	}
+		          	
+		        	for(JadualHargaBean service : serviceList){
+		        		rowIndex ++;
+		        		cellIndex =0;
+		        		row = serviceSheet.createRow(rowIndex);
+		        		row.createCell(cellIndex++).setCellValue(service.getZone());
+		        		row.createCell(cellIndex++).setCellValue(service.getItem());
+		        		row.createCell(cellIndex++).setCellValue(service.getUom());
+		        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
+		        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
+		        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
+		        		row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
+		        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
+		        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
+		        		//row.createCell(cellIndex++).setCellValue(service.getTotalAmount());
+		        	}
+		        	 for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
+		 	        	serviceSheet.autoSizeColumn(x);
+		 	        }
+		        	// Hide zone column if all N/A
+		        	if(!zoneExist){
+		        		 serviceSheet.setColumnHidden(0, true);
+			        }
+		        }else{
+		        	wb.removeSheetAt(1);
 		        }
-	        }else{
-	        	wb.removeSheetAt(1);
-	        }
-	        wb.setActiveSheet(0);
-	        // Write the output to a file
-	        FileOutputStream fileOut = new FileOutputStream(filePath);
-	        wb.write(fileOut);
-	        fileOut.close();
+		        wb.setActiveSheet(0);
+		        // Write the output to a file
+		        FileOutputStream fileOut = new FileOutputStream(filePath);
+		        wb.write(fileOut);
+		        fileOut.close();
 		    }
 		    else{
 		    	 throw new EpException("Template file doesn't exist");
