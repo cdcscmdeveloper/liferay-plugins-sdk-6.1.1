@@ -2998,8 +2998,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void generateJadualHarga(String filePath,List<JadualHargaBean> productList,List<JadualHargaBean> serviceList){
 		try {
-			FileInputStream inputStream = new FileInputStream(new File(
-					FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates") + ContractConst.DOCPATH_CT_LOA_JADUAL_HARGA));	
+//			FileInputStream inputStream = new FileInputStream(new File(
+//					FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/classess/templates") + ContractConst.DOCPATH_CT_LOA_JADUAL_HARGA));
+//			
+		    final String templatePath = "templates" + ContractConst.DOCPATH_CT_LOA_JADUAL_HARGA;
+		    InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
+		    if (inputStream != null) {
+		            
+		    
 			XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
 	     
 	        Sheet productSheet =null;
@@ -3104,6 +3110,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        FileOutputStream fileOut = new FileOutputStream(filePath);
 	        wb.write(fileOut);
 	        fileOut.close();
+		    }
+		    else{
+		    	 throw new EpException("Template file doesn't exist");
+		    }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
