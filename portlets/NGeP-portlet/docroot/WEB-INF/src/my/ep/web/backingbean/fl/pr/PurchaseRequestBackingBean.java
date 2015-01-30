@@ -495,6 +495,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				break;
 			}
 		}
+		if(isFlFulfilmentApprover() || getManagedBean().isFlDocMaintain()){
+			getManagedBean().getFulfilmentRequest().setSubmissionDate(getManagedBean().getFulfilmentRequest().getSubmissionDate());
+		}else {
+			getManagedBean().getFulfilmentRequest().setSubmissionDate(new Timestamp(System.currentTimeMillis()));
+		}
 	}
 
 	public void flDeliveryAddrList() {
