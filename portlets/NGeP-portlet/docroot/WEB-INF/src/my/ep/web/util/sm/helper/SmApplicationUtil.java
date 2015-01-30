@@ -1045,10 +1045,10 @@ public class SmApplicationUtil {
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
 			for (SmSupplierCategory category : appl.getSmSupplierCategories()) {
-				if (category.getPmCategoryL3().getCategoryL3Code()
-						.equalsIgnoreCase("99")) {
-					if (category.getOtherDesc() != null
-							&& category.getOtherDesc().isEmpty()) {
+				if (category.getPmCategoryL3().getOtherDescReq() != null
+						&& category.getPmCategoryL3().getOtherDescReq()
+								.equals(new Integer(1))) {
+					if (StringUtils.isEmpty(category.getOtherDesc())) {
 						sb.append("<br/>")
 								.append(++i)
 								.append(".) ")
@@ -4577,13 +4577,12 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Get whether latest approved personnel is authorized
 	 * 
-	 * @param identificationNo, supplierId
-	 *            - String identificationNo
-	 *            - Long supplierId
+	 * @param identificationNo
+	 *            , supplierId - String identificationNo - Long supplierId
 	 */
 	public static boolean isLatestApprovedPersonnelAlreadyAuthorized(
 			String identificationNo, Long supplierId) {
