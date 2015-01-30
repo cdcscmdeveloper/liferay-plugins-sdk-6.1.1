@@ -265,7 +265,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			this.getManagedBean().setItemList(
 					this.getManagedBean().getScQtFinalization().getScQtRecommends());
 		}
-		
 		decisionEvent();
 		populateRecommendTypeEventDetails(false);
 		fwdHigherAuthorityEvent();
@@ -2987,6 +2986,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 						this.getManagedBean().setShortlistedSupplierList(shortlistedSupppliersByZone.get(currentZone));
 					}
 				}				
+			} else if (!isZonal &&
+						CollectionUtils.isEmpty(this.getManagedBean().getShortlistedSupplierList())) {
+				this.getManagedBean().setShortlistedSupplierList(new ArrayList<ScQtEvaluationResult>());
+				this.getManagedBean().getShortlistedSupplierList().addAll(
+							this.getManagedBean().getShortlistedPackageList());
 			}
 		}
 		this.getManagedBean().setItemize(itemize);
