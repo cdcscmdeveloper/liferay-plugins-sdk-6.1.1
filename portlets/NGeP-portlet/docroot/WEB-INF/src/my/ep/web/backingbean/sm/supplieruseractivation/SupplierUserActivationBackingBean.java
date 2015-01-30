@@ -24,6 +24,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
@@ -113,7 +114,11 @@ public class SupplierUserActivationBackingBean extends
 /*					this.getManagedBean().setPersonnelId(Long.parseLong(personnelId));
 					this.getManagedBean().setSupplierId(supplierProfile.getSupplierId());*/
 					this.getManagedBean().setSmPersonnel(personnel);
-					
+					this.getManagedBean()
+							.setLatesApprovedAndDraftPersonnels(
+									getOthersPersonnelWithSameIdentificationNoAndSupplierId(
+											personnel,
+											supplierProfile.getSupplierId()));
 					this.getManagedBean().setEncrpKeyStr(encryptedKey);
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml");
 					return;
@@ -192,7 +197,7 @@ public class SupplierUserActivationBackingBean extends
 					
 					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();		
 					
-					reqDTO.setSmPersonnels(getOthersPersonnelWithSameIdentificationNoAndSupplierId(getManagedBean().getSmPersonnel(), Long.parseLong(supplierId),draftApplId));
+					reqDTO.setSmPersonnels(getManagedBean().getLatesApprovedAndDraftPersonnels());
 					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					reqDTO.setLoginId(loginId);
@@ -313,10 +318,12 @@ public class SupplierUserActivationBackingBean extends
 		}
 	}
 	
-	// syazwan: added to retrieve others personnel with same identificationNo
+	// syazwan: added to retrieve all personnel with same identificationNo
 	// and supplierId
 	private List<SmPersonnel> getOthersPersonnelWithSameIdentificationNoAndSupplierId(
-			SmPersonnel smPersonnel, Long supplierId, Long draftApplId) {
+			SmPersonnel smPersonnel, Long supplierId) {
+		log.info("************others personnel that need to update pmuser for personnel Id:"
+				+ smPersonnel.getPersonnelId() + "******************");
 		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 		try {
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
@@ -324,23 +331,28 @@ public class SupplierUserActivationBackingBean extends
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
-			reqDTO.setDraftApplId(draftApplId);
 			PersonnelResDTO resDTO = null;
-			
-			//add personnel same identificationNo by supplierid
+
+			// add personnel same identificationNo by supplierid
 			resDTO = personnelSO
 					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
 			if (resDTO.getSmPersonnelList() != null
 					&& !resDTO.getSmPersonnelList().isEmpty()) {
-				for (SmPersonnel smPersonnelTmp : resDTO
-						.getSmPersonnelList()) {
+				for (SmPersonnel smPersonnelTmp : resDTO.getSmPersonnelList()) {
 					if (smPersonnelTmp.getPersonnelId().compareTo(
-							smPersonnel.getPersonnelId()) != 0) {
+							smPersonnel.getPersonnelId()) != 0
+							&& smPersonnelTmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+							&& smPersonnelTmp.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						log.info("**************************others personnel id:"
+								+ smPersonnelTmp.getPersonnelId()
+								+ "************************");
+						smPersonnelTmp
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 						smPersonnelList.add(smPersonnelTmp);
 					}
 				}
 			}
-			
+
 		} catch (Exception ex) {
 			log.info("Error in getOthersPersonnelWithSameIdentificationNoAndSupplierId:"
 					+ ex.getMessage());
@@ -365,7 +377,8 @@ public class SupplierUserActivationBackingBean extends
 					.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
 			if (resDTO.getSmPersonnel() != null
 					&& (resDTO.getSmPersonnel().getEpRole() == null || StringUtils
-							.isBlank(resDTO.getSmPersonnel().getEpRole()))) {
+							.isBlank(resDTO.getSmPersonnel().getEpRole()))
+					&& resDTO.getSmPersonnel().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 				isAlreadyDeactivate = true;
 			}
 		} catch (Exception ex) {
