@@ -1103,6 +1103,22 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		return isAllPriceTypesStandard;
 	}
 	
+	public boolean hasWeightage(TemplateSpecBean templateSpecBean) {
+		boolean hasWeightage = false;
+		
+		for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
+			TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+			
+			if (specQuestion.isWeightageReq()) {
+				hasWeightage = true;
+				
+				break;
+			}
+		}
+		
+		return hasWeightage;
+	}
+	
 	public void updateItemWeightageReq(TemplateSpecBean templateSpecBean) {
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		
