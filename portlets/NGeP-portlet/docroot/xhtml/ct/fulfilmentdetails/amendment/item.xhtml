@@ -96,7 +96,7 @@
 					     
 					       <p:column headerText="#{lbl['lbl.ct.max.order.qty']}">
 					        	<p:inputText value="#{itemMaxQtiesVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;width:119px;" rendered="#{itemMaxQtiesVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
-					        		disabled="#{amendmentBackingBean.bpkApprover or amendmentBackingBean.managedBean.disableAmendDetails}">
+					        		disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 							         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemMaxQtiesVar.ctContractItem.uom.uomCode)}" />
 							         <p:ajax process="@this"/>
 						        </p:inputText>
@@ -117,7 +117,7 @@
 						       </h:outputText>
 					       </p:column>
 				
-				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" rendered="#{!amendmentBackingBean.bpkApprover}">
+				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}">
 						        <p:commandLink update=":form:ctItemMaxQtyTable"
 						           process="@form" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails or !amendmentBackingBean.isContractAdmin()}" 
 						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
@@ -133,7 +133,7 @@
 				
 				     <p:spacer height="10"/>
 				     <div class="ppRightBtn">
-					       <p:commandButton value="#{lbl['lbl.btn.ok']}"  update=":form:itemTable" rendered="#{!amendmentBackingBean.bpkApprover}"
+					       <p:commandButton value="#{lbl['lbl.btn.ok']}"  update=":form:itemTable" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}"
 					          process="@form" action="#{amendmentBackingBean.setNewMaxQty()}" onclick="dlgItemMaxQty.hide();" />
 					       <p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="dlgItemMaxQty.hide();" type="button" />
 				      </div>
@@ -230,7 +230,7 @@
 								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
 								  <h:panelGroup style="float:right;" rendered="#{itemPriceVar.changePrice}">
 								   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
-								   		disabled="#{amendmentBackingBean.bpkApprover}">
+								   		disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 										<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										<p:ajax process="@this"/>
 									</p:inputText>
@@ -252,7 +252,7 @@
 									</h:outputText>
 								</p:column>
 								
-								<p:column headerText="#{lbl['lbl.ct.action']}" rendered="#{!amendmentBackingBean.bpkApprover}"
+								<p:column headerText="#{lbl['lbl.ct.action']}" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}"
 								    styleClass="column-align-center" style="width:10%; white-space:normal;">
 									<p:commandLink update=":form:itemId" process="@form"  disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
 									   rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
@@ -303,7 +303,7 @@
 	               		 </f:facet>
 					     <h:panelGroup style="float:right;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
-						  	disabled="#{amendmentBackingBean.bpkApprover or  amendmentBackingBean.managedBean.disableAmendDetails}" >
+						  	disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemCeilingQtiesVar.ctContractItem.uom.uomCode)}" />
 								<p:ajax process="@this"/>
 						</p:inputText>
@@ -415,7 +415,7 @@
 					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
 					     <h:panelGroup style="float:right;"  rendered="#{ItemPricesVar.changePrice}">
 					    	<p:inputText value="#{ItemPricesVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.price']}"
-					    		disabled="#{amendmentBackingBean.bpkApprover or  amendmentBackingBean.managedBean.disableAmendDetails}" >
+					    		disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" >
 								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax process="@this"/>
 						</p:inputText>
@@ -434,7 +434,7 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" rendered="#{!amendmentBackingBean.bpkApprover}">
+					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}">
 						<p:commandLink update=":form:servicePriceTable" process="@form" rendered="#{!ItemPricesVar.changePrice and ItemPricesVar.editable}"
 							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
