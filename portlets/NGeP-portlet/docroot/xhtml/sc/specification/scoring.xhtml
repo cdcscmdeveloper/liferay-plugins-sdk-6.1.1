@@ -54,7 +54,12 @@
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
-					<p:ajax event="blur" process="@this" partialSubmit="true" />
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,#{scoringPnlId}_fromRangeTG" />
+					<ac:validateNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+						maxIntegerDigits="14" />
+					<f:attribute name="min" value="0"></f:attribute>
 				</p:inputText>
 				<!-- 	<p:message id="#{scoringPnlId}_rangeFrom"
 					for="#{scoringPnlId}_fromRange" display="icon"></p:message> -->
