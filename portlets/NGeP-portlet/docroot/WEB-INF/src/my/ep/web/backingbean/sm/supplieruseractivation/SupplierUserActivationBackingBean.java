@@ -321,28 +321,32 @@ public class SupplierUserActivationBackingBean extends
 	// syazwan: added to retrieve all personnel with same identificationNo
 	// and supplierId
 	private List<SmPersonnel> getOthersPersonnelWithSameIdentificationNoAndSupplierId(
-			SmPersonnel smPersonnel, Long supplierId) {
+			SmPersonnel currPersonnel, Long supplierId) {
 		log.info("************others personnel that need to update pmuser for personnel Id:"
-				+ smPersonnel.getPersonnelId() + "******************");
+				+ currPersonnel.getPersonnelId() + "******************");
 		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 		try {
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
 					.getInstance().getServiceObject("sm", IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
+			reqDTO.setIdentificationNo(currPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
 			PersonnelResDTO resDTO = null;
 
-			// add personnel same identificationNo by supplierid
+			// add personnel same identificationNo by supplierid but exclude
+			// current personnel
 			resDTO = personnelSO
 					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
 			if (resDTO.getSmPersonnelList() != null
 					&& !resDTO.getSmPersonnelList().isEmpty()) {
 				for (SmPersonnel smPersonnelTmp : resDTO.getSmPersonnelList()) {
 					if (smPersonnelTmp.getPersonnelId().compareTo(
-							smPersonnel.getPersonnelId()) != 0
+							currPersonnel.getPersonnelId()) != 0
 							&& smPersonnelTmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-							&& smPersonnelTmp.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+							&& smPersonnelTmp.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+							&& smPersonnelTmp.getEpRole() != null
+							&& StringUtils.isNotBlank(smPersonnelTmp
+									.getEpRole())) {
 						log.info("**************************others personnel id:"
 								+ smPersonnelTmp.getPersonnelId()
 								+ "************************");
@@ -363,7 +367,7 @@ public class SupplierUserActivationBackingBean extends
 	
 
 	// syazwan: added to validate if pending activation personnel already
-	// deactivate in latest approved personnel
+	// deactivate/terminate in latest approved personnel
 	private boolean isPersonnelAlreadyDeactivate(SmPersonnel smPersonnel,
 			Long supplierId) {
 		boolean isAlreadyDeactivate = false;
