@@ -26,7 +26,7 @@
 							action="#{bsvAttendanceBackingBean.backBtn}"
 							style="float:left;" />
 					</p:column>
-					<p:column width="100%" style="text-align:right">
+					<p:column width="100%" style="text-align:right" >
 						<p:commandButton value="#{lbl['lbl.ss.save']}"
 							process="@form" 
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}" />
@@ -34,6 +34,16 @@
 							process="@form" 
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}" />
 					</p:column>
+					<!-- <p:column width="100%" style="text-align:right" rendered="#{!empty bsvAttendanceBackingBean.managedBean.outComes}">
+					<ui:repeat var="bpmAction"
+						value="#{bsvAttendanceBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button"
+							action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+					</ui:repeat>
+					</p:column> -->
 				</p:row>
 				<div align="left" class="header-info">
 					<table style="width: 100%">
