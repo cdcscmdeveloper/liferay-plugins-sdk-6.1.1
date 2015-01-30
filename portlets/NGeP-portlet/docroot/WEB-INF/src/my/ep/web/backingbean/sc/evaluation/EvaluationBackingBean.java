@@ -817,11 +817,220 @@ public class EvaluationBackingBean extends
 	}
 
 	public String evaluationBackaction() {
-		this.getManagedBean().setComplianceCheckListIndex(-1);
-		this.getManagedBean().setCheckListType("");
-		//this.getManagedBean().setScQtChecklist(null);
+		IQTEvaluationSO evaluationSo = null;
+		try {
+			String checkListType = this.getManagedBean()
+					.getEvaluationTechnicalFinancialType();
+			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
+			EvaluationReqDTO checklistreqDTO = new EvaluationReqDTO();
+			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			checklistreqDTO.setCheckList(checkList);
+			EvaluationResDTO checkListResDTO = new EvaluationResDTO();
+		
+			PmStatus evalStatus = new PmStatus();
+			if (checkListType.equalsIgnoreCase("ET")) {
+				checkListResDTO = evaluationSo
+						.retrieveQtCheckList(checklistreqDTO);
+
+				if (null != checkListResDTO.getCheckList()) {
+					checkList = checkListResDTO.getCheckList();
+					//evalStatus = checkList.getPmEvalStatus();
+				}
+
+				if (this.getManagedBean().getScQt().getEvaluationType()
+						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
+						&& !this.getManagedBean().getScQt()
+								.isTechEvaluationReq()) {
+					if (null != checkList.getPmEvalStatus()
+							&& checkList.getPmEvalStatus().getStatusId().equals(
+									QTStatusConst.TS_PENDING_SUBMISSION)) {
+					 evalStatus = new PmStatus();
+						//evalStatus = new PmStatus();
+						evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
+						//checkList.setPmEvalStatus(evalStatus);
+						setTechnicalEvaluationStatus(checkList, checkListType,evalStatus);
+
+					}
+
+				} else {
+					if (this.getManagedBean().getEvaluationCheckListType()
+							.equalsIgnoreCase("TS")) {
+
+						if (null != checkList.getPmEvalStatus()
+								&& checkList.getPmEvalStatus().getStatusId().equals(
+										QTStatusConst.TS_PENDING_SUBMISSION)) {
+							for (ScQtProposalChecklist proposalCheCklist : this
+									.getManagedBean()
+									.getComplianceTechnicalProposalCheckList()) {
+								if (null == proposalCheCklist
+										.getTotalUserScore()
+										|| proposalCheCklist
+												.getTotalUserScore().intValue() == 0) {
+									 evalStatus = new PmStatus();
+									evalStatus
+											.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+									break;
+								} else {
+									 evalStatus = new PmStatus();
+									evalStatus
+											.setStatusId(QTStatusConst.TS_COMPLETED);
+								}
+							}
+
+							//checkList.setPmEvalStatus(evalStatus);
+							setTechnicalEvaluationStatus(checkList,
+									checkListType,evalStatus);
+
+						}
+
+					} else {
+						if (null != checkList.getPmEvalStatus()
+								&& checkList.getPmEvalStatus().getStatusId().equals(
+										QTStatusConst.TS_PENDING_SUBMISSION)) {
+							for (ScQtProposalChecklist proposalCheCklist : this
+									.getManagedBean()
+									.getComplianceTechnicalProposalCheckList()) {
+								if (null == proposalCheCklist
+										.getEvaluationStatus()
+										|| proposalCheCklist
+												.getEvaluationStatus()
+												.getStatusId()
+												.equals(QTStatusConst.PR_PENDING)) {
+								 evalStatus = new PmStatus();
+									evalStatus
+											.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+									break;
+								} else {
+								 evalStatus = new PmStatus();
+									evalStatus
+											.setStatusId(QTStatusConst.TS_COMPLETED);
+								}
+							}
+
+							//checkList.setPmEvalStatus(evalStatus);
+							setTechnicalEvaluationStatus(checkList,
+									checkListType,evalStatus);
+
+						}
+
+					}
+				}
+
+			} else if (checkListType.equalsIgnoreCase("EF")) {
+				checkListResDTO = evaluationSo
+						.retrieveQtCheckList(checklistreqDTO);
+
+				if (null != checkListResDTO.getCheckList()) {
+					checkList = checkListResDTO.getCheckList();
+					//evalStatus = checkList.getPmEvalStatus();
+				}
+				if (this.getManagedBean().getEvaluationCheckListType()
+						.equalsIgnoreCase("FS")) {
+					if (null != checkList.getPmEvalStatus()
+							&& checkList.getPmEvalStatus().getStatusId().equals(
+									QTStatusConst.TS_PENDING_SUBMISSION)) {
+						for (ScQtProposalChecklist proposalCheckList : this
+								.getManagedBean().getFinSpecSupplierList()) {
+							if (null == proposalCheckList.getTotalScore()
+									|| proposalCheckList.getTotalScore()
+											.intValue() == 0) {
+								 evalStatus = new PmStatus();
+								evalStatus
+										.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+								break;
+							} else {
+								 evalStatus = new PmStatus();
+								evalStatus
+										.setStatusId(QTStatusConst.TS_COMPLETED);
+							}
+						}
+						//checkList.setPmEvalStatus(evalStatus);
+						setTechnicalEvaluationStatus(checkList, checkListType,evalStatus);
+					}
+
+				} else {
+					if (null != checkList.getPmEvalStatus()
+							&& checkList.getPmEvalStatus().getStatusId().equals(
+									QTStatusConst.TS_PENDING_SUBMISSION)) {
+						for (ScQtProposalChecklist proposalCheCklist : this
+								.getManagedBean()
+								.getComplianceTechnicalProposalCheckList()) {
+							if (null == proposalCheCklist.getEvaluationStatus()
+									|| proposalCheCklist.getEvaluationStatus()
+											.getStatusId()
+											.equals(QTStatusConst.PR_PENDING)) {
+								 evalStatus = new PmStatus();
+								evalStatus
+										.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+								break;
+							} else {
+								 evalStatus = new PmStatus();
+								evalStatus
+										.setStatusId(QTStatusConst.TS_COMPLETED);
+							}
+						}
+
+						//checkList.setPmEvalStatus(evalStatus);
+						setTechnicalEvaluationStatus(checkList, checkListType,evalStatus);
+
+					}
+				}
+
+			}
+
+			// this.getManagedBean().setScQtChecklist(null);
+		} finally {
+			this.getManagedBean().setEvaluationTechnicalFinancialType("");
+			this.getManagedBean().setEvaluationCheckListType("");
+			this.getManagedBean().setEvaluationCheckListIndex(-1);
+			// this.getManagedBean().setCheckListType(checklistType);
+			this.getManagedBean().setComplianceCheckListIndex(-1);
+			this.getManagedBean().setCheckListType("");
+
+		}
 		return "evaluationstage1view.xhtml";
 
+	}
+
+	private void setTechnicalEvaluationStatus(ScQtCheckList checkList,
+			String checkListType,PmStatus status) {
+		IQTEvaluationSO evaluationSo = null;
+		try {
+			EvaluationReqDTO checklistreqDTO = new EvaluationReqDTO();
+			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			checklistreqDTO.setEvaluationStatus(status);
+			//checkList.setPmEvalStatus(status);
+			checklistreqDTO.setCheckList(checkList);
+			EvaluationResDTO checkListresDTO = evaluationSo
+					.saveOrUpdatePresentationDemoCheckList(checklistreqDTO);
+			this.getManagedBean().setScQtChecklist(
+					checkListresDTO.getCheckList());
+			if (checkListType.equalsIgnoreCase("ET")) {
+				this.getManagedBean()
+						.getEvaluationStgTechnicalCheckList()
+						.remove(this.getManagedBean()
+								.getEvaluationCheckListIndex());
+				this.getManagedBean()
+						.getEvaluationStgTechnicalCheckList()
+						.add(this.getManagedBean()
+								.getEvaluationCheckListIndex(),
+								this.getManagedBean().getScQtChecklist());
+			} else if (checkListType.equalsIgnoreCase("EF")) {
+				this.getManagedBean()
+						.getEvaluationStgfinancialCheckList()
+						.remove(this.getManagedBean()
+								.getEvaluationCheckListIndex());
+				this.getManagedBean()
+						.getEvaluationStgfinancialCheckList()
+						.add(this.getManagedBean()
+								.getEvaluationCheckListIndex(),
+								this.getManagedBean().getScQtChecklist());
+			}
+		} finally {
+			evaluationSo = null;
+		}
 	}
 
 	public String technicalBackaction() {
@@ -1334,12 +1543,17 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public String viewTechnicalEvaluation(ScQtCheckList checklist) {
+	public String viewTechnicalEvaluation(ScQtCheckList checklist, int index,
+			String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = null;
 		// this.getManagedBean().setQtProposalChecklist(checklist);
 		try {
+			this.getManagedBean().setEvaluationCheckListType("");
 			this.getManagedBean().setScQtChecklist(checklist);
+			this.getManagedBean().setEvaluationCheckListIndex(index);
+			this.getManagedBean().setEvaluationTechnicalFinancialType(
+					checklistType);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -1400,11 +1614,16 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public String evaluateTechnicalEvaluation(ScQtCheckList checklist) {
+	public String evaluateTechnicalEvaluation(ScQtCheckList checklist,
+			int index, String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = null;
 		try {
+			this.getManagedBean().setEvaluationCheckListType("");
 			this.getManagedBean().setScQtChecklist(checklist);
+			this.getManagedBean().setEvaluationCheckListIndex(index);
+			this.getManagedBean().setEvaluationTechnicalFinancialType(
+					checklistType);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -1447,6 +1666,9 @@ public class EvaluationBackingBean extends
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
 							.getDefinationType().getParameterCode())) {
+				this.getManagedBean()
+						.setEvaluationCheckListType(
+								ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
 				return "technicalSpecEvaluation.xhtml";
 				// return "productServiceTechScoreSpec.xhtml";
 
@@ -1460,12 +1682,17 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public String viewfinacialEvaluation(ScQtCheckList checklist) {
+	public String viewfinacialEvaluation(ScQtCheckList checklist, int index,
+			String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = null;
 		// this.getManagedBean().setQtProposalChecklist(checklist);
 		try {
+			this.getManagedBean().setEvaluationCheckListType("");
 			this.getManagedBean().setScQtChecklist(checklist);
+			this.getManagedBean().setEvaluationCheckListIndex(index);
+			this.getManagedBean().setEvaluationTechnicalFinancialType(
+					checklistType);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -1507,7 +1734,7 @@ public class EvaluationBackingBean extends
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
 							.getDefinationType().getParameterCode())) {
-
+				this.getManagedBean().setEvaluationCheckListType("FS");
 				EvaluationReqDTO specDtls = new EvaluationReqDTO();
 				specDtls.setQtId(this.getManagedBean().getScQt().getQtId());
 				specDtls.setCheckListId(this.getManagedBean()
@@ -1656,12 +1883,16 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	public String evaluatefinancialEvaluation(ScQtCheckList checklist) {
+	public String evaluatefinancialEvaluation(ScQtCheckList checklist,
+			int index, String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = null;
 		try {
-
+			this.getManagedBean().setEvaluationCheckListType("");
 			this.getManagedBean().setScQtChecklist(checklist);
+			this.getManagedBean().setEvaluationCheckListIndex(index);
+			this.getManagedBean().setEvaluationTechnicalFinancialType(
+					checklistType);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -1706,6 +1937,7 @@ public class EvaluationBackingBean extends
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
 							.getDefinationType().getParameterCode())) {
+				this.getManagedBean().setEvaluationCheckListType("FS");
 				EvaluationReqDTO specDtls = new EvaluationReqDTO();
 				specDtls.setQtId(this.getManagedBean().getScQt().getQtId());
 				specDtls.setCheckListId(this.getManagedBean()
@@ -1728,6 +1960,7 @@ public class EvaluationBackingBean extends
 
 				if (null != speczone.getZones()
 						&& !speczone.getZones().isEmpty()) {
+
 					retriveFinancialSpecZones(speczone);
 					return "evaluationFinancialSpec.xhtml";
 				} else {
@@ -3507,7 +3740,7 @@ public class EvaluationBackingBean extends
 				retriveComplianceTechnical();
 				// retrives1Details();
 			} else if (outputTab == 2) {
-				//this.getManagedBean().setCheckListType("");
+				// this.getManagedBean().setCheckListType("");
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
