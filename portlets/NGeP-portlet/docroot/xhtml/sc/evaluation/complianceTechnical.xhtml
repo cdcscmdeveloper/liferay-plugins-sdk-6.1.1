@@ -13,16 +13,16 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.tech.proposal']}"
 		toggleable="true">
 
-		<p:dataTable var="complianceTech" id="complianceTechnicalProposal" 
+		<p:dataTable var="complianceTech" id="complianceTechnicalProposal"
 			editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalCheckList}"
 			first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"
 			rowKey="#{complianceTech}">
-		<!-- 	<ac:paginator for="complianceTechnicalProposal" /> -->
+			<!-- 	<ac:paginator for="complianceTechnicalProposal" /> -->
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
-				style="width:70%;white-space: normal;">
+				style="width:55%;white-space: normal;">
 
 				<h:outputText value="#{complianceTech.title}"></h:outputText>
 
@@ -36,6 +36,15 @@
 					value="#{evaluationBackingBean.getParameterDesc(complianceTech.definationType)}"></h:outputText>
 
 			</p:column>
+			
+				<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
+					style="width:15%;white-space: normal;">
+
+
+					<h:outputText rendered="#{complianceTech.definationType.parameterCode eq 'UP'}"
+						value="#{evaluationBackingBean.getStatusDescById(complianceTech.pmEvalStatus.statusId)}"></h:outputText>
+
+				</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
@@ -43,7 +52,7 @@
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
 					rendered="#{complianceTech.definationType.parameterCode eq 'UP'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.technicalComplianceAction(complianceTech)}" />
+					action="#{evaluationBackingBean.technicalComplianceAction(complianceTech,index,'T')}" />
 
 
 			</p:column>

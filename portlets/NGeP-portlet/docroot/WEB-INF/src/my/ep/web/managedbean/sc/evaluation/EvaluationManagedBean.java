@@ -213,6 +213,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean complianceOnly;
 	private boolean evaluationStageStatusHide=true;
 	private List<TplSpecScoring> specItemScoringList;
+	private int complianceCheckListIndex=-1;
   
 	/**
 	 * @return the today
@@ -2090,6 +2091,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setSpecItemScoringList(List<TplSpecScoring> specItemScoringList) {
 		this.specItemScoringList = specItemScoringList;
+	}
+
+	/**
+	 * @return the complianceCheckListIndex
+	 */
+	public int getComplianceCheckListIndex() {
+		return complianceCheckListIndex;
+	}
+
+	/**
+	 * @param complianceCheckListIndex the complianceCheckListIndex to set
+	 */
+	public void setComplianceCheckListIndex(int complianceCheckListIndex) {
+		this.complianceCheckListIndex = complianceCheckListIndex;
 	}
 
 	
