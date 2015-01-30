@@ -381,11 +381,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
 		}
 		
-		String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
+		/*String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
 		if(isExistUserByIdentificationNo(loginID)){
 			throw new EpException(MessageConst.ERROR_721005);
 
-		}
+		}*/
 		
 		//check Exist email in smPersonnel
 		//this.checkExistEmailInPersonnel(smPersonnel.getEmail());
