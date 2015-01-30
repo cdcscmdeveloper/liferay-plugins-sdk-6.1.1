@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -40,6 +41,7 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -98,6 +100,7 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
@@ -1225,17 +1228,28 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 			if (nodesToRemoved.size() > 0) {
 				treeNodes.removeAll(nodesToRemoved);
+			} else {
+				throw new EpException("Please select atleast one location");
 			}
 		}
 	}
 
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
-
+		debugLogger("getDropdownLocationValues");
+		IOrgProfileSO orgProfile = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileResDTO orgResDto = orgProfile
+				.retrieveOrgStateCodeByOrgProfileId(this.getManagedBean()
+						.getQt().getPmOrgProfile().getOrgProfileId());
+		this.getManagedBean().setAllStateCode(orgResDto.getStateStatusId());
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCATION_LEVEL_STATE);
-		types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
+		if (this.getManagedBean().getAllStateCode() == 2) {
+			types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
+		}
 		types.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
-
+		
 		SelectItem[] items = null;
 		try {
 			items = new SelectItem[types.size() + 1];
@@ -1243,6 +1257,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			int i = 1;
 			for (String location : types) {
 				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(locationLevel);
+
 				for (PmParameterDesc paramDesc : localParamDesc) {
 					if (paramDesc.getPmParameter().getParameterCode()
 							.equals(location)) {
@@ -1730,5 +1745,21 @@ public class QTSupplierQulCriteriaBackingBean extends
 				}
 			}
 		}
+	}
+	
+	public void checkAllConditions(AjaxBehaviorEvent event) {
+		debugLogger("checkAllCondition");
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<TreeNode> list = getManagedBean().getZoneTrees();
+		for (TreeNode node : list) {
+			for (TreeNode childNode : node.getChildren()) {
+				if (flag) {
+					childNode.setSelected(true);
+				} else {
+					childNode.setSelected(false);
+				}
+			}
+		}
+		getManagedBean().setZoneTrees(list);
 	}
 }
