@@ -98,7 +98,14 @@
 											 partialSubmit="true"  update="rptCmCriteriaRegtype"/>			
 									</p:selectOneMenu>
 									</c:if>
-										 			
+									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmGroupOneView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.cmGroupOne}" style="margin-top:5px;width:300px;">
+									
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmtype']}" itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.unspsccode']}" itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>																			
+									</p:selectOneMenu>
+								  </c:if>	 			
 							    </h:panelGrid>							    
 						    </td>
 						  </tr>

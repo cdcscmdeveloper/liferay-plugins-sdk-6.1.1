@@ -279,6 +279,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String cmProofIdentity;
 	private String cmSupplOrAdmin;
 	private String cmExtention;
+	private String cmGroupOne;
 	//fl	
 	private String flItmType;
 	private String flPtj;
@@ -407,6 +408,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String ctPtj;
 	
 	
+	public String getCmGroupOne() {
+		return cmGroupOne;
+	}
+	public void setCmGroupOne(String cmGroupOne) {
+		this.cmGroupOne = cmGroupOne;
+	}
 	public String getCtMinistry() {
 		return ctMinistry;
 	}
@@ -1748,7 +1755,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			//if (null != this.getCtMinistry()) {
-				reqDTO.setUserId(lngUserId);
+				reqDTO.setUserId(Long.parseLong("15463"));
 				reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 				//reqDTO.setParentOrgProfileId(Long.parseLong(this.getCtMinistry()));
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
@@ -1769,12 +1776,17 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		//OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		IOrgProfileSO orgProfileSO = null;
 		try {
-			/*Long ministryId = (Long) event.getComponent().getAttributes()
-					.get("value");*/
-			if (null != this.getFlMinistry()) {
+			
+			if (null != this.getFlMinistry()||null != this.getCtMinistry()) {
+				Long ministryId = null;
+				if (null != this.getFlMinistry()) {
+				    ministryId = Long.parseLong(this.getFlMinistry());	
+				}else if (null != this.getCtMinistry()) {
+					ministryId = Long.parseLong(this.getFlMinistry());
+				}
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-				reqDTO.setParentOrgProfileId(Long.parseLong(this.getFlMinistry()));
+				reqDTO.setParentOrgProfileId(ministryId);
 				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
@@ -1791,24 +1803,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 
 		} finally {
 			orgProfileSO = null;
-		}
-		/*if (null != this.getFlMinistry()) {
-			//reqDTO.setUserId(lngUserId);
-			//reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-			reqDTO.setParentOrgProfileId(Long.parseLong(this.getFlMinistry()));
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO.retrievePtjListByMinistryId(reqDTO);
-			List<PmOrgProfile> list = resDTO.getOrgProfileList();
-			for (PmOrgProfile user : list) {
-			//if (null != pmorgprofile) {
-				SelectItem selectItem= new SelectItem();
-				selectItem.setLabel(user.getOrgName());
-				selectItem.setValue(user.getOrgProfileId());
-				ptjList.add(selectItem);				
-			}			
-		}*/
+		}	
 	}
 	/*
 	 *Enable  criteria variables by report name 
@@ -2664,9 +2659,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getCmExtention()!=null)&&(this.getCmExtention()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ+this.getCmExtention());
 			}
+			if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.LST_REJ_CAT_ITM_RPT_VAL))){
+				if((this.getCmGroupOne()!=null)&&(this.getCmGroupOne()!=ReportConst.EMPTY_VAL)){
+					rptGenBean.setCmGroupOneVar(ReportConst.CM_AMP_PGROUP_EQ+this.getCmGroupOne());
+				}
+			}
+			
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getCmExtentionVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getCmExtentionCodeVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getCmExtentionVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getCmGroupOneVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getCmExtentionCodeVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
@@ -2911,6 +2912,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setCmExtentionColour(null);
 		this.setCmProofIdentity(null);
 		this.setCmSupplOrAdmin(null);
+		this.setCmGroupOne(null);
 		this.setFlItmType(null);
 		this.setFlPtj(null);
 		this.setFlContractNo(null);
