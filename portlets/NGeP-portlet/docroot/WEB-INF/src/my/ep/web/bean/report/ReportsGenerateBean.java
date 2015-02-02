@@ -108,6 +108,7 @@ public class ReportsGenerateBean {
 		private boolean cmMofRegView = false;
 		private boolean cmSupplOrAdminView = false;
 		private boolean cmExtentionView = false;
+		private boolean cmGroupOneView = false;
 		//SM module
 		private boolean smCompanyNameView = false;
 		private boolean smApplicationNoView = false;
@@ -301,6 +302,7 @@ public class ReportsGenerateBean {
 		private String cmSupplOrAdminVar=ReportConst.EMPTY_VAL;	
 		private String cmExtentionCodeVar=ReportConst.EMPTY_VAL;
 		private String cmExtentionVar=ReportConst.EMPTY_VAL;
+		private String cmGroupOneVar=ReportConst.EMPTY_VAL;
 		
 		//sm
 		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
@@ -431,6 +433,18 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public boolean isCmGroupOneView() {
+			return cmGroupOneView;
+		}
+		public void setCmGroupOneView(boolean cmGroupOneView) {
+			this.cmGroupOneView = cmGroupOneView;
+		}
+		public String getCmGroupOneVar() {
+			return cmGroupOneVar;
+		}
+		public void setCmGroupOneVar(String cmGroupOneVar) {
+			this.cmGroupOneVar = cmGroupOneVar;
+		}
 		public boolean isCtMinistryView() {
 			return ctMinistryView;
 		}

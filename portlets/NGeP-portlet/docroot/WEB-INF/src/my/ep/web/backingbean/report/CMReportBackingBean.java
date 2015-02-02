@@ -63,7 +63,8 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 					rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmCompanyNameView(true);
-					rptGenBean.setCmRegistrationTypeView(true);					
+					rptGenBean.setCmRegistrationTypeView(true);	
+					rptGenBean.setCmGroupOneView(true);
 				//};
 	            break;
 	        case ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL:
