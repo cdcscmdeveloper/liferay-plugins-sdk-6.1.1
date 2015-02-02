@@ -54,7 +54,6 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	private static Logger log = Logger.getLogger(CtTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CONTRACT_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CONTRACT_DETAIL_SEARCH = "ctTrackingDiaryDetailSearch.xhtml";
-	private VCtDocument vCtDocument;
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
 	private FacesScopes getFacesScopes() {
@@ -270,8 +269,9 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchContractNo()));
-			System.out.println("getCtDocumentDataModel docNo "+ getManagedBean().getSearchContractNo());
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocId()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocType()));
+			System.out.println("getCtDocumentDataModel docId "+ getManagedBean().getvCtDocument().getDocId());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -289,8 +289,8 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	}
 
 	public String goToTrackingDiarySearch(VCtDocument vCtDocument) {
-//		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-//		getManagedBean().setSmSupplier(smSupplier);
+		System.out.println("**********vCtDocument************"+ vCtDocument.getDocId());
+		getManagedBean().setvCtDocument(vCtDocument);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CONTRACT_DETAIL_SEARCH + "?faces-redirect=true";
 	}
