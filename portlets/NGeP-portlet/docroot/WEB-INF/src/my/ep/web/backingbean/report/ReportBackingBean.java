@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -30,6 +31,8 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -42,8 +45,10 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -52,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -102,6 +108,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private List<SelectItem> statusList = new ArrayList<SelectItem>();	
 	private List<SelectItem> ministryList = new ArrayList<SelectItem>();
 	private List<SelectItem> ptjList = new ArrayList<SelectItem>();	
+	//private List<PmOrgProfile> ptjList;
 	private List<String> loanList = new ArrayList<String>();
 	
 	SCReportBackingBean scReportBackingBean;
@@ -202,7 +209,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void setPtjList(List<SelectItem> ptjList) {
 		this.ptjList = ptjList;
 	}
+	
+	
 	private String localToDateVar;
+	
+	/*public List<PmOrgProfile> getPtjList() {
+		return ptjList;
+	}
+	public void setPtjList(List<PmOrgProfile> ptjList) {
+		this.ptjList = ptjList;
+	}*/
 	private String userId;
 	private long lngUserId;
 	private String roleCode;	
@@ -1669,6 +1685,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public List<String> retriveUserrloeByUserId(String moduleName) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(moduleName, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
+		retrieveMinistryByOrgtype();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {	
 			userId = new FacesScopes().getUserSessionBean().getUserId().toString();
 			lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
@@ -1725,14 +1742,73 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		
 		return authoriztionList;
 	}
-	public void retrieveMinistryByUserId() {
-		userId = new FacesScopes().getUserSessionBean().getUserId().toString();
-		lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(getManagedBean().getModuleValue(), IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(ReportConst.ENG_LANG);
-		UserResDTO userResDTO = userSO.retrieveUserListByOrgProfileId(reqDTO);
+	public void retrieveMinistryByOrgtype() {
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			userId = new FacesScopes().getUserSessionBean().getUserId().toString();
+			lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			//if (null != this.getCtMinistry()) {
+				reqDTO.setUserId(lngUserId);
+				reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+				//reqDTO.setParentOrgProfileId(Long.parseLong(this.getCtMinistry()));
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> list = resDTO.getOrgProfileList();
+				for (PmOrgProfile user : list) {
+					SelectItem selectItem= new SelectItem();
+					selectItem.setLabel(user.getOrgName());
+					selectItem.setValue(user.getOrgProfileId());
+					ministryList.add(selectItem);				
+				}
+			//}
+		}		
+	}
+	public void retrievePTJByOrgProfileId() {		
+		//OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			/*Long ministryId = (Long) event.getComponent().getAttributes()
+					.get("value");*/
+			if (null != this.getFlMinistry()) {
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				reqDTO.setParentOrgProfileId(Long.parseLong(this.getFlMinistry()));
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+				List<PmOrgProfile> list = resDTO.getOrgProfileList();
+				for (PmOrgProfile user : list) {
+					SelectItem selectItem= new SelectItem();
+					selectItem.setLabel(user.getOrgName());
+					selectItem.setValue(user.getOrgProfileId());
+					ptjList.add(selectItem);				
+				}
+				//this.setPtjList(resDTO.getOrgProfileList());
+			}
+
+		} finally {
+			orgProfileSO = null;
+		}
+		/*if (null != this.getFlMinistry()) {
+			//reqDTO.setUserId(lngUserId);
+			//reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+			reqDTO.setParentOrgProfileId(Long.parseLong(this.getFlMinistry()));
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO.retrievePtjListByMinistryId(reqDTO);
+			List<PmOrgProfile> list = resDTO.getOrgProfileList();
+			for (PmOrgProfile user : list) {
+			//if (null != pmorgprofile) {
+				SelectItem selectItem= new SelectItem();
+				selectItem.setLabel(user.getOrgName());
+				selectItem.setValue(user.getOrgProfileId());
+				ptjList.add(selectItem);				
+			}			
+		}*/
 	}
 	/*
 	 *Enable  criteria variables by report name 
