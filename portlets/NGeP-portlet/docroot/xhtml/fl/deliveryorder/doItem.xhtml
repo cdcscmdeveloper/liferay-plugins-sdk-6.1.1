@@ -35,18 +35,23 @@
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
 			<p:column style="white-space:normal;width:163px">
-				<h:outputText value="#{lbl['lbl.fl.do.delivery.service.start.end.date']}" />
-				<br/>
+				<h:outputText value="#{lbl['lbl.fl.do.start.date']}" />
+				<p:spacer width="2"/>
 				<p:inputText size="7" disabled="true"
 					value="#{doDelAddress.startDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.start.date']}"/>
+				<br />
+				<h:outputText value="#{lbl['lbl.fl.do.end.date']}" />
+				<p:spacer width="5"/>
 				<p:inputText size="7" disabled="true"
 					value="#{doDelAddress.endDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.end.date']}"/>
 			</p:column>
 			<p:column style="white-space:normal;">
 				<h:outputText value="*" styleClass="mandatory" />
