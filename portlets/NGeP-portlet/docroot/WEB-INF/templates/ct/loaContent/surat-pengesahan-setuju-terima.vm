@@ -70,7 +70,7 @@
 	<tr>
 		<td>
 			Tuan, <br />
-			<b>Tambahan Kepada  $contractTitle  $contractNo </b> <br/>
+			<b>Tambahan Kepada $contractNo </b> <br/>
 		</td>
 	</tr>	
 	<tr>
@@ -83,7 +83,7 @@
 					<p>Tuan adalah diingatkan bahawa mengikut Syarat-syarat kontrak, tuan adalah dikehendaki menyempurnakan perkara berikut: <br /></p>
 					<p>3.1 mendepositkan dengan Kerajaan, suatu Bon Pelaksanaan dalam bentuk Jaminan Bank/Jaminan Syarikat Kewangan/ Jaminan Insurans yang tak boleh batal daripada sebuah Bank/Syarikat Kewangan/Syarikat Insurans yang diluluskan dan didaftarkan di Malaysia dengan jumlah sebanyak RM $bondAmt yang merupakan $bondAmtText peratus ($bondPercentage %) dari jumlah  kontrak dan tempoh sahlaku sehingga $bondExpDate. Dokumen bon Pelaksanaan tersebut hendaklah dikemukakan kepada Kerajaan dalam tempoh $bondResDueDays hari dari tarikh surat ini disetujuterima. <br/></p>
 					<p>3.2 Sekiranya pembekal mendepositkan kepada Kerajaan Polisi Insurans. Pembekal hendaklah mengemukakan resit-resit premium yang telah dibayar bagi tujuan pemeriksaan.<br/></p>
-					<p>3.4 Apa-apa kegagalan dalam mematuhi kehendak-kehendak para 3 ini dalam tempoh masa yang dinyatakan, kecuali jika diabaikan dengan nyata oleh Kerajaan, akan menyebabkan penerimaan SST ini terbatal dan selepas itu Kerajaan tidaklah dengan apa-apa cara juga bertanggungjawab kepada tuan.<br /></p>
+					<p>3.3 Apa-apa kegagalan dalam mematuhi kehendak-kehendak para 3 ini dalam tempoh masa yang dinyatakan, kecuali jika diabaikan dengan nyata oleh Kerajaan, akan menyebabkan penerimaan SST ini terbatal dan selepas itu Kerajaan tidaklah dengan apa-apa cara juga bertanggungjawab kepada tuan.<br /></p>
 				</li>
 				#end
 				<li style="padding-bottom:20px;">Tarikh permulaan sebagaimana yang disebutkan dalam syarat-syarat kontrak adalah pada $contractEffDate.<br /></li>
@@ -110,9 +110,9 @@
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td><br /><br /><br /><br />
 			Dengan ini yang bertandatangan di bawah ini mengakui penerimaan surat tersebut dan mengesahkan tiada apa apa terma, syarat atau stipulasi tambahan telah dikenakan dengan keluaran surat tersebut oleh yang bertandatangan di bawah ini.
-			<br /><br />
+			<br /><br /><br /><br />
 		</td>
 	</tr>
 	<tr>
@@ -122,6 +122,8 @@
 				<td colspan="3">
 					<br />________________________________
 				</td>
+				<td>
+				</td>
 				<td colspan="3">
 					<br />________________________________
 				</td>
@@ -130,19 +132,23 @@
 				<td colspan="3" style='font-weight:bold;'>
 					Tandatangan bagi pihak Pembekal
 				</td>
+				<td>
+				</td>
 				<td colspan="3" style='font-weight:bold;'>
 					Tandatangan bagi pihak saksi Pembekal
 				</td>
 			</tr>
-			<tr>
+			<tr valign="top">
 				<td width="17%">
 					Nama Penuh 
 				</td>
 				<td width="1%">
 					: 
 				</td>
-				<td width="32%">
+				<td width="30%">
 					$supplierUserName
+				</td>
+				<td width="4%">
 				</td>
 				<td width="17%">
 					Nama Penuh
@@ -150,7 +156,7 @@
 				<td width="1%">
 					: 
 				</td>
-				<td width="32%">
+				<td width="30%">
 					$witnessName
 				</td>
 			</tr>
@@ -163,6 +169,8 @@
 				</td>
 				<td>
 					$supplierUserID
+				</td>
+				<td>
 				</td>
 				<td>
 					No KP
@@ -185,6 +193,8 @@
 					$supplierUserDesignation
 				</td>
 				<td>
+				</td>
+				<td>
 					Jawatan
 				</td>
 				<td>
@@ -194,15 +204,23 @@
 					$witnessDesignation
 				</td>
 			</tr>
-			<tr>
+			<tr valign="top">
 				<td>
 					Nama Pembekal
 				</td>
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td style="white-space: normal;">
 					$supplierCompName
+				</td>
+				<td>
+				<td>
+				</td>
+				</td>
+				<td>
+				</td>
+				<td>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -214,6 +232,8 @@
 				</td>
 				<td style="white-space: normal;">
 					$supplierCompAddress
+				</td>
+				<td>
 				</td>
 				<td>
 					Alamat
@@ -236,6 +256,8 @@
 					$supplierTelNo
 				</td>
 				<td>
+				</td>
+				<td>
 					No Tel
 				</td>
 				<td>
@@ -254,6 +276,8 @@
 				</td>
 				<td>
 					$supplierFaxNo
+				</td>
+				<td>
 				</td>
 				<td>
 					No Faks
@@ -276,6 +300,8 @@
 					$supplierMobileNo
 				</td>
 				<td>
+				</td>
+				<td>
 					Tel Bimbit
 				</td>
 				<td>
@@ -296,6 +322,8 @@
 					$supplierEmail
 				</td>
 				<td>
+				</td>
+				<td>
 					Alamat emel
 				</td>
 				<td>
@@ -306,7 +334,7 @@
 				</td>
 			</tr>	
 			<tr>
-				<td colspan="6">
+				<td colspan="7">
 					<br /><br />
 				</td>
 			</tr>
@@ -317,7 +345,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td colspan="4">
 					$bankAccNo
 				</td>
 			</tr>
@@ -328,7 +356,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td colspan="4">
 					$bankName
 				</td>
 			</tr>
@@ -339,7 +367,7 @@
 				<td valign="top">
 					: 
 				</td>
-				<td colspan="3">
+				<td colspan="4">
 					$bankAddress
 				</td>
 			</tr>
@@ -350,7 +378,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td colspan="4">
 					$ackDate
 				</td>
 			</tr>
