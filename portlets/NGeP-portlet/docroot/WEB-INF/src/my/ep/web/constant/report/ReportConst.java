@@ -528,6 +528,7 @@ public class ReportConst {
 	public static final String CM_AMP_UNSPSC_CODE_EQ = "&PUNSPSCCODE=";
 	public static final String CM_AMP_UNSPSC_TITLE_EQ = "&PUNSPSCTITLE=";
 	public static final String CM_AMP_EXTENSION_EQ = "&PEXTENSION=";
+	public static final String CM_AMP_PGROUP_EQ = "&PGROUP=";
 	//sc
 	public static final String SC_AMP_REQUISENER_EQ = "&REQUIUSRID=";
 	public static final String SC_AMP_SUPPLIER_EQ = "&SUPP=";
