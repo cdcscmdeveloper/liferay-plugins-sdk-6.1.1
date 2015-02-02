@@ -243,7 +243,8 @@ public class SupplierUserActivationBackingBean extends
 						log.info("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
 						SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
 						
-						log.info("SmPersonnel code----->" + this.getManagedBean().getSmPersonnel().getIdentificationType().getParameterCode());
+						//log.info("SmPersonnel code----->" + this.getManagedBean().getSmPersonnel().getIdentificationType().getParameterCode());
+						log.info("SmPersonnel code----->" + this.getManagedBean().getSmPersonnel().getIdentificationTypeId());
 						try{
 							resDTO = reqSO.createPmProfile(reqDTO);
 							this.getManagedBean().setValidActivation(false);
