@@ -119,6 +119,7 @@
 					<p:column selectionMode="multiple" width="5%" />
 					<p:column headerText="#{lbl['lbl.sm.category']}" />
 					<p:column headerText="#{lbl['lbl.sm.category.type']}" />
+					<p:column headerText="#{lbl['lbl.sm.category.firstRecomm']}" />
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" width="5%" />
@@ -137,6 +138,12 @@
 					rendered="#{!catBean.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.category.type.special']}"
 					rendered="#{catBean.specialCategory}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{lbl['lbl.sm.catCodes.apprv']}"
+					rendered="#{catBean.poDecFlg eq 1}" />
+				<h:outputText value="#{lbl['lbl.sm.catCodes.reject']}"
+					rendered="#{catBean.poDecFlg eq 0}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
