@@ -421,6 +421,9 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.NEGOTIATE_LOI,
 				SourcingConstants.LOI_PTJ_PAGE);
 		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
+				+ SCProcessNameConst.REVISE_LOI,
+				SourcingConstants.LOI_PTJ_PAGE);
+		temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 				+ SCProcessNameConst.ACCEPT_LOI,
 				SourcingConstants.LOI_SUPPLIER_PAGE);
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
