@@ -27,7 +27,6 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
@@ -39,8 +38,6 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
-import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -285,9 +282,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
 							crBB.getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 						}
-						if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
-							contractSupplierResDTO.getFactoring().getPmFinancialBranch();
-						}
 					}else{
 						resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
 					}
@@ -361,9 +355,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(resDTO.getFlOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
-			if(null != resDTO.getFlOrder().getPmFinancialBranch()){
-				flOrderBB.getRfcAddress(null, resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
-			} else if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
+			if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
 				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId(), null);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -401,16 +393,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(resDTO.getFlOrder().isFactored()) {
 				flOrderBB.getManagedBean().setFactoringCheck("true");
 				flOrderBB.getFactoringCompanyDtl();
-				if(null != resDTO.getFlOrder().getPmFinancialBranch()){
-					IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
-					FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
-					financialOrgReqDTO.setFinancialOrgId(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-					FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(financialOrgReqDTO);
-					if(financialOrgResDTO.getFinancialBranchList() != null && !financialOrgResDTO.getFinancialBranchList().isEmpty()){
-						flOrderBB.getManagedBean().setFactoringBranchList(financialOrgResDTO.getFinancialBranchList());
-					}
-					flOrderBB.getFactoringAddress(null, resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
-				} else if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
+				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
 					flOrderBB.getFactoringAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId(), null);
 				}				
 			}
@@ -448,9 +431,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
 							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
 							flOrderBB.getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
-						}
-						if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
-							contractSupplierResDTO.getFactoring().getPmFinancialBranch();
 						}
 					}else{
 						flOrderBB.getManagedBean().getFlRequest().getCtContract().setFactored(false);
@@ -506,7 +486,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			invBB.getManagedBean().setDocMaintainRemarks(true);
 			if(invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-				invBB.getFactoringBranchDtl(); 
+				invBB.getFactoringDtl(); 
 			}			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
@@ -577,7 +557,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			if(pmBB.getManagedBean().getPaymentAdvice().getFulfilmentOrder().isFactored()){
-				pmBB.getFactoringBranchDtl(); 
+				pmBB.getFactoringDtl(); 
 			}
 			navgPage=NAV_TO_MAINTAIN_PA;
 		} else if(docType.equals(ParameterConst.DOCTYPE_STOP_DELIVERY)){
