@@ -47,6 +47,7 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private Date searchContractFromDuration;
 	private Date searchContractToDuration;
+	private VCtDocument vCtDocument;
 	private IPagingDataModel<VCtDocument> ctDocumentDataModel = new CtDocumentPagingDataModel();
 	
 	private class CtDocumentPagingDataModel extends PagingDataModel<VCtDocument> {
@@ -70,14 +71,14 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 	
 				if(getSearchTrasactionType()!=null && getSearchTrasactionType()!="") {
 					System.out.println("transactionType");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_EQUALS.value(),getSearchTrasactionType()));
 				}
-				if(getSearchViewType()!=null) {
-					System.out.println("group");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
-				}
+//				if(getSearchViewType()!=null) {
+//					System.out.println("group");
+//					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
+//				}
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
-					System.out.println("docNo");
+					System.out.println("docNo" + getSearchContractNo() );
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
 				}
 				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
@@ -92,17 +93,17 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 					System.out.println("loaPhysicalNo");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
 				}	
-				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
+				if(getSearchContractFromDuration()!=null) {
 					System.out.println("searchContractFromDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractFromDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractFromDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchContractFromDuration()));
 				}
-				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
+				if(getSearchContractFromDuration()!=null) {
 					System.out.println("searchContractToDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractToDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractToDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchContractFromDuration()));
 				}	
-				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
+				if(getSearchStatusId()!=null) {
 					System.out.println("statusId");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("statusId",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("statusId",SearchOperator.OPERATOR_EQUALS.value(),getSearchStatusId()));
 				}
 				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
 				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
@@ -119,26 +120,6 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-//	public boolean isCtFulfilmentRequisitioner() {
-//		FacesScopes facesScopes = new FacesScopes();
-//		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
-//	}
-//	public boolean isCtFulfilmentApprover() {
-//		FacesScopes facesScopes = new FacesScopes();
-//		return facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value());
-//	}
-//	public boolean isCtFulfilmentSupplier() {
-//		FacesScopes facesScopes = new FacesScopes();
-//		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
-//	}
-//	public boolean isCtFulfilmentRecevingOfficer() {
-//		FacesScopes facesScopes = new FacesScopes();
-//		return facesScopes.hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
-//	}
-//	public boolean isCtFulfilmentPaymentOfficer() {
-//		FacesScopes facesScopes = new FacesScopes();
-//		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
-//	}
 	public String getSearchTrasactionType() {
 		return searchTrasactionType;
 	}
@@ -237,6 +218,14 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPhysContractNo(String searchPhysContractNo) {
 		this.searchPhysContractNo = searchPhysContractNo;
+	}
+
+	public VCtDocument getvCtDocument() {
+		return vCtDocument;
+	}
+
+	public void setvCtDocument(VCtDocument vCtDocument) {
+		this.vCtDocument = vCtDocument;
 	}
 
 }
