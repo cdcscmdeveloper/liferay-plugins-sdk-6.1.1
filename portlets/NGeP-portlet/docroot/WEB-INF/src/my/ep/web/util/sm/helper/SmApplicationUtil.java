@@ -1350,7 +1350,8 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean validateEquityOwnerCount(
-			SmApplicationManagedBean managedBean, int currentTab) {
+			SmApplicationManagedBean managedBean, int currentTab,
+			String currentPageType) {
 		boolean validCount = true;
 		if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean.getBusinessTypeVal()
@@ -1364,17 +1365,42 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722507);
 			}
 		} else if (managedBean.getBusinessTypeVal() != null
-				&& !managedBean
+				&& (managedBean
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) || managedBean
+						.getBusinessTypeVal()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT))) {
+			if (currentPageType
+					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+				int perShrCnt = 0;
+				int compShrCnt = 0;
+				if (managedBean.getSmapplShareHolders() != null) {
+					perShrCnt = managedBean.getSmapplShareHolders().size();
+				}
+				if (managedBean.getSmAppl().getSmEquityCompanies() != null) {
+					compShrCnt = managedBean.getSmAppl().getSmEquityCompanies()
+							.size();
+				}
+				if (perShrCnt + compShrCnt < 2) {
+					validCount = false;
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					throw new EpException(MessageConst.ERROR_722592);
+				}
+			}
+		} else if (managedBean.getBusinessTypeVal() != null
+				&& managedBean
+						.getBusinessTypeVal()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)
 				&& (managedBean.getSmapplShareHolders() == null || (managedBean
 						.getSmapplShareHolders() != null && managedBean
 						.getSmapplShareHolders().size() < 2))) {
-
 			validCount = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722508);
+
 		}
 		return validCount;
 	}
