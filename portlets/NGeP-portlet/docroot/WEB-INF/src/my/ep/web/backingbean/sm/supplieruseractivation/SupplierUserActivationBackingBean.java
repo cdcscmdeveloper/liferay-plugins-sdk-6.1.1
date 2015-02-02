@@ -182,23 +182,23 @@ public class SupplierUserActivationBackingBean extends
 					//create PmUser only
 					log.info("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
 					
-					Long draftApplId = null;
-					IMofRegistrationSO mofRegistrationSO = null;
-					try {
-						mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",IMofRegistrationSO.class);
-						MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
-						mofRegistrationReqDTO.setSupplierId(Long.parseLong(supplierId));
-						MofRegistrationResDTO mofRegistrationResDTO = mofRegistrationSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO);
-						if(mofRegistrationResDTO.getSmAppl() != null)
-							draftApplId = mofRegistrationResDTO.getSmAppl().getApplId();
-					} finally {
-						
-					}
+//					Long draftApplId = null;
+//					IMofRegistrationSO mofRegistrationSO = null;
+//					try {
+//						mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",IMofRegistrationSO.class);
+//						MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+//						mofRegistrationReqDTO.setSupplierId(Long.parseLong(supplierId));
+//						MofRegistrationResDTO mofRegistrationResDTO = mofRegistrationSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO);
+//						if(mofRegistrationResDTO.getSmAppl() != null)
+//							draftApplId = mofRegistrationResDTO.getSmAppl().getApplId();
+//					} finally {
+//						
+//					}
 					
 					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();		
 					
 					reqDTO.setSmPersonnels(getManagedBean().getLatesApprovedAndDraftPersonnels());
-					reqDTO.setDraftApplId(draftApplId);
+//					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					reqDTO.setLoginId(loginId);
 					reqDTO.setPassword(password);
@@ -219,8 +219,8 @@ public class SupplierUserActivationBackingBean extends
 							resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
 
 							this.getManagedBean().setValidActivation(false);
-							this.getManagedBean().setSmPersonnel(null);
-							renewSesionObject();
+//							this.getManagedBean().setSmPersonnel(null);
+//							renewSesionObject();
 							return navigateToAck();
 
 						}catch(Exception ex){
