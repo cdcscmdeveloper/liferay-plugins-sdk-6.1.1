@@ -110,6 +110,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isOnlineBidding;
 	private boolean isMultipleLoi;
 	private boolean isItemRowSelect;
+	private boolean isSubmit;
 	
 	private ScQtEvaluationResult shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -486,6 +487,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setItemRowSelect(boolean isItemRowSelect) {
 		this.isItemRowSelect = isItemRowSelect;
+	}
+
+	/**
+	 * @return the isSubmit
+	 */
+	public boolean isSubmit() {
+		return isSubmit;
+	}
+
+	/**
+	 * @param isSubmit the isSubmit to set
+	 */
+	public void setSubmit(boolean isSubmit) {
+		this.isSubmit = isSubmit;
 	}
 
 	/**
