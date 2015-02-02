@@ -7024,7 +7024,7 @@ public class SpecificationBackingBean extends
 			setUserDetails(st2financeproposalList2);
 
 			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(1L);
+			statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			StatusResDTO statusres = statussO
 					.retrieveStatusByStatusId(statusreq);
 
@@ -7092,7 +7092,7 @@ public class SpecificationBackingBean extends
 									IStatusSO.class);
 
 					StatusReqDTO statusreq = new StatusReqDTO();
-					statusreq.setStatusId(1L);
+					statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 					StatusResDTO statusres = statussO
 							.retrieveStatusByStatusId(statusreq);
 
@@ -7142,7 +7142,7 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(1L);
+			statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			StatusResDTO statusres = statussO
 					.retrieveStatusByStatusId(statusreq);
 
@@ -7215,7 +7215,7 @@ public class SpecificationBackingBean extends
 									IStatusSO.class);
 
 					StatusReqDTO statusreq = new StatusReqDTO();
-					statusreq.setStatusId(1L);
+					statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 					StatusResDTO statusres = statussO
 							.retrieveStatusByStatusId(statusreq);
 
@@ -8269,6 +8269,9 @@ public class SpecificationBackingBean extends
 				}
 
 			}
+			PmStatus specificationStatus = new PmStatus();
+			specificationStatus.setStatusId(QTStatusConst.TS_COMPLETED);
+			reqDTO.setSpecificationStatus(specificationStatus);
 			reqDTO.setTobeRemoveScores(removedList);
 			reqDTO.setScQtCheckList(checkList);
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
@@ -8501,6 +8504,9 @@ public class SpecificationBackingBean extends
 			}
 
 			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
+			PmStatus specificationStatus = new PmStatus();
+			specificationStatus.setStatusId(QTStatusConst.TS_COMPLETED);
+			reqDTO.setSpecificationStatus(specificationStatus);
 			reqDTO.setTobeRemoveScores(removedList);
 			reqDTO.setScQtCheckList(checkList);
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
