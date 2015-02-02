@@ -13143,5 +13143,12 @@ public class SpecificationBackingBean extends
 		}
 		return this.getManagedBean().getBankyearsList();
 	}
+	
+	public void deleteCheckListFile(ScQtCheckListAttachment checkListAttachment) {
+		checkListAttachment = null;
+		this.getManagedBean().getScQtChecklist()
+				.setScQtCheckListAttachment(checkListAttachment);
+
+	}
 
 }
