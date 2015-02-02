@@ -14,28 +14,23 @@
 	</ui:define>
    <ui:define name="contentSection">
 	 <h:panelGrid id="asd" columns="1" cellpadding="5">
-	   <p:commandLink value="RequestChallRespUpdate" update="asd" action="https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx">
-							 
-		</p:commandLink>  <h:outputLink value = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx" ><h:outputText value="Open Project" /> </h:outputLink>
-	      <p:commandLink value="RequestChangePIN" update="asd" action="https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx">
-							
+	   <p:commandLink value="Chall Resp Update" update="asd" action="#{spkiBackingBean.RequestChallRespUpdate}">
+		</p:commandLink> 
+		<p:spacer width="13" />
+	      <p:commandLink value="Change PIN" update="asd" action="#{spkiBackingBean.RequestChangePIN}">
 		</p:commandLink>
-		<p:spacer width="7" />
-		   <p:commandLink value="RequestResetPIN" update="asd" action="https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx">
-						
+		<p:spacer width="13" />
+		   <p:commandLink value="Reset PIN" update="asd" action="#{spkiBackingBean.RequestResetPIN}">
 		</p:commandLink>
-		<p:spacer width="7" />
-		   <p:commandLink value="RequestRevokeCert" update="asd" action="https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx">
-						
+		<p:spacer width="32" />
+		   <p:commandLink value="Revoke Cert" update="asd" action="#{spkiBackingBean.RequestRevokeCert}">
 		</p:commandLink>
 		<p:spacer width="7" />
 	   </h:panelGrid>
-		<h:panelGrid columns="1" cellpadding="5">
-		</h:panelGrid>
 	<h:panelGrid columns="1" cellpadding="5">
-<p:commandButton value="Submit"  action="#{spkiBackingBean.getChallengeQuestions}" update="aasd" oncomplete="gpki_dlg.show();"  />	 
+<p:commandButton value="Submit"  action="#{spkiBackingBean.getChallengeQuestions}" update="aasd" oncomplete="spki_dlg.show();"  />	 
 	</h:panelGrid>
- <ac:gpkiPopup  id="aasd" textBeforeSign="123" postSignAction="#{gpkiBackingBean.gsignAction()}" /> 
+ <ac:spkiPopup  id="aasd" textBeforeSign="123" postSignAction="#{gpkiBackingBean.gsignAction()}" /> 
 	</ui:define>
 		    
 </ui:composition>				
