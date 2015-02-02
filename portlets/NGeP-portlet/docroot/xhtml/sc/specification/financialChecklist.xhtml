@@ -201,6 +201,17 @@
 						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{supplierProposalDetailBackingBean.downloadFile(stageTwofunctional.scQtCheckListAttachment)}" />
+						
+						<p:commandLink
+						rendered="#{stageTwofunctional.scQtCheckListAttachment.fileName ne null}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						action="#{specificationBackingBean.deleteCheckListFile(stageTwofunctional.scQtCheckListAttachment)}"
+						immediate="true" update="@form">
+						<h:graphicImage library="ep/images/design" name="trash.png"
+							styleClass="tasklist_title1" />
+						<f:setPropertyActionListener value="#{stageTwofunctional}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+					</p:commandLink>
 					<!-- 	<h:outputText
 						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"></h:outputText> -->
 				</h:panelGroup>
