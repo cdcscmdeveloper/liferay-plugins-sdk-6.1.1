@@ -212,7 +212,7 @@
 							value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
 						<p:ajax event="change" process="@this"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="branchId,bankName,accNo,clausePanel, notificationBtn"
+							update="bankName,accNo,clausePanel, notificationBtn"
 							listener="#{supplierBackingBean.reset}" />
 					</p:selectOneMenu>
 					<p:message for="factoringId" display="icon"></p:message>
@@ -235,18 +235,18 @@
 					<p:message for="authRefNo" display="icon" />
 				</h:panelGrid>
 
-				<p:outputLabel value="#{lbl['lbl.ct.factoring.branch']}" />
-				<p:selectOneMenu id="branchId" style="width:210px;"
-					disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.financialBankBranch == null
-								or supplierBackingBean.managedBean.viewOnly}"
-					value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
-					<f:selectItems
-						value="#{supplierBackingBean.managedBean.financialBankBranch}" />
-					<p:ajax event="change" process="@this"
-						update="bankName,accNo, notificationBtn"
-						listener="#{supplierBackingBean.resetBranch}" />
-				</p:selectOneMenu>
 
+                <p:outputLabel value="#{lbl['lbl.ct.bank.name']}" />
+				<h:panelGrid columns="3">
+					<p:inputText id="bankName" style="width:200px;"
+						value="#{supplierBackingBean.managedBean.factoringBankName}"
+						disabled="true" />
+					<p:spacer width="1" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
+				</h:panelGrid>
+				
+	
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
@@ -264,16 +264,16 @@
 					</p:calendar>
 					<p:message for="effdateCal" display="icon" />
 				</h:panelGrid>
-
-				<p:outputLabel value="#{lbl['lbl.ct.bank.name']}" />
+				
+				<p:outputLabel value="#{lbl['lbl.ct.bank.account.no']}" />
 				<h:panelGrid columns="3">
-					<p:inputText id="bankName" style="width:200px;"
-						value="#{supplierBackingBean.managedBean.factoringBankName}"
-						disabled="true" />
+					<p:inputText id="accNo" style="width:200px;" disabled="true"
+						value="#{supplierBackingBean.managedBean.accountNo}" />
 					<p:spacer width="1" />
 					<ac:iconTooltip
-						value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
+						value="#{lbl['lbl.ct.tooltip.factoring.account.no']}" />
 				</h:panelGrid>
+
 
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
@@ -296,21 +296,6 @@
 					</p:calendar>
 					<p:message for="expdateCal" display="icon" />
 				</h:panelGrid>
-
-				<p:outputLabel value="#{lbl['lbl.ct.bank.account.no']}" />
-				<h:panelGrid columns="3">
-					<p:inputText id="accNo" style="width:200px;" disabled="true"
-						value="#{supplierBackingBean.managedBean.accountNo}" />
-					<p:spacer width="1" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.ct.tooltip.factoring.account.no']}" />
-				</h:panelGrid>
-
-
-				<f:verbatim
-					rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
-				<f:verbatim
-					rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
 
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
