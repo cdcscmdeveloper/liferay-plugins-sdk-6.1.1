@@ -66,7 +66,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private CtFactoring factoring;
 	private CtFactoring uploadFiles;
 	private List<PmFinancialAcc> financialAccList;
-	private SelectItem[] financialBankBranch;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private Map<Long, String> factoringCompMap;
@@ -336,14 +335,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
-	}
-
-	public SelectItem[] getFinancialBankBranch() {
-		return financialBankBranch;
-	}
-
-	public void setFinancialBankBranch(SelectItem[] financialBankBranch) {
-		this.financialBankBranch = financialBankBranch;
 	}
 
 	public String getFileDirectory() {
