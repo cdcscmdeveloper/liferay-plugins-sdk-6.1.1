@@ -223,21 +223,6 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td style="width: 117px;"><p:outputLabel
-							value="#{lbl['lbl.fl.factoring.branch']}" /></td>
-					<td><p:selectOneMenu id="factoringBranch" disabled="#{empty flOrderBB.managedBean.factoringBranchList or flOrderBB.managedBean.buttonVal=='View'}"
-					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialBranch.financialBranchId}" style="width: 325px;margin-bottom:5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems var="factoringBranch"
-							value="#{flOrderBB.managedBean.factoringBranchList}"
-							itemLabel="#{factoringBranch.branchName}"
-							itemValue="#{factoringBranch.financialBranchId}" />
-						<p:ajax event="change"
-							listener="#{flOrderBB.getSelectedFactoringBranchDtl}"
-							update="factoringCompPnl" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.address']}" /></td>
 					<td><p:inputTextarea cols="50" rows="8" disabled="true"

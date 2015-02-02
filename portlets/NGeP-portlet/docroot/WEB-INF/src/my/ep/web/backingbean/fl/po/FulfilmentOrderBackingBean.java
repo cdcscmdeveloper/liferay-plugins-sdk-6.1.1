@@ -469,7 +469,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		Long financialOrgId = (Long) e.getComponent().getAttributes().get("value");
 		
 		getManagedBean().getFulfilmentOrder().getPmFinancialBranch().setFinancialBranchId(null);
-		getManagedBean().setFactoringBranchList(new ArrayList<PmFinancialBranch>());
 		getManagedBean().setSupplierAddress(null);
 		getManagedBean().setPhoneNo(null);
 		getManagedBean().setFaxNo(null);
@@ -494,66 +493,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
 			}
-			
-			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
-			FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
-			financialOrgReqDTO.setFinancialOrgId(financialOrgId);
-			FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(financialOrgReqDTO);
-			if(financialOrgResDTO.getFinancialBranchList() != null && !financialOrgResDTO.getFinancialBranchList().isEmpty()){
-				getManagedBean().setFactoringBranchList(financialOrgResDTO.getFinancialBranchList());
-			}
 		}
 	}
 		
-	public void getSelectedFactoringBranchDtl(AjaxBehaviorEvent e){
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-		Long financialBranchId = (Long) e.getComponent().getAttributes().get("value");
-		
-		getManagedBean().setSupplierAddress(null);
-		getManagedBean().setPhoneNo(null);
-		getManagedBean().setFaxNo(null);
-		getManagedBean().setContactPerson(null);
-		getManagedBean().setContactEmail(null);
-		getManagedBean().setContactPhoneNo(null);
-		
-		if(financialBranchId!=null) {
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialBranchId(financialBranchId);
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if(!resDTO.getAddressTypeList().isEmpty()){
-				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-				
-				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null && resDTO.getAddressTypeList().get(0).getPmContacts().size()>0){
-					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-					getManagedBean().setContactPerson(pmContact.getContactName());
-					getManagedBean().setContactEmail(pmContact.getEmail());
-					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-				}
-			}
-		} else { //reset back to HQ info
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialOrgId(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if(!resDTO.getAddressTypeList().isEmpty()){
-				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() && resDTO.getAddressTypeList().get(0).getPmContacts().size()>0 ){
-					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-					getManagedBean().setContactPerson(pmContact.getContactName());
-					getManagedBean().setContactEmail(pmContact.getEmail());
-					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-				}
-			}				
-		}
-	}
-	
 	 public void getRfcAddress(Long financialOrgId, Long financialBranchId){
 		 IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		
