@@ -173,6 +173,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 		reqDTO.setReasonCategory(ParameterConst.FULFILMENT_REASON_CODE);
+		reqDTO.setSortBy("pmReason.reasonCode");
 		ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 		getManagedBean().setReasonDescs(resDTO.getReasonDescList());
 		List<PmReasonDesc> reasonDescs = resDTO.getReasonDescList();
