@@ -29,7 +29,8 @@
 			textBeforeSign="#{invoiceBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{invoiceBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{invoiceBackingBean.enableAutoUpdate()}" />
-		<ac:spkiPopup postSignAction="#{invoiceBackingBean.preSubmitAction(spkiBackingBean.pmDigiSign)}"/>
+		<ac:spkiPopup postSignAction="#{invoiceBackingBean.preSubmitAction(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{invoiceBackingBean.enableAutoUpdate()}" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
