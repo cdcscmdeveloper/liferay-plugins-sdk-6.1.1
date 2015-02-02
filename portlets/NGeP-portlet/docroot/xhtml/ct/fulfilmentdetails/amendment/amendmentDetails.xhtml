@@ -129,20 +129,17 @@
 		<h:panelGroup rendered="#{amendmentBackingBean.managedBean.committetype eq ParameterConst.committeeTypeQuotationCommitteeB or 
 				  		        amendmentBackingBean.managedBean.committetype eq ParameterConst.committeeTypeQuotationCommitteeA and
 				  		        amendmentBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego and
-				  		        !amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
+				  		        !amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt and
+				  		        !amendmentBackingBean.managedBean.disableAmendDetails}">
 		  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
-			<h:panelGrid columns="2" style="float:right;">
-				<p:outputLabel value="*" styleClass="mandatory" />
+			<h:panelGrid columns="1" style="float:right;">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="3">
+			<h:panelGrid columns="1">
 				<p:selectOneMenu id="secretary" value="#{amendmentBackingBean.managedBean.secretaryId}" 
-					label="#{lbl['lbl.ct.secretary']}" style="width:300px;"
-					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
+					label="#{lbl['lbl.ct.secretary']}" style="width:300px;">
 		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 		       	</p:selectOneMenu>
-			    <p:spacer width="1"/>
-				<p:message for="secretary" display="icon" />
 			</h:panelGrid>
 		  </h:panelGrid>
 		</h:panelGroup>

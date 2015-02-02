@@ -477,7 +477,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				     getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 				     getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			    }
-		  	    
+		  	    getManagedBean().setSecretaryId(null);
 		  	    if (getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 		  	    	getManagedBean().setSecretaryId(getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
 		  	    }
@@ -927,7 +927,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			               }
 			   
 			           //Validation checking for committee
-			           if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && getManagedBean().getTaskId()==null) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			           if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && getManagedBean().getTaskId()==null) ||
+			        		   action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ||
+			        		   action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			        	   	if(!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
 				                 if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) &&
 						                  getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO) ) {
@@ -3804,6 +3806,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			for(PmUser user : list) {
 		       items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+			}
+			
+			if(list.size() == 1) {
+				getManagedBean().setSecretaryId(list.get(0).getUserId());
 			}
 		 } catch (Exception e) {
 	    	   e.printStackTrace();
