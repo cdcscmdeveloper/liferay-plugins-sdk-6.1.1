@@ -18,7 +18,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -58,7 +57,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private List<PmFinancialOrg> pmFinancialOrgs;
-	private List<PmFinancialBranch> factoringBranchList;
 	private List<PmReasonDesc> reasonDescs;
 	
 	private List<FlFulfilmentItem> flItemList;
@@ -469,20 +467,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setPmFinancialOrgs(List<PmFinancialOrg> pmFinancialOrgs) {
 		this.pmFinancialOrgs = pmFinancialOrgs;
-	}
-
-	/**
-	 * @return the factoringBranchList
-	 */
-	public List<PmFinancialBranch> getFactoringBranchList() {
-		return factoringBranchList;
-	}
-
-	/**
-	 * @param factoringBranchList the factoringBranchList to set
-	 */
-	public void setFactoringBranchList(List<PmFinancialBranch> factoringBranchList) {
-		this.factoringBranchList = factoringBranchList;
 	}
 
 	/**

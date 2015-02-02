@@ -263,7 +263,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					getManagedBean().setInvoice(resDTO.getInvoice());
 					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-						getFactoringBranchDtl(); 
+						getFactoringDtl(); 
 					}
 				}
 			}
@@ -369,7 +369,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}
 				
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-					getFactoringBranchDtl(); 
+					getFactoringDtl(); 
 				}
 				
 				getManagedBean().setSelectedTabIndex(0);
@@ -407,7 +407,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialBranch(contractSupplierResDTO.getFactoring().getPmFinancialBranch());
 							}	
 							if(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
-								getManagedBean().setBranchName(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getBranchName());
 								finOrgReqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
 								finOrgResDTO = financialOrgSO.retriveFinAccDtlByBranchId(finOrgReqDTO);
 							} else { //reset back to HQ info
@@ -471,7 +470,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().setInvoice(resDTO.getInvoice());
 			getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-				getFactoringBranchDtl(); 
+				getFactoringDtl(); 
 			}			
 
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -747,12 +746,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 	}
 	
-	public void getFactoringBranchDtl(){
+	public void getFactoringDtl(){
 		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 		FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
 		FinancialOrgResDTO finOrgResDTO = null;
 		
-		getManagedBean().setBranchName(null);
 		getManagedBean().setSupplierAddress(null);
 		getManagedBean().setPhoneNo(null);
 		getManagedBean().setFaxNo(null);
@@ -760,14 +758,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		getManagedBean().setContactEmail(null);
 		getManagedBean().setContactPhoneNo(null);
 		
-		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
-			getManagedBean().setBranchName(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getBranchName());
-			finOrgReqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
-			finOrgResDTO = financialOrgSO.retriveFinAccDtlByBranchId(finOrgReqDTO);
-		} else { //reset back to HQ info
-			finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
-			finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
-		}
+		//HQ info
+		finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+		finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
 		
 		if(finOrgResDTO.isSuccessful()) {
 			if(finOrgResDTO.getPmAddressType()!=null){
@@ -975,7 +968,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					getManagedBean().setInvoice(resDTO.getInvoice());
 					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-						getFactoringBranchDtl(); 
+						getFactoringDtl(); 
 					}
 				}
 			}
