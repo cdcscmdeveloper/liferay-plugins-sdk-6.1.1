@@ -1453,7 +1453,7 @@ public class SmApplicationBackingBean extends
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			validSave = SmApplicationUtil.validateEquityOwnerCount(
-					getManagedBean(), currentTab);
+					getManagedBean(), currentTab, currentPageType);
 			validSave = SmApplicationUtil.validateEquityOwnerAmount(
 					getManagedBean(), currentTab);
 			validSave = SmApplicationUtil.validateEquityCompanyAmount(
@@ -1461,8 +1461,9 @@ public class SmApplicationBackingBean extends
 			validatePaidCaptialAmt(true);
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
+
 			validSave = SmApplicationUtil.validateEquityOwnerCount(
-					getManagedBean(), currentTab);
+					getManagedBean(), currentTab, currentPageType);
 			validSave = SmApplicationUtil.validatePersonnelBeforeSave(
 					validSave, currentTab, getManagedBean());
 			calculateBumiPercentageTotals();
@@ -3859,7 +3860,7 @@ public class SmApplicationBackingBean extends
 
 			}
 			updatePersonnelRecordStatus(getManagedBean().getSmAppl()
-					.getSmPersonnels(),getManagedBean().getSmSupplier());
+					.getSmPersonnels(), getManagedBean().getSmSupplier());
 			saveOrUpdateAppl();
 			SmApplicationUtil.setPersonnelsPrevApprovedDirectorEquityOwner(
 					getManagedBean().getSmAppl(), getManagedBean()
