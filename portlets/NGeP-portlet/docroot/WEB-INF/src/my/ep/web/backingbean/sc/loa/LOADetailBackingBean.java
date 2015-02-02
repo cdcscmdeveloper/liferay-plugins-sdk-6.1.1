@@ -219,7 +219,9 @@ public class LOADetailBackingBean extends
 			getManagedBean().setEditFlag(true);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
-	        getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
+				getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			}
 
 		} finally {
 			qtAwardSO = null;
@@ -311,13 +313,6 @@ public class LOADetailBackingBean extends
 
 			ScLoa scLoa = new ScLoa();
 			// scLoa.setLoaId(loaId);
-			
-			// active tab index for loa contents
-			if(getManagedBean().getCurrentStatusId() != null){
-				if(getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_VERIFICATION)){
-					getManagedBean().setSelectedTabIndex(5);
-				}
-			}
 
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
@@ -329,6 +324,20 @@ public class LOADetailBackingBean extends
 			if (resDTO.getScLoa() != null) {
 				scLoa = resDTO.getScLoa();
 			}
+
+			// active tab index for loa contents
+			if(getManagedBean().getCurrentStatusId() != null){
+				if(getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_VERIFICATION)){
+					if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getDocType() != null){
+						if(scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+							getManagedBean().setSelectedTabIndex(6);
+						} else{
+							getManagedBean().setSelectedTabIndex(5);
+						}
+					}
+				}
+			}
+			
 			editLOAAction(scLoa);
 			getManagedBean().setEditFlag(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1827,6 +1836,9 @@ public class LOADetailBackingBean extends
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
 
@@ -1900,6 +1912,9 @@ public class LOADetailBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
 
@@ -1984,6 +1999,8 @@ public class LOADetailBackingBean extends
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setDigiSignData(digiSign);
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		    resDTO = qtAwardSO.saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {

@@ -1559,6 +1559,9 @@ public class LOIDetailBackingBean extends
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 
 			// AwardSupplierReqDTO awardSupplierReqDTO = new
 			// AwardSupplierReqDTO();
@@ -1719,6 +1722,8 @@ public class LOIDetailBackingBean extends
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(awardDataType);
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
 
@@ -1812,6 +1817,8 @@ public class LOIDetailBackingBean extends
 					.getBPMAuthenticationCtxToken());
 			awardSupplierReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			awardSupplierReqDTO.setPayLoad(awardDataType);
+			awardSupplierReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			awardSupplierReqDTO.setRoleCode(getUserRoleCode());
 			
 			if (null != digiSign) {
 				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_INTENT, 
