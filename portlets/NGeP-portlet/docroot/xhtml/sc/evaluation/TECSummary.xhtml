@@ -14,7 +14,7 @@
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier"
-			rows="10" editable="true" rowIndexVar="index" 
+			rows="10" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="oneTierQualifiedSupplier" />
@@ -22,7 +22,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}"
 				style="width:25%;white-space: normal;">
 
-				<h:outputText value="#{qualifiedSupplier.evalRank}"></h:outputText>
+				<h:outputLabel value="#{qualifiedSupplier.evalRank}"
+					style="text-align:right"></h:outputLabel>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
@@ -36,7 +37,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
 				style="width:30%;white-space: normal;">
-				<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
+				<h:outputLabel value="#{qualifiedSupplier.totalScore}"
+					style="text-align:right"></h:outputLabel>
 			</p:column>
 
 
@@ -53,6 +55,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
 						value="#{evaluationBackingBean.managedBean.evaTotQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 
@@ -67,7 +70,7 @@
 		<p:dataTable var="disQualifiedSupplier" rows="10"
 			value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"
 			id="oneTierDisQualifiedSupplier" editable="true" rowIndexVar="index"
-			 rowKey="#{disQualifiedSupplier}">
+			rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="oneTierDisQualifiedSupplier" />
 
 
@@ -84,7 +87,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
 				style="width:50%;white-space: normal;">
-				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
+				<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
+					style="text-align:right"></h:outputLabel>
 
 			</p:column>
 
@@ -101,6 +105,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
 						value="#{evaluationBackingBean.managedBean.evaTotDisQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 

@@ -44,7 +44,8 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
 
-					<h:outputText value="#{summaryqualSup.evalRank}"></h:outputText>
+					<h:outputLabel value="#{summaryqualSup.evalRank}"
+						style="text-align:right"></h:outputLabel>
 				</p:column>
 
 
@@ -59,7 +60,8 @@
 
 
 				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
+					<h:outputLabel value="#{summaryqualSup.totalScore}"
+						style="text-align:right"></h:outputLabel>
 				</p:column>
 
 			</p:dataTable>
@@ -74,6 +76,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
 							value="#{evaluationBackingBean.managedBean.itemTotQualSuppliers}"></p:inputText></td>
 				</tr>
 
@@ -101,7 +104,8 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
+					<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
+						style="text-align:right"></h:outputLabel>
 				</p:column>
 
 
@@ -117,6 +121,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
 							value="#{evaluationBackingBean.managedBean.itemTotDisQualSuppliers}"></p:inputText></td>
 				</tr>
 

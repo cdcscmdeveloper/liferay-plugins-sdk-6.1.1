@@ -20,7 +20,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
 
-				<h:outputText value="#{finEvaluationqualifiedSupplier.evalRank}"></h:outputText>
+				<h:outputLabel value="#{finEvaluationqualifiedSupplier.evalRank}"
+					style="text-align:right"></h:outputLabel>
 			</p:column>
 
 
@@ -34,7 +35,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
+				<h:outputLabel value="#{finEvaluationqualifiedSupplier.totalScore}"
+					style="text-align:right"></h:outputLabel>
 			</p:column>
 
 
@@ -50,6 +52,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
 						value="#{(!empty qualifiedList) ? qualifiedList.size() :0}"></p:inputText></td>
 			</tr>
 
@@ -78,7 +81,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
-				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
+				<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
+					style="text-align:right"></h:outputLabel>
 			</p:column>
 
 
@@ -94,6 +98,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
 						value="#{(!empty disQualifiedSupplier) ? disQualifiedList.size():0}"></p:inputText></td>
 			</tr>
 
