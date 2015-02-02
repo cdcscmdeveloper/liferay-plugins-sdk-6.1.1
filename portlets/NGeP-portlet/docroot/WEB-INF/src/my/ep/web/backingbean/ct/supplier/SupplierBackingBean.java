@@ -76,7 +76,6 @@ import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -155,10 +154,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		getManagedBean().getFactoring().setStatus(pmStatus);
 		getManagedBean().getFactoring().setCtContract(new CtContract());
 		getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
-		getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
 		getManagedBean().setAccountNo(null);
 		getManagedBean().setFactoringBankName(null);
-		getManagedBean().setFinancialBankBranch(null);
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
@@ -303,11 +300,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
         getManagedBean().setEffDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate());
         getManagedBean().setExpDate(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate());
         reset();
-        if (getManagedBean().getFactoring().getPmFinancialBranch() == null) 
-	             getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
-        else 
-	           resetBranch();
-      
+     
         if(getManagedBean().getFactoring().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED) 
 	           getManagedBean().setRemoveFactoring(true);
       
@@ -693,7 +686,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	public void flush(){
-		this.getManagedBean().setFinancialBankBranch(null);
 		this.getManagedBean().setAccountNo(null);
 		this.getManagedBean().setFactoringBankName(null);
 	}
@@ -731,33 +723,20 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 
    public void reset(){ 
 	 
-	   SelectItem[] items = null;
 	   IFinancialOrgSO financialOrgSO = null;
 	   FinancialOrgReqDTO reqDTO = null;
 	   FinancialOrgResDTO resDTO = null;
 	   flush();
 		try {
-			int i = 1;
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 			reqDTO = new FinancialOrgReqDTO();
 			if (getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
 				 
 				    reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
-				    resDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(reqDTO);
-			    
-				    if(resDTO.getFinancialBranchList() != null && !resDTO.getFinancialBranchList().isEmpty()){
-					         List<PmFinancialBranch> list = resDTO.getFinancialBranchList();
-					         items = new SelectItem[list.size() + 1];
-					         items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-					         for (PmFinancialBranch pmFinancialBranch : list) {
-						          items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
-				             } getManagedBean().setFinancialBankBranch(items);
-				   }else{
-					         resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
-					         getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
-					         getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
-					         getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
-			       }
+				    resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
+				    getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+					getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
+					getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
 		    }
 		  }catch(Exception ex){
 			  ex.printStackTrace();
@@ -766,25 +745,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			financialOrgSO = null;
 		 }
    }
-   
-   public void resetBranch(){
-	   IFinancialOrgSO financialOrgSO;
-	   try {
-		   if(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId() != null) {
-			   financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
-			   FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-			   reqDTO.setFinancialBranchId(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId());
-			   FinancialOrgResDTO resDTO = financialOrgSO.retriveFinAccDtlByBranchId(reqDTO);
-			   getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
-			   getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
-			   getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
-		   }
-	   }catch(Exception ex){
-		   ex.printStackTrace();
-	   }finally{
-		   financialOrgSO = null;
-	   }
-    }
+ 
    
 	public void changeLoaActionListener() {
 	
@@ -810,10 +771,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 						                   pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
 						                   getManagedBean().getFactoring().setStatus(pmStatus);
 					          	            reset();
-					              	        if(getManagedBean().getFactoring().getPmFinancialBranch() == null) 
-							                     getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
-						                   else 
-							                    resetBranch();
 					                  }  else {
 					                     getManagedBean().setRemoveFactoring(false);
 					                     initializeFactoring();
