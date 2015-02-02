@@ -57,7 +57,10 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.user.scores']}"
 				style="width:15%">
 				<p:inputText value="#{demoSupplier.totalScore}"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"></p:inputText>
+					style="text-align:right"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}">
+					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+				</p:inputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
