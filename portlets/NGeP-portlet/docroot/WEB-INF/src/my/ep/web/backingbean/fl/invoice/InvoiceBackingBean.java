@@ -403,13 +403,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(contractSupplierResDTO.getFactoring().getFinancialOrg());
 								//getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 							}
-							if(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
-								finOrgReqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
-								finOrgResDTO = financialOrgSO.retriveFinAccDtlByBranchId(finOrgReqDTO);
-							} else { //reset back to HQ info
-								finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
-								finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
-							}
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
 							if(finOrgResDTO.isSuccessful()) {
 								if(finOrgResDTO.getPmAddressType()!=null){
 									getManagedBean().setSupplierAddress(getFullAddress(finOrgResDTO.getPmAddressType().getPmAddress()));
