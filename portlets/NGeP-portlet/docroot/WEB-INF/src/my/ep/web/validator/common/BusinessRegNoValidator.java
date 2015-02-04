@@ -11,6 +11,7 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,23 +33,35 @@ public class BusinessRegNoValidator implements Validator {
 		UIInput dropdown = (UIInput) component.getParent().findComponent(
 				"busTypeId");
 		String businessType = "";
-		String businessRegNo = "";
 
 		if (value != null && StringUtils.isNotBlank(value.toString())) {
-			businessRegNo = value.toString();
 			if (dropdown != null) {
 				businessType = dropdown.getValue().toString();
 
 				if (robList.contains(businessType)) {
-					validateRob(businessRegNo);
+					validateRob(value.toString());
 				} else if (rocList.contains(businessType)) {
-					validateRoc(businessRegNo);
+					validateRoc(value.toString());
 				} else if (llpList.contains(businessType)) {
-					validateLlp(businessRegNo);
+					validateLlp(value.toString());
 				} else if (sabahSarawakList.contains(businessType)) {
 					StringUtils.deleteWhitespace(value.toString());
+				} else{
+					validateRos(businessType, value);
 				}
 			}
+		}
+	}
+	
+	private void validateRos(String businessType,Object value){
+		if (businessType.equals("K")) {
+			validateRosPertubuhan(value.toString());
+		} else if (businessType.equals("L")) {
+			validateRosKoperasi(value.toString());
+		} else if (businessType.equals("M")) {
+			StringUtils.deleteWhitespace(value.toString());
+		} else if (businessType.equals("N")) {
+			StringUtils.deleteWhitespace(value.toString());
 		}
 	}
 
@@ -117,9 +130,77 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	private void validateRosKoperasi(String rosNo) {
+		String[] splitRos = rosNo.split("-");
+		String splitRos1 = "";
+		String splitRos2 = "";
+		String splitRos3 = "";
+
+		if (splitRos != null && splitRos.length == 3) {
+			splitRos1 = splitRos[0];
+			splitRos2 = splitRos[1];
+			splitRos3 = splitRos[2];
+			if (splitRos1.length() != 1 || StringUtils.isNumeric(splitRos1)) {
+				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+			} else if (splitRos2.length() != 1
+					|| !StringUtils.isNumeric(splitRos2)) {
+				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+			} else if (splitRos3.length() != 4
+					|| !StringUtils.isNumeric(splitRos3)) {
+				throwErrorMsg("lbl.sm.businessregno.invalid.format.roskoperasiskm");
+			}
+		} else {
+			throwErrorMsg("lbl.sm.businessregno.notvalid.roskoperasiskm");
+		}
+	}
+	
+	private void validateRosPertubuhan(String rosNo) {
+		String[] splitRos = rosNo.split("-");
+		String splitRos1 = "";
+		String splitRos2 = "";
+		String splitRos3 = "";
+		String splitRos4 = "";
+
+		if (splitRos != null && splitRos.length == 4) {
+			splitRos1 = splitRos[0];
+			splitRos2 = splitRos[1];
+			splitRos3 = splitRos[2];
+			splitRos4 = splitRos[3];
+			
+			if (splitRos1.length() != 3 || StringUtils.isNumeric(splitRos1)) {
+				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
+			} else if (splitRos2.length() != 3
+					|| !StringUtils.isAlphanumeric(splitRos2)) {
+				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
+			} else if (splitRos3.length() != 2
+					|| !StringUtils.isNumeric(splitRos3)) {
+				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
+			}else if(isValidDate(splitRos4)){
+				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
+			}
+		} else {
+			throwErrorMsg("lbl.sm.businessregno.notvalid.rospertubuhanjppm");
+		}
+	}
+
 	private void throwErrorMsg(String key) {
 		throw new ValidatorException(new FacesMessage(
 				FacesMessage.SEVERITY_ERROR, "Business Reg No Error",
 				SmCommonUtil.getMessage(key, null)));
+	}
+	
+	private boolean isValidDate(String dateParam){
+		boolean retVal = true;
+		if(dateParam.length()!=8){
+			retVal = false;
+		}else{
+			try{
+				DateUtils.convertStringToDate("ddMMyyyy", dateParam);
+			}catch(Exception ex){
+				retVal = false;
+			}
+		}
+		
+		return retVal;
 	}
 }
