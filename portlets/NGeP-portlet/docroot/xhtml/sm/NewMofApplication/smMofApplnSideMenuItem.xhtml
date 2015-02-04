@@ -78,15 +78,17 @@
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 									update=":form" />
-								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}" style="white-space: normal;"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+									style="white-space: normal;" onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
 									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
 									update=":form" />
 							</c:when>
 							<c:otherwise>
-								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}" style="white-space: normal;"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+									style="white-space: normal;" onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
 									update=":form" />
@@ -100,11 +102,28 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 							update=":form" />
-						<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-							update=":form" />
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+							</c:otherwise>
+						</c:choose>
+
 					</c:when>
 					<c:otherwise>
 					</c:otherwise>
@@ -135,15 +154,17 @@
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
 									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 									update=":form" />
-								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}" style="white-space: normal;"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+									style="white-space: normal;" onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
 									update=":form" />
 							</c:when>
 							<c:otherwise>
-								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}" style="white-space: normal;"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
+									style="white-space: normal;" onstart="blockWidget.show()"
+									oncomplete="blockWidget.hide()"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
 									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
 									update=":form" />
@@ -157,11 +178,26 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 							update=":form" />
-						<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-							update=":form" />
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+							</c:otherwise>
 					</c:when>
 					<c:otherwise>
 					</c:otherwise>
