@@ -152,7 +152,7 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryZoneView = false;
 		private boolean smBasicRegView = false;
 		private boolean smMandatoryBothSupplierTypeView = false;
-		
+		private boolean smYearTextView = false;
 		
 		
 		/*private boolean smSupplierNameView = false;
@@ -325,7 +325,7 @@ public class ReportsGenerateBean {
 		private String smMandatoryCreatedFromYearVar=ReportConst.EMPTY_VAL;
 		private String smMandatoryCreatedToYearVar=ReportConst.EMPTY_VAL;
 		private String smSVOUserVar=ReportConst.EMPTY_VAL;
-		
+		private String smYearTextVar=ReportConst.EMPTY_VAL;
 		
 		/*private String supportingDocumentTotVar=ReportConst.EMPTY_VAL;	
 		private String docStatusTotVar=ReportConst.EMPTY_VAL;	
@@ -433,6 +433,18 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public boolean isSmYearTextView() {
+			return smYearTextView;
+		}
+		public void setSmYearTextView(boolean smYearTextView) {
+			this.smYearTextView = smYearTextView;
+		}
+		public String getSmYearTextVar() {
+			return smYearTextVar;
+		}
+		public void setSmYearTextVar(String smYearTextVar) {
+			this.smYearTextVar = smYearTextVar;
+		}
 		public boolean isCmGroupOneView() {
 			return cmGroupOneView;
 		}
