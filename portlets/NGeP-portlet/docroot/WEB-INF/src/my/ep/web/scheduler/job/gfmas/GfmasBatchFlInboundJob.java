@@ -9,15 +9,13 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-/**
- * @author Venkat Chanumolu
- */
+
 
 @DisallowConcurrentExecution
-public class GfmasBatchIntegrationJob implements Job {
+public class GfmasBatchFlInboundJob implements Job {
 
 	public static Logger log = EpLogger
-			.getLogger(GfmasBatchIntegrationJob.class);
+			.getLogger(GfmasBatchFlInboundJob.class);
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -29,11 +27,11 @@ public class GfmasBatchIntegrationJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
-		log.info("GfmasBatchIntegrationJob ");
+		log.info("GfmasFlIntegrationJob ");
 
 		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		 gfmasIntegration.sstInformationGfmas();
-		// gfmasIntegration.kodAkaunInPutStream();
+		// Update Payment Info
+		gfmasIntegration.paymentGfmasInbound();
 
 	}
 
