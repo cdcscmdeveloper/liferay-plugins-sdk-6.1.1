@@ -81,7 +81,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private static final Logger log = EpLogger.getLogger(ReportBackingBean.class);
 
 	public ReportBackingBean() {
-	}	
+	}
+	private String moduleValue;
+	private String reportName;
 	private ScQt scqt;
 	List<SelectItem> reportList;
 	private List<SelectItem> moduleList;
@@ -117,6 +119,19 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	SMReportBackingBean smReportBackingBean;
 	CTReportBackingBean ctReportBackingBean;	
 	
+	
+	public String getReportName() {
+		return reportName;
+	}
+	public void setReportName(String reportName) {
+		this.reportName = reportName;
+	}
+	public String getModuleValue() {
+		return moduleValue;
+	}
+	public void setModuleValue(String moduleValue) {
+		this.moduleValue = moduleValue;
+	}
 	public CTReportBackingBean getCtReportBackingBean() {
 		return ctReportBackingBean;
 	}
@@ -1624,8 +1639,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Retrieve module list 
 	 */
 	public List<SelectItem> retriveModuleList() {
-		moduleList = new ArrayList<SelectItem>();		
+		moduleList = new ArrayList<SelectItem>();
+		reportList=new ArrayList<SelectItem>();	
 		SelectItem selectItem= new SelectItem();
+		retriveReportListBymoduleName();
+		/*getManagedBean().setReportName(null);
+		getManagedBean().setReportValue(null);*/
 		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SC_TTL));
 		selectItem.setValue(ReportConst.SC_MOD_VAL);
 		moduleList.add(selectItem);			
@@ -1652,15 +1671,17 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Retrieve report list by module 
 	 */
 	public void retriveReportListBymoduleName() {
+		reportList=new ArrayList<SelectItem>();	
 		rptGenBean = new ReportsGenerateBean();		
-		getManagedBean().setReportName(null);
-		getManagedBean().setReportValue(null);
+		/*getManagedBean().setReportName(null);
+		getManagedBean().setReportValue(null);*/
+		this.setReportName(null);
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setRptGenBean(null);
-		retriveUserrloeByUserId(getManagedBean().getModuleValue());
-		if(getManagedBean().getModuleValue()!=null){
-			retriveReportListByModule(getManagedBean().getModuleValue());			
+		retriveUserrloeByUserId(this.getModuleValue());
+		if(this.getModuleValue()!=null){
+			retriveReportListByModule(this.getModuleValue());			
 		}		
 		getManagedBean().setReportList(reportList);		
 		getManagedBean().setRptGenBean(rptGenBean);		
@@ -1699,7 +1720,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Retrieve Role code by User id 
 	 */
 	public List<String> retriveUserrloeByUserId(String moduleName) {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(moduleName, IUserSO.class);
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		retrieveMinistryByOrgtype();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {	
@@ -1826,13 +1847,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		rptGenBean = new ReportsGenerateBean();	
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
-		getManagedBean().setReportName(ReportConst.EMPTY_VAL);
+		this.setReportName(ReportConst.EMPTY_VAL);
 		stateLst = new ArrayList<SelectItem>();
 		districtLst = new ArrayList<SelectItem>();
 		levOneCatLst = new ArrayList<SelectItem>();
 		levTwoCatLst = new ArrayList<SelectItem>();
 		levThreeCatLst = new ArrayList<SelectItem>();		
-		if((getManagedBean().getModuleValue())!=null && (getManagedBean().getReportValue())!=null){
+		if((this.getModuleValue())!=null && (getManagedBean().getReportValue())!=null){
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			PMReportReqDTO reqDTO = new PMReportReqDTO();
 			reqDTO.setReportId(getManagedBean().getReportValue());
@@ -1846,21 +1867,21 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					}else{
 						label = pmReport.getReportTitle();
 					}	
-				getManagedBean().setReportName(label);
+					this.setReportName(label);
 				reportFileNameJSP = pmReport.getReportFilename();
 				getManagedBean().setReportJsp(pmReport.getReportFilename());				
 			}			
-			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){				
+			if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){				
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,authoriztionList);				
-			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){	
+			}else if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){	
 				generateMonthList();
 				generateYearList();
 				scReportBackingBean.enableCriteriaVariablesByReportBySC(rptGenBean,authoriztionList);
-			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){				
+			}else if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){				
 				flReportBackingBean.enableCriteriaVariablesByReportByFL(rptGenBean,authoriztionList);
-			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))){				
+			}else if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))){				
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(rptGenBean,authoriztionList);
-			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))){				
+			}else if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))){				
 				ctReportBackingBean.enableCriteriaVariablesByReportByCT(rptGenBean,authoriztionList);
 			}
 			resetReportForm();
@@ -1881,12 +1902,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void retrieveDates(){		
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		
-		if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){
+		if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){
 			Date currentDate= new Date();
 			this.setScCreatedFromYear(outputDateFormat.format(currentDate).substring(6,10));
 			this.setScCreatedToYear(outputDateFormat.format(currentDate).substring(6,10));
 		}
-		if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
+		if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
 			Date currentDate= new Date();
 			this.setSmCreatedFromYear(outputDateFormat.format(currentDate).substring(6,10));
 			this.setSmCreatedToYear(outputDateFormat.format(currentDate).substring(6,10));
@@ -1904,8 +1925,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				this.setScSoneCrtdFromDate(newDate);			
 			}
 		}*/
-		if((getManagedBean().getModuleValue()!=null)&&(this.getSubModule()!=null)){
-			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))&&(this.getSubModule().equalsIgnoreCase(ReportConst.SUB_MOD_S1))){
+		if((this.getModuleValue()!=null)&&(this.getSubModule()!=null)){
+			if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))&&(this.getSubModule().equalsIgnoreCase(ReportConst.SUB_MOD_S1))){
 				Date currentDate= new Date();
 				this.setScSoneCrtdToDate(currentDate);
 				Date newDate= new Date();
@@ -2071,7 +2092,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 */
 	public void generateReport(){
 		rptGenBean = new ReportsGenerateBean();	
-		if((getManagedBean().getModuleValue()!=null)&&(getManagedBean().getReportValue()!=null)){
+		if((this.getModuleValue()!=null)&&(getManagedBean().getReportValue()!=null)){
 			if(!(getManagedBean().getReportValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
 				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getScCreatedToMonth()==null)&&(this.getScCreatedFromMonth()!=null)||(this.getScCreatedToMonth()!=null)&&(this.getScCreatedFromMonth()==null)))){
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
@@ -2113,15 +2134,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((((PmUser)new FacesScopes().getUserSessionBean()).getUserId()!=null)&&(new FacesScopes().getUserSessionBean().getUserId().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setUserIdVar(ReportConst.FL_AMP_USER_ID_EQ+new FacesScopes().getUserSessionBean().getUserId().toString());
 			}
-			if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
+			if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
 				generateSCReport();				
-			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
+			}else if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
 				generateCMReport();				
-			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
+			}else if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
 				generateFLReport();				
-			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
+			}else if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
 				generateSMReport();			
-			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)){
+			}else if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)){
 				generateCTReport();			
 			}				
 			if(null!=constructedParamString && !ReportConst.EMPTY_VAL.equals(constructedParamString)){										
@@ -2899,7 +2920,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Clear report criteria 
 	 */
 	public void resetReportForm(){		
-		retriveModuleList();		
+		//retriveModuleList();			
+		//retriveReportListBymoduleName();
 		this.setFromDate(null);
 		this.setToDate(null);	
 		this.setScQuotationId(null);
