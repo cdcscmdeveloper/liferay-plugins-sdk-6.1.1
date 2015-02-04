@@ -991,7 +991,8 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().isSupplierUser()
 				&& getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
-						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)
+				&& (currentTab < outputTab)) {
 			validateSupportingDocs();
 		}
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
@@ -1477,8 +1478,8 @@ public class SmApplicationBackingBean extends
 					validSave, getManagedBean(), currentTab);
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
-			if (getManagedBean().isPoUser()
-					|| getManagedBean().isApproverUser()) {
+			if ((getManagedBean().isPoUser() || getManagedBean()
+					.isApproverUser()) && currentTab < outputTab) {
 				validSave = SmApplicationUtil.checkSupportDocsValidity(
 						validSave, getManagedBean(), currentTab);
 			}
