@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -472,6 +473,16 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}		
 	}
 	
+	public void deleteMeetingAttendanceDetails(List<ScQtMeetingAttendance> selectedMeetingAttendanceList) {
+		try {
+			List<ScQtMeetingAttendance> meetingAttendanceList = 
+						getManagedBean().getMeetingAttendanceList();
+			deleteRowsAction(meetingAttendanceList, selectedMeetingAttendanceList);
+			this.getManagedBean().setSelectedMeetingAttList(null);
+		} finally {
+		}		
+	}	
+	
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
 		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -801,6 +812,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		PmParameter recommendBy = getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, recommendByStr);
 		ScQtEvaluationResult scQtEvaluationResult = this.getManagedBean().getRecommendedSupplier();
 		if (scQtEvaluationResult != null) {
+			
 			//award
 			SmSupplier smSupplier = scQtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier();
 			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
@@ -841,6 +853,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					setUserDetails(selectedRecommendDtl);
 				} 
 				scQtRecommend.setRecommendBy(recommendBy);
+				scQtRecommend.setRecommendByStr(recommendBy.getParameterCode());
 				scQtRecommend.getRecommendDtls().clear();
 				scQtRecommend.getRecommendDtls().add(selectedRecommendDtl);	
 			}
@@ -3002,7 +3015,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					}
 				}				
 			} else if (!isZonal &&
-						CollectionUtils.isEmpty(this.getManagedBean().getShortlistedSupplierList())) {
+						CollectionUtils.isEmpty(this.getManagedBean().getShortlistedSupplierList()) && 
+						CollectionUtils.isNotEmpty(this.getManagedBean().getShortlistedPackageList())) {
 				this.getManagedBean().setShortlistedSupplierList(new ArrayList<ScQtEvaluationResult>());
 				this.getManagedBean().getShortlistedSupplierList().addAll(
 							this.getManagedBean().getShortlistedPackageList());
@@ -3138,6 +3152,32 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		retrieveCommitteeSecretary(parameter.getParameterCode());
 	}
 	
+	public void updateOfferedPrice(ScQtRecommendDtl recommendDtl) {
+		debugLogger("updateOfferedPrice...");
+		
+		boolean isItemRowSelected = this.getManagedBean().isItemRowSelect();
+		if (isItemRowSelected && recommendDtl != null) {
+			SmSupplier currentSupplier = recommendDtl.getSupplier();
+			List<ScQtEvaluationResultDtl> shortlistedItemSupplierList =
+					this.getManagedBean().getShortlistedItemSupplierList();
+			if (currentSupplier != null && 
+					CollectionUtils.isNotEmpty(shortlistedItemSupplierList)) {
+				for (ScQtEvaluationResultDtl evalResultDtl : shortlistedItemSupplierList) {
+					SmSupplier shortListedSupplier = evalResultDtl.getQtEvaluationResult().getScQtProposal().
+							getScQtSupplier().getSmSupplier();
+					ScQtProposalItem proposalItem = evalResultDtl.getQtEvaluationResult().getScQtProposalItem();
+					if ((currentSupplier.getSupplierId()).equals(
+							shortListedSupplier.getSupplierId())) {
+						ScRequestItem requestItem = recommendDtl.getScQtRecommend().getRequestItem();
+						BigDecimal offeredPrice = TemplateSpecHelper.getInstance().calcTotalAmount(requestItem.getTplSpecQuestion(), 
+														new BigDecimal(proposalItem.getOfferPrice()), recommendDtl.getAwardQty());
+						evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
+					}
+				}
+			}
+		}
+	}
+	
 	public void selectItemEvent(SelectEvent event) {
 		debugLogger("selectItemEvent");
 		
@@ -3179,14 +3219,14 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			SuppFinalizationResDTO resDTO = this.getShortListedSuppliersByItem(scQtRecommend);
 			if (resDTO.isSuccessful()) {
 				shortlistedItemSupplierList = resDTO.getQualifiedByItemSuppliers();
-			}
-			if (CollectionUtils.isNotEmpty(shortlistedItemSupplierList)) {
-				for (ScQtEvaluationResultDtl evalResultDtl : shortlistedItemSupplierList) {
-					ScQtProposalItem qtProposalItem = evalResultDtl.getQtEvaluationResult().getScQtProposalItem();
-					if (qtProposalItem != null) {
-						BigDecimal offeredPrice = TemplateSpecHelper.getInstance().calcTotalAmount(
-								scQtRecommend.getRequestItem().getTplSpecQuestion(), new BigDecimal(qtProposalItem.getOfferPrice()), 
-								new BigDecimal(qtProposalItem.getOfferQuantity()));
+				
+				if (CollectionUtils.isNotEmpty(shortlistedItemSupplierList)) {
+					for (ScQtEvaluationResultDtl evalResultDtl :
+													shortlistedItemSupplierList) {
+						ScQtProposalItem proposalItem = evalResultDtl.getQtEvaluationResult().getScQtProposalItem();
+						ScRequestItem requestItem = scQtRecommend.getRequestItem();
+						BigDecimal offeredPrice = TemplateSpecHelper.getInstance().calcTotalAmount(requestItem.getTplSpecQuestion(), 
+														new BigDecimal(proposalItem.getOfferPrice()), requestItem.getQuantity());
 						evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 					}
 				}
@@ -3260,6 +3300,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		if (CollectionUtils.isNotEmpty(selectedItemList)) {
 			List<ScQtEvaluationResultDtl> recomendedList = getManagedBean().getRecommendedItemSupplierList();
 			for (ScQtRecommend scQtRecommend : selectedItemList) {
+				PmParameter pmParameter = scQtRecommend.getRecommendBy();
 				
 				// Reset selection
 				if (StringUtils.isBlank(scQtRecommend.getRecommendByStr())) {
@@ -3271,8 +3312,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				
 				if (CollectionUtils.isNotEmpty(recomendedList)) {
 					ScQtRecommendDtl selectedRecommendDtl = null;
-					BigDecimal awardQty = null;
-					Set<ScQtRecommendDtl> toBeAddedSet = new HashSet<ScQtRecommendDtl>();
+					Set<ScQtRecommendDtl> toBeAddedSet = new LinkedHashSet<ScQtRecommendDtl>();
 					if (!this.getManagedBean().isItemRowSelect()) {
 						if (scQtRecommend.getRecommendDtls() != null) {
 							toBeAddedSet.addAll(scQtRecommend.getRecommendDtls());
@@ -3289,15 +3329,14 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 											.getSmSupplier().getSupplierId())) {
 								alreadyExists = true;
 								checkAndRemoveFromDeletedList(removedList, detail);
-								detail.setAwardQty(awardQty);
-//								detail.setScQtProposalItem(recomendedSupplier.getQtEvaluationResult().getScQtProposalItem());
 								setUserDetails(detail);
-								toBeAddedSet.add(detail);								
+								toBeAddedSet.add(detail);	
 								break;
 							}
 						}
 						if (!alreadyExists) {
-							selectedRecommendDtl = setSelectedSupplier(recomendedSupplier.getQtEvaluationResult(), scQtRecommend, awardQty, removedList);	
+							selectedRecommendDtl = setSelectedSupplier(recomendedSupplier.getQtEvaluationResult(), 
+									scQtRecommend, null, removedList);	
 							setUserDetails(selectedRecommendDtl);
 							toBeAddedSet.add(selectedRecommendDtl);
 						}
@@ -3336,7 +3375,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				
 				if(recommendType.equalsIgnoreCase(ParameterConst.RECOMMEND_TYPE_ITEM) 
 						&& scQtRecommend.getAwardSupplierList() != null){
-					PmParameter pmParameter = scQtRecommend.getRecommendBy();
 					ScRequestItem scRequestItem = scQtRecommend.getRequestItem();
 					String priceType = scRequestItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode();
 					
