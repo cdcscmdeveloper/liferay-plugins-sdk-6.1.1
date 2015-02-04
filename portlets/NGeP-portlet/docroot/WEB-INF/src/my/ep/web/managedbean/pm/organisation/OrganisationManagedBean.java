@@ -51,7 +51,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmAddressType> deliveryAddressList;
 	private PmAddressType selectedDeliveryAddress;
 	private PmAddressType deliveryAddress;
-	private List<PmAddressType> addressTypesList;
+	private List<PmAddressType> addressTypesList = new ArrayList<PmAddressType>();
 
 	private PmContact deliveryContactPerson;
 	private List<PmAddressType> selectedAddressTypes;

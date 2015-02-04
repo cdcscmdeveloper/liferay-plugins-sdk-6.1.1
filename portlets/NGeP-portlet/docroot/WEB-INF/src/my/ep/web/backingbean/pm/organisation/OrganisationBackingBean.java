@@ -78,7 +78,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
-import my.ep.web.type.sc.quationtender.RecordStatus;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -86,7 +85,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import org.quartz.utils.DBConnectionManager;
 
 @ManagedBean(name = "organisationBackingBean")
 @ViewScoped
@@ -174,6 +172,7 @@ public class OrganisationBackingBean extends
 		getManagedBean().setPmFinancialAcc(new ArrayList<PmFinancialAcc>());
 		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());
 		getManagedBean().setOrgProfile(orgProifle);
+		//getManagedBean().setAddressTypesList(null);
 	}
 	private void resetInitialOrg(){
 		
@@ -188,6 +187,7 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setOfficeAddress(null);
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);		
 		this.getManagedBean().setOrgTypeId(null);
+		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 	}
 	/* -- ORG PROFILE SERACH--  */
 	public void searchOrganisation() {
@@ -345,7 +345,22 @@ public class OrganisationBackingBean extends
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
 			retrieveMinistryList();
-			orgDeliveryAddrList(orgProfile);
+			//orgDeliveryAddrList(orgProfile);
+			
+			if (getManagedBean().getOrgProfile().getPmAddressTypes() != null && !getManagedBean().getOrgProfile().getPmAddressTypes().isEmpty()) {
+				for (PmAddressType pmAddressType : getManagedBean().getOrgProfile().getPmAddressTypes()) {
+					
+					if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.DELIVERY_ADDRESS.value())) {
+						log.info("Addresss"+pmAddressType.getAddressTypeId());
+						log.info("ADDREESSE"+pmAddressType.getPmAddress().getAddress1());
+						this.getManagedBean().getAddressTypesList().add(pmAddressType);
+						//this.getManagedBean().setDeliveryContactPerson(pmAddressType.getPmContacts().get(0));
+					
+						
+					}				
+					
+				}
+			}
 			/*if(orgProfile.getMainProfileGroups()!=null && !orgProfile.getMainProfileGroups().isEmpty()){
 				for(PmProfileGroup profileGroup:orgProfile.getMainProfileGroups()){
 					if(profileGroup.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || profileGroup.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED){
@@ -710,7 +725,18 @@ public class OrganisationBackingBean extends
 		// PTJ
 		if (parameterResDTO.getPmParameter().getParameterCode()
 				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-			getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
+			/*getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
+			getManagedBean().setDeliveryAddressList(getManagedBean().getAddressTypesList());
+			
+			orgProfile.setPmAddressTypes(getManagedBean().getDeliveryAddressList());*/
+			/*for(PmAddressType addressType:getManagedBean().getOrgProfile().getPmAddressTypes()){
+				if(addressType.getAddressType().equals(AddressType.BILLING_ADDRESS)){
+					getManagedBean().getAddressTypesList().add(addressType);
+				}				
+			}*/
+			
+			//List<PmAddressType> addressTypeList = new ArrayList<PmAddressType>();
+			getManagedBean().getAddressTypesList().addAll(getManagedBean().getOrgProfile().getPmAddressTypes());
 			
 			orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			
@@ -981,9 +1007,12 @@ public class OrganisationBackingBean extends
 		
 		PmAddressType deliveryAddr = getManagedBean().getDeliveryAddress();
 		PmAddress manualAddr = deliveryAddr.getPmAddress();	
+		if(manualAddr.isBrandNew()){
 		deliveryAddr.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 		deliveryAddr.setPmOrgProfile(getManagedBean().getOrgProfile());
 		deliveryAddr.setPmAddress(manualAddr);	
+		}
+		
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setStateId(manualAddr.getPmState().getStateId());
