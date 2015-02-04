@@ -24,7 +24,7 @@ public class BusinessRegNoValidator implements Validator {
 	private static List<String> llpList = Arrays.asList("B");
 	private static List<String> sabahSarawakList = Arrays.asList("D", "E", "G",
 			"H");
-	private static List<String> llpLastThreeList = Arrays.asList("LGN", "FGN",
+	private static List<String> llpLastThreeCombinations = Arrays.asList("LGN", "FGN",
 			"LCS", "FCS", "LLW", "FLW", "LCA", "FCA");
 
 	@Override
@@ -119,7 +119,7 @@ public class BusinessRegNoValidator implements Validator {
 				} else {
 					if (StringUtils.isBlank(splitLlp2)
 							|| splitLlp2.length() != 3
-							|| !llpLastThreeList.contains(splitLlp2)) {
+							|| !llpLastThreeCombinations.contains(splitLlp2)) {
 						throwErrorMsg("lbl.sm.businessregno.afterdash.llp");
 					}
 				}
