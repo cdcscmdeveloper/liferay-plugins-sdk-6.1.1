@@ -381,8 +381,10 @@ public class SupplierUserActivationBackingBean extends
 			PersonnelResDTO resDTO = personnelSO
 					.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
 			if (resDTO.getSmPersonnel() != null) {
-				if (resDTO.getSmPersonnel().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-					// already deactivated
+				// already deactivated
+				if (resDTO.getSmPersonnel().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE
+						&& StringUtils.isBlank(resDTO.getSmPersonnel()
+								.getEpRole())) {
 					isAlreadyDeactivate = true;
 				}
 			} else {
