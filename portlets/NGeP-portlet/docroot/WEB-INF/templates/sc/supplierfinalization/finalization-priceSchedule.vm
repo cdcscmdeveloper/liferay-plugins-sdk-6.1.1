@@ -44,9 +44,9 @@
 					#end
 					<table class="table2" width='100%'>
 						<tr>
-							<td>No.</td>
-							<td>Kod Pembekal</td>
-							<td>Harga Ditawarkan (RM)</td>
+							<td bgcolor="#eee">No.</td>
+							<td bgcolor="#eee">Kod Pembekal</td>
+							<td bgcolor="#eee">Harga Ditawarkan (RM)</td>
 						</tr>
 						#set( $count = 1 )
 						#foreach( $supplierBean in $supplierBeans )
@@ -63,9 +63,9 @@
 				#if ($isZone == "false")
 					<table class="table2" width='100%'>
 		    			<tr>
-		    				<td>No.</td>
-		    				<td>Kod Pembekal</td>
-		    				<td>Harga Ditawarkan (RM)</td>
+		    				<td bgcolor="#eee">No.</td>
+		    				<td bgcolor="#eee">Kod Pembekal</td>
+		    				<td bgcolor="#eee">Harga Ditawarkan (RM)</td>
 		    			</tr>
 		    			#set( $count = 1 )
 		    			#foreach( $supplierBean in $supplierBeans )
