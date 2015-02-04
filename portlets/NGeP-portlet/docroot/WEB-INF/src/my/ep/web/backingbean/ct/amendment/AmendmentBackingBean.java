@@ -1065,14 +1065,107 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    flushItem();
 			if(this.getManagedBean().getShowItem()!=null) {
 				
-				if (this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-					this.getManagedBean().setItemPricing(true);
+				if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+					getManagedBean().setItemPricing(true);
 				
-				} else if (this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-					this.getManagedBean().setItemCeilingQuantity(true);
+				} else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+					getManagedBean().setItemCeilingQuantity(true);
 				}
-			}
+			}	
 	   }
+	 
+	 public void newItemPrice(){
+	
+		 if(getManagedBean().getSelectedItem() != null && !getManagedBean().getSelectedItem().getCtItemPrices().isEmpty() &&
+				 (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) || 
+				  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
+				  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
+			 
+			       for(int temp = 0;temp<getManagedBean().getSelectedItem().getCtItemPrices().size(); temp++ ) {
+			    		  Date date = getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getEffDate();
+			    	     int counter =0;
+			    	     int index=0;
+			    	     int countRow =0;
+			    	     for(CtItemPrice itemPrice1 : getManagedBean().getSelectedItem().getCtItemPrices()){
+			    	    	 countRow++;
+			    	    	 if(getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)||  
+			    	    			 getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
+			    	    			 getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) ||
+			    	    			 getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
+			    	     
+			    	    		 if(getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getFromQty().equals( itemPrice1.getFromQty()) &&
+			    	    				 getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getToQty().equals( itemPrice1.getToQty()) &&
+			    	    				 getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())){
+			    	    		 counter++;
+				    		     if(counter >= 2) {
+				    		    	 if(date.before(itemPrice1.getEffDate())){
+				    		    		 index = countRow;
+				    		    		 date = itemPrice1.getEffDate();
+				    		    	 }
+				    		     }
+			    	    	   }
+			    	    	 } else if(getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName()))  {
+				    		     counter++;
+				    		     if(counter >= 2) {
+				    		    	 if(date.before(itemPrice1.getEffDate())){
+				    		    		 index = countRow;
+				    		    		 date = itemPrice1.getEffDate();
+				    		    	 }
+				    		     }
+				    	    }
+				       }
+			    	  
+			    	     if(index > 0) {
+			    	          CtItemPrice priceOfItem = getManagedBean().getSelectedItem().getCtItemPrices().get(index-1);
+			    	        
+			    	          for( CtItemPrice zonelOfItem : getManagedBean().getSelectedItem().getCtItemPrices()){
+			    	        	     if(priceOfItem.getCtContractZone().getZoneName().equalsIgnoreCase( zonelOfItem.getCtContractZone().getZoneName()))
+			    	    		        zonelOfItem.setChangeZoneLabel(false);
+			    	    	  }
+			    	       
+			    	          priceOfItem.setChangeZoneLabel(true);
+			    	         getManagedBean().getSelectedItem().getCtItemPrices().remove(index-1);
+			    	         getManagedBean().getSelectedItem().getCtItemPrices().add(index-1, priceOfItem);
+			    	     }
+			       }
+		   }			
+	 }
+	 
+	 public void newServiceItemPrice(){
+			
+		 if(getManagedBean().getSelectedServiceItem() != null && !getManagedBean().getSelectedServiceItem().getCtItemPrices().isEmpty() &&
+				 getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+			
+			      for( CtItemPrice zonelOfItem : getManagedBean().getSelectedServiceItem().getCtItemPrices()){
+    	    		    zonelOfItem.setChangeZoneLabel(false);
+    	    	  }
+			 
+			       for(int temp = 0;temp<getManagedBean().getSelectedServiceItem().getCtItemPrices().size(); temp++ ) {
+			    		  Date date = getManagedBean().getSelectedServiceItem().getCtItemPrices().get(temp).getEffDate();
+			    	     int counter =0;
+			    	     int index=0;
+			    	     int countRow =0;
+			    	     for(CtItemPrice itemPrice1 : getManagedBean().getSelectedServiceItem().getCtItemPrices()){
+			    	    	 countRow++;
+			    	    	  if(getManagedBean().getSelectedServiceItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName()))  {
+				    		     counter++;
+				    		     if(counter >= 2) {
+				    		    	 if(date.before(itemPrice1.getEffDate())){
+				    		    		 index = countRow;
+				    		    		 date = itemPrice1.getEffDate();
+				    		    	 }
+				    		     }
+				    	    }
+				       }
+			    	     if(index > 0) {
+			    	          CtItemPrice priceOfItem = getManagedBean().getSelectedServiceItem().getCtItemPrices().get(index-1);
+			    	          priceOfItem.setChangeZoneLabel(true);
+			    	         getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(index-1);
+			    	         getManagedBean().getSelectedServiceItem().getCtItemPrices().add(index-1, priceOfItem);
+			    	     }
+			       }
+		   }			
+	 }
 		
 	   public void flushItem() {
 			getManagedBean().setItemPricing(false);
@@ -2180,6 +2273,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 		this.getManagedBean().getSelectedItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedItem().getCtItemPrices().addAll(ctItemPriceList);
+		newItemPrice();
 		ctItemPriceList.clear();
 	}
 	
@@ -2265,6 +2359,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().addAll(ctItemPriceList);
+		newServiceItemPrice();
 		ctItemPriceList.clear();
 	}
 	    
@@ -2272,13 +2367,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		CtItemPrice ctItemPrice = getManagedBean().getCtItemPrices().getAssociateCtItemPrice();
 		ctItemPrice.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		ctItemPrice.setChkIndexOfRow(false);
-		this.getManagedBean().getSelectedItem().getCtItemPrices().remove(getManagedBean().getCtItemPrices());
+		getManagedBean().getSelectedItem().getCtItemPrices().remove(getManagedBean().getCtItemPrices());
+		newItemPrice();
 	}
 	public void deleteServiceItemPriceOnIndexs() {
 		CtItemPrice ctItemPrice = getManagedBean().getCtServiceItemPrices().getAssociateCtItemPrice();
 		ctItemPrice.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		ctItemPrice.setChkIndexOfRow(false);
 		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(getManagedBean().getCtServiceItemPrices());
+		newServiceItemPrice();
 	}
 	    
 	public void editCeilingQuantityOnIndexs() {
@@ -3178,13 +3275,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		 if(getManagedBean().getSelectedItem() != null) {
 			 
-			 if(getManagedBean().getShowItem() != null && getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE))
+			 if(getManagedBean().getShowItem() != null && getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 			         getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-			  else if(getManagedBean().getShowItem() != null && getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY))
+			 }  else if(getManagedBean().getShowItem() != null && getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
 				     getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
-			  else 
+			 }  else {
 				  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-		     }
+		     }newItemPrice();
+		 }
        }	
 	
 	public String getPortletTitle() {

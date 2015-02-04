@@ -1587,9 +1587,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  } else {
 			  getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 		  }
-	  }
 	  
-	   if(getManagedBean().getSelectedItem() != null && !getManagedBean().getSelectedItem().getCtItemPrices().isEmpty() &&
+	  
+	   if(!getManagedBean().getSelectedItem().getCtItemPrices().isEmpty() &&
 		 (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) || 
 		  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
 		  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
@@ -1634,9 +1634,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    	         getManagedBean().getSelectedItem().getCtItemPrices().add(index-1, priceOfItem);
 	    	     }
 	       }
-}				
-    }
-    
+         }				
+      }
+  }
     public void changeItemTypes(){
     	try{
     		flushItem();
