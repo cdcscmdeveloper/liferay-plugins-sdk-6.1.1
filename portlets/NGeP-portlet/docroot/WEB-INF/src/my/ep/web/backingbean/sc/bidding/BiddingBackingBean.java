@@ -382,6 +382,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					ParameterConst.RECOMMEND_TYPE_ITEM);
 			getManagedBean().setBidManagementInitialViewBy(
 					ParameterConst.RECOMMEND_TYPE_ITEM);
+			getManagedBean().setSelectedBidItem(getManagedBean().getScheduledBid().getScBidItems().get(0));
 			rowSelectListener(getManagedBean().getScheduledBid().getScBidItems().get(0));
 		}
 
