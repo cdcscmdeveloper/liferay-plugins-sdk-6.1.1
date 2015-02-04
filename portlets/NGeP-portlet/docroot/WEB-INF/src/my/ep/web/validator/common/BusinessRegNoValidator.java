@@ -56,10 +56,8 @@ public class BusinessRegNoValidator implements Validator {
 			if (splitRoc1.length() > 7) {
 				throwErrorMsg("lbl.sm.businessregno.beforedash.roc");
 			} else {
-				if (StringUtils.isBlank(splitRoc2)) {
+				if (StringUtils.isBlank(splitRoc2) || splitRoc2.length() != 1) {
 					throwErrorMsg("lbl.sm.businessregno.afterdash.roc");
-				} else if (splitRoc2.length() > 1) {
-					throwErrorMsg("lbl.sm.businessregno.afterdashmax.roc");
 				}
 			}
 		} else {
@@ -77,10 +75,8 @@ public class BusinessRegNoValidator implements Validator {
 			if (splitRob1.length() > 9) {
 				throwErrorMsg("lbl.sm.businessregno.beforedash.rob");
 			} else {
-				if (StringUtils.isBlank(splitRob2)) {
+				if (StringUtils.isBlank(splitRob2) || splitRob2.length() != 1) {
 					throwErrorMsg("lbl.sm.businessregno.afterdash.rob");
-				} else if (splitRob2.length() > 1) {
-					throwErrorMsg("lbl.sm.businessregno.afterdashmax.rob");
 				}
 			}
 		} else {
@@ -95,15 +91,15 @@ public class BusinessRegNoValidator implements Validator {
 		if (splitLlp != null && splitLlp.length > 1) {
 			splitLlp1 = splitLlp[0] != null ? splitLlp[0] : "";
 			splitLlp2 = splitLlp[1] != null ? splitLlp[1] : "";
-			if (splitLlp1.length() > 30) {
-				throwErrorMsg("lbl.sm.businessregno.beforedash.llp");
+			if (llpNo.length() > 30) {
+				throwErrorMsg("lbl.sm.businessregno.max.llp");
 			} else {
 				if (splitLlp1.length() < 3
 						|| !splitLlp1.substring(0, 3).equals("LLP")) {
 					throwErrorMsg("lbl.sm.businessregno.notvalid.firstthree.llp");
 				} else {
 					if (StringUtils.isBlank(splitLlp2)
-							&& splitLlp2.length() < 3) {
+							|| splitLlp2.length() != 3) {
 						throwErrorMsg("lbl.sm.businessregno.afterdash.llp");
 					}
 				}
