@@ -21,6 +21,8 @@ public class BusinessRegNoValidator implements Validator {
 	private static List<String> robList = Arrays.asList("C", "F");
 	private static List<String> rocList = Arrays.asList("I", "J");
 	private static List<String> llpList = Arrays.asList("B");
+	private static List<String> sabahSarawakList = Arrays.asList("D", "E", "G",
+			"H");
 	private static List<String> llpLastThreeList = Arrays.asList("LGN", "FGN",
 			"LCS", "FCS", "LLW", "FLW", "LCA", "FCA");
 
@@ -43,6 +45,8 @@ public class BusinessRegNoValidator implements Validator {
 					validateRoc(businessRegNo);
 				} else if (llpList.contains(businessType)) {
 					validateLlp(businessRegNo);
+				} else if (sabahSarawakList.contains(businessType)) {
+					StringUtils.deleteWhitespace(value.toString());
 				}
 			}
 		}
