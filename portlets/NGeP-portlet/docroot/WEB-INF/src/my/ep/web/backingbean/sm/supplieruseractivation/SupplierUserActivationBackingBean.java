@@ -380,10 +380,13 @@ public class SupplierUserActivationBackingBean extends
 			reqDTO.setSmSupplierId(supplierId);
 			PersonnelResDTO resDTO = personnelSO
 					.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
-			if (resDTO.getSmPersonnel() != null
-					&& (resDTO.getSmPersonnel().getEpRole() == null || StringUtils
-							.isBlank(resDTO.getSmPersonnel().getEpRole()))
-					&& resDTO.getSmPersonnel().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+			if (resDTO.getSmPersonnel() != null) {
+				if (resDTO.getSmPersonnel().getAuthorizedFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+					// already deactivated
+					isAlreadyDeactivate = true;
+				}
+			} else {
+				// already terminated
 				isAlreadyDeactivate = true;
 			}
 		} catch (Exception ex) {
