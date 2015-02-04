@@ -23,6 +23,16 @@
 				style="width : 15%">
 				<h:outputText value="#{address.pmAddress.pmState.stateName}" />
 			</p:column>
+				<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:selectOneMenu styleClass="ppDropDownWidthS" 
+					disabled="#{address.brandNew}"
+					value="#{address.recordStatusFlg}" required="true"
+					style="width: 135px;margin-bottom: 5px;">
+					<f:selectItems
+						value="#{financialOrgBackingBean.getStatusOptions()}" />
+				</p:selectOneMenu>
+
+			</p:column>
 			<p:column>
 				<p:commandLink oncomplete="addressPopup.show();"
 					actionListener="#{organisationBackingBean.editDeliveryAddress(address)}"
@@ -63,7 +73,6 @@
 							display="icon" /></td>
 
 					<td></td>
-
 				</tr>
 			<tr>
 				<td width="120">
