@@ -531,9 +531,12 @@ public class GfmasIntegration {
 					subSitia.setPmSetia(setiaresDTO.getPmSetia());
 					subSitia.setSubSetiaCode(project.getSubSetiaCode());
 					subSitia.setDescription(project.getDescription());
-					PmParameter paymentType = new PmParameter();
-					paymentType.setParameterCode("");
-					subSitia.setFinancingType(paymentType);
+					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();					
+					parameterReqDTO
+							.setParameterCode(project.getPembiayaan());
+					ParameterResDTO parameterResDTO = parameterSO
+							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					subSitia.setFinancingType(parameterResDTO.getPmParameter());
 					subSitia.setEffDate(new Timestamp(System
 							.currentTimeMillis()));
 					subSitia.setRecordStatusFlg(1);

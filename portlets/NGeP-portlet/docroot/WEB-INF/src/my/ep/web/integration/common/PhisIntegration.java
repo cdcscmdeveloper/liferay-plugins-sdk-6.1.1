@@ -39,7 +39,6 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.pm.AddressType;
-import my.ep.web.integration.gfmas.GlAccount;
 import my.ep.web.integration.phis.ItemType;
 import my.ep.web.integration.phis.MasterDataMaterialInfo;
 import my.ep.web.integration.phis.MaterialBrand;
@@ -478,7 +477,6 @@ public class PhisIntegration {
 	}
 
 	public void glAccount() {
-		
 
 		
 		Date date = null;
