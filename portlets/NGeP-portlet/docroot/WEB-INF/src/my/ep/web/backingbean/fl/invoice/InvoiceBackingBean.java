@@ -403,9 +403,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialOrg(contractSupplierResDTO.getFactoring().getFinancialOrg());
 								//getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 							}
-							if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
-								getManagedBean().getInvoice().getFlFulfilmentOrder().setPmFinancialBranch(contractSupplierResDTO.getFactoring().getPmFinancialBranch());
-							}	
 							if(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
 								finOrgReqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
 								finOrgResDTO = financialOrgSO.retriveFinAccDtlByBranchId(finOrgReqDTO);

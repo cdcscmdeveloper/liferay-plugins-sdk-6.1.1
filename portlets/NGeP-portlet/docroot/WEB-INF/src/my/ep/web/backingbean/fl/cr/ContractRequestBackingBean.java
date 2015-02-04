@@ -973,9 +973,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
 						getSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
 					}
-					if(contractSupplierResDTO.getFactoring().getPmFinancialBranch() != null){
-						contractSupplierResDTO.getFactoring().getPmFinancialBranch();
-					}
 				}else{
 					resDTO.getFlFulfilmentRequest().getCtContract().setFactored(false);
 				}
