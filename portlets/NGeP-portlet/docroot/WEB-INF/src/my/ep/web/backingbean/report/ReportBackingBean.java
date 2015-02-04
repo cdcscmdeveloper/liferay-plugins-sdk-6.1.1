@@ -1755,7 +1755,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			//if (null != this.getCtMinistry()) {
-				reqDTO.setUserId(Long.parseLong("15463"));
+				reqDTO.setUserId(lngUserId);
 				reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 				//reqDTO.setParentOrgProfileId(Long.parseLong(this.getCtMinistry()));
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
