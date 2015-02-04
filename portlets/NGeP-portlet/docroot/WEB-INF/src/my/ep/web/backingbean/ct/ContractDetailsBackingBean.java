@@ -1589,7 +1589,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  }
 	  }
 	  
-	   if(getManagedBean().isViewContract() && getManagedBean().getSelectedItem() != null && !getManagedBean().getSelectedItem().getCtItemPrices().isEmpty() &&
+	   if(getManagedBean().getSelectedItem() != null && !getManagedBean().getSelectedItem().getCtItemPrices().isEmpty() &&
 		 (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) || 
 		  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
 		  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
@@ -2808,18 +2808,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	try {
     		      financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
     	          reqDTO = new FinancialOrgReqDTO();
-    	       
-    	          if(getManagedBean().getCtContract().getCtFactoring().getPmFinancialBranch() != null) {
-    	        	  
-    	        		reqDTO.setFinancialBranchId(getManagedBean().getCtContract().getCtFactoring().getPmFinancialBranch().getFinancialBranchId());
-    	        		FinancialOrgResDTO resDTO  = financialOrgSO.retriveFinAccDtlByBranchId(reqDTO);
-    	        		PmFinancialAcc pmFinancialAcc = resDTO.getPmFinancialAcc();
-    	        		getManagedBean().setFinancialAccNo(pmFinancialAcc.getAccountNo());
- 	          		    return pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName();
-
-    	          } else if(getManagedBean().getCtContract().getCtFactoring().getFinancialOrg() != null) {
-    	            	    reqDTO.setFinancialOrgId(getManagedBean().getCtContract().getCtFactoring().getFinancialOrg().getFinancialOrgId());
-    	                    FinancialOrgResDTO resDTO  = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
+    	          if(getManagedBean().getCtContract().getCtFactoring().getFinancialOrg() != null) {
+    	        	  reqDTO.setFinancialOrgId(getManagedBean().getCtContract().getCtFactoring().getFinancialOrg().getFinancialOrgId());
+    	              FinancialOrgResDTO resDTO  = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
     	                    PmFinancialAcc pmFinancialAcc = resDTO.getPmFinancialAcc();
     	                    getManagedBean().setFinancialAccNo(pmFinancialAcc.getAccountNo());
     	          		    return pmFinancialAcc.getPmPaymentBankOrg().getFinOrgName();
