@@ -61,7 +61,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -145,7 +144,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					getManagedBean().getFulfilmentOrder().setFactored(true);
 				} else {
 					getManagedBean().getFulfilmentOrder().setPmFinancialOrg(null);
-					getManagedBean().getFulfilmentOrder().setPmFinancialBranch(null);
 				}
 			}
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
@@ -371,10 +369,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				flReqDTO.setFlOrderId(removeReqType.getOrderId());
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-				if(null != resDTO.getFlOrder().getPmFinancialBranch()){
-					getRfcAddress(null, resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
-				} else if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
-					getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId(), null);
+				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
+					getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
 				}				
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setTaskId(taskId);
@@ -453,7 +449,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public void getFactoringCompanyDtl(){
 		if(getManagedBean().getFulfilmentOrder().getPmFinancialOrg() == null){
 			getManagedBean().getFulfilmentOrder().setPmFinancialOrg(new PmFinancialOrg());
-			getManagedBean().getFulfilmentOrder().setPmFinancialBranch(new PmFinancialBranch());
 		}
 		
 		
@@ -467,7 +462,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		Long financialOrgId = (Long) e.getComponent().getAttributes().get("value");
 		
-		getManagedBean().getFulfilmentOrder().getPmFinancialBranch().setFinancialBranchId(null);
 		getManagedBean().setSupplierAddress(null);
 		getManagedBean().setPhoneNo(null);
 		getManagedBean().setFaxNo(null);
@@ -495,7 +489,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		}
 	}
 		
-	 public void getRfcAddress(Long financialOrgId, Long financialBranchId){
+	 public void getRfcAddress(Long financialOrgId){
 		 IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		
 		 getManagedBean().setRfcAddress(null);
@@ -504,10 +498,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 getManagedBean().setRfcContactPerson(null);
 		 getManagedBean().setRfcContactEmail(null);
 		 getManagedBean().setRfcContactPhoneNo(null);
-		 if(financialOrgId!=null || financialBranchId!=null) {
+		 if(financialOrgId!=null) {
 				AddressReqDTO reqDTO = new AddressReqDTO();
 				reqDTO.setFinancialOrgId(financialOrgId);
-				reqDTO.setFinancialBranchId(financialBranchId);
 				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 				
 				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
@@ -526,7 +519,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 	}	
 	 
-	public void getFactoringAddress(Long financialOrgId, Long financialBranchId) {
+	public void getFactoringAddress(Long financialOrgId) {
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 
 		getManagedBean().setSupplierAddress(null);
@@ -536,10 +529,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		getManagedBean().setContactEmail(null);
 		getManagedBean().setContactPhoneNo(null);
 
-		if (financialOrgId != null || financialBranchId!=null) {
+		if (financialOrgId != null) {
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setFinancialOrgId(financialOrgId);
-			reqDTO.setFinancialBranchId(financialBranchId);
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
