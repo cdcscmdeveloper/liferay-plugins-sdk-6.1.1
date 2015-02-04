@@ -75,7 +75,9 @@
 				<td class="tdContent"><p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
-						size="40" label="#{lbl['lbl.sm.businessregno']}" />
+						size="40" label="#{lbl['lbl.sm.businessregno']}" >
+						<f:validator validatorId="busRegNoValidator" />
+						</p:inputText>
 					&#160;
 					<p:graphicImage id="regNoti" library="ep/images/design" name="tooltips.png" />
 					<p:tooltip id="regNott" for="regNoti">
