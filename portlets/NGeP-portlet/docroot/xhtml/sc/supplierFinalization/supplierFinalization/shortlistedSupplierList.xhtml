@@ -36,8 +36,7 @@
 				widgetVar="shortlistedSuppDtls"
 				value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
 				selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
-				editable="true" rowIndexVar="index" style="width:100%"
-				rowKey="#{shortlistedSupp}"
+				editable="true" rowIndexVar="index" style="width:100%" rowKey="#{shortlistedSupp}"
 				rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}">
 				<ac:paginator for="supplierListTblSingle" />
 					
@@ -194,7 +193,9 @@
 				</p:column>
 				
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}"/>
+					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 	
 				<p:column style="text-align:right;">
@@ -245,23 +246,23 @@
 					rendered="#{suppFinalizationBackingBean.managedBean.itemize
 									and suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
 									
-				<ac:paginator for="supplierListTblMultiple" />
+				<ac:paginator for="itemSupplierListTblMultiple" />
 				
 				<p:ajax event="rowSelect"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this" partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this" partialSubmit="true"/>
 				
 				<p:ajax event="rowSelectCheckbox"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselect"
 					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselectCheckbox"
 					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
+					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this"  partialSubmit="true"/>
 				
 				<p:columnGroup type="header">
 		        	<p:row>
@@ -301,7 +302,9 @@
 				</p:column>
 				
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedItemSupp.qtEvaluationResult.offeredPrice}"/>
+					<h:outputText value="#{shortlistedItemSupp.qtEvaluationResult.offeredPrice}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 	
 				<p:column style="text-align:right;">
