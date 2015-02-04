@@ -734,7 +734,7 @@ public class SpecificationBackingBean extends
 		}
 
 		if (!this.getManagedBean().getScQt().isPanel()) {
-			
+
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
 				this.getManagedBean().getScQt().setZonal(false);
@@ -3946,7 +3946,7 @@ public class SpecificationBackingBean extends
 	public void showGeneralZoneLocationPopup() {
 
 		ICountrySO countrySo = null;
-		
+
 		try {
 			Long locationLevel = this.getManagedBean().getScQt()
 					.getZoneLocationLevel().getParameterId();
@@ -5444,6 +5444,10 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQt()
 						.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
 
+			} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
+				this.getManagedBean().getScQt()
+						.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
 			}
 
 		} finally {
@@ -7744,6 +7748,7 @@ public class SpecificationBackingBean extends
 	public void addScheduleDetails() {
 		IQTSpecSO specso = getSpecSO();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		IParameterSO parameterSo = null;
 		try {
 
 			int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -7760,10 +7765,35 @@ public class SpecificationBackingBean extends
 				for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
 					// localSchedule.add(freqSchedule.get(j));
 					ScQtSchedule schedule = new ScQtSchedule();
-					schedule.setStartYear(String.valueOf(year));
-					schedule.setEndYear(String.valueOf(year));
+					// schedule.setStartYear(String.valueOf(year));
+					// schedule.setEndYear(String.valueOf(year));
 					PmParameter parameter = new PmParameter();
-					schedule.setScheduleType(parameter);
+					if (null != this.getManagedBean().getFulfilmentType()
+							&& !"".equalsIgnoreCase(this.getManagedBean()
+									.getFulfilmentType())
+							&& this.getManagedBean()
+									.getFulfilmentType()
+									.equalsIgnoreCase(
+											ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						parameterSo = BusinessDelegate.getInstance()
+								.getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT,
+										IParameterSO.class);
+						ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+						docDefTypeReqDTO
+								.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
+						docDefTypeReqDTO
+								.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+						ParameterResDTO docDefTypeResDTO = parameterSo
+								.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+						schedule.setScheduleType(docDefTypeResDTO
+								.getPmParameter());
+
+					} else {
+
+						schedule.setScheduleType(parameter);
+					}
+					// schedule.setScheduleType(parameter);
 					setUserDetails(schedule);
 					// freqSchedule.add(schedule);
 					localSchedule.add(schedule);
@@ -7781,10 +7811,34 @@ public class SpecificationBackingBean extends
 						.getTotalFrequency(); i++) {
 
 					ScQtSchedule schedule = new ScQtSchedule();
-					schedule.setStartYear(String.valueOf(year));
-					schedule.setEndYear(String.valueOf(year));
+					// schedule.setStartYear(String.valueOf(year));
+					// schedule.setEndYear(String.valueOf(year));
 					PmParameter parameter = new PmParameter();
-					schedule.setScheduleType(parameter);
+					if (null != this.getManagedBean().getFulfilmentType()
+							&& !"".equalsIgnoreCase(this.getManagedBean()
+									.getFulfilmentType())
+							&& this.getManagedBean()
+									.getFulfilmentType()
+									.equalsIgnoreCase(
+											ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+						parameterSo = BusinessDelegate.getInstance()
+								.getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT,
+										IParameterSO.class);
+						ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+						docDefTypeReqDTO
+								.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
+						docDefTypeReqDTO
+								.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+						ParameterResDTO docDefTypeResDTO = parameterSo
+								.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+						schedule.setScheduleType(docDefTypeResDTO
+								.getPmParameter());
+
+					} else {
+
+						schedule.setScheduleType(parameter);
+					}
 					setUserDetails(schedule);
 					freqSchedule.add(schedule);
 				}
@@ -7807,14 +7861,18 @@ public class SpecificationBackingBean extends
 		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
 			int start = Integer.parseInt(schedule.getStartMonth());
 			String fromMonth = retriveMonthDtls(start);
+			schedule.setEndMonth(schedule.getStartMonth());
 			int end = Integer.parseInt(schedule.getEndMonth());
 			String toMonth = retriveMonthDtls(end);
 
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-
-			String fromdate = 01 + "/" + fromMonth + "/"
-					+ schedule.getStartYear();
-			String toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+			String fromdate = null;
+			String toDate = null;
+			if (null != schedule.getStartYear()
+					&& null != schedule.getEndYear()) {
+				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
+				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+			}
 
 			// schedule.setScheduleNo(schedule.getScheduleNo());
 
@@ -7823,12 +7881,14 @@ public class SpecificationBackingBean extends
 				Date date1;
 				Date date2;
 				try {
-					date1 = format.parse(fromdate);
-					date2 = format.parse(toDate);
-					long days = DateUtils.getDaysDifference(date1, date2);
-					int day = (int) days;
-					int months = day / 30;
-					schedule.setTotalMonths(new BigDecimal(months));
+					if (null != fromdate && null != toDate) {
+						date1 = format.parse(fromdate);
+						date2 = format.parse(toDate);
+						long days = DateUtils.getDaysDifference(date1, date2);
+						int day = (int) days;
+						int months = day / 30;
+						schedule.setTotalMonths(new BigDecimal(months));
+					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -7845,12 +7905,33 @@ public class SpecificationBackingBean extends
 			} finally {
 
 			}
+		} else {
+			int index = freqSchedule.indexOf(schedule);
+			if (null != schedule.getStartMonth()) {
+				schedule.setEndMonth(schedule.getStartMonth());
+			}
+			freqSchedule.set(index, schedule);
 		}
 
 	}
 
-	public void calculateProgressiveStartMonth(AjaxBehaviorEvent event) {
-		event.getComponent().getAttributes().get("value");
+	public void calculateProgressiveStartMonth(
+			ScQtProgressivePayment progressivepayment) {
+		// event.getComponent().getAttributes().get("value");
+		List<ScQtProgressivePayment> payment = this.getManagedBean()
+				.getProgressivePaymentList();
+		if (null == progressivepayment) {
+			payment = new ArrayList<ScQtProgressivePayment>();
+
+		}
+		if (null != progressivepayment
+				&& null != progressivepayment.getStartMonth()) {
+			int index = payment.indexOf(progressivepayment);
+			progressivepayment.setEndMonth(progressivepayment.getStartMonth());
+			payment.set(index, progressivepayment);
+
+			this.getManagedBean().setProgressivePaymentList(payment);
+		}
 
 	}
 
@@ -7879,10 +7960,13 @@ public class SpecificationBackingBean extends
 			String toMonth = retriveMonthDtls(end);
 
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-
-			String fromdate = 01 + "/" + fromMonth + "/"
-					+ schedule.getStartYear();
-			String toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+			String fromdate = null;
+			String toDate = null;
+			if (null != schedule.getStartYear()
+					&& null != schedule.getEndYear()) {
+				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
+				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+			}
 
 			// schedule.setScheduleNo(schedule.getScheduleNo());
 
@@ -7891,12 +7975,14 @@ public class SpecificationBackingBean extends
 				Date date1;
 				Date date2;
 				try {
-					date1 = format.parse(fromdate);
-					date2 = format.parse(toDate);
-					long days = DateUtils.getDaysDifference(date1, date2);
-					int day = (int) days;
-					int months = day / 30;
-					schedule.setTotalMonths(new BigDecimal(months));
+					if (null != fromdate && null != toDate) {
+						date1 = format.parse(fromdate);
+						date2 = format.parse(toDate);
+						long days = DateUtils.getDaysDifference(date1, date2);
+						int day = (int) days;
+						int months = day / 30;
+						schedule.setTotalMonths(new BigDecimal(months));
+					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -7968,8 +8054,8 @@ public class SpecificationBackingBean extends
 						.getTotalProgressivePayment(); j++) {
 					// progressiveList.add(progressive.get(j));
 					ScQtProgressivePayment payment = new ScQtProgressivePayment();
-					payment.setStartYear(String.valueOf(year));
-					payment.setEndYear(String.valueOf(year));
+					// payment.setStartYear(String.valueOf(year));
+					// payment.setEndYear(String.valueOf(year));
 					// payment.setScheduleType(new BigDecimal(1));
 
 					setUserDetails(payment);
@@ -7991,8 +8077,8 @@ public class SpecificationBackingBean extends
 						.getTotalProgressivePayment(); i++) {
 
 					ScQtProgressivePayment payment = new ScQtProgressivePayment();
-					payment.setStartYear(String.valueOf(year));
-					payment.setEndYear(String.valueOf(year));
+					// payment.setStartYear(String.valueOf(year));
+					// payment.setEndYear(String.valueOf(year));
 					// payment.setScheduleType(new BigDecimal(1));
 
 					setUserDetails(payment);
@@ -10069,6 +10155,7 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().getScQt()
 						.setFulfilmentType(new PmParameter());
+
 			}
 			fc.getApplication()
 					.getNavigationHandler()
@@ -12358,101 +12445,121 @@ public class SpecificationBackingBean extends
 	}
 
 	private void settemplateSpecList(List<ScQtCheckList> savedCheckLists) {
-		
+
 		if (null != savedCheckLists && !savedCheckLists.isEmpty()) {
 			if (null == this.getManagedBean().getScQtCheckSt2techProposal()) {
-				this.getManagedBean().setScQtCheckSt2techProposal(new ArrayList<ScQtCheckList>());
+				this.getManagedBean().setScQtCheckSt2techProposal(
+						new ArrayList<ScQtCheckList>());
 			}
-			
-			if (null == this.getManagedBean().getScQtCheckSt2financeProposalList()) {
-				this.getManagedBean().setScQtCheckSt2financeProposalList(new ArrayList<ScQtCheckList>());
+
+			if (null == this.getManagedBean()
+					.getScQtCheckSt2financeProposalList()) {
+				this.getManagedBean().setScQtCheckSt2financeProposalList(
+						new ArrayList<ScQtCheckList>());
 			}
-			
+
 			int currIndex = this.getManagedBean().getIndex();
 			int newTplSpecIndex = 0;
 			int lastTplSpecIndex = 0;
 			boolean isNewTplSpec = this.getManagedBean().isNewTemplateSpec();
-			
-			if(isNewTplSpec){
-				for (ScQtCheckList checkList : this.getManagedBean().getScQtCheckSt2techProposal()) {
-					if(checkList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
+
+			if (isNewTplSpec) {
+				for (ScQtCheckList checkList : this.getManagedBean()
+						.getScQtCheckSt2techProposal()) {
+					if (checkList
+							.getDefinationType()
+							.getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
 						lastTplSpecIndex = lastTplSpecIndex + 1;
 					}
 				}
 				newTplSpecIndex = lastTplSpecIndex;
 			}
-			
-			
+
 			for (ScQtCheckList checkList : savedCheckLists) {
-				
-				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
-					List<ScQtCheckList> technicalCheckLists = this.getManagedBean().getScQtCheckSt2techProposal();
-					
+
+				if (SourcingConstants.TECHNICAL_DOCTYPE
+						.equalsIgnoreCase(checkList.getDocCategory())) {
+					List<ScQtCheckList> technicalCheckLists = this
+							.getManagedBean().getScQtCheckSt2techProposal();
+
 					if (currIndex == -1) {
-						if (null != technicalCheckLists && !technicalCheckLists.isEmpty()) {
+						if (null != technicalCheckLists
+								&& !technicalCheckLists.isEmpty()) {
 							boolean techSpec = false;
-							
-							
+
 							for (int i = 0; i < technicalCheckLists.size(); i++) {
-								ScQtCheckList qtCheckList = technicalCheckLists.get(i);
-								
-								if (qtCheckList.getTitle().equalsIgnoreCase(checkList.getTitle())) {
+								ScQtCheckList qtCheckList = technicalCheckLists
+										.get(i);
+
+								if (qtCheckList.getTitle().equalsIgnoreCase(
+										checkList.getTitle())) {
 									techSpec = true;
 									technicalCheckLists.remove(i);
 									technicalCheckLists.add(i, checkList);
 								}
 							}
-							if (!techSpec ) {
-								if(isNewTplSpec){
-									technicalCheckLists.add(newTplSpecIndex, checkList);
-								}else{
+							if (!techSpec) {
+								if (isNewTplSpec) {
+									technicalCheckLists.add(newTplSpecIndex,
+											checkList);
+								} else {
 									technicalCheckLists.add(checkList);
 								}
 							}
-							
+
 						} else {
 							technicalCheckLists.add(checkList);
 						}
-						
+
 					} else {
 						technicalCheckLists.remove(currIndex);
-						technicalCheckLists.add(currIndex,checkList);
+						technicalCheckLists.add(currIndex, checkList);
 					}
-					
+
 				} else {
-					List<ScQtCheckList> finanicialCheckLists = this.getManagedBean().getScQtCheckSt2financeProposalList();
-					
+					List<ScQtCheckList> finanicialCheckLists = this
+							.getManagedBean()
+							.getScQtCheckSt2financeProposalList();
+
 					if (currIndex == -1) {
-						if(isNewTplSpec){
-							finanicialCheckLists.add(newTplSpecIndex, checkList);
-						}else{
+						if (isNewTplSpec) {
+							finanicialCheckLists
+									.add(newTplSpecIndex, checkList);
+						} else {
 							finanicialCheckLists.add(checkList);
 						}
-						
+
 					} else {
-						if (null != finanicialCheckLists && !finanicialCheckLists.isEmpty()) {
+						if (null != finanicialCheckLists
+								&& !finanicialCheckLists.isEmpty()) {
 							boolean finspec = false;
-							
+
 							for (int i = 0; i < finanicialCheckLists.size(); i++) {
-								ScQtCheckList qtCheckList = finanicialCheckLists.get(i);
-								if (qtCheckList.getTitle().equalsIgnoreCase(checkList.getTitle())) {
+								ScQtCheckList qtCheckList = finanicialCheckLists
+										.get(i);
+								if (qtCheckList.getTitle().equalsIgnoreCase(
+										checkList.getTitle())) {
 									finspec = true;
 									finanicialCheckLists.remove(i);
 									finanicialCheckLists.add(i, checkList);
 								}
 							}
-							
+
 							if (!finspec) {
-								finanicialCheckLists.add(currIndex,checkList);
+								finanicialCheckLists.add(currIndex, checkList);
 							}
-							
+
 						} else {
 							finanicialCheckLists.add(checkList);
 						}
 					}
 					/*
-					 * this.getManagedBean().getScQtCheckSt2financeProposalList().remove(this.getManagedBean().getIndex());
-					 * this.getManagedBean().getScQtCheckSt2financeProposalList().add(this.getManagedBean().getIndex(), checkList);
+					 * this.getManagedBean().getScQtCheckSt2financeProposalList()
+					 * .remove(this.getManagedBean().getIndex());
+					 * this.getManagedBean
+					 * ().getScQtCheckSt2financeProposalList()
+					 * .add(this.getManagedBean().getIndex(), checkList);
 					 */
 				}
 			}
@@ -12469,7 +12576,7 @@ public class SpecificationBackingBean extends
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
 
- 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
+		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
 				&& SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(specType)) {
 			validateBusinessOwner(true);
@@ -12545,33 +12652,50 @@ public class SpecificationBackingBean extends
 							"Please choose the zones before proceed.");
 				}
 			}
-			IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IParameterSO.class);
 			ParameterReqDTO finSpecType = new ParameterReqDTO();
 			finSpecType.setParameterType(ParameterTypeConst.SPECIFICATION_TYPE);
-			finSpecType.setParameterCode(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
-			ParameterResDTO finSpecresDTO = parameterSO.retrieveParameterByTypeAndCode(finSpecType);
+			finSpecType
+					.setParameterCode(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
+			ParameterResDTO finSpecresDTO = parameterSO
+					.retrieveParameterByTypeAndCode(finSpecType);
 			specMaster.setSpecTypeCode(finSpecresDTO.getPmParameter());
-			TemplateSpecHelper.getInstance().cloneTplSpecQuestions(specMaster, scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions());
-			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,SourcingConstants.FINANCIAL_DOCTYPE);
+			TemplateSpecHelper.getInstance().cloneTplSpecQuestions(
+					specMaster,
+					scQtCheckList.getScQtDoc().getTplSpecMaster()
+							.getTplSpecQuestions());
+			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
+					SourcingConstants.FINANCIAL_DOCTYPE);
 			PmStatus financialstatus = new PmStatus();
 			financialstatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			qtCheckList.setPmStatus(financialstatus);
-			qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster().getSpecName());
+			qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
+					.getSpecName());
 			qtCheckList.setScoringReq(true);
-			qtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+			qtCheckList.getScQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
-			TemplateSpecHelper.getInstance().updateItemWeightageReq(qtCheckList.getScQtDoc().getTplSpecMaster(),qtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions());
+			TemplateSpecHelper.getInstance().updateItemWeightageReq(
+					qtCheckList.getScQtDoc().getTplSpecMaster(),
+					qtCheckList.getScQtDoc().getTplSpecMaster()
+							.getTplSpecQuestions());
 			qtCheckList.getScQtDoc().getTplSpecMaster().setScoringReq(true);
 
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
-			List<ScQtCheckList> finanicalCheckList = this.getManagedBean().getScQtCheckSt2financeProposalList();
+			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
 			List<ScQtCheckList> toBeRemoveList = new ArrayList<ScQtCheckList>();
 			if (null != finanicalCheckList && !finanicalCheckList.isEmpty()) {
-				if (null != this.getManagedBean().getCheckListTitle() && !"".equals(this.getManagedBean().getCheckListTitle())) {
+				if (null != this.getManagedBean().getCheckListTitle()
+						&& !"".equals(this.getManagedBean().getCheckListTitle())) {
 					for (int i = 0; i < finanicalCheckList.size(); i++) {
-						ScQtCheckList localCheckList = finanicalCheckList.get(i);
-						if (this.getManagedBean().getCheckListTitle().equalsIgnoreCase(localCheckList.getTitle())) {
+						ScQtCheckList localCheckList = finanicalCheckList
+								.get(i);
+						if (this.getManagedBean().getCheckListTitle()
+								.equalsIgnoreCase(localCheckList.getTitle())) {
 							localCheckList.setDeleted(true);
 							toBeRemoveList.add(localCheckList);
 							finanicalCheckList.remove(localCheckList);
@@ -12587,7 +12711,8 @@ public class SpecificationBackingBean extends
 			PmStatus evalStatus = new PmStatus();
 			evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			scQtCheckList.setPmEvalStatus(evalStatus);
-			scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			scQtCheckList.getScQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			updatedCheckLists.add(scQtCheckList);
 
 		}
@@ -12596,7 +12721,9 @@ public class SpecificationBackingBean extends
 
 		// code if alredy checklist exist need to remove existing finalcialspec
 
-		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
 			resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
@@ -12605,7 +12732,8 @@ public class SpecificationBackingBean extends
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 				if (null != reqDTO.getCheckLists()) {
 					for (ScQtCheckList checkList : reqDTO.getCheckLists()) {
-						if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
+						if (SourcingConstants.TECHNICAL_DOCTYPE
+								.equalsIgnoreCase(checkList.getDocCategory())) {
 							PmStatus status = new PmStatus();
 							status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 							checkList.setPmStatus(status);
@@ -12618,11 +12746,14 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(specType)) {
 					if (null != reqDTO.getCheckLists()) {
 						for (ScQtCheckList checkList : reqDTO.getCheckLists()) {
-							if (SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(checkList.getDocCategory())) {
+							if (SourcingConstants.FINANCIAL_DOCTYPE
+									.equalsIgnoreCase(checkList
+											.getDocCategory())) {
 								PmStatus status = new PmStatus();
 								status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 								checkList.setPmStatus(status);
-								this.getManagedBean().setScQtChecklist(checkList);
+								this.getManagedBean().setScQtChecklist(
+										checkList);
 							}
 						}
 					}
@@ -12642,23 +12773,32 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().setCheckListTitle("");
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
-			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE.equalsIgnoreCase(flowType)) {
+			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
+					.equalsIgnoreCase(flowType)) {
 
-				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluationType())
-						&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+						.getManagedBean().getScQt().getEvaluationType())
+						&& !this.getManagedBean().getScQt()
+								.isTechEvaluationReq()) {
 					// retriveTechnicalSpecification();
 					// retriveTechnicalCheckList();
 					// settemplateSpecList(savedCheckLists);
-					if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+					if (SourcingConstants.TECHNICAL_DOCTYPE
+							.equalsIgnoreCase(specType)) {
 						// retriveTechnicalSpecification();
 						settemplateSpecList(savedCheckLists);
 					} else {
 						retriveFinancialCheckList();
 						// settemplateSpecList(savedCheckLists);
 					}
-				} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluationType())
-						|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluationType()) 
-						&& this.getManagedBean().getScQt().isTechEvaluationReq())) {
+				} else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(this.getManagedBean().getScQt()
+								.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(this.getManagedBean()
+										.getScQt().getEvaluationType()) && this
+								.getManagedBean().getScQt()
+								.isTechEvaluationReq())) {
 					settemplateSpecList(savedCheckLists);
 
 				}
@@ -12728,11 +12868,12 @@ public class SpecificationBackingBean extends
 
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowtype)) {
 			return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
-			
-		} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE.equalsIgnoreCase(flowtype)) {
+
+		} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
+				.equalsIgnoreCase(flowtype)) {
 			this.getManagedBean().setIndex(-1);
 			this.getManagedBean().setNewTemplateSpec(true);
-			
+
 			return "/xhtml/sc/main/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 		}
 
@@ -13143,7 +13284,7 @@ public class SpecificationBackingBean extends
 		}
 		return this.getManagedBean().getBankyearsList();
 	}
-	
+
 	public void deleteCheckListFile(ScQtCheckListAttachment checkListAttachment) {
 		checkListAttachment = null;
 		this.getManagedBean().getScQtChecklist()

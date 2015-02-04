@@ -59,6 +59,8 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
 							id="scheduleNum">
+							<p:ajax process="@this" partialSubmit="true"
+								update="@this,frequencySchedule" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
@@ -71,7 +73,7 @@
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scheduleDetails"
+								update="scheduleDetails,scheduleendMonth"
 								listener="#{specificationBackingBean.calculateStartMonth(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
@@ -85,7 +87,8 @@
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change" process="@this" partialSubmit="true" update="scheduleDetails"
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="scheduleDetails"
 								listener="#{specificationBackingBean.calculateStartMonth(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -94,12 +97,13 @@
 
 					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 						style="width:25%">
-						<p:selectOneMenu style="width:100px;"
+						<p:selectOneMenu style="width:100px;" id="scheduleendMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails" process="@this" partialSubmit="true"
+							<p:ajax event="change" update="scheduleDetails" process="@this"
+								partialSubmit="true"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -111,7 +115,8 @@
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails" process="@this" partialSubmit="true"
+							<p:ajax event="change" update="scheduleDetails" process="@this"
+								partialSubmit="true"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -187,6 +192,9 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
 							maxlength="3" size="5">
+
+							<p:ajax process="@this" partialSubmit="true"
+								update="@this,progressivePayment" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
 						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
@@ -199,7 +207,10 @@
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							required="true" id="progressivePhasedesc" style="width:100px;"
-							label="#{lbl['lbl.sc.spec.description']}"></p:inputText>
+							label="#{lbl['lbl.sc.spec.description']}">
+							<p:ajax process="@this" partialSubmit="true"
+								update="@this,progressivePayment" />
+						</p:inputText>
 						<p:message id="phaseDescId" for="progressivePhasedesc"
 							display="icon"></p:message>
 					</p:column>
@@ -212,7 +223,8 @@
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
+								update="paymentEndMonth"
+								listener="#{specificationBackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -226,14 +238,16 @@
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
+								listener="#{specificationBackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
 						</p:selectOneMenu>
 
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
+					<p:column
+						headerText="
+								#{lbl['lbl.sc.spec.stage2.score.to']}"
 						style="width:15%">
-						<p:selectOneMenu style="width:100px;"
+						<p:selectOneMenu style="width:100px;" id="paymentEndMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{payment.endMonth}">
 
@@ -242,7 +256,6 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
 						</p:selectOneMenu>
-
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
@@ -251,6 +264,8 @@
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -263,6 +278,8 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							id="progressivePercentage" style="width:100px;"
 							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18">
+							<p:ajax process="@this" partialSubmit="true"
+								update="@this,progressivePayment" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 						</p:inputText>
 						<p:message id="pahsePercentage" for="progressivePercentage"
