@@ -134,7 +134,7 @@
 							rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 }" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null  and specificationBackingBean.managedBean.finStandaraChecklist}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null  and specificationBackingBean.managedBean.finStandaraChecklist and stageTwofunctional.qtChecklistId eq null}">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
 					</ui:fragment>
@@ -201,8 +201,8 @@
 						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{supplierProposalDetailBackingBean.downloadFile(stageTwofunctional.scQtCheckListAttachment)}" />
-						
-						<p:commandLink
+
+					<p:commandLink
 						rendered="#{stageTwofunctional.scQtCheckListAttachment.fileName ne null}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						action="#{specificationBackingBean.deleteCheckListFile(stageTwofunctional.scQtCheckListAttachment)}"
@@ -273,6 +273,9 @@
 				process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList, specificationBackingBean.managedBean.markDeletedFinChecklist)}"
 				update="financeProposaltwo">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.finStandaraChecklist}"
+					value="#{true}" />
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
