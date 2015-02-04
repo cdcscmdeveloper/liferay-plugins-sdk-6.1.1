@@ -18,7 +18,7 @@
 						    <td width="100%">
 						    <h:panelGrid id="rptModule" columns="4"  style="margin-bottom:5px;width:85%;">
 						    <p:outputLabel value="#{lbl['lbl.rpt.module']}" style="margin-bottom:5px;width:160px;"/>
-						    <p:selectOneMenu  value="#{reportBackingBean.managedBean.moduleValue}" style="margin-bottom:5px;width:300px;" >
+						    <p:selectOneMenu  value="#{reportBackingBean.moduleValue}" style="margin-bottom:5px;width:300px;" >
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
 								<p:ajax event="change" listener="#{reportBackingBean.retriveReportListBymoduleName}" process="@this"
@@ -36,7 +36,7 @@
 						    </tr>
 						     <tr>
 						    <td width="100%">					
-						  		<p:outputLabel value="#{reportBackingBean.managedBean.reportName}" 
+						  		<p:outputLabel value="#{reportBackingBean.reportName}" 
 							 	style="font-size:17px;margin-top:17px;font-weight:bold;white-space:normal;float:left;"/>
 							</td>
 						  </tr>						    

@@ -17,9 +17,9 @@ public class ReportMangedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> reportList=new ArrayList<SelectItem>();
-	private String reportName;
+	//private String reportName;
 	private String reportValue;
-	private String moduleValue;
+	//private String moduleValue;
 	private String reportJsp;
 	
 			
@@ -35,24 +35,24 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setReportValue(String reportValue) {
 		this.reportValue = reportValue;
 	}
-	public String getModuleValue() {
+	/*public String getModuleValue() {
 		return moduleValue;
 	}
 	public void setModuleValue(String moduleValue) {
 		this.moduleValue = moduleValue;
-	}	
+	}*/	
 	public ReportsGenerateBean getRptGenBean() {
 		return rptGenBean;
 	}
 	public void setRptGenBean(ReportsGenerateBean rptGenBean) {
 		this.rptGenBean = rptGenBean;
 	}	
-	public String getReportName() {
+	/*public String getReportName() {
 		return reportName;
 	}
 	public void setReportName(String reportName) {
 		this.reportName = reportName;
-	}
+	}*/
 	public List<SelectItem> getReportList() {
 		return reportList;
 	}
