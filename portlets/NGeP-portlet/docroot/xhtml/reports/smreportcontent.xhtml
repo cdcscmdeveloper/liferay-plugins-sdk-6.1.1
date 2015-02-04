@@ -689,6 +689,13 @@
 									</table>	
 									</p:column>
 								  </c:if>
+								  
+								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smYearTextView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.yearone']}" style="margin-top:5px;width:160px;" />			
+									
+									<p:inputText  value="#{reportBackingBean.smYearText}" style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
 								  <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smExtraTwoColumnView}">
 								  <p:outputLabel value="" style="margin-top:5px;width:160px;" />
 									<p:outputLabel value="" style="margin-top:5px;width:290px;" />

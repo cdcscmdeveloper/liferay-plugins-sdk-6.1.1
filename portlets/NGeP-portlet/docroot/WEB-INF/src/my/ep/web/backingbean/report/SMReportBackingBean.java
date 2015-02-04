@@ -108,8 +108,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmMandatoryCreatedFromYearView(true);				
 	            break;
 		 case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:				
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
+				rptGenBean.setSmYearTextView(true);
+				rptGenBean.setSmExtraTwoColumnView(true);					
 	            break;
 		 case ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL:	
 	        	rptGenBean.setSmExtraTwoColumnView(true);
