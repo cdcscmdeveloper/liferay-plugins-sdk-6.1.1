@@ -38,10 +38,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSpecificationRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.directpurchase.ZonesBean;
@@ -329,6 +332,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private int technicalSpecCount;
 	private int financialSpecCount;
 	private List<SelectItem> bankyearsList;
+	private List<ScQtSupplier> restrictedSupplierList;
+	private SmSupplier smSupplier;
+	private SmMofAccount smMofAccount;
 	
 	private boolean newTemplateSpec;
 
@@ -3345,6 +3351,48 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setNewTemplateSpec(boolean newTemplateSpec) {
 		this.newTemplateSpec = newTemplateSpec;
+	}
+
+	/**
+	 * @return the restrictedSupplierList
+	 */
+	public List<ScQtSupplier> getRestrictedSupplierList() {
+		return restrictedSupplierList;
+	}
+
+	/**
+	 * @param restrictedSupplierList the restrictedSupplierList to set
+	 */
+	public void setRestrictedSupplierList(List<ScQtSupplier> restrictedSupplierList) {
+		this.restrictedSupplierList = restrictedSupplierList;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+
+	/**
+	 * @return the smMofAccount
+	 */
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+	/**
+	 * @param smMofAccount the smMofAccount to set
+	 */
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
 	}
 
 }

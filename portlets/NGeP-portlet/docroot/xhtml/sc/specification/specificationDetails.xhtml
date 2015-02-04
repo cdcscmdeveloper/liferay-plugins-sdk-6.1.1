@@ -122,6 +122,8 @@
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;">
+						<p:ajax process="@this" partialSubmit="true"
+							update="@this,contract" />
 					</p:inputMask> <h:outputText value="(Month)" /> <p:message id="completion"
 						for="contract" display="icon"></p:message></td>
 			</tr>
