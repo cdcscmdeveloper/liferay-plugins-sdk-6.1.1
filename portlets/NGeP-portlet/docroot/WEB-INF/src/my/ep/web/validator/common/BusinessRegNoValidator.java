@@ -175,7 +175,7 @@ public class BusinessRegNoValidator implements Validator {
 			} else if (splitRos3.length() != 2
 					|| !StringUtils.isNumeric(splitRos3)) {
 				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
-			}else if(isValidDate(splitRos4)){
+			}else if(!isValidDate(splitRos4)){
 				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
 			}
 		} else {
