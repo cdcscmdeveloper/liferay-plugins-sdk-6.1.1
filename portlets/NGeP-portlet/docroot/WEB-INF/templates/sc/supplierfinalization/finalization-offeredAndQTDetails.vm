@@ -218,12 +218,12 @@
 </table>
 <table class="infoTable">
 	<tr>
-		<td class="tdInfoTable">Nama</td>
-		<td class="tdInfoTable">Jawatan</td>
-		<td class="tdInfoTable">Gred</td>
-		<td class="tdInfoTable">Kad Pengenalan No.</td>
-		<td class="tdInfoTable">Jabatan </td>
-		<td class="tdInfoTable">Peranan</td>
+		<td class="tdInfoTable" bgcolor="#eee">Nama</td>
+		<td class="tdInfoTable" bgcolor="#eee">Jawatan</td>
+		<td class="tdInfoTable" bgcolor="#eee">Gred</td>
+		<td class="tdInfoTable" bgcolor="#eee">Kad Pengenalan No.</td>
+		<td class="tdInfoTable" bgcolor="#eee">Jabatan </td>
+		<td class="tdInfoTable" bgcolor="#eee">Peranan</td>
 	</tr>
 	#foreach( $committeeMember in $committeeActivities )
 	<tr>

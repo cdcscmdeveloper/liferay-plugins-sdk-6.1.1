@@ -50,6 +50,21 @@
 	</style>
 </head>
 <body>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KERTAS TAKLIMAT TENDER/SEBUT HARGA UNTUK PERTIMBANGAN </span>
+            <br/><br/>
+        </td>
+    </tr>
+    <tr>
+		<td align="center">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $ptj <br/> $jabatan </span>
+			<br/>
+        </td>
+    </tr>
+</table>
+<br/>
 	<table width='100%'>
 		<tr>
 			<td align="left">
@@ -168,12 +183,12 @@
 	</table>
 	<table class="infoTable">
 		<tr>
-			<td class="tdInfoTable">Category Code</td>
-			<td class="tdInfoTable">Main-Category</td>
-			<td class="tdInfoTable">Sub-Category</td>
-			<td class="tdInfoTable">Sub-Category Division</td>
-			<td class="tdInfoTable">Category Type</td>
-			<td class="tdInfoTable">Mandatory</td>
+			<td class="tdInfoTable" bgcolor="#eee">Category Code</td>
+			<td class="tdInfoTable" bgcolor="#eee">Main-Category</td>
+			<td class="tdInfoTable" bgcolor="#eee">Sub-Category</td>
+			<td class="tdInfoTable" bgcolor="#eee">Sub-Category Division</td>
+			<td class="tdInfoTable" bgcolor="#eee">Category Type</td>
+			<td class="tdInfoTable" bgcolor="#eee">Mandatory</td>
 		</tr>
 		#foreach( $categoryDtls in $categoryList )
 		<tr>
@@ -217,8 +232,8 @@
 					<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
 						<table class="infoTable">
 							<tr>
-								<td>Zone</td>
-								<td>State</td>
+								<td bgcolor="#eee">Zone</td>
+								<td bgcolor="#eee">State</td>
 								#if ($locationLevel == "District")
 									<td>District</td>
 								#end
@@ -246,9 +261,9 @@
 						<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
 						<table class="infoTable">
 							<tr>
-								<td>State</td>
+								<td bgcolor="#eee">State</td>
 								#if ($locationLevel == "District")
-									<td>District</td>
+									<td bgcolor="#eee">District</td>
 								#end
 							</tr>
 							#foreach($tplSpecLoc in $locality)
@@ -289,11 +304,11 @@
 						#end<br/>
 						<table class="infoTable">
 							<tr>
-								<td>Description</td>
-								<td>Date/Time</td>
-								<td>Location</td>
-								<td>Coordinationg Officer</td>
-								<td>Max Attendance</td>
+								<td bgcolor="#eee">Description</td>
+								<td bgcolor="#eee">Date/Time</td>
+								<td bgcolor="#eee">Location</td>
+								<td bgcolor="#eee">Coordinationg Officer</td>
+								<td bgcolor="#eee">Max Attendance</td>
 							</tr>
 							#foreach( $briefingdtls in $zoneList.briefingList )
 							<tr>
@@ -314,11 +329,11 @@
 						<br />
 						<table class="infoTable">
 							<tr>
-								<td>Description</td>
-								<td>Date/Time</td>
-								<td>Location</td>
-								<td>Coordinationg Officer</td>
-								<td>Max Attendance</td>
+								<td bgcolor="#eee">Description</td>
+								<td bgcolor="#eee">Date/Time</td>
+								<td bgcolor="#eee">Location</td>
+								<td bgcolor="#eee">Coordinationg Officer</td>
+								<td bgcolor="#eee">Max Attendance</td>
 							</tr>
 							#foreach( $sitevisitdtls in $zoneList.sitevisitList )
 							<tr>
@@ -355,10 +370,10 @@
 	</table>
 	<table class="infoTable">
 		<tr>
-			<td class="tdInfoTable">Name</td>
-			<td class="tdInfoTable">Tel No</td>
-			<td class="tdInfoTable">Fax No</td>
-			<td class="tdInfoTable">Email</td>
+			<td class="tdInfoTable" bgcolor="#eee">Name</td>
+			<td class="tdInfoTable" bgcolor="#eee">Tel No</td>
+			<td class="tdInfoTable" bgcolor="#eee">Fax No</td>
+			<td class="tdInfoTable" bgcolor="#eee">Email</td>
 		</tr>
 		#foreach( $contactPerson in $contactPersons )
 		<tr>
