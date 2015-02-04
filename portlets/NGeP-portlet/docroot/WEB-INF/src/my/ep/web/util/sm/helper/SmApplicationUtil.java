@@ -3760,6 +3760,25 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Retrieve pm parameter by type and code.
+	 * 
+	 * @param paramId
+	 *            -String param type,String param code
+	 * @return PmParameter object
+	 */
+	public static PmParameter retrievePmParameterByTypeAndCode(String type, String code) {
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(type);
+		reqDTO.setParameterCode(code);
+		ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
+
+		return resDTO.getPmParameter();
+	}
+
+	/**
 	 * Gets the sm supplier basic info vo for mapping data.
 	 * 
 	 * @param bean
