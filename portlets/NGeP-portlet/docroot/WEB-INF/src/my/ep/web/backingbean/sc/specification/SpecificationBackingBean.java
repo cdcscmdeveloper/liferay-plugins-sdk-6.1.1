@@ -49,7 +49,9 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -89,12 +91,16 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -138,12 +144,15 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSpecificationRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -226,7 +235,7 @@ public class SpecificationBackingBean extends
 		// this.getManagedBean().setPanelItemCategory(null);
 		// this.getManagedBean().setSelectPanelItem(false);
 		if (this.getManagedBean().getScQt().isPanel()) {
-			retriveBusinessOwnerQualificationCriteri();
+			retriveBusinessOwnerQualificationCriteri("BO");
 			if (null != this.getManagedBean().getCtPanelItem()) {
 
 				List<CtPanelItem> panelItem = this.getManagedBean()
@@ -508,7 +517,7 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri();
+				retriveBusinessOwnerQualificationCriteri("BO");
 
 				break;
 			case 2:
@@ -532,7 +541,7 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri();
+				retriveBusinessOwnerQualificationCriteri("BO");
 				if (!isSpecComplete) {
 					retriveTechnicalSpecification();
 				}
@@ -557,7 +566,7 @@ public class SpecificationBackingBean extends
 
 				// .getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri();
+				retriveBusinessOwnerQualificationCriteri("BO");
 				// retriveTechnicalSpecification();
 				retriveFinancialSpecification();
 				break;
@@ -1109,7 +1118,7 @@ public class SpecificationBackingBean extends
 			retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
 			break;
 		case 1:
-			retriveBusinessOwnerQualificationCriteri();
+			retriveBusinessOwnerQualificationCriteri("BO");
 			break;
 
 		case 2:
@@ -1616,7 +1625,7 @@ public class SpecificationBackingBean extends
 			retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
 			break;
 		case 1:
-			retriveBusinessOwnerQualificationCriteri();
+			retriveBusinessOwnerQualificationCriteri("SC");
 			break;
 
 		case 2:
@@ -1802,7 +1811,7 @@ public class SpecificationBackingBean extends
 	public void loadPrepareSpecDetails(Long qtId, String docType) {
 
 		retriveSpecdetails(qtId, docType);
-		retriveBusinessOwnerQualificationCriteri();
+		retriveBusinessOwnerQualificationCriteri("BO");
 		retriveTechnicalSpecification();
 		retriveFinancialSpecification();
 		retriveApprovalRemarks();
@@ -1817,7 +1826,7 @@ public class SpecificationBackingBean extends
 
 		retriveSpecdetails(qtId, docType);
 
-		retriveBusinessOwnerQualificationCriteri();
+		retriveBusinessOwnerQualificationCriteri("SC");
 		if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 				.getManagedBean().getScQt().getEvaluationType())
 				&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
@@ -1849,7 +1858,7 @@ public class SpecificationBackingBean extends
 	/**
 	 * To get the Supplier Qualification Criteria Details for BO PrepareSpec..
 	 */
-	public void retriveBusinessOwnerQualificationCriteri() {
+	public void retriveBusinessOwnerQualificationCriteri(String type) {
 
 		IQTDetailSO QtDetailsSO;
 		QuationTenderResDTO tenderResDTO;
@@ -1891,6 +1900,18 @@ public class SpecificationBackingBean extends
 					 * 
 					 * }
 					 */
+					this.getManagedBean().setTotalSuppliers(0);
+					if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+							.equalsIgnoreCase(scQt.getQtType())
+							&& type.equalsIgnoreCase("SC")) {
+						if (null != scQt.getScQtSuppliers()
+								&& !scQt.getScQtSuppliers().isEmpty()) {
+							this.getManagedBean().setRestrictedSupplierList(
+									scQt.getScQtSuppliers());
+							this.getManagedBean().setTotalSuppliers(
+									scQt.getScQtSuppliers().size());
+						}
+					}
 
 					if (scQt.getEstimatedAmount().intValue() > 500000
 							&& this.getManagedBean().getAllStateCode() == 3
@@ -10806,7 +10827,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri();
+				retriveBusinessOwnerQualificationCriteri("SC");
 
 				break;
 			case 2:
@@ -13290,6 +13311,94 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getScQtChecklist()
 				.setScQtCheckListAttachment(checkListAttachment);
 
+	}
+
+	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier,
+			SmSupplier smSupplier) {
+		// debugLogger("retrieveSmMofAccount");
+
+		Long supplierId = null;
+		SmMofAccount smMofAccount = null;
+		if (scQtSupplier != null) {
+			supplierId = scQtSupplier.getSmSupplier().getSupplierId();
+			smMofAccount = scQtSupplier.getSmMofAccount();
+
+			if (smMofAccount != null) {
+				return smMofAccount;
+			}
+		} else {
+			supplierId = smSupplier.getSupplierId();
+			smMofAccount = smSupplier.getSmMofAccount();
+
+			if (smMofAccount != null) {
+				return smMofAccount;
+			}
+		}
+
+		IMofAccountSO mofAccountSO;
+		try {
+			mofAccountSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+			MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+			accountReqDTO.setSupplierId(supplierId);
+			accountReqDTO
+					.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
+
+			MofAccountResDTO mofAccountResDTO = mofAccountSO
+					.retriveMOFAccountBySupplierIdAndType(accountReqDTO);
+			if (mofAccountResDTO.getMofAccount() != null) {
+				smMofAccount = mofAccountResDTO.getMofAccount();
+				if (scQtSupplier != null) {
+					scQtSupplier.setSmMofAccount(smMofAccount);
+				} else {
+					smSupplier.setSmMofAccount(smMofAccount);
+				}
+			}
+		} finally {
+			mofAccountSO = null;
+		}
+		return smMofAccount;
+	}
+
+	public void showSupplierDetails(ScQtSupplier qtSupplier) {
+		// debugLogger("showSupplierDetails");
+		IQTSupplierSO qtSupplierSO = null;
+		try {
+			qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
+
+			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+			reqDTO.setSupplierId(qtSupplier.getSmSupplier().getSupplierId());
+
+			QTSupplierResDTO resDTO = qtSupplierSO
+					.retrieveSupplierDtlById(reqDTO);
+
+			this.getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+			this.getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
+			/*
+			 * List<SmPersonnel> personnelsList = resDTO.getSmSupplier()
+			 * .getSmAppl().getSmPersonnels(); if (null != personnelsList) { for
+			 * (SmPersonnel smPersonnel : personnelsList) {
+			 * getManagedBean().setPersonnel(smPersonnel); } }
+			 */
+			SmCompanyBasic smCompanyBasic = resDTO.getSmSupplier().getSmAppl()
+					.getSmCompanyBasic();
+			for (SmCompanyAddress smCompanyAddress : smCompanyBasic
+					.getSmCompanyAddresses()) {
+				if (AddressType.CONTACT_ADDRESS.value().equals(
+						smCompanyAddress.getAddressType())) {
+					log.info("found hq address");
+					getManagedBean().setSupplierBranch("HQ");
+					getManagedBean().setSupplierAddress(
+							smCompanyAddress.getSmAddress());
+					// getManagedBean().setSupplierContact(getManagedBean().getPersonnel().getName());
+					// getManagedBean().setSupplierEmail(getManagedBean().getPersonnel().getEmail());
+					break;
+				}
+			}
+		} finally {
+			qtSupplierSO = null;
+		}
 	}
 
 }
