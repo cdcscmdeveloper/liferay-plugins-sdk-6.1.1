@@ -8550,6 +8550,49 @@ public class SmApplicationBackingBean extends
 		return ePRoleList;
 	}
 
+	public List<SelectItem> getAcademicQualifications() {
+		SelectItem[] initQualifications = getDropdownValues("QL");
+		String suppType = StringUtils.isNotBlank(getManagedBean()
+				.getNewSupplierType()) ? getManagedBean().getNewSupplierType()
+				: getManagedBean().getSmAppl().getSupplierType();
+		PmParameter certificate = SmApplicationUtil
+				.retrievePmParameterByTypeAndCode("QL", "5");
+		PmParameter diploma = SmApplicationUtil
+				.retrievePmParameterByTypeAndCode("QL", "4");
+		List<SelectItem> tempList = initQualifications != null ? Arrays
+				.asList(initQualifications) : new ArrayList<SelectItem>();
+		List<SelectItem> finalList = new ArrayList<SelectItem>();
+
+		if (getManagedBean().getSelectedShareHolder() != null
+				&& suppType.equals("J")) {
+			if (certificate != null && diploma != null) {
+				for (SelectItem tempItem : tempList) {
+					if (tempItem.getValue() != null) {
+						if (certificate.getParameterId().compareTo(
+								Long.parseLong(tempItem.getValue().toString())) == 0) {
+							if (getManagedBean().getSelectedShareHolder()
+									.isClerical()) {
+								finalList.add(tempItem);
+							}
+						} else if (diploma.getParameterId().compareTo(
+								Long.parseLong(tempItem.getValue().toString())) == 0) {
+							if (getManagedBean().getSelectedShareHolder()
+									.isClerical()
+									|| getManagedBean()
+											.getSelectedShareHolder()
+											.isSemiProf()) {
+								finalList.add(tempItem);
+							}
+						}else{
+							finalList.add(tempItem);
+						}
+					}
+				}
+			}
+
+		}
+		return finalList;
+	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
 	// String appNo = getManagedBean().getSmAppl().getApplNo();

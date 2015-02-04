@@ -851,7 +851,7 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
 						value="#{backingBean.managedBean.selectedStaffAcademic.qualificationLevelId}">
-						<f:selectItems value="#{backingBean.getDropdownValues('QL')}" />
+						<f:selectItems value="#{backingBean.getAcademicQualifications()}" />
 					</p:selectOneMenu> <p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
 						showSummary="true" showDetail="false" display="icon" /></td>
 				<td style="width: 20px"><p:graphicImage id="uidti"
