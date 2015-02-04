@@ -108,7 +108,7 @@
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and specificationBackingBean.managedBean.techStandaraChecklist }">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null}">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 					</ui:fragment>
@@ -197,7 +197,7 @@
 
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null  and specificationBackingBean.managedBean.techStandaraChecklist}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null  and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null}">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
 					</ui:fragment>
@@ -315,6 +315,9 @@
 				process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2techProposal, specificationBackingBean.managedBean.markDeletedTechChecklist)}"
 				update="stageTwotechProposal">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.techStandaraChecklist}"
+					value="#{true}" />
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
