@@ -99,7 +99,7 @@ public class SupplierUserActivationBackingBean extends
 		//log.info("hash supplier id: " + SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())));
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivate(personnel, supplierProfile.getSupplierId())) {
+		if(personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivatedOrTerminates(personnel, supplierProfile.getSupplierId())) {
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
 				
 				long applDateInMilis = personnel.getCreatedDate().getTime();
@@ -369,8 +369,8 @@ public class SupplierUserActivationBackingBean extends
 
 	// syazwan: added to validate if pending activation personnel already
 	// deactivate/terminate in latest approved personnel
-	private boolean isPersonnelAlreadyDeactivate(SmPersonnel smPersonnel,
-			Long supplierId) {
+	private boolean isPersonnelAlreadyDeactivatedOrTerminates(
+			SmPersonnel smPersonnel, Long supplierId) {
 		boolean isAlreadyDeactivate = false;
 		try {
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
