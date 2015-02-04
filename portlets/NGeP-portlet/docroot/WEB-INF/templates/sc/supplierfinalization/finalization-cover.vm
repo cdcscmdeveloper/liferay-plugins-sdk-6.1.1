@@ -70,10 +70,10 @@
 			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
 			<table class="table2" width='100%'>
 				<tr>
-					<td>Bil. Mesyuarat</td>
-					<td>Tempat</td>
-					<td>Tarikh</td>
-					<td>Masa</td>
+					<td bgcolor="#eee">Bil. Mesyuarat</td>
+					<td bgcolor="#eee">Tempat</td>
+					<td bgcolor="#eee">Tarikh</td>
+					<td bgcolor="#eee">Masa</td>
 				</tr>
 				#set( $count = 1 )
 				#foreach( $meetingDtls in $scQtMeetings )
