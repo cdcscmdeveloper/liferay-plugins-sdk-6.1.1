@@ -8,7 +8,7 @@
 
 
 	<p:panel header="#{lbl['lbl.qt.nb.searchCriteria']}" id="nbpanel">
-		
+
 		<ac:lovPopup />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -66,15 +66,15 @@
 						<p:commandLink update="publishdtl"
 							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','today')}"
 							process="@this" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							oncomplete="blockWidget.hide();">
 							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
 								style="padding-right:15px;padding-bottom:10px; font-size:12px" />
 						</p:commandLink>
 
 						<p:commandLink update="publishdtl"
 							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','today')}"
-							rendered="#{noticeBoardBackingBean.managedBean.pubToday}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							rendered="#{noticeBoardBackingBean.managedBean.pubToday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<p:graphicImage library="ep/images/design" name="reset.png"
 								value="/resources/ep/images/design/reset.png" />
 						</p:commandLink>
@@ -83,16 +83,16 @@
 					<p:column
 						rendered="#{!noticeBoardBackingBean.managedBean.pubToday}">
 						<p:commandLink update="publishdtl"
-							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							actionListener="#{noticeBoardBackingBean.hideFields('PUBLISHDETAILS','null')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
 								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 						</p:commandLink>
 
 						<p:commandLink update="publishdtl"
 							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','null')}"
-							rendered="#{noticeBoardBackingBean.managedBean.pubYesterday}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							rendered="#{noticeBoardBackingBean.managedBean.pubYesterday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<p:graphicImage library="ep/images/design" name="reset.png"
 								value="/resources/ep/images/design/reset.png" />
 						</p:commandLink>
@@ -103,7 +103,7 @@
 			<h:panelGrid id="rangePubDatePG" columns="2" border="0"
 				cellpadding="0" cellspacing="0" width="100%"
 				columnClasses="nbColumnHeight"
-				rendered="#{!noticeBoardBackingBean.managedBean.pubShow}" >
+				rendered="#{!noticeBoardBackingBean.managedBean.pubShow}">
 
 				<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
 					style="padding-right:5px;" />
@@ -153,8 +153,10 @@
 				update="locations"></p:ajax>
 			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
 				<h:panelGroup id="resetBtn" styleClass="resetBtnCLS">
+
+
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
-						style="float:right;width:25px"
+						style="float:right;width:80px"
 						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
 						update="locations,@(.resetBtnCLS)"
 						actionListener="#{noticeBoardBackingBean.clearTreeNode('location')}">
@@ -222,16 +224,16 @@
 					<p:column
 						rendered="#{!noticeBoardBackingBean.managedBean.breifYesterday}">
 						<p:commandLink update="briefingdtls"
-							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','today')}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','today')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
 								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 						</p:commandLink>
 
 						<p:commandLink update="briefingdtls"
 							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','today')}"
-							rendered="#{noticeBoardBackingBean.managedBean.breifToday}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							rendered="#{noticeBoardBackingBean.managedBean.breifToday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<p:graphicImage library="ep/images/design" name="reset.png"
 								value="/resources/ep/images/design/reset.png" />
 						</p:commandLink>
@@ -240,16 +242,16 @@
 					<p:column
 						rendered="#{!noticeBoardBackingBean.managedBean.breifToday}">
 						<p:commandLink update="briefingdtls"
-							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','null')}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							actionListener="#{noticeBoardBackingBean.hideFields('BRIEFINGDETAILS','null')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
 								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 						</p:commandLink>
 
 						<p:commandLink update="briefingdtls"
 							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','null')}"
-							rendered="#{noticeBoardBackingBean.managedBean.breifYesterday}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							rendered="#{noticeBoardBackingBean.managedBean.breifYesterday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<p:graphicImage library="ep/images/design" name="reset.png"
 								value="/resources/ep/images/design/reset.png" />
 						</p:commandLink>
@@ -290,16 +292,16 @@
 					<p:column
 						rendered="#{!noticeBoardBackingBean.managedBean.svYesterday}">
 						<p:commandLink update="sitevisitdtls"
-							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','today')}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','today')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<h:outputText value="#{lbl['lbl.sc.notice.board.today']}"
 								style="padding-right:15px;margin-bottom:20px;font-size:12px" />
 						</p:commandLink>
 
 						<p:commandLink update="sitevisitdtls"
 							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','today')}"
-							rendered="#{noticeBoardBackingBean.managedBean.svToday}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							rendered="#{noticeBoardBackingBean.managedBean.svToday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<p:graphicImage library="ep/images/design" name="reset.png"
 								value="/resources/ep/images/design/reset.png" />
 						</p:commandLink>
@@ -308,16 +310,16 @@
 
 					<p:column rendered="#{!noticeBoardBackingBean.managedBean.svToday}">
 						<p:commandLink update="sitevisitdtls"
-							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','null')}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							actionListener="#{noticeBoardBackingBean.hideFields('SITEVISITDETAILS','null')}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<h:outputText value="#{lbl['lbl.sc.notice.board.yesterday']}"
 								style="padding-right:15px;padding-bottom:10px;font-size:12px" />
 						</p:commandLink>
 
 						<p:commandLink update="sitevisitdtls"
 							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','null')}"
-							rendered="#{!noticeBoardBackingBean.managedBean.svToday and noticeBoardBackingBean.managedBean.svYesterday}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();">
+							rendered="#{!noticeBoardBackingBean.managedBean.svToday and noticeBoardBackingBean.managedBean.svYesterday}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 							<p:graphicImage library="ep/images/design" name="reset.png"
 								value="/resources/ep/images/design/reset.png" />
 						</p:commandLink>
@@ -383,9 +385,8 @@
 						action="#{noticeBoardBackingBean.searchNoticeBoard}"
 						update="@(.nbsrhresultsStyleClass)" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();">
-					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
-						icon="ui-icon-reset" update="nbpanel" process="@this"
-						action="#{noticeBoardBackingBean.reset}">
+					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}" update="nbpanel"
+						process="@this" action="#{noticeBoardBackingBean.reset}">
 					</p:commandButton></td>
 			</tr>
 		</table>
