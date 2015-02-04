@@ -118,10 +118,24 @@
 								<ui:include
 									src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
 							</c:if>
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-								<ui:include
-									src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-							</c:if>
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+										<ui:include
+											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 10}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+								</c:when>
+								<c:otherwise>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
 						</c:otherwise>
@@ -169,10 +183,24 @@
 								<ui:include
 									src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
 							</c:if>
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
-								<ui:include
-									src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-							</c:if>
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+										<ui:include
+											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+								</c:when>
+								<c:otherwise>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
 						</c:otherwise>
