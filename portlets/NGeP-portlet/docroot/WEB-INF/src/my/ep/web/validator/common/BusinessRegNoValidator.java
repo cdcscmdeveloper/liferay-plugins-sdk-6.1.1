@@ -21,6 +21,8 @@ public class BusinessRegNoValidator implements Validator {
 	private static List<String> robList = Arrays.asList("C", "F");
 	private static List<String> rocList = Arrays.asList("I", "J");
 	private static List<String> llpList = Arrays.asList("B");
+	private static List<String> llpLastThreeList = Arrays.asList("LGN", "FGN",
+			"LCS", "FCS", "LLW", "FLW", "LCA", "FCA");
 
 	@Override
 	public void validate(FacesContext context, UIComponent component,
@@ -99,7 +101,8 @@ public class BusinessRegNoValidator implements Validator {
 					throwErrorMsg("lbl.sm.businessregno.notvalid.firstthree.llp");
 				} else {
 					if (StringUtils.isBlank(splitLlp2)
-							|| splitLlp2.length() != 3) {
+							|| splitLlp2.length() != 3
+							|| !llpLastThreeList.contains(splitLlp2)) {
 						throwErrorMsg("lbl.sm.businessregno.afterdash.llp");
 					}
 				}
