@@ -7057,7 +7057,7 @@ public class SpecificationBackingBean extends
 
 			List<PmDocument> selectList = this.getManagedBean()
 					.getStageTwoTechComplianceSelect();
-
+			this.getManagedBean().setTechStandaraChecklist(false);
 			if (null == selectList || selectList.isEmpty()) {
 				throw new EpException(MessageConst.ERROR_760147);
 			}
@@ -7176,7 +7176,7 @@ public class SpecificationBackingBean extends
 
 			List<PmDocument> selectList = this.getManagedBean()
 					.getStageTwoFinComplianceSelect();
-
+			this.getManagedBean().setFinStandaraChecklist(false);
 			if (compilance == null) {
 				compilance = new ArrayList<ScQtCheckList>();
 			}
