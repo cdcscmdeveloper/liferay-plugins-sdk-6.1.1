@@ -67,6 +67,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private ScPIZone scPIZone = new ScPIZone(); 
 	private	ScRequestNote	requestNote;
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
+    
+    private String action;
 	
 	public Map<String, TplSpecZoneDtl> getZoneDtlMap() {
 		return zoneDtlMap;
@@ -471,5 +473,12 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setRequestNote(ScRequestNote requestNote) {
 		this.requestNote = requestNote;
 	}
-	
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
 }
