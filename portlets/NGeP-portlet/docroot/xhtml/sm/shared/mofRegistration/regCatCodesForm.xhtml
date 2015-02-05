@@ -93,7 +93,7 @@
 					<p:row>
 						<p:column style="width:2%"
 							rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}"
-							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate}" />
 						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width : 2%;"
 							disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
@@ -126,7 +126,7 @@
 				</p:columnGroup>
 				<p:column selectionMode="multiple" style="width:2%"
 					rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}"
-					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+					disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate}" />
 				<p:column style="width : 2%;">
 					<p:outputLabel value="#{index + 1}"
 						style="float: left;white-space: normal;" />
@@ -148,8 +148,18 @@
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
 						value="#{catBean.otherDesc}"
 						rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
-						<p:ajax event="blur" process="@this" partialSubmit="true"></p:ajax>
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
+							update=":form:tt:catCodeInfPan" />
 					</p:inputTextarea>
+					<p:graphicImage id="prevOtherDesc" library="ep/images/design"
+						name="icon_alert.png" style="padding-left : 3px;"
+						rendered="#{not empty catBean.approvedDate and catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and not empty catBean.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
+					<p:tooltip for="prevOtherDesc">
+						<p:inputTextarea readonly="true" disabled="true" rows="5"
+							cols="20"
+							value="#{lbl['lbl.sm.catCodes.prevDesc']} #{catBean.prevOtherDesc}" />
+					</p:tooltip>
 					<p:message for="otherDesc" showDetail="false" showSummary="true"
 						display="icon" />
 				</p:column>
@@ -450,7 +460,19 @@
 					<p:inputTextarea id="otherDescR" maxlength="100"
 						label="#{lbl['lbl.sm.catCodes.othDesc']}"
 						value="#{catBeanR.otherDesc}"
-						rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}" />
+						rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}">
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
+							update=":form:tt:catCodeInfPan" />
+					</p:inputTextarea>
+					<p:graphicImage id="prevOtherDescR" library="ep/images/design"
+						name="icon_alert.png" style="padding-left : 3px;"
+						rendered="#{not empty catBeanR.approvedDate and catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and not empty catBeanR.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
+					<p:tooltip for="prevOtherDesc">
+						<p:inputTextarea readonly="true" disabled="true" rows="5"
+							cols="20"
+							value="#{lbl['lbl.sm.catCodes.prevDesc']} #{catBeanR.prevOtherDesc}" />
+					</p:tooltip>
 					<p:message for="otherDescR" showDetail="false" showSummary="true"
 						display="icon" />
 				</p:column>

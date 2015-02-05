@@ -1864,6 +1864,27 @@ public class SmApplicationBackingBean extends
 		category.setApprovedDate(new Date());
 	}
 
+	public void assignCategoryReApprovalOnOtherDescChange(SmSupplierCategory cat) {
+		if (getManagedBean().isSupplierUser()) {
+			System.out
+					.println("**** This is changed data for the other desc ***** ");
+			if (StringUtils.isNotEmpty(cat.getOtherDesc())
+					&& cat.getApprovedDate() != null) {
+				if (!cat.getOtherDesc().trim()
+						.equalsIgnoreCase(cat.getPrevOtherDesc().trim())) {
+					cat.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+					cat.setPoDecFlg(null);
+					cat.setApprvrDecFlg(null);
+				} else {
+					cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
+					cat.setPoDecFlg(cat.getPrevPoDecFlg());
+					cat.setApprvrDecFlg(cat.getPrevApprDecFlg());
+				}
+
+			}
+		}
+	}
+
 	/**
 	 * Ajax call to set the application category selected.
 	 * 
@@ -8183,9 +8204,10 @@ public class SmApplicationBackingBean extends
 					.getDeleteNewApplCategoryList().iterator();
 			while (iterator.hasNext()) {
 				SmSupplierCategory cat = iterator.next();
-				if (cat.getRecordStatusFlg() != null
-						&& cat.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				if ((cat.getRecordStatusFlg() != null && cat
+						.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
+						|| (cat.getApprovedDate() != null)) {
 					iterator.remove();
 				}
 			}
