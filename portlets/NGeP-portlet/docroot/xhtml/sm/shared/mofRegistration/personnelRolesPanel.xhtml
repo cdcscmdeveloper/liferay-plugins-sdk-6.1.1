@@ -60,7 +60,11 @@
 									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" /></td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
-											value="#{backingBean.managedBean.selectedShareHolder.clerical}" /></td>
+											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
+											<p:ajax event="change" update=":form:tt:shrRolesPanel"
+												process=":form:tt:shrRolesPanel" partialSubmit="true" />
+										</p:selectBooleanCheckbox>
+									</td>
 									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.stf']}" /></td>
 								</tr>
 							</c:if>
@@ -139,7 +143,11 @@
 											value="#{lbl['lbl.sm.professional.semi']}" /></td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
-											value="#{backingBean.managedBean.selectedShareHolder.clerical}" /></td>
+											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
+										<p:ajax event="change" update=":form:tt:shrRolesPanel"
+												process=":form:tt:shrRolesPanel" partialSubmit="true" />
+										</p:selectBooleanCheckbox>
+									</td>
 									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" /></td>
 								</tr>
 							</c:if>
