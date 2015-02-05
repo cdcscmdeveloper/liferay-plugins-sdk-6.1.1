@@ -8572,7 +8572,11 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder() != null
 				&& StringUtils.isNotBlank(suppType) && suppType.equals("J")) {
 			if (getManagedBean().getCertificate() != null
-					&& getManagedBean().getDiploma() != null) {
+					&& getManagedBean().getDiploma() != null
+					&& (getManagedBean().getSelectedShareHolder().isProf()
+							|| getManagedBean().getSelectedShareHolder()
+									.isSemiProf() || getManagedBean()
+							.getSelectedShareHolder().isClerical())) {
 				finalList = new ArrayList<SelectItem>();
 				for (SelectItem tempItem : getManagedBean()
 						.getAcadQualifications()) {
