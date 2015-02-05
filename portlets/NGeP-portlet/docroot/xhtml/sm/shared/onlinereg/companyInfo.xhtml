@@ -76,6 +76,7 @@
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
 						size="40" label="#{lbl['lbl.sm.businessregno']}" >
+						<p:ajax event="blur" update="pnlCompInfo" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
 						<f:validator validatorId="busRegNoValidator" />
 						</p:inputText>
 					&#160;
