@@ -111,6 +111,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, Object> bizNatureL5Map;
 	private static Map<Long, Object> identityType;
 	private static Map<Long, PmCertBody> profCertBodyMap;
+	private static List<String> sabahSarawakList = Arrays.asList("D", "E", "G",
+			"H");
 
 	public RegistrationBackingBean() {
 //		if (MDC.get(LogKey.USER_ID) == null) {
@@ -1571,39 +1573,77 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		String retVal = "";
 		SelectItem[] pmBusinessTypeItems = pmBusinessTypeDropDown();
 		List<SelectItem> businessTypeItems = new ArrayList<SelectItem>();
-		if (StringUtils.isNotBlank(businessType) && pmBusinessTypeItems!=null && pmBusinessTypeItems.length>0) {
-				businessTypeItems = Arrays.asList(pmBusinessTypeItems);
-				for (SelectItem item : businessTypeItems) {
-					if (businessType.equals(item.getValue())) {
-						retVal = item.getLabel();
-						break;
-					}
+		if (StringUtils.isNotBlank(businessType) && pmBusinessTypeItems != null
+				&& pmBusinessTypeItems.length > 0) {
+			businessTypeItems = Arrays.asList(pmBusinessTypeItems);
+			for (SelectItem item : businessTypeItems) {
+				if (businessType.equals(item.getValue())) {
+					retVal = item.getLabel();
+					break;
 				}
+			}
 		}
 		return retVal;
 	}
 	
-	public String getBusinessNatureSection(SmSupplierBusiness suppBusinessNat){
+	public String getBusinessNatureSection(SmSupplierBusiness suppBusinessNat) {
 		String sectionLvl1Code = "";
 		PmBusinessNature pmBizNat = suppBusinessNat.getPmBusinessNature();
 		PmBusinessNature pmBizObjL4 = null;
-		if(pmBizNat!=null && pmBizNat.getParentBusinessNature()!=null && pmBizNat.getParentBusinessNature().getBusinessNatureId()!=null){
-			pmBizObjL4 = SmCommonUtil.retrieveBusinessNatureById(pmBizNat.getParentBusinessNature().getBusinessNatureId());
+		if (pmBizNat != null
+				&& pmBizNat.getParentBusinessNature() != null
+				&& pmBizNat.getParentBusinessNature().getBusinessNatureId() != null) {
+			pmBizObjL4 = SmCommonUtil.retrieveBusinessNatureById(pmBizNat
+					.getParentBusinessNature().getBusinessNatureId());
 		}
 		PmBusinessNature pmBizObjL3 = null;
-		if(pmBizObjL4!=null && pmBizObjL4.getParentBusinessNature()!=null && pmBizObjL4.getParentBusinessNature().getBusinessNatureId()!=null){
-			pmBizObjL3 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL4.getParentBusinessNature().getBusinessNatureId());
+		if (pmBizObjL4 != null
+				&& pmBizObjL4.getParentBusinessNature() != null
+				&& pmBizObjL4.getParentBusinessNature().getBusinessNatureId() != null) {
+			pmBizObjL3 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL4
+					.getParentBusinessNature().getBusinessNatureId());
 		}
 		PmBusinessNature pmBizObjL2 = null;
-		if(pmBizObjL3!=null && pmBizObjL3.getParentBusinessNature()!=null && pmBizObjL3.getParentBusinessNature().getBusinessNatureId()!=null){
-			pmBizObjL2 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL3.getParentBusinessNature().getBusinessNatureId());
+		if (pmBizObjL3 != null
+				&& pmBizObjL3.getParentBusinessNature() != null
+				&& pmBizObjL3.getParentBusinessNature().getBusinessNatureId() != null) {
+			pmBizObjL2 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL3
+					.getParentBusinessNature().getBusinessNatureId());
 		}
 		PmBusinessNature pmBizObjL1 = null;
-		if(pmBizObjL2!=null && pmBizObjL2.getParentBusinessNature()!=null && pmBizObjL2.getParentBusinessNature().getBusinessNatureId()!=null){
-			pmBizObjL1 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL2.getParentBusinessNature().getBusinessNatureId());
+		if (pmBizObjL2 != null
+				&& pmBizObjL2.getParentBusinessNature() != null
+				&& pmBizObjL2.getParentBusinessNature().getBusinessNatureId() != null) {
+			pmBizObjL1 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL2
+					.getParentBusinessNature().getBusinessNatureId());
 		}
-		sectionLvl1Code =  pmBizObjL1==null?"":pmBizObjL1.getLevelCode();
+		sectionLvl1Code = pmBizObjL1 == null ? "" : pmBizObjL1.getLevelCode();
 		return sectionLvl1Code;
+	}
+
+	public void removeRegNoWhiteSpace() {
+		if (getManagedBean().getSmSupp() != null
+				&& getManagedBean().getSmSupp().getBusinessType() != null
+				&& StringUtils.isNotBlank(getManagedBean().getSmSupp()
+						.getBusinessType())
+				&& getManagedBean().getSmSupp().getRegNo() != null
+				&& StringUtils.isNotBlank(getManagedBean().getSmSupp()
+						.getRegNo())) {
+			String bussType = getManagedBean().getSmSupp().getBusinessType();
+			if (sabahSarawakList.contains(bussType)) {
+				getManagedBean().getSmSupp().setRegNo(
+						StringUtils.deleteWhitespace(getManagedBean()
+								.getSmSupp().getRegNo()));
+			} else if (getManagedBean().getSmSupp().getRegNo().equals("M")) {
+				getManagedBean().getSmSupp().setRegNo(
+						StringUtils.deleteWhitespace(getManagedBean()
+								.getSmSupp().getRegNo()));
+			} else if (getManagedBean().getSmSupp().getRegNo().equals("N")) {
+				getManagedBean().getSmSupp().setRegNo(
+						StringUtils.deleteWhitespace(getManagedBean()
+								.getSmSupp().getRegNo()));
+			}
+		}
 	}
 }
 
