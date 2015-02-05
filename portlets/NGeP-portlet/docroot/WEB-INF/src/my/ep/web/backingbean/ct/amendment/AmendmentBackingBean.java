@@ -3918,18 +3918,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		try{
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			Long contractSignerId = getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId();
-		   	UserReqDTO reqDTO = new UserReqDTO();
-		   	reqDTO.setUserId(contractSignerId);
-		   	
-		   	UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
-		   	PmUser pmUser = resDTO.getPmUser();
-		   	if(pmUser != null){
-		   		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractSigner(pmUser);
-		   	}
-			
-			} catch (Exception e) {
-		 	   e.printStackTrace();
-		 	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			if(contractSignerId !=null){
+			   	UserReqDTO reqDTO = new UserReqDTO();
+			   	reqDTO.setUserId(contractSignerId);			   	
+			   	UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+			   	PmUser pmUser = resDTO.getPmUser();
+			   	if(pmUser != null){
+			   		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractSigner(pmUser);
+			   	}
 			}
+		} catch (Exception e) {
+		 	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
 	}
 }
