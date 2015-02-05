@@ -30,7 +30,7 @@ public class PhisBatchPmOutboundJob implements Job {
        PhisIntegration phisIntegration = new PhisIntegration();       
        phisIntegration.votFund();
        phisIntegration.votFundDana();
-     //  cmIntegration.glAccount();
+     //  phisIntegration.glAccount();
        phisIntegration.programActivity();
        phisIntegration.project();
 		

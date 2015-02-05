@@ -4,7 +4,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:panel styleClass="sampleDetails" >
+	<p:panel >
 
 		<p:dataTable id="deliveryAddressId"
 			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres"
@@ -12,7 +12,7 @@
 			<ac:paginator for="deliveryAddressId" />
 			<p:column selectionMode="multiple"
 				 style="width:2%" />
-			<p:column headerText="#{lbl['lbl.pm.address.address']}">
+			<!-- <p:column headerText="#{lbl['lbl.pm.address.address']}">
 				<h:outputText value="#{address.pmAddress.address1}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.address.district']}"
@@ -22,6 +22,9 @@
 			<p:column headerText="#{lbl['lbl.pm.address.state']}"
 				style="width : 15%">
 				<h:outputText value="#{address.pmAddress.pmState.stateName}" />
+			</p:column> -->
+			 <p:column headerText="#{lbl['lbl.pm.address.address']}" style="white-space:normal;">
+				<h:outputText value="#{organisationBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
 				<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu styleClass="ppDropDownWidthS" 
@@ -29,7 +32,7 @@
 					value="#{address.recordStatusFlg}" required="true"
 					style="width: 135px;margin-bottom: 5px;">
 					<f:selectItems
-						value="#{financialOrgBackingBean.getStatusOptions()}" />
+						value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 
 			</p:column>
