@@ -291,9 +291,9 @@ public class ApprovalBackingBean extends
 			scQtApproval.setApproverSettings(null);
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
-				.equalsIgnoreCase(taskName) ||
-				SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
-				.equalsIgnoreCase(taskName)) {
+				.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
+						.equalsIgnoreCase(taskName)) {
 
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
 			this.getManagedBean().setApprovalType(
@@ -380,7 +380,15 @@ public class ApprovalBackingBean extends
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
 					ParameterConst.DOCTYPE_PCB_APPROVAL);
-			scQtApproval.setApproverSettings(null);
+
+		} else if (SCProcessNameConst.APPROVE_CANCELATION
+				.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.FINALIZATION_COMMITTEE_APPROVAL
+							.dispalyName());
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
+					ParameterConst.DOCTYPE_PCB_APPROVAL);
 
 		}
 
@@ -535,10 +543,10 @@ public class ApprovalBackingBean extends
 							if (SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE
 									.equalsIgnoreCase(taskName)) {
 								committeStatus
-								.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+										.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
 							} else {
 								committeStatus
-								.setStatusId(QTStatusConst.CMT_COMPLETED);	
+										.setStatusId(QTStatusConst.CMT_COMPLETED);
 							}
 						}
 						qtCommittee.getScCommittee().setCommitteStatus(
