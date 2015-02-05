@@ -1493,6 +1493,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			List<CmSupplierItem> cmSupplierItems = this.getManagedBean()
 					.getMaintainItemList();
+			List<CmSupplierItem> uploadedSupplierItems = new ArrayList<CmSupplierItem>();
 			// List<CmSupplierItem> catItems = new ArrayList<CmSupplierItem>();
 
 			Double supplierItemId = new Double(0);
@@ -1513,6 +1514,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			Row row = rowIterator.next();
 
 			String invalidDataMsg = MessageUtils.getMessage(MessageConst.ERROR_715034,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())+":\n";
+			
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 			
 			int rowNum = 1;
 			int count = 0;
@@ -1538,7 +1542,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					// CmSupplierItem catalogItem = new CmSupplierItem();
 					System.out.println("***********supplierItemId" + supplierItemId);
 					if (supplierItemId > 0) {
-						for (CmSupplierItem supplierItem : cmSupplierItems) {
+//						for (CmSupplierItem supplierItem : cmSupplierItems) {
+						for(int i = 0; i < cmSupplierItems.size(); i++) {
+							CmSupplierItem supplierItem = cmSupplierItems.get(i);
+							CatalogueReqDTO reqDTO1 = new CatalogueReqDTO();							
+							reqDTO1.setSupplierItemId(supplierItem.getSupplierItemId());
+							CatalogueResDTO resDTO1 = catalogueSO.retrieveSupplierItemById(reqDTO1);
+							supplierItem = resDTO1.getSupplierItem();
+							
 							if (supplierItem.getSupplierItemId() == supplierItemId) {
 
 								CmStandardPricing cmStandardPricing = new CmStandardPricing();
@@ -1711,14 +1722,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											leadTime));
 								}
 
+								// set prices to null when upload from excel. 
+								supplierItem.setCmPromotionPricing(null);
+								supplierItem.setCmTierPricings(null);
+								supplierItem.setCmPromotionTierPricings(null);
+								supplierItem.setzStdPrices(null);
+								supplierItem.setCmZonalPromotionPricings(null);
+								supplierItem.setCmZonalTierPricings(null);
+								supplierItem.setCmZonalPromotionTierPricings(null);
+								
+								supplierItem.setCmTariffPricings(null);
+								supplierItem.setCmZonalTariffPricings(null);
+								
+								
 								// catItems.add(catalogItem);
 
-								int existingIndex = cmSupplierItems
-										.indexOf(supplierItem);
+//								int existingIndex = cmSupplierItems
+//										.indexOf(supplierItem);
 
-								this.getManagedBean().getMaintainItemList()
-										.set(existingIndex, supplierItem);
-
+//								this.getManagedBean().getMaintainItemList()
+//										.set(existingIndex, supplierItem);
+								System.out.println("supplierItem3: " + supplierItem);
+//								cmSupplierItems.set(i, supplierItem);
+//								System.out.println("supplierItem4: " + cmSupplierItems.get(i));
+								uploadedSupplierItems.add(supplierItem);
 							}
 						}
 					}
@@ -1735,12 +1762,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// workbook.write(out);
 			// out.close();
 
-			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-			reqDTO.setSaveSupplierItems(this.getManagedBean()
-					.getMaintainItemList());
+			reqDTO.setSaveSupplierItems(uploadedSupplierItems);
 			CatalogueResDTO resDTO = catalogueSO.updateSupplierItem(reqDTO);
 
 			/*
