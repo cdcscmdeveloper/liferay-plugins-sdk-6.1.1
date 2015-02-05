@@ -36,8 +36,8 @@
 						value="#{fcaApprovalTab.approverCommittes}"
 						itemLabel="#{secretary.parameterCode}"
 						itemValue="#{secretary.parameterCode}" />
-					<p:ajax event="change" update="commTypes"
-						listener="#{qTDetailBB.retrieveFinalizationCommitteeSecretaryName}" />
+					<p:ajax event="change" update="commTypes" process="@this"
+						listener="#{qTDetailBB.retrieveFinalizationCommitteeSecretaryName}" partialSubmit="true"/>
 				</p:selectOneMenu>
 
 			</p:column>
