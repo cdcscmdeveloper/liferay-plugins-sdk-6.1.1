@@ -19,9 +19,13 @@
 				</p:selectOneRadio></td>
 		</tr>
 	</table>
-	<p:panel
-		header="#{lbl['lbl.sm.suppDoc.online.checklist.application.no']} #{backingBean.managedBean.smAppl.applNo}"
-		toggleable="true" id="onSupTblPan">
+	<p:panel toggleable="true" id="onSupTblPan">
+		<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.sm.suppDoc.online.checklist.application.no']}" />
+			<h:outputText value="#{backingBean.managedBean.smAppl.applNo}"
+				rendered="#{backingBean.managedBean.smAppl.activeAppl}" />
+		</f:facet>
 
 		<c:if
 			test="#{not empty backingBean.managedBean.bumiRecommendationNote}">
