@@ -1021,7 +1021,7 @@ public class EvaluationBackingBean extends
 					.saveOrUpdatePresentationDemoCheckList(checklistreqDTO);
 			this.getManagedBean().setScQtChecklist(
 					checkListresDTO.getCheckList());
-			if (checkListType.equalsIgnoreCase("ET")) {
+			if (null != checkListType && checkListType.equalsIgnoreCase("ET")) {
 				this.getManagedBean()
 						.getEvaluationStgTechnicalCheckList()
 						.remove(this.getManagedBean()
@@ -1031,7 +1031,8 @@ public class EvaluationBackingBean extends
 						.add(this.getManagedBean()
 								.getEvaluationCheckListIndex(),
 								this.getManagedBean().getScQtChecklist());
-			} else if (checkListType.equalsIgnoreCase("EF")) {
+			} else if (null != checkListType
+					&& checkListType.equalsIgnoreCase("EF")) {
 				this.getManagedBean()
 						.getEvaluationStgfinancialCheckList()
 						.remove(this.getManagedBean()
