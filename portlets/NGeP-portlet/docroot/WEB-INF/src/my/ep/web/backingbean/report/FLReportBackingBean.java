@@ -88,7 +88,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSupplierView(true);
 			//rptGenBean.setFlDeliveryAddressView(true);
 			rptGenBean.setFlRecievingOfficerView(true);
-			rptGenBean.setFlContractTypeView(true);
+			//rptGenBean.setFlContractTypeView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlGroupFourView(true);
@@ -100,7 +100,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlRecievingOfficerView(true);
 			rptGenBean.setFlDeliveryAddressView(true);
 			rptGenBean.setFlContractNoView(true);
-			rptGenBean.setFlContractTypeView(true);
+			//rptGenBean.setFlContractTypeView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlItemNameView(true);
 			rptGenBean.setFlItemCodeView(true);
@@ -121,7 +121,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
-			rptGenBean.setFlContractTypeView(true);
+			//rptGenBean.setFlContractTypeView(true);
 			rptGenBean.setFlGroupFiveView(true);
 			rptGenBean.setFromDateView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_MIN_NAME));		
@@ -303,7 +303,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlRecievingOfficerView(true);
 			//rptGenBean.setFlDeliveryAddressView(true);
 			rptGenBean.setFlContractNoView(true);
-			rptGenBean.setFlContractTypeView(true);
+			//rptGenBean.setFlContractTypeView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlGroupFourView(true);
 			rptGenBean.setFlPkpNoView(true);
@@ -343,7 +343,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			//rptGenBean.setFlItemNameView(true);
 			//rptGenBean.setFlItemCodeView(true);
 			//rptGenBean.setFlItemTypeView(true);
-			rptGenBean.setFlContractTypeView(true);
+			//rptGenBean.setFlContractTypeView(true);
 			rptGenBean.setFlGroupFiveView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFromDateView(true);			
