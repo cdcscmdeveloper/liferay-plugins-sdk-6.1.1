@@ -5169,10 +5169,11 @@ public class SpecificationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);
 		if (null != this.getManagedBean().getScQt()
 				&& QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 						.getManagedBean().getScQt().getEvaluationType())) {
-			recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);
+
 			recommendList
 					.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
 		}
