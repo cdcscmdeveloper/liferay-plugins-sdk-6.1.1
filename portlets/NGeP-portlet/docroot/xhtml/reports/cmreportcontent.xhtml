@@ -70,9 +70,9 @@
 								  <p:outputLabel value="" style="margin-top:5px;width:160px;" />
 									<p:outputLabel value="" style="margin-top:5px;width:290px;" />
 								  </c:if>
-								   <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.extension']}" style="margin-top:5px;width:160px;" />			
-									<p:selectOneMenu value="#{reportBackingBean.cmExtention}" style="margin-top:5px;width:300px;">
+								   <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionCodeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.extCode']}" style="margin-top:5px;width:160px;" />			
+									<p:selectOneMenu value="#{reportBackingBean.cmExtentionCode}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.extType']}" itemValue="#{lbl['lbl.rpt.extType']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.extBrand']}" itemValue="#{lbl['lbl.rpt.extBrand']}"></f:selectItem>		
@@ -101,7 +101,7 @@
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmGroupOneView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.cmGroupOne}" style="margin-top:5px;width:300px;">
-									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmtype']}" itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.unspsccode']}" itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>																			
 									</p:selectOneMenu>
@@ -140,6 +140,9 @@
 									</c:if> 					  
 							    </h:panelGrid>							    
 						    </td>
+						  </tr>
+						  <tr>
+						    
 						  </tr>
 					</table>
 		</div>			
