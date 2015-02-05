@@ -64,7 +64,7 @@
 		
 	</p:panel>
 	
-	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500">
+	<p:panel id="cancelCircularPnl" header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" rowIndexVar="index" 
 			value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{panelBackingBean.managedBean.selectedCancelCirculars}" >
