@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.userprofilemaintenance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -86,12 +87,16 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private Long myCountryId;
 	private String token;
 	private boolean deactivatePersonnel;
+	private Date currDate;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
 		if(myCountryId==null){
 			myCountryId = SmCommonUtil.getMyCountryId();
+		}
+		if(currDate==null){
+			currDate = new Date();
 		}
 	}
 
@@ -598,6 +603,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setDeactivatePersonnel(boolean deactivatePersonnel) {
 		this.deactivatePersonnel = deactivatePersonnel;
+	}
+
+	public Date getCurrDate() {
+		return currDate;
+	}
+
+	public void setCurrDate(Date currDate) {
+		this.currDate = currDate;
 	}
 
 }
