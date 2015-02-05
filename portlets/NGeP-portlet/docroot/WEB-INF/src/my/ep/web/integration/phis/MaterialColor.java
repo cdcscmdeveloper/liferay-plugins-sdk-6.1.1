@@ -45,7 +45,7 @@ public class MaterialColor {
 	
 	@Override
 	public boolean equals(Object obj) {
-	    if(obj instanceof MaterialClass)
+	    if(obj instanceof MaterialColor)
 	    {
 	    	MaterialColor temp = (MaterialColor) obj;
 	        if(this.materialColorCode.equalsIgnoreCase(temp.materialColorCode) && this.materialColorDescription.equalsIgnoreCase(temp.materialColorDescription))
