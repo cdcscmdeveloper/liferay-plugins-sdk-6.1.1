@@ -12147,7 +12147,7 @@ public class SpecificationBackingBean extends
 							.get(i);
 					financialCheckList.setDeleted(true);
 					toBeRemoveCheckLists.add(financialCheckList);
-					financialCheckLIsts.remove(financialCheckLIsts.get(i));
+					financialCheckLIsts.remove(financialCheckList);
 				}
 			}
 
