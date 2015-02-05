@@ -10,7 +10,7 @@
 			value="#{organisationBackingBean.managedBean.addressTypesList}" widgetVar="deliveryAddres"
 			var="address" rowIndexVar="index" rowKey="#{address}" selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
 			<ac:paginator for="deliveryAddressId" />
-			<p:column selectionMode="multiple"
+			<p:column selectionMode="multiple" disabledSelection="#{!address.brandNew}"
 				 style="width:2%" />
 			<!-- <p:column headerText="#{lbl['lbl.pm.address.address']}">
 				<h:outputText value="#{address.pmAddress.address1}" />
