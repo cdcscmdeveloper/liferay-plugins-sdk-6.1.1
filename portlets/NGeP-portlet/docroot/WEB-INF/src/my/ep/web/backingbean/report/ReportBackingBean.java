@@ -65,6 +65,7 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
@@ -84,8 +85,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	private String moduleValue;
 	private String reportName;
+	private String reportValue;
 	private ScQt scqt;
-	List<SelectItem> reportList;
+	private List<SelectItem> reportList=new ArrayList<SelectItem>();
 	private List<SelectItem> moduleList;
 	private List<SelectItem> regTypeList;
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();	
@@ -120,6 +122,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	CTReportBackingBean ctReportBackingBean;	
 	
 	
+	public String getReportValue() {
+		return reportValue;
+	}
+	public void setReportValue(String reportValue) {
+		this.reportValue = reportValue;
+	}
 	public String getReportName() {
 		return reportName;
 	}
@@ -1639,12 +1647,19 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Retrieve module list 
 	 */
 	public List<SelectItem> retriveModuleList() {
-		moduleList = new ArrayList<SelectItem>();
+		/*moduleList = new ArrayList<SelectItem>();
 		reportList=new ArrayList<SelectItem>();	
 		SelectItem selectItem= new SelectItem();
-		retriveReportListBymoduleName();
-		/*getManagedBean().setReportName(null);
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		getManagedBean().setReportValue(null);
+		rptGenBean = new ReportsGenerateBean();	
+		//retriveReportListBymoduleName();
+		getManagedBean().setReportName(null);
 		getManagedBean().setReportValue(null);*/
+		//rptGenBean = new ReportsGenerateBean();
+		//getManagedBean().setRptGenBean(rptGenBean);
+		moduleList = new ArrayList<SelectItem>();		
+		SelectItem selectItem= new SelectItem();
 		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SC_TTL));
 		selectItem.setValue(ReportConst.SC_MOD_VAL);
 		moduleList.add(selectItem);			
@@ -1666,6 +1681,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		moduleList.add(selectItem4);
 		//checkVariableValueExist();
 		return moduleList;
+	}
+	public void preRenderView() {
+		rptGenBean = new ReportsGenerateBean();
+		getManagedBean().setRptGenBean(rptGenBean);
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		getManagedBean().setReportValue(null);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, ReportConst.REPORT_PAGE);
 	}
 	/*
 	 *Retrieve report list by module 
@@ -1852,7 +1876,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		districtLst = new ArrayList<SelectItem>();
 		levOneCatLst = new ArrayList<SelectItem>();
 		levTwoCatLst = new ArrayList<SelectItem>();
-		levThreeCatLst = new ArrayList<SelectItem>();		
+		levThreeCatLst = new ArrayList<SelectItem>();
+		getManagedBean().setReportValue(this.getReportValue());
 		if((this.getModuleValue())!=null && (getManagedBean().getReportValue())!=null){
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 			PMReportReqDTO reqDTO = new PMReportReqDTO();
@@ -2922,6 +2947,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void resetReportForm(){		
 		//retriveModuleList();			
 		//retriveReportListBymoduleName();
+		//getManagedBean().setReportValue(null);
+		//this.setModuleValue(null);
 		this.setFromDate(null);
 		this.setToDate(null);	
 		this.setScQuotationId(null);

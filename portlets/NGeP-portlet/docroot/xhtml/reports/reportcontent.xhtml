@@ -25,9 +25,9 @@
 								 partialSubmit="true"  update="@all"/>
 							</p:selectOneMenu>
 							<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" style="margin-bottom:5px;width:160px;"/>
-							<p:selectOneMenu value="#{reportBackingBean.managedBean.reportValue}" style="margin-bottom:5px;width:300px;">
+							<p:selectOneMenu value="#{reportBackingBean.reportValue}" style="margin-bottom:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-								<f:selectItems value="#{reportBackingBean.managedBean.reportList}"></f:selectItems>
+								<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
 								<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}" process="@this"
 					 			partialSubmit="true" update="@all"/>
 							</p:selectOneMenu>
