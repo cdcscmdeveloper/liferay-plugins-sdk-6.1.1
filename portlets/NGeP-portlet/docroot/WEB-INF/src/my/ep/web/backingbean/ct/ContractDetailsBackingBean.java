@@ -835,7 +835,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				
 					} else if(contractVer.getCtContract().getLoa().getBondAmt() != null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-						int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue() +bondAmendAmount);
+						
+						int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
+						if(bondAmendAmount!=0) {
+							retval = Double.compare(bondAmount , bondAmendAmount);
+						}
 						if( retval >0 ){
 							throw new EpException(MessageConst.ERROR_750015);
 						}
