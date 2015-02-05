@@ -724,19 +724,16 @@ public class OrganisationBackingBean extends
 		
 		// PTJ
 		if (parameterResDTO.getPmParameter().getParameterCode()
-				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {
-			/*getManagedBean().getAddressTypesList().addAll(orgProfile.getPmAddressTypes());
-			getManagedBean().setDeliveryAddressList(getManagedBean().getAddressTypesList());
-			
-			orgProfile.setPmAddressTypes(getManagedBean().getDeliveryAddressList());*/
-			/*for(PmAddressType addressType:getManagedBean().getOrgProfile().getPmAddressTypes()){
-				if(addressType.getAddressType().equals(AddressType.BILLING_ADDRESS)){
+				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {		
+			for(PmAddressType addressType:getManagedBean().getOrgProfile().getPmAddressTypes()){
+				
+				if(addressType.getAddressType().equals(AddressType.BILLING_ADDRESS.value())&&(addressType.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE))){
+					
 					getManagedBean().getAddressTypesList().add(addressType);
 				}				
-			}*/
+			}
 			
-			//List<PmAddressType> addressTypeList = new ArrayList<PmAddressType>();
-			getManagedBean().getAddressTypesList().addAll(getManagedBean().getOrgProfile().getPmAddressTypes());
+			//getManagedBean().getAddressTypesList().addAll(getManagedBean().getOrgProfile().getPmAddressTypes());
 			
 			orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			
