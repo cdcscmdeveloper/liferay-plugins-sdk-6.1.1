@@ -3172,7 +3172,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					SmSupplier shortListedSupplier = evalResultDtl.getQtEvaluationResult().getScQtProposal().
 							getScQtSupplier().getSmSupplier();
 					ScQtProposalItem proposalItem = evalResultDtl.getQtEvaluationResult().getScQtProposalItem();
-					if ((currentSupplier.getSupplierId()).equals(
+					if (proposalItem != null && 
+							(currentSupplier.getSupplierId()).equals(
 							shortListedSupplier.getSupplierId())) {
 						ScRequestItem requestItem = recommendDtl.getScQtRecommend().getRequestItem();
 						BigDecimal offeredPrice = TemplateSpecHelper.getInstance().calcTotalAmount(requestItem.getTplSpecQuestion(), 
@@ -3231,9 +3232,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 													shortlistedItemSupplierList) {
 						ScQtProposalItem proposalItem = evalResultDtl.getQtEvaluationResult().getScQtProposalItem();
 						ScRequestItem requestItem = scQtRecommend.getRequestItem();
-						BigDecimal offeredPrice = TemplateSpecHelper.getInstance().calcTotalAmount(requestItem.getTplSpecQuestion(), 
-														new BigDecimal(proposalItem.getOfferPrice()), requestItem.getQuantity());
-						evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
+						if (proposalItem != null) {
+							BigDecimal offeredPrice = TemplateSpecHelper.getInstance().calcTotalAmount(requestItem.getTplSpecQuestion(), 
+															new BigDecimal(proposalItem.getOfferPrice()), requestItem.getQuantity());
+							evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
+						}
 					}
 				}
 			}
