@@ -271,6 +271,7 @@ public class FinancialOrgBackingBean extends
 		List<PmAddressType> finAddressTypes = this.getManagedBean().getFinancialOrg().getPmAddressTypes();
 
 		boolean addrExist = false;
+		boolean contactExist = false;
 	
 		if (finAddressTypes != null && !finAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : finAddressTypes) {
@@ -283,8 +284,15 @@ public class FinancialOrgBackingBean extends
 				// financial contact
 				if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					this.getManagedBean().setContactPerson(pmAddressType.getPmContacts().get(0));
-				}else{
-					this.getManagedBean().setContactPerson(getManagedBean().getContactPerson());
+					contactExist= true;
+				}else{ 
+					log.info("Contact not Exist");
+					List<PmContact> contactLst = new ArrayList<PmContact>();
+					getManagedBean().setContactPerson(new PmContact());
+					PmContact contact = getManagedBean().getContactPerson();					
+					contact.setPmAddressType(pmAddressType);
+					contactLst.add(contact);
+					pmAddressType.setPmContacts(contactLst);
 				}
 			}
 		}
@@ -998,7 +1006,7 @@ public class FinancialOrgBackingBean extends
 			for (PmFinancialSvc financialSvc : selectedFinancialSvcList) {
 				cashOnHandList.remove(financialSvc);
 				if(getManagedBean().getServiceTypes()!=null){
-					getManagedBean().getServiceTypes().remove(financialSvc.getServiceTypeCode().getParameterCode());
+						getManagedBean().getServiceTypes().remove(financialSvc.getServiceTypeCode().getParameterCode());
 				}
 			}
 		}
