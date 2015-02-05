@@ -1066,10 +1066,10 @@ public class QTBusinessOwnerBackingBean extends
 						IQTDetailSO.class);
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		QuationTenderResDTO resDTO = null;
-		if (currStatus.getStatusId() > QTStatusConst.QT_PENDING_APPOINT_BO) {
+		/*if (currStatus.getStatusId() > QTStatusConst.QT_PENDING_APPOINT_BO) {
 			quationTenderReqDTO.setQtdetail(qt);
 			resDTO = detailSO.cancleQT(quationTenderReqDTO);
-		} else {
+		} else {*/
 			ScQtStatus qtStatus = new ScQtStatus();
 			qtStatus.setScQt(qt);
 			PmStatus status = new PmStatus();
@@ -1084,7 +1084,7 @@ public class QTBusinessOwnerBackingBean extends
 			quationTenderReqDTO.setQtdetail(qt);
 
 			resDTO = detailSO.saveQTDtl(quationTenderReqDTO);
-		}
+		//}
 		if (resDTO.isSuccessful()) {
 			renewSesionObject();
 			getMinistrySpecificationSecretaryList();
