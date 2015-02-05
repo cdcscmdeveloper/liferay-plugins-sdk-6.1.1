@@ -113,8 +113,9 @@
 				</p:outputPanel>
 				
 				<h:outputText value="#{item.requestItem.quantity}" style="text-align: right;"
-					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
-								and item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
+					rendered="#{(item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or
+									item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and
+										item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
 			</p:column>
 		</p:dataTable>
 		
