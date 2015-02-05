@@ -8567,12 +8567,13 @@ public class SmApplicationBackingBean extends
 		String suppType = StringUtils.isNotBlank(getManagedBean()
 				.getNewSupplierType()) ? getManagedBean().getNewSupplierType()
 				: getManagedBean().getSmAppl().getSupplierType();
-		List<SelectItem> finalList = new ArrayList<SelectItem>();
+		List<SelectItem> finalList = getManagedBean().getAcadQualifications();
 
 		if (getManagedBean().getSelectedShareHolder() != null
 				&& StringUtils.isNotBlank(suppType) && suppType.equals("J")) {
 			if (getManagedBean().getCertificate() != null
 					&& getManagedBean().getDiploma() != null) {
+				finalList = new ArrayList<SelectItem>();
 				for (SelectItem tempItem : getManagedBean()
 						.getAcadQualifications()) {
 					if (tempItem.getValue() != null) {
@@ -8605,7 +8606,6 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-
 		}
 		return finalList;
 	}
