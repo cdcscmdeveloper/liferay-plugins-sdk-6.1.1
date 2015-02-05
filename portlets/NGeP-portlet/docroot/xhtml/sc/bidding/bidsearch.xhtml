@@ -6,8 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:messages id="bidSearchMessages"  autoUpdate="true" showDetail="true"  showSummary="false"
-		closable="true" />
+	<p:messages id="bidSearchMessages" autoUpdate="true" showDetail="true"
+		showSummary="false" closable="true" />
 	<p:panel header="#{lbl['lbl.sc.search']}" id="bidSearchPanel"
 		toggleable="true">
 
@@ -26,10 +26,10 @@
 					<td style="width: 20%"></td>
 					<td style="width: 15%"><p:outputLabel id="pickedStatusLbl"
 							value="#{lbl['lbl.sc.status']}" /></td>
-					<td style="width: 20%" rowspan="3"><p:selectManyMenu id="pickedStatus"
-							style="height:155px;width: 200px;"
+					<td style="width: 20%" rowspan="4"><p:selectManyMenu
+							id="pickedStatus" style="height:155px;width: 200px;"
 							value="#{biddingBB.managedBean.selectedStatusDescList}">
-							<f:selectItems  value="#{biddingBB.managedBean.statusDescs}"
+							<f:selectItems value="#{biddingBB.managedBean.statusDescs}"
 								var="status" itemLabel="#{status.statusName}"
 								itemValue="#{status.pmStatus.statusId}" />
 						</p:selectManyMenu></td>
@@ -52,7 +52,7 @@
 
 					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.title']}" /></td>
-					<td  colspan="3"><p:inputText id="bidTitleBS"
+					<td colspan="3"><p:inputText id="bidTitleBS"
 							value="#{biddingBB.managedBean.searchBidTitle}" size="90">
 							<f:validateLength maximum="1000" />
 						</p:inputText></td>
@@ -65,7 +65,8 @@
 							value="#{lbl['lbl.sc.bidding.date.from']}" /></td>
 					<td style="width: 15%"><p:calendar size="20"
 							value="#{biddingBB.managedBean.searchBiddingDateFrom}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidFromDate" showOn="button">
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidFromDate"
+							showOn="button">
 
 							<p:ajax event="dateSelect"
 								listener="#{biddingBB.startDateSelectListener}"
@@ -73,12 +74,14 @@
 						</p:calendar></td>
 					<td style="width: 15%"><p:outputLabel id="bidToDateLbl"
 							value="#{lbl['lbl.sc.bidding.date.to']}" /></td>
-					<td style="width: 20%"><p:calendar widgetVar="searchBiddingDateTo" size="20"
+					<td style="width: 20%"><p:calendar
+							widgetVar="searchBiddingDateTo" size="20"
 							mindate="#{biddingBB.managedBean.searchBiddingDateToMinDate}"
 							value="#{biddingBB.managedBean.searchBiddingDateTo}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidToDate" showOn="button" /></td>
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidToDate"
+							showOn="button" /></td>
 					<td style="width: 15%"></td>
-					<td style="width: 20%"></td>
+					<!-- <td style="width: 20%"></td> -->
 				</tr>
 			</table>
 
@@ -109,8 +112,7 @@
 
 		<p:dataTable id="biddingList" rowIndexVar="index"
 			value="#{biddingBB.managedBean.searchDataModel}" var="bid"
-			lazy="true"
-			rows="10">
+			lazy="true" rows="10">
 
 			<ac:paginator for="biddingList"></ac:paginator>
 
@@ -121,17 +123,20 @@
 				<h:outputText id="docNoDTBS" value="#{bid.scBid.docNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.document.title']}">
-				<h:outputText style="white-space : normal;" id="docTitleDTBS" value="#{bid.scBid.docTitle}" />
+				<h:outputText style="white-space : normal;" id="docTitleDTBS"
+					value="#{bid.scBid.docTitle}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bid.start']}">
-				<h:outputText id="bidStartDTBS"  value="#{bid.startDate}" >
-					<f:convertDateTime  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+				<h:outputText id="bidStartDTBS" value="#{bid.startDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bid.end']}">
 
 				<h:outputText id="bidEndDTBS" value="#{bid.endDate}">
-					<f:convertDateTime  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"  />
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.created.by']}">
@@ -145,49 +150,52 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.action']}" style="width :10%">
 
-				<p:commandLink id="bidManagementNavigationBtn" size="5" 
+				<p:commandLink id="bidManagementNavigationBtn" size="5"
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
 
-					<p:graphicImage id="editBtnImage" library="ep/images/design" name="edit.png"
-						value="/css/images/design/edit.png" />
-						<p:spacer width="5" ></p:spacer>
+					<p:graphicImage id="editBtnImage" library="ep/images/design"
+						name="edit.png" value="/css/images/design/edit.png" />
+					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
-				<p:tooltip id="toolTipNavigate" for="bidManagementNavigationBtn" value="Navigate" />
-				
+				<p:tooltip id="toolTipNavigate" for="bidManagementNavigationBtn"
+					value="Navigate" />
+
 				<p:commandLink id="pauseButton"
 					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress'}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidPausePopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
-					<p:graphicImage id="pauseBtnImage" library="ep/images/design" name="pause.png"
-						value="/css/images/design/pause.png" />
-						<p:spacer width="5" ></p:spacer>
+					<p:graphicImage id="pauseBtnImage" library="ep/images/design"
+						name="pause.png" value="/css/images/design/pause.png" />
+					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
 				<p:tooltip id="pauseToolTip" for="pauseButton" value="Pause Bid" />
-				
+
 				<p:commandLink id="cancelButton" onmouseover="Cancel"
-					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress' or biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Pending Bidding'}"
+					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress' or biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Pending Bidding' or biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Paused'}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidCancelPopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
 
-					<p:graphicImage id="cancelBtnImage" library="ep/images/design" name="cancel.png"
-						value="/css/images/design/cancel.png" />
-						<p:spacer width="5" ></p:spacer>
+					<p:graphicImage id="cancelBtnImage" library="ep/images/design"
+						name="cancel.png" value="/css/images/design/cancel.png" />
+					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
-				<p:tooltip id="cancelButtonToolTip" for="cancelButton" value="Cancel Bid" />
+				<p:tooltip id="cancelButtonToolTip" for="cancelButton"
+					value="Cancel Bid" />
 				<p:commandLink id="resumeButton"
 					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Paused'}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
 					update="@([id$=rescheduleRebidPopUp])"
 					oncomplete="bidRescheduleOrResume.show();" size="5">
-					<p:graphicImage id="resumeBtnImage" library="ep/images/design" name="play.png"
-						value="/css/images/design/play.png" />
+					<p:graphicImage id="resumeBtnImage" library="ep/images/design"
+						name="play.png" value="/css/images/design/play.png" />
 				</p:commandLink>
-				<p:tooltip id="resumeButtonToolTip" for="resumeButton" value="Resume Bid" />
+				<p:tooltip id="resumeButtonToolTip" for="resumeButton"
+					value="Resume Bid" />
 
 
 			</p:column>
@@ -209,9 +217,9 @@
 	<p:panel id="rescheduleRebidPopUp">
 
 
-		<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="675px" height="280px"
-			widgetVar="bidRescheduleOrResume" showEffect="fade" hideEffect="fade"
-			modal="true" id="rescheduleOrResumeBid">
+		<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="675px"
+			height="280px" widgetVar="bidRescheduleOrResume" showEffect="fade"
+			hideEffect="fade" modal="true" id="rescheduleOrResumeBid">
 			<ui:include
 				src="/xhtml/sc/bidding/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
 		</p:dialog>
