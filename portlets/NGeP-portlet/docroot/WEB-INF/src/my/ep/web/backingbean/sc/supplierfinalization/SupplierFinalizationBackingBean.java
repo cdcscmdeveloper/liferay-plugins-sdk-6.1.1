@@ -2579,12 +2579,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return items;
     }
 	
-	public SelectItem[] getItemRecommendByDropDown(PmParameter priceType) {
+	public SelectItem[] getItemRecommendByDropDown(PmParameter priceType, ScQtRecommend scQtRecommend) {
 		SelectItem[] items = null;
-				
 		String priceTypeCode = priceType.getParameterCode();
-		if(priceTypeCode.equals(ParameterConst.PRICE_TYPE_TARIFF) || priceTypeCode.equals(ParameterConst.PRICE_TYPE_TIER)){
-			List<String> recommendList = new ArrayList<String>();
+		List<String> recommendList = new ArrayList<String>();
+		if (priceTypeCode.equals(ParameterConst.PRICE_TYPE_TARIFF) || 
+				priceTypeCode.equals(ParameterConst.PRICE_TYPE_TIER)) {
 			recommendList.add(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
 			recommendList.add(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD);
 			recommendList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
@@ -2593,15 +2593,21 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
 							SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
-			
 			items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, searchBean);
-			
-		}else{
+		} else {
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+			recommendList.add(ParameterConst.RECOMMEND_BY_AWARD);
+			
+			PmParameter itemType = scQtRecommend.getRequestItem().getTplSpecQuestion().
+					getTplSpecMaster().getItemTypeCode();
+			if (!(StringUtils.equals(ParameterConst.PRICE_TYPE_STANDARD, priceTypeCode) ||
+					StringUtils.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD, priceTypeCode)) ||
+						StringUtils.equals(ParameterConst.ITEM_TYPE_SERVICE, itemType.getParameterCode())) {
+					recommendList.add(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD);
+			}			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.RECOMMEND_BY_AWARD));
-			
+							SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
 			items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, searchBean);
 		}
 		return items;
