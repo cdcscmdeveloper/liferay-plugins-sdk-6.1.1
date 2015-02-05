@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sm.reactivatebasic;
 
+import java.io.Serializable;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -10,6 +12,7 @@ import org.primefaces.context.RequestContext;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
@@ -21,7 +24,12 @@ import my.ep.web.vo.ReactivateSupplierVO;
 
 @ManagedBean(name = "reactivateBasicBackingBean")
 @ViewScoped
-public class ReactivateBasicBackingBean {
+public class ReactivateBasicBackingBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7438377529919682830L;
 
 	private ReactivateSupplierVO reactivateBasic;
 
@@ -41,7 +49,9 @@ public class ReactivateBasicBackingBean {
 		reqDTO.setRegNo(reactivateBasic.getRegNo());
 
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IRegistrationSO.class);
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IRegistrationSO.class);
 		try {
 			RegistrationResDTO resDTO = reqSO.reactivateBasicAccount(reqDTO);
 
@@ -62,12 +72,6 @@ public class ReactivateBasicBackingBean {
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		}
-	}
-
-	public void back() {
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "/xhtml/sm/onlinereg/signUp");
 	}
 
 	public ReactivateSupplierVO getReactivateBasic() {
