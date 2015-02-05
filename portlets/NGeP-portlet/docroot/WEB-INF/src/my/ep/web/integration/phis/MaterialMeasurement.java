@@ -41,7 +41,7 @@ public class MaterialMeasurement {
 	
 	@Override
 	public boolean equals(Object obj) {
-	    if(obj instanceof MaterialClass)
+	    if(obj instanceof MaterialMeasurement)
 	    {
 	    	MaterialMeasurement temp = (MaterialMeasurement) obj;
 	        if(this.measurementCode.equalsIgnoreCase(temp.measurementCode) && this.measurementDescription.equalsIgnoreCase(temp.measurementDescription))
