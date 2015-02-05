@@ -86,19 +86,21 @@
 	</p:panel>
 	<p:panel id="contractSigner" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.ct.contract.signer']}"/>
+			<h:outputText value="#{lbl['lbl.ct.loa.signer']}"/>
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
 	  	</f:facet>
 		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
 		    <h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
-			    <p:outputLabel value="#{lbl['lbl.ct.contract.signer']}" />
+			    <p:outputLabel value="#{lbl['lbl.ct.loa.signer']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-			   <p:selectOneMenu id="signer" style="width:310px" label="#{lbl['lbl.ct.contract.signer']}"
+			   <p:selectOneMenu id="signer" style="width:310px" label="#{lbl['lbl.ct.loa.signer']}"
 			        disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 			       value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
 				   <f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}" />
+				   <p:ajax event="change" partialSubmit="true" process="@this" update="@form" 
+				   	listener="#{amendmentBackingBean.contractSignerChange()}" />
 		     	</p:selectOneMenu>
 		         <p:message for="signer" display="icon"/>
 		     </h:panelGrid>
