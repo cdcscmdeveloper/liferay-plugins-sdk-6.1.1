@@ -8603,6 +8603,8 @@ public class SmApplicationBackingBean extends
 						} else {
 							finalList.add(tempItem);
 						}
+					} else {
+						finalList.add(tempItem);
 					}
 				}
 			}
