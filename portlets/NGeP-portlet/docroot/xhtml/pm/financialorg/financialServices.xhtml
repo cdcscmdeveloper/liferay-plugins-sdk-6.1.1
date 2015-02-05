@@ -24,7 +24,7 @@
 				<p:selectOneMenu id="svcType"
 					value="#{financialsrv.serviceTypeCode.parameterId}"
 					disabled="#{!financialsrv.brandNew || financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}"
-					label="#{lbl['lbl.pm.financialorg.servicetype']}" required="true"
+					label="#{lbl['lbl.pm.financialorg.servicetype']}" required="false"
 					styleClass="ppDropDownWidthL">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems var="serviceType" itemLabel="#{serviceType.codeName}" itemValue="#{serviceType.pmParameter.parameterId}" 
