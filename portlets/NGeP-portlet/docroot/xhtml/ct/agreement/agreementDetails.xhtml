@@ -84,7 +84,8 @@
 			  			</p:inputText>
 			  		</td>
 				</tr>				
-				<h:panelGroup rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
+				<h:panelGroup rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry or 
+				agreementBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}">
 				<tr>
 					<td class="columnWidth150">
 						<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
@@ -147,7 +148,16 @@
 				  <h:outputText value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
 			  </h:panelGrid>
-		   </h:panelGrid>	 
+		   </h:panelGrid>	
+		     <h:panelGrid columns="3" rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode eq ParameterConst.contractTypeCentral}">  
+			   <p:selectBooleanCheckbox 
+			      value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"  disabled="true"/>
+		       <p:spacer width="2" />
+		       <h:panelGrid columns="2">
+		       		<h:outputText value="#{lbl['lbl.ct.follow.ctvalue']}" />
+		       		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fctvalue']}" />
+			   </h:panelGrid>
+		     </h:panelGrid>  
 		   <h:panelGrid columns="3"
 		       rendered="#{agreementBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
