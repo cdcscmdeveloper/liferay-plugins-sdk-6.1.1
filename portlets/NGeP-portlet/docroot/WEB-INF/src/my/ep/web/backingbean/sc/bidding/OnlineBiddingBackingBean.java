@@ -78,6 +78,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String remainingHours;
 	private String remainingMinutes;
 	private String remainingSeconds;
+	
+	private TemplateSpecHelper tplSpecHelper;
 
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
@@ -90,7 +92,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	public OnlineBiddingBackingBean() {
-
+		
 	}
 
 	private void debugLogger(Object message) {
@@ -844,6 +846,26 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public Long getBidCompleted() {
 		return bidCompleted;
+	}
+	
+	
+
+	/**
+	 * @return the tplSpecHelper
+	 */
+	public TemplateSpecHelper getTplSpecHelper() {
+		
+		if(null == tplSpecHelper){
+			tplSpecHelper = new TemplateSpecHelper();
+		}
+		return tplSpecHelper;
+	}
+
+	/**
+	 * @param tplSpecHelper the tplSpecHelper to set
+	 */
+	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
+		this.tplSpecHelper = tplSpecHelper;
 	}
 
 	private Long durationCalculator(Date startDate, Date endDate) {
