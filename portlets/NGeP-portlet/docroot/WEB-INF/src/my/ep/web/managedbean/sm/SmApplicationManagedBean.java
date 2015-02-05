@@ -334,6 +334,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String applnRejectionRemarks;
 	private String applnOverLapRemarks;
 	private String poToSvcRmrk;
+	private PmParameter certificate;
+	private PmParameter diploma;
+	private List<SelectItem> acadQualifications;
 	
 	private PmDigiSign pmDigiSign;
 
@@ -2568,6 +2571,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
+	}
+
+	public PmParameter getCertificate() {
+		return certificate;
+	}
+
+	public void setCertificate(PmParameter certificate) {
+		this.certificate = certificate;
+	}
+
+	public PmParameter getDiploma() {
+		return diploma;
+	}
+
+	public void setDiploma(PmParameter diploma) {
+		this.diploma = diploma;
+	}
+
+	public List<SelectItem> getAcadQualifications() {
+		return acadQualifications;
+	}
+
+	public void setAcadQualifications(List<SelectItem> acadQualifications) {
+		this.acadQualifications = acadQualifications;
 	}
 	
 }
