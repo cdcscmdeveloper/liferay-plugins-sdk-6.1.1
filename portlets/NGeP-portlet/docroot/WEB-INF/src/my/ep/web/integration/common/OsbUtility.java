@@ -2,6 +2,11 @@ package my.ep.web.integration.common;
 
 import java.rmi.RemoteException;
 
+import my.ep.web.integration.osb.BatchPortTypeProxy;
+
+/*
+* @author P.Ganga prasad
+*/
 public class OsbUtility {
 
 	public void osbServiceCallOutBound(String processId) {
@@ -27,7 +32,7 @@ public class OsbUtility {
 			epmfRq_Type.setRqHeader(header_Type);
 			epmfRq_Type.setBatchOutboundRq(batchOutboundRq_Type);
 
-			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new my.ep.web.integration.osb.BatchPortTypeProxy();
+			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new BatchPortTypeProxy("http://192.168.120.14:8011/Batch/Generic/Outbound/v1.0?wsdl");
 
 			my.ep.web.integration.osb.EPMFRs_Type epmfRs_Type = batchPortTypeProxy.invoke(epmfRq_Type);
 
@@ -62,7 +67,7 @@ public class OsbUtility {
 		   epmfRq_Type.setRqHeader(header_Type);
 		   epmfRq_Type.setBatchInboundRq(batchOutboundRq_Type);
 
-		   my.ep.web.integration.osb.inbound.BatchPortTypeProxy batchPortTypeProxy = new my.ep.web.integration.osb.inbound.BatchPortTypeProxy();
+		   my.ep.web.integration.osb.inbound.BatchPortTypeProxy batchPortTypeProxy = new my.ep.web.integration.osb.inbound.BatchPortTypeProxy("http://192.168.120.14:8011/Batch/Generic/Inbound/v1.0?wsdl");
 
 		   my.ep.web.integration.osb.inbound.EPMFRs_Type epmfRs_Type =batchPortTypeProxy.invoke(epmfRq_Type);
 		   

@@ -47,7 +47,7 @@ public class Encryption {
 				
 	    // call osb service	for transfering from host to 1GFMAS
 				 OsbUtility osbUtility = new OsbUtility();
-				// osbUtility.osbServiceCallOutBound(processId);
+				 osbUtility.osbServiceCallOutBound(processId);
 		
 	}
 
@@ -122,7 +122,7 @@ public class Encryption {
 		
 		//once upload is done cal web service osb integration to transfer file.
 		 OsbUtility osbUtility = new OsbUtility();
-		// osbUtility.osbServiceCallOutbound(processId);
+		 osbUtility.osbServiceCallOutBound(processId);
 		
 	}
 
