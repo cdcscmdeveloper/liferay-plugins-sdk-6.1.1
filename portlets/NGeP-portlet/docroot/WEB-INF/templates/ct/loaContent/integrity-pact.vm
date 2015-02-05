@@ -6,7 +6,7 @@
          display: block; text-align: center;
          position: running(footer);
          }
-         div {
+        #content div {
 			text-align: justify;
 			text-justify: inter-word;
 		}
@@ -49,6 +49,7 @@
 	</div>
 	<br/>
 	<br/>
+	<div id="content">
       <font face="Arial, Verdana" size="2"><b>SURAT AKUAN PEMBIDA BERJAYA</b></font><br/>
       <font face="Arial, Verdana" size="2">$amendmentTitle untuk $contractNo $amendmentRefNo</font>
       <div style="font-family: Arial, Verdana; font-size: 10pt; font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><br/></div>
@@ -67,5 +68,6 @@
       	 <div><font face="Arial, Verdana" size="2">Nama Pegawai: &#160;&#160;&#160;&#160;&#160;&#160;&#160; $supplierUserName </font></div>
       	 <div><font face="Arial, Verdana" size="2">No Kad Pengenalan: &#160;&#160; $supplierUserIcNo</font></div>
       </div>
+    </div>
    </body>
 </html>
