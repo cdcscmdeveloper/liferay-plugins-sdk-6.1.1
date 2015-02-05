@@ -62,6 +62,7 @@
     </tr>
 	<tr>
 		<td>
+			<br />
 			Kepada: <br />
 			$supplierName <br />
 			$supplierAddress <br /><br />
@@ -69,6 +70,7 @@
 	</tr>
 	<tr>
 		<td>
+			<br />
 			Tuan, <br />
 			<b>Tambahan Kepada $contractNo </b> <br/>
 		</td>
@@ -131,11 +133,13 @@
 			<tr>
 				<td colspan="3" style='font-weight:bold;'>
 					Tandatangan bagi pihak Pembekal
+					<br /><br /><br /><br />
 				</td>
 				<td>
 				</td>
 				<td colspan="3" style='font-weight:bold;'>
 					Tandatangan bagi pihak saksi Pembekal
+					<br /><br /><br /><br />
 				</td>
 			</tr>
 			<tr valign="top">
@@ -335,7 +339,7 @@
 			</tr>	
 			<tr>
 				<td colspan="7">
-					<br /><br />
+					<br /><br /><br/><br /><br /><br/>
 				</td>
 			</tr>
 			<tr>
