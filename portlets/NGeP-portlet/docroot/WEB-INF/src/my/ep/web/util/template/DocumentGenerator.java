@@ -29,8 +29,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  * 
  */
 public class DocumentGenerator {
-
-	private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
+private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	
 	private static DocumentGenerator instance;
 	private static VelocityEngine ve;
@@ -40,9 +39,7 @@ public class DocumentGenerator {
 			ve = new VelocityEngine();
 			ve.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
 			ve.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
-			//ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
-			ve.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,"org.apache.velocity.runtime.log.Log4JLogChute" );
-			ve.setProperty("runtime.log.logsystem.log4j.logger","root");
+			ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
 			ve.init();
 		}
 		return ve;
