@@ -283,7 +283,9 @@ public class FinancialOrgBackingBean extends
 				// financial contact
 				if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 					this.getManagedBean().setContactPerson(pmAddressType.getPmContacts().get(0));
-				} 
+				}else{
+					this.getManagedBean().setContactPerson(getManagedBean().getContactPerson());
+				}
 			}
 		}
 		if (!addrExist) {
