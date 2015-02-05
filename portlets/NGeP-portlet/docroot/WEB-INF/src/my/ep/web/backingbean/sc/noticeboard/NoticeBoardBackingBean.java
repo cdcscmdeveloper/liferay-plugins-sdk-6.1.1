@@ -197,6 +197,7 @@ public class NoticeBoardBackingBean extends
 						briefingReqDTO.setQtId(scQt.getQtId());
 						briefingReqDTO.setSpecZoneId(specZoneDtl
 								.getSpecZoneId());
+						briefingReqDTO.setAttandanceReq(true);
 						IQTBriefingSO briefingSO = EpEjbBusinessDelegate
 								.getInstance().getServiceObject(
 										ModuleCodeConst.SUPPLIER_SELECTION,
@@ -526,6 +527,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public String gotoSupplierQualificationCriteria(Long qtId) {
+		
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
 		ScQt scQt = new ScQt();
@@ -536,6 +538,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public String gotoSupplierRegistration(Long qtId) {
+		
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
 		retriveBsvDetails(qtId);
@@ -650,7 +653,7 @@ public class NoticeBoardBackingBean extends
 
 	public String showPriceSchedules(Long qtId) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
-
+		
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
@@ -1177,6 +1180,7 @@ public class NoticeBoardBackingBean extends
 	 * TO register the supplier for Bsv...
 	 */
 	public void registerSupplierForBSV() {
+
 		if (null == this.getManagedBean().getSmSupplier()) {
 			throw new EpException(MessageConst.ERROR_760200);
 		}
@@ -1245,6 +1249,7 @@ public class NoticeBoardBackingBean extends
 							preBsvAttandance.setChangedDate(null);
 							preBsvAttandance
 									.setBsvRegistration(bsvRegistration);
+							preBsvAttandance.setAttended(true);
 							preAttandance.add(preBsvAttandance);
 						} catch (IllegalAccessException e) {
 							// TODO Auto-generated catch block
@@ -1489,12 +1494,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	private void retriveBsvDetails(Long qtId) {
-		this.getManagedBean().setSmSupplier(null);
-		this.getManagedBean().setCompanyName(null);
-		this.getManagedBean().setMofAccounts(null);
-		this.getManagedBean().setAttendanceList(null);
-		this.getManagedBean().setMofNumber(null);
-		this.getManagedBean().setSelectedBsvAttandance(null);
+
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1530,6 +1530,7 @@ public class NoticeBoardBackingBean extends
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 					briefingReqDTO.setQtId(scQt.getQtId());
 					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+					briefingReqDTO.setAttandanceReq(true);
 					IQTBriefingSO briefingSO = EpEjbBusinessDelegate
 							.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1590,21 +1591,27 @@ public class NoticeBoardBackingBean extends
 		}
 		BriefingZoneBean zoneBean = this.getManagedBean().getNormalBsvBean();
 
-		for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedBriefingDtls()) {
+		if (!zoneBean.getSelectedBriefingDtls().isEmpty()
+				|| !zoneBean.getSelectedSiteVisitDtls().isEmpty()) {
+			for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedBriefingDtls()) {
 
-			bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
-			if (bsvDtl.getToBeattand() < 0) {
-				bsvDtl.setToBeattand(0);
+				bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
+				if (bsvDtl.getToBeattand() < 0) {
+					bsvDtl.setToBeattand(0);
+				}
+
 			}
 
-		}
+			for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedSiteVisitDtls()) {
 
-		for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedSiteVisitDtls()) {
-
-			bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
-			if (bsvDtl.getToBeattand() < 0) {
-				bsvDtl.setToBeattand(0);
+				bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
+				if (bsvDtl.getToBeattand() < 0) {
+					bsvDtl.setToBeattand(0);
+				}
 			}
+		} else {
+			((SelectBooleanCheckbox) event.getSource()).setSelected(false);
+			throw new EpException(MessageConst.ERROR_760185);
 		}
 
 	}

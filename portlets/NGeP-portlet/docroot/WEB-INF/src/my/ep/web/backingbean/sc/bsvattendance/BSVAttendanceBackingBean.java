@@ -383,7 +383,7 @@ public class BSVAttendanceBackingBean extends
 														new FacesScopes()
 																.getUserLocale())));
 
-			} 
+			}
 		} finally {
 			qTBriefingSO = null;
 		}
@@ -831,35 +831,37 @@ public class BSVAttendanceBackingBean extends
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			List<ScQtBsvDtl> briefingDetails = new ArrayList<ScQtBsvDtl>();
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
-
+			List<ScQtBsvRegistration> newRegistrations = new ArrayList<ScQtBsvRegistration>();
 			for (ScQtBsvRegistration registration : this.getManagedBean()
 					.getBriefingRegistrationList()) {
+				if (registration.isBrandNew()) {
+					List<ScQtBsvAttendance> bsvAttandance = registration
+							.getBsvAttendance();
 
-				List<ScQtBsvAttendance> bsvAttandance = registration
-						.getBsvAttendance();
+					if (getAttandanceCount(bsvAttandance) > scQtBrief
+							.getMaxNoOfAttendance()) {
+						throw new EpException(MessageConst.ERROR_760230,
+								new String[] { Integer.valueOf(
+										scQtBrief.getMaxNoOfAttendance())
+										.toString() });
+					}
+					boolean flag = isOneAuthorizedPersonal(bsvAttandance);
 
-				if (getAttandanceCount(bsvAttandance) > scQtBrief
-						.getMaxNoOfAttendance()) {
-					throw new EpException(MessageConst.ERROR_760230,
-							new String[] { Integer.valueOf(
-									scQtBrief.getMaxNoOfAttendance())
-									.toString() });
+					if (flag) {
+						registration.setAttended(true);
+						registration.setRecordStatusFlg(0);
+					} else {
+						throw new EpException(MessageConst.ERROR_760043,
+								new String[] { "1" });
+					}
+					newRegistrations.add(registration);
 				}
-				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
-
-				if (flag) {
-					registration.setAttended(true);
-					registration.setRecordStatusFlg(0);
-				} else {
-					throw new EpException(MessageConst.ERROR_760043,
-							new String[] { "1" });
-				}
-
 			}
-			scQtBrief.setQtBsvRegistrations(this.getManagedBean()
-					.getBriefingRegistrationList());
+
+			scQtBrief.setQtBsvRegistrations(newRegistrations);
 			briefingDetails.add(scQtBrief);
 			reqDTO.setQtBriefingList(briefingDetails);
+			reqDTO.setToBeDeletedRegistations(this.getManagedBean().getToBeDeletedRegistartions());
 			reqDTO.setInvokeBpm(true);
 			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
