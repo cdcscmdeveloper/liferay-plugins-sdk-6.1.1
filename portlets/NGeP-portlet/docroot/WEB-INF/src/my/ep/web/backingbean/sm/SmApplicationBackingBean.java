@@ -463,6 +463,18 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
+
+			SelectItem[] qualifications = getDropdownValues("QL");
+			getManagedBean().setCertificate(
+					SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
+							"5"));
+			getManagedBean().setDiploma(
+					SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
+							"4"));
+			getManagedBean().setAcadQualifications(
+					qualifications != null ? Arrays.asList(qualifications)
+							: new ArrayList<SelectItem>());
+
 		}
 		getManagedBean()
 				.setDefPmCountry(
@@ -8552,31 +8564,34 @@ public class SmApplicationBackingBean extends
 	}
 
 	public List<SelectItem> getAcademicQualifications() {
-		SelectItem[] initQualifications = getDropdownValues("QL");
 		String suppType = StringUtils.isNotBlank(getManagedBean()
 				.getNewSupplierType()) ? getManagedBean().getNewSupplierType()
 				: getManagedBean().getSmAppl().getSupplierType();
-		PmParameter certificate = SmApplicationUtil
-				.retrievePmParameterByTypeAndCode("QL", "5");
-		PmParameter diploma = SmApplicationUtil
-				.retrievePmParameterByTypeAndCode("QL", "4");
-		List<SelectItem> tempList = initQualifications != null ? Arrays
-				.asList(initQualifications) : new ArrayList<SelectItem>();
 		List<SelectItem> finalList = new ArrayList<SelectItem>();
 
 		if (getManagedBean().getSelectedShareHolder() != null
-				&& suppType.equals("J")) {
-			if (certificate != null && diploma != null) {
-				for (SelectItem tempItem : tempList) {
+				&& StringUtils.isNotBlank(suppType) && suppType.equals("J")) {
+			if (getManagedBean().getCertificate() != null
+					&& getManagedBean().getDiploma() != null) {
+				for (SelectItem tempItem : getManagedBean()
+						.getAcadQualifications()) {
 					if (tempItem.getValue() != null) {
-						if (certificate.getParameterId().compareTo(
-								Long.parseLong(tempItem.getValue().toString())) == 0) {
+						if (getManagedBean()
+								.getCertificate()
+								.getParameterId()
+								.compareTo(
+										Long.parseLong(tempItem.getValue()
+												.toString())) == 0) {
 							if (getManagedBean().getSelectedShareHolder()
 									.isClerical()) {
 								finalList.add(tempItem);
 							}
-						} else if (diploma.getParameterId().compareTo(
-								Long.parseLong(tempItem.getValue().toString())) == 0) {
+						} else if (getManagedBean()
+								.getDiploma()
+								.getParameterId()
+								.compareTo(
+										Long.parseLong(tempItem.getValue()
+												.toString())) == 0) {
 							if (getManagedBean().getSelectedShareHolder()
 									.isClerical()
 									|| getManagedBean()
@@ -8584,7 +8599,7 @@ public class SmApplicationBackingBean extends
 											.isSemiProf()) {
 								finalList.add(tempItem);
 							}
-						}else{
+						} else {
 							finalList.add(tempItem);
 						}
 					}
