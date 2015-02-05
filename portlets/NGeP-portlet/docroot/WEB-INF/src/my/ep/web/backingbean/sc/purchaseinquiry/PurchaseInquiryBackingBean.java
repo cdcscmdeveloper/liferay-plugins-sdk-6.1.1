@@ -55,6 +55,7 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -67,13 +68,16 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
@@ -559,16 +563,26 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		}
 		
 		 /**
-		  *  submitPrInquiryPrice  method to submit purchase inquiry price  details by supplier  in Purchase inquiry
+		  *  submitPrInquiryPrice  method to submit purchase inquiry price  details by supplier
 		  */	
-	  public String submitPrInquiryPrice(String outcome){
+	  public String submitPrInquiryPrice(PmDigiSign  pmDigiSign){
 		   IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 			   //call prInquirySO submitPrice method
 			   PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			   ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 				ScRequestSupplierItem scRequestSupplierItem   = getManagedBean().getScRequestSupplierItem();
 			   finalizeRemarks(prInquiry.getRemarks());
-			   
+
+			   // spki 
+			    String originalText = prepareOriginalText(scRequestSupplierItem.getSmSupplier());
+			   if (null != pmDigiSign) {
+				   updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_PURCHASE_INQUIRY, 
+						   prInquiry.getPrInquiryId(), prInquiry.getPrInquiryNo() , originalText);
+			   }
+
+			   SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			   String signedData =  spkiBackingBean.spkiSignTransaction(originalText);
+
 			   // updating price 
 			   List<ScRequestSupplierItem>	scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
 			   scRequestSupplierItems.add(scRequestSupplierItem);
@@ -581,8 +595,12 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			   reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			   reqDTO.setRoleCode(getUserRoleCode());
 			   reqDTO.setToken(token);
-			   reqDTO.setOutcome(outcome);
+			   reqDTO.setOutcome(getManagedBean().getAction());
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
+			  
+			   pmDigiSign.setSignedData(signedData);
+			   reqDTO.setPmDigiSign(pmDigiSign);
+			   
 			   PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
 			   if(resDTO.isSuccessful()){
 				 ScPrInquiry scPrInquiry = resDTO.getPrInquiryDetail();
@@ -594,6 +612,33 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				   throw new EpException(MessageConst.ERROR_700020);
 		   }
 		return null;
+	  }
+
+	  private String prepareOriginalText(SmSupplier  smSupplier) {
+		  FacesScopes facesScopes = new FacesScopes();
+		  StringBuilder sb = new StringBuilder();
+		  String countryCode ="";
+		  String orginalText = "";
+
+		  if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+			  List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+			  for (SmCompanyAddress compaAddress : companyAddress) {
+				  if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					  countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+					  break;
+				  }
+			  }
+		  }
+		  sb.append(getManagedBean().getScPrInquiry().getPrInquiryNo())
+		  .append("|")
+		  .append(facesScopes.getUserSessionBean().getIdentificationNo())
+		  .append("|")
+		  .append(smSupplier.getRegNo())
+		  .append("|")
+		  .append(countryCode);
+		  orginalText  = sb.toString();
+		  return orginalText;
 	  }
 
 	/**
@@ -810,6 +855,10 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 Long prInquiryID = Long.valueOf(directPurchaseDataType.getDpId());
 		 prInquiryReqDTO.setPrInquiryId(prInquiryID);
 		 prInquiryReqDTO.setFetchSubEntity(true);
+		 
+		 if(DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE.equals(res.getDocStatus().longValue())){
+			 prInquiryReqDTO.setFetchSupplierEntity(true);
+		 }
 		 PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 		 ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
 		 

@@ -66,13 +66,14 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					   <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 	
 	                   <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}">
-	                       <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+	                    <ac:spkiPopup id="spkiPopup" postSignAction="#{purchaseInquiryBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
+	                       <p:commandButton value="#{lbl[buttonLabel]}"
 							        styleClass="ui-button"
-									partialSubmit="true"
-								    update="@form"
-									onstart="blockWidget.show();"
-									oncomplete="blockWidget.hide();"
-									actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(bpmAction)}" />
+								    update="spkiPopup"
+								    action="#{spkiBackingBean.getChallengeQuestions}"
+									oncomplete="spki_dlg.show();">
+									<f:setPropertyActionListener value="#{bpmAction}" target="#{purchaseInquiryBackingBean.managedBean.action}" />
+							</p:commandButton>
 	                  </c:if>
 					</ui:repeat>
 				</c:when>
