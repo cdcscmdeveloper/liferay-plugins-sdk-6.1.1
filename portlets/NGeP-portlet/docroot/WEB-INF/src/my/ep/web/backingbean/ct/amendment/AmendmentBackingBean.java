@@ -1080,8 +1080,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				 (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) || 
 				  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
 				  getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
-			 
-			       for(int temp = 0;temp<getManagedBean().getSelectedItem().getCtItemPrices().size(); temp++ ) {
+			
+			    for( CtItemPrice zonelOfItem : getManagedBean().getSelectedItem().getCtItemPrices()){
+	          	        zonelOfItem.setChangeZoneLabel(false);
+	    	     }
+	    
+			     for(int temp = 0;temp<getManagedBean().getSelectedItem().getCtItemPrices().size(); temp++ ) {
 			    		  Date date = getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getEffDate();
 			    	     int counter =0;
 			    	     int index=0;
@@ -1117,12 +1121,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	  
 			    	     if(index > 0) {
 			    	          CtItemPrice priceOfItem = getManagedBean().getSelectedItem().getCtItemPrices().get(index-1);
-			    	        
-			    	          for( CtItemPrice zonelOfItem : getManagedBean().getSelectedItem().getCtItemPrices()){
-			    	        	     if(priceOfItem.getCtContractZone().getZoneName().equalsIgnoreCase( zonelOfItem.getCtContractZone().getZoneName()))
-			    	    		        zonelOfItem.setChangeZoneLabel(false);
-			    	    	  }
-			    	       
 			    	          priceOfItem.setChangeZoneLabel(true);
 			    	         getManagedBean().getSelectedItem().getCtItemPrices().remove(index-1);
 			    	         getManagedBean().getSelectedItem().getCtItemPrices().add(index-1, priceOfItem);
