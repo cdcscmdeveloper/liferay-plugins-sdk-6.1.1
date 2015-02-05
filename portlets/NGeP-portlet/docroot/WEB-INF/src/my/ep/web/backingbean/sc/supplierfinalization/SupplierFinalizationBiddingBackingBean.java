@@ -74,7 +74,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 1;
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 2;
+	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 1;
 
 	public SupplierFinalizationBiddingBackingBean() {
 
@@ -272,6 +272,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		} finally {
 			meetingSO = null;
 		}
+	}
+	
+	public void supplierItemPricePopupAction(Object obj) {
+		// TODO : Implement the code to display the supplier details in popup
 	}
 
 	/**
@@ -479,7 +483,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			String[] outComes = this.getManagedBean().getOutComes();
 			String processName = this.getManagedBean().getProcessName();
 			ScQt scQt = getManagedBean().getScQt();
-
+			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			
 			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
@@ -487,7 +492,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			qtSuppFinalizationSO.saveFinalizationOfflineEndorsement(reqDTO);
 
 			renewSesionObject();
-			setTaskDetails(activeIndex, taskId, outComes, processName);
+			setTaskDetails(activeIndex, taskId, outComes, processName, currentStatusId);
 
 			Long qtId = scQt.getQtId();
 			retrieveOnlineBiddingEndorsement(qtId);
@@ -586,7 +591,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 
 	private void setTaskDetails(Integer activeIndex, String taskId,
-			String[] outComes, String processName) {
+			String[] outComes, String processName, Long currentStatusId) {
 		if (activeIndex != null) {
 			this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
 		}
