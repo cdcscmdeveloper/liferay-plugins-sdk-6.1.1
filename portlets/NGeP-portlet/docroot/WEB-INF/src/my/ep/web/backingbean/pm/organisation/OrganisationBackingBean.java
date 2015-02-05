@@ -413,7 +413,7 @@ public class OrganisationBackingBean extends
 		if (orgAddressTypes != null && !orgAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : orgAddressTypes) {
 				
-				if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
+				if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())&& (pmAddressType.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE))) {
 					this.getManagedBean().setOfficeAddress(pmAddressType.getPmAddress());
 					addrExist = true;
 					log.info("Address Exist");
@@ -1413,8 +1413,6 @@ public class OrganisationBackingBean extends
 			pmState.setStateCode(null);
 		}
 	}
-	
 
-	
 
 }
