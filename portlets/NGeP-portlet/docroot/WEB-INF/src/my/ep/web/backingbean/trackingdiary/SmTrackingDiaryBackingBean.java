@@ -93,8 +93,13 @@ public class SmTrackingDiaryBackingBean extends
 		return NAV_TO_SMSUPPLIER_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
-	public String reset() {
-		return null;
+	public void reset(){
+		this.getManagedBean().setApplicationNo(null);
+		this.getManagedBean().setApplicationType(null);
+		this.getManagedBean().setMOFAccountNo(null);
+		this.getManagedBean().setSupplierName(null);
+		this.getManagedBean().setSmSupplier(null);
+//		this.getManagedBean().setSmDocumentDataModel(null);
 	}
 
 	public String backToPrev() {

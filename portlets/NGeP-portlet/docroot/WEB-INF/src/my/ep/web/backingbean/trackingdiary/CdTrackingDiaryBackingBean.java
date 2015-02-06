@@ -90,11 +90,14 @@ public class CdTrackingDiaryBackingBean extends
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
-	public String reset() {
-		System.out.println("In reset action...................");
-		System.out.println("after reset.........................");
-		return null;
+	public void reset(){
+		this.getManagedBean().setSearchDocumentNoValue(null);
+		this.getManagedBean().setSearchSupplierValue(null);
+		this.getManagedBean().setSearchUNSPSCExtensionCodeValue(null);
+		this.getManagedBean().setSearchStatusId(null);
+//		this.getManagedBean().setSmDocumentDataModel(null);
 	}
+
 	public SelectItem[] getStatus() {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
