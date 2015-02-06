@@ -73,7 +73,7 @@
 				
 				<p:column>
 					<p:commandLink update=":form:suppDtlPopUp"
-						action="#{suppFinalizationBackingBean.showSupplierDetails}"
+						action="#{suppFinalizationBackingBean.showSupplierDetails(null, null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
 						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
@@ -181,7 +181,7 @@
 				
 				<p:column>
 					<p:commandLink update=":form:suppDtlPopUp"
-						action="#{suppFinalizationBackingBean.showSupplierDetails}"
+						action="#{suppFinalizationBackingBean.showSupplierDetails(null,null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
 						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
@@ -289,7 +289,7 @@
 				
 				<p:column>
 					<p:commandLink update=":form:suppDtlPopUp"
-						action="#{suppFinalizationBackingBean.showSupplierDetails}"
+						action="#{suppFinalizationBackingBean.showSupplierDetails(null,null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedItemSupp.qtEvaluationResult}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
 						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
