@@ -2869,16 +2869,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				|| getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()>=24) {
 				return true;
 			}
-		} else if(rulesType==2) { // quantity
-			if((getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() / getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()) > 0.5) {
-				return true;
-			}			
-			if(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() > maxAdditionalLimit) {
-				return true;
-			}
-			if((getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()+getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue()) > maxTotalLimit) {
-				return true;
-			}			
+		} else if(rulesType==2) { // quantity		
 			for(CtContractItem ctContractItem : getManagedBean().getCtItemList()) {
 				for(CtItemMaxQty ctItemMaxQty : ctContractItem.getCtItemMaxQties()) {
 					if(ctItemMaxQty.isChangeQuantity()) {
