@@ -8,14 +8,14 @@
 	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 139px"><p:outputLabel
+				<td style="width: 154px"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="45"
+				<td><p:inputText size="59"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td rowspan="2" valign="top" style="width: 205px;"><p:outputLabel
+				<td rowspan="2" valign="top" style="width: 160px;"><p:outputLabel
 						value="#{lbl['lbl.fl.do.title']}" /></td>
-				<td rowspan="2" colspan="3"><p:inputTextarea cols="60" rows="2"
+				<td rowspan="2" colspan="3"><p:inputTextarea cols="40" rows="2"
 						style=" margin-bottom:5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.title}"
 						disabled="true" /></td>
@@ -23,16 +23,21 @@
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="45" id="ptjGroup"
+				<td><p:inputText size="59" id="ptjGroup"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="45" id="controlOff"
+				<td><p:inputText size="59" id="controlOff"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
 						disabled="true" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
+				<td><p:selectBooleanCheckbox disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored}">
+					</p:selectBooleanCheckbox>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>								
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
@@ -44,16 +49,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
-				<td><p:inputText size="45"
+				<td><p:inputText size="59"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.requistioner.userName}"
 						disabled="true" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored}"></p:selectBooleanCheckbox><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>						
+				
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.inv.contract.no']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
-				<td><p:inputText disabled="true" size="45" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}" 
+				<td><p:inputText disabled="true" size="30" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}" 
 				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/></td>
 				
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
