@@ -303,7 +303,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 
 	public String backToPrev() {
 
-		return NAV_TO_FL_SEARCH;
+		return NAV_TO_FL_SEARCH + "?faces-redirect=true";
 	}
 
 	public String goToTrackingDiarySearch(VFlDocument vFlDocument) {
