@@ -115,8 +115,13 @@ public class ScTrackingDiaryBackingBean extends
 		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
-	public String reset() {
-		return null;
+	public void reset(){
+		this.getManagedBean().setSearchDocNo(null);
+		this.getManagedBean().setSearchDocumentType(null);
+		this.getManagedBean().setSearchStatusId(null);
+		this.getManagedBean().setSearchDocumentTitle(null);
+		this.getManagedBean().setSearchDocumentToDuration(null);
+		this.getManagedBean().setSearchDocumentFromDuration(null);
 	}
 
 	public String backToPrev() {
