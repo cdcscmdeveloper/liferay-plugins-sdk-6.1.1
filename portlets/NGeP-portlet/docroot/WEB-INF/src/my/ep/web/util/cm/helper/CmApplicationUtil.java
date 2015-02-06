@@ -2,7 +2,6 @@ package my.ep.web.util.cm.helper;
 
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
-import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -28,7 +27,7 @@ public class CmApplicationUtil {
 		return trckVO;
 	}
 	
-	public static CmTrackingDairyVO assignTrackingDiaryValuesForUNSPSCExtension(CmRequestCode cmRequestCode, String actionDesc,
+	public static CmTrackingDairyVO assignTrackingDiaryValuesForUNSPSCExtension(String actionDesc,
 			PmStatus status) {
 		CmTrackingDairyVO trckVO = new CmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();

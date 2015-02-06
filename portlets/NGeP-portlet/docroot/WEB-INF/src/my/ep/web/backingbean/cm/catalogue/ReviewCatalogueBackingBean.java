@@ -144,6 +144,7 @@ public class ReviewCatalogueBackingBean extends
 				bb.getManagedBean().getSelectedMaintainItem());		
 		log.info("Tracking diary for approveCatalogueItem items");		
 		
+		reqDTO.setTrackingStatus(true);
 		reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
 		reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(
 				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,null));
@@ -231,8 +232,8 @@ public class ReviewCatalogueBackingBean extends
 								new FacesScopes().getUserLocale())));
 	
 				return "addCatalogView";
-			}
-		
+			}			
+			
 			catalogueSO.updateSupplierItem(reqDTO);
 			bb.getManagedBean().setRejectReason(null);
 		} catch (Exception e) {

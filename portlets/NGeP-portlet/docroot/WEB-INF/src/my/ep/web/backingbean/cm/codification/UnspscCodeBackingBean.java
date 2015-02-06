@@ -218,8 +218,9 @@ public class UnspscCodeBackingBean extends
 
 			if (action.equalsIgnoreCase("SUBMIT")) {				
 				if (this.getManagedBean().getRequestCode().isBrandNew()) {					
-					log.info("Tracking diary for UNSPSC Code---submitForRequest()");
-					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(this.getManagedBean().getRequestCode(),CmConst.UNSPSC_CODE_REQUEST, new PmStatus()));
+					log.info("Tracking diary for UNSPSC Code Request---submitForRequest()");
+					reqDTO.setTrackingStatus(true);
+					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST, new PmStatus()));
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
 										
                     if(resDTO.isSuccessful()){
@@ -293,7 +294,7 @@ public class UnspscCodeBackingBean extends
 			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
 
 			if (action.equalsIgnoreCase("RECOMMEND TO SUPPLIER")) {
-
+				
 				if (!(this.getManagedBean().getRequestCode()
 						.getCmRecommendCodes() != null && this.getManagedBean()
 						.getRequestCode().getCmRecommendCodes().size() > 0)) {
@@ -321,10 +322,10 @@ public class UnspscCodeBackingBean extends
 						.getRequestCode().getCmRecommendCodes()) {
 
 					unspsc.setCmRequestCode(this.getManagedBean()
-							.getRequestCode());
+							.getRequestCode());					
 
 				}
-
+				
 			}
 
 			System.out.println("size:"
@@ -335,6 +336,9 @@ public class UnspscCodeBackingBean extends
 			CodificationResDTO resDTO = null;
 
 			if (this.getManagedBean().getRequestCode().isBrandNew()) {
+				log.info("tracking diary for UNSPSC CODE REQUEST By CatalogAdmin:addCodificationRequest");
+				reqDTO.setTrackingStatus(true);
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST_ADMIN, new PmStatus()));
 
 				resDTO = unspscSO.addCodificationRequest(reqDTO);
 
@@ -350,6 +354,11 @@ public class UnspscCodeBackingBean extends
 				log.info("***update***");
 				System.out.println("size:"
 						+ reqDTO.getRequestCode().getCmRecommendCodes().size());
+				if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
+				{	log.info("tracking diary for status:bpmTesting");			
+					reqDTO.setTrackingStatus(true);
+					UNSPSCCodeRequestReviewByUser(reqDTO,face,action);					
+				}
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			}
 
@@ -375,7 +384,30 @@ public class UnspscCodeBackingBean extends
 		return "BPMtesting";
 
 	}
+	
+	public void UNSPSCCodeRequestReviewByUser(CodificationReqDTO reqDTO,FacesScopes face,String action){     
+		if(action.equalsIgnoreCase("SUBMIT")){
+			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
+				log.info("Tracking diary for UNSPSC Code Review by Catalog_Admin");
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CATALOG_ADMIN, new PmStatus()));
+			}
+			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
+				log.info("Tracking diary for UNSPSC Code Review CODIFICATION_OFFICER");
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CODIFICATION_OFFICER, new PmStatus()));
+			}
 
+		}
+		else {
+			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
+				log.info("Tracking diary for UNSPSC Code Recomended To Supplier by Catalog_Admin");
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, new PmStatus()));
+			}			
+			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
+				log.info("Tracking diary for UNSPSC Code Recomended To Supplier by CODIFICATION_OFFICER");
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CODIFICATION_OFFICER, new PmStatus()));
+			}
+		}
+	}
 	public String selectSubmitRecommend(String action) throws Exception {
 
 		try {
@@ -1137,6 +1169,9 @@ public class UnspscCodeBackingBean extends
 						.getUnspscCode())){
 					return "reviewBeforeCreateTempCode";
 				}
+				log.info("tracking diary for Codification_Officer:savetempCode");
+				reqDTO.setTrackingStatus(true);
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CODIFICATION_OFFICER, new PmStatus()));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1178,6 +1213,9 @@ public class UnspscCodeBackingBean extends
 				reqDTO.setToken(token);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setOutCome(outcome);
+                log.info("tracking diary for UNSPSC Code Recomended to Supplier by Codification_Officer");
+				reqDTO.setTrackingStatus(true);
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CODIFICATION_OFFICER, new PmStatus()));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1501,13 +1539,18 @@ public class UnspscCodeBackingBean extends
 		    }
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
-		reqDTO.setToken(token);
-		
-		log.info("Tracking diary for Extension Code---submitToBPM()");
-		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
-		    reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(code,CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));		
-	    }
-		
+		reqDTO.setToken(token);		
+		log.info("Tracking diary for Extension Code---submitToBPM()");			
+			if(face.hasRoleUser(CmConst.CM_ADMIN)){
+				reqDTO.setTrackingStatus(true);
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST_ADMIN, new PmStatus()));	
+
+			}
+			else {
+				reqDTO.setTrackingStatus(true);
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));				
+			}		
+
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
 		
         if(resDTO.isSuccessful()){
@@ -1864,6 +1907,10 @@ public class UnspscCodeBackingBean extends
 			reqDTO.setCmUnspsc(resDTO.getCommodityObj());
 			reqDTO.setUnspscId(resDTO.getCommodityObj().getUnspscId());
 
+			log.info("Tracking diary for Extension Code Published by Code_Officer");
+			reqDTO.setTrackingStatus(true);
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_PUBLISHED_CODE_OFFICER, new PmStatus()));
+			
 			resDTO = unspscSO.publishExtensionRequest(reqDTO);
 
 		}
@@ -1986,9 +2033,14 @@ public class UnspscCodeBackingBean extends
 						// return "reviewApproveExtensionCode";
 					}
 				}
-
+				if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
+				{   
+					log.info("tracking diary for ExtensionCodeReviewStatus: submitToReviewExt");
+					reqDTO.setTrackingStatus(true);					
+				    getExtensionCodeReviewStatus(reqDTO,face);
+				}
+			  
 			}
-
 			resDTO = unspscSO.updateExtensionRequest(reqDTO);
 
 		}
@@ -2008,6 +2060,23 @@ public class UnspscCodeBackingBean extends
 		return "BPMtesting";
 	}
 
+	
+	public void getExtensionCodeReviewStatus(CodificationReqDTO reqDTO,FacesScopes face){			
+		if (face.hasRoleUser(CmConst.CM_ADMIN)){		
+			log.info("Tracking diary for Extension Code Creation or Extension Code Review by Catalog_Admin");
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CATALOG_ADMIN, new PmStatus()));
+			}
+		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
+			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CD_COMMITTE, new PmStatus()));
+		}
+		else if (face.hasRoleUser(CmConst.EP_COMMITTEE)) {
+			log.info("Tracking diary for Extension Code Creation or Extension Code Review by EP_COMMITTE");
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_EP_COMMITTE, new PmStatus()));
+			}
+	}
+	
+	
 	public void preRenderExtensionMaintenanceView() {
 
 		System.out.println("**********preRenderExtensionView**************");
@@ -2389,7 +2458,7 @@ public class UnspscCodeBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome("SUBMIT");
 			reqDTO.setRequestCode(code);
-			reqDTO.setProcessId(CDProcessNameConst.EXTENSION_CODE_MAINTENANCE_PROCESS_ID);
+			reqDTO.setProcessId(CDProcessNameConst.EXTENSION_CODE_MAINTENANCE_PROCESS_ID);				
 
 			CodificationResDTO resDTO = unspscSO.addCodificationRequest(reqDTO);
 
