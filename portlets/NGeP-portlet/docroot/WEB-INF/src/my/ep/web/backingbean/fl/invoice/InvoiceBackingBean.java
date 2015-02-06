@@ -386,6 +386,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					List<SelectItem> bankAccountList = getPopulateBankAccountList();
 					if((getManagedBean().getInvoice().getAccountNo()==null || getManagedBean().getInvoice().getAccountNo().length()==0) && bankAccountList.size()==1) {
 						getManagedBean().getInvoice().setAccountNo(bankAccountList.get(0).getValue().toString());
+						bankInfoActionListener();
 					}
 				} else {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo());
