@@ -1092,7 +1092,20 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 		if(isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-		} else {
+
+		} else if(isDigiSigningRequired(RoleCode.QCA_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		} else if(isDigiSigningRequired(RoleCode.QCB_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		}else if(isDigiSigningRequired(RoleCode.FPB_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		}else if(isDigiSigningRequired(RoleCode.PBB_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		}
+		else {
 			updateBPMTask(outcome, null);
 		}	
 	}
