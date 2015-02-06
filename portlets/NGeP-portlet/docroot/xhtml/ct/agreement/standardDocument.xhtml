@@ -57,7 +57,7 @@
 					</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
-						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}">
+						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}" immediate="true">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 						</h:commandLink>
