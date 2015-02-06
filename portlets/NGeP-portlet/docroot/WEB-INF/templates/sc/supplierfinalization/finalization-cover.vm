@@ -37,20 +37,26 @@
     </tr>
     <tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $jabatan/ $ptj</span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $jabatan <br/> $ptj</span>
 			<br/><br/>
         </td>
     </tr>
     <tr>
-		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KERTAS TAKLIMAT TENDER/SEBUTHARGA UNTUK PERTIMBANGAN</span>
-			<br/><br/>
+        <td align="center">
+        	#if ( $procurementMode == "Q")
+            	<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KERTAS TAKLIMAT SEBUT HARGA UNTUK PERTIMBANGAN </span>
+            	<br/> <br/>
+            #end
+            #if ( $procurementMode == "T")
+            	<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KERTAS TAKLIMAT TENDER UNTUK PERTIMBANGAN </span>
+            	<br/> <br/>
+            #end
         </td>
     </tr>
     <tr>
 		<td align="center">
 			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>$commType</span>
-            <br/>
+            <br/> <br/><br/>
         </td>
     </tr>
 	<tr>
