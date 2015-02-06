@@ -98,8 +98,7 @@
 		  
 			     <p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" 
 			          process="@this" partialSubmit="true" onsuccess="dlgPerformDel.show();"
-				      rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
-				      disabled="#{contractDetailsBackingBean.managedBean.buttonHideActive}" >
+				      rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" >
 					<p:tooltip for="delPdBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 					</p:tooltip>
