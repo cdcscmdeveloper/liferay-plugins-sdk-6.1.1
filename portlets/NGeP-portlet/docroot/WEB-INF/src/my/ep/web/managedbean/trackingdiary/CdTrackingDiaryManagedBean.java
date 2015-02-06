@@ -30,7 +30,8 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchSupplierValue; 
 	private String searchUNSPSCExtensionCodeValue;
 	private Long searchStatusId;
-
+	private Object[] object;
+	
 	private IPagingDataModel<Object[]> cdDocumentDataModel 	= new SearchPagingDataModel();
 
 	private class SearchPagingDataModel extends PagingDataModel<Object[]> {
@@ -116,6 +117,14 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setSearchStatusId(Long searchStatusId) {
 		this.searchStatusId = searchStatusId;
+	}
+
+	public Object[] getObject() {
+		return object;
+	}
+
+	public void setObject(Object[] object) {
+		this.object = object;
 	}
 
 	public IPagingDataModel<Object[]> getCdDocumentDataModel() {

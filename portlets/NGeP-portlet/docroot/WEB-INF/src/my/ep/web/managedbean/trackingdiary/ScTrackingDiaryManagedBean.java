@@ -59,6 +59,7 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private Date searchDocumentFromDuration;
 	private Date searchDocumentToDuration;
+	private Object[] object;
 	private IPagingDataModel<Object[]> scRNDocumentDataModel = new ScDocumentPagingDataModel();
 //	  Doctype    table
 //	   RN         ScRequestNote
@@ -121,6 +122,14 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setSearchDocumentType(String searchDocumentType) {
 		this.searchDocumentType = searchDocumentType;
 	}
+	
+	public String getSearchDocNo() {
+		return searchDocNo;
+	}
+
+	public void setSearchDocNo(String searchDocNo) {
+		this.searchDocNo = searchDocNo;
+	}
 
 	public String getSearchDocumentNo() {
 		return searchDocumentNo;
@@ -162,6 +171,14 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchDocumentToDuration = searchDocumentToDuration;
 	}
 
+	public Object[] getObject() {
+		return object;
+	}
+
+	public void setObject(Object[] object) {
+		this.object = object;
+	}
+
 	public IPagingDataModel<Object[]> getScRNDocumentDataModel() {
 		return scRNDocumentDataModel;
 	}
@@ -178,12 +195,5 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 //		this.scObj = scObj;
 //	}
 
-	public String getSearchDocNo() {
-		return searchDocNo;
-	}
-
-	public void setSearchDocNo(String searchDocNo) {
-		this.searchDocNo = searchDocNo;
-	}
 
 }

@@ -54,7 +54,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-//BackingBEan
 
 /**
  * Managed Bean for Fulfillment document
@@ -69,9 +68,6 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String tempLoginId;
-	private String tempDocType;
-	private String searchType = "D"; // Define or Advanced
 	private String searchOrderType; 
 	private String searchDocType;
 	private String searchDocNo;
@@ -88,43 +84,14 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchOrderNo;
 	private String searchPhysLoaNo;
 	private String searchPhysContractNo;
-	
-	private List<PmStatusDesc> docStatusList;
-	private List<PmParameterDesc> procurementTypeList;
 	private Long statusDescId;
 	private Long searchProcurementTypeId;
 	
 	private VFlDocument vFlDocument;
 
-//	private FlFulfilmentRequest fulfilmentRequest;
-//	private PmUser pmUser;
-	
 	private List<VFlDocument> flDocumentList;
 	
-//	private Boolean checkDocType =false;
-//	private Boolean checkPoDocType =false;
-//	private Boolean checkPaDocType =false;
-//	//private Boolean checkTitle =false;
-//	private Boolean checkDocNo =false;
-//	private Boolean  checkDoInDocType=false;
-//	private Boolean  checkDoDocType=false;
-//	private Boolean  checkInDocType=false;
-	
-//	// getUserGroup
-//	private String flRequisitioner;
-//	private String flRecevingOfficer;
-//	private String flSupplier;
-//	private String flPmOfficer;
-//	private String flApprover;
-//	
-//	// for selected Approver List
-//	private DualListModel<String> approverModel;
-//	private HashMap<String, PmUserGroupUser> approverMap;
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
-
-	public String getTempLoginId() {
-		return tempLoginId;
-	}
 	
 	private class FlDocumentPagingDataModel extends PagingDataModel<VFlDocument> {
 		private static final long serialVersionUID = 1L;
@@ -336,32 +303,12 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 		
 	}
 
-	public void setTempLoginId(String tempLoginId) {
-		this.tempLoginId = tempLoginId;
-	}
-
-	public String getTempDocType() {
-		return tempDocType;
-	}
-
-	public void setTempDocType(String tempDocType) {
-		this.tempDocType = tempDocType;
-	}
-
 	public List<VFlDocument> getFlDocumentList() {
 		return flDocumentList;
 	}
 
 	public void setFlDocumentList(List<VFlDocument> flDocumentList) {
 		this.flDocumentList = flDocumentList;
-	}
-
-	public String getSearchType() {
-		return searchType;
-	}
-
-	public void setSearchType(String searchType) {
-		this.searchType = searchType;
 	}
 
 	public String getSearchOrderType() {
@@ -547,20 +494,6 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the docStatusList
-	 */
-	public List<PmStatusDesc> getDocStatusList() {
-		return docStatusList;
-	}
-
-	/**
-	 * @param docStatusList the docStatusList to set
-	 */
-	public void setDocStatusList(List<PmStatusDesc> docStatusList) {
-		this.docStatusList = docStatusList;
-	}
-
-	/**
 	 * @return the statusDescId
 	 */
 	public Long getStatusDescId() {
@@ -602,33 +535,9 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchProcurementTypeId = searchProcurementTypeId;
 	}
 
-//	/**
-//	 * @return the checkDoInDocType
-//	 */
-//	public Boolean getCheckDoInDocType() {
-//		return checkDoInDocType;
-//	}
-//
-//	/**
-//	 * @param checkDoInDocType the checkDoInDocType to set
-//	 */
-//	public void setCheckDoInDocType(Boolean checkDoInDocType) {
-//		this.checkDoInDocType = checkDoInDocType;
-//	}
-
 	/**
 	 * @return the procurementTypeList
 	 */
-	public List<PmParameterDesc> getProcurementTypeList() {
-		return procurementTypeList;
-	}
-
-	/**
-	 * @param procurementTypeList the procurementTypeList to set
-	 */
-	public void setProcurementTypeList(List<PmParameterDesc> procurementTypeList) {
-		this.procurementTypeList = procurementTypeList;
-	}
 
 	/**
 	 * @return the searchSuppDoRef
