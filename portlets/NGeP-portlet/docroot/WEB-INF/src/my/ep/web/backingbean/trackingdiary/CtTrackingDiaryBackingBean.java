@@ -238,21 +238,14 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 //		System.out.println("done");
 	}
 	public void reset(){
-//		this.getManagedBean().setSearchTitle(null);
-//		this.getManagedBean().setSearchSuppName(null);
-//		this.getManagedBean().setSearchSuppDoRef(null);
-//		this.getManagedBean().setSearchSuppInvRef(null);
-//		this.getManagedBean().setSearchContractNo(null);
-//		this.getManagedBean().setSearchContractToDuration(null);
-//		this.getManagedBean().setSearchContractFromDuration(null);
-//		this.getManagedBean().setSearchLoaNo(null);
-//		this.getManagedBean().setSearchCircularNo(null);
-//		this.getManagedBean().setSearchTrasactionType(null);
-//		this.getManagedBean().setSearchViewType(null);
-//		this.getManagedBean().setSearchPhysContractNo(null);
-//		this.getManagedBean().setSearchPhysLoaNo(null);
-		
-		renewSesionObject();
+		this.getManagedBean().setSearchTrasactionType(null);
+		this.getManagedBean().setSearchViewType(null);
+		this.getManagedBean().setSearchContractNo(null);
+		this.getManagedBean().setSearchLoaNo(null);
+		this.getManagedBean().setSearchPhysContractNo(null);
+		this.getManagedBean().setSearchPhysLoaNo(null);
+		this.getManagedBean().setSearchContractToDuration(null);
+		this.getManagedBean().setSearchContractFromDuration(null);
 	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {

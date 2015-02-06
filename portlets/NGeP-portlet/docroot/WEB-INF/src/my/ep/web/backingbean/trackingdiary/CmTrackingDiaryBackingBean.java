@@ -37,7 +37,11 @@ public class CmTrackingDiaryBackingBean extends
 	private static Logger log = Logger.getLogger(CmTrackingDiaryBackingBean.class);
 	public static final String NAV_TO_CATALOG_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CATALOG_DETAIL_SEARCH = "cmTrackingDiaryDetailSearch.xhtml";
-	FacesScopes face = new FacesScopes();
+
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
@@ -113,10 +117,14 @@ public class CmTrackingDiaryBackingBean extends
 		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 
-	public String reset() {
-		System.out.println("In reset ...................");
-		System.out.println("after reset.........................");
-		return null;
+	public void reset(){
+		this.getManagedBean().setSearchItemCodeValue(null);
+		this.getManagedBean().setSearchItemNameValue(null);
+		this.getManagedBean().setSearchStatusId(null);
+		this.getManagedBean().setSearchSupplierValue(null);
+		this.getManagedBean().setSearchCreatedFromDuration(null);
+		this.getManagedBean().setSearchCreatedToDuration(null);
+//		this.getManagedBean().setSmDocumentDataModel(null);
 	}
 	public SelectItem[] getStatus() {
 		SelectItem[] items = null;
@@ -125,7 +133,7 @@ public class CmTrackingDiaryBackingBean extends
 			items = new SelectItem[3];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+					getFacesScopes().getUserLocale()));
 			items[1] = new SelectItem(new String("ACT"), new String("ACTIVE"));
 			items[2] = new SelectItem(new String("NACT"), new String("NON ACTIVE"));
 		} catch (Exception e) {
@@ -147,7 +155,7 @@ public class CmTrackingDiaryBackingBean extends
 		
 		options.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				face.getUserLocale())));
+				getFacesScopes().getUserLocale())));
 		options.add(new SelectItem(CmConst.ITEM_STATUS_DRAFT, "Draf"));
 		options.add(new SelectItem(CmConst.ITEM_STATUS_PENDING_APPROVAL, "Menunggu Kelulusan"));
 		options.add(new SelectItem(CmConst.ITEM_STATUS_APPROVED, "Diluluskan"));
