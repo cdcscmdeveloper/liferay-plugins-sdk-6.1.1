@@ -105,6 +105,16 @@
 	          	</p:selectOneMenu>         
 	        </p:column>     
 	         -->   
+	         <p:column width="5%">
+			<f:facet name="header">
+					                #{lbl['lbl.pm.status']}
+				                </f:facet>
+			<p:selectOneMenu value="#{orgUnit.recordStatusFlg}"
+				 style="width:40px;">
+				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
+				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+			</p:selectOneMenu>
+		</p:column>
 	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
       		    <p:commandLink action="#{profileManagementBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
       		    	immediate="true" update="dtOrgUnit">
