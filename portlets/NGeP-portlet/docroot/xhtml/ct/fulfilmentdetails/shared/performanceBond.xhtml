@@ -65,8 +65,7 @@
 			
 			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.expiry.date']}">
 				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
-				    readonlyInput="true" disabled="true" mindate="#{contractDetailsBackingBean.exactDate}" 
-				    navigator="true" maxdate="#{contractDetailsBackingBean.exactDate}"
+				    readonlyInput="true" disabled="true"  navigator="true" 
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 				    <f:attribute name="startDate" value="#{varBond.effDate}" />
                     <f:validator validatorId="primeDateRangeValidator" />
