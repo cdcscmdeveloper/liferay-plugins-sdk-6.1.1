@@ -1365,6 +1365,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
     	context.put("ptj", scQt.getPmOrgProfile().getOrgName());
     	context.put("title", scQt.getQtTitle());
     	
+    	context.put("procurementMode", scQt.getProcurementMode()
+				.getParameterCode());
+    	
     	String committeeType = "";
     	for (ScQtCommittee scQtCommittee : scQt.getScQtCommittees()) {
     		committeeType = scQtCommittee.getScCommittee().getCommitteeType().getParameterCode();
