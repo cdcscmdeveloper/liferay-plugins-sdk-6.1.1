@@ -1109,10 +1109,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-cover-page.vm";
 			context.put("imgUrl", imgUrl);
-			context.put("contractTitle", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
+			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
 			context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 			context.put("supplierRegistrationNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
-			context.put("physicalContactNo", getManagedBean().getCtContract().getCurrentContractVer().getContractPhysicalNo());
+			context.put("physicalContactNo", getManagedBean().getCtContract().getContractNo());
 			context.put("contractStartDate",df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
 			context.put("contractEndDate",df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));
 			context.put("contractPeriod", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractPeriod()+ "");
@@ -1155,7 +1155,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 			context.put("supplierRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 			context.put("supplierAddress",AddressUtils.getFullAddress(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress()));
-			context.put("contractTitle", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
+			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
 
 		} else if (ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode)) {
 			context = new VelocityContext();
