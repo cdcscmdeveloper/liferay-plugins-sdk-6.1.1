@@ -160,7 +160,7 @@ public class CmTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_CATALOG_SEARCH;
+		return NAV_TO_CATALOG_SEARCH + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {

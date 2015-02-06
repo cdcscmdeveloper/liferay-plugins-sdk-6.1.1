@@ -297,7 +297,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 
 	public String backToPrev() {
 
-		return NAV_TO_CONTRACT_SEARCH;
+		return NAV_TO_CONTRACT_SEARCH + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {

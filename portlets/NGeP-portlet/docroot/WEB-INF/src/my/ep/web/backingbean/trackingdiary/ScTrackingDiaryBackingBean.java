@@ -121,7 +121,7 @@ public class ScTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_SC_SEARCH;
+		return NAV_TO_SC_SEARCH + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {

@@ -99,7 +99,7 @@ public class SmTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_SMSUPPLIER_SEARCH;
+		return NAV_TO_SMSUPPLIER_SEARCH + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {

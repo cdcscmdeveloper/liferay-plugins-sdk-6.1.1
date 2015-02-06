@@ -10,18 +10,5 @@ import my.ep.web.managedbean.trackingdiary.TrackingDiaryManagedBean;
 public class TrackingDiaryBackingBean extends
 		BaseBackingBean<TrackingDiaryManagedBean> {
 
-	private String codeType;
-
-//	private int previousScreen = 0;//0=catSearch;1=catMaintenance;
-	
-	
-
-	public String getCodeType() {
-		return codeType;
-	}
-
-	public void setCodeType(String codeType) {
-		this.codeType = codeType;
-	}
 }
 
