@@ -121,7 +121,7 @@ public class CdTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_CODIFICATION_SEARCH;
+		return NAV_TO_CODIFICATION_SEARCH + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
