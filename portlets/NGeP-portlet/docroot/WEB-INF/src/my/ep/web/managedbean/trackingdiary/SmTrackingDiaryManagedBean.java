@@ -32,9 +32,9 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 	private String supplierName;
 	private String applicationType;
 	private SmSupplier smSupplier;
-	private IPagingDataModel<SmSupplier> smDocumentDataModel = new SearchPagingDataModel();
+	public IPagingDataModel<SmSupplier> smDocumentDataModel = new SearchPagingDataModel();
 	
-	private class SearchPagingDataModel extends PagingDataModel<SmSupplier> {
+	public class SearchPagingDataModel extends PagingDataModel<SmSupplier> {
 
 		private static final long serialVersionUID = 1L;
 
