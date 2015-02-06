@@ -725,13 +725,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()==null){
 			this.getManagedBean().getSelectedUser().setPmUserOrgs(new ArrayList<PmUserOrg>());
 		}
-		if(!this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
-			for(PmUserOrg pmUserOrg: this.getManagedBean().getSelectedUser().getPmUserOrgs()){
-				if(pmUserOrg.getExpDate()==null){
-					throw new EpException(MessageConst.ERROR_770018); 
-				}
-			}
-		}
+//		if(!this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
+//			for(PmUserOrg pmUserOrg: this.getManagedBean().getSelectedUser().getPmUserOrgs()){
+//				if(pmUserOrg.getExpDate()==null){
+//					throw new EpException(MessageConst.ERROR_770018); 
+//				}
+//			}
+//		}
 		
 		PmUserOrg pmUserOrg = new PmUserOrg();
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
