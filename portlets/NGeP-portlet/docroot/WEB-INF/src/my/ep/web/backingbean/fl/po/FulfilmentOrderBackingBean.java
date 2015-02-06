@@ -253,6 +253,15 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
 		doMB.setDeliveryOrder(resDTO);
+		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
+				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
+				deliveryAddress.setSuppDelOrdNoDisabled(false);
+				if(remainOrderQty.doubleValue()==0){
+					deliveryAddress.setSuppDelOrdNoDisabled(true);
+				}
+			}
+		}	
 		doMB.sortOrderSummaryList(doMB.getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 		doMB.getManagedBean().setFromPageUrl("/xhtml/fl/dopending/doPendingTable.xhtml");
 		return NAV_TO_CREATE_DO;
