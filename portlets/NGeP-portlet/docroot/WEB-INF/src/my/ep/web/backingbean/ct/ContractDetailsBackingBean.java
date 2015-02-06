@@ -462,13 +462,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  		    	getManagedBean().setFrequencySchedule("P");
    	         }
 			
-			if(getManagedBean().getContractVer().getCtPerformanceBonds() != null && !getManagedBean().getContractVer().getCtPerformanceBonds().isEmpty()){
-				   for(CtPerformanceBond bond : getManagedBean().getContractVer().getCtPerformanceBonds()){
-					   bond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-					   bond.setExpDate(getExactDate());
-				   }
-			}
-			
 			if(getManagedBean().getCtContract().getLatestContractVer() != null && getManagedBean().getCtContract().getLatestContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)) {
 				    IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 					ContractAmendmentResDTO resAmendDto = amendSO.getAmendmentByLastestContractVer(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
@@ -2748,13 +2741,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	return true;
     }
     
-    public Date getExactDate(){
+  /*  public Date getExactDate(){
     	
+    	 String expDate = "";
     	 SimpleDateFormat dateFormat = null;
     	
     	try{
     	        dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-    	        String expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+    	          
+    	        expDate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate());
                 int startDay = Integer.valueOf(expDate.substring(0, 2));
 		        int startMonth = Integer.valueOf(expDate.substring(3, 5));
 		        int startYear = Integer.valueOf(expDate.substring(6, expDate.length())) +1;
@@ -2765,7 +2760,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     		ex.printStackTrace();
     	}
     	return null;
-    }
+    }*/
     
     public Date chkMimiumDate(boolean maxDate){
     	
