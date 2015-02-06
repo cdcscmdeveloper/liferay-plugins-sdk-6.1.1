@@ -337,6 +337,7 @@ public class SmApplicationBackingBean extends
 			if (newApplNum != null) {
 				getManagedBean().getSmAppl().setApplNo(newApplNum);
 			}
+			getManagedBean().getSmAppl().setQuestionnaire(false);
 			if (getManagedBean().getSmAppl().getSmSvTasks() != null
 					&& !getManagedBean().getSmAppl().getSmSvTasks().isEmpty()) {
 				for (SmSvTask task : getManagedBean().getSmAppl()
@@ -6358,34 +6359,57 @@ public class SmApplicationBackingBean extends
 								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 				} else {
-					if (pmStatId != null
-							&& !getManagedBean()
-									.getSmAppl()
-									.getApplType()
-									.equalsIgnoreCase(
-											ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
-							&& !getManagedBean()
-									.getSmAppl()
-									.getApplType()
-									.equalsIgnoreCase(
-											ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-						for (PmStatusDesc desc : getManagedBean()
-								.getRegStatusDescList()) {
-							if (pmStatId.equals(desc.getPmStatus()
-									.getStatusId())) {
-								getManagedBean().getSmAppl().setPmStatus(
-										desc.getPmStatus());
-								if (desc.getPmStatus().getPmRegStatus() != null) {
-									getManagedBean().getSmAppl()
-											.setPmRegStatus(
-													desc.getPmStatus()
-															.getPmRegStatus());
-									getManagedBean().getSmSupplier().setBumi(
-											getManagedBean().getSmAppl()
-													.getPmRegStatus()
-													.isBumiAppl());
+					if (pmStatId != null) {
+						if (getManagedBean()
+								.getSmAppl()
+								.getApplType()
+								.equalsIgnoreCase(
+										ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+							for (PmStatusDesc desc : getManagedBean()
+									.getRegStatusDescList()) {
+								if (pmStatId.equals(desc.getPmStatus()
+										.getStatusId())) {
+									getManagedBean().getSmAppl().setPmStatus(
+											desc.getPmStatus());
+									if (desc.getPmStatus().getPmRegStatus() != null) {
+										getManagedBean()
+												.getSmAppl()
+												.setPmRegStatus(
+														desc.getPmStatus()
+																.getPmRegStatus());
+										getManagedBean()
+												.getSmSupplier()
+												.setBumi(
+														getManagedBean()
+																.getSmAppl()
+																.getPmRegStatus()
+																.isBumiAppl());
+									}
 								}
 							}
+						} else if (getManagedBean()
+								.getSmAppl()
+								.getApplType()
+								.equalsIgnoreCase(
+										ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+							for (PmStatusDesc desc : getManagedBean()
+									.getRegStatusDescList()) {
+								if (desc.getPmStatus()
+										.getStatusId()
+										.equals(SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED)) {
+									getManagedBean().getSmAppl().setPmStatus(
+											desc.getPmStatus());
+									if (desc.getPmStatus().getPmRegStatus() != null) {
+										getManagedBean()
+												.getSmAppl()
+												.setPmRegStatus(
+														desc.getPmStatus()
+																.getPmRegStatus());
+									}
+									break;
+								}
+							}
+
 						}
 					}
 					reqDTO.setPaymentReqd(setPaymentMode());
