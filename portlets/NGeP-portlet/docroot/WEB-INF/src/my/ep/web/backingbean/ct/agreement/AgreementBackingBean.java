@@ -554,7 +554,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				 } else { // default to ministry
 					reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				 }
-			
+			     reqDTO.setApprovalLimit(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
 			     resDTO = userSO.retrieveUserListByRole(reqDTO);
 			     List<PmUser> list = resDTO.getUserList();
 			     items = new SelectItem[list.size() + 1];

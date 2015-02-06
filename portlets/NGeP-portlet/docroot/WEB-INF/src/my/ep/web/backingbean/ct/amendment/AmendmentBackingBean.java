@@ -2617,6 +2617,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   UserReqDTO reqDTO = new UserReqDTO();
 			   reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());	
 			   reqDTO.setOrgProfileId(this.getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			   reqDTO.setApprovalLimit(getManagedBean().getContractVer().getCtContractValue().getContractAmount().add(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount()));
 			   UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 				List<PmUser> list = resDTO.getUserList();
 			   items = new SelectItem[list.size()+1];
