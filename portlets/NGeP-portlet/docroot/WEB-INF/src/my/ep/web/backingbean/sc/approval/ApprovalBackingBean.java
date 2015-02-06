@@ -280,6 +280,8 @@ public class ApprovalBackingBean extends
 					.getScQtApprovalDtls()) {
 				if (approvalRequest.getApproverAction() == null) {
 					approvalRequest.setApproverAction(new PmParameter());
+				} else {
+					approvalRequest.setApproverAction(new PmParameter());
 				}
 			}
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
@@ -432,6 +434,20 @@ public class ApprovalBackingBean extends
 
 				this.setDefaultDateTime(reqDTO.getQtdetail());
 				detailSO.validateScheduleDetails(reqDTO);
+			}
+			if (SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean()
+					.getApprovalType())) {
+				List<ScQtApprovalRemark> remarks = this.getManagedBean()
+						.getScQtApproval().getScQtApprovalRemarks();
+				if (null != remarks) {
+					for (int i = 0; i < remarks.size(); i++) {
+						String userRemark = remarks.get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							throw new EpException(MessageConst.ERROR_100022,
+									new String[] { "Remark" });
+						}
+					}
+				}
 			}
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}
@@ -816,7 +832,12 @@ public class ApprovalBackingBean extends
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
-						scQt.setOpenFor(approvalRequest.getOriginalValue());
+						//scQt.setOpenFor(approvalRequest.getOriginalValue());
+						if ("Open".equalsIgnoreCase(approvalRequest.getOriginalValue())) {
+							scQt.setOpenFor("O");
+						} else {
+							scQt.setOpenFor("B");
+						}
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
