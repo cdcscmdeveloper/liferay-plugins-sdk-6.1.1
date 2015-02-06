@@ -810,10 +810,15 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			throw new EpException(MessageConst.ERROR_760211);
 		}
 		
+		List<ScQtRecommend> toBeValidatedRecommendList = null;
+		if (isZonal && isSubmit) {
+			toBeValidatedRecommendList = new ArrayList<ScQtRecommend>();
+		}
 		List<ScQtRecommend> scQtRecommendList = new ArrayList<ScQtRecommend>();
 		scQtRecommendList.addAll(scQtFinalization.getScQtRecommends());
 		PmParameter recommendBy = getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, recommendByStr);
 		ScQtEvaluationResult scQtEvaluationResult = this.getManagedBean().getRecommendedSupplier();
+		
 		if (scQtEvaluationResult != null) {
 			
 			//award
@@ -821,12 +826,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 				if (isZonal && 
 						!(scQtRecommend.getTplSpecZoneDtl().getSpecZoneId().equals(
-								zoneDtl.getSpecZoneId())) && !isSubmit) {
+								zoneDtl.getSpecZoneId()))) {
+					if (isSubmit) {
+						toBeValidatedRecommendList.add(scQtRecommend);
+					}
 					continue;
-				}
-				if (CollectionUtils.isEmpty(scQtRecommend.getRecommendDtls()) && isSubmit) {
-					setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
-					throw new EpException(MessageConst.ERROR_760206); 
 				}
 				boolean alreadyExists = false;
 				ScQtRecommendDtl selectedRecommendDtl = null;
@@ -867,13 +871,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 				if (isZonal && 
 						!(scQtRecommend.getTplSpecZoneDtl().getSpecZoneId().equals(
-								zoneDtl.getSpecZoneId())) && !isSubmit) {
+								zoneDtl.getSpecZoneId()))) {
+					if (isSubmit) {
+						toBeValidatedRecommendList.add(scQtRecommend);
+					}
 					continue;
 				}	
-				if (CollectionUtils.isEmpty(scQtRecommend.getRecommendDtls()) && isSubmit) {
-					setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
-					throw new EpException(MessageConst.ERROR_760206); 
-				}				
 				List<ScQtEvaluationResult> recommendedSupplierList = this.getManagedBean().getRecommendedSupplierList();
 				if (CollectionUtils.isNotEmpty(recommendedSupplierList)) {
 					if (scQtRecommend.getRecommendDtls() == null) {
@@ -919,6 +922,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				}
 				scQtRecommend.setRecommendByStr(recommendByStr);
 			}
+		}
+		if (isSubmit && isZonal && 
+				CollectionUtils.isNotEmpty(toBeValidatedRecommendList)) {
+			validateAwardOfItemsToSuppliersByPackage(scQtRecommendList);
 		}
 		scQtFinalization.setScQtRecommends(scQtRecommendList);
 	}
@@ -3651,6 +3658,15 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		} else {
 			log.info("There are no selected items");
 			return;
+		}
+	}
+	
+	private void validateAwardOfItemsToSuppliersByPackage(List<ScQtRecommend> scQtRecommendList) {
+		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+			if (CollectionUtils.isEmpty(scQtRecommend.getRecommendDtls())) {
+				setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_760206); 
+			}
 		}
 	}
 	
