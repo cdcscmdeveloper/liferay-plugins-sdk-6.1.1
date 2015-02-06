@@ -309,6 +309,7 @@ public class OrganisationBackingBean extends
 		// clear list's previous value
 		this.getManagedBean().setSmSupplierBanks(
 				new ArrayList<SmSupplierBank>());
+		this.getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());
 		this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		retrieveSupplierUserList(id);
@@ -361,7 +362,7 @@ public class OrganisationBackingBean extends
 					
 				}
 			}
-			/*if(orgProfile.getMainProfileGroups()!=null && !orgProfile.getMainProfileGroups().isEmpty()){
+			if(orgProfile.getMainProfileGroups()!=null && !orgProfile.getMainProfileGroups().isEmpty()){
 				for(PmProfileGroup profileGroup:orgProfile.getMainProfileGroups()){
 					if(profileGroup.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || profileGroup.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED){
 						this.getManagedBean().getProfileGroup().add(profileGroup);
@@ -369,9 +370,8 @@ public class OrganisationBackingBean extends
 					}
 					
 				}
-			}*/
-			this.getManagedBean().setProfileGroup(
-					orgProfile.getMainProfileGroups());
+			}
+			//this.getManagedBean().setProfileGroup(orgProfile.getMainProfileGroups());
 
 		}
 		// PTJ, GLC, LAT, STG and STB
@@ -753,12 +753,17 @@ public class OrganisationBackingBean extends
 			else{
 			
 				if(getManagedBean().getProfileGroup()!=null && !getManagedBean().getProfileGroup().isEmpty()){
+					
 					for (PmProfileGroup proGroup : getManagedBean().getProfileGroup()) {						
 							proGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 							log.info("Profile Suspended");
+							profileGroup.add(proGroup);
+							orgProfile.setMainProfileGroups(profileGroup);
 						
-					}	
+					}
+					
 				}
+				
 								
 			}
 			
