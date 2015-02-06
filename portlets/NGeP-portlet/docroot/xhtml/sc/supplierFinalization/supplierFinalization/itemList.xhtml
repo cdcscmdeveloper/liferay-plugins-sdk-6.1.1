@@ -79,9 +79,8 @@
 						<p:dataList var="recommendDetail" value="#{item.recommendDtls}" type="none">								   
 							<p:column>
 								<p:commandLink update="@([id$=suppDtlPopUp])"
-									action="#{suppFinalizationBackingBean.supplier}"
+									action="#{suppFinalizationBackingBean.showSupplierDetails(item, recommendDetail)}"
 									oncomplete="suppDtlWidgetVar.show();">
-									<f:setPropertyActionListener value="#{recommendDetail.supplier}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
 									<h:outputText value="#{recommendDetail.supplier.companyName}" />
 								</p:commandLink>
 								<br/>
