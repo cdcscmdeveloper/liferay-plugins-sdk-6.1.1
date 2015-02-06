@@ -72,21 +72,25 @@
 					<p:outputLabel value="#{lbl['lbl.sm.businessregno']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
-						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
-						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
-						size="40" label="#{lbl['lbl.sm.businessregno']}" >
-						<p:ajax event="blur" update="pnlCompInfo" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
-						<f:validator validatorId="busRegNoValidator" />
-						</p:inputText>
-					&#160;
-					<p:graphicImage id="regNoti" library="ep/images/design" name="tooltips.png" />
-					<p:tooltip id="regNott" for="regNoti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.no']}"  />
-					</p:tooltip>&#160;
-					<p:message id="regNoMsg" for="regNo" display="icon" />
+				
+				<td class="tdContent">
+					<p:outputPanel id="regNoPanelId">
+						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
+							value="#{registrationBackingBean.managedBean.smSupp.regNo}"
+							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
+							size="40" label="#{lbl['lbl.sm.businessregno']}" >
+							<p:ajax event="blur" update="regNoPanelId" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
+							<f:validator validatorId="busRegNoValidator" />
+							</p:inputText>
+						&#160;
+						<p:graphicImage id="regNoti" library="ep/images/design" name="tooltips.png" />
+						<p:tooltip id="regNott" for="regNoti">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.no']}"  />
+						</p:tooltip>&#160;
+						<p:message id="regNoMsg" for="regNo" display="icon" />
+					</p:outputPanel>
 				</td>
-
+				
 				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="ownerNameId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.ownername']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
