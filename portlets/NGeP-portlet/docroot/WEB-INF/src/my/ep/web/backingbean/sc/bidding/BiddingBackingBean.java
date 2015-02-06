@@ -51,7 +51,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	public BiddingBackingBean() {
 
 		System.out.println("biddingBB constructor");
-
+		
 		getStatusDescList();
 
 	}
@@ -64,15 +64,21 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	}
 
 	public void resetSearchFormAction() {
-
+		
 		getManagedBean().setSearchBiddingNo(null);
 		getManagedBean().setSearchDocumentNo(null);
 		getManagedBean().setSearchBidTitle(null);
 		getManagedBean().setSearchBiddingDateFrom(null);
 		getManagedBean().setSearchBiddingDateTo(null);
+		if(getManagedBean().getSelectedStatusDescList() != null){
+			getManagedBean().getSelectedStatusDescList().clear();
+		}
 		getManagedBean().setSelectedStatusDescList(null);
 		getManagedBean().setMindate(null);
-
+		
+		getManagedBean().searchForScheduledBids();
+		
+		
 	}
 
 	public void startDateSelectListener(SelectEvent event) {
@@ -156,6 +162,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			BiddingResDTO resDto = biddingSO.updateBidAction(reqDto);
 			if (resDto.isSuccessful()) {
 				log.info("bidPauseOrCancelAction successful");
+				resetSearchFormAction();
 			}
 
 		}
@@ -187,6 +194,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			if (resDto.isSuccessful()) {
 				getManagedBean().setBidAction(resDto.getScBidAction());
 				getManagedBean().getBidAction().setRemark(null);
+				resetSearchFormAction();
 			}
 
 		} finally {
