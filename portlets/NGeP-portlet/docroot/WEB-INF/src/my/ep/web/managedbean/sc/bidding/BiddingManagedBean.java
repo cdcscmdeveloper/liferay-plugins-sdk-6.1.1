@@ -29,6 +29,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.CartesianChartModel;
@@ -53,7 +54,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private Date searchBiddingDateTo;
 	private Date searchBiddingDateToMinDate;
 	
-	
 	private Long remainingTime;
 	private String duration;
 	private String newBidDuration;
@@ -63,8 +63,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String actionType;
 	private Date newStartDate;
 	private Date newEndDate;
-	
-		
 	
 	private List<ScBidSchedule> scheduledBidList;
 	
@@ -80,8 +78,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private List<ScBidItem> scBidItemsList;
 
 	private ScBidItem selectedBidItem;
-
-	
 	
 	private CartesianChartModel bidPriceLinearModel;
 	
@@ -99,15 +95,14 @@ public class BiddingManagedBean extends BaseManagedBean {
 
 	private Date createdDateFrom;
 	private Date createdDateTo;
-
-	
-	
 	
 	private String createdBy;
 
 	private String bidManagementViewBy;
 	private String bidManagementInitialViewBy;
 	private boolean rendered;
+	
+	private TemplateSpecHelper tplSpecHelper;
 	
 	public BiddingManagedBean() {
 
@@ -835,8 +830,31 @@ public class BiddingManagedBean extends BaseManagedBean {
 	public void setZoneDetailsList(List<TplSpecZoneDtl> zoneDetailsList) {
 		this.zoneDetailsList = zoneDetailsList;
 	}
-
 	
+	
+	/**
+	 * @return the tplSpecHelper
+	 */
+	public TemplateSpecHelper getTplSpecHelper() {
+		
+		if(this.tplSpecHelper == null ){
+			this.tplSpecHelper = new TemplateSpecHelper();
+		}
+		return tplSpecHelper;
+	}
+
+
+
+	/**
+	 * @param tplSpecHelper the tplSpecHelper to set
+	 */
+	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
+		this.tplSpecHelper = tplSpecHelper;
+	}
+
+
+
+
 	private IPagingDataModel<ScBidSchedule> searchDataModel = new SearchPagingDataModel();
 
 	private class SearchPagingDataModel extends PagingDataModel<ScBidSchedule> {
@@ -849,7 +867,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<ScBidSchedule> pageChangeListener(
+		public ISearchResultBean<ScBidSchedule> pageChangeListener(
 				ISearchBean<ScBidSchedule> bidSchSearchBean) {
 
 			IBiddingSO biddingSO = null;
