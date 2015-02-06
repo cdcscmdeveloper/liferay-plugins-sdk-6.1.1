@@ -16,7 +16,7 @@
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
 					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
-					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction" process="@all"
+					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId" process="@all"
 					   onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
@@ -155,7 +155,7 @@
 				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
 					disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
-					<p:ajax event="blur" update="extStartDate, extEndDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" 
+					<p:ajax event="blur" update="extStartDate, extEndDate, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" 
 					 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 					</p:inputText>
 				<p:spacer width="2" />

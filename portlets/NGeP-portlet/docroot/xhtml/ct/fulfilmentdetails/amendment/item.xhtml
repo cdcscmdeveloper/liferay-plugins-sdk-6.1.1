@@ -20,7 +20,7 @@
 			     value="#{amendmentBackingBean.managedBean.ctItemList}"  selectionMode="single"	
 			     selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{ctItemVar}">
 				 <ac:paginator for="itemTable" />
-				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.setDeafultPriceType()}"
+				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.onSelectProductItem()}"
 				     process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			
 				  <p:column style="width:30%; white-space:normal;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
@@ -72,7 +72,7 @@
 					<p:spacer width="5"/>
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" style="margin-bottom: -4px;" />
+						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
 					</p:commandLink>
 				</p:column>
 				
@@ -118,13 +118,12 @@
 				
 				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}">
 						        <p:commandLink update=":form:ctItemMaxQtyTable"
-						           process="@form" disabled="#{!amendmentBackingBean.isContractAdmin()}" 
+						           process="@form" disabled="#{itemMaxQtiesVar.chkIndexOfRow}" 
 						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 							       <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 							       <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						        </p:commandLink>
-					    	    <p:commandLink rendered="#{itemMaxQtiesVar.changeQuantity}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
-					    	       oncomplete="dlgDelItemMaxQty.show();return false;">
+					    	    <p:commandLink rendered="#{itemMaxQtiesVar.changeQuantity}" oncomplete="dlgDelItemMaxQty.show();return false;">
 							        <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 							        <p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						        </p:commandLink>
@@ -257,12 +256,12 @@
 								<p:column headerText="#{lbl['lbl.ct.action']}" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}"
 								    styleClass="column-align-center" style="width:10%; white-space:normal;">
 									<p:commandLink update=":form:itemId" process="@form" 
-									   rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
+										disabled="#{itemPriceVar.chkIndexOfRow}"
+									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 									</p:commandLink>
-									<p:commandLink rendered="#{itemPriceVar.changePrice}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
-									    oncomplete="dlgItemPrices.show();return false;">
+									<p:commandLink rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 									</p:commandLink>
@@ -326,14 +325,14 @@
 						</h:outputText>
 					</p:column>
 					<p:column rendered="false" headerText="#{lbl['lbl.ct.action']}" style="width:5%; white-space:normal;" styleClass="column-align-center">
-						<p:commandLink update=":form:ceilingTable"  disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
-						   rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
+						<p:commandLink update=":form:ceilingTable"
+							disabled="#{itemCeilingQtiesVar.chkIndexOfRow}"
+						   	rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
-						<p:commandLink oncomplete="dlgCeilQuantity.show();return false;" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
-						 rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
+						<p:commandLink oncomplete="dlgCeilQuantity.show();return false;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
 							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						</p:commandLink>
@@ -367,7 +366,8 @@
 			<p:dataTable id="serviceTable" var="serviceItemVar" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
-				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" listener="#{amendmentBackingBean.newServiceItemPrice()}" />
+				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" listener="#{amendmentBackingBean.onSelectServiceItem()}" 
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<p:column  style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
 				      <f:facet name="header">
 		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
@@ -441,12 +441,12 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}">
 						<p:commandLink update=":form:servicePriceTable" process="@form" rendered="#{!ItemPricesVar.changePrice and ItemPricesVar.editable}"
-							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
+							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}"
+							 disabled="#{ItemPricesVar.chkIndexOfRow}">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
-						<p:commandLink rendered="#{ItemPricesVar.changePrice}"  disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" 
-						oncomplete="dlgSvcItemPrices.show();return false;">
+						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						</p:commandLink>
