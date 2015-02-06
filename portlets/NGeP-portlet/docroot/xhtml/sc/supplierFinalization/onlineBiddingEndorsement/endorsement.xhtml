@@ -8,14 +8,14 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
+	<ui:define name="contentSection">
 	<style type="text/css">
-		.sidemenu>.ui-tabmenu-nav {
+		.sidemenu > .ui-tabmenu-nav {		
 			padding-bottom: 100px !important;
 			margin-bottom: -100px !important;
 		}	
-	</style>
+	</style>	
 	
-	<ui:define name="contentSection">
 	<p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 	 <ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
 		   postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
@@ -35,7 +35,6 @@
 					styleClass="ui-button"
 					action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}" />
 			</ui:repeat>
-
 
 		</div>
 
@@ -90,6 +89,7 @@
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/signOff.xhtml" />
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierDetailsPopUp.xhtml" />
+			
 	</ui:define>
 
 </ui:composition>
