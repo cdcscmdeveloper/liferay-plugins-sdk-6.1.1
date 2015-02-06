@@ -10,8 +10,7 @@
 		showDetail="true" autoUpdate="true" closable="true" />
 	<table style="width: 100%">
 		<tr>
-			<c:if
-				test="#{backingBean.managedBean.smAppl.applType ne 'C'  and backingBean.managedBean.smAppl.applType ne 'U' and backingBean.managedBean.smAppl.applType ne 'A'}">
+			<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' }">
 				<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
