@@ -3,10 +3,12 @@ package my.ep.web.backingbean.report;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,8 +21,13 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -31,6 +38,8 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -45,6 +54,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -57,10 +67,15 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
@@ -114,14 +129,56 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private List<SelectItem> ptjList = new ArrayList<SelectItem>();	
 	//private List<PmOrgProfile> ptjList;
 	private List<String> loanList = new ArrayList<String>();
+	private List<SelectItem> unspcList=new ArrayList<SelectItem>();
+	private List<SelectItem> brandList=new ArrayList<SelectItem>();
+	private List<SelectItem> extTypeList=new ArrayList<SelectItem>();
+	private List<SelectItem> measurmentList=new ArrayList<SelectItem>();
+	private List<SelectItem> colorList=new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
 	FLReportBackingBean flReportBackingBean;
 	SMReportBackingBean smReportBackingBean;
 	CTReportBackingBean ctReportBackingBean;	
+	Long unspid = null;
 	
 	
+	public List<SelectItem> getBrandList() {
+		return brandList;
+	}
+	public void setBrandList(List<SelectItem> brandList) {
+		this.brandList = brandList;
+	}
+	public List<SelectItem> getExtTypeList() {
+		return extTypeList;
+	}
+	public void setExtTypeList(List<SelectItem> extTypeList) {
+		this.extTypeList = extTypeList;
+	}
+	public List<SelectItem> getMeasurmentList() {
+		return measurmentList;
+	}
+	public void setMeasurmentList(List<SelectItem> measurmentList) {
+		this.measurmentList = measurmentList;
+	}
+	public List<SelectItem> getColorList() {
+		return colorList;
+	}
+	public void setColorList(List<SelectItem> colorList) {
+		this.colorList = colorList;
+	}
+	public Long getUnspid() {
+		return unspid;
+	}
+	public void setUnspid(Long unspid) {
+		this.unspid = unspid;
+	}
+	public List<SelectItem> getUnspcList() {
+		return unspcList;
+	}
+	public void setUnspcList(List<SelectItem> unspcList) {
+		this.unspcList = unspcList;
+	}
 	public String getReportValue() {
 		return reportValue;
 	}
@@ -688,7 +745,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String reportURL;	
 	private StreamedContent pdfFile;
 	private String constructedParamString;
-	private String reportFileNameJSP;	
+	private String reportFileNameJSP;
 	
 	public String getCtContractNo() {
 		return ctContractNo;
@@ -1642,22 +1699,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
-	}	
+	}
+	
 	/*
 	 *Retrieve module list 
 	 */
 	public List<SelectItem> retriveModuleList() {
-		/*moduleList = new ArrayList<SelectItem>();
-		reportList=new ArrayList<SelectItem>();	
-		SelectItem selectItem= new SelectItem();
-		getManagedBean().setReportList(new ArrayList<SelectItem>());
-		getManagedBean().setReportValue(null);
-		rptGenBean = new ReportsGenerateBean();	
-		//retriveReportListBymoduleName();
-		getManagedBean().setReportName(null);
-		getManagedBean().setReportValue(null);*/
-		//rptGenBean = new ReportsGenerateBean();
-		//getManagedBean().setRptGenBean(rptGenBean);
+		
 		moduleList = new ArrayList<SelectItem>();		
 		SelectItem selectItem= new SelectItem();
 		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SC_TTL));
@@ -1735,6 +1783,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				}
 				
 			}
+			//retrieveCMUnspc();
 		}else{		
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.REPORTS_NOT_AVAILABLE_BY_MODULE));
 		}
@@ -1858,6 +1907,123 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		} finally {
 			orgProfileSO = null;
 		}	
+	}	
+	public void retrieveCMUnspc() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<Object[]>  cmunspcLst = reportSO.retrieveCMUnspc();		
+		for(Object[] object : cmunspcLst){
+			SelectItem selectItem= new SelectItem();
+			selectItem.setLabel(object[0].toString());
+			selectItem.setValue(object[1]);
+			unspcList.add(selectItem);						
+		}
+	}
+	public void enableExtension() {
+		if(null != this.getCmUnspscCode()&&(this.getCmUnspscCode()!=ReportConst.EMPTY_VAL)){
+			if((this.getCmUnspscCode().length()==8)){
+				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
+				if(null!=unspid){
+					rptGenBean.setCmExtentionCodeView(true);	
+				}else{
+					this.setCmUnspscCode(null);
+					this.setCmExtentionCode(null);
+					rptGenBean.setCmExtentionCodeView(false);
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+				}			
+			}else{
+				this.setCmUnspscCode(null);
+				this.setCmExtentionCode(null);
+				rptGenBean.setCmExtentionCodeView(false);
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+			}
+		}else{
+			this.setCmExtentionCode(null);
+			rptGenBean.setCmExtentionCodeView(false);
+		}
+	}
+	
+	public Long retrieveCMUnspcIdbyCode(String unspcCode) {
+		Long unspcid=null;		
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<BigDecimal>  cmunspcLst = reportSO.retrieveCMUnspcIdbyCode(unspcCode);
+		if((null!=cmunspcLst)&&(cmunspcLst.size()!=0)){	
+			unspcid=((BigDecimal)cmunspcLst.get(0)).longValue();			
+		}		
+		return unspcid;
+	}
+	public void retrieveExtention() {
+		this.setUnspid((long) 12392);
+		this.setCmExtentionBrand(null);
+		this.setCmExtentionType(null);
+		this.setCmExtentionMeasurment(null);
+		this.setCmExtentionColour(null);
+		brandList=new ArrayList<SelectItem>();
+		extTypeList=new ArrayList<SelectItem>();
+		measurmentList=new ArrayList<SelectItem>();
+		colorList=new ArrayList<SelectItem>();
+		rptGenBean.setCmExtentionBrandView(false);
+		rptGenBean.setCmExtentionTypeView(false);
+		rptGenBean.setCmExtentionMeasurmentView(false);
+		rptGenBean.setCmExtentionColourView(false);
+		if(null!=this.getCmExtentionCode()){
+			if(this.getCmExtentionCode().equals(ReportConst.EXT_BRAND)){
+				rptGenBean.setCmExtentionBrandView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveBrand();
+			}else if(this.getCmExtentionCode().equals(ReportConst.EXT_TYPE)){
+				rptGenBean.setCmExtentionTypeView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveExtType();
+			}else if(this.getCmExtentionCode().equals(ReportConst.EXT_MEASUREMENT)){
+				rptGenBean.setCmExtentionMeasurmentView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveMeasurement();
+			}else if(this.getCmExtentionCode().equals(ReportConst.EXT_COLOUR)){
+				rptGenBean.setCmExtentionColourView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveColor();
+			}
+		}	
+	}
+	public void retrieveBrand() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<Object[]>  brandLst = reportSO.retrieveBrandByUnspsc(unspid);		
+		for(Object[] object : brandLst){
+			SelectItem selectItem= new SelectItem();
+			selectItem.setValue(object[0]);
+			selectItem.setLabel(object[1].toString());
+			brandList.add(selectItem);						
+		}
+	}
+	public void retrieveExtType() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<Object[]>  typeLst = reportSO.retrieveTypeByUnspsc(unspid);		
+		for(Object[] object : typeLst){
+			SelectItem selectItem= new SelectItem();
+			selectItem.setValue(object[0]);
+			selectItem.setLabel(object[1].toString());
+			extTypeList.add(selectItem);						
+		}
+	}
+	public void retrieveMeasurement() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<Object[]>  msrmntLst = reportSO.retrieveMeasurementByUnspsc(unspid);		
+		for(Object[] object : msrmntLst){
+			SelectItem selectItem= new SelectItem();
+			selectItem.setValue(object[0]);
+			selectItem.setLabel(object[1].toString());
+			measurmentList.add(selectItem);						
+		}
+	}
+	public void retrieveColor() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		List<Object[]>  clrLst = reportSO.retrieveColorByUnspsc(unspid);		
+		for(Object[] object : clrLst){
+			SelectItem selectItem= new SelectItem();
+			selectItem.setValue(object[0]);
+			selectItem.setLabel(object[1].toString());
+			colorList.add(selectItem);						
+		}
 	}
 	/*
 	 *Enable  criteria variables by report name 
@@ -2717,15 +2883,26 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getCmExtention()!=null)&&(this.getCmExtention()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ+this.getCmExtention());
 			}
+			if((this.getCmExtentionBrand()!=null)&&(this.getCmExtentionBrand()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCmExtentionBrandVar(ReportConst.CM_AMP_PEXT_EQ+this.getCmExtentionBrand());
+			}
+			if((this.getCmExtentionType()!=null)&&(this.getCmExtentionType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCmExtentionTypeVar(ReportConst.CM_AMP_PEXT_EQ+this.getCmExtentionType());
+			}
+			if((this.getCmExtentionMeasurment()!=null)&&(this.getCmExtentionMeasurment()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCmExtentionMeasurmentVar(ReportConst.CM_AMP_PEXT_EQ+this.getCmExtentionMeasurment());
+			}
+			if((this.getCmExtentionColour()!=null)&&(this.getCmExtentionColour()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCmExtentionColourVar(ReportConst.CM_AMP_PEXT_EQ+this.getCmExtentionColour());
+			}
 			if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.LST_REJ_CAT_ITM_RPT_VAL))){
 				if((this.getCmGroupOne()!=null)&&(this.getCmGroupOne()!=ReportConst.EMPTY_VAL)){
 					rptGenBean.setCmGroupOneVar(ReportConst.CM_AMP_PGROUP_EQ+this.getCmGroupOne());
 				}
-			}
-			
+			}			
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getCmExtentionVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getCmGroupOneVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getCmExtentionCodeVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getCmExtentionTypeVar()+rptGenBean.getCmExtentionBrandVar()+rptGenBean.getCmExtentionMeasurmentVar()+rptGenBean.getCmExtentionColourVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getCmExtentionVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getCmGroupOneVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getCmExtentionCodeVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
@@ -2974,6 +3151,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setCmProofIdentity(null);
 		this.setCmSupplOrAdmin(null);
 		this.setCmGroupOne(null);
+		this.setCmExtentionBrand(null);
+		this.setCmExtentionType(null);
+		this.setCmExtentionMeasurment(null);
+		this.setCmExtentionColour(null);
+		brandList=new ArrayList<SelectItem>();
+		extTypeList=new ArrayList<SelectItem>();
+		measurmentList=new ArrayList<SelectItem>();
+		colorList=new ArrayList<SelectItem>();
 		this.setFlItmType(null);
 		this.setFlPtj(null);
 		this.setFlContractNo(null);
