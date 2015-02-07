@@ -529,6 +529,7 @@ public class ReportConst {
 	public static final String CM_AMP_UNSPSC_TITLE_EQ = "&PUNSPSCTITLE=";
 	public static final String CM_AMP_EXTENSION_EQ = "&PEXTENSION=";
 	public static final String CM_AMP_PGROUP_EQ = "&PGROUP=";
+	public static final String CM_AMP_PEXT_EQ = "&PEXT=";
 	//sc
 	public static final String SC_AMP_REQUISENER_EQ = "&REQUIUSRID=";
 	public static final String SC_AMP_SUPPLIER_EQ = "&SUPP=";
@@ -697,4 +698,9 @@ public class ReportConst {
 	public static final String URL_NOT_CONNECTED = "lbl.rpt.search.URL_NOT_CONNECTED";
 	public static final String REPORTS_NOT_AVAILABLE_BY_MODULE = "lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE";
 	public static final String REPORT_PAGE = "reportcontentmain";
+	public static final String PLZ_PROV_VALID_UNSPCCODE = "lbl.rpt.search.PLZ_PROV_VALID_UNSPCCODE";
+	public static final String EXT_TYPE="TYPE";
+	public static final String EXT_BRAND="BRAND";
+	public static final String EXT_MEASUREMENT="MEASUREMENT";
+	public static final String EXT_COLOUR="COLOUR";
 }
