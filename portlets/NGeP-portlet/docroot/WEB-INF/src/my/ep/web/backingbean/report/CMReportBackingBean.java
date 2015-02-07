@@ -30,7 +30,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setCmItemStatusView(true);
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmExtentionCodeView(true);
+				//rptGenBean.setCmExtentionCodeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
@@ -42,7 +42,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	//rptGenBean.setCmSupplOrAdminView(true);			
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmExtentionCodeView(true);			
+				//rptGenBean.setCmExtentionCodeView(true);			
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);						
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
@@ -57,7 +57,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	//rptGenBean.setCmSupplOrAdminView(true);			
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmExtentionCodeView(true);			
+				//rptGenBean.setCmExtentionCodeView(true);			
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
@@ -71,7 +71,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	//rptGenBean.setCmSupplOrAdminView(true);			
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmExtentionCodeView(true);			
+				//rptGenBean.setCmExtentionCodeView(true);			
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
@@ -85,7 +85,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.LST_EXP_CAT_ITM_RPT_VAL:	        		
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmExtentionCodeView(true);			
+				//rptGenBean.setCmExtentionCodeView(true);			
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
@@ -104,7 +104,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmExtentionCodeView(true);			
+				//rptGenBean.setCmExtentionCodeView(true);			
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){

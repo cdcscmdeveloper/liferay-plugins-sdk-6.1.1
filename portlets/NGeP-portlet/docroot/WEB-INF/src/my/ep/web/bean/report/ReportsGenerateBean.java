@@ -109,6 +109,7 @@ public class ReportsGenerateBean {
 		private boolean cmSupplOrAdminView = false;
 		private boolean cmExtentionView = false;
 		private boolean cmGroupOneView = false;
+		
 		//SM module
 		private boolean smCompanyNameView = false;
 		private boolean smApplicationNoView = false;
@@ -303,7 +304,10 @@ public class ReportsGenerateBean {
 		private String cmExtentionCodeVar=ReportConst.EMPTY_VAL;
 		private String cmExtentionVar=ReportConst.EMPTY_VAL;
 		private String cmGroupOneVar=ReportConst.EMPTY_VAL;
-		
+		private String cmExtentionBrandVar=ReportConst.EMPTY_VAL;
+		private String cmExtentionTypeVar=ReportConst.EMPTY_VAL;
+		private String cmExtentionMeasurmentVar=ReportConst.EMPTY_VAL;
+		private String cmExtentionColourVar=ReportConst.EMPTY_VAL;
 		//sm
 		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
 		private String reportTypeTotVar=ReportConst.EMPTY_VAL;	
@@ -433,6 +437,30 @@ public class ReportsGenerateBean {
 		
 	
 		
+		public String getCmExtentionBrandVar() {
+			return cmExtentionBrandVar;
+		}
+		public void setCmExtentionBrandVar(String cmExtentionBrandVar) {
+			this.cmExtentionBrandVar = cmExtentionBrandVar;
+		}
+		public String getCmExtentionTypeVar() {
+			return cmExtentionTypeVar;
+		}
+		public void setCmExtentionTypeVar(String cmExtentionTypeVar) {
+			this.cmExtentionTypeVar = cmExtentionTypeVar;
+		}
+		public String getCmExtentionMeasurmentVar() {
+			return cmExtentionMeasurmentVar;
+		}
+		public void setCmExtentionMeasurmentVar(String cmExtentionMeasurmentVar) {
+			this.cmExtentionMeasurmentVar = cmExtentionMeasurmentVar;
+		}
+		public String getCmExtentionColourVar() {
+			return cmExtentionColourVar;
+		}
+		public void setCmExtentionColourVar(String cmExtentionColourVar) {
+			this.cmExtentionColourVar = cmExtentionColourVar;
+		}
 		public boolean isSmYearTextView() {
 			return smYearTextView;
 		}
