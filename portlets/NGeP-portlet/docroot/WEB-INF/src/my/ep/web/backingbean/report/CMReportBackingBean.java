@@ -214,7 +214,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
 				rptGenBean.setCmItemNameView(true);		
-				rptGenBean.setCmExtentionView(true);
+				//rptGenBean.setCmExtentionView(true);
 				break;
 	       /* case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);			
