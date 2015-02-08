@@ -22,6 +22,7 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
@@ -78,7 +79,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String remainingHours;
 	private String remainingMinutes;
 	private String remainingSeconds;
-	
+
 	private TemplateSpecHelper tplSpecHelper;
 
 	private static Logger log = Logger
@@ -92,7 +93,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	public OnlineBiddingBackingBean() {
-		
+
 	}
 
 	private void debugLogger(Object message) {
@@ -104,7 +105,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	@PostConstruct
 	private void init() {
-
 
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -282,9 +282,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
 
 		log.info("decrementAmountValueChangeListener");
-
 		ScBidPrice newBidPrice = new ScBidPrice();
 		BigDecimal newPrice = null;
+
 		if (scBidPrice.getBidPrice() == null
 				&& scBidPrice.getNewPrice() != null) {
 			newPrice = BigDecimal.valueOf(scBidPrice.getScBidSupplierItem()
@@ -302,13 +302,65 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		scBidPrice.setNewBidPrice(newBidPrice);
 		int index = getBidPrices().indexOf(scBidPrice);
 		getBidPrices().set(index, scBidPrice);
+	}
 
+	private Double getBidPriceTotals(ScBidPrice scBidPrice, BigDecimal itemPrice) {
+
+		return this.tplSpecHelper.calcTotalAmount(
+				scBidPrice.getScBidSupplierItem().getScBidItem()
+						.getScRequestItem().getTplSpecQuestion(),
+				itemPrice,
+				new BigDecimal(scBidPrice.getScBidSupplierItem().getScBidItem()
+						.getQty())).doubleValue();
+	}
+
+	public void confirmAndSubmitBIdPrice(ScBidPrice scBidPrice) {
+
+		log.info("confirmAndSubmitBIdPrice");
+		BigDecimal newPrice = null;
+		Double lastBidpriceTotal = null;
+		Double newBidpriceTotal = null;
+		if (scBidPrice.getBidPrice() == null
+				&& scBidPrice.getNewPrice() != null) {
+			newPrice = BigDecimal.valueOf(scBidPrice.getScBidSupplierItem()
+					.getItemStartPrice().doubleValue()
+					- scBidPrice.getNewPrice().doubleValue());
+			lastBidpriceTotal = getBidPriceTotals(scBidPrice, scBidPrice
+					.getScBidSupplierItem().getItemStartPrice());
+			newBidpriceTotal = getBidPriceTotals(scBidPrice, newPrice);
+
+		}
+
+		else if (scBidPrice.getBidPrice() != null
+				&& scBidPrice.getNewPrice() != null) {
+			newPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
+					.doubleValue() - scBidPrice.getNewPrice().doubleValue());
+			lastBidpriceTotal = getBidPriceTotals(scBidPrice,
+					scBidPrice.getBidPrice());
+			newBidpriceTotal = getBidPriceTotals(scBidPrice, newPrice);
+
+		}
+
+		if (lastBidpriceTotal != null && newBidpriceTotal != null) {
+			Double diffPercentage = ((lastBidpriceTotal - newBidpriceTotal) / lastBidpriceTotal) * 100;
+			if (diffPercentage > 10) {
+				this.setScBidPrice(scBidPrice);
+				RequestContext.getCurrentInstance().execute(
+						"newBidPriceConfirm.show()");
+			} else {
+				updateBidPriceAndCalculateRank(scBidPrice);
+			}
+		}
 	}
 
 	public void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
 		log.info("updateBidPriceNDcalculateRank");
-
-		ScBidPrice priceItemToPersist = bidPriceItem.getNewBidPrice();
+		ScBidPrice priceItemToPersist = null;
+		if ( bidPriceItem.getNewBidPrice() != null && bidPriceItem.getNewBidPrice().getBidPrice() != null) {
+			priceItemToPersist = bidPriceItem.getNewBidPrice();
+		} else {
+			priceItemToPersist = this.getScBidPrice().getNewBidPrice();
+		}
 
 		IBiddingSO biddingSO = null;
 
@@ -346,7 +398,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		TemplateSpecHelper tplSpecHelper = new TemplateSpecHelper();
 		Double startPriceTotal = 0D;
 		List<ScBidPrice> bidPriceList = getBidPrices();
-		
+
 		if (getBidPrices() != null && getBidPrices().size() != 0) {
 			for (ScBidPrice bidPrice : bidPriceList) {
 				startPriceTotal += (tplSpecHelper.calcTotalAmount(bidPrice
@@ -391,16 +443,20 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 					newBidPriceTotal += (tplSpecHelper.calcTotalAmount(bidPrice
 							.getScBidSupplierItem().getScBidItem()
-							.getScRequestItem().getTplSpecQuestion(),
-							bidPrice.getNewBidPrice().getBidPrice(),
-							new BigDecimal(bidPrice.getScBidSupplierItem()
-									.getScBidItem().getQty())).doubleValue());
+							.getScRequestItem().getTplSpecQuestion(), bidPrice
+							.getNewBidPrice().getBidPrice(), new BigDecimal(
+							bidPrice.getScBidSupplierItem().getScBidItem()
+									.getQty())).doubleValue());
 				} else if (bidPrice.getBidPrice() != null) {
-					newBidPriceTotal += 
-							
-							(tplSpecHelper.calcTotalAmount(bidPrice.getScBidSupplierItem().getScBidItem().getScRequestItem().getTplSpecQuestion(),bidPrice.getBidPrice(),new BigDecimal(bidPrice
-									.getScBidSupplierItem().getScBidItem().getQty())).doubleValue());
-						
+					newBidPriceTotal +=
+
+					(tplSpecHelper.calcTotalAmount(bidPrice
+							.getScBidSupplierItem().getScBidItem()
+							.getScRequestItem().getTplSpecQuestion(),
+							bidPrice.getBidPrice(), new BigDecimal(bidPrice
+									.getScBidSupplierItem().getScBidItem()
+									.getQty())).doubleValue());
+
 				} else {
 					newBidPriceTotal += (tplSpecHelper.calcTotalAmount(bidPrice
 							.getScBidSupplierItem().getScBidItem()
@@ -847,22 +903,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public Long getBidCompleted() {
 		return bidCompleted;
 	}
-	
-	
 
 	/**
 	 * @return the tplSpecHelper
 	 */
 	public TemplateSpecHelper getTplSpecHelper() {
-		
-		if(null == tplSpecHelper){
+
+		if (null == tplSpecHelper) {
 			tplSpecHelper = new TemplateSpecHelper();
 		}
 		return tplSpecHelper;
 	}
 
 	/**
-	 * @param tplSpecHelper the tplSpecHelper to set
+	 * @param tplSpecHelper
+	 *            the tplSpecHelper to set
 	 */
 	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
 		this.tplSpecHelper = tplSpecHelper;
