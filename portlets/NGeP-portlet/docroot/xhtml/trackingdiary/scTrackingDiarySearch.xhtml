@@ -59,8 +59,8 @@
 								<td width="35%"><p:outputLabel
 										value="Status" /></td>
 								<td width="35%">					
-									<p:selectOneMenu value="#{smTrackingDiaryBackingBean.managedBean.applicationType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
+									<p:selectOneMenu value="#{scTrackingDiaryBackingBean.managedBean.searchStatusId}">
+										<f:selectItems value="#{scTrackingDiaryBackingBean.searchStatusDesc()}" />
 									</p:selectOneMenu>
 								</td>						
 							</tr>
@@ -107,7 +107,7 @@
 					<f:facet name="header">
 					Document Status
 				</f:facet>
-					#{Obj[4]}
+					#{scTrackingDiaryBackingBean.getStatusDescById(#{Obj[4]})
 				</p:column>
 				<p:column>
 					<f:facet name="header">

@@ -2,21 +2,12 @@ package my.ep.web.backingbean.trackingdiary;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
-import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.exception.EpException;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -24,10 +15,9 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.trackingdiary.SmTrackingDiaryManagedBean;
-import my.ep.web.util.FacesScopes;
+import my.ep.web.managedbean.trackingdiary.SmTrackingDiaryManagedBean.SearchPagingDataModel;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "smTrackingDiaryBackingBean")
@@ -99,7 +89,7 @@ public class SmTrackingDiaryBackingBean extends
 		this.getManagedBean().setMOFAccountNo(null);
 		this.getManagedBean().setSupplierName(null);
 		this.getManagedBean().setSmSupplier(null);
-//		this.getManagedBean().setSmDocumentDataModel(null);
+//		this.getManagedBean().setSmDocumentDataModel(new SearchPagingDataModel());
 	}
 
 	public String backToPrev() {
