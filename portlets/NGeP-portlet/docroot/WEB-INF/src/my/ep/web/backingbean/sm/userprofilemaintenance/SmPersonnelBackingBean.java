@@ -1383,7 +1383,7 @@ public class SmPersonnelBackingBean extends
 
 			}
 		}
-		
+
 		if (getManagedBean().isUpgradeMofDraftAppl()) {
 			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -1396,7 +1396,7 @@ public class SmPersonnelBackingBean extends
 
 			PersonnelResDTO resDTO = smPersonnelSO
 					.retrieveDraftPersonnelByIdentificationNoAndSupplierId(reqDTO);
-			if(resDTO.getSmPersonnel()!=null){
+			if (resDTO.getSmPersonnel() != null) {
 				throw new EpException(MessageConst.ERROR_722589);
 			}
 		}
@@ -1782,9 +1782,13 @@ public class SmPersonnelBackingBean extends
 						.getBasicSmPersonnel().getEpRole())) {
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
 					.equals(RoleCode.CM_USER.value())) {
-				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
 						Integer.parseInt(ParameterConst.FLAG_NO));
+				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
+						Integer.parseInt(ParameterConst.FLAG_YES));
 			} else {
+				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
+						Integer.parseInt(ParameterConst.FLAG_YES));
 				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
 						Integer.parseInt(ParameterConst.FLAG_YES));
 			}
