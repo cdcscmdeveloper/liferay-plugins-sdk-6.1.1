@@ -52,39 +52,26 @@
 			            <h:panelGroup>
 				            <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
 				     	        disabled="#{panelBackingBean.managedBean.viewContract}"
-				       	        maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.complaint.deadline']}" />
+				       	        maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.int.deadline']}" />
 				           <p:spacer width="5" />
 				          <h:outputText value="#{lbl['lbl.ct.months']}" />
 			        </h:panelGroup>	
 			              
-			               <h:panelGrid columns="2" style="float:right;">
-			                    <p:outputLabel value="*" styleClass="mandatory" />
-			              	    <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
-		                   </h:panelGrid>
-		                   <h:panelGrid columns="2">
-			   		           <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
-			   		            	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			         	            mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
-			         	            showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
-			         	            disabled="#{panelBackingBean.managedBean.viewContract}">
-			         	            <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
-                                   <f:validator validatorId="primeDateRangeValidator" />
-			         	   </p:calendar>
-			         	   <p:message for="popupButtonCal1" display="icon" />
-			         	</h:panelGrid>
-			         	
-			         	
-			        
-			        
-			         <h:outputLabel value="#{lbl['lbl.ct.complaint.deadline']}" />
-			         <h:panelGroup>
-				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
-				     	disabled="#{panelBackingBean.managedBean.viewContract}"
-				       	maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.complaint.deadline']}" />
-				     <p:spacer width="5" />
-				     <h:outputText value="#{lbl['lbl.ct.months']}" />
-			        </h:panelGroup>	
-			        
+		               <h:panelGrid columns="2" style="float:right;">
+		                    <p:outputLabel value="*" styleClass="mandatory" />
+		              	    <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
+	                   </h:panelGrid>
+	                   <h:panelGrid columns="2">
+		   		           <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
+		   		            	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+		         	            mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
+		         	            showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
+		         	            disabled="#{panelBackingBean.managedBean.viewContract}">
+		         	            <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
+                                  <f:validator validatorId="primeDateRangeValidator" />
+		         	   </p:calendar>
+		         	   <p:message for="popupButtonCal1" display="icon" />
+		         	</h:panelGrid>			        
 			        <h:outputLabel value="#{lbl['lbl.ct.payment.day']}" />
 			        <h:panelGroup>
 				       <p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" 
