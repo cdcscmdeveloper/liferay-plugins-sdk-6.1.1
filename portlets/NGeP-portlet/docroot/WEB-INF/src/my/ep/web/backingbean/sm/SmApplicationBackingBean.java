@@ -3071,7 +3071,7 @@ public class SmApplicationBackingBean extends
 		overLapCategory = SmApplicationUtil.validL3CategoryCodeForOverLapping(
 				getManagedBean().getSelectedCategory().getPmCategoryL3()
 						.getCategoryL3Id(), getManagedBean().getSmSupplier()
-						.getSupplierId());
+						.getSupplierId(),getManagedBean().getSmAppl().getApplId());
 		getManagedBean().getSelectedCategory().setOverLapCategory(
 				overLapCategory);
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
