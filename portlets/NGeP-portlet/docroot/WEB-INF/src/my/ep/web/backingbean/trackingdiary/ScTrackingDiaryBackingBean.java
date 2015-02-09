@@ -50,8 +50,10 @@ public class ScTrackingDiaryBackingBean extends
 	public static final String NAV_TO_SC_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_DETAIL_SEARCH = "scTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
+	
 	public ScTrackingDiaryBackingBean() {
 	}
+
 	public SelectItem[] getDocumentType() {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
@@ -80,6 +82,7 @@ public class ScTrackingDiaryBackingBean extends
 		}
 		return items;
 	}
+
 	public SelectItem[] searchStatusDesc() throws NamingException {
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		IStatusSO statusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
@@ -87,10 +90,11 @@ public class ScTrackingDiaryBackingBean extends
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"pmStatus.moduleCode",
 				SearchOperator.OPERATOR_EQUALS.value(),
-				"CT"));
+				"SC"));
 		List<String> docTypeList = new ArrayList<String>();
-		docTypeList.add("FD");
-		docTypeList.add("FA");
+		docTypeList.add(getManagedBean().getSearchDocumentType());
+//		docTypeList.add("FA");
+		System.out.println("searchStatusDesc");
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"pmStatus.docType",
 				SearchOperator.OPERATOR_IN.value(),
@@ -129,6 +133,7 @@ public class ScTrackingDiaryBackingBean extends
 
 		return items;
 	}
+
 	public void search() {
 //		if ((extensionCode != null && extensionCode.isEmpty()) && ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))) {
 //			throw new EpException(MessageConst.ERROR_716006);
