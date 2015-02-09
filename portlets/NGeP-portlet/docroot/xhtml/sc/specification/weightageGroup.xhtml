@@ -63,7 +63,7 @@
 					true" maxIntegerDigits="14">
 					</ac:validateNumber>
 					<p:ajax event="blur" process="@this"
-						listener="#{specificationBackingBean.techScoreSum}"
+						listener="#{specificationBackingBean.techScoringCheckList(tech)}"
 						update=":form:addpoints" />
 				</p:inputText>
 				<p:message id="techScoreId" for="techScoreWeight" display="icon"></p:message>
@@ -78,7 +78,7 @@
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 
 					<p:ajax event="blur" process="@this"
-						listener="#{specificationBackingBean.techWeightageSum}"
+						listener="#{specificationBackingBean.techScoringCheckList(tech)}"
 						update=":form:addpoints" />
 				</p:inputText>
 
