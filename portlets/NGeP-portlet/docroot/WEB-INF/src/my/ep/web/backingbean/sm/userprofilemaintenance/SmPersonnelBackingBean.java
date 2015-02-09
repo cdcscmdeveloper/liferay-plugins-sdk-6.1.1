@@ -1782,13 +1782,11 @@ public class SmPersonnelBackingBean extends
 						.getBasicSmPersonnel().getEpRole())) {
 			if (getManagedBean().getBasicSmPersonnel().getEpRole()
 					.equals(RoleCode.CM_USER.value())) {
-				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
-						Integer.parseInt(ParameterConst.FLAG_NO));
+				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(0);
 				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
 						Integer.parseInt(ParameterConst.FLAG_YES));
 			} else {
-				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(
-						Integer.parseInt(ParameterConst.FLAG_YES));
+				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(2);
 				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
 						Integer.parseInt(ParameterConst.FLAG_YES));
 			}
