@@ -10,17 +10,17 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.exception.EpException;
@@ -113,6 +113,7 @@ public class SupplierUserActivationBackingBean extends
 					this.getManagedBean().setValidActivation(true);
 /*					this.getManagedBean().setPersonnelId(Long.parseLong(personnelId));
 					this.getManagedBean().setSupplierId(supplierProfile.getSupplierId());*/
+					personnel.setEpRole(getEpRole(personnel, supplierProfile));
 					this.getManagedBean().setSmPersonnel(personnel);
 					this.getManagedBean()
 							.setLatesApprovedAndDraftPersonnels(
@@ -328,7 +329,9 @@ public class SupplierUserActivationBackingBean extends
 		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 		try {
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(currPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
@@ -364,8 +367,6 @@ public class SupplierUserActivationBackingBean extends
 		}
 		return smPersonnelList;
 	}
-	
-	
 
 	// syazwan: added to validate if pending activation personnel already
 	// deactivate/terminate in latest approved personnel
@@ -374,7 +375,9 @@ public class SupplierUserActivationBackingBean extends
 		boolean isAlreadyDeactivate = false;
 		try {
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
@@ -395,6 +398,40 @@ public class SupplierUserActivationBackingBean extends
 			log.info("Error in isPersonnelAlreadyDeactivate:" + ex.getMessage());
 		}
 		return isAlreadyDeactivate;
+	}
+
+	// syazwan: added to check if eprole still BASIC or MOF
+	private String getEpRole(SmPersonnel smPersonnel, SmSupplier smSupplier) {
+		String epRole = smPersonnel.getEpRole();
+		if (smSupplier.getSupplierId() != null
+				&& smPersonnel.getEpRole() != null
+				&& smPersonnel.getEpRole().equalsIgnoreCase(
+						RoleCode.BASIC_SUPPLIER_USER.value())) {
+			ISupplierSearchSO supplierSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierSearchSO.class);
+			SmSupplier smSupplierTmp = null;
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setSupplierId(smSupplier.getSupplierId());
+			try {
+				smSupplierTmp = supplierSO.retriveSupplierById(
+						supplierSearchReqDTO).getSmSupplier();
+				// means already MOF because have applNo
+				// change BASIC_SUPPLIER_USER to MOF_SUPPLIER_USER
+				if (smSupplierTmp.getSmAppl().getApplNo() != null
+						&& StringUtils.isNotBlank(smSupplierTmp.getSmAppl()
+								.getApplNo())) {
+					epRole = RoleCode.MOF_SUPPLIER_USER.value();
+				}
+			} catch (Exception ex) {
+				log.info(ex.getMessage());
+			} finally {
+				smSupplierTmp = null;
+				supplierSearchReqDTO = null;
+			}
+		}
+		return epRole;
 	}
 
 	public String getTempPassword() {
