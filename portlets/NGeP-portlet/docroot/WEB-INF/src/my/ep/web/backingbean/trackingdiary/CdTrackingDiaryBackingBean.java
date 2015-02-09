@@ -33,7 +33,6 @@ public class CdTrackingDiaryBackingBean extends
 	public static final String NAV_TO_CODIFICATION_SEARCH = "trackingDiary.xhtml";
 	public static final String NAV_TO_CODIFICATION_DETAIL_SEARCH = "cdTrackingDiaryDetailSearch.xhtml";
 
-//	private IPagingDataModel<CmUnspsc> searchDataModel 	= new SearchPagingDataModel();
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
 	public CdTrackingDiaryBackingBean() {
@@ -85,7 +84,7 @@ public class CdTrackingDiaryBackingBean extends
 
 	public String goToTrackingDiarySearch(Object[] unspscObj) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-//		getManagedBean().setCmUnspsc(unspscObj);
+		getManagedBean().setObject(unspscObj);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CODIFICATION_DETAIL_SEARCH + "?faces-redirect=true";
 	}
