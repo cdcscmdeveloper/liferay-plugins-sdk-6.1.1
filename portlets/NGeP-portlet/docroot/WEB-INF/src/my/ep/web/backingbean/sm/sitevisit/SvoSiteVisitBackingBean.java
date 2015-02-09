@@ -1432,18 +1432,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
 			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
-			SmSvTemplate manufacturingTemplate = null;
-			for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()) {
-				if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
-					manufacturingTemplate = svTemplate;
-					if(manufacturingTemplate.getFinancialDocLs() == null) {
-						manufacturingTemplate.setFinancialDocLs(new ArrayList<SmSvManufacturingDoc>());
-					}
-					/*if(manufacturingTemplate.getFinancialDocParamMap() == null) {
-						manufacturingTemplate.setFinancialDocParamMap(new HashMap<Long,PmParameterDesc>());						
-					}*/
-				}
-			}
+			//SmSvTemplate manufacturingTemplate = null;
 
 			//retrieve Purchase Method && apply puchase method to map
 			Map<String, String> purchaseMethodMap = new HashMap<String,String>();
@@ -1455,12 +1444,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 			
-			this.prepareFinancialDoc(manufacturingTemplate);
-			//manufacturingTemplate.getFinancialDocParamMap();
+			List<PmParameterDesc> financialDocLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.MANUFACTURING_FINANCIAL_DOC, new FacesScopes().getUserLocale().getLanguage());
 			context.put("smCommonUtil", new SmCommonUtil());
-			//context.put("financialDocParamMap", manufacturingTemplate.getFinancialDocParamMap());
-			context.put("financialDocLs", manufacturingTemplate.getFinancialDocLs());
-			context.put("additionalDocLs", manufacturingTemplate.getAdditionalDocLs());
+			context.put("financialDocLs", financialDocLs);
+			context.put("additionalDocLs", "");
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
 			context.put("purchaseMethodMap", purchaseMethodMap);
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
