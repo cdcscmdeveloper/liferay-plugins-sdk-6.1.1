@@ -21,10 +21,13 @@
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
 								<td width="35%"><p:outputLabel
-										value="Document Type" /></td>
+										value="Document Type" /><p:outputLabel
+										value="*" styleClass="mandatory" /></td>
 								<td width="35%">					
 									<p:selectOneMenu value="#{scTrackingDiaryBackingBean.managedBean.searchDocumentType}">
 										<f:selectItems value="#{scTrackingDiaryBackingBean.getDocumentType()}" />
+										<p:ajax event="change" update="searchPanel"
+											listener="#{scTrackingDiaryBackingBean.searchStatusDesc}" />
 									</p:selectOneMenu>
 								</td>						
 							</tr>
@@ -42,7 +45,7 @@
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel
-										value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td>
+										value="Document Start/End Date" /></td>
 								<td width="35%"><p:calendar mode="popup" showOn="button"
 										readonlyInput="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -99,21 +102,21 @@
 				</p:column>
 				<p:column>
 					<f:facet name="header">
+					Document Title
+				</f:facet>
+					#{Obj[5]}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
 					Document Type
 				</f:facet>
 					#{Obj[3]}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Document Status
+					Status
 				</f:facet>
-					#{scTrackingDiaryBackingBean.getStatusDescById(#{Obj[4]})
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					Document Title
-				</f:facet>
-					#{Obj[5]}
+					#{scTrackingDiaryBackingBean.getStatusDescById(Obj[4])}
 				</p:column>
 				<p:column>
 					<f:facet name="header">

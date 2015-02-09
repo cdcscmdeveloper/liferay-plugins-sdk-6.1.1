@@ -18,7 +18,7 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 			
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+<!-- 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/> -->
 			<table>
 			<tr>
 				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
@@ -63,7 +63,7 @@
 			<h:panelGroup id="docDoStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
 					<p:outputLabel
-						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
+						value="Document Start/End Date" />
 					<p:calendar mode="popup" showOn="button"
 						readonlyInput="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"

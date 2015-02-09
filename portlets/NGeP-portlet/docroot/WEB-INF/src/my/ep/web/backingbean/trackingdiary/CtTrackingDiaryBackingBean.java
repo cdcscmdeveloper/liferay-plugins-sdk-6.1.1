@@ -19,12 +19,14 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -62,14 +64,13 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	}
 
 	public void search(){
-//		if(null == getManagedBean().getSearchTrasactionType()){ 
-//			throw new EpException(MessageConst.ERROR_740023);
-//		}else if((null ==getManagedBean().getSearchViewType() 
-//				&& "".equalsIgnoreCase(getManagedBean().getSearchContractNo()) 
-//				&& "".equalsIgnoreCase(getManagedBean().getSearchLoaNo()))){
-//			throw new EpException(MessageConst.ERROR_740023);
-//		MessageConst.ERROR_715026
+//		if ((getManagedBean().getSearchDocumentNoValue() != null && getManagedBean().getSearchDocumentNoValue().isEmpty()) 
+//				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
+//				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
+//				&& (getManagedBean().getSearchStatusId() != null)) {
+//			throw new EpException(MessageConst.ERROR_716006);
 //		}
+
 		System.out.println("pageChangeListener");
 		getManagedBean().getCtDocumentDataModel().reloadData();
 	}
