@@ -58,6 +58,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -1071,6 +1072,28 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
 		getManagedBean().setSelectedStaffAcademic(aca);
 		closeBlockUI();
+	}
+	
+	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel,
+			SmSupplier smSupplier) {
+		String accStatus = "";
+		if (smSupplier != null
+				&& smSupplier.getSupplierId() != null
+				&& smPersonnel.getEpRole() != null
+				&& StringUtils.isNotBlank(smPersonnel.getEpRole())
+				&& smPersonnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+
+			if (SmApplicationUtil.isLatestApprovedPersonnelAlreadyAuthorized(
+					smPersonnel.getIdentificationNo(),
+					smSupplier.getSupplierId())) {
+				accStatus = SmCommonUtil.getMessage(
+						"lbl.sm.activation.status.activated", null);
+			} else {
+				accStatus = SmCommonUtil.getMessage(
+						"lbl.sm.activation.status.pending", null);
+			}
+		}
+		return accStatus;
 	}
 
 	private void setApplicationShareHolders(List<SmPersonnel> perList) {
