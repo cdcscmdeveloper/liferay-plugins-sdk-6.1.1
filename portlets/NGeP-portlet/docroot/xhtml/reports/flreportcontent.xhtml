@@ -104,13 +104,7 @@
 									<p:inputText maxlength="100" value="#{reportBackingBean.flRequisitioner}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
-									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRequisitionerView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}" style="margin-top:5px;width:160px;" />									
-									<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.requisitionerList}"></f:selectItems>																																	
-									</p:selectOneMenu>
-								  </c:if>
+									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMtoContractView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.mtoContract']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.flMtoContract}"  style="margin-top:5px;width:290px;" >									
