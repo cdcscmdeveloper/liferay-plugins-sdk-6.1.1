@@ -17,7 +17,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.sitevisit.printing.apparatus.mchne']}
 					</f:facet>
-					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.printingParamMap[acc.pmParameter.parameterId].codeName}"></h:outputText>
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(acc.pmParameter)}"></h:outputText>
 				</p:column>
 
 				<p:column>

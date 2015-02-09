@@ -12,7 +12,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.financial.doc']}
 					</f:facet>
-					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.financialDocParamMap[finDoc.pmParameter.parameterId].codeName}"></h:outputText>
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(finDoc.pmParameter)}"></h:outputText>
 			</p:column>
 			
 			<p:column>
