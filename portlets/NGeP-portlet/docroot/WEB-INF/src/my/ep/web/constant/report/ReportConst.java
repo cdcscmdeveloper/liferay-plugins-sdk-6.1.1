@@ -7,12 +7,15 @@ import java.text.SimpleDateFormat;
  */
 public class ReportConst {
 
-	public static final String MOD_SC_TTL = "lbl.module.supplierSelection";
+	//public static final String MOD_SC_TTL = "lbl.module.supplierSelection";
+	public static final String MOD_SC_TTL = "lbl.module.quotationtender";
+	public static final String MOD_DP_TTL = "lbl.module.directpurchase";
 	public static final String MOD_CM_TTL = "lbl.module.catalogueManagement";
 	public static final String MOD_FL_TTL = "lbl.module.orderFulfillment";
 	public static final String MOD_SM_TTL = "lbl.module.supplierManagement";
 	public static final String MOD_CT_TTL = "lbl.module.contractManagement";
 	public static final String SC_MOD_VAL = "SC";
+	public static final String DP_MOD_VAL = "DP";
 	public static final String CM_MOD_VAL = "CM";
 	public static final String FL_MOD_VAL = "FL";
 	public static final String SM_MOD_VAL = "SM";	
