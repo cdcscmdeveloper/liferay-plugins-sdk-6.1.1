@@ -30,7 +30,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	private Long appId;
+	private long appId;
 	private String[] bpmAction;
 	private String taskId;
 	private SMSiteVisitDataType bpmPojo;
@@ -107,11 +107,11 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.bpmPojo = bpmPojo;
 	}
 
-	public Long getAppId() {
+	public long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(Long appId) {
+	public void setAppId(long appId) {
 		this.appId = appId;
 	}
 
