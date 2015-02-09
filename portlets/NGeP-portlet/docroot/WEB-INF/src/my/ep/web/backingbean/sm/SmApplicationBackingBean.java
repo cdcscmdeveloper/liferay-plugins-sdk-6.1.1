@@ -598,9 +598,10 @@ public class SmApplicationBackingBean extends
 					SmCompanyAddress comAdd = smAppl.getSmCompanyBasic()
 							.getSmCompanyAddresses().get(0);
 					SmAddress addr = comAdd.getSmAddress();
-					this.getManagedBean().setBasicCompanyStates(
-							retrievePmStateList(addr.getPmCountry()
-									.getCountryId()));
+					// this.getManagedBean().setBasicCompanyStates(
+					SmApplicationUtil.setPmStateDropdownValuesForBasicInfo(this
+							.getManagedBean(), addr.getPmCountry()
+							.getCountryId());
 					this.getManagedBean().setBasicCompanyDistricts(
 							retrievePmDistrictList(addr.getPmState()
 									.getStateId()));
@@ -3071,7 +3072,8 @@ public class SmApplicationBackingBean extends
 		overLapCategory = SmApplicationUtil.validL3CategoryCodeForOverLapping(
 				getManagedBean().getSelectedCategory().getPmCategoryL3()
 						.getCategoryL3Id(), getManagedBean().getSmSupplier()
-						.getSupplierId(),getManagedBean().getSmAppl().getApplId());
+						.getSupplierId(), getManagedBean().getSmAppl()
+						.getApplId());
 		getManagedBean().getSelectedCategory().setOverLapCategory(
 				overLapCategory);
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -7045,10 +7047,16 @@ public class SmApplicationBackingBean extends
 	public void populateStatesByCountry(long coutryId, String panelName,
 			PmState state, PmDistrict district, PmCity city) {
 		try {
-			List<PmState> stateLs = this.retrievePmStateList(coutryId);
+			List<PmState> stateLs = new ArrayList<PmState>();
+			if (!panelName
+					.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)) {
+				stateLs = this.retrievePmStateList(coutryId);
+			}
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
-				this.getManagedBean().setBasicCompanyStates(stateLs);
+				// this.getManagedBean().setBasicCompanyStates(stateLs);
+				SmApplicationUtil.setPmStateDropdownValuesForBasicInfo(
+						this.getManagedBean(), coutryId);
 				this.getManagedBean().setBasicCompanyDistricts(
 						new ArrayList<PmDistrict>());
 				this.getManagedBean().setBasicCompanyCities(
