@@ -23,6 +23,7 @@
 		<!-- 		<ui:include src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /> -->
 		<ui:param name="viewFlag" value="false" />
 		
+		
 		<table class="customTbl">
 			<tr valign="top">
 				<td class="sidemenutd" style="width:20%"><ui:include
@@ -30,6 +31,15 @@
 
 				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
 					<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}" >
+						</p:commandButton>
+
+						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}" 
+							rendered="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
+							<f:param name="disableValidation" value="true" />
+						</p:commandButton>
+					</div>
 					<ui:param name="category" value="#{svoSiteVisitBackingBean.managedBean.indexPageMap[svoSiteVisitBackingBean.managedBean.activeIndex]}" />
 						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
 							<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
