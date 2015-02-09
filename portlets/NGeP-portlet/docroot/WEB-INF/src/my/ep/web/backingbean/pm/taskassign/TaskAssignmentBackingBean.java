@@ -308,7 +308,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		
 				if(ParameterConst.ORG_TYPE_SM_BPK_HQ.equals(pmParameter.getParameterCode())
 					|| ParameterConst.ORG_TYPE_SM_PMS_SABAH.equals(pmParameter.getParameterCode())
-					|| ParameterConst.ORG_TYPE_SM_PMS_SARAWAK.equals(pmParameter.getParameterCode())){
+					|| ParameterConst.ORG_TYPE_SM_PMS_SARAWAK.equals(pmParameter.getParameterCode())
+					||ParameterConst.ORG_TYPE_BPK_HQ.equals(pmParameter.getParameterCode())
+					||ParameterConst.ORG_TYPE_PMS_SABAH.equals(pmParameter.getParameterCode())
+					||ParameterConst.ORG_TYPE_PMS_SARAWAK.equals(pmParameter.getParameterCode())){
 					this.getManagedBean().setOrgProfileRequired(false);
 					//default org profile
 					PmOrgValidity pmOrgValidity = getOrgProfile(pmParameter.getParameterCode());
