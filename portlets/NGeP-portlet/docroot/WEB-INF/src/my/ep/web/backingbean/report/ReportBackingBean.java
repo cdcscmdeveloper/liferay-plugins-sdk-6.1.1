@@ -2167,7 +2167,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL1List();		
 		for(PmCategoryL1 catOne: catCodeResDTO.getCategoryL1List()){			
 			SelectItem selectItem= new SelectItem();
-			selectItem.setLabel(catOne.getCategoryName()+" - "+catOne.getCategoryL1Id());
+			selectItem.setLabel(catOne.getCategoryL1Code()+" - "+catOne.getCategoryName());
 			selectItem.setValue(catOne.getCategoryL1Id());
 			levOneCatLst.add(selectItem);			
 		}
@@ -2181,7 +2181,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL2ListByL1Id(catCodeReqDTO);
 			for(PmCategoryL2 catTwo: catCodeResDTO.getCategoryL2List()){			
 				SelectItem selectItem= new SelectItem();
-				selectItem.setLabel(catTwo.getCategoryName()+" - "+catTwo.getCategoryL2Id());
+				selectItem.setLabel(catTwo.getCategoryL2Code()+" - "+catTwo.getCategoryName());
 				selectItem.setValue(catTwo.getCategoryL2Id());
 				levTwoCatLst.add(selectItem);			
 			}
@@ -2196,7 +2196,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL3ListByL2Id(catCodeReqDTO);
 			for(PmCategoryL3 catThree: catCodeResDTO.getCategoryL3List()){			
 				SelectItem selectItem= new SelectItem();
-				selectItem.setLabel(catThree.getCategoryName()+" - "+catThree.getCategoryL3Id());
+				selectItem.setLabel(catThree.getCategoryL3Code()+" - "+catThree.getCategoryName());
 				selectItem.setValue(catThree.getCategoryL3Id());
 				levThreeCatLst.add(selectItem);			
 			}
