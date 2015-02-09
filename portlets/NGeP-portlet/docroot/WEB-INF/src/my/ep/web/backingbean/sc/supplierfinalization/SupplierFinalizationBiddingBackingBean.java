@@ -186,6 +186,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 						Long bidScheduleId = bidScheduleList.get(0)
 								.getBidScheduleId();
 						bidReqDTO.setBidScheduleId(bidScheduleId);
+						getManagedBean().setScheduledBid(bidScheduleList.get(0));
 
 						BiddingResDTO bidResDTO = biddingSO
 								.retrieveBidScheduleDtl(bidReqDTO);
@@ -274,10 +275,33 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
-	public void supplierItemPricePopupAction(Object obj) {
-		// TODO : Implement the code to display the supplier details in popup
-	}
+	public void supplierItemPricePopupAction(BidPackageBean packageItem) {
 
+		getManagedBean().setSupplierCode(
+				packageItem.getScBidSupplier().getSmSupplier().getSupplierId());
+
+		IBiddingSO biddingSO = null;
+
+		try {
+			biddingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+			BiddingReqDTO reqDTO = new BiddingReqDTO();
+			reqDTO.setSupplierId(packageItem.getScBidSupplier().getSmSupplier()
+					.getSupplierId());
+			reqDTO.setBidScheduleId(getManagedBean().getScheduledBid()
+					.getBidScheduleId());
+
+			BiddingResDTO resDTO = biddingSO
+					.retrieveSupplierBidPriceList(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				getManagedBean().setScBidPriceList(resDTO.getBidPrices());
+			}
+		} finally {
+			biddingSO = null;
+		}
+	}
+	
 	/**
 	 * Method to call Supplier Details popup in supplier finalization
 	 */
