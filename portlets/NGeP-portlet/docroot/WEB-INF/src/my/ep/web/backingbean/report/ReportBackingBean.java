@@ -1748,7 +1748,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 */
 	public void retriveReportListBymoduleName() {
 		reportList=new ArrayList<SelectItem>();	
-		rptGenBean = new ReportsGenerateBean();		
+		rptGenBean = new ReportsGenerateBean();
+		this.setReportValue(null);
 		/*getManagedBean().setReportName(null);
 		getManagedBean().setReportValue(null);*/
 		this.setReportName(null);
@@ -1764,7 +1765,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		resetReportForm();		
 	}
 	public List<SelectItem> retriveReportListByModule(String module){
-		reportList=new ArrayList<SelectItem>();		
+		reportList=new ArrayList<SelectItem>();	
+		
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 		PMReportReqDTO reqDTO = new PMReportReqDTO();
 		reqDTO.setModuleCode(module);
