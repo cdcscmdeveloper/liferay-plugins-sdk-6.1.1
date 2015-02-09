@@ -136,7 +136,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="1">
-				<p:selectOneMenu id="secretary" value="#{amendmentBackingBean.managedBean.secretaryId}" 
+				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
 					label="#{lbl['lbl.ct.secretary']}" style="width:300px;">
 		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 		       	</p:selectOneMenu>
