@@ -134,10 +134,15 @@
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
-									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleChairperson}" />
-								
+									<h:outputText value="#{lbl['lbl.sc.chairperson']}" 
+										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleChairperson}" />
+										
+									<h:outputText value="#{lbl['lbl.sc.secretary']}" 
+										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}" />	
+																	
 									<p:selectOneMenu id="meetingRoleId" required="true" 
-										rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleChairperson}"
+										rendered="#{(committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleChairperson and
+														committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary)}"
 										label="#{lbl['lbl.sc.role']}"
 										value="#{committeeMember.memberRole.parameterCode}" style="width: 110px;margin-bottom: 5px;">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getMemberRoleTypeDropdownValues()}" />
