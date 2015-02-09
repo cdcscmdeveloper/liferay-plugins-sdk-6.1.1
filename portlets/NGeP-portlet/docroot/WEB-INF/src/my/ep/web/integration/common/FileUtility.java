@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.web.integration.eperunding.BoardOfDirector;
 import my.ep.web.integration.eperunding.ConsultantProfile;
 import my.ep.web.integration.eperunding.EquityOwner;
@@ -149,7 +149,6 @@ public class FileUtility {
 
 	public void materialColorFileOutPutStream(List<MaterialColor> content,
 			String filePath) {
-		System.out.println("inside materialColorFileOutPutStream..");
 		String SERVICE_CODE = "PHS-050";
 		Writer writer = null;
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -159,7 +158,6 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
-				System.out.println("-------------------");
 				
 				StringBuffer line;
 				for (MaterialColor mcolor : content) {
@@ -198,7 +196,6 @@ public class FileUtility {
 
 	public void materialMeasurementFileOutPutStream(
 			List<MaterialMeasurement> content, String filePath) {
-		System.out.println("inside materialMeasurementFileOutPutStream");
 		String SERVICE_CODE = "PHS-060";
 		Writer writer = null;
 
@@ -209,7 +206,6 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
-				System.out.println("=================");
 				StringBuffer line;
 				for (MaterialMeasurement mMeasurement : content) {
 					line = new StringBuffer();
@@ -246,7 +242,6 @@ public class FileUtility {
 	}
 
 	public void itemTypeFileOutPutStream(List<ItemType> content, String filePath) {
-		System.out.println("inside itemTypeFileOutPutStream ");
 		String SERVICE_CODE = "PHS-070";
 		Writer writer = null;
 
@@ -257,7 +252,6 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
-				System.out.println("=======================");
 				StringBuffer line;
 				for (ItemType itemType : content) {
 					line = new StringBuffer();
@@ -581,8 +575,8 @@ public class FileUtility {
 				    vot.setVotFundType(fileUtility.getValue(line,4 ,1));
 					vot.setCode(fileUtility.getValue(line, 4, 3));
 					vot.setPtjCode(fileUtility.getValue(line,7 ,2));
-					vot.setDescription(fileUtility.getValue(line, 9, 255));
-					vot.setStatus(fileUtility.getValue(line, 264,1));
+					vot.setDescription(fileUtility.getValue(line, 9, 264));
+					vot.setStatus(fileUtility.getValue(line, 264,265));
 					votList.add(vot);
 
 				}
@@ -834,14 +828,76 @@ public class FileUtility {
 		// END OF GFMAS PM Files
 	
 	
-	// set values for masterData material Info
+	// set values for masterData material Info 1gfmas
 	
-	public List<MasterDataMaterialInfo> setMasterDataMaterialInfo(){
+	public List<MasterDataMaterialInfo> setGfmasMasterDataMaterialInfo(List<CmItem> cmItemList){
+		
+		List<MasterDataMaterialInfo> masterDataMaterialInfoList = new ArrayList<MasterDataMaterialInfo>();
+		MasterDataMaterialInfo masterDataMaterialInfo = null;
+		
+		if(cmItemList.size()>0){
+			
+			for(CmItem cmItem :cmItemList){
+				masterDataMaterialInfo = new MasterDataMaterialInfo();
+				
+				cmItem.getCmSupplierItems();
+	
+				masterDataMaterialInfo.setMaterialCode(cmItem.getExtensionCode());
+				masterDataMaterialInfo.setCodeType("P");
+				masterDataMaterialInfo.setActionCode(checkAction(cmItem.getCreatedDate(), cmItem.getChangedDate()));
+				masterDataMaterialInfo.setMaterialDesc(cmItem.getItemName());
+				masterDataMaterialInfo.setMaterialAddDesc("Sample for testing");
+		
+				masterDataMaterialInfo.setStartEffectiveDt(new Date());
+				masterDataMaterialInfo.setEndEffectiveDt(new Date());
+				masterDataMaterialInfo.setCommodityName(cmItem.getCmUnspsc().getUnspscTitle());
+				masterDataMaterialInfo.setBaseUnitOfMeasure("UN");
+				masterDataMaterialInfo.setMaterialType(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 2)+"00");
+				masterDataMaterialInfo.setMaterialGroup(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 4)+"0000");
+				masterDataMaterialInfo.setAltUnitOfMeasure("U25");
+				masterDataMaterialInfoList.add(masterDataMaterialInfo);
+			}
+		}
 		
 		
-		return null;
+		return masterDataMaterialInfoList;
+	
+		}
+	
+	// set values for masterData material Info phis
+	
+    public List<my.ep.web.integration.phis.MasterDataMaterialInfo> setPHISMasterDataMaterialInfo(List<CmItem> cmItemList){
 		
-	}
+		List<my.ep.web.integration.phis.MasterDataMaterialInfo> masterDataMaterialInfoList = new ArrayList<my.ep.web.integration.phis.MasterDataMaterialInfo>();
+		my.ep.web.integration.phis.MasterDataMaterialInfo masterDataMaterialInfo = null;
+		
+		if(cmItemList.size()>0){
+			
+			for(CmItem cmItem :cmItemList){
+				masterDataMaterialInfo = new my.ep.web.integration.phis.MasterDataMaterialInfo();
+				
+				cmItem.getCmSupplierItems();
+	
+				masterDataMaterialInfo.setProductCode(cmItem.getExtensionCode());
+				masterDataMaterialInfo.setCodeType("P");
+				masterDataMaterialInfo.setOldProductCode("123");
+				masterDataMaterialInfo.setItemDescription("Sample for testing");
+				masterDataMaterialInfo.setKodTindakan(checkAction(cmItem.getCreatedDate(), cmItem.getChangedDate()));
+		
+				masterDataMaterialInfo.setStartEffectiveDate(new Date());
+				masterDataMaterialInfo.setEndEffectiveDate(new Date());
+				masterDataMaterialInfo.setCommodityName(cmItem.getCmUnspsc().getUnspscTitle());
+				masterDataMaterialInfo.setBaseUnitOfMeasure("UN");
+				masterDataMaterialInfo.setSegment(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 2));
+				masterDataMaterialInfo.setFamily(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 4));
+				masterDataMaterialInfo.setAltUnitOfMeasurement("U25");
+				masterDataMaterialInfoList.add(masterDataMaterialInfo);
+			}
+		}
+		
+		return masterDataMaterialInfoList;
+	
+		}
 	
 	
 
@@ -971,8 +1027,9 @@ public class FileUtility {
 	}
 	
 	public String checkAction(Date createdDate, Date updatedDate) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date1 = null, date2 = null;
+		
 		try {
 			date1 = sdf.parse(createdDate.getYear() + "-"
 					+ createdDate.getMonth() + "-" + createdDate.getDate());
@@ -980,14 +1037,14 @@ public class FileUtility {
 					+ updatedDate.getMonth() + "-" + updatedDate.getDate());
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		String action;
-		if (date1.compareTo(date2) > 0) {
+		if (createdDate.after(updatedDate)) {
 			action = IntegrationConstants.DEL;
-		} else if (date1.compareTo(date2) < 0) {
+		} else if (createdDate.before(updatedDate)) {
 			action = IntegrationConstants.ADJ;
-		} else if (date1.compareTo(date2) == 0) {
+		} else if (createdDate.equals(updatedDate)) {
 			action = IntegrationConstants.CRE;
 		} else {
 			action = IntegrationConstants.CRE;
@@ -997,7 +1054,7 @@ public class FileUtility {
 	
 	public String formatDate(Date date) {
 
-		SimpleDateFormat dt1 = new SimpleDateFormat("yyyMMdd");
+		SimpleDateFormat dt1 = new SimpleDateFormat("ddMMyyyy");
 
 		return String.format("%s", dt1.format(date));
 	}
@@ -1157,7 +1214,6 @@ public class FileUtility {
 				line.append(String.format("%.0f", cProfile
 						.getCapitalProportion().getTotalShare()));
 
-				// line.append(System.getProperty("line.separator"));
 				writer.write(line.toString());
 			}
 
@@ -1231,7 +1287,6 @@ public class FileUtility {
 
 			StringBuffer line;
 			writer.write("         " + content.size() + " Rows Selected");
-			// line.append(System.getProperty("line.separator"));
 			for (ManagementPersonnel mPersonnel : content) {
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
@@ -1313,7 +1368,6 @@ public class FileUtility {
 
 			StringBuffer line;
 			writer.write("         " + content.size() + " Rows Selected");
-			// line.append(System.getProperty("line.separator"));
 			for (BoardOfDirector bDirector : content) {
 				line = new StringBuffer();
 
@@ -1658,10 +1712,7 @@ public class FileUtility {
 	}
 	
 	public String getValue(String line,int begin,int size){
-		  
 		  String result = line.substring(begin, begin+size);
-//		  char[] result = new char[size];
-//		  line.getChars(begin, begin+size, result, 0);
 		  return result.trim();
 	  }
 
