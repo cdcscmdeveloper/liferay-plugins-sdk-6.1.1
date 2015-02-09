@@ -1710,7 +1710,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		SelectItem selectItem= new SelectItem();
 		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SC_TTL));
 		selectItem.setValue(ReportConst.SC_MOD_VAL);
-		moduleList.add(selectItem);			
+		moduleList.add(selectItem);
+		SelectItem selectItem5= new SelectItem();
+		selectItem5.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_DP_TTL));
+		selectItem5.setValue(ReportConst.DP_MOD_VAL);
+		moduleList.add(selectItem5);		
 		SelectItem selectItem1= new SelectItem();
 		selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_CM_TTL));
 		selectItem1.setValue(ReportConst.CM_MOD_VAL);
@@ -2064,7 +2068,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}			
 			if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){				
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,authoriztionList);				
-			}else if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){	
+			}else if((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))||(this.getModuleValue().equalsIgnoreCase(ReportConst.DP_MOD_VAL))){	
 				generateMonthList();
 				generateYearList();
 				scReportBackingBean.enableCriteriaVariablesByReportBySC(rptGenBean,authoriztionList);
