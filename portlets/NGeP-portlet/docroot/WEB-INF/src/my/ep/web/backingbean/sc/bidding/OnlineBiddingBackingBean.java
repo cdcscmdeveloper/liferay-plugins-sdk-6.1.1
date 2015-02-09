@@ -210,14 +210,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
 				getSmSupplier().getSupplierId());
 
-		if (getScBidSchedule().getPmStatus().getStatusId()
-				.equals(BidStatusConst.BID_CANCELLED)
-				|| getScBidSchedule().getPmStatus().getStatusId()
-						.equals(BidStatusConst.BID_PAUSED)) {
-			RequestContext.getCurrentInstance().execute(
-					"onlineBiddingNotification.show()");
-		}
-
 	}
 
 	private void getOnlineBidScheduleDetails(Long bidScheduleID, Long supplierID)
@@ -262,9 +254,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 								.getStatusId())) {
 					setScBidSchedule(resDTO.getScBidSchedule());
 				} else {
-
-					navigateUsingExternalContext(scBidSchedule
-							.getBidScheduleId());
+					setScBidSchedule(resDTO.getScBidSchedule());
+					if (getScBidSchedule().getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_CANCELLED)
+							|| getScBidSchedule().getPmStatus().getStatusId()
+									.equals(BidStatusConst.BID_PAUSED)) {
+						RequestContext.getCurrentInstance().execute(
+								"onlineBiddingNotification.show()");
+					}
 				}
 			}
 		} finally {
@@ -356,7 +353,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
 		log.info("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
-		if ( bidPriceItem.getNewBidPrice() != null && bidPriceItem.getNewBidPrice().getBidPrice() != null) {
+		if (bidPriceItem.getNewBidPrice() != null
+				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
 			priceItemToPersist = bidPriceItem.getNewBidPrice();
 		} else {
 			priceItemToPersist = this.getScBidPrice().getNewBidPrice();
@@ -392,6 +390,28 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			biddingSO = null;
 		}
 	}
+	
+	public void biddStatusNotificationAction(){
+		
+		try{
+			navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			
+		}
+		
+	}
+
+	private Long durationCalculator(Date startDate, Date endDate) {
+
+		long durationInMills = endDate.getTime() - startDate.getTime();
+
+		long time = TimeUnit.SECONDS.convert(durationInMills,
+				TimeUnit.MILLISECONDS);
+
+		return time;
+	}
 
 	private void itemStartPriceTotal() {
 
@@ -412,21 +432,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 
 		setItemStartPriceTotal(nf.format(startPriceTotal));
-	}
-
-	/**
-	 * @return the newScBidPrice
-	 */
-	public ScBidPrice getNewScBidPrice() {
-		return newScBidPrice;
-	}
-
-	/**
-	 * @param newScBidPrice
-	 *            the newScBidPrice to set
-	 */
-	public void setNewScBidPrice(ScBidPrice newScBidPrice) {
-		this.newScBidPrice = newScBidPrice;
 	}
 
 	/**
@@ -474,14 +479,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param itemNewBidPriceTotal
-	 *            the itemNewBidPriceTotal to set
-	 */
-	public void setItemNewBidPriceTotal(String itemNewBidPriceTotal) {
-		this.itemNewBidPriceTotal = itemNewBidPriceTotal;
-	}
-
-	/**
 	 * @return the remainingBidTime
 	 */
 	public Long getRemainingBidTime() {
@@ -506,14 +503,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 
 		return remainingBidTime;
-	}
-
-	/**
-	 * @param remainingBidTime
-	 *            the remainingBidTime to set
-	 */
-	public void setRemainingBidTime(Long remainingBidTime) {
-		this.remainingBidTime = remainingBidTime;
 	}
 
 	/**
@@ -546,6 +535,119 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 		this.setItemLastBidPriceTotal(nf.format(lastBidPriceTotal));
 		return itemLastBidPriceTotal;
+	}
+
+	/**
+	 * @return the interval
+	 */
+	public Long getInterval() {
+
+		if (getScBidSchedule().getPmStatus().getStatusId()
+				.equals(BidStatusConst.BID_PENDING_BIDDING)) {
+
+			if (!(durationCalculator(new Date(), scBidSchedule.getStartDate()) < 0)) {
+
+				interval = durationCalculator(new Date(),
+						scBidSchedule.getStartDate());
+			} else {
+				interval = 10L;
+			}
+
+		} else {
+			interval = 10L;
+		}
+
+		return interval;
+	}
+
+	/**
+	 * @return the remainingSeconds
+	 */
+	public String getRemainingSeconds() {
+
+		if (scBidSchedule != null && scBidAction != null) {
+
+			long durationInMills = scBidSchedule.getEndDate().getTime()
+					- scBidAction.getCreatedDate().getTime();
+			long diffSeconds = durationInMills / 1000 % 60;
+			remainingHours = durationFormat.format(diffSeconds);
+		}
+
+		return remainingSeconds;
+	}
+
+	/**
+	 * @return the remainingMinutes
+	 */
+	public String getRemainingMinutes() {
+
+		if (scBidSchedule != null && scBidAction != null) {
+
+			long durationInMills = scBidSchedule.getEndDate().getTime()
+					- scBidAction.getCreatedDate().getTime();
+			long diffMinutes = durationInMills / (60 * 1000) % 60;
+			remainingHours = durationFormat.format(diffMinutes);
+		}
+
+		return remainingMinutes;
+	}
+
+	/**
+	 * @return the remainingHours
+	 */
+	public String getRemainingHours() {
+
+		if (scBidSchedule != null && scBidAction != null) {
+
+			long durationInMills = scBidSchedule.getEndDate().getTime()
+					- scBidAction.getCreatedDate().getTime();
+			long diffHours = durationInMills / (60 * 60 * 1000) % 24;
+			remainingHours = durationFormat.format(diffHours);
+		}
+
+		return remainingHours;
+	}
+
+	/**
+	 * @return the tplSpecHelper
+	 */
+	public TemplateSpecHelper getTplSpecHelper() {
+
+		if (null == tplSpecHelper) {
+			tplSpecHelper = new TemplateSpecHelper();
+		}
+		return tplSpecHelper;
+	}
+
+	/**
+	 * @return the newScBidPrice
+	 */
+	public ScBidPrice getNewScBidPrice() {
+		return newScBidPrice;
+	}
+
+	/**
+	 * @param newScBidPrice
+	 *            the newScBidPrice to set
+	 */
+	public void setNewScBidPrice(ScBidPrice newScBidPrice) {
+		this.newScBidPrice = newScBidPrice;
+	}
+
+	/**
+	 * @param itemNewBidPriceTotal
+	 *            the itemNewBidPriceTotal to set
+	 */
+	public void setItemNewBidPriceTotal(String itemNewBidPriceTotal) {
+		this.itemNewBidPriceTotal = itemNewBidPriceTotal;
+	}
+
+	/**
+	 * @param remainingBidTime
+	 *            the remainingBidTime to set
+	 */
+	public void setRemainingBidTime(Long remainingBidTime) {
+		this.remainingBidTime = remainingBidTime;
 	}
 
 	/**
@@ -677,29 +779,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @return the interval
-	 */
-	public Long getInterval() {
-
-		if (getScBidSchedule().getPmStatus().getStatusId()
-				.equals(BidStatusConst.BID_PENDING_BIDDING)) {
-
-			if (!(durationCalculator(new Date(), scBidSchedule.getStartDate()) < 0)) {
-
-				interval = durationCalculator(new Date(),
-						scBidSchedule.getStartDate());
-			} else {
-				interval = 10L;
-			}
-
-		} else {
-			interval = 10L;
-		}
-
-		return interval;
-	}
-
-	/**
 	 * @param interval
 	 *            the interval to set
 	 */
@@ -798,22 +877,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @return the remainingHours
-	 */
-	public String getRemainingHours() {
-
-		if (scBidSchedule != null && scBidAction != null) {
-
-			long durationInMills = scBidSchedule.getEndDate().getTime()
-					- scBidAction.getCreatedDate().getTime();
-			long diffHours = durationInMills / (60 * 60 * 1000) % 24;
-			remainingHours = durationFormat.format(diffHours);
-		}
-
-		return remainingHours;
-	}
-
-	/**
 	 * @param remainingHours
 	 *            the remainingHours to set
 	 */
@@ -822,43 +885,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @return the remainingMinutes
-	 */
-	public String getRemainingMinutes() {
-
-		if (scBidSchedule != null && scBidAction != null) {
-
-			long durationInMills = scBidSchedule.getEndDate().getTime()
-					- scBidAction.getCreatedDate().getTime();
-			long diffMinutes = durationInMills / (60 * 1000) % 60;
-			remainingHours = durationFormat.format(diffMinutes);
-		}
-
-		return remainingMinutes;
-	}
-
-	/**
 	 * @param remainingMinutes
 	 *            the remainingMinutes to set
 	 */
 	public void setRemainingMinutes(String remainingMinutes) {
 		this.remainingMinutes = remainingMinutes;
-	}
-
-	/**
-	 * @return the remainingSeconds
-	 */
-	public String getRemainingSeconds() {
-
-		if (scBidSchedule != null && scBidAction != null) {
-
-			long durationInMills = scBidSchedule.getEndDate().getTime()
-					- scBidAction.getCreatedDate().getTime();
-			long diffSeconds = durationInMills / 1000 % 60;
-			remainingHours = durationFormat.format(diffSeconds);
-		}
-
-		return remainingSeconds;
 	}
 
 	/**
@@ -905,32 +936,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @return the tplSpecHelper
-	 */
-	public TemplateSpecHelper getTplSpecHelper() {
-
-		if (null == tplSpecHelper) {
-			tplSpecHelper = new TemplateSpecHelper();
-		}
-		return tplSpecHelper;
-	}
-
-	/**
 	 * @param tplSpecHelper
 	 *            the tplSpecHelper to set
 	 */
 	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
 		this.tplSpecHelper = tplSpecHelper;
-	}
-
-	private Long durationCalculator(Date startDate, Date endDate) {
-
-		long durationInMills = endDate.getTime() - startDate.getTime();
-
-		long time = TimeUnit.SECONDS.convert(durationInMills,
-				TimeUnit.MILLISECONDS);
-
-		return time;
 	}
 
 }
