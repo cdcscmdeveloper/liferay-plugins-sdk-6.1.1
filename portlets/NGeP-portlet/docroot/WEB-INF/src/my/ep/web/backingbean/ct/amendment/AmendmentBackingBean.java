@@ -595,6 +595,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		      if(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)){
 		    	  getManagedBean().setDisablefinalAmendDetails(true);
 		      }
+		      //Default the secretary
+		      if ((getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) ||
+		    		  getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) &&
+		    		  getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) &&
+		    		  !getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() &&
+		    		  !getManagedBean().isDisableAmendDetails()) {
+		    	  SelectItem[] secretaryList = getSecretaryDropdownList(); 
+		    	  if(secretaryList != null & secretaryList.length == 2) {
+		    		  getManagedBean().setSecretaryId((Long)secretaryList[1].getValue());
+		    	  }
+		      }
 	   	    } finally {
 		     	contractSO = null;
 		     	reqDTO = null;
@@ -3926,10 +3937,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			for(PmUser user : list) {
 		       items[i++] = new SelectItem(user.getUserId(), user.getUserName());
-			}
-			
-			if(list.size() == 1) {
-				getManagedBean().setSecretaryId(list.get(0).getUserId());
 			}
 		 } catch (Exception e) {
 	    	   e.printStackTrace();
