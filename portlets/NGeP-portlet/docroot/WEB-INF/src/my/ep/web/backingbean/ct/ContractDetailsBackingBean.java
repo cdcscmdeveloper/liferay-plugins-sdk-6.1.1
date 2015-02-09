@@ -2254,6 +2254,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			amendBB.getManagedBean().setSelectedItem(null);
 			amendBB.getManagedBean().setSelectedServiceItem(null);
 			amendBB.setAmendmentContractVer(resDTO);
+			amendBB.ConstructTabSideMenu();
 		}finally {
 			contractSO = null;
 			ctBB = null;
@@ -2278,6 +2279,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    getManagedBean().setViewContract(true);
 	    setValidateContractField(resDTO); 
+	    ConstructSideTabMenu();
 	    getManagedBean().setSelectedTabIndex(0);
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
@@ -2301,6 +2303,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 		    setValidateContractField(resDTO);
+		    ConstructSideTabMenu();
 		    
 		    getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		    
 	        getManagedBean().setViewContract(false);
