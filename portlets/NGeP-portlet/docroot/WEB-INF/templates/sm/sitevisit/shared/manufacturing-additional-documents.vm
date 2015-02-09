@@ -15,10 +15,10 @@
 			#foreach($additionalDoc in $additionalDocLs)
 			<tr>
 				<td>$velocityCount</td>
-				<td>$additionalDoc.docName</td>
-				<td>$additionalDoc.docRef</td>
-				<td>$additionalDoc.docDate</td>
-				<td>$additionalDoc.remark</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			#end
 		#else
