@@ -1,5 +1,7 @@
 package my.ep.web.scheduler.job.gfmas;
 
+import java.io.IOException;
+
 import my.ep.factory.EpLogger;
 import my.ep.web.integration.common.GfmasIntegration;
 
@@ -23,6 +25,11 @@ public class GfmasBatchPmInboundJob implements Job {
 		}
 		log.info(message);
 	}
+	public static void main(String[] args) throws IOException {
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		gfmasIntegration.pejabatPerakaunanGfmasInbound();
+	}
+
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
@@ -30,26 +37,27 @@ public class GfmasBatchPmInboundJob implements Job {
 		log.info("GfmasPMBatchIntegrationJob ");
 
 		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		// 
+		
 		gfmasIntegration.pejabatPerakaunanGfmasInbound();
-		//
-		gfmasIntegration.pejabatPerakaunanGfmasInbound();
-		//
+		
+		gfmasIntegration.pegawaiPengawalGfmasInbound();
+		
 		gfmasIntegration.votGfmasInbound();
-		//
-		gfmasIntegration.votDanaGfmasInbound();
-		//
-		gfmasIntegration.kodAkaunGfmasInbound();
-		//
-		gfmasIntegration.kodBankGfmasInbound();
-		//
-		gfmasIntegration.kumpulanPtjGfmasInbound();
-		//
-		gfmasIntegration.kumpulanPtjGfmasInbound();
-		//
+		
+		gfmasIntegration.votDanaGfmasInbound();		
+		
 		gfmasIntegration.programAktivitiGfmasInbound();
-		//
+		
 		gfmasIntegration.projectGfmasInbound();
+		
+		gfmasIntegration.kodAkaunGfmasInbound();		
+		
+		gfmasIntegration.kumpulanPtjGfmasInbound();
+		//
+		//gfmasIntegration.kodBankGfmasInbound();
+		//
+		//gfmasIntegration.masterDataPtjGfmasInbound();
+		
 		
 
 	}
