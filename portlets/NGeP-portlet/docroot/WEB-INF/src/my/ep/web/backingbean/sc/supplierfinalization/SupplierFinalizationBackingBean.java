@@ -3510,7 +3510,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		ScQtProposalItem proposalItem = evalResultDtl.getQtEvaluationResult().getScQtProposalItem();
 		if (proposalItem != null) {
 			BigDecimal offeredPrice = TemplateSpecHelper.getInstance().calcTotalAmount(requestItem.getTplSpecQuestion(), 
-											new BigDecimal(proposalItem.getOfferPrice()), requestItem.getQuantity());
+											new BigDecimal(proposalItem.getOfferPrice()), new BigDecimal(proposalItem.getOfferQuantity()));
 			evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 		}
 	}
