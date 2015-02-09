@@ -20,7 +20,7 @@
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 				<p:commandLink value="#{price.scBidSupplier.smSupplier.supplierId}"
 					oncomplete="pricePop.show();"
-					actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(item)}"
+					actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(price)}"
 					update="@([id$=itemPricePop])" />
 			</p:column>
 			
@@ -71,5 +71,9 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-
+	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"
+		 widgetVar="pricePop" showEffect="fade"
+		hideEffect="fade" modal="true" id="itemPricePop">
+		<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/itemPricePopup.xhtml"></ui:include>
+	</p:dialog>
 </ui:composition>

@@ -9,6 +9,7 @@ import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -52,6 +53,11 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private String attachmentDocType;
 	private Object payLoad;
 	private String action;
+	
+	// Item price pop up
+	private Long supplierCode;
+	private ScBidSchedule scheduledBid;
+	private List<ScBidPrice> ScBidPriceList;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -270,4 +276,23 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setAction(String action) {
 		this.action = action;
 	}
+	public Long getSupplierCode() {
+		return supplierCode;
+	}
+	public void setSupplierCode(Long supplierCode) {
+		this.supplierCode = supplierCode;
+	}
+	public ScBidSchedule getScheduledBid() {
+		return scheduledBid;
+	}
+	public void setScheduledBid(ScBidSchedule scheduledBid) {
+		this.scheduledBid = scheduledBid;
+	}
+	public List<ScBidPrice> getScBidPriceList() {
+		return ScBidPriceList;
+	}
+	public void setScBidPriceList(List<ScBidPrice> scBidPriceList) {
+		ScBidPriceList = scBidPriceList;
+	}
+	
 }
