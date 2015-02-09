@@ -4666,4 +4666,96 @@ public class SmApplicationUtil {
 		return isAlreadyActivate;
 	}
 
+	public static List<PmState> retrievePmStateList(long countryId) {
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setCountryId(countryId);
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStateSO.class);
+		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+		return resDTO.getStateList();
+	}
+
+	public static void setPmStateDropdownValuesForBasicInfo(
+			SmApplicationManagedBean managedBean, Long countryId) {
+
+		List<PmState> stateLs = retrievePmStateList(countryId);
+
+		if (managedBean.getBasicCompanyStates() == null) {
+			managedBean.setBasicCompanyStates(new ArrayList<PmState>());
+		}
+		if (managedBean.getSmSupplier().getBusinessType() != null
+				&& !managedBean.getSmSupplier().getBusinessType()
+						.equalsIgnoreCase("")) {
+
+			if (managedBean
+					.getBusinessTypeVal()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+					|| managedBean
+							.getBusinessTypeVal()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
+
+				// PmCountry defaultCountry = SmCommonUtil
+				// .retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+				managedBean.setBasicCompanyStates(new ArrayList<PmState>());
+				if (managedBean
+						.getSmSupplier()
+						.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+						|| managedBean
+								.getSmSupplier()
+								.getBusinessType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)) {
+					for (PmState state : stateLs) {
+						if (state.getStateName().equalsIgnoreCase("SARAWAK")) {
+							managedBean.getBasicCompanyStates().add(state);
+						}
+					}
+				} else if (managedBean
+						.getSmSupplier()
+						.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+						|| managedBean
+								.getSmSupplier()
+								.getBusinessType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+					for (PmState state : stateLs) {
+						if (state.getStateName().equalsIgnoreCase("SABAH")) {
+							managedBean.getBasicCompanyStates().add(state);
+
+						}
+					}
+				} else if (managedBean
+						.getSmSupplier()
+						.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+						|| managedBean
+								.getSmSupplier()
+								.getBusinessType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
+
+					for (PmState state : stateLs) {
+						if (!state.getStateName().equalsIgnoreCase("SABAH")
+								&& !state.getStateName().equalsIgnoreCase(
+										"SARAWAK")) {
+							managedBean.getBasicCompanyStates().add(state);
+						}
+					}
+				}
+
+			} else {
+				managedBean.setBasicCompanyStates(stateLs);
+			}
+		} else {
+			managedBean.setBasicCompanyStates(stateLs);
+		}
+
+	}
 }
