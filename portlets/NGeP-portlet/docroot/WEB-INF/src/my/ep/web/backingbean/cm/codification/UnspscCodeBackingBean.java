@@ -456,6 +456,11 @@ public class UnspscCodeBackingBean extends
 			log.info("***update***");
 			System.out.println("size:"
 					+ reqDTO.getRequestCode().getCmRecommendCodes().size());
+			
+			log.info("tracking diary for Catalog_Admin:selectSubmitRecommend");
+			reqDTO.setTrackingStatus(true);
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, new PmStatus()));
+			
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
