@@ -5,33 +5,23 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
-
-		<table>
-
-			<tr>
-				<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
-				<TD><p:inputText id="popupBiddingNo"
-						
-						size="20" disabled="true" value="#{onlineBiddingBB.scBidSchedule.bidNo}" /></TD>
-			</tr>
-
-			<tr>
-				<TD><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></TD>
-				<TD><p:inputText id="popupDocumentNo"
-						
-						size="20" disabled="true" value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}" /></TD>
-			</tr>
-
-			<tr>
-				<TD colspan="2"><p:inputTextarea cols="80" rows="10" disabled="true" value="#{onlineBiddingBB.scBidAction.remark}" />
-				</TD>
-				
-			</tr>
-
-			
-		</table>
-
-	<p:commandButton value="#{lbl['lbl.btn.ok']}"  onclick="onlineBiddingNotification.hide();"/>
+	<table>
+		<tr style="align : left;" >
+			<TD  ><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
+			<TD><p:inputText id="popupBiddingNo" size="20" disabled="true"
+					value="#{onlineBiddingBB.scBidSchedule.bidNo}" /></TD>
+		</tr>
+		<tr  style="align : left;">
+			<TD><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></TD>
+			<TD><p:inputText id="popupDocumentNo" size="20" disabled="true"
+					value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}" /></TD>
+		</tr>
+		<tr>
+			<TD colspan="2"><p:inputTextarea cols="80" rows="10" style="white-space : normal; "
+					disabled="true" value="#{onlineBiddingBB.scBidAction.remark}" /></TD>
+		</tr>
+	</table>
+	<p:commandButton style="float : right" value="#{lbl['lbl.btn.ok']}" partialSubmit="true" action="onlineBiddingBB.biddStatusNotificationAction"
+		process="@this" onclick="onlineBiddingNotification.hide();" />
 
 </ui:composition>
