@@ -82,6 +82,15 @@
 				    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.required.agreement']}" />			
+			<h:panelGrid columns="4">
+				<p:selectOneRadio id="reqAgreement" disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.agreementReq
+				 	or amendmentBackingBean.managedBean.disablefinalAmendDetails}"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.agreementReq}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
+				</p:selectOneRadio>
+			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
 	<p:panel id="contractSigner" toggleable="true" toggleSpeed="500">
@@ -99,7 +108,7 @@
 			        disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
 			       value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
 				   <f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}" />
-				   <p:ajax event="change" partialSubmit="true" process="@this" update="@form" 
+				   <p:ajax event="change" partialSubmit="true" process="@this" update="signer" 
 				   	listener="#{amendmentBackingBean.contractSignerChange()}" />
 		     	</p:selectOneMenu>
 		         <p:message for="signer" display="icon"/>
