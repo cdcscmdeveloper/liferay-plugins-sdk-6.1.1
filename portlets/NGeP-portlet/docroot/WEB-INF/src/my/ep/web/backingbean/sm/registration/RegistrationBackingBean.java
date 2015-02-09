@@ -111,8 +111,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, Object> bizNatureL5Map;
 	private static Map<Long, Object> identityType;
 	private static Map<Long, PmCertBody> profCertBodyMap;
-	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G",
-			"H");
+	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G", "H");
 	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
 
 	public RegistrationBackingBean() {
