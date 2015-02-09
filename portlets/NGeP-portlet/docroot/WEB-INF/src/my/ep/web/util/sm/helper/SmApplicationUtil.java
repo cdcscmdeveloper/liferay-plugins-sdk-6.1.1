@@ -2120,10 +2120,12 @@ public class SmApplicationUtil {
 	 *            - Long the cat l3 id
 	 * @param supplierId
 	 *            - Long supplier id
+	 * @param applId
+	 *            - Long current application id
 	 * @return true, if successful
 	 */
 	public static boolean validL3CategoryCodeForOverLapping(Long catL3Id,
-			Long supplierId) {
+			Long supplierId, Long applId) {
 		log.info("*** Validate the code with directors and equi owners ***** ");
 		IMofRegistrationSO mofRegistrationSO = null;
 		boolean overLapCategory = false;
@@ -2134,6 +2136,7 @@ public class SmApplicationUtil {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSupplierId(supplierId);
 			reqDto.setCatL3Id(catL3Id);
+			reqDto.setApplId(applId);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.checkValidCategoryForSupplier(reqDto);
 			if (resDTO.isInvalidCategory()) {
@@ -3766,7 +3769,8 @@ public class SmApplicationUtil {
 	 *            -String param type,String param code
 	 * @return PmParameter object
 	 */
-	public static PmParameter retrievePmParameterByTypeAndCode(String type, String code) {
+	public static PmParameter retrievePmParameterByTypeAndCode(String type,
+			String code) {
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IParameterSO.class);
