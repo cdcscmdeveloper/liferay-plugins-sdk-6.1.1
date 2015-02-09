@@ -111,8 +111,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, Object> bizNatureL5Map;
 	private static Map<Long, Object> identityType;
 	private static Map<Long, PmCertBody> profCertBodyMap;
-	private static List<String> sabahSarawakList = Arrays.asList("D", "E", "G",
+	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G",
 			"H");
+	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
 
 	public RegistrationBackingBean() {
 //		if (MDC.get(LogKey.USER_ID) == null) {
@@ -1630,15 +1631,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				&& StringUtils.isNotBlank(getManagedBean().getSmSupp()
 						.getRegNo())) {
 			String bussType = getManagedBean().getSmSupp().getBusinessType();
-			if (sabahSarawakList.contains(bussType)) {
+			if (sabahSarawakRemoveWhiteSpaceList.contains(bussType)) {
 				getManagedBean().getSmSupp().setRegNo(
 						StringUtils.deleteWhitespace(getManagedBean()
 								.getSmSupp().getRegNo()));
-			} else if (getManagedBean().getSmSupp().getRegNo().equals("M")) {
-				getManagedBean().getSmSupp().setRegNo(
-						StringUtils.deleteWhitespace(getManagedBean()
-								.getSmSupp().getRegNo()));
-			} else if (getManagedBean().getSmSupp().getRegNo().equals("N")) {
+			} else if (rosRemoveWhiteSpaceList.contains(bussType)) {
 				getManagedBean().getSmSupp().setRegNo(
 						StringUtils.deleteWhitespace(getManagedBean()
 								.getSmSupp().getRegNo()));
