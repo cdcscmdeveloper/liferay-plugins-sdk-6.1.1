@@ -43,8 +43,8 @@
 				action="#{suppFinalizationBackingBean.showReminder}"
 				update=":form:reminderPopup"
 				oncomplete="reminder.show();" 
-				rendered="#{(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.sfPendingEndorsement) || 
-													(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.sfPendingSignOff)}" />
+				rendered="#{(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.DA_PENDING_ENDORSEMENT) || 
+													(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.DA_PENDING_SIGN_OFF)}" />
 		</div>
 	</p:panel>
 	
