@@ -77,8 +77,13 @@
 		  <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
 				<p:tabMenu styleClass="sidemenu" 
-						activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}"
-						model="#{amendmentBackingBean.managedBean.amendMenuModel}" />
+						activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}" >
+					<c:forEach var="menu" items="#{amendmentBackingBean.managedBean.finalListOfSideMenu}" varStatus="status" >
+						<p:menuitem value="#{menu}" id="AmendMenuId#{status.index}" update="@form" actionListener="#{amendmentBackingBean.amendTabChangeAction(status.index)}">
+							<f:setPropertyActionListener target="#{amendmentBackingBean.managedBean.selectedTabIndex}" value="#{status.index}" />
+						</p:menuitem>
+					</c:forEach>								
+				</p:tabMenu>
 			  </td>
 			 <td width="80%">
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.fd'] }">

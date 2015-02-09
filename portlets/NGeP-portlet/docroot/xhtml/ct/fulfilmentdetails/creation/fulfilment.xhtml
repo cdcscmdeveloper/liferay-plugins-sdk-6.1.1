@@ -81,8 +81,13 @@
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
 				<p:tabMenu id="sidemenuId" styleClass="sidemenu" 
-						activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}"
-						model="#{contractDetailsBackingBean.managedBean.fulfilmentMenuModel}" />
+						activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}" >
+					<c:forEach var="menu" items="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu}" varStatus="status" >
+						<p:menuitem value="#{menu}" id="zoneMenuID#{status.index}" update="@form" actionListener="#{contractDetailsBackingBean.fulfilmentTabChangeAction(status.index)}">
+							<f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.selectedTabIndex}" value="#{status.index}" />
+						</p:menuitem>
+					</c:forEach>			
+				</p:tabMenu>
 			  </td>
 			 	<td width="80%">
 			 	<p:outputPanel id="ctMenuId1" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.fd'] }">
