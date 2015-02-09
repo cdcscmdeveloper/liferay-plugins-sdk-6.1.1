@@ -1925,6 +1925,20 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}
 	}
 	public void enableExtension() {
+		this.setCmExtentionCode(null);
+		this.setCmExtentionBrand(null);
+		this.setCmExtentionType(null);
+		this.setCmExtentionMeasurment(null);
+		this.setCmExtentionColour(null);
+		brandList=new ArrayList<SelectItem>();
+		extTypeList=new ArrayList<SelectItem>();
+		measurmentList=new ArrayList<SelectItem>();
+		colorList=new ArrayList<SelectItem>();
+		rptGenBean.setCmExtentionCodeView(false);
+		rptGenBean.setCmExtentionBrandView(false);
+		rptGenBean.setCmExtentionTypeView(false);
+		rptGenBean.setCmExtentionMeasurmentView(false);
+		rptGenBean.setCmExtentionColourView(false);
 		if(null != this.getCmUnspscCode()&&(this.getCmUnspscCode()!=ReportConst.EMPTY_VAL)){
 			if((this.getCmUnspscCode().length()==8)){
 				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
@@ -1958,7 +1972,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		return unspcid;
 	}
 	public void retrieveExtention() {
-		this.setUnspid((long) 12392);
+		//this.setUnspid((long) 12392);
 		this.setCmExtentionBrand(null);
 		this.setCmExtentionType(null);
 		this.setCmExtentionMeasurment(null);
