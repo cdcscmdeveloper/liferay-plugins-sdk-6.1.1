@@ -339,15 +339,12 @@ public class OrganisationBackingBean extends
 		// PTJ
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
-			retrieveMinistryList();
-			//orgDeliveryAddrList(orgProfile);
-			
+			retrieveMinistryList();			
 			if (getManagedBean().getOrgProfile().getPmAddressTypes() != null && !getManagedBean().getOrgProfile().getPmAddressTypes().isEmpty()) {
 				for (PmAddressType pmAddressType : getManagedBean().getOrgProfile().getPmAddressTypes()) {
 					
 					if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.DELIVERY_ADDRESS.value())) {
-						log.info("Addresss"+pmAddressType.getAddressTypeId());
-						log.info("ADDREESSE"+pmAddressType.getPmAddress().getAddress1());
+						
 						this.getManagedBean().getAddressTypesList().add(pmAddressType);
 						//this.getManagedBean().setDeliveryContactPerson(pmAddressType.getPmContacts().get(0));						
 					}				
@@ -379,20 +376,23 @@ public class OrganisationBackingBean extends
 					log.info("Supplier Test");
 					/*this.getManagedBean().setSmSupplierBanks(
 							orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks());*/
+					if(orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()!=null && !orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()){
 					for(SmSupplierBank supplierBank :orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()){
 						if(supplierBank.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || supplierBank.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED){
 							this.getManagedBean().getSmSupplierBanks().add(supplierBank);
 							
 						}
 					}
+					}
 					
 					log.info("Supplier Bank-----> "+orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks().size());
-					
+					if(orgProfile.getSmSupplier().getSmAppl().getSmPersonnels()!=null && !orgProfile.getSmSupplier().getSmAppl().getSmPersonnels().isEmpty()){
 					for(SmPersonnel supplierBank :orgProfile.getSmSupplier().getSmAppl().getSmPersonnels()){
 						if(supplierBank.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE || supplierBank.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED){
 							this.getManagedBean().getSmPersonnels().add(supplierBank);
 							
 						}
+					}
 					}
 					//this.getManagedBean().setSmPersonnels(orgProfile.getSmSupplier().getSmAppl().getSmPersonnels());
 					log.info("Supplier Users ---->"+orgProfile.getSmSupplier().getSmAppl().getSmPersonnels().size());
@@ -574,7 +574,7 @@ public class OrganisationBackingBean extends
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							IRegistrationSO.class);		
 		
-		if (getManagedBean().getOrgProfile().isGovtSeller()) {
+		if (getManagedBean().getOrgProfile().isGovtSeller()) {		
 				
 			// new Supplier
 			if (orgProfile.getSmSupplier() == null) {
@@ -612,6 +612,7 @@ public class OrganisationBackingBean extends
 				feeResDTO.setSuccessful(true);
 
 			}
+			
 			if (orgProfile.getSmSupplier() != null) {
 				log.info("Update Supplier");
 				
@@ -625,8 +626,7 @@ public class OrganisationBackingBean extends
 				if (supplier != null) {
 					RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 					
-					//supplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
-					SmSupplierBank supBank = null;
+					
 					if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
 		                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
 		                	 FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
@@ -636,26 +636,22 @@ public class OrganisationBackingBean extends
 										.retrieveFinancialOrgById(finReqDTO);
 								PmFinancialOrg pmFinancialOrg = finResDTO
 										.getPmFinancialOrg();								
-								if(supplierBank.isBrandNew()){
-									supBank = new SmSupplierBank();
-								supBank.setAccountNo(supplierBank.getAccountNo());
-								supBank.setPmFinancialOrg(pmFinancialOrg);
-								supBank.setAccountPurpose("P");
-								supBank.setSmAppl(supplier.getSmAppl());								
-								supplier.getSmAppl().getSmSupplierBanks().add(supBank);
+								if(supplierBank.isBrandNew()){									
+									supplierBank.setAccountNo(supplierBank.getAccountNo());
+									supplierBank.setPmFinancialOrg(pmFinancialOrg);
+									supplierBank.setAccountPurpose("P");
+									supplierBank.setSmAppl(supplier.getSmAppl());
+									
+								supplier.getSmAppl().getSmSupplierBanks().add(supplierBank);
 								}
-								/*else{
-									supplierBank.setRecordStatusFlg(supplierBank.getRecordStatusFlg());
-									log.info("supplier bank record status"+supplierBank.getRecordStatusFlg());
-									supplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());
-								}*/
-							
+								log.info("Supplier Bank Record Status------>"+supplierBank.getRecordStatusFlg()+"<-----");
 		                }
+		               
 					}
 					if(getManagedBean().getSmPersonnels()!=null && !getManagedBean().getSmPersonnels().isEmpty()){
 						for(SmPersonnel personnel:getManagedBean().getSmPersonnels()){
 							personnel.setRecordStatusFlg(personnel.getRecordStatusFlg());
-							log.info("Personal Record Status------"+personnel.getRecordStatusFlg()+"-----");
+							log.info("Personal Record Status------>"+personnel.getRecordStatusFlg()+"<-----");
 							supplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
 						}
 					}
@@ -1374,6 +1370,5 @@ public class OrganisationBackingBean extends
 			pmState.setStateCode(null);
 		}
 	}
-
 
 }
