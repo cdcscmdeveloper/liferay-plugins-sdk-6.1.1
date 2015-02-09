@@ -15,10 +15,10 @@
 			#foreach($financialDoc in $financialDocLs)
 			<tr>
 				<td>$velocityCount</td>
-				<td>$financialDocParamMap.get($financialDoc.pmParameter.parameterId).codeName</td>
-				<td>$!financialDoc.docRef</td>
-				<td>$!financialDoc.docDate</td>
-				<td>$!financialDoc.remark</td>
+				<td>$financialDoc.codeName</td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			#end
 		#else
