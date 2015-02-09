@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.supplierfinalization;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -58,6 +59,9 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private Long supplierCode;
 	private ScBidSchedule scheduledBid;
 	private List<ScBidPrice> ScBidPriceList;
+	
+	private BigDecimal lowestNonBumiOfferedPrice;
+	private BigDecimal bumiSuppLowestOfferedPrice;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -293,6 +297,18 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	public void setScBidPriceList(List<ScBidPrice> scBidPriceList) {
 		ScBidPriceList = scBidPriceList;
+	}
+	public BigDecimal getLowestNonBumiOfferedPrice() {
+		return lowestNonBumiOfferedPrice;
+	}
+	public void setLowestNonBumiOfferedPrice(BigDecimal lowestNonBumiOfferedPrice) {
+		this.lowestNonBumiOfferedPrice = lowestNonBumiOfferedPrice;
+	}
+	public BigDecimal getBumiSuppLowestOfferedPrice() {
+		return bumiSuppLowestOfferedPrice;
+	}
+	public void setBumiSuppLowestOfferedPrice(BigDecimal bumiSuppLowestOfferedPrice) {
+		this.bumiSuppLowestOfferedPrice = bumiSuppLowestOfferedPrice;
 	}
 	
 }

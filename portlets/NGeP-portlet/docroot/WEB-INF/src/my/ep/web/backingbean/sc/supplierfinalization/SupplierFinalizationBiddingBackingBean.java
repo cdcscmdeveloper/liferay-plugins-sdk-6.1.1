@@ -2,7 +2,9 @@ package my.ep.web.backingbean.sc.supplierfinalization;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -54,6 +56,7 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -195,6 +198,23 @@ public class SupplierFinalizationBiddingBackingBean extends
 									.getBidPackages();
 							getManagedBean().setBiddingPackagePriceList(
 									biddingPackagePriceList);
+							
+							BigDecimal lowestNonBumiOfferedPrice = null;
+							
+							// Set lowest non-bumi offered price
+							if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
+								List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
+								for (BidPackageBean packageBean : biddingPackagePriceList) {
+									if (!packageBean.getScBidSupplier().getSmSupplier().isBumi()) {
+										nonBumiPriceList.add(packageBean.getBidPrice());
+									}
+								}
+								if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
+									Collections.sort(nonBumiPriceList);
+									lowestNonBumiOfferedPrice = nonBumiPriceList.get(0);
+								}
+							}
+							getManagedBean().setLowestNonBumiOfferedPrice(lowestNonBumiOfferedPrice);
 						}
 					}
 				}
