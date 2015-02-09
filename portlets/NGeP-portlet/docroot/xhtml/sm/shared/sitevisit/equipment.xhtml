@@ -14,7 +14,7 @@
 						#{lbl['lbl.sm.machine.equiType']}
 					</f:facet>
 				
-					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentParamMap[equipMaint.pmParameter.parameterId].codeName}"></h:outputText>
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(equipMaint.pmParameter)}"></h:outputText>
 			</p:column>
 			
 			<p:column>
@@ -42,8 +42,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.machine.equiType']}
 					</f:facet>
-				
-					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentParamMap[equipBinding.pmParameter.parameterId].codeName}"></h:outputText>
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(equipBinding.pmParameter)}"></h:outputText>
 			</p:column>
 			
 			<p:column>

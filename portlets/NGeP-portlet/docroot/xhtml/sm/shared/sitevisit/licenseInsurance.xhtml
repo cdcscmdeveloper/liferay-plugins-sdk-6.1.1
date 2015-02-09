@@ -15,7 +15,7 @@
 				</f:facet>
 
 				<h:outputText
-					value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.licenseInsuranceParamMap[dockWorkLicenseIns.pmParameter.parameterId].codeName}"></h:outputText>
+					value="#{svoSiteVisitBackingBean.getParameterDesc(dockWorkLicenseIns.pmParameter)}"></h:outputText>
 			</p:column>
 
 			<p:column>
@@ -23,7 +23,7 @@
 					#{lbl['lbl.sm.license.closing.date']}
 				</f:facet>
 				<p:calendar id="closingDateCalId"
-						navigator="true"  label="#{lbl['lbl.sm.license.closing.date']}"
+						navigator="true"  label="#{lbl['lbl.sm.license.closingexpiry.date']}"
 						value="#{dockWorkLicenseIns.expDate}" disabled="#{viewFlag}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						yearRange="0:+99" 

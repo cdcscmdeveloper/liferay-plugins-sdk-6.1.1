@@ -13,9 +13,8 @@
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.license.insurance']}
 				</f:facet>
-
-				<h:outputText
-					value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.licenseInsuranceParamMap[printingLicenseIns.pmParameter.parameterId].codeName}"></h:outputText>
+				
+				<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(printingLicenseIns.pmParameter)}"></h:outputText>
 			</p:column>
 
 			<p:column>
