@@ -30,7 +30,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	private long appId;
+	private Long appId;
 	private String[] bpmAction;
 	private String taskId;
 	private SMSiteVisitDataType bpmPojo;
@@ -81,7 +81,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmMachineDtl[] selectedDockyardMachine;
 	private SmMachineDtl[] selectedWorkshopMachine;
 	
-	private Map<Long, PmParameterDesc> printingParamMap;
+	//private Map<Long, PmParameterDesc> printingParamMap;
 	private ArrayList<String> printingCatLs;
 	private Map<String, SmSvCategory> printingCatMap;
 	private SmSvPrintwork[] selectedPrintWorks;
@@ -107,11 +107,11 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.bpmPojo = bpmPojo;
 	}
 
-	public long getAppId() {
+	public Long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(long appId) {
+	public void setAppId(Long appId) {
 		this.appId = appId;
 	}
 
@@ -425,13 +425,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedAddFinancialDoc = selectedAddFinancialDoc;
 	}
 
-	public Map<Long, PmParameterDesc> getPrintingParamMap() {
+/*	public Map<Long, PmParameterDesc> getPrintingParamMap() {
 		return printingParamMap;
 	}
 
 	public void setPrintingParamMap(Map<Long, PmParameterDesc> printingParamMap) {
 		this.printingParamMap = printingParamMap;
-	}
+	}*/
 
 	public ArrayList<String> getPrintingCatLs() {
 		return printingCatLs;
