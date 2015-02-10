@@ -3960,6 +3960,7 @@ public class SpecificationBackingBean extends
 											paramDesc.getPmParameter()
 													.getParameterCode(),
 											ScQtLocCriteria.class));
+					getManagedBean().setIndex(-1);
 				}
 
 			}
@@ -4022,6 +4023,8 @@ public class SpecificationBackingBean extends
 											paramDesc.getPmParameter()
 													.getParameterCode(),
 											TplSpecZoneLoc.class));
+					this.getManagedBean().setIndex(-1);
+					this.getManagedBean().setZoneName("");
 				}
 
 			}
@@ -12528,7 +12531,7 @@ public class SpecificationBackingBean extends
 					.remove(this.getManagedBean().getIndex());
 			this.getManagedBean().getScQtCheckSt2financeProposalList()
 					.add(this.getManagedBean().getIndex(), localCheckList);
-			
+
 		}
 
 	}
