@@ -63,6 +63,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -88,6 +89,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "createDOBackingBean")
 @RequestScoped
 public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManagedBean> {
+	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
 	private static Logger log = Logger.getLogger(DeliveryOrderBackingBean.class);
 	/**
 	 * get faces scopes
@@ -855,5 +857,20 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
 		String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
 		pmDigiSign.setSignedData(signedData);
+	}
+	
+	public String navigateOrderNoPage(String docType){
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(docType);
+		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+		FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
+		orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+		
+		return NAV_ORDERNO;
 	}
 }

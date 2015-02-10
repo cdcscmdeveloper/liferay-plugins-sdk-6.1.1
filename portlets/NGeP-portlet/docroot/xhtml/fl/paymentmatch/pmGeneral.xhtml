@@ -15,8 +15,8 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
-				<td ><p:inputText disabled="true" size="20"
-						value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}" /></td>
+				<td ><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}"
+						 action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeDebitAdjustmentNote)}"/> </td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
@@ -25,8 +25,8 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
-				<td style="width: 146px;"><p:inputText disabled="true" size="20"
-						value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}" /></td>	
+				<td style="width: 146px;"><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}"
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeCreditAdjustmentNote)}"/> </td>	
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
@@ -35,8 +35,8 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
-				<td><p:inputText disabled="true" size="20"
-						value="#{paymentMatchBackingBean.managedBean.stopInstrNo}" /></td>		
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo}"
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeStopDelivery)}"/> </td>		
 				<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.inst.no']}"/></td>
 			</tr>
 			<tr>
@@ -119,8 +119,9 @@
 				<td ><p:outputLabel
 						value="#{lbl['lbl.fl.invoice.no']}" /></td>
 				<td>
-					<p:inputText size="20" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
+						<p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}"
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}"></p:commandLink>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.submissionDate}">
