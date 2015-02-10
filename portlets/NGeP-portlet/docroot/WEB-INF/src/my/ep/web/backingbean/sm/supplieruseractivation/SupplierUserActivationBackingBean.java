@@ -74,6 +74,7 @@ public class SupplierUserActivationBackingBean extends
 		String personnelId = originalServletRequest.getParameter("pr");
 		String hashSupplierId = originalServletRequest.getParameter("sp");
 		String encryptedKey = originalServletRequest.getParameter("kp");
+		String createdTimeParam = originalServletRequest.getParameter("ct");
 		
 		log.info("personnelId: " + personnelId);
 		log.info("hashSupplierId: " + hashSupplierId);
@@ -99,7 +100,8 @@ public class SupplierUserActivationBackingBean extends
 		//log.info("hash supplier id: " + SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())));
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivatedOrTerminates(personnel, supplierProfile.getSupplierId())) {
+		if(personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivatedOrTerminates(personnel, supplierProfile.getSupplierId()) 
+				&& isLatestActivationEmail(createdTimeParam, personnel)) {
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
 				
 				long applDateInMilis = personnel.getCreatedDate().getTime();
@@ -432,6 +434,29 @@ public class SupplierUserActivationBackingBean extends
 			}
 		}
 		return epRole;
+	}
+	
+	// syazwan:added to check whether the activation email send is latest or
+	// already override by new activation email
+	private boolean isLatestActivationEmail(String createdTimeParam,
+			SmPersonnel smPersonnel) {
+		boolean retVal = true;
+		try {
+			if (createdTimeParam != null
+					&& StringUtils.isNotBlank(createdTimeParam)) {
+				log.info("Inside comparing latest activation email for personnelId:"
+						+ smPersonnel.getPersonnelId() + " sendMailDate:"
+						+ createdTimeParam + " createdDate:"
+						+ smPersonnel.getCreatedDate().getTime());
+				Long createdTime = Long.parseLong(createdTimeParam);
+				if (createdTime.compareTo(smPersonnel.getCreatedDate()
+						.getTime()) != 0) {
+					retVal = false;
+				}
+			}
+		} catch (Exception ex) {
+		}
+		return retVal;
 	}
 
 	public String getTempPassword() {
