@@ -70,6 +70,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -201,6 +202,28 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			
 			ScQtCommittee committee = resDTO.getQtCommittee();
 			getManagedBean().setScQtCommittee(committee);
+			
+			List<ScQtCommitteeActivity> activities = committee.getCommitteeActivities();
+			if (CollectionUtils.isNotEmpty(activities)) {
+				for (ScQtCommitteeActivity activity : activities) {
+					PmParameter memberRole = activity.getScCommitteeMember().getMemberRole();
+					if (activity.getScCommitteeMember().getRepresentativeType() == null && 
+							ParameterConst.COMMITTEE_ROLE_MEMBER.equals(memberRole.getParameterCode())) {
+						activity.getScCommitteeMember().setRepresentativeType(new PmParameter());
+					}
+				}
+			} else {
+				List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
+				if (CollectionUtils.isNotEmpty(commMembers)) {
+					for (ScCommitteeMember member : commMembers) {
+						PmParameter memberRole = member.getMemberRole();
+						if (member.getRepresentativeType() == null && 
+								ParameterConst.COMMITTEE_ROLE_MEMBER.equals(memberRole.getParameterCode())) {
+							member.setRepresentativeType(new PmParameter());
+						}
+					}
+				}
+			}
 			
 			List<ScQtCommitteRemarks> remarks = initializeRemarks(
 					committee, null, committee.getQtCommitteRemarks(), ScQtCommitteRemarks.class);
