@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<p:panel id="pc" header="#{lbl['lbl.ct.panel.panel.circular']}" toggleable="true" toggleSpeed="500" widgetVar="panelpc">
+	<h:panelGrid id="panelCircularId" columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
+				
+					<h:panelGrid columns="2" style="float:right;">
+					     <p:outputLabel value="*" styleClass="mandatory" />
+					     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
+				   </h:panelGrid>
+				 	<p:inputTextarea id="circularNoTxt" style="width:170px; margin-top:2px;margin-bottom:2px" rows="5"
+                        maxlength="60"  disabled="true" value="#{panelBackingBean.managedBean.circularVer.circularNo}"  autoResize="false"/>
+					
+				   <h:panelGrid columns="2" style="float:right;">
+				        <p:outputLabel value="*" styleClass="mandatory" />
+				        <h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
+				   </h:panelGrid>
+				       <p:inputTextarea id="circularNameTxt" rows="5" style="width:230px;" maxlength="200"
+						   disabled="true" autoResize="false" value="#{panelBackingBean.managedBean.circularVer.name}" />
+				    
+				    <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+				    <p:inputText  style="width:170px;" maxlength="60" disabled="true"
+						value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />
+						
+						 <h:panelGrid columns="2" style="float:right;">
+						    <p:outputLabel value="*" styleClass="mandatory" />
+							<p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
+			   	         </h:panelGrid>
+			   	         <p:calendar id="popupButtonCal" navigator="true" size="17" showOn="button" 
+			   	               value="#{panelBackingBean.managedBean.circularVer.startDate}"  disabled="true" 
+			       		        pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+			       	      </p:calendar> 
+			              
+			              <h:outputLabel value="#{lbl['lbl.ct.complaint.deadline']}" />
+			            <h:panelGroup>
+				            <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
+				     	        disabled="true"  maxlength="4" style="text-align:right;margin-top:2px; width:50px;" />
+				           <p:spacer width="5" />
+				          <h:outputText value="#{lbl['lbl.ct.months']}" />
+			        </h:panelGroup>	
+			              
+			               <h:panelGrid columns="2" style="float:right;">
+			                    <p:outputLabel value="*" styleClass="mandatory" />
+			              	    <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
+		                   </h:panelGrid>
+		                       <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
+			   		            	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+			         	            size="17" navigator="true" showOn="button"   disabled="true">
+			   	         	   </p:calendar>
+			      
+			        
+			         <h:outputLabel value="#{lbl['lbl.ct.complaint.deadline']}" />
+			         <h:panelGroup>
+				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
+				     	disabled="true" 	maxlength="4" style="text-align:right;margin-top:2px; width:50px;" />
+				     <p:spacer width="5" />
+				     <h:outputText value="#{lbl['lbl.ct.months']}" />
+			        </h:panelGroup>	
+			        
+			        <h:outputLabel value="#{lbl['lbl.ct.payment.day']}" />
+			        <h:panelGroup>
+				       <p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" 
+					     disabled="true"  maxlength="4" style="text-align:right; width:50px;margin-top:2px;"  />
+				      <p:spacer width="5" />
+				     <h:outputText value="#{lbl['lbl.ct.days']}" />
+			      </h:panelGroup>
+			
+			     <h:outputLabel value="#{lbl['lbl.ct.delivery.period']}" /> 
+			     <h:panelGroup>
+				    <p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" 
+					disabled="true"  maxlength="4" style="text-align:right; width:50px;" />
+				<p:spacer width="5" />
+				<h:outputText value="#{lbl['lbl.ct.days']}" />
+			</h:panelGroup>	
+			
+			<h:outputLabel value="#{lbl['lbl.ct.contract.effective.end.date']}" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" 
+					disabled="true" maxlength="4" style="text-align:right; width:50px;" />
+				<p:spacer width="5" />
+				<h:outputText value="#{lbl['lbl.ct.days']}" />
+			</h:panelGroup>
+			
+			<h:outputLabel value="#{lbl['lbl.ct.replacement.day']}" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" 
+					disabled="true" maxlength="4" style="text-align:right; width:50px;" />
+				<p:spacer width="5" />
+				<h:outputText value="#{lbl['lbl.ct.days']}" />
+			</h:panelGroup>	
+			
+			<h:outputLabel value="#{lbl['lbl.ct.warranty.period']}" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" 
+					disabled="true" maxlength="4" style="text-align:right; width:50px;" />
+				<p:spacer width="5" />
+				<h:outputText value="#{lbl['lbl.ct.months']}" />
+			</h:panelGroup>	
+			
+			 <h:panelGrid columns="2" style="float:right;">
+			     <p:outputLabel value="*" styleClass="mandatory" />
+				 <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+			</h:panelGrid>
+		
+		        <h:panelGroup id="uploadCircularPg">
+					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile(1)}" />				
+			  </h:panelGroup>	
+	</h:panelGrid>
+	</p:panel>
+	
+	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" >
+		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
+			rowKey="#{data}" rowIndexVar="index">
+			<ac:paginator for="contactPersonDt" />
+			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
+			      <p:outputLabel value="#{data.name}" style="width:95%;" maxlength="20" ></p:outputLabel>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
+				 <p:outputLabel value="#{data.address}" style="width:95%;" maxlength="200" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;">
+				<p:outputLabel  id="email" value="#{data.email}" style="width:95%;" maxlength="100"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;">
+				<p:outputLabel id="phoneNo" value="#{data.phoneNo}" style="width:95%;" maxlength="100"/>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:panel id="cancelCircularPnl" header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
+		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" rowIndexVar="index" 
+			value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}">
+			<ac:paginator for="cancelCircularDt" />		
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
+				<h:outputText value="#{data.circularVer.circularNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
+				<h:outputText value="#{data.circularVer.name}" />
+			</p:column>	
+		</p:dataTable>
+	</p:panel>
+	</ui:composition>

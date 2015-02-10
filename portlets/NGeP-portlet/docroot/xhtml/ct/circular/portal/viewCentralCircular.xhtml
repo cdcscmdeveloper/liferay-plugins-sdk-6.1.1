@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<p:panel id="ccc" header="#{lbl['lbl.ct.panel.central.contract.circular']}" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
+			 
+			   <h:panelGrid columns="2" style="float:right;">
+			    	 <p:outputLabel value="*" styleClass="mandatory" />
+				     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
+				</h:panelGrid>
+				 <h:panelGrid columns="2">
+				     <p:inputTextarea id="circularNoUpTxt" style="width:170px; margin-top:2px;margin-bottom:2px" rows="5"
+					 	required="true" maxlength="60"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}"  label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"/>
+				      <p:message for="circularNoUpTxt" display="icon"/>
+				  </h:panelGrid>
+				   
+				    <h:panelGrid columns="2" style="float:right;">
+				        <p:outputLabel value="*" styleClass="mandatory" />
+			        	<p:outputLabel  value="#{lbl['lbl.ct.circular.name']}" />
+				    </h:panelGrid>
+		            <h:panelGrid columns="3">
+				        <p:inputTextarea id="circularNameUpTxt" rows="5" style="width:230px;" 
+				              maxlength="200" required="true" 
+						      disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
+						      label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+						      <p:spacer width="5"/>
+					          <p:message for="circularNameUpTxt" display="icon"/>
+			        </h:panelGrid>
+			        
+			          <h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+				  <p:inputText  style="width:170px;" maxlength="60"
+						disabled="#{centralContractBackingBean.managedBean.viewContract}"
+						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />
+						
+			      <p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
+		          <p:inputText  id="popupButtonCal3" style="width:115px;" disabled="true"
+		              value="#{centralContractBackingBean.managedBean.circularVer.startDate}">
+				    <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
+				
+				  <p:outputLabel value="#{lbl['lbl.ct.extension.period']}" />
+		           <h:panelGrid columns="3">
+		           <p:inputText id="extendPeriod"  style="text-align:right;width:65px;" 
+		           	  disabled="#{centralContractBackingBean.managedBean.viewContract}"
+		              label="#{lbl['lbl.ct.extension.period']}" value="#{centralContractBackingBean.managedBean.circularVer.extendPeriod}">
+		             <p:ajax event="blur" process="@this" 
+				        listener="#{centralContractBackingBean.extendStartEndDate()}" update=":form:popupButtonCal5,:form:popupButtonCal6"></p:ajax>
+		           </p:inputText>
+		           <p:spacer width="2" /> 
+		           <p:outputLabel value="#{lbl['lbl.ct.months']}"/>
+		        </h:panelGrid>
+		        
+				<h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
+		        <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal4" 
+			             style="width:115px;" disabled="true">
+				        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
+				
+			
+		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" /> 
+		         <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" id="popupButtonCal5" 
+			             style="width:115px;" disabled="true">
+			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
+		        <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" />
+		       <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" id="popupButtonCal6" 
+			             style="width:115px;" disabled="true">
+			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
+		     
+		      <h:panelGrid columns="2" style="float:right;">
+		        <p:outputLabel value="*" styleClass="mandatory" />
+		         <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+		       </h:panelGrid> 
+		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
+				action="#{centralContractBackingBean.downloadFile(1)}" />
+		   </h:panelGrid>	
+	</p:panel>
+	
+	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
+		<p:dataTable id="contactPersonDt" var="contactPersonsVar" widgetVar="contactPersonObj"
+		     value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index"
+		 	rowKey="#{contactPersonsVar}"  selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
+			<ac:paginator for="contactPersonDt" />
+			<p:column selectionMode="multiple" style="width:5%" 
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
+			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
+				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
+					disabled="#{centralContractBackingBean.managedBean.viewContract}"
+				   	style="width:95%;" label="#{lbl['lbl.ct.contact.person.name']}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
+				<p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200"
+					disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;">
+				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
+				     style="width:95%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
+				     disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;">
+				<p:inputText id="validPhone" style="width:95%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
+				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
+				   disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2" />
+		
+		
+        
+	</p:panel>
+	
+	<p:panel id="exemptedOrgPnl" header="#{lbl['lbl.ct.panel.exempted.ministry']}" toggleable="true" toggleSpeed="500">
+		<p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
+		 	rowKey="#{exemptedOrgsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedExemptedOrgs}">
+			<ac:paginator for="exemptedOrgDt" />
+			<p:column selectionMode="multiple" style="width:3%"
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
+			<p:column headerText="#{lbl['lbl.ct.ministry']}">
+				#{exemptedOrgsVar.orgProfile.orgName}
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:panel id="cancelCircularPnl" header="#{lbl['lbl.ct.panel.related.cancelled.circular']}" toggleable="true" toggleSpeed="500">
+		<p:dataTable id="cancelCircularDt" var="cancelCircularVar" rowKey="#{cancelCircularVar}" rowIndexVar="index" 
+			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
+			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
+			<ac:paginator for="cancelCircularDt" />
+			<p:column selectionMode="multiple" style="width:3%"
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
+			<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}">
+				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
+				<h:outputText value="#{cancelCircularVar.circularVer.name}" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2" />
+	</p:panel>
+</ui:composition>
