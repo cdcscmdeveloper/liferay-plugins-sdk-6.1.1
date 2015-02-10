@@ -184,6 +184,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -204,7 +205,8 @@ public class SpecificationBackingBean extends
 	private IPagingDataModel<CtCircularVer> searchCircular = new SearchCircularPagingDataModel();
 	private IPagingDataModel<TplSpecMaster> templateSpecCreate = new CreateTemplateSpecPagingDataModel();
 	private IPagingDataModel<PmAddressType> searchDeliveryAddress = new DeliveryPagingDataModel();
-
+	private static Logger log = Logger
+			.getLogger(SpecificationBackingBean.class);
 	// private List<SpecificationCompilanceBean> selectedCompilenceList;
 	private int count;
 
@@ -630,6 +632,7 @@ public class SpecificationBackingBean extends
 
 		try {
 			validatePrepareQtChecklist();
+
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -10765,7 +10768,23 @@ public class SpecificationBackingBean extends
 				}
 			}
 		}
-
+		if (null != localChecklist && localChecklist.size() > 0) {
+			for (ScQtCheckList checkList : scQt.getScQtChecklists()) {
+				if (null != checkList.getQtScoreWeightage()
+						&& null != checkList.getQtScoreWeightage()
+								.getQtScoreWeightageId()) {
+					log.info("QtId"
+							+ checkList.getScQt().getQtId()
+							+ "CheckListTitle"
+							+ checkList.getTitle()
+							+ "weightageId"
+							+ checkList.getQtScoreWeightage()
+									.getQtScoreWeightageId()
+							+ "qtScoreweightage"
+							+ checkList.getQtScoreWeightage());
+				}
+			}
+		}
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
 		scQt.setScQtBriefings(null);
