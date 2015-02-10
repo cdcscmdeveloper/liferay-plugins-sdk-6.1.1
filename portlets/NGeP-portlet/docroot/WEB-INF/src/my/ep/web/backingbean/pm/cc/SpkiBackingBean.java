@@ -27,11 +27,14 @@ import org.bouncycastle.util.encoders.Base64Encoder;
 
 import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.pm.common.digisign.DigiSignReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.logging.LogKey;
@@ -71,7 +74,8 @@ public class SpkiBackingBean {
 	private String challsAnswer;
 	private String password;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
-	
+    FacesScopes facesScope = new FacesScopes();
+
 
 	public SpkiBackingBean() {}
 	
@@ -264,13 +268,28 @@ public class SpkiBackingBean {
 		this.challengeQues1 = challengeQues1;
 	}
 
+	public String getSupplierOrgId() {
+		ISupplierSearchSO smSupplierSO = null;
+		System.out.println("ISearchResultBean<SmSupplier> pageChangeListener");
+		smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISupplierSearchSO.class);
+	    Long userId = facesScope.getUserSessionBean().getUserId();
+
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setUserId(userId);
+		SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
+//		res.getResultBean().getResultList().get(0).getEpNo();
+
+		return res.getResultBean().getResultList().get(0).getEpNo();	
+	}
+	
 	public void RequestChangePIN() throws IOException, PortalException, SystemException {
 //	    FacesScopes facesScope = new FacesScopes();
-//	    String userId = facesScope.getUserSessionBean().getIdentificationNo();
-//	    String orgId = facesScope.getUserSessionBean().getIdentificationNo();
-//	    String email = facesScope.getUserSessionBean().getIdentificationNo();
-	    String userId = "890101011234"; 
-	    String orgId = "eP-1400J005d"; 
+	    String userId = facesScope.getUserSessionBean().getIdentificationNo();
+	    String orgId = getSupplierOrgId();
+	    String email = facesScope.getUserSessionBean().getEmail();
+//	    String userId = "890101011234"; 
+//	    String orgId = "eP-1400J005d"; 
 	    String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
