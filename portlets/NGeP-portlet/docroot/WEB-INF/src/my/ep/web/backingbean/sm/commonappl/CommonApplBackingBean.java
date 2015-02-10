@@ -757,7 +757,7 @@ public class CommonApplBackingBean extends
 		return resDTO;
 	}
 
-	private MofRegistrationResDTO retriveApplicationById(int applId) {
+	private MofRegistrationResDTO retriveApplicationById(long applId) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
 
