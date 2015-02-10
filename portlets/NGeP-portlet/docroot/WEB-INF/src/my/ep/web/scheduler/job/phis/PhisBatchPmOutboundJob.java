@@ -28,11 +28,11 @@ public class PhisBatchPmOutboundJob implements Job {
 		
 	  log.info("PM PHIS Servrice");
        PhisIntegration phisIntegration = new PhisIntegration();       
-       phisIntegration.votFund();
-       phisIntegration.votFundDana();
+      // phisIntegration.votFund();
+     //  phisIntegration.votFundDana();
      //  phisIntegration.glAccount();
-       phisIntegration.programActivity();
-       phisIntegration.project();
+     //  phisIntegration.programActivity();
+      // phisIntegration.project();
 		
 	}
 

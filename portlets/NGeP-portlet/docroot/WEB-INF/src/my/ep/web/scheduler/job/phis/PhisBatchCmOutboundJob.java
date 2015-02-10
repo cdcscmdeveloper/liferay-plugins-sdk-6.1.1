@@ -27,7 +27,7 @@ public class PhisBatchCmOutboundJob implements Job {
 		log.info(" CM PHIS Servrice");
 		PhisIntegration phisIntegration = new PhisIntegration();
 
-		phisIntegration.createFilesforPHIS();
+		//phisIntegration.createFilesforPHIS();
 
 	}
 
