@@ -30,7 +30,7 @@ public class GfmasBatchSmOutboundJob implements Job {
 		log.info("GfmasSMOutboundJob ");
 
 		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		// gfmasIntegration.sstInformationGfmas();
+		 gfmasIntegration.sstInformationGfmas();
 		
 	}
 
