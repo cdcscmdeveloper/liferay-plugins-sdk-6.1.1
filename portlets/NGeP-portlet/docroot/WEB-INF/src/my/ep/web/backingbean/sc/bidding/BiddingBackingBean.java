@@ -49,11 +49,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	private static Logger log = Logger.getLogger(BiddingBackingBean.class);
 
 	public BiddingBackingBean() {
-
-		System.out.println("biddingBB constructor");
-		
 		getStatusDescList();
-
 	}
 
 	private void debugLogger(Object message) {
@@ -297,6 +293,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+			if(getManagedBean().getBidAction().getNewStartDate() != null){
+				getManagedBean().getBidAction().getScBidSchedule().setStartDate(getManagedBean().getBidAction().getNewStartDate());
+			}
+			if(getManagedBean().getBidAction().getNewEndDate() != null){
+				getManagedBean().getBidAction().getScBidSchedule().setEndDate(getManagedBean().getBidAction().getNewEndDate());
+			}
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			reqDTO.setScBidAction(this.getManagedBean().getBidAction());
