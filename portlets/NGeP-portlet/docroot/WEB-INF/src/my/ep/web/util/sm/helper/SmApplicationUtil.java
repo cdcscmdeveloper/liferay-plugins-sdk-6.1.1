@@ -100,6 +100,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -148,6 +149,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -4757,5 +4759,36 @@ public class SmApplicationUtil {
 			managedBean.setBasicCompanyStates(stateLs);
 		}
 
+	}
+	
+	/**
+	 * Get academic qualifications from PmParameterDesc
+	 * 
+	 * @return the List<SelectItem>
+	 */
+	public static List<SelectItem> getAcademicQualifications() {
+		List<SelectItem> academics = new ArrayList<SelectItem>();
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean("QL", null);
+
+		// sort
+		Collections.sort(parameterDescs, new Comparator<PmParameterDesc>() {
+			@Override
+			public int compare(final PmParameterDesc s1,
+					final PmParameterDesc s2) {
+				return StringUtil.upperCase(
+						s1.getPmParameter().getParameterCode()).compareTo(
+						StringUtil.upperCase(s2.getPmParameter()
+								.getParameterCode()));
+			}
+		});
+
+		academics.add(new SelectItem(null, SmCommonUtil.getMessage(
+				"lbl.txt.select", null)));
+		for (PmParameterDesc pd : parameterDescs) {
+			academics.add(new SelectItem(pd.getPmParameter().getParameterId(),
+					pd.getCodeName()));
+		}
+		return academics;
 	}
 }
