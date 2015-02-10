@@ -33,25 +33,25 @@
 
 				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
 
-				<p:column width="15%">
+				<p:column style="width:210px" >
 					<f:facet name="header">
 					Creation Timestamp
 					</f:facet>
 				#{trackingDiaryObj.actionedDate}
 				</p:column>
-				<p:column width="15%">
+				<p:column width="401px">
 					<f:facet name="header">
 					Actioned By
 					</f:facet>
 				#{trackingDiaryObj.actionedBy}
 				</p:column>
-				<p:column width="15%">
+				<p:column width="401px">
 					<f:facet name="header">
 					Role
 					</f:facet>
 				#{trackingDiaryObj.roleCode}
 				</p:column>
-				<p:column width="25%">
+				<p:column width="401px">
 					<f:facet name="header">
 					Description
 					</f:facet>
@@ -59,7 +59,7 @@
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Document Status
+					Status
 					</f:facet>
 				#{ctTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
 				</p:column>
