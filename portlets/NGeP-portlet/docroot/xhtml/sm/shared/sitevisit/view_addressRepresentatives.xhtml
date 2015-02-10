@@ -8,36 +8,38 @@
 
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" id="pnlSvSelectSvAdd" align="left">
 		<p:dataTable var="svAdd" id="dtblSelectedSvAdd" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvTemplateAddresses}">
+			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAddresses}">
 			<p:column headerText="#{lbl['lbl.sm.address']}">
-					#{svAdd.smSvAddress.smAddress.address1}<br />
-					#{svAdd.smSvAddress.smAddress.address2}<br />
-					#{svAdd.smSvAddress.smAddress.address3}<br />
-					#{svAdd.smSvAddress.smAddress.address4}
+					#{svAdd.smAddress.address1}<br />
+					#{svAdd.smAddress.address2}<br />
+					#{svAdd.smAddress.address3}<br />
+					#{svAdd.smAddress.address4}
 				</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.postcode']}">
-				#{svAdd.smSvAddress.smAddress.postcode}
+				#{svAdd.smAddress.postcode}
 				</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.towncity']}">
-				#{svAdd.smSvAddress.smAddress.pmCity.cityName}
+				#{svAdd.smAddress.pmCity.cityName}
 				</p:column>
 				
 			<p:column headerText="#{lbl['lbl.sm.district']}">
-				#{svAdd.smSvAddress.smAddress.pmDistrict.districtName}
+				#{svAdd.smAddress.pmDistrict.districtName}
 				</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.state']}">
-				#{svAdd.smSvAddress.smAddress.pmState.stateName}
+				#{svAdd.smAddress.pmState.stateName}
 				</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.country']}">
-				#{svAdd.smSvAddress.smAddress.pmCountry.countryName}
+				#{svAdd.smAddress.pmCountry.countryName}
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-		
+	
+	<ui:include src="/xhtml/sm/shared/sitevisit/categoryCodeByTemplate.xhtml" />
+	
 	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep">
 		<p:dataTable id="dtIntRepTbl" var="interviewee" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
