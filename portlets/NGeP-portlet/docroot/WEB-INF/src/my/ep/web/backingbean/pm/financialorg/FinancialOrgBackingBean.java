@@ -276,24 +276,25 @@ public class FinancialOrgBackingBean extends
 		if (finAddressTypes != null && !finAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : finAddressTypes) {
 				// financial address
-				if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
+				if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())&&(pmAddressType.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE))) {
 					this.getManagedBean().setPmAddress(pmAddressType.getPmAddress());
 					addrExist = true;
+					// financial contact
+					if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
+						this.getManagedBean().setContactPerson(pmAddressType.getPmContacts().get(0));
+						contactExist= true;
+					}else if(!contactExist){
+						log.info("Contact not Exist");
+						List<PmContact> contactLst = new ArrayList<PmContact>();
+						getManagedBean().setContactPerson(new PmContact());
+						PmContact contact = getManagedBean().getContactPerson();					
+						contact.setPmAddressType(pmAddressType);
+						contactLst.add(contact);
+						pmAddressType.setPmContacts(contactLst);
+					}
 				}
 				
-				// financial contact
-				if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
-					this.getManagedBean().setContactPerson(pmAddressType.getPmContacts().get(0));
-					contactExist= true;
-				}else{ 
-					log.info("Contact not Exist");
-					List<PmContact> contactLst = new ArrayList<PmContact>();
-					getManagedBean().setContactPerson(new PmContact());
-					PmContact contact = getManagedBean().getContactPerson();					
-					contact.setPmAddressType(pmAddressType);
-					contactLst.add(contact);
-					pmAddressType.setPmContacts(contactLst);
-				}
+				
 			}
 		}
 		if (!addrExist) {
