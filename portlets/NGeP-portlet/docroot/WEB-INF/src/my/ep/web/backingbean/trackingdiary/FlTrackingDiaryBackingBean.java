@@ -286,6 +286,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocNo()));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocType()));
 			System.out.println("Fl TrackingDiary docNo " + getManagedBean().getvFlDocument().getDocNo());
+			System.out.println("Fl TrackingDiary DocType " + getManagedBean().getvFlDocument().getDocType());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();

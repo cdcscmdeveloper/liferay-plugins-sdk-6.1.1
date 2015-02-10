@@ -36,10 +36,6 @@ public class SmTrackingDiaryBackingBean extends
 	}
 	
 	public void search() {
-//		log.info("................................smSupplierTitle="+ smSupplierTitle);
-//		if ((extensionCode != null && extensionCode.isEmpty()) && ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))) {
-//			throw new EpException(MessageConst.ERROR_716006);
-//		}
 //		if ((getManagedBean().getSearchDocumentNoValue() != null && getManagedBean().getSearchDocumentNoValue().isEmpty()) 
 //				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
 //				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())

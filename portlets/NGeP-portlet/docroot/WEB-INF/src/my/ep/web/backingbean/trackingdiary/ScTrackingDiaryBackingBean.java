@@ -135,9 +135,6 @@ public class ScTrackingDiaryBackingBean extends
 	}
 
 	public void search() {
-//		if ((extensionCode != null && extensionCode.isEmpty()) && ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))) {
-//			throw new EpException(MessageConst.ERROR_716006);
-//		}
 		System.out.println("ScTrackingDiaryBackingBean search");
 		getManagedBean().getScRNDocumentDataModel().reloadData();
 	}
@@ -157,6 +154,7 @@ public class ScTrackingDiaryBackingBean extends
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchDocNo()));
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocType()));
 			System.out.println("Sc TrackingDiary docNo  " + getManagedBean().getSearchDocNo());
 
 			reqDTO.setSearchBean(searchBean);
