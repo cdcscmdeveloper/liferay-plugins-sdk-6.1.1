@@ -789,7 +789,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
-	/*
+	
 	public void orgUnitStatusChange(int index){
 		logger.info("orgUnitStatusChange");
 		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
@@ -803,7 +803,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 	}
-	
+	/*
 	public void changeResponsibleOrgDates(ValueChangeEvent changeEvent){
 		logger.info("changeResponsibleOrgDates");
 		System.out.println("NEW " + changeEvent.getNewValue());
@@ -2031,21 +2031,25 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()){
 								activeRoleNumber++;
 							}
+								
+						}
+						if(activeRoleNumber==0){
+							throw new EpException(MessageConst.ERROR_770150);
 						}
 					}else{
 						userOrg.setCurrentActive(false);
 					}
+				}else{
+					
 				}
 			}
 		}
 		if(activeOrgNumber>1){
 			throw new EpException(MessageConst.ERROR_770028);
-		}else if(activeOrgNumber==0){
+		}else if(user.isBrandNew() && activeOrgNumber==0){
 			throw new EpException(MessageConst.ERROR_770029);
 		}
-		if(activeRoleNumber==0){
-			throw new EpException(MessageConst.ERROR_770150);
-		}
+		
 	}
 	
 	/**
@@ -2057,6 +2061,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		if(user.getPmUserOrgs()!=null){
 			for(PmUserOrg userOrg: user.getPmUserOrgs()){
+				if(userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
 				for(PmUserRole userRole:userOrg.getPmUserRoles()){
 					String roleCode = userRole.getPmRole().getRoleCode();
 					if(userRole.getPmRole().isLimitRequired()){
@@ -2072,6 +2077,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							throw new EpException(MessageConst.ERROR_770106, new String[]{getRoleDescByRoleCode(roleCode)});
 						}
 					}
+				}
 				}
 			}
 		}

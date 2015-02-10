@@ -5049,7 +5049,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>pmFactoringCompanies</portlet-name>
+		<portlet-name>factoring-Companies</portlet-name>
 		<display-name>Factoring Companies</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
