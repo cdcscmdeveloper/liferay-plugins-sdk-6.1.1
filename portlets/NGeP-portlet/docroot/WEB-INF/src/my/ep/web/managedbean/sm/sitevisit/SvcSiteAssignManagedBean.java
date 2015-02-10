@@ -10,8 +10,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sm.SmApplSectionReview;
-import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -24,7 +22,7 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private SmSvTask smSvTask;
-	private long appId;
+	private Long appId;
 	private String[] bpmAction;
 	private String taskId;
 	private SMSiteVisitDataType bpmPojo;
@@ -53,11 +51,11 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 		this.smSvTask = smSvTask;
 	}
 
-	public long getAppId() {
+	public Long getAppId() {
 		return appId;
 	}
 
-	public void setAppId(long appId) {
+	public void setAppId(Long appId) {
 		this.appId = appId;
 	}
 
