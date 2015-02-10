@@ -337,6 +337,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter certificate;
 	private PmParameter diploma;
 	private List<SelectItem> acadQualifications;
+	private Long prevBasicStateId;
 	
 	private PmDigiSign pmDigiSign;
 
@@ -2595,6 +2596,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAcadQualifications(List<SelectItem> acadQualifications) {
 		this.acadQualifications = acadQualifications;
+	}
+
+	public Long getPrevBasicStateId() {
+		return prevBasicStateId;
+	}
+
+	public void setPrevBasicStateId(Long prevBasicStateId) {
+		this.prevBasicStateId = prevBasicStateId;
 	}
 	
 }

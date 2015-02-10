@@ -605,6 +605,8 @@ public class SmApplicationBackingBean extends
 					this.getManagedBean().setBasicCompanyDistricts(
 							retrievePmDistrictList(addr.getPmState()
 									.getStateId()));
+					getManagedBean().setPrevBasicStateId(
+							addr.getPmState().getStateId());
 					this.getManagedBean().setBasicCompanyCities(
 							retrievePmCityList(addr.getPmDistrict()
 									.getDistrictId()));
@@ -1002,12 +1004,24 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
 		} else if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
-				&& getManagedBean().isSupplierUser()
-				&& getManagedBean().getSmAppl().getSupportingDocMode() != null
-				&& getManagedBean().getSmAppl().getSupportingDocMode()
-						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)
-				&& (currentTab < outputTab)) {
-			validateSupportingDocs();
+				&& getManagedBean().isSupplierUser()) {
+			if (getManagedBean().getSmAppl().getSupportingDocMode() != null
+					&& getManagedBean()
+							.getSmAppl()
+							.getSupportingDocMode()
+							.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)
+					&& (currentTab < outputTab)) {
+				validateSupportingDocs();
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses() != null
+					&& !getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().isEmpty()) {
+				SmCompanyAddress comAdd = getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getSmCompanyAddresses().get(0);
+				getManagedBean().setPrevBasicStateId(
+						comAdd.getSmAddress().getPmState().getStateId());
+			}
 		}
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		log.info("******* Current page AFTER in managed bean ********"
@@ -1527,7 +1541,10 @@ public class SmApplicationBackingBean extends
 			List<Long> catL3Ids = new ArrayList<Long>();
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
-				catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
+				}
 			}
 			rqDto.setCategoryL3Ids(catL3Ids);
 			log.info(" **** Total categories sent to Doc So ***"
@@ -1563,27 +1580,46 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			} else {
-				docs.addAll(getManagedBean().getSmAppl().getSmApplSupportDocs());
-				for (PmDocument doc : rsDTO.getDocumentList()) {
-					boolean recordExists = false;
-					for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
-							.getSmApplSupportDocs()) {
+				if (getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress()
+						.getPmState().getStateId()
+						.equals(getManagedBean().getPrevBasicStateId())) {
+					log.info(" ******* Existing doc list without change in state id  *****");
+					docs.addAll(getManagedBean().getSmAppl()
+							.getSmApplSupportDocs());
+					for (PmDocument doc : rsDTO.getDocumentList()) {
+						boolean recordExists = false;
+						for (SmApplSupportDoc smDocu : getManagedBean()
+								.getSmAppl().getSmApplSupportDocs()) {
 
-						if (smDocu.getPmDocument().getDocumentId()
-								.equals(doc.getDocumentId())) {
-							// docs.add(smDocu);
-							recordExists = true;
+							if (smDocu.getPmDocument().getDocumentId()
+									.equals(doc.getDocumentId())) {
+								// docs.add(smDocu);
+								recordExists = true;
+							}
+						}
+						if (!recordExists) {
+							docs.add(SmApplicationUtil
+									.getDefaultSmApplSupportingDoc(doc,
+											getManagedBean().getSmAppl()));
+						}
+
+						// to display or hide download column
+						if (doc.isDownload()) {
+							getManagedBean().setHasSuppDocToDownload(true);
 						}
 					}
-					if (!recordExists) {
+				} else {
+					log.info(" ******* Existing doc list without CHANGE in state id  *****");
+					for (PmDocument doc : rsDTO.getDocumentList()) {
+						getManagedBean().getSmAppl().getSmApplSupportDocs()
+								.clear();
 						docs.add(SmApplicationUtil
 								.getDefaultSmApplSupportingDoc(doc,
 										getManagedBean().getSmAppl()));
-					}
-
-					// to display or hide download column
-					if (doc.isDownload()) {
-						getManagedBean().setHasSuppDocToDownload(true);
+						if (doc.isDownload()) {
+							getManagedBean().setHasSuppDocToDownload(true);
+						}
 					}
 				}
 			}
