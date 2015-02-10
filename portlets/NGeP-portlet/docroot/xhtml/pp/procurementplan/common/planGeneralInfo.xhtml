@@ -34,7 +34,7 @@
 	            
 	    </h:panelGrid>	
 	-->
-	<div align="left" class="header-info">
+	<div align="left" class="header-info" style="margin-bottom:5px;">
 		<table style="width:100%;">
 			<tr>
 				<td width="6%">
@@ -56,6 +56,12 @@
 					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} /
 					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}
 				</td>
+			</tr>
+		</table>
+	</div>
+	<div align="left" class="header-info">
+		<table style="width:100%;">
+			<tr>
 				<td width="5%">
 					<p:outputLabel value="#{lbl['lbl.pp.status']}"/>
 				</td>
