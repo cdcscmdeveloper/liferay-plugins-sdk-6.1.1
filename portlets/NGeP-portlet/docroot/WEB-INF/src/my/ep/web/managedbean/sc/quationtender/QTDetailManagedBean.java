@@ -60,6 +60,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -276,6 +277,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> supplierStateCode;
 	private List<String> supplierDistrictCode;
 	private List<String> supplierDivisionCode;
+	
+	private List<ScQtLocCriteria> existingSupplierLocationList;
+	private boolean isSupplierValidation;
 
 	// Panel Information
 	private CtPanelItem ctPanelItem;
@@ -2865,6 +2869,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setMofAccounts(List<SmMofAccount> mofAccounts) {
 		this.mofAccounts = mofAccounts;
+	}
+
+	public List<ScQtLocCriteria> getExistingSupplierLocationList() {
+		return existingSupplierLocationList;
+	}
+
+	public void setExistingSupplierLocationList(
+			List<ScQtLocCriteria> existingSupplierLocationList) {
+		this.existingSupplierLocationList = existingSupplierLocationList;
+	}
+
+	public boolean isSupplierValidation() {
+		return isSupplierValidation;
+	}
+
+	public void setSupplierValidation(boolean isSupplierValidation) {
+		this.isSupplierValidation = isSupplierValidation;
 	}
 
 }
