@@ -444,7 +444,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		reqDTO.setCtxToken(token);
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-		obj.setDpId(requestListResDTO.getRequestNoteDetail().getRequestNoteId().intValue());
+		obj.setDpId(requestListResDTO.getRequestNoteDetail().getRequestNoteId());
 		//obj.setPtj("Asdqwe");
 		if (submit) {
 			String approvaUserId = "";
