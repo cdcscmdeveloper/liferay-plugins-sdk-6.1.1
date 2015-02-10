@@ -51,7 +51,7 @@
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}"  style="width:50%;white-space:normal;">
 					<h:commandLink value="#{data.name}"
 						styleClass="blue_font"
-						action="#{circularBackingBean.gotoPage(data.circularVerId, data.docType)}" />
+						action="#{circularBackingBean.gotoViewPage(data.circularVerId, data.docType)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.update.as.of']}"  style="width:10%;white-space:normal;">
 					<h:outputText value="#{data.changedDate}" >
