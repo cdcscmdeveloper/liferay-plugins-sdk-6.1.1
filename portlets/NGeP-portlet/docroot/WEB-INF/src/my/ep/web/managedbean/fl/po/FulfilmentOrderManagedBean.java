@@ -41,6 +41,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private boolean contractRequest;
 	private String buttonVal;
+	private String backToPrevious;
 	
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
@@ -767,6 +768,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
+	}
+
+	/**
+	 * @return the backToPrevious
+	 */
+	public String getBackToPrevious() {
+		return backToPrevious;
+	}
+
+	/**
+	 * @param backToPrevious the backToPrevious to set
+	 */
+	public void setBackToPrevious(String backToPrevious) {
+		this.backToPrevious = backToPrevious;
 	}
 
 }

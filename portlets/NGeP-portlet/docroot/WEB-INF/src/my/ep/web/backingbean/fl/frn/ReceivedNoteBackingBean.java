@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -57,6 +58,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -81,6 +84,8 @@ import com.liferay.portal.util.PortalUtil;
 public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManagedBean> {
 	private static Logger log = Logger.getLogger(ReceivedNoteBackingBean.class);
 	private String className="@(.myFrnEvalClassName)";
+	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/shared/hyperlinkView/deliveryOrderPage/doHyperlink.xhtml";
+	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
 	/**
 	 * @return the className
 	 */
@@ -523,5 +528,37 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		double receivedQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getReceivedQty().doubleValue();
 		return orderQty - receivedQty - flFulfilmentNoteItem.getReceivedQty().doubleValue();	
 	}
-
+	
+	public String navigateDocument(String docType){
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
+			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			reqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = orderSO.retrieveDeliveryOrderById(reqDTO);
+			DeliveryOrderBackingBean doBB = new DeliveryOrderBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+			doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+		
+			return NAV_DELIVERYORDER_PAGE;
+		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlOrderId(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+			reqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+			FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
+			orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			
+			return NAV_ORDERNO;
+		}
+		
+		return null;
+		
+	}
 }

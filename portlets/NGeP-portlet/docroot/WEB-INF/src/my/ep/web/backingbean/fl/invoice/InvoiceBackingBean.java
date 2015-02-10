@@ -1205,5 +1205,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
 			pmDigiSign.setSignedData(signedData);
 		}
+		
+		public String backToDocument() {
+			return getManagedBean().getBackToDocument();
+		}
 	
 }

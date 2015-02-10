@@ -27,6 +27,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
@@ -93,6 +94,10 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.dan.DebitAdjustmentNoteBackingBean;
+import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
+import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -127,7 +132,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	private static Map<Long, PmProject> projectCodeMap = new HashMap<Long, PmProject>();
 	private static Map<Long, PmSetia> setiaCodeMap = new HashMap<Long, PmSetia>();
 	private static Map<Long, PmSubSetia> subSetiaCodeMap = new HashMap<Long, PmSubSetia>();
-	
+	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	private static final String NAV_ADJ = "/xhtml/fl/shared/hyperlinkView/adjustmentPage/adjustmentHyperlink.xhtml";
+	private static final String NAV_SI = "/xhtml/fl/shared/hyperlinkView/stopInstrPage/stopInstrHyperlink.xhtml";
+	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
 	/**
 	 * @return the className
 	 */
@@ -1154,4 +1162,88 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 		}
 	}
+	
+	public String navigateDocument(String docType){
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlOrderId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getFulfilmentOrderId());
+			reqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+			FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
+			orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+
+			return NAV_ORDERNO;
+		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)){
+			IAdjustmentSO adjustmentSO = (IAdjustmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+			Long adjId = null;
+			for(FlAdjustment adjOb : getManagedBean().getPaymentAdvice().getFlInvoice().getFlAdjustments()){
+				if(adjOb.getDocType().equalsIgnoreCase(docType)){
+					adjId = adjOb.getAdjustmentId();
+					break;
+				}
+			}
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setDanId(adjId);
+			reqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(reqDTO);
+			DebitAdjustmentNoteBackingBean adjBB = new DebitAdjustmentNoteBackingBean();
+			adjBB.getManagedBean().setAdjustment(resDTO.getAdjustment());
+			resDTO.setAdjLink(true);
+			adjBB.setAdjustmentNote(resDTO);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			adjBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+
+			return NAV_ADJ;
+		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
+			IAdjustmentSO adjustmentSO = (IAdjustmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+			Long adjId = null;
+			for(FlAdjustment adjOb : getManagedBean().getPaymentAdvice().getFlInvoice().getFlAdjustments()){
+				if(adjOb.getDocType().equalsIgnoreCase(docType)){
+					adjId = adjOb.getAdjustmentId();
+					break;
+				}
+			}
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setDanId(adjId);
+			reqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(reqDTO);
+			DebitAdjustmentNoteBackingBean adjBB = new DebitAdjustmentNoteBackingBean();
+			adjBB.getManagedBean().setAdjustment(resDTO.getAdjustment());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			resDTO.setAdjLink(true);
+			adjBB.setAdjustmentNote(resDTO);
+			adjBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+
+			return NAV_ADJ;
+		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_STOP_DELIVERY)){
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			FulfilmentResDTO resDTO = orderSO.retrieveStopDeliveryByDocNo(getManagedBean().getStopInstrNo());
+			StopInstrBackingBean siBB = new StopInstrBackingBean();
+			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+			siBB.populateChargeLineData();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			siBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+
+			return NAV_SI;
+		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)){
+			IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setInvoiceId(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceId());
+			reqDTO.setDocType(docType);
+			reqDTO.setInvoiceLink(true);
+			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+			InvoiceBackingBean invBB = new InvoiceBackingBean();
+			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+
+			return NAV_INVOICE;
+		}
+		return null;
+	}
 }
+

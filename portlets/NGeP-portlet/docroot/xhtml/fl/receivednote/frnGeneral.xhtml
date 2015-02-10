@@ -42,8 +42,8 @@
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.flFulfilmentOrder.docNo}"></p:inputText></td>
+				<td><p:commandLink value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.flFulfilmentOrder.docNo}" 
+						action="#{receivedNoteBackingBean.navigateDocument(receivedNoteBackingBean.managedBean.fulfilmentRequest.flFulfilmentOrder.docType)}"></p:commandLink> </td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>

@@ -419,5 +419,9 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
 		pmDigiSign.setSignedData(signedData);
 	}
+	
+	public String backToDocument() {
+		return getManagedBean().getBackToDocument();
+	}
 
 }

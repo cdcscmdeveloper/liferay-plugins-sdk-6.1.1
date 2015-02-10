@@ -850,4 +850,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	        pmDigiSign.setSignedData(signedData);
 		}
 		
+		public String backToDeliveryOrder() {
+			return getManagedBean().getBackToPrevious();
+		}
 }
