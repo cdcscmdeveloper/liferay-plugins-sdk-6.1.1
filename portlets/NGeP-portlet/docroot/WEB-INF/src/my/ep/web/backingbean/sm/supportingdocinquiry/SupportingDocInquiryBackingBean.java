@@ -12,6 +12,7 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryReqDTO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.exception.EpException;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -38,7 +39,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		log.info("**********viewDocInquiry*********");
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 		SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
-		//this.getManagedBean().setAppId(1009L);
+		//this.getManagedBean().setAppId(1257436L);
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
@@ -63,6 +64,8 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(
+					SupplierManagementConst.SUPP_SEND_INQUIRY_SDO, this.getManagedBean().getAppId(), this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo(), getUserRole()));
 
 			SupportingDocInquiryResDTO resDTO = reqSO.updateInquiry(reqDTO);
 			//SupportingDocInquiryResDTO resDTO = new SupportingDocInquiryResDTO();
@@ -70,6 +73,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			if(resDTO.isSuccessful()){
 				log.info("*****is Success******");
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				renewSesionObject();
 				return navigateToAck();
 			}
 		}catch(Exception ex){
@@ -100,4 +104,18 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
 	
+	private String getUserRole() {
+		FacesScopes facesScopes = new FacesScopes();
+		if(facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){ 
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();
+		}else if(facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		}else if(facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		}else if(facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		}else{ 
+			return null;
+		}
+	}
 }
