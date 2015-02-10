@@ -82,7 +82,7 @@
 				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
 				disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 				oncomplete="addDeliveryAddr.show();" 
-				title="#{lbl['lbl.fl.tooltip.recv.officer']}"/>
+				title="#{lbl['lbl.fl.tooltip.ptj.address']}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
 				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) "
