@@ -409,6 +409,11 @@ public class SupplierManagementConst {
 	public static final String APPROVER_APPROVE_APPL = "Application approved by Approver";
 	public static final String PO_SEND_INQUIRY_SUPP = "PO sent inquiry to supplier";
 	public static final String PO_ESCALATE_APPROVER = "PO esclated the application to Approver for final decision";
+	
+	public static final String SDO_SUBMIT_APPL = "SDO submitted supporting document checklist";
+	public static final String SDO_SEND_INQUIRY = "SDO sent inquiry to supplier";
+	public static final String SUPP_SEND_INQUIRY_SDO = "Supplier sent response to SDO";
+	
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
 
