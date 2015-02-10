@@ -131,6 +131,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
@@ -848,7 +849,7 @@ public class QTDetailBackingBean extends
 					scQt.setLatestBsvDate(getLatestBsvDate(bsvs.get(0)
 							.getScQtBsvDtls()));
 				}
-				
+
 			} else {
 				// code for if bsv details if any and non zonal
 				BriefingZoneBean bsvDtlBean = this.getManagedBean()
@@ -897,8 +898,10 @@ public class QTDetailBackingBean extends
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						PmAddress pmAddress = scQtSampleSubmission.getAddress();
-						if (pmAddress.getPmDivision() != null && pmAddress.getPmDivision().getDivisionId() == null) {
-							scQtSampleSubmission.getAddress().setPmDivision(null);
+						if (pmAddress.getPmDivision() != null
+								&& pmAddress.getPmDivision().getDivisionId() == null) {
+							scQtSampleSubmission.getAddress().setPmDivision(
+									null);
 						}
 						scQtSampleSubmission.getAddress().setPmCountry(
 								retrieveCountry());
@@ -1688,7 +1691,8 @@ public class QTDetailBackingBean extends
 										FacesMessage.SEVERITY_INFO,
 										null,
 										MessageUtils
-												.getMessage(getMsgCodeByTaskName(taskName),
+												.getMessage(
+														getMsgCodeByTaskName(taskName),
 														new String[] {
 																getParameterDesc(
 																		ParameterTypeConst.DOCUMENT_TYPES,
@@ -1753,6 +1757,7 @@ public class QTDetailBackingBean extends
 								.getDisplayName(qtApproval
 										.getApprovalCategory()
 										.getParameterCode()));
+
 						qtApproval.setScQtApprovalRemarks(initializeRemarks(
 								qtApproval, this.getManagedBean().getQt()
 										.getCurrentWorkFlowStatus(),
@@ -2987,7 +2992,7 @@ public class QTDetailBackingBean extends
 
 	public List<PmUser> retrievePmUserSecratryDtl(String committeeType) {
 		debugLogger("retrievePmUserSecratryDtl");
-
+		this.getManagedBean().setPmUsersList(null);
 		ICommitteSO committeSO;
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2999,6 +3004,7 @@ public class QTDetailBackingBean extends
 
 			CommitteResDTO resDTO = committeSO
 					.retrieveFcSecretaryUsersByCommType(reqDTO);
+			this.getManagedBean().setPmUsersList(resDTO.getUserList());
 			return resDTO.getUserList();
 
 		} finally {
@@ -3311,14 +3317,23 @@ public class QTDetailBackingBean extends
 										.getParameterCode())) {
 					qtApproval.setApproverSettings(approvalTab
 							.getScQtApproval().getApproverSettings());
-					if (qtApproval.getScQtApprovalRemarks() == null) {
-						qtApproval.setScQtApprovalRemarks(approvalTab
-								.getScQtApproval().getScQtApprovalRemarks());
-					} else {
-						qtApproval.setScQtApprovalRemarks(approvalTab
-								.getScQtApproval().getScQtApprovalRemarks());
+
+					qtApproval.setScQtApprovalRemarks(approvalTab
+							.getScQtApproval().getScQtApprovalRemarks());
+					List<ScQtApprovalRemark> approvalRemarks = qtApproval
+							.getScQtApprovalRemarks();
+					if (CollectionUtils.isNotEmpty(approvalRemarks)) {
+						for (ScQtApprovalRemark remarks : approvalRemarks) {
+							remarks.setScQtApproval(qtApproval);
+						}
+
 					}
-					if (qtApproval.getScQtApprovalAttachment() == null) {
+
+					if (null != approvalTab.getScQtApproval()
+							.getScQtApprovalAttachment()) {
+						approvalTab.getScQtApproval()
+								.getScQtApprovalAttachment()
+								.setScQtApproval(qtApproval);
 						qtApproval.setScQtApprovalAttachment(approvalTab
 								.getScQtApproval().getScQtApprovalAttachment());
 					}
@@ -3622,7 +3637,21 @@ public class QTDetailBackingBean extends
 					.getSelectedApprovalTabBean();
 			finalizeRemarks(tabBean.getScQtApproval().getScQtApprovalRemarks());
 			if (tabBean.getScQtApproval().getScQtApprovalRemarks().isEmpty()) {
+				ScQtApproval qtApproval = tabBean.getScQtApproval();
+				qtApproval.setScQtApprovalRemarks(initializeRemarks(qtApproval,
+						this.getManagedBean().getQt()
+								.getCurrentWorkFlowStatus(),
+						qtApproval.getScQtApprovalRemarks(),
+						ScQtApprovalRemark.class));
 				throw new EpException("Remarks is mandatory");
+			}
+			List<ScQtApproverSettings> approverSettings = tabBean
+					.getScQtApproval().getApproverSettings();
+			if (null != approverSettings && !approverSettings.isEmpty()) {
+				String fcCommType = approverSettings.get(0).getCommitteType();
+				if (StringUtils.isEmpty(fcCommType)) {
+					throw new EpException("Please Choose finalization Committe");
+				}
 			}
 			List<ScQtApproval> scQtApprovals = new ArrayList<ScQtApproval>();
 			tabBean.getScQtApproval().setSubmissionDate(new Date());
@@ -3642,7 +3671,7 @@ public class QTDetailBackingBean extends
 									null,
 									MessageUtils
 											.getMessage(
-													MessageConst.INFO_700010,
+													MessageConst.INFO_700018,
 													new String[] {
 															getParameterDesc(
 																	ParameterTypeConst.DOCUMENT_TYPES,
@@ -3658,11 +3687,24 @@ public class QTDetailBackingBean extends
 		}
 
 	}
-	
-	private String getMsgCodeByTaskName(String taskName){
-		if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)){
+
+	private String getMsgCodeByTaskName(String taskName) {
+		if (SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)) {
 			return MessageConst.INFO_700052;
 		}
 		return MessageConst.INFO_700005;
+	}
+
+	public void updateUserIdToSettings(AjaxBehaviorEvent event) {
+		Long id = (Long) event.getComponent().getAttributes().get("value");
+		List<PmUser> userList = this.getManagedBean().getPmUsersList();
+		for (PmUser user : userList) {
+			if (user.getUserId().equals(id)) {
+				this.getManagedBean().getSelectedApprovalTabBean()
+						.getScQtApproval().getApproverSettings().get(0)
+						.setApprover(user);
+				break;
+			}
+		}
 	}
 }
