@@ -897,6 +897,10 @@ public class EvaluationBackingBean extends
 
 					} else {
 						if (null != checkList.getPmEvalStatus()
+								&& null != checkList.getDefinationType()
+								&& !checkList.getDefinationType()
+										.getParameterCode()
+										.equalsIgnoreCase("UP")
 								&& checkList
 										.getPmEvalStatus()
 										.getStatusId()
@@ -925,6 +929,17 @@ public class EvaluationBackingBean extends
 							setTechnicalEvaluationStatus(checkList,
 									checkListType, evalStatus);
 
+						} else {
+							if (null != checkList.getDefinationType()
+									&& checkList.getDefinationType()
+											.getParameterCode()
+											.equalsIgnoreCase("UP")) {
+								evalStatus = new PmStatus();
+								evalStatus
+										.setStatusId(QTStatusConst.TS_COMPLETED);
+								setTechnicalEvaluationStatus(checkList,
+										checkListType, evalStatus);
+							}
 						}
 
 					}
@@ -969,6 +984,9 @@ public class EvaluationBackingBean extends
 
 				} else {
 					if (null != checkList.getPmEvalStatus()
+							&& null != checkList.getDefinationType()
+							&& !checkList.getDefinationType()
+									.getParameterCode().equalsIgnoreCase("UP")
 							&& checkList
 									.getPmEvalStatus()
 									.getStatusId()
@@ -995,6 +1013,16 @@ public class EvaluationBackingBean extends
 						setTechnicalEvaluationStatus(checkList, checkListType,
 								evalStatus);
 
+					} else {
+						if (null != checkList.getDefinationType()
+								&& checkList.getDefinationType()
+										.getParameterCode()
+										.equalsIgnoreCase("UP")) {
+							evalStatus = new PmStatus();
+							evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
+							setTechnicalEvaluationStatus(checkList,
+									checkListType, evalStatus);
+						}
 					}
 				}
 
