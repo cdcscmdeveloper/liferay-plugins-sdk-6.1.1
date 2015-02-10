@@ -46,8 +46,6 @@ public class CmTrackingDiaryBackingBean extends
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 
 	public CmTrackingDiaryBackingBean() {
-//	    String unspscCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("unspscCode");
-//	    System.out.println("unspscCode====================================: "+unspscCode);
 	}
 	
 	public void search() {
@@ -69,7 +67,7 @@ public class CmTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),""));
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCmSupplierItem().geti));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
 //			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
 
@@ -90,7 +88,7 @@ public class CmTrackingDiaryBackingBean extends
 
 	public String goToTrackingDiarySearch(CmSupplierItem cmSupplierItem) {
 //		log.debug("**********goToTrackingDiarySearch************"+ unspscObj.getUnspscCode());
-//		getManagedBean().setSmSupplier(smSupplier);
+		getManagedBean().setCmSupplierItem(cmSupplierItem);
 		searchTrackingDiaryDataModel.reloadData();	
 		return NAV_TO_CATALOG_DETAIL_SEARCH + "?faces-redirect=true";
 	}
