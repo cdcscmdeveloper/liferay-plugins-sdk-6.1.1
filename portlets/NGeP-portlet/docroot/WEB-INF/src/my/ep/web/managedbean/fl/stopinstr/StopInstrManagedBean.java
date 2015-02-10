@@ -42,6 +42,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	private boolean autoUpdate;
 	private String textBeforeSign;
 	private String buttonAction;
+	private String backToDocument;
 	
 	public List<PmReasonDesc> getReasonDescs() {
 		if(reasonDescs==null) {
@@ -122,5 +123,19 @@ public class StopInstrManagedBean extends BaseManagedBean {
 
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
+	}
+
+	/**
+	 * @return the backToDocument
+	 */
+	public String getBackToDocument() {
+		return backToDocument;
+	}
+
+	/**
+	 * @param backToDocument the backToDocument to set
+	 */
+	public void setBackToDocument(String backToDocument) {
+		this.backToDocument = backToDocument;
 	}
 }

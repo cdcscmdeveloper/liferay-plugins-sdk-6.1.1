@@ -94,6 +94,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	
 	private Long invoiceId;
+	private String backToDocument;
 	
 	/**
 	 * @return the docType
@@ -608,6 +609,18 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	public void setInvoiceId(Long invoiceId) {
 		this.invoiceId = invoiceId;
+	}
+	/**
+	 * @return the backToDocument
+	 */
+	public String getBackToDocument() {
+		return backToDocument;
+	}
+	/**
+	 * @param backToDocument the backToDocument to set
+	 */
+	public void setBackToDocument(String backToDocument) {
+		this.backToDocument = backToDocument;
 	}
 
 

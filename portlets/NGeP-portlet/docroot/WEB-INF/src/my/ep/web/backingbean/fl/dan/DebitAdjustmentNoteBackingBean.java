@@ -184,8 +184,10 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, adjustment.getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 		} else {
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, adjustment.getFlRequest().getCtContract().getContractNo());
-		}			
-		flBB.initializeRemarkAndAttachement(adjustment.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+		}
+		if(!resDTO.isAdjLink()){
+			flBB.initializeRemarkAndAttachement(adjustment.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+		}
 	}
 	
 	private void calInvSummary(FlAdjustment adjustment) {
@@ -288,5 +290,10 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
+	}
+	
+	public String backToDocument(){
+		return getManagedBean().getBackToDocument();
+		
 	}
 }

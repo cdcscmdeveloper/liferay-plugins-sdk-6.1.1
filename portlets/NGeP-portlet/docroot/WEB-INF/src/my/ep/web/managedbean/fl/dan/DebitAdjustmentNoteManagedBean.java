@@ -67,6 +67,7 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private BigDecimal danAmtTotal ;
 	private BigDecimal invAmtTotal ;
 	private String accountNoName;
+	private String backToDocument;
 	
 	
 	/**
@@ -382,6 +383,18 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setAccountNoName(String accountNoName) {
 		this.accountNoName = accountNoName;
+	}
+	/**
+	 * @return the backToDocument
+	 */
+	public String getBackToDocument() {
+		return backToDocument;
+	}
+	/**
+	 * @param backToDocument the backToDocument to set
+	 */
+	public void setBackToDocument(String backToDocument) {
+		this.backToDocument = backToDocument;
 	}
 	
 }
