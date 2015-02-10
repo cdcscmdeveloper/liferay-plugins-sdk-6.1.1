@@ -1,0 +1,60 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<cc:interface>
+		<!-- <cc:attribute name="id" /> -->
+		<cc:attribute name="unspscCode" default="" />
+		
+	</cc:interface>
+
+	<cc:implementation>
+		
+			<p:panel header="Trackng Diary Details" toggleable="true">
+
+			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{cdTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
+
+				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
+
+				<p:column width="15%">
+					<f:facet name="header">
+					Creation Timestamp
+					</f:facet>
+				#{trackingDiaryObj.actionedDate}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Actioned By
+					</f:facet>
+				#{trackingDiaryObj.actionedBy}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Role
+					</f:facet>
+				#{trackingDiaryObj.roleCode}
+				</p:column>
+				<p:column width="25%">
+					<f:facet name="header">
+					Description
+					</f:facet>
+				#{trackingDiaryObj.actionDesc}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Document Status
+					</f:facet>
+				#{smTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>			
+
+	</cc:implementation>
+	
+</ui:component>

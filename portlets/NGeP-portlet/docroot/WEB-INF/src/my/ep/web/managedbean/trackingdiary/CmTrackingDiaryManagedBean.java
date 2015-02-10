@@ -17,6 +17,7 @@ import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -35,6 +36,7 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchStatusId;
 	private Date searchCreatedFromDuration;
 	private Date searchCreatedToDuration;
+	private CmSupplierItem cmSupplierItem;
 
 	private IPagingDataModel<CmSupplierItem> cmDocumentDataModel 	= new SearchPagingDataModel();
 
@@ -144,6 +146,14 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setSearchCreatedToDuration(Date searchCreatedToDuration) {
 		this.searchCreatedToDuration = searchCreatedToDuration;
+	}
+
+	public CmSupplierItem getCmSupplierItem() {
+		return cmSupplierItem;
+	}
+
+	public void setCmSupplierItem(CmSupplierItem cmSupplierItem) {
+		this.cmSupplierItem = cmSupplierItem;
 	}
 
 
