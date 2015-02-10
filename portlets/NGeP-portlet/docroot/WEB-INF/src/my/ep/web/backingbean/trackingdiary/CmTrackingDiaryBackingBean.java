@@ -51,30 +51,8 @@ public class CmTrackingDiaryBackingBean extends
 	}
 	
 	public void search() {
-//		if(null == getManagedBean().getSearchTrasactionType()){ 
-//		throw new EpException(MessageConst.ERROR_740023);
-//	}else if((null ==getManagedBean().getSearchViewType() 
-//			&& "".equalsIgnoreCase(getManagedBean().getSearchContractNo()) 
-//			&& "".equalsIgnoreCase(getManagedBean().getSearchLoaNo()))){
-//		throw new EpException(MessageConst.ERROR_740023);
-//	MessageConst.ERROR_715026
-//	}
-	System.out.println("pageChangeListener");
-	getManagedBean().getCmDocumentDataModel().reloadData();
-
-//		log.info(".......................unspscCode="+ unspscCode);
-//		log.info("................................unspscTitle="+ unspscTitle);
-//		(extensionCode == null && unspscCode == null && (unspscTitle == null || unspscTitle.isEmpty()))
-//		if ((extensionCode != null && extensionCode.isEmpty()) && ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))) {
-//			throw new EpException(MessageConst.ERROR_716006);
-//		}
-//
-//		if (unspscCode != null && !unspscCode.isEmpty() && unspscCode.length() != 8) {
-//			throw new EpException(MessageConst.ERROR_715026);
-//		}
-
-//		searchDataModel.reloadData();	
-		
+		System.out.println("pageChangeListener");
+		getManagedBean().getCmDocumentDataModel().reloadData();
 	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {
@@ -92,7 +70,7 @@ public class CmTrackingDiaryBackingBean extends
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),""));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
 //			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
 
 			reqDTO.setSearchBean(searchBean);

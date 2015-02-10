@@ -67,6 +67,7 @@ public class CdTrackingDiaryBackingBean extends
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchDocumentNoValue()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CD"));
 			System.out.println("getCdDocumentDataModel docNo " + getManagedBean().getSearchDocumentNoValue());
 
 			reqDTO.setSearchBean(searchBean);
