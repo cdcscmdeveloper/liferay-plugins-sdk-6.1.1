@@ -54,7 +54,7 @@
 			</tr>
 
 			<tr>
-				<TD style="width : 25%"> <h:outputText value="* " styleClass="mandatory" /><h:outputLabel id="newBidStartDateLbl" value="#{lbl['lbl.sc.new.bidding.start']}" /></TD>
+				<TD style="width : 25%; text-align : right;"> <h:outputText value="* " styleClass="mandatory" /><h:outputLabel id="newBidStartDateLbl" value="#{lbl['lbl.sc.new.bidding.start']}" /></TD>
 				<TD style="width : 25%"> <p:calendar id="newBidStart" required="true" size="16"
 						value="#{biddingBB.managedBean.bidAction.newStartDate}" label="#{lbl['lbl.sc.new.bidding.start']}"
 						showOn="button" mindate="#{biddingBB.managedBean.mindate}"
@@ -67,7 +67,7 @@
 					<p:message id="newStartDateMsg" for="newBidStart"
 					showDetail="false" display="icon" />
 					</TD>
-				<TD style="width : 25%"> <h:outputText value="* " styleClass="mandatory" rendered="#{biddingBB.managedBean.bidAction.actionType eq 'B'}"/>
+				<TD style="width : 25%; text-align : right;"> <h:outputText value="* " styleClass="mandatory" rendered="#{biddingBB.managedBean.bidAction.actionType eq 'B'}"/>
 				<h:outputLabel id="newBidEndDateLbl" value="#{lbl['lbl.sc.new.bidding.end']}" /></TD>
 				<TD style="width : 25%"><p:inputText id="newResumeBidEndDate" 
 						disabled="true" size="20"
@@ -99,7 +99,7 @@
 			</tr>
 
 		<tr>
-			<TD style="width : 25%"><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel id="suppNotesLbl" value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
+			<TD style="width : 25%; text-align : right;"><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel id="suppNotesLbl" value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
 			<TD style="width : 75%" colspan="3"><p:inputTextarea id="reBidOrResumeSupplierNotes" required="true"
 					value="#{biddingBB.managedBean.bidAction.remark}" rows="5" label="#{lbl['lbl.sc.notes.to.supplier']}"
 					cols="75" maxLength="200" />
