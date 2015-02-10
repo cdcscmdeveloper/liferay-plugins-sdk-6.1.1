@@ -19,10 +19,10 @@
 		value="#{factoringBackingBean.managedBean.factoringCompanies}">
           <ac:paginator for="factoringCompanyTableID" />
 
-		<p:column>
-			<f:facet name="header">
+		<p:column >
+		 <f:facet name="header">
 			    #{lbl['lbl.pm.fact.company.name']}
-			  </f:facet>
+			  </f:facet> 
 			#{factoringObj.finOrgName}
 		</p:column>
 	
