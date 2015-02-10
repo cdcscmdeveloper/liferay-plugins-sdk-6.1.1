@@ -465,7 +465,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
 
-			SelectItem[] qualifications = getDropdownValues("QL");
 			getManagedBean().setCertificate(
 					SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
 							"5"));
@@ -473,8 +472,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
 							"4"));
 			getManagedBean().setAcadQualifications(
-					qualifications != null ? Arrays.asList(qualifications)
-							: new ArrayList<SelectItem>());
+					SmApplicationUtil.getAcademicQualifications());
 
 		}
 		getManagedBean()
