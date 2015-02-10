@@ -29,8 +29,10 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -1240,5 +1242,21 @@ public class SmCommonUtil {
 	public static String formatToTwoDecimalPoint(BigDecimal amount){
 		DecimalFormat formatter = new DecimalFormat("###,##0.00");
 		return formatter.format(amount);
+	}
+	
+	public static SmTrackingDairyVO assignTrackingDiaryValues(String actionDesc, Long applId, String applNo, String userRole) {
+		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(userRole);
+		trckVO.setDocId(applId);
+		trckVO.setDocNo(applNo);
+		trckVO.setDocType("SR");
+		trckVO.setGroupId(null);
+		trckVO.setStatus(null);
+		trckVO.setGroupDocType(null);
+
+		return trckVO;
 	}
 }
