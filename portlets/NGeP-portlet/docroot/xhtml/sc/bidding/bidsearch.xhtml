@@ -154,12 +154,12 @@
 					<p:commandLink id="bidManagementNavigationBtn" size="5"
 						action="#{biddingBB.bidManagementAction(bid)}" process="@this">
 
-						<p:graphicImage id="editBtnImage" library="ep/images/design"
-							name="edit.png" value="/css/images/design/edit.png" />
+						<p:graphicImage id="viewBtnImage" library="ep/images/design"
+							name="document.png" value="/css/images/design/document.png" />
 						<p:spacer width="5"></p:spacer>
 					</p:commandLink>
 					<p:tooltip id="toolTipNavigate" for="bidManagementNavigationBtn"
-						value="Navigate" />
+						value="View" />
 
 					<p:commandLink id="pauseButton"
 						rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress'}"
@@ -209,8 +209,8 @@
 
 			<p:dialog
 				header="#{(biddingBB.managedBean.bidAction.actionType eq 'P') ? lbl['lbl.sc.pause.bid'] : lbl['lbl.sc.cancel.bid']}"
-				widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade"
-				modal="true" id="bidPauseOrCancel">
+				widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade" draggable="false" resizable="false"
+				modal="false" id="bidPauseOrCancel">
 				<ui:include src="/xhtml/sc/bidding/bsPauseOrCancelBidPopup.xhtml"></ui:include>
 			</p:dialog>
 
@@ -218,9 +218,9 @@
 		<p:panel id="rescheduleRebidPopUp">
 
 
-			<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="675px"
-				height="280px" widgetVar="bidRescheduleOrResume" showEffect="fade"
-				hideEffect="fade" modal="true" id="rescheduleOrResumeBid">
+			<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="680px" height="320px" draggable="false" resizable="false"
+ 				 widgetVar="bidRescheduleOrResume" showEffect="fade"
+				hideEffect="fade" modal="false" id="rescheduleOrResumeBid">
 				<ui:include
 					src="/xhtml/sc/bidding/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
 			</p:dialog>
