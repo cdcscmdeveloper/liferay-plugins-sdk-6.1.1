@@ -2039,7 +2039,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}else{
 						userOrg.setCurrentActive(false);
 					}
-				}else{
 					
 				}
 			}
