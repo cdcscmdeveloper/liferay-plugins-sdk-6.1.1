@@ -66,6 +66,7 @@ import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmSvTemplateAddress;
 import my.ep.persistence.entity.sm.SmSvWorker;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -1854,6 +1855,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVO_SUBMIT_REPORT, 
+					this.getManagedBean().getSmSvTask().getSmAppl().getApplId(), this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getUserRole()));
 		}
 		
 		reqDTO.setSmSvTask(svTask);
@@ -1880,5 +1883,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 			return "";
 		}
+	}
+	
+	private String getUserRole() {	
+		FacesScopes fs = new FacesScopes();
+		if(fs.hasRoleUser(RoleCode.UPS_SVO.value()))
+			return RoleCode.UPS_SVO.value();		
+		else 
+			return null;
 	}
 }
