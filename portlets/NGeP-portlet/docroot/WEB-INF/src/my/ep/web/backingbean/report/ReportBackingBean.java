@@ -2345,7 +2345,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((((PmUser)new FacesScopes().getUserSessionBean()).getUserId()!=null)&&(new FacesScopes().getUserSessionBean().getUserId().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setUserIdVar(ReportConst.FL_AMP_USER_ID_EQ+new FacesScopes().getUserSessionBean().getUserId().toString());
 			}
-			if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
+			if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)||this.getModuleValue().equalsIgnoreCase(ReportConst.DP_MOD_VAL)){		
 				generateSCReport();				
 			}else if(this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
 				generateCMReport();				
