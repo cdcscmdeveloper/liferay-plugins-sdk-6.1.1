@@ -257,7 +257,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
-		//this.getManagedBean().setAppId(1257118L);
+		//this.getManagedBean().setAppId(1257118);
 		//this.getManagedBean().setAppId(1257442);
 		//this.getManagedBean().setAppId(1257676); //FT
 		
@@ -366,9 +366,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
 		
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
-		svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
+		//svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
 		
-		if(svTemplate.getSelectedAddresses() != null && svTemplate.getSelectedAddresses().length > 0){
+		/*if(svTemplate.getSelectedAddresses() != null && svTemplate.getSelectedAddresses().length > 0){
 			log.info("selected Address is not null>>>>>");
 			for(SmSvAddress selectedAdd : svTemplate.getSelectedAddresses()){
 				SmSvTemplateAddress svTempAdd = new SmSvTemplateAddress();
@@ -376,7 +376,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTempAdd.setSmSvAddress(selectedAdd);
 				svTemplate.getSmSvTemplateAddresses().add(svTempAdd);
 			}
-		}
+		}*/
 		
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
@@ -398,7 +398,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 			if(svTemplate.getSmSvFacility() == null){
-				svTemplate.setSmSvFacility(new SmSvFacility());
+				setSelectedSmSvFacility(svTemplate.getPmParameter().getParameterCode());
 			}
 		}
 		//log.info("---svTemplate selected ADD----------" + this.getManagedBean().getSelectedSvTemplate().getSmSvTemplateAddresses().size());
