@@ -1244,6 +1244,15 @@ public class SmCommonUtil {
 		return formatter.format(amount);
 	}
 	
+	/**
+	 * Create TrackingDiaryVO object
+	 * @param actionDesc action Desc
+	 * @param applId application Id
+	 * @param applNo Appl No
+	 * @param userRole User Role
+	 * 
+	 * @return SmTrackingDairyVO
+	 */
 	public static SmTrackingDairyVO assignTrackingDiaryValues(String actionDesc, Long applId, String applNo, String userRole) {
 		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
