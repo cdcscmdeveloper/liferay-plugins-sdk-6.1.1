@@ -75,11 +75,14 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -300,7 +303,7 @@ public class QTDetailBackingBean extends
 		try {
 
 			validateQtDetails();
-
+			if (this.getManagedBean().isSupplierValidation() == false) {
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -321,6 +324,8 @@ public class QTDetailBackingBean extends
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
+			}
+			this.getManagedBean().setSupplierValidation(false);
 		} finally {
 
 		}
@@ -735,10 +740,16 @@ public class QTDetailBackingBean extends
 			}
 		}
 		if (!scQt.isZonal() && !scQt.isPanel()) {
-			scQt.setZoneLocationLevel(null);
 			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 					this.getManagedBean().getZoneTrees(), null);
-			if (locCriteria != null && !locCriteria.isEmpty()) {
+			List<ScQtLocCriteria> existingcheckLocCriteria = (List<ScQtLocCriteria>) checkExistingLocation(
+					locCriteria, this.getManagedBean().getExistingSupplierLocationList(), this.getManagedBean().getLocalLevelCode());
+			if (existingcheckLocCriteria != null
+					&& !existingcheckLocCriteria.isEmpty()) {
+				scQt.getScQtSupplierCriteria().setScQtLocCriteria(
+						existingcheckLocCriteria);
+			}
+			/*if (locCriteria != null && !locCriteria.isEmpty()) {
 				this.getManagedBean().getSupplierCriteria()
 						.setScQtLocCriteria(locCriteria);
 				ScQtSupplierCriteria qtSupplierCriteria = this.getManagedBean()
@@ -750,7 +761,7 @@ public class QTDetailBackingBean extends
 					qtSupplierCriteria.setLocationLevel(null);
 				}
 				qtSupplierCriteria.setQtZoneCriterias(null);
-			}
+			}*/
 		} else if (scQt.isZonal() && !scQt.isPanel()) {
 			/*
 			 * List<TplSpecZoneDtl> businessOwnerZone =
@@ -804,6 +815,19 @@ public class QTDetailBackingBean extends
 				if (tabBean.getBudgetApprovalUsers() != null) {
 					tabBean.getScQtApproval().setApproverSettings(
 							tabBean.getBudgetApprovalUsers().getTarget());
+				}
+				if (tabBean.getScQtApproval().getApprovalType().equals("Others Approval")) {
+					for (ScQtApprovalRequest approvalRequest : tabBean.getScQtApproval().getScQtApprovalDtls()) {
+						if (approvalRequest.getApproverAction() != null && approvalRequest.getApproverAction().getParameterId() == null) {
+							approvalRequest.setApproverAction(null);
+						}
+						if (approvalRequest.getAppRequestRemark() != null) {
+							ScQtAppRequestRemark remarks = approvalRequest.getAppRequestRemark();
+							if (remarks.getRemark() == null || remarks.getRemark().equals("")) {
+								approvalRequest.setAppRequestRemark(null);
+							}
+						}
+					}
 				}
 				tabBean.getScQtApproval().setScQtApprovalRemarks(
 						finalizeRemarks(tabBean.getScQtApproval()
@@ -1030,6 +1054,75 @@ public class QTDetailBackingBean extends
 		return toBeRemoveList;
 	}
 
+	// Check method for supplier Locations existing
+		private List<ScQtLocCriteria> checkExistingLocation(
+				List<ScQtLocCriteria> currentLocationList,
+				List<ScQtLocCriteria> existingLocations, String locationLevelCode) {
+			List<ScQtLocCriteria> criteriaList = new ArrayList<ScQtLocCriteria>();
+			if (null == existingLocations || existingLocations.isEmpty()) {
+				if (null != currentLocationList && !currentLocationList.isEmpty())
+
+					criteriaList.addAll(currentLocationList);
+			} else {
+				if (null != currentLocationList) {
+					List<PmState> states = new ArrayList<PmState>();
+					List<PmDivision> divisions = new ArrayList<PmDivision>();
+					List<PmDistrict> districts = new ArrayList<PmDistrict>();
+					for (ScQtLocCriteria specLoc : currentLocationList) {
+						if (null != locationLevelCode
+								&& ParameterConst.LOCATION_LEVEL_STATE
+										.equalsIgnoreCase(locationLevelCode)) {
+							PmState state = specLoc.getPmState();
+							if (null != state) {
+								if (states.isEmpty()) {
+									for (ScQtLocCriteria existingLoc : existingLocations) {
+										states.add(existingLoc.getPmState());
+										criteriaList.add(existingLoc);
+									}
+								}
+								if (!states.contains(state)) {
+									criteriaList.add(specLoc);
+								}
+							}
+						} else if (null != locationLevelCode
+								&& ParameterConst.LOCATION_LEVEL_DISTRICT
+								.equalsIgnoreCase(locationLevelCode)) {
+							PmDistrict district = specLoc.getPmDistrict();
+							if (null != district) {
+								if (districts.isEmpty()) {
+									for (ScQtLocCriteria existingLoc : existingLocations) {
+										districts.add(existingLoc.getPmDistrict());
+										criteriaList.add(existingLoc);
+									}
+								}
+
+								if (!districts.contains(district)) {
+									criteriaList.add(specLoc);
+								}
+							}
+						} else if (null != locationLevelCode
+								&& ParameterConst.LOCATION_LEVEL_DIVISION
+								.equalsIgnoreCase(locationLevelCode)) {
+							PmDivision divison = specLoc.getPmDivision();
+							if (null != divison) {
+								if (divisions.isEmpty()) {
+									for (ScQtLocCriteria existingLoc : existingLocations) {
+										divisions.add(existingLoc.getPmDivision());
+										criteriaList.add(existingLoc);
+									}
+								}
+
+								if (!divisions.contains(divison)) {
+									criteriaList.add(specLoc);
+								}
+							}
+						}
+					}
+				}
+			}
+			return criteriaList;
+			
+		}
 	/**
 	 * @return
 	 */
@@ -1883,7 +1976,7 @@ public class QTDetailBackingBean extends
 			for (TabBean approvalTabBean : tabBeans) {
 				MenuItem approvalItem = new MenuItem();
 				approvalItem.setValue(approvalTabBean.getTitleName());
-				approvalItem.setUpdate("@form");
+				approvalItem.setUpdate("@all");
 				approvalItem.setActionExpression(FacesScopes
 						.createMethodExpression(facesContext,
 								"#{qTDetailBB.approvalTabChangeAction("
@@ -2028,6 +2121,7 @@ public class QTDetailBackingBean extends
 							}
 							if (null != getManagedBean().getZoneTrees()
 									&& getManagedBean().getZoneTrees().size() == 0) {
+								this.getManagedBean().setExistingSupplierLocationList(locCriteria);
 								getManagedBean().getZoneTrees().addAll(
 										LocationSingleton.getInstance()
 												.constuctTreeNode(locCriteria));
@@ -3072,6 +3166,9 @@ public class QTDetailBackingBean extends
 		int activeIndex = this.getManagedBean().getActiveIndex();
 
 		int subTabIndex = this.getManagedBean().getSelectedTabIndex();
+		
+		boolean supplierValidation = this.getManagedBean().isSupplierValidation();
+		String locationLevel = this.getManagedBean().getLocalLevelCode();
 
 		QuationTenderResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
@@ -3108,7 +3205,9 @@ public class QTDetailBackingBean extends
 			break;
 		case 2:
 			reqDTO = prepareQTInfo();
-			detailSO.validateSupplierQualificationDtls(reqDTO);
+			if (!this.getManagedBean().isSupplierValidation()) {
+				detailSO.validateSupplierQualificationDtls(reqDTO);
+			}
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -3186,6 +3285,8 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
+		this.getManagedBean().setSupplierValidation(supplierValidation);
+		this.getManagedBean().setLocalLevelCode(locationLevel);
 	}
 
 	public void qtDetailsTabChange(Integer activeIndex) {
