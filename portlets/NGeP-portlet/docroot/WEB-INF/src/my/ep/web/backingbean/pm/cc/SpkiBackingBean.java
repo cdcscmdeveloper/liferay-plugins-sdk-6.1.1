@@ -144,7 +144,7 @@ public class SpkiBackingBean {
 		try{
 			KMCClient client = KMCClientFactory.getInstance(f);
 			
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken("890101011234", "eP-1400J005d"));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(getDigiCertUserId(),getSupplierEpNo()));
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -263,12 +263,22 @@ public class SpkiBackingBean {
 
 	    debugLogger("========================: "+pmDigiSign.getSignedData());
 
-		}
+	}
 	public void setChallengeQues1(String challengeQues1) {
 		this.challengeQues1 = challengeQues1;
 	}
 
-	public String getSupplierOrgId() {
+	public String getDigiCertUserId() {
+				
+		return facesScope.getUserSessionBean().getIdentificationNo();	
+	}
+
+	public String getSupplierEmail() {
+		
+		return facesScope.getUserSessionBean().getEmail();
+	}
+
+	public String getSupplierEpNo() {
 		ISupplierSearchSO smSupplierSO = null;
 		System.out.println("ISearchResultBean<SmSupplier> pageChangeListener");
 		smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
@@ -278,58 +288,45 @@ public class SpkiBackingBean {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setUserId(userId);
 		SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
-//		res.getResultBean().getResultList().get(0).getEpNo();
 
 		return res.getResultBean().getResultList().get(0).getEpNo();	
 	}
 	
 	public void RequestChangePIN() throws IOException, PortalException, SystemException {
-//	    FacesScopes facesScope = new FacesScopes();
-	    String userId = facesScope.getUserSessionBean().getIdentificationNo();
-	    String orgId = getSupplierOrgId();
-	    String email = facesScope.getUserSessionBean().getEmail();
-//	    String userId = "890101011234"; 
-//	    String orgId = "eP-1400J005d"; 
 	    String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID=" + getDigiCertUserId() + "&token=" + encodedtoken;
 		externalContext.redirect(url);
 		System.out.println("Encoded encodedtoken " + encodedtoken);
 		System.out.println("Encoded URL " + url);	 
 	}
 	
 	public void RequestChallRespUpdate() throws IOException, PortalException, SystemException {
-	    String userId = "890101011234"; 
-	    String orgId = "eP-1400J005d"; 
 	    String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID="+userId+"&token=" + encodedtoken;
+		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID=" + getDigiCertUserId() + "&token=" + encodedtoken;
 		externalContext.redirect(url2);
 		System.out.println("Encoded encodedtoken " + encodedtoken);
 		System.out.println("Encoded URL " + url2);	 
 	}
 	
 	public void RequestResetPIN() throws IOException, PortalException, SystemException {
-	    String userId = "890101011234"; 
-	    String orgId = "eP-1400J005d"; 
 	    String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID="+userId+"&email=TEST.YAZID@YAHOO.COM" + "&token=" + encodedtoken;
+		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID=" + getDigiCertUserId() + "&email=" + getSupplierEmail() + "&token=" + encodedtoken;
 		externalContext.redirect(url3);
 		System.out.println("Encoded encodedtoken " + encodedtoken);
 		System.out.println("Encoded URL " + url3);	 
 	}
 	
 	public void RequestRevokeCert() throws IOException, PortalException, SystemException {
-	    String userId = "890101011234"; 
-	    String orgId = "eP-1400J005d"; 
 	    String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID="+userId+"&orgid=eP-1400J005d"+ "&token=" + encodedtoken;
+		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + getDigiCertUserId() + "&orgid=" + getSupplierEpNo() + "&token=" + encodedtoken;
 		externalContext.redirect(url4);
 		System.out.println("Encoded encodedtoken " + encodedtoken);
 		System.out.println("Encoded URL " + url4);	 
