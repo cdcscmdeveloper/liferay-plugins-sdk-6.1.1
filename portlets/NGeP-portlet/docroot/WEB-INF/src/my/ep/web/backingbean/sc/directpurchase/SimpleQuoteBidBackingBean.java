@@ -68,7 +68,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		reqDTO.setCtxToken(token);
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId().intValue());
+		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId());
 		//obj.setPtj("Asdqwe");
 		reqDTO.setOutcome("SUBMIT");
 		if(getManagedBean().getTaskId() != null){
@@ -188,7 +188,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		reqDTO.setCtxToken(token);
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId().intValue());
+		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId());
 		//obj.setPtj("Asdqwe");
 		if(submit){
 			obj.getSuppliers().clear();
