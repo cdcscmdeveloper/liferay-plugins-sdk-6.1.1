@@ -168,7 +168,8 @@
 						postUpdateListener="contractRequestBackingBean.checkVotFundLov()" 
 						value="#{contractRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
 					</ac:lov></h:panelGroup></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 200px; margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
 						<f:selectItems value="#{contractRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>

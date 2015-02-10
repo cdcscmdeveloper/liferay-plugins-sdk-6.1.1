@@ -170,7 +170,8 @@
 						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{purchaseRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
 						value="#{purchaseRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
 					</ac:lov></h:panelGroup></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 200px; margin-bottom:5px;" value="#{purchaseRequestBackingBean.managedBean.assetIndId}" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}">
 						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
