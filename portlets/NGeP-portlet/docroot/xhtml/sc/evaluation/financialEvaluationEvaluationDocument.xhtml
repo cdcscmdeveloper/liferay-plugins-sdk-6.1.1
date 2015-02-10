@@ -12,16 +12,19 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="financialEvaluationUploadDtlsId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;"
-				action="#{evaluationBackingBean.evaluationBackaction}" />
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				action="#{evaluationBackingBean.evaluationBackaction}"
+				immediate="true" />
 
-			<!-- <p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" /> -->
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" update="@all"
+				action="#{evaluationBackingBean.saveEvalutionStageUploadDtls(evaluationBackingBean.managedBean.scQtChecklist)}" />
 		</div>
-	<p:spacer height="25" />
+		<p:spacer height="25" />
 		<br />
 		<br />
 		<p:panel>
@@ -56,7 +59,7 @@
 					style="width:10%">
 					<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
 						<p:commandLink ajax="false"
-								actionListener="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}"
+							actionListener="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}"
 							process="@this" partialSubmit="true">
 							<p:graphicImage library="ep/images/design"
 								value="/resources/ep/images/design/icon_txt.png" />
@@ -81,14 +84,22 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}"
 					style="width:15%">
-					<p:inputText value="#{evaFinSupplier.totalUserScore}"></p:inputText>
+					<p:inputText style="text-align:right;" size="20" maxlength="18"
+						value="#{evaFinSupplier.totalUserScore}"
+						disabled="#{evaluationBackingBean.managedBean.readOnly}">
+						<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+					</p:inputText>
+					<p:spacer width="5"></p:spacer>
+					<h:outputText
+						value="/#{evaluationBackingBean.managedBean.scQtChecklist.qtScoreWeightage.score}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:25%">
 					<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-						<p:inputTextarea rows="2" cols="40"
-							value="#{evaFinSupplier.remark}" disabled="true"></p:inputTextarea>
+						<p:inputTextarea rows="2" cols="40" maxlength="200"
+							disabled="#{evaluationBackingBean.managedBean.readOnly}"
+							value="#{evaFinSupplier.remark}"></p:inputTextarea>
 					</ui:fragment>
 				</p:column>
 			</p:dataTable>
