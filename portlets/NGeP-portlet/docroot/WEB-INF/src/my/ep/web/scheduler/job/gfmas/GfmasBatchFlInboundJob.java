@@ -31,7 +31,7 @@ public class GfmasBatchFlInboundJob implements Job {
 
 		GfmasIntegration gfmasIntegration = new GfmasIntegration();
 		// Update Payment Info
-		gfmasIntegration.paymentGfmasInbound();
+		//gfmasIntegration.paymentGfmasInbound();
 
 	}
 
