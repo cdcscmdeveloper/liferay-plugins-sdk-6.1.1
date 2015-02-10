@@ -29,7 +29,7 @@ public class PhisBatchSmOutboundJob implements Job {
 	  log.info(" SM PHIS Servrice");
        PhisIntegration phisIntegration = new PhisIntegration();	
       
-      // phisIntegration.masterDataMaterialInfoPHIS();
+       phisIntegration.masterDataMaterialInfoPHIS();
        
      
 		

@@ -38,21 +38,21 @@ public class GfmasBatchPmInboundJob implements Job {
 
 		GfmasIntegration gfmasIntegration = new GfmasIntegration();
 		
-		//gfmasIntegration.pejabatPerakaunanGfmasInbound();
+		gfmasIntegration.pejabatPerakaunanGfmasInbound();
 		
-		//gfmasIntegration.pegawaiPengawalGfmasInbound();
+		gfmasIntegration.pegawaiPengawalGfmasInbound();
 		
-		//gfmasIntegration.votGfmasInbound();
+		gfmasIntegration.votGfmasInbound();
 		
-		//gfmasIntegration.votDanaGfmasInbound();		
+		gfmasIntegration.votDanaGfmasInbound();		
 		
-		//gfmasIntegration.programAktivitiGfmasInbound();
+		gfmasIntegration.programAktivitiGfmasInbound();
 		
-		//gfmasIntegration.projectGfmasInbound();
+		gfmasIntegration.projectGfmasInbound();
 		
-		//gfmasIntegration.kodAkaunGfmasInbound();		
+		gfmasIntegration.kodAkaunGfmasInbound();		
 		
-		//gfmasIntegration.kumpulanPtjGfmasInbound();
+		gfmasIntegration.kumpulanPtjGfmasInbound();
 		//
 		//gfmasIntegration.kodBankGfmasInbound();
 		//
