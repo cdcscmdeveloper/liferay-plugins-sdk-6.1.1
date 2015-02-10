@@ -14,27 +14,27 @@
 				value="#{supplierProposalDetailBackingBean.managedBean.smAppl}" />
 
 			<p:tab id="tab1" title="#{lbl['lbl.sc.sp.supp.info']}"
-				styleClass="noBorders tr,noBorders td">
+				>
 				<ui:include src="/xhtml/sc/supplierproposal/supplierDetails.xhtml" />
 			</p:tab>
 
 			<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}"
-				styleClass="noBorders tr,noBorders td">
+				>
 				<ui:include src="/xhtml/sc/supplierproposal/branchInfo.xhtml" />
 			</p:tab>
 
 			<p:tab id="tab3" title="#{lbl['lbl.sc.sp.capital.info']}"
-				styleClass="noBorders tr,noBorders td">
+				>
 				<ui:include src="/xhtml/sc/supplierproposal/capitalInfo.xhtml" />
 			</p:tab>
 
 			<p:tab id="tab4" title="#{lbl['lbl.sc.sp.personnel']}"
-				styleClass="noBorders tr,noBorders td">
+				>
 				<ui:include src="/xhtml/sc/supplierproposal/personnelInfo.xhtml" />
 			</p:tab>
 
 			<p:tab id="tab5" title="#{lbl['lbl.sc.sp.bank.info']}"
-				styleClass="noBorders tr,noBorders td">
+				>
 				<ui:include src="/xhtml/sc/supplierproposal/bankInfo.xhtml" />
 			</p:tab>
 
@@ -45,7 +45,7 @@
 
 
 			<p:tab  rendered="#{statusHide}"
-				styleClass="noBorders tr,noBorders td">
+				>
 				<f:facet name="title">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText
