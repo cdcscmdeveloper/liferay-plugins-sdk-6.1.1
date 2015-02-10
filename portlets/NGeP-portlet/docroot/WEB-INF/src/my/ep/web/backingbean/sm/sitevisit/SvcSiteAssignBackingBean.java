@@ -109,7 +109,7 @@ public class SvcSiteAssignBackingBean extends
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721201,
 					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-
+				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
 				log.info("Submission is failed >>>>>>>>"); 
