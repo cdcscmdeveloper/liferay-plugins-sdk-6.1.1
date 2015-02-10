@@ -39,54 +39,54 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.PHIS_SM_OUTBOUND_CONTINUOUS_JOB,
 						CmSchedulerConstants.PHIS_SM_OUTBOUND_JOB_GROUP),
 						PhisBatchSmOutboundJob.class, CmSchedulerConstants.PHIS_SM_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//PHIS CM Out bound Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.PHIS_CM_OUTBOUND_CONTINUOUS_JOB,
 						CmSchedulerConstants.PHIS_CM_OUTBOUND_JOB_GROUP),
 						PhisBatchCmOutboundJob.class, CmSchedulerConstants.PHIS_CM_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//GFMAS PM IN bound Continuous job				
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_FL_IN_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_FL_IN_JOB_GROUP),
 						GfmasBatchFlInboundJob.class, CmSchedulerConstants.GFMAS_FL_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//GFMAS PM IN bound Continuous job				
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_PM_IN_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_PM_IN_JOB_GROUP),
 						GfmasBatchPmInboundJob.class, CmSchedulerConstants.GFMAS_PM_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//GFMAS SC IN bound Continuous job				
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_SC_IN_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_SC_IN_JOB_GROUP),
 						GfmasBatchScInboundJob.class, CmSchedulerConstants.GFMAS_SC_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//GFMAS SM IN bound Continuous job				
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_SM_IN_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_SM_IN_JOB_GROUP),
 						GfmasBatchSmInboundJob.class, CmSchedulerConstants.GFMAS_SM_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//GFMAS SM OUT bound Continuous job				
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_SM_OUT_JOB_GROUP),
 						GfmasBatchSmOutboundJob.class, CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//Eperunding SM Integration Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
 						EperundingBatchIntegrationJob.class, CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 				//Notification Integration Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
-						"0 0 0/1 * * ?");
+						"0 0 8,20 * * ?");
 	}
 }
