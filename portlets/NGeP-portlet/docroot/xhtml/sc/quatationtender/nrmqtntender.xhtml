@@ -78,8 +78,7 @@
 				process="@this, openPnlId" partialSubmit="true" update="openPnlId"
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, openPnlId"
-				partialSubmit="true"
+				process="@this, openPnlId" partialSubmit="true"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
 				update="openPnlId" />
 		</div>
@@ -103,7 +102,7 @@
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 								<f:selectItem
 									itemValue="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}" />
-								<p:ajax update="@form"
+								<p:ajax update="@all"
 									listener="#{qTSupplierQulCriteriaBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
@@ -158,8 +157,8 @@
 
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-								<p:ajax event="change"
-									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
+								<p:ajax event="change" update="zoneLocationDataTable"
+									listener="#{qTSupplierQulCriteriaBackingBean.selectSupplierLocation}" />
 							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon" /></td>
 					</tr>
 				</table>
@@ -167,17 +166,20 @@
 			<p:panel
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and !qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<h:panelGrid width="100%">
-					<p:dataTable id="zoneLocationDataTable"
+					<p:dataTable id="zoneLocationDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
-						<p:column headerText="Location" style="width:90%">
+						<p:column style="width:90%">
+							<f:facet name="header">
+								<h:outputText value="* " styleClass="mandatory" />
+								<h:outputText value="Location" />
+							</f:facet>
 							<p:tree value="#{zoneTree}" var="location"
 								selectionMode="checkbox">
 								<p:ajax event="select"
 									listener="#{qTSupplierQulCriteriaBackingBean.selectLocationTreeNode}" />
 								<p:ajax event="unselect"
 									listener="#{qTSupplierQulCriteriaBackingBean.unSelectLocationTreeNode}" />
-
 								<p:treeNode type="state">
 									<h:outputText value="#{location.pmState.stateName}" />
 								</p:treeNode>
@@ -204,17 +206,16 @@
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right">
-					<p:selectBooleanCheckbox id="checkAll" style="float:left;margin-top: 13px;">
-						<p:ajax event="change" partialSubmit="true" process="@this" update="zoneLocationDataTable"  listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}"/>
+					<p:selectBooleanCheckbox id="checkAll" style="float:left;margin-top: 13px;margin-right: -4px;">
+						<p:ajax event="change" partialSubmit="true" process="@all" update="zoneLocationDataTable"  listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}"/>
 					</p:selectBooleanCheckbox>
 					<p:spacer width="1" />
 					<h:outputLabel value="Check All" style="float:left;margin-top: 13px;" />
-					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-						update="@([id$=zonePopupPanel])" oncomplete="ZoneLocation.show();"
-						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}"/>
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+						update="@([id$=zonePopupPanel])"
+						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						process="@this, zoneLocationDataTable" partialSubmit="true"
-						update="@([id$=zoneLocationDataTable])"
+						update="zoneLocationDataTable"
 						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
 			</p:panel>
@@ -237,14 +238,15 @@
 
 					<tr>
 						<td style="width: 94px"><p:outputLabel
-								value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
+								value="#{lbl['lbl.sc.spec.zone.location.level']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel.parameterId}"
 								style="width: 178px;">
 
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-								<p:ajax event="change"
+								<p:ajax event="change" update="zoneyesDataTable"
 									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
 							</p:selectOneMenu></td>
 					</tr>
@@ -254,7 +256,7 @@
 			<p:panel
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<h:panelGrid width="100%">
-					<p:dataTable id="zoneYesDatatbl"
+					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
 						<p:column headerText="Location">
@@ -279,8 +281,9 @@
 				</h:panelGrid>
 			</p:panel>
 
-			<p:dialog widgetVar="ZoneLocation" modal="true" width="35%"
-				position="top" height="65%">
+			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
+				widgetVar="ZoneLocation" modal="true" width="35%" position="top"
+				height="65%">
 				<p:panel id="zonePopupPanel"
 					header="#{lbl['lbl.sc.spec.zone.add.location']}">
 					<table styleClass="noBorders tr,noBorders td">
@@ -314,13 +317,13 @@
 						<tr>
 							<td>
 								<div class="ppRightBtn">
-									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-										onclick="ZoneLocation.hide();" />
 									<p:commandButton value="#{lbl['lbl.btn.ok']}"
 										onclick="ZoneLocation.hide();" process="@all"
 										update="@this, zoneLocationDataTable,zonePopupPanel"
 										action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}">
 									</p:commandButton>
+									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+										onclick="ZoneLocation.hide();" />
 								</div>
 							</td>
 						</tr>
