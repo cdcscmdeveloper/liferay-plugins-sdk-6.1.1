@@ -113,6 +113,8 @@
 				 style="width:40px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+				<p:ajax event="change" listener="#{profileManagementBackingBean.orgUnitStatusChange(index)}" 
+			     		update=":form:tvRoleReceivingAddr:dtRoles"/>
 			</p:selectOneMenu>
 		</p:column>
 	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
