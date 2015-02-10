@@ -748,7 +748,9 @@ public class EvaluationBackingBean extends
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			this.getManagedBean().setScQtChecklist(
 					checkListresDTO.getCheckList());
-			if (this.getManagedBean().getCheckListType().equalsIgnoreCase("T")) {
+			if (null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType()
+							.equalsIgnoreCase("T")) {
 
 				this.getManagedBean()
 						.getComplianceTechnicalCheckList()
@@ -759,8 +761,9 @@ public class EvaluationBackingBean extends
 						.add(this.getManagedBean()
 								.getComplianceCheckListIndex(),
 								this.getManagedBean().getScQtChecklist());
-			} else if (this.getManagedBean().getCheckListType()
-					.equalsIgnoreCase("F")) {
+			} else if (null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType()
+							.equalsIgnoreCase("F")) {
 				this.getManagedBean()
 						.getCompliancefinancialCheckList()
 						.remove(this.getManagedBean()
@@ -857,8 +860,11 @@ public class EvaluationBackingBean extends
 					}
 
 				} else {
-					if (this.getManagedBean().getEvaluationCheckListType()
-							.equalsIgnoreCase("TS")) {
+					if (null != this.getManagedBean()
+							.getEvaluationCheckListType()
+							&& this.getManagedBean()
+									.getEvaluationCheckListType()
+									.equalsIgnoreCase("TS")) {
 
 						if (null != checkList.getPmEvalStatus()
 								&& checkList
@@ -933,8 +939,9 @@ public class EvaluationBackingBean extends
 					checkList = checkListResDTO.getCheckList();
 					// evalStatus = checkList.getPmEvalStatus();
 				}
-				if (this.getManagedBean().getEvaluationCheckListType()
-						.equalsIgnoreCase("FS")) {
+				if (null != this.getManagedBean().getEvaluationCheckListType()
+						&& this.getManagedBean().getEvaluationCheckListType()
+								.equalsIgnoreCase("FS")) {
 					if (null != checkList.getPmEvalStatus()
 							&& checkList
 									.getPmEvalStatus()
@@ -3921,7 +3928,7 @@ public class EvaluationBackingBean extends
 						&& this.getManagedBean()
 								.getCurrentStatusId()
 								.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
-					
+
 					complianceStageCheck();
 					if (currentTab == 1) {
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
@@ -4018,7 +4025,7 @@ public class EvaluationBackingBean extends
 								.getCurrentStatusId()
 								.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 						&& !this.getManagedBean().isReadOnly()) {
-					//evaluationStageCheck();
+					// evaluationStageCheck();
 					if (currentTab == 2) {
 
 						if (this.getManagedBean()
@@ -6536,6 +6543,47 @@ public class EvaluationBackingBean extends
 		}
 
 		this.getManagedBean().getScQtMeetings().set(index, list);
+
+	}
+
+	public void saveEvalutionStageUploadDtls(ScQtCheckList checkList) {
+		IQTEvaluationSO evaluationSo = null;
+		try {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			EvaluationResDTO resDTO = new EvaluationResDTO();
+			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			List<ScQtProposalChecklist> uploadedList = this.getManagedBean()
+					.getComplianceTechnicalProposalCheckList();
+
+			if (null != uploadedList && !uploadedList.isEmpty()) {
+				for (ScQtProposalChecklist proposalList : uploadedList) {
+					if (null != proposalList.getTotalUserScore()) {
+						if (proposalList.getTotalUserScore().intValue() > checkList
+								.getQtScoreWeightage().getScore().intValue()) {
+							throw new EpException(MessageConst.ERROR_760242);
+
+						}
+					}
+				}
+				reqDTO.setComplianceList(uploadedList);
+			}
+			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
+
+			this.getManagedBean().setComplianceTechnicalProposalCheckList(
+					resDTO.getSaveComplianceList());
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									"Evaluation Uploaded Checklist saved successfully.",
+									"Evaluation Uploaded Checklist saved successfully."));
+
+		} finally {
+
+		}
 
 	}
 }
