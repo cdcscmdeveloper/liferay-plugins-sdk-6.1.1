@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -136,12 +137,21 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			}*/
 
 			try{
+				String actionDesc = null;
+				if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
+					actionDesc = SupplierManagementConst.SDO_SEND_INQUIRY;
+				}else{
+					actionDesc = SupplierManagementConst.SDO_SUBMIT_APPL;
+				}
+				
 				String token = getFacesScopes().getBPMAuthenticationCtxToken();
 				SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 				ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
 				reqDTO.setApplId(this.getManagedBean().getAppId());
 				reqDTO.setOutcome(resAction);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+				reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(
+						actionDesc, this.getManagedBean().getAppId(), this.getManagedBean().getSmAppl().getApplNo(), getUserRole()));
 
 				log.info("-----------SDO----------" + reqDTO.getOutcome());
 				log.info("-----------SDO Review----------" + reqDTO.getTaskId());
@@ -167,6 +177,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
 					//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
 					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+					renewSesionObject();
 					return navigateToAck();
 				} else {
 					throw new EpException(MessageConst.ERROR_721109);
@@ -266,4 +277,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return file;
 	}
 	
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()))
+			return RoleCode.UPS_SDO.value();		
+		else 
+			return null;
+	}
+
 }
