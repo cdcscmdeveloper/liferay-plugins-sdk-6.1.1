@@ -4760,7 +4760,7 @@ public class SmApplicationUtil {
 		}
 
 	}
-	
+
 	/**
 	 * Get academic qualifications from PmParameterDesc
 	 * 
@@ -4786,8 +4786,10 @@ public class SmApplicationUtil {
 		academics.add(new SelectItem(null, SmCommonUtil.getMessage(
 				"lbl.txt.select", null)));
 		for (PmParameterDesc pd : parameterDescs) {
-			academics.add(new SelectItem(pd.getPmParameter().getParameterId(),
-					pd.getCodeName()));
+			if (!pd.getPmParameter().getParameterCode().equals("6")) {
+				academics.add(new SelectItem(pd.getPmParameter()
+						.getParameterId(), pd.getCodeName()));
+			}
 		}
 		return academics;
 	}
