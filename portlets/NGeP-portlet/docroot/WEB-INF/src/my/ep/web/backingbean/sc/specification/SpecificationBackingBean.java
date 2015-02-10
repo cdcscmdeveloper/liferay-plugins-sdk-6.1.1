@@ -1668,7 +1668,7 @@ public class SpecificationBackingBean extends
 				checktemplateSpecStatus(this.getManagedBean().getScQt());
 				checkFinancialSpecStatus(this.getManagedBean().getScQt());
 				retriveFinancialScoring();
-				
+
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
@@ -12230,6 +12230,7 @@ public class SpecificationBackingBean extends
 						// this.getManagedBean().setScQtCheckSt2techProposal(null);
 						// retriveTechnicalSpecification();
 						this.getManagedBean().setScQtCheckSt2techProposal(null);
+						this.getManagedBean().setFinancialScoring(null);
 						retriveOneTierCheckList();
 					} else if (QTConstants.EVALUATION_TWO_TIER
 							.equalsIgnoreCase(this.getManagedBean().getScQt()
@@ -12242,6 +12243,7 @@ public class SpecificationBackingBean extends
 						// this.getManagedBean().setScQtCheckSt2techProposal(null);
 						// retriveTechnicalCheckList();
 						this.getManagedBean().setScQtCheckSt2techProposal(null);
+						this.getManagedBean().setFinancialScoring(null);
 						retriveTechnicalCheckList();
 					}
 					this.getManagedBean().setIndex(-1);
@@ -12372,6 +12374,7 @@ public class SpecificationBackingBean extends
 					// retriveTechnicalSpecification();
 					// retriveTechnicalCheckList();
 					// settemplateSpecList(savedCheckLists);
+					this.getManagedBean().setFinancialScoring(null);
 					if (SourcingConstants.TECHNICAL_DOCTYPE
 							.equalsIgnoreCase(specType)) {
 						// settemplateSpecList(savedCheckLists);
@@ -12390,6 +12393,7 @@ public class SpecificationBackingBean extends
 										.getScQt().getEvaluationType()) && this
 								.getManagedBean().getScQt()
 								.isTechEvaluationReq())) {
+					this.getManagedBean().setFinancialScoring(null);
 					// settemplateSpecList(savedCheckLists);
 					setTechnicalCheckList(savedCheckLists.get(0));
 
@@ -12524,6 +12528,7 @@ public class SpecificationBackingBean extends
 					.remove(this.getManagedBean().getIndex());
 			this.getManagedBean().getScQtCheckSt2financeProposalList()
 					.add(this.getManagedBean().getIndex(), localCheckList);
+			
 		}
 
 	}
@@ -12906,6 +12911,7 @@ public class SpecificationBackingBean extends
 				}
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().setCheckListTitle("");
+				this.getManagedBean().setFinancialScoring(null);
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 			}
