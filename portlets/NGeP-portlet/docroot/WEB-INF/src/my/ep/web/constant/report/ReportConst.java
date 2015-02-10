@@ -702,8 +702,8 @@ public class ReportConst {
 	public static final String REPORTS_NOT_AVAILABLE_BY_MODULE = "lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE";
 	public static final String REPORT_PAGE = "reportcontentmain";
 	public static final String PLZ_PROV_VALID_UNSPCCODE = "lbl.rpt.search.PLZ_PROV_VALID_UNSPCCODE";
-	public static final String EXT_TYPE="TYPE";
-	public static final String EXT_BRAND="BRAND";
-	public static final String EXT_MEASUREMENT="MEASUREMENT";
-	public static final String EXT_COLOUR="COLOUR";
+	public static final String EXT_TYPE="Type";
+	public static final String EXT_BRAND="Brand";
+	public static final String EXT_MEASUREMENT="Measurement";
+	public static final String EXT_COLOUR="Colour";
 }
