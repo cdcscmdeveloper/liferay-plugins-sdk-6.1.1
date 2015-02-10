@@ -130,4 +130,47 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return null;
 	}
 	
+	public String gotoViewPage(Long circularVerId, String docType) {
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerId(circularVerId);
+			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				PanelBackingBean ppBB = new PanelBackingBean();
+				ppBB.getManagedBean().setSelectionOfZone(false);
+				ppBB.getManagedBean().setSelectedPanelItems(null);
+				ppBB.getManagedBean().setSelectedPanelZone(null);
+				ppBB.getManagedBean().setSelectedTabIndex(0);
+				ppBB.getManagedBean().setAction("view");
+				ppBB.getManagedBean().setUpdateAction(false);
+				ppBB.getManagedBean().setViewContract(true);
+				ppBB.getManagedBean().setOutComes(new String[]{});
+				ppBB.setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				ppBB.getManagedBean().setFromCircularNotice(true);
+				return "panelCircularTab.xhtml?faces-redirect=true";
+			} else {
+				CentralContractBackingBean ccBB = new CentralContractBackingBean();
+				ccBB.getManagedBean().setSelectedCircularContract(null);
+				ccBB.getManagedBean().setSelectedCircularItem(null);
+				ccBB.getManagedBean().setSelectedZoneItems(null);
+				ccBB.getManagedBean().setSelectedTabIndex(0);
+				ccBB.getManagedBean().setAction("view");
+				ccBB.getManagedBean().setViewContract(true);
+				ccBB.getManagedBean().setUpdateAction(false);
+				ccBB.getManagedBean().setOutComes(new String[]{});
+				ccBB.setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));	
+				ccBB.getManagedBean().setFromCircularNotice(true);
+				return "centralCircularTab.xhtml?faces-redirect=true";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
+		return null;
+	}
+	
 }
