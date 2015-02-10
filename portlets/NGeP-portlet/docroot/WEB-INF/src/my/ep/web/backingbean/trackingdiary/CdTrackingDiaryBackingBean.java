@@ -44,7 +44,7 @@ public class CdTrackingDiaryBackingBean extends
 		if ((getManagedBean().getSearchDocumentNoValue() != null && getManagedBean().getSearchDocumentNoValue().isEmpty()) 
 				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
 				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
-				&& (getManagedBean().getSearchStatusId() != null)) {
+				) {
 			throw new EpException(MessageConst.ERROR_716006);
 		}
 		System.out.println("pageChangeListener");
