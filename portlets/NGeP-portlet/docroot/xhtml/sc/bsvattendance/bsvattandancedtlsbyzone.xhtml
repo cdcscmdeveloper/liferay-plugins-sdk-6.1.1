@@ -10,8 +10,8 @@
 	<p:accordionPanel id="accordpnllist"
 		value="#{bsvAttendanceBackingBean.managedBean.zoneBean}"
 		var="zonePnlList"  activeIndex="#{bsvAttendanceBackingBean.managedBean.bsvZoneindx}">
-		<p:ajax event="tabChange" update="accordpnllist"
-			listener="#{bsvAttendanceBackingBean.onZoneTabChange}" />
+		<p:ajax event="tabChange" 
+			listener="#{bsvAttendanceBackingBean.onZoneTabChange}"/>
 
 		<p:tab id="bsvzonetabs" title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
 			<ui:param name="bsvDetails"
