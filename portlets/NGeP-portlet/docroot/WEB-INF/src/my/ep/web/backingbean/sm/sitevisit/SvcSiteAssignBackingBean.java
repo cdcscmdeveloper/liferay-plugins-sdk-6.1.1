@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -43,7 +44,7 @@ public class SvcSiteAssignBackingBean extends
 	}
 
 	public void retrieveSiteAssignInfo() {
-		//this.getManagedBean().setAppId(1009);
+		//		this.getManagedBean().setAppId(1257118);
 		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
@@ -98,6 +99,9 @@ public class SvcSiteAssignBackingBean extends
 			reqDTO.setSmSvTask(svTask);
 			reqDTO.setToken(token);
 			reqDTO.setSmRemark(this.getManagedBean().getSmRemark());
+			reqDTO.setTrackingDairyVO(
+					SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVC_ASSIGN_SITEVISIT, 
+							this.getManagedBean().getSmSvTask().getSmAppl().getApplId(), this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getUserRole()));
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -168,5 +172,12 @@ public class SvcSiteAssignBackingBean extends
 		if(this.getManagedBean().getSmSvTask() == null){
 			retrieveSiteAssignInfo();
 		}
+	}
+	
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()))
+			return RoleCode.UPS_SVC.value();		
+		else 
+			return null;
 	}
 }
