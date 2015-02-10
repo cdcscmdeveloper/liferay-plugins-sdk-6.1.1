@@ -1086,8 +1086,6 @@ public class SmPersonnelBackingBean extends
 
 	public void save() throws Exception {
 		FacesContext fc = FacesContext.getCurrentInstance();
-
-		setAuthorizedFlag();
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			getManagedBean().setBasicSmPersonnel(
 					saveNewUser(getManagedBean().getBasicSmPersonnel(), fc));
@@ -1160,11 +1158,8 @@ public class SmPersonnelBackingBean extends
 	public SmPersonnel saveNewUser(SmPersonnel smPersonnel, FacesContext fc) {
 
 		validatePersonnelBeforeSave(smPersonnel);
-
+		setAuthorizedFlag(smPersonnel);
 		setPersonnelAddress(smPersonnel);
-		// smPersonnel.setAuthorizedFlg(1);
-		// smPersonnel.setContractSignerFlg(1);
-		// smPersonnel.setSoftcertFlg(1);
 
 		if (smPersonnel.getIdentificationType().getParameterCode().equals("I")) {
 			myIdentityVerification(smPersonnel);
@@ -1776,19 +1771,17 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
-	private void setAuthorizedFlag() {
-		if (getManagedBean().getBasicSmPersonnel().getEpRole() != null
-				&& StringUtils.isNotBlank(getManagedBean()
-						.getBasicSmPersonnel().getEpRole())) {
-			if (getManagedBean().getBasicSmPersonnel().getEpRole()
-					.equals(RoleCode.CM_USER.value())) {
-				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(0);
-				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
-						Integer.parseInt(ParameterConst.FLAG_YES));
+	private void setAuthorizedFlag(SmPersonnel smPersonnel) {
+		if (smPersonnel != null && smPersonnel.getEpRole() != null
+				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
+			if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
+				smPersonnel.setSoftcertFlg(0);
+				smPersonnel.setAuthorizedFlg(Integer
+						.parseInt(ParameterConst.FLAG_YES));
 			} else {
-				getManagedBean().getBasicSmPersonnel().setSoftcertFlg(2);
-				getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(
-						Integer.parseInt(ParameterConst.FLAG_YES));
+				smPersonnel.setSoftcertFlg(2);
+				smPersonnel.setAuthorizedFlg(Integer
+						.parseInt(ParameterConst.FLAG_YES));
 			}
 		}
 	}

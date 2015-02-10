@@ -444,9 +444,11 @@ public class SupplierUserActivationBackingBean extends
 		try {
 			if (createdTimeParam != null
 					&& StringUtils.isNotBlank(createdTimeParam)) {
-				log.info("Inside comparing latest activation email for personnelId:"
-						+ smPersonnel.getPersonnelId() + " sendMailDate:"
-						+ createdTimeParam + " createdDate:"
+				log.info(">>>>>>>>>>>>>Inside comparing latest activation email for personnelId:"
+						+ smPersonnel.getPersonnelId()
+						+ " sendMailDate:"
+						+ createdTimeParam
+						+ " createdDate:"
 						+ smPersonnel.getCreatedDate().getTime());
 				Long createdTime = Long.parseLong(createdTimeParam);
 				if (createdTime.compareTo(smPersonnel.getCreatedDate()
