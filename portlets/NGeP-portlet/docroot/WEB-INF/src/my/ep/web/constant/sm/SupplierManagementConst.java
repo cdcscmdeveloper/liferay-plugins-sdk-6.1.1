@@ -146,7 +146,7 @@ public class SupplierManagementConst {
 	public static final String SECTION_REV_ROLE_APP = "A";
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
-	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
+	public static String SUPPLIER_BUSINESS_TYPE = "SBT";
 
 	// SDO BPM Action
 	public static final String BPM_INQUIRY = "INQUIRY";
@@ -819,6 +819,10 @@ public class SupplierManagementConst {
 
 	public Integer getSM_SUPPORTDOCS_FILE_SIZE_LIMIT() {
 		return SM_SUPPORTDOCS_FILE_SIZE_LIMIT;
+	}
+
+	public String getSupplierBusinessType() {
+		return SUPPLIER_BUSINESS_TYPE;
 	}
 	
 }
