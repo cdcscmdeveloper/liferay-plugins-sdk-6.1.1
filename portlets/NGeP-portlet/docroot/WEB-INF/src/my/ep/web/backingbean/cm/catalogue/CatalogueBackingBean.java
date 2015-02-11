@@ -5990,12 +5990,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}	
 		
-		if(!priceInvalid) {
-			BigDecimal promotionTierPrice = pricing.getPrice();
-			BigDecimal parentTierPrice = pricing.getParentPrice().getPrice();
-
-			if(parentTierPrice.compareTo(promotionTierPrice) <= 0) {
-				priceInvalid = true;
+		if(pricing.getPricingType().equals("04")) {
+			if(!priceInvalid) {
+				BigDecimal promotionTierPrice = pricing.getPrice();
+				BigDecimal parentTierPrice = pricing.getParentPrice().getPrice();
+	
+				if(parentTierPrice.compareTo(promotionTierPrice) <= 0) {
+					priceInvalid = true;
+				}
 			}
 		}
 		
