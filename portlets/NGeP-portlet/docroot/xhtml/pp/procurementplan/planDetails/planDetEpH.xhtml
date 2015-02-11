@@ -14,7 +14,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			gtBudgetAmt, gtPlanAmt, gtNonAllocAmt - the class name of grand total fields 
 			hiddenGtBudgetAmt, hiddenGtPlanAmt, hiddenGtNonAllocAmt - the class name of calculated value in hidden fields
 		*/
-		function updateEpFooter(){
+		function updateEpFooterH(){
 			document.getElementsByClassName('gtBudgetAmtH')[0].innerHTML = document.getElementsByClassName('hiddenGtBudgetAmtH')[0].value;
 			document.getElementsByClassName('gtPlanAmtH')[0].innerHTML = document.getElementsByClassName('hiddenGtPlanAmtH')[0].value;
 			document.getElementsByClassName('gtNonAllocAmtH')[0].innerHTML = document.getElementsByClassName('hiddenGtNonAllocAmtH')[0].value;
@@ -128,7 +128,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votAmanah)}"
-		  				update=":form:hiddenGtBudgetAmtH, :form:hiddenGtNonAllocAmtH, otNonAllocAmt, itBudgetAmt" oncomplete="updateEpFooter();" 
+		  				update=":form:hiddenGtBudgetAmtH, :form:hiddenGtNonAllocAmtH, otNonAllocAmt, itBudgetAmt" oncomplete="updateEpFooterH();" 
 		  				 />
 		  		</p:inputText>
 		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
@@ -139,7 +139,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votAmanah)}"
-		  				update=":form:hiddenGtPlanAmtH, :form:hiddenGtNonAllocAmtH, otNonAllocAmt, itPlanAmt" oncomplete="updateEpFooter();"   />
+		  				update=":form:hiddenGtPlanAmtH, :form:hiddenGtNonAllocAmtH, otNonAllocAmt, itPlanAmt" oncomplete="updateEpFooterH();"   />
 		  		</p:inputText>
 		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
 	        </p:column>
