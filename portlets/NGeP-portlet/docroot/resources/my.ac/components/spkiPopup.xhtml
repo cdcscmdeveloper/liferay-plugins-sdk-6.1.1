@@ -24,30 +24,28 @@
 			<c:otherwise>
 				<p:remoteCommand name="spkiAutoUpdateAction" />
 			</c:otherwise>
-		</c:choose>   
-			<p:remoteCommand name="spkiPostSignAction"
+	</c:choose>   
+	<p:remoteCommand name="spkiPostSignAction"
 				action="#{cc.attrs.postSignAction}" />
-		<script>
+	<script>
 			function spkiSign() {
 				spkiAutoUpdateAction();
 				spkiPostSignAction();
 				spki_dlg.hide();
-				
 			}
-		</script>
+	</script>
     <p:dialog widgetVar="spki_dlg" resizable="false" modal="true">
         <span id="#{cc.clientId}">
-        
-    
-        <h:outputLabel value="#{lbl['lbl.cc.spki.title']}" />
-          <h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
-           <h:outputLabel value="#{spkiBackingBean.challengeQues1}" />
-           <p:inputText value="#{spkiBackingBean.challsAnswer}" />
-        
-            <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-            <p:password binding="#{pin1}" id="password" value="#{spkiBackingBean.password}"  />
- 			<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" />        
-		</h:panelGrid></span>
+	        <h:outputLabel value="#{lbl['lbl.cc.spki.title']}" />
+			<h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
+	        	<h:outputLabel value="#{spkiBackingBean.challengeQues1}" />
+	           	<p:inputText value="#{spkiBackingBean.challsAnswer}" />
+	        	
+	            <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
+	            <p:password binding="#{pin1}" id="password" value="#{spkiBackingBean.password}"  />
+	 			<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" />        
+			</h:panelGrid>
+		</span>
     </p:dialog>
 </cc:implementation>
 </ui:composition>
