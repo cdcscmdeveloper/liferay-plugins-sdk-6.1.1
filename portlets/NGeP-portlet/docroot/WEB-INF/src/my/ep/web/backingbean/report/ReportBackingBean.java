@@ -2793,9 +2793,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getScPIno()!=null)&&(this.getScPIno()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScPInoVar(ReportConst.SC_AMP_PI_NO_EQ+this.getScPIno());
 			}
-			if((this.getScRequisenerId()!=null)&&(this.getScRequisenerId()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setScRequisenerIdVar(ReportConst.SC_AMP_REQUISENER_EQ+this.getScRequisenerId());
-			}
+			
 			if((this.getScSupplier()!=null)&&(this.getScSupplier()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScSupplierVar(ReportConst.SC_AMP_SUPPLIER_EQ+this.getScSupplier());
 			}
@@ -2817,7 +2815,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				userRoleLogin = ReportConst.DESKOFFR;
 			}else if(authoriztionList.contains(ReportConst.REQUISITIONER)){
 				userRoleLogin = ReportConst.REQUISITIONER;
-			}			
+			}
+			if(!userRoleLogin.equals(ReportConst.REQUISITIONER)){
+				if((this.getScRequisenerId()!=null)&&(this.getScRequisenerId()!=ReportConst.EMPTY_VAL)){				 
+					rptGenBean.setScRequisenerIdVar(ReportConst.SC_AMP_REQUISENER_EQ+this.getScRequisenerId());
+				}
+			}
 			if((userRoleLogin!=null)&&(userRoleLogin!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setScUserAccessRoleVar(ReportConst.AMP_USER_ACCESS_ROLE_EQ+userRoleLogin);
 			}
