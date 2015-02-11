@@ -3614,6 +3614,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				checkCeilingAmount(flRequest);
 				checkCeilingQty(flRequest);
 				checkMaximumQty(flRequest);
+			}else if(flRequest.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+				if(flRequest.getCtContract().getLatestContractVer().getCtContractValue().isFollowLoaAmt()){
+					checkContractAmount(flRequest);
+				}
+				
 			}
 			
 			if(isRequisitioner()){
