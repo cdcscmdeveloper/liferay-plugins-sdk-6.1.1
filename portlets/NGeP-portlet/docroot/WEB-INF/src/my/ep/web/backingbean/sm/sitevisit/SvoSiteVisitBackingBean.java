@@ -222,6 +222,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_WORKSHOP, workshopAddress);
 		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA, readMaterialAddress);
 		
+		for(Map.Entry<String, SmSvTemplate> svTemplate : getManagedBean().getSmSvTemplateMap().entrySet()){
+			if(getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).size() < 1){
+				for(SmSvAddress svAddr : getManagedBean().getSmSvTask().getSmSvAddresses()){
+					getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(svAddr);
+				}
+			}
+		}
+		
 	}
 	
 	private void setSelectedSvTemplateAddresses(String templateType){
@@ -258,7 +266,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
-		//this.getManagedBean().setAppId(1257118);
+		//this.getManagedBean().setAppId(1257729);
 		//this.getManagedBean().setAppId(1257442);
 		//this.getManagedBean().setAppId(1257676); //FT
 		
