@@ -257,13 +257,13 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.createdDt']}" style="width:158px;"/>
 								</TD>
 								<TD>
-									<p:calendar  showOn="button" value="#{reportBackingBean.scSoneCrtdFromDate}" 
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.scSoneCrtdFromDate}" 
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
 																				
 									</p:calendar>
 								</TD>				
 								<TD>
-									<p:calendar  showOn="button" value="#{reportBackingBean.scSoneCrtdToDate}"
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.scSoneCrtdToDate}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
 									</p:calendar> 
 								</TD>
@@ -279,13 +279,13 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.publishedDt']}" style="width:158px;"/>
 								</TD>
 								<TD>
-									<p:calendar  showOn="button" value="#{reportBackingBean.scPublishFromDate}" 
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.scPublishFromDate}" 
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
 																				
 									</p:calendar>
 								</TD>				
 								<TD>
-									<p:calendar  showOn="button" value="#{reportBackingBean.scPublishToDate}"
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.scPublishToDate}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
 									</p:calendar> 
 								</TD>

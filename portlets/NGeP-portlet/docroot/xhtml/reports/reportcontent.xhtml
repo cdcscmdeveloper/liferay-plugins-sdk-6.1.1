@@ -54,12 +54,13 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.dtRange']}" style="width:158px;"/>
 								</TD>
 								<TD>
-									<p:calendar  showOn="button" value="#{reportBackingBean.fromDate}" 
-										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">																				
+									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
+									
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
 									</p:calendar>
 								</TD>				
 								<TD>
-									<p:calendar  showOn="button" value="#{reportBackingBean.toDate}"
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
 																							
 									</p:calendar> 
