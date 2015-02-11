@@ -5976,6 +5976,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}	
 	}
 	
+	/**
+	 * To validate price on every keyup
+	 * @param pricing
+	 * @param pricings
+	 */
 	public void validatePriceValue(CmPricing pricing, List<CmPricing> pricings){
 		boolean priceInvalid = false;
 
@@ -5984,6 +5989,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				priceInvalid = true;
 			}
 		}	
+		
+		if(!priceInvalid) {
+			BigDecimal promotionTierPrice = pricing.getPrice();
+			BigDecimal parentTierPrice = pricing.getParentPrice().getPrice();
+			
+			System.out.println("parentTierPrice.compareTo(promotionTierPrice): " + parentTierPrice.compareTo(promotionTierPrice));
+			System.out.println("priceInvalid1: " + priceInvalid);
+			if(parentTierPrice.compareTo(promotionTierPrice) <= 0) {
+				priceInvalid = true;
+			}
+			System.out.println("priceInvalid1: " + priceInvalid);
+		}
+		
 		if(priceInvalid){
 			pricing.setCheckOk(false);
 			this.getManagedBean().setError9(true);
