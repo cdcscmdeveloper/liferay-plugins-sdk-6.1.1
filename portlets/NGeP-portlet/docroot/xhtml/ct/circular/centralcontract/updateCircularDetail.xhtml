@@ -68,6 +68,15 @@
 			             style="width:115px;" disabled="true">
 			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 		     
+		     	<h:outputLabel value="#{lbl['lbl.ct.warranty.period']}" />
+				<h:panelGroup>
+					<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.warrantyPeriod}" 
+						disabled="#{centralContractBackingBean.managedBean.viewContract}"
+					  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
+					<p:spacer width="5" />
+					<h:outputText value="#{lbl['lbl.ct.months']}" />
+				</h:panelGroup>
+		     
 		      <h:panelGrid columns="2" style="float:right;">
 		        <p:outputLabel value="*" styleClass="mandatory" />
 		         <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
