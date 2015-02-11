@@ -1069,9 +1069,26 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		List<SelectItem> itemList = new ArrayList<SelectItem>();
 		try {
 			SelectItem[] items = getDropdownCodeValues("SBT");
+
 			for(SelectItem selectItem : items) {
 				if(!this.getManagedBean().getSmSupp().isBrandNew()){
-					itemList.add(selectItem);
+					String bizType = this.getManagedBean().getSmSupp().getBusinessType();
+					if(selectItem.getValue() != null){
+						if(bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+								bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+
+							if(selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+									selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+								itemList.add(selectItem);
+							}
+						}else if(bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) || 
+								bizType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)){
+							if(selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) || 
+									selectItem.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)){
+								itemList.add(selectItem);
+							}
+						}
+					}
 				}else{
 					if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_BASIC)){
 						itemList.add(selectItem);
@@ -1098,7 +1115,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 			}
-			
+
 			// sort
 			if(CollectionUtils.isNotEmpty(itemList)){
 				Collections.sort(itemList, new Comparator<SelectItem>() {
@@ -1109,8 +1126,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				});
 			}
-			
-			
 			log.info("------------->" + itemList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1118,7 +1133,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 
 		}
-		
+
 		return itemList.toArray(new SelectItem[itemList.size()]);
 	}
 	
@@ -1567,23 +1582,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}else{
 			return updateOnlineAccount();
 		}
-	}
-	
-	public String getBusinessType(String businessType) {
-		String retVal = "";
-		SelectItem[] pmBusinessTypeItems = pmBusinessTypeDropDown();
-		List<SelectItem> businessTypeItems = new ArrayList<SelectItem>();
-		if (StringUtils.isNotBlank(businessType) && pmBusinessTypeItems != null
-				&& pmBusinessTypeItems.length > 0) {
-			businessTypeItems = Arrays.asList(pmBusinessTypeItems);
-			for (SelectItem item : businessTypeItems) {
-				if (businessType.equals(item.getValue())) {
-					retVal = item.getLabel();
-					break;
-				}
-			}
-		}
-		return retVal;
 	}
 	
 	public String getBusinessNatureSection(SmSupplierBusiness suppBusinessNat) {
