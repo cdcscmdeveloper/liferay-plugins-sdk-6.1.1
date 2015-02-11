@@ -37,14 +37,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td width="390px"><p:inputTextarea cols="55" rows="2" readonly="true" autoResize="false" style="resize:none"
+				<td width="390px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:351px;"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputTextarea cols="55" rows="2" readonly="true" autoResize="false" style="resize:none"
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:351px;"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>
 				</td>

@@ -36,7 +36,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td width="460px"><p:inputTextarea cols="60" rows="2" readonly="true" autoResize="false" style="resize:none" 
+				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" /></td>
@@ -45,14 +45,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td width="460px"><p:inputTextarea cols="60" rows="2" readonly="true" autoResize="false" style="resize:none" 
+				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td width="460px"><p:inputTextarea cols="60" rows="2" readonly="true" autoResize="false" style="resize:none" 
+				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
