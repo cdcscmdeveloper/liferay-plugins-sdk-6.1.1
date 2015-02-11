@@ -27,48 +27,8 @@
 				<p:commandButton value="Back" styleClass="ui-button" action="#{ctTrackingDiaryBackingBean.backToPrev}" />
 			</div>
 		</div>
-		<p:panel header="Trackng Diary Details" toggleable="true">
+		<ac:trackingDiaryDetail dataTable="#{ctTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
 
-			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{ctTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
-
-				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
-
-				<p:column style="width:210px" >
-					<f:facet name="header">
-					Creation Timestamp
-					</f:facet>
-				#{trackingDiaryObj.actionedDate}
-				</p:column>
-				<p:column width="401px">
-					<f:facet name="header">
-					Actioned By
-					</f:facet>
-				#{trackingDiaryObj.actionedBy}
-				</p:column>
-				<p:column width="401px">
-					<f:facet name="header">
-					Role
-					</f:facet>
-				#{trackingDiaryObj.roleCode}
-				</p:column>
-				<p:column width="401px">
-					<f:facet name="header">
-					Description
-					</f:facet>
-				#{trackingDiaryObj.actionDesc}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-					Status
-					</f:facet>
-				#{ctTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
-				</p:column>
-
-			</p:dataTable>
-
-		</p:panel>			
-
-<!-- 		<ui:include src="trackingDiaryDetailResult.xhtml"></ui:include> -->
 	</h:panelGroup>		
 
 
