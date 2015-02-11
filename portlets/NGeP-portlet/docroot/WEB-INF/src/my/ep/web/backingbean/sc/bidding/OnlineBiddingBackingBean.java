@@ -210,6 +210,15 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		log.info("pollListener - start");
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
 				getSmSupplier().getSupplierId());
+		if (getScBidSchedule().getPmStatus().getStatusId()
+				.equals(BidStatusConst.BID_CANCELLED)
+				|| getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_PAUSED)) {
+			
+			System.out.println("bid pause remarks are "+ this.getScBidAction().getRemark());
+			RequestContext.getCurrentInstance().execute(
+					"onlineBiddingNotification.show()");
+		}
 
 	}
 
@@ -248,7 +257,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					}
 				}
 				setBidPrices(fetchedBidPrices);
-				if (scBidSchedule
+				setScBidSchedule(resDTO.getScBidSchedule());
+				/*if (scBidSchedule
 						.getPmStatus()
 						.getStatusId()
 						.equals(resDTO.getScBidSchedule().getPmStatus()
@@ -263,9 +273,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 						RequestContext.getCurrentInstance().execute(
 								"onlineBiddingNotification.show()");
 					}
+					}*/
 				}
 			}
-		} finally {
+		 finally {
 			biddingSO = null;
 		}
 	}
@@ -392,15 +403,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 	}
 	
-	public void biddStatusNotificationAction(){
-		
-		try{
-			navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			
-		}
+	public void biddStatusNotificationAction()throws PortalException,
+	SystemException, IOException {
+		log.info("biddStatusNotificationAction");
+		navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
 		
 	}
 
