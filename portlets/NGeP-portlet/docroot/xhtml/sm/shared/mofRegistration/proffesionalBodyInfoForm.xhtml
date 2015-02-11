@@ -53,7 +53,12 @@
 				<p:column selectionMode="multiple" width="5%" />
 
 
-				<p:column headerText="#{lbl['lbl.sm.profBody.profBody']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory"
+							style="padding-right: 4px;" />
+						<h:outputText value="#{lbl['lbl.sm.profBody.profBody']}" />
+					</f:facet>
 					<h:outputText value="#{profBean.pmCertBody.bodyName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.profBody.regNo']}">
