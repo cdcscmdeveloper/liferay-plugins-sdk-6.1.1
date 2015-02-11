@@ -953,18 +953,23 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			setEditorValue("");
 			if(vmFile !=null && templateName != null) {
 				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
+				UserReqDTO userReqDTO = null;
 				
 				String imgUrl = getServerUrl()+ "css/images/eperolehan.png";
 				context.put("imgUrl", imgUrl);
 				if (getManagedBean().getFactoring().getCreatedBy() == null) {
-					context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName()); 
+					userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+					context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName());
+					context.put("supplierDesignation", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getDesignation());
 				}					
 				else {
-					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(getManagedBean().getFactoring().getCreatedBy());
 					context.put("supplierOfficerName", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getUserName()); 
+					context.put("supplierDesignation", userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser().getDesignation());
 				}
-				context.put("supplierAddress", AddressUtils.getFullAddress(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress()));
+				context.put("supplierAddress", AddressUtils.getFullAddress(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress()).replaceAll("(\r\n|\n)", "<br/>"));
 				context.put("telNo", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierPhoneNo());
 				context.put("faxNo", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierFaxNo());				
 				context.put("refNo", getManagedBean().getFactoring().getAuthRefNo());
@@ -981,7 +986,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
 				if(addressResDTO.getAddressTypeList().size()>0) {
-					context.put("ptjAddress", AddressUtils.getFullAddress(addressResDTO.getAddressTypeList().get(0).getPmAddress()));
+					context.put("ptjAddress", AddressUtils.getFullAddress(addressResDTO.getAddressTypeList().get(0).getPmAddress()).replaceAll("(\r\n|\n)", "<br/>"));
 				}
 				
 				context.put("contractTitle", getManagedBean().getCtContract().getContractName());
@@ -992,12 +997,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				}
 				context.put("factoringStartDate", df.format(getManagedBean().getFactoring().getEffDate()));
 				context.put("factoringCompName", getFactoringCompany());
-				context.put("factoringBankAddress", getManagedBean().getFactoringBankAddress());
+				context.put("factoringBankAddress", getManagedBean().getFactoringBankAddress().replaceAll("(\r\n|\n)", "<br/>"));
 				context.put("factoringAccountNo", getManagedBean().getAccBankName());
 				context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 				
 				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
-					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 					
 					context.put("contractAdminName", getFacesScopes().getUserSessionBean().getUserName());
