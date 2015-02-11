@@ -194,6 +194,9 @@
 				<h:outputText value="#{lbl['lbl.ct.panel.factoring']}" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.dtls']}" />
 			</f:facet>
+			
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.factoring.details']}" escape="false"/><br/><br/>
+			
 			<h:panelGrid columns="4" style="width:100%;"
 				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 
@@ -201,7 +204,6 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.ct.factoring.company']}" />
 				</h:panelGrid>
-
 				<h:panelGrid columns="2">
 					<p:selectOneMenu id="factoringId"
 						label="#{lbl['lbl.ct.factoring.company']}" required="true"
@@ -212,7 +214,7 @@
 							value="#{supplierBackingBean.retrieveFinancialOrgList()}" />
 						<p:ajax event="change" process="@this"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							update="bankName,accNo,clausePanel, notificationBtn"
+							update="bankName,clausePanel, notificationBtn"
 							listener="#{supplierBackingBean.reset}" />
 					</p:selectOneMenu>
 					<p:message for="factoringId" display="icon"></p:message>
@@ -222,7 +224,6 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.ct.factoring.agreement.ref']}" />
 				</h:panelGrid>
-
 				<h:panelGrid columns="2">
 					<p:inputText
 						value="#{supplierBackingBean.managedBean.factoring.authRefNo}"
@@ -238,8 +239,8 @@
 
                 <p:outputLabel value="#{lbl['lbl.ct.bank.name']}" />
 				<h:panelGrid columns="3">
-					<p:inputText id="bankName" style="width:200px;"
-						value="#{supplierBackingBean.managedBean.factoringBankName}"
+					<p:inputText id="bankName" style="width:350px;"
+						value="#{supplierBackingBean.managedBean.accBankName}"
 						disabled="true" />
 					<p:spacer width="1" />
 					<ac:iconTooltip
@@ -264,22 +265,32 @@
 					</p:calendar>
 					<p:message for="effdateCal" display="icon" />
 				</h:panelGrid>
-				
-				<p:outputLabel value="#{lbl['lbl.ct.bank.account.no']}" />
-				<h:panelGrid columns="3">
-					<p:inputText id="accNo" style="width:200px;" disabled="true"
-						value="#{supplierBackingBean.managedBean.accountNo}" />
-					<p:spacer width="1" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.ct.tooltip.factoring.account.no']}" />
+
+				<h:panelGrid columns="2" style="float:right;">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.agreement']}" />
 				</h:panelGrid>
-
-
+				<h:panelGroup id="uploadFactoringPg">
+					<h:panelGrid columns="3">
+						<p:commandButton 
+							oncomplete="uploadFactoringDlg.show();return false;"
+							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"  immediate="true"
+							update="factoringPanel, uploadFactoringDlg"
+							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() 
+										or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" />
+						<p:spacer width="1" />
+						<h:commandLink
+							value="#{supplierBackingBean.managedBean.factoring.fileName}"
+							style="float:left;" styleClass="blue_font"
+							rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
+							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
+					</h:panelGrid>
+				</h:panelGroup>
+				
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 				</h:panelGrid>
-
 				<h:panelGrid columns="2">
 					<p:calendar id="expdateCal" size="25" required="true"
 						showOn="button" label="#{lbl['lbl.ct.end.date']}"
@@ -297,27 +308,9 @@
 					<p:message for="expdateCal" display="icon" />
 				</h:panelGrid>
 
-				<h:panelGrid columns="2" style="float:right;">
-					<p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.agreement']}" />
-				</h:panelGrid>
-				<h:panelGroup id="uploadFactoringPg">
-					<h:panelGrid columns="3">
-						<p:commandButton
-							oncomplete="uploadFactoringDlg.show();return false;"
-							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"
-							update="factoringPanel, uploadFactoringDlg"
-							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() 
-										or supplierBackingBean.managedBean.viewOnly}" />
-						<p:spacer width="1" />
-						<h:commandLink
-							value="#{supplierBackingBean.managedBean.factoring.fileName}"
-							style="float:left;" styleClass="blue_font"
-							rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
-							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
-					</h:panelGrid>
-				</h:panelGroup>
-
+				
+                <f:verbatim rendered="#{supplierBackingBean.managedBean.removeFactoring}"></f:verbatim>
+                <f:verbatim rendered="#{supplierBackingBean.managedBean.removeFactoring}"></f:verbatim>
 				<h:panelGrid columns="2" style="float:right;"
 					rendered="#{supplierBackingBean.managedBean.removeFactoring}">
 					<p:outputLabel value="*" styleClass="mandatory" />
