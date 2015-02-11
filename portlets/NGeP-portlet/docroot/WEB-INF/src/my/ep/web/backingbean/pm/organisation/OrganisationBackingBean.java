@@ -782,12 +782,12 @@ public class OrganisationBackingBean extends
 		validateContactPerson(this.getManagedBean().getOfficeContactPerson());
 		reqDTO.setPmOrgProfile(orgProfile);
 		OrgProfileResDTO resDTO = orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
-		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		/*reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 		OrgProfileResDTO resDTO1 = orgProfileSO
-				.retrieveOrgProfileDtlByProfileId(reqDTO);
+				.retrieveOrgDetailsByOrgId(reqDTO);
 		if (resDTO1 != null && resDTO1.getPmOrgProfile() != null) {
 			getManagedBean().setOrgProfile(resDTO1.getPmOrgProfile());
-		}
+		}*/
 
 		if (resDTO.isSuccessful()) {
 			result = resDTO.isSuccessful();
