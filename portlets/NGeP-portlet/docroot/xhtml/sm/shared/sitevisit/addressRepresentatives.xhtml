@@ -6,6 +6,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+<!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/categoryCodeByTemplate.xhtml" /> -->
+
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" id="pnlSvSelectSvAdd" align="left">
 		<p:dataTable var="svAdd" id="dtblSelectedSvAdd" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvAddressMap[svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode]}" 
@@ -40,7 +42,9 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-		
+
+<!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/visitinfo.xhtml" /> -->
+	
 	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep">
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
