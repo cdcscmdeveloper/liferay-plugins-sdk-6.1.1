@@ -33,6 +33,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private SmApplInquiry selectedInquiryResponse;
 	private List<PmParameterDesc> businessTypeLs;
 	private List<SmApplSupportDoc> unselectedSmApplSuppDocs;
+	private String zoneCode;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -137,6 +138,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	public void setUnselectedSmApplSuppDocs(
 			List<SmApplSupportDoc> unselectedSmApplSuppDocs) {
 		this.unselectedSmApplSuppDocs = unselectedSmApplSuppDocs;
+	}
+
+	public String getZoneCode() {
+		return zoneCode;
+	}
+
+	public void setZoneCode(String zoneCode) {
+		this.zoneCode = zoneCode;
 	}
 
 	

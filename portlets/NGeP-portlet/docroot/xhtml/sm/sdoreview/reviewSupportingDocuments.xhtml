@@ -275,7 +275,7 @@
 		        </p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
-					<p:selectBooleanCheckbox value="#{suppDoc.received}" disabled="#{!empty suppDoc.smApplDocFiles}">
+					<p:selectBooleanCheckbox value="#{suppDoc.received}">
 						<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
 					</p:selectBooleanCheckbox>
 				</p:column>

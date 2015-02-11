@@ -9,8 +9,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.exception.EpException;
@@ -50,12 +54,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	public void viewSupportingDocument() {
-		//this.getManagedBean().setAppId(1006);
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
-		//this.getManagedBean().setAppId(2765); 
-		//this.getManagedBean().setAppId(1257436);
+		//this.getManagedBean().setAppId(1257696);
+		//this.getManagedBean().setAppId(1257568);
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
-		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
+		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
 		SdoReviewResDTO resDTO = reqSO.retrieveApplById(reqDTO);
 		this.getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -71,22 +74,40 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		this.getManagedBean().setSmRemark(new SmRemark());
 		this.getManagedBean().setSmApplInquiry(new SmApplInquiry());
 		this.getManagedBean().setSelectedInquiryResponse(new SmApplInquiry());
-		
 		this.getManagedBean().setUnselectedSmApplSuppDocs(new ArrayList<SmApplSupportDoc>());
 
-		for(SmApplSupportDoc applSuppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-			if(!applSuppDoc.isReceived()){
-				if(applSuppDoc.getSmApplDocFiles().size() > 0){
-					applSuppDoc.setReceived(true);
+		String zoneCode = retrieveZoneByStateId(this.getManagedBean().getCompanyAdd().getPmState().getStateId());
+		log.info("***********zone code***********" + zoneCode);
+		log.info("***********State id***********" + this.getManagedBean().getCompanyAdd().getPmState().getStateId());
+		this.getManagedBean().setZoneCode(zoneCode);
+		
+		if(zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SABAH) 
+				|| zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SARAWAK)){
+			for(SmApplSupportDoc applSuppDocSbhSrk : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				if(applSuppDocSbhSrk.getSmApplDocFiles().size() > 0){
+					if(!applSuppDocSbhSrk.isReceived()){
+						this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDocSbhSrk);
+					}
 				}else{
-					this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
+					if(applSuppDocSbhSrk.isReceived()){
+						if(applSuppDocSbhSrk.getPmDocument().isMandatory()){
+							this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDocSbhSrk);
+						}
+					}
+				}	
+			}
+		}else{
+			for(SmApplSupportDoc applSuppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				if(!applSuppDoc.isReceived()){
+					if(applSuppDoc.getPmDocument().isMandatory()){
+						this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
+					}
 				}
 			}
 		}
 		
-		retrieveBusinessTypeList();
+		//retrieveBusinessTypeList();
 		log.info("----------Supporting document-------------" +  this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
-
 	}
 
 	
@@ -146,7 +167,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				
 				String token = getFacesScopes().getBPMAuthenticationCtxToken();
 				SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
-				ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
+				ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
 				reqDTO.setApplId(this.getManagedBean().getAppId());
 				reqDTO.setOutcome(resAction);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -218,13 +239,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 
 	}
 	
-	public void retrieveBusinessTypeList(){
+/*	public void retrieveBusinessTypeList(){
 		List<PmParameterDesc> pmDesc = new ArrayList<PmParameterDesc>();
 		pmDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE, new FacesScopes().getUserLocale().getLanguage());
 		
 		System.out.println("**retrieveBusinessTypeList***" + pmDesc.size());
 		this.getManagedBean().setBusinessTypeLs(pmDesc);
-	}
+	}*/
 	
 	public String navigateToAck(){
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721103,
@@ -248,7 +269,21 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		if(applSuppDoc.isReceived()){
 			unselectedSuppDocLs.remove(applSuppDoc);
 		}else{
-			unselectedSuppDocLs.add(applSuppDoc);
+			String zoneCode = this.getManagedBean().getZoneCode();
+			if(zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SABAH) 
+					|| zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SARAWAK)){
+				if(applSuppDoc.getSmApplDocFiles().size() > 0){
+					unselectedSuppDocLs.add(applSuppDoc);
+				}else{
+					if(applSuppDoc.getPmDocument().isMandatory()){
+						this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
+					}
+				}
+			}else{
+				if(applSuppDoc.getPmDocument().isMandatory()){
+					unselectedSuppDocLs.add(applSuppDoc);
+				}
+			}
 		}
 		log.debug("-----applSuppDoc size----" + unselectedSuppDocLs.size());
 	}
@@ -282,6 +317,16 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			return RoleCode.UPS_SDO.value();		
 		else 
 			return null;
+	}
+	
+	private String retrieveZoneByStateId(Long stateId){
+		IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		ZoneReqDTO reqDTO = new ZoneReqDTO();
+		reqDTO.setStateId(stateId);
+		
+		ZoneResDTO resDTO = reqSO.retrieveZoneByStateId(reqDTO);
+		
+		return resDTO.getPmZone().getZoneCode();
 	}
 
 }
