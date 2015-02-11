@@ -834,7 +834,7 @@ public class ApprovalBackingBean extends
 									.getApproverAction().getParameterCode())) {
 						//scQt.setOpenFor(approvalRequest.getOriginalValue());
 						if ("Open".equalsIgnoreCase(approvalRequest.getOriginalValue())) {
-							scQt.setOpenFor("O");
+							scQt.setOpenFor("A");
 						} else {
 							scQt.setOpenFor("B");
 						}
