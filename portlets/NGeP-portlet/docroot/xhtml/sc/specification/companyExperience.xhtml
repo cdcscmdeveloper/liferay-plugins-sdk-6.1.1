@@ -169,11 +169,11 @@
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								actionListener="#{specificationBackingBean.addScoring(10)}"
-								update="#{scoringPnlId}"/>
+								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
 								update="#{scoringPnlId}">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
@@ -192,6 +192,7 @@
 									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 								</ui:fragment></td>
 							<td><p:inputText required="true" maxlength="18"
+									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									label="#{lbl['lbl.sc.spec.max.score']}"
 									id="techGovCompanyContracts"
@@ -251,7 +252,7 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
 								update="#{scoringPnlId}">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
@@ -271,7 +272,7 @@
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 								</ui:fragment></td>
-							<td><p:inputText
+							<td><p:inputText style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									value="#{specificationBackingBean.managedBean.scQtContractScore.score}"
 									maxlength="18" required="true"
