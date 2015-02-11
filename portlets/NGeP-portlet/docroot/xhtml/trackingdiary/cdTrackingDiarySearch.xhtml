@@ -50,9 +50,9 @@
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.search']}"
 								action="#{cdTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								icon="ui-icon-search" update="resultPanel" />
+								update="resultPanel" />
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								action="#{cdTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
+								action="#{cdTrackingDiaryBackingBean.reset}" update=":form" />
 						</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
@@ -75,13 +75,13 @@
 				</f:facet>
 				#{Obj[1]}
 				</p:column>
-				<p:column>
+				<p:column width="15%">
 					<f:facet name="header">
 					UNSPSC / Extension Code
 				</f:facet>
 				#{Obj[2]}
 				</p:column>
-				<p:column>
+				<p:column width="5%">
 					<f:facet name="header">
 					Action
 				</f:facet>

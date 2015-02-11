@@ -24,21 +24,10 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 		<div style="text-align: right; min-height: 40px;">	
 			<div style="float: left; clear: both;">
-				<p:commandButton value="BB" styleClass="ui-button" action="#{cdTrackingDiaryBackingBean.backToPrev}" />
+				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cdTrackingDiaryBackingBean.backToPrev}" />
 			</div>
 		</div>
-
-<!-- 		<table style="width: 100%"> -->
-<!-- 			<tr> -->
-<!-- 				<td><p:panel style="width: 100%;" header="Document Details" -->
-<!-- 						toggleable="true" id="searchTabId"> -->
-
-<!-- 						<table style="margin-top: 10px; width: 100%;"> -->
-<!-- 						</table> -->
-<!-- 						</p:panel></td> -->
-<!-- 			</tr> -->
-<!-- 		</table> -->
-		<ac:trackingDiaryDetail  id="aasd"  /> 
+		<ac:trackingDiaryDetail dataTable="#{cdTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
 	</h:panelGroup>		
 
 
