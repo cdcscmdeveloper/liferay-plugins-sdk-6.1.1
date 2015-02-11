@@ -17,8 +17,8 @@
 		<p:messages id="financialAssetsLiabilitysScore" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"></p:messages>
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;"  immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -122,11 +122,11 @@
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								actionListener="#{specificationBackingBean.addScoring(60)}"
-								update="#{scoringPnlId}"/>
+								update="#{scoringPnlId}" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
 								update="#{scoringPnlId}">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
@@ -146,6 +146,7 @@
 									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 								</ui:fragment></td>
 							<td><p:inputText id="finAssetsLiaScore" required="true"
+									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
