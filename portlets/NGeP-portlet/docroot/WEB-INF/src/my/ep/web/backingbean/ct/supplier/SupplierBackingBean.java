@@ -623,6 +623,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					     messageId = MessageConst.INFO_700011;
 				    } else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 					    messageId = MessageConst.INFO_700045;
+				    } else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					    messageId = MessageConst.INFO_700008;
 				    }
 				    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_INFO,	null,
