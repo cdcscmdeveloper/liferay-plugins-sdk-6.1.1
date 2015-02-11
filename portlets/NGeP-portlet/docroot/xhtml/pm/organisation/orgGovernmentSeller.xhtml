@@ -83,8 +83,8 @@
 				<h:outputText value="#{personnel.pmUser.userName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu value="#{personnel.pmUser.recordStatusFlg}"
-					required="true" disabled="#{personnel.pmUser.brandNew}" style="margin-bottom: 5px;">
+				<p:selectOneMenu value="#{personnel.recordStatusFlg}"
+					required="true" disabled="#{personnel.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>

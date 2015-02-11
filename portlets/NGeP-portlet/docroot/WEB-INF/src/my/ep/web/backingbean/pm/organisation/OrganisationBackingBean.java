@@ -16,6 +16,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -31,6 +32,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -623,7 +626,7 @@ public class OrganisationBackingBean extends
 				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
 				
 				SmSupplier supplier = orgProfileSm.getSmSupplier();
-				if (supplier != null) {
+			if (supplier != null) {
 					RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 					
 					
@@ -640,27 +643,46 @@ public class OrganisationBackingBean extends
 									supplierBank.setAccountNo(supplierBank.getAccountNo());
 									supplierBank.setPmFinancialOrg(pmFinancialOrg);
 									supplierBank.setAccountPurpose("P");
-									supplierBank.setSmAppl(supplier.getSmAppl());
-									
-								supplier.getSmAppl().getSmSupplierBanks().add(supplierBank);
+									supplierBank.setSmAppl(supplier.getSmAppl());			
+									supplier.getSmAppl().getSmSupplierBanks().add(supplierBank);
 								}
+								if(supplierBank.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+			                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); 
+			                		 log.info("Active Supplier Bank");
+			                	 }
+			                	 else{
+			                		 log.info("Inactive Supplier Bank");
+			                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED); 
+			                		 supplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());
+			                	 }
+								
 								log.info("Supplier Bank Record Status------>"+supplierBank.getRecordStatusFlg()+"<-----");
 		                }
 		               
 					}
+					log.info("Sm Personel list Size"+getManagedBean().getSmPersonnels().size());					
+				
 					if(getManagedBean().getSmPersonnels()!=null && !getManagedBean().getSmPersonnels().isEmpty()){
+						log.info("SM Persnels test");
 						for(SmPersonnel personnel:getManagedBean().getSmPersonnels()){
-							personnel.setRecordStatusFlg(personnel.getRecordStatusFlg());
-							log.info("Personal Record Status------>"+personnel.getRecordStatusFlg()+"<-----");
+							if(personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+								personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+								log.info("Personal Record Status Active");
+							}
+							else{
+								log.info("Personal Record Status inactie");
+								personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+							}
+													
 							supplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
 						}
-					}
-					
+					}					
 					regReqDTO.setSmSupp(supplier);
 					RegistrationResDTO regResDTO = registrationSO
 							.updatePTJSupplier(regReqDTO);
 					regResDTO.setSuccessful(true);
 				}
+			
 			}
 		}
 		else{
@@ -673,23 +695,23 @@ public class OrganisationBackingBean extends
 				
 				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
 				
-				SmSupplier supplier = orgProfileSm.getSmSupplier();
-				if (supplier != null) {
+				SmSupplier smSupplier = orgProfileSm.getSmSupplier();
+				if (smSupplier != null) {
 						RegistrationReqDTO regReqDTO = new RegistrationReqDTO();					
 					
 					if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
 		                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){		                	
 								supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);									
-								supplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());			
+								smSupplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());			
 		                }
 					}
 					if(getManagedBean().getSmPersonnels()!=null && !getManagedBean().getSmPersonnels().isEmpty()){
 						for(SmPersonnel personnel:getManagedBean().getSmPersonnels()){
 							personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);							
-							supplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
+							smSupplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
 						}
 					}					
-					regReqDTO.setSmSupp(supplier);
+					regReqDTO.setSmSupp(smSupplier);
 					RegistrationResDTO regResDTO = registrationSO
 							.updatePTJSupplier(regReqDTO);
 					regResDTO.setSuccessful(true);
@@ -702,8 +724,7 @@ public class OrganisationBackingBean extends
 							
 				feeReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 				log.info("Org ProifleId--"+orgProfile.getOrgProfileId());
-				FeeExemptionResDTO feeResDTO = exemptionSO.deleteFeeExemptionByOrgProfile(feeReqDTO);			
-				
+				FeeExemptionResDTO feeResDTO = exemptionSO.deleteFeeExemptionByOrgProfile(feeReqDTO);				
 				feeResDTO.setSuccessful(true);
 			}
 			
@@ -720,6 +741,15 @@ public class OrganisationBackingBean extends
 					getManagedBean().getAddressTypesList().add(addressType);
 				}				
 			}
+			//Validate the Delivery Address
+              for(PmAddressType deliveryAddress:getManagedBean().getAddressTypesList()){
+				
+				if(deliveryAddress.getAddressType().equals(AddressType.DELIVERY_ADDRESS.value())){
+					log.info("Validate Delivery Address"+deliveryAddress.getPmAddress().getAddress1());
+					validateDeliveryAddress(deliveryAddress.getPmAddress());
+				}				
+			}
+			
 			// Pm Address Types
 		 orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
 			// New OR Update Profile Groups
@@ -995,7 +1025,13 @@ public class OrganisationBackingBean extends
 		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
 		districtReqDTO.setDistrictId(manualAddr.getPmDistrict().getDistrictId());
 		DistrictResDTO districtResDTO = districtSO.retriveDistrictByID(districtReqDTO);		
-		manualAddr.setPmDistrict(districtResDTO.getPmDistrict());	
+		manualAddr.setPmDistrict(districtResDTO.getPmDistrict());
+		
+		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+		CityReqDTO cityReqDTO = new CityReqDTO();
+		cityReqDTO.setCityId(manualAddr.getPmCity().getCityId());
+		CityResDTO cityResDTO = citySO.retriveCityById(cityReqDTO);	
+		manualAddr.setPmCity(cityResDTO.getPmCity());
 			
 		if(manualAddr.isBrandNew() && !manualAddr.isModified()){
 			getManagedBean().getAddressTypesList().add(deliveryAddr);
