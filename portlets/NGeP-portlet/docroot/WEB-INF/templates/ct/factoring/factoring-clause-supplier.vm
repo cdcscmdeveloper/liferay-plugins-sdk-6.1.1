@@ -26,7 +26,7 @@
 	  </table>
 	  <div><br/></div>
 	  <div><br/></div>
-	  <div style="text-align: center;"><strong>BORANG C1</strong></div>
+	  <div style="text-align: center;"><strong></strong></div>
 	  <div><br/></div>
 	  <div><br/></div>
 	  <div style="width:30%; float:right">
@@ -46,9 +46,9 @@
 	  <div><strong>Tajuk Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractTitle</strong></div>
 	  <div><strong>No. Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractPhysicalNo</strong></div>
 	  <hr>
-	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $factoringStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap inbois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
+	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $factoringStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap invois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
       <div><br/></div>
-      <div>Inbois ini telah dijual dan pindahmilik kepada</v>
+      <div>Invois ini telah dijual dan pindahmilik kepada</v>
       <div>$factoringCompName.</div>
       <div><br/></div>
       <div>Sila bayar terus kepada:</div>
@@ -74,8 +74,8 @@
       <div><br/></div>
       <div><br/></div>
       <div>.......................</div>
-      <div>Nama Pembekal<span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierOfficerName</div>
-      <div>Nama Syarikat<span class="Apple-tab-span" style="white-space:pre">	</span><span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierName</div>
+      <div>Nama <span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierOfficerName</div>      
+      <div>Jawatan <span class="Apple-tab-span" style="white-space:pre">	</span>: $supplierDesignation</div>
       <div style="height:750px"/>
       <hr>
 	  <div style="text-align: center; font-style: italic;">Ini adalah dokumen cetakan komputer. Tiada tandatangan diperlukan</div>

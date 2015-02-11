@@ -26,7 +26,7 @@
 	  </table>
 	  <div><br/></div>
 	  <div><br/></div>
-	  <div style="text-align: center;"><strong>BORANG C1</strong></div>
+	  <div style="text-align: center;"><strong></strong></div>
 	  <div><br/></div>
 	  <div><br/></div>
 	  <div style="width:30%; float:right">
@@ -46,9 +46,9 @@
 	  <div><strong>Tajuk Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractTitle</strong></div>
 	  <div><strong>No. Kontrak<span class="Apple-tab-span" style="white-space:pre">	</span>: $contractPhysicalNo</strong></div>
 	  <hr>
-	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $factoringStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap inbois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
+	  <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $factoringStartDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan invois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap invois yang terlibat akan dipindahmilik secara atas talian seperti berikut :-</div>
       <div><br/></div>
-      <div>Inbois ini telah dijual dan pindahmilik kepada</v>
+      <div>Invois ini telah dijual dan pindahmilik kepada</v>
       <div>$factoringCompName.</div>
       <div><br/></div>
       <div>Sila bayar terus kepada:</div>
@@ -79,9 +79,9 @@
 	  <br/><br/><br/><br/>
 	  <hr>
 	  <p style="page-break-before: always" />
-	  <div>i)<span class="Apple-tab-span" style="white-space:pre">	</span>i.	Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju untuk membuat bayaran seperti yang diarahkan.<div>
+	  <div>i)<span class="Apple-tab-span" style="white-space:pre">	</span>	Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju untuk membuat bayaran seperti yang diarahkan.<div>
       <div><br/></div>
-      <div>ii)<span class="Apple-tab-span" style="white-space:pre">	</span>ii.	Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju supaya semua bayaran bagi Kontrak No $contractPhysicalNo dibuat terus kepada $factoringCompName A/C No. $factoringAccountNo (dengan syarat rujukan akaun ini dicatatkan di atas tiap-tiap invois, sijil akuan penerimaan dan bil-bil).</div>
+      <div>ii)<span class="Apple-tab-span" style="white-space:pre">	</span> Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju supaya semua bayaran bagi Kontrak No $contractPhysicalNo dibuat terus kepada $factoringCompName A/C No. $factoringAccountNo (dengan syarat rujukan akaun ini dicatatkan di atas tiap-tiap invois, sijil akuan penerimaan dan bil-bil).</div>
       <div><br/></div>
       <div><br/></div>
       <div><br/></div>	  
