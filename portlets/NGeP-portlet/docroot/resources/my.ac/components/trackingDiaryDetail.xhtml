@@ -7,54 +7,50 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<cc:interface>
-		<!-- <cc:attribute name="id" /> -->
-		<cc:attribute name="unspscCode" default="" />
+		<cc:attribute name="dataTable" />
 		
 	</cc:interface>
 
 	<cc:implementation>
-		
-			<p:panel header="Trackng Diary Details" toggleable="true">
-
-			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{cdTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
+	<p:panel header="Trackng Diary Details" toggleable="true">
+		<p:dataTable id="trackingDiaryTableID" lazy="true"  value="#{cc.attrs.dataTable}" 
+			var="trackingDiaryObj" width="100%" rows="10" styleClass="fixed-size" >
 
 				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
 
-				<p:column width="15%">
+				<p:column width="10%">
 					<f:facet name="header">
 					Creation Timestamp
 					</f:facet>
 				#{trackingDiaryObj.actionedDate}
 				</p:column>
-				<p:column width="15%">
+				<p:column width="10%">
 					<f:facet name="header">
 					Actioned By
 					</f:facet>
 				#{trackingDiaryObj.actionedBy}
 				</p:column>
-				<p:column width="15%">
+				<p:column width="10%">
 					<f:facet name="header">
 					Role
 					</f:facet>
 				#{trackingDiaryObj.roleCode}
 				</p:column>
-				<p:column width="25%">
+				<p:column style="white-space: normal" >
 					<f:facet name="header">
 					Description
 					</f:facet>
 				#{trackingDiaryObj.actionDesc}
 				</p:column>
-				<p:column width="15%">
+				<p:column width="10%" style="white-space: normal" >
 					<f:facet name="header">
-					Document Status
+					Status
 					</f:facet>
-				#{smTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				#{trackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
 				</p:column>
 
-			</p:dataTable>
-
-		</p:panel>			
+		</p:dataTable>
+	</p:panel>			
 
 	</cc:implementation>
-	
 </ui:component>
