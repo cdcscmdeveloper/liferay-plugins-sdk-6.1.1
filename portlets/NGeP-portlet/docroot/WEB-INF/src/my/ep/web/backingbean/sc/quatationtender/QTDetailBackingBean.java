@@ -816,19 +816,6 @@ public class QTDetailBackingBean extends
 					tabBean.getScQtApproval().setApproverSettings(
 							tabBean.getBudgetApprovalUsers().getTarget());
 				}
-				if (tabBean.getScQtApproval().getApprovalType().equals("Others Approval")) {
-					for (ScQtApprovalRequest approvalRequest : tabBean.getScQtApproval().getScQtApprovalDtls()) {
-						if (approvalRequest.getApproverAction() != null && approvalRequest.getApproverAction().getParameterId() == null) {
-							approvalRequest.setApproverAction(null);
-						}
-						if (approvalRequest.getAppRequestRemark() != null) {
-							ScQtAppRequestRemark remarks = approvalRequest.getAppRequestRemark();
-							if (remarks.getRemark() == null || remarks.getRemark().equals("")) {
-								approvalRequest.setAppRequestRemark(null);
-							}
-						}
-					}
-				}
 				tabBean.getScQtApproval().setScQtApprovalRemarks(
 						finalizeRemarks(tabBean.getScQtApproval()
 								.getScQtApprovalRemarks()));
