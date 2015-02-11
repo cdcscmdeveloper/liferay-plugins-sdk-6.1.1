@@ -22,7 +22,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
@@ -79,6 +78,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String remainingHours;
 	private String remainingMinutes;
 	private String remainingSeconds;
+	
+	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE) ;
 
 	private TemplateSpecHelper tplSpecHelper;
 
@@ -942,5 +943,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
 		this.tplSpecHelper = tplSpecHelper;
 	}
+
+	/**
+	 * @return the servicetype
+	 */
+	public Long getServicetype() {
+		return servicetype;
+	}
+	
+	
 
 }

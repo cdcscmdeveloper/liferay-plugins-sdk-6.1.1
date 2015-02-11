@@ -28,6 +28,38 @@
 					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
 					size="20" disabled="true" /></TD>
 		</tr>
+		
+		<h:panelGroup rendered="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemType.parameterCode eq onlineBiddingBB.servicetype}">
+		<tr>
+			<TD><p:outputLabel value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" /></TD>
+			<TD><p:inputText style="text-align : right;"
+					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.tplSpecQuestion.clUomFrequency}"
+					size="20" disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:inputText></TD>
+		</tr>
+		<tr>
+			<TD><p:outputLabel value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" /></TD>
+			<TD><p:inputText style="text-align : right;"
+					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.tplSpecQuestion.clUomPerDay}"
+					size="20" disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText></TD>
+		</tr>
+		<tr>
+			<TD><p:outputLabel value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" /></TD>
+			<TD><p:inputText style="text-align : right;"
+					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.tplSpecQuestion.clUomPerMonth}"
+					size="20" disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText></TD>
+		</tr>
+		
+		
+		</h:panelGroup>
 
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
