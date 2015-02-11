@@ -1118,6 +1118,32 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
+	public static boolean validatePersonnelAcademics(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab) {
+		log.info("******* Validate Academics For personnel******** ");
+		boolean validPersonnels = true;
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		SmAppl appl = managedBean.getSmAppl();
+		for (SmPersonnel per : appl.getSmPersonnels()) {
+			if (per.getSmStaffAcademics() == null
+					|| per.getSmStaffAcademics().isEmpty()) {
+				sb.append("<br/>");
+				sb.append(++i + ".)");
+				sb.append(per.getName());
+				validPersonnels = false;
+			}
+		}
+		if (!validPersonnels) {
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_722599,
+					new String[] { sb.toString() });
+		}
+
+		return validSave;
+	}
+
 	/**
 	 * Validate sm personnels before saving applicaiton the information.
 	 * 
