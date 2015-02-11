@@ -5993,13 +5993,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(!priceInvalid) {
 			BigDecimal promotionTierPrice = pricing.getPrice();
 			BigDecimal parentTierPrice = pricing.getParentPrice().getPrice();
-			
-			System.out.println("parentTierPrice.compareTo(promotionTierPrice): " + parentTierPrice.compareTo(promotionTierPrice));
-			System.out.println("priceInvalid1: " + priceInvalid);
+
 			if(parentTierPrice.compareTo(promotionTierPrice) <= 0) {
 				priceInvalid = true;
 			}
-			System.out.println("priceInvalid1: " + priceInvalid);
 		}
 		
 		if(priceInvalid){
