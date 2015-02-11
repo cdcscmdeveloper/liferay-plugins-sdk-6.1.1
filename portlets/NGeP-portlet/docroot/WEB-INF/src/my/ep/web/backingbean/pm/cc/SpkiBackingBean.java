@@ -71,7 +71,7 @@ public class SpkiBackingBean {
 	
 	private static List<String> challs = null;
 	private String challengeQues1;
-	private String challsAnswer;
+	private String challengeAns1;
 	private String password;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
     FacesScopes facesScope = new FacesScopes();
@@ -201,7 +201,7 @@ public class SpkiBackingBean {
 //			
 			// Simulate user selected the question and answer accordingly
 			Map<Object, Object> challenges = new HashMap<Object, Object>();
-			challenges.put(challengeQues1, challsAnswer);
+			challenges.put(challengeQues1, challengeAns1);
 
 			// Simulate the data ready to sign
 			String dataForSigning = "This is data for signing!";
@@ -252,7 +252,7 @@ public class SpkiBackingBean {
 //		obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign});
 
 	    debugLogger("textBeforeSign==================================: "+textBeforeSign);
-	    debugLogger("reflectAction=====================================: "+ challsAnswer+ password);
+//	    debugLogger("reflectAction=====================================: "+ challsAnswer+ password);
 	}
 	public void signAction(my.ep.persistence.entity.pm.common.PmDigiSign pmDigiSign) {
 
@@ -290,46 +290,6 @@ public class SpkiBackingBean {
 		SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
 
 		return res.getResultBean().getResultList().get(0).getEpNo();	
-	}
-	
-	public void RequestChangePIN() throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url = "https://kmcep-dev.digicert.com.my/kmc/RequestChangePIN.aspx?userID=" + getDigiCertUserId() + "&token=" + encodedtoken;
-		externalContext.redirect(url);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url);	 
-	}
-	
-	public void RequestChallRespUpdate() throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url2 = "https://kmcep-dev.digicert.com.my/kmc/RequestChallRespUpdate.aspx?userID=" + getDigiCertUserId() + "&token=" + encodedtoken;
-		externalContext.redirect(url2);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url2);	 
-	}
-	
-	public void RequestResetPIN() throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url3 = "https://kmcep-dev.digicert.com.my/kmc/RequestResetPIN.aspx?userID=" + getDigiCertUserId() + "&email=" + getSupplierEmail() + "&token=" + encodedtoken;
-		externalContext.redirect(url3);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url3);	 
-	}
-	
-	public void RequestRevokeCert() throws IOException, PortalException, SystemException {
-	    String token = generateSecurityToken(); 
-		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + getDigiCertUserId() + "&orgid=" + getSupplierEpNo() + "&token=" + encodedtoken;
-		externalContext.redirect(url4);
-		System.out.println("Encoded encodedtoken " + encodedtoken);
-		System.out.println("Encoded URL " + url4);	 
 	}
 	
 	public static void main(String[] args) {
@@ -375,19 +335,20 @@ public class SpkiBackingBean {
 	public String getChallengeQues1() {
 		return challengeQues1;
 	}
-	public String getChallsAnswer() {
-		return challsAnswer;
-	}
-	public void setChallsAnswer(String challsAnswer) {
-		this.challsAnswer = challsAnswer;
 
+	public String getChallengeAns1() {
+		return challengeAns1;
 	}
+
+	public void setChallengeAns1(String challengeAns1) {
+		this.challengeAns1 = challengeAns1;
+	}
+
 	public String getPassword() {
 		return password;
 	}
+	
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
 }
