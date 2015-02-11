@@ -6270,7 +6270,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.getPrice()
 						.compareTo(
 								this.getManagedBean().getSelectedMaintainItem()
-										.getCmStandardPricing().getPrice()) > 0) {
+										.getCmStandardPricing().getPrice()) >= 0) {
 					this.getManagedBean().setPricingTabIndex(0);
 					this.getManagedBean().setNormalPricingIndex(1);
 					this.getManagedBean().setError6(true);
