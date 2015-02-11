@@ -55,12 +55,24 @@
 				</td>
 				<td style="text-align:left;width:30%;word-wrap: break-word;">
 					<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
-						value="#{registrationBackingBean.managedBean.smSupp.businessType}" rendered="#{registrationBackingBean.managedBean.smAppl.brandNew}" style="width:310px">
-						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}" />
-						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form"></p:ajax>
+						value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
+						rendered="#{registrationBackingBean.managedBean.smAppl.brandNew || 
+						(!registrationBackingBean.managedBean.smAppl.brandNew and 
+						(registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH || 
+						registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK || 
+						registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH || 
+						registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK ))}" 
+						style="width:310px">
+						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
+						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
 					</p:selectOneMenu><p:message id="busTypeIdMsg" for="busTypeId" display="icon" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{registrationBackingBean.getBusinessType(registrationBackingBean.managedBean.smSupp.businessType)}" 
-						rendered="#{!registrationBackingBean.managedBean.smAppl.brandNew}" />
+					<p:outputLabel styleClass="outputLabel-view" 
+					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
+					rendered="#{!registrationBackingBean.managedBean.smAppl.brandNew and 
+						registrationBackingBean.managedBean.smSupp.businessType ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH and 
+						registrationBackingBean.managedBean.smSupp.businessType ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK and 
+						registrationBackingBean.managedBean.smSupp.businessType ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH and 
+						registrationBackingBean.managedBean.smSupp.businessType ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK}" />
 				</td>
 				<c:choose>
 					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
