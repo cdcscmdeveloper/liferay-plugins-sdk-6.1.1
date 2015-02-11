@@ -70,7 +70,8 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
 					</p:inputText>
 					<p:spacer width="5"/>
-					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
+					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;" 
+					  rendered="#{!amendmentBackingBean.managedBean.prepareLOA or !amendmentBackingBean.managedBean.disablefinalAmendDetails}">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
 					</p:commandLink>
@@ -446,7 +447,8 @@
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
-						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;">
+						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;"
+						 disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" >
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						</p:commandLink>
