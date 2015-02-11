@@ -59,7 +59,8 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String originalAccountNo;
 	private String factoringBankName;
 	private String accBankName;
-	
+	private String factoringBankAddress;
+
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	private CtFactoring factoring;
@@ -290,6 +291,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setFactoringBankName(String factoringBankName) {
 		this.factoringBankName = factoringBankName;
+	}
+
+	public String getFactoringBankAddress() {
+		return factoringBankAddress;
+	}
+
+	public void setFactoringBankAddress(String factoringBankAddress) {
+		this.factoringBankAddress = factoringBankAddress;
 	}
 
 	public boolean isAgreeFactoringClause() {

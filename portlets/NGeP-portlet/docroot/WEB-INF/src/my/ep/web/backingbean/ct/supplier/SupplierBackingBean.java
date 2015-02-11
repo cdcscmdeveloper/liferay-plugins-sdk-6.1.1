@@ -921,8 +921,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	public boolean isLetterGenerated() {
-		if ((getManagedBean().getSelectedContract() != null || (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) && getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()  != null && 
-				getManagedBean().getAccountNo() != null && getManagedBean().getFactoring().getAuthRefNo() != null && 
+		if ((getManagedBean().getSelectedContract() != null || (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getLoa().getLoaNo() != null)) && getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId()  != null  && getManagedBean().getFactoring().getAuthRefNo() != null && 
 				getManagedBean().getFactoring().getEffDate() != null && getManagedBean().getFactoring().getExpDate() != null)
 			return true;
 		else
@@ -992,7 +991,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				context.put("factoringStartDate", df.format(getManagedBean().getFactoring().getEffDate()));
 				context.put("factoringCompName", getFactoringCompany());
 				context.put("factoringBankAddress", getManagedBean().getFactoringBankAddress());
-				context.put("factoringAccountNo", getManagedBean().getAccountNo());
+				context.put("factoringAccountNo", getManagedBean().getAccBankName());
 				context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 				
 				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
