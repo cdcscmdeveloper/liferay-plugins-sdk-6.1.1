@@ -1097,6 +1097,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			
 			setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+			extendStartEndDate();
 			return "circularBase.xhtml?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1499,18 +1500,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void extendStartEndDate(){
 		
-		if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
+		if(getManagedBean().isAutoUpdate()){
 			Calendar c = Calendar.getInstance();
 			c.setTime(getManagedBean().getCircularVer().getEndDate());
 			c.add(Calendar.DATE, 1);
 			getManagedBean().getCircularVer().setExtendStartDate(c.getTime());
-			
-			c.setTime(getManagedBean().getCircularVer().getEndDate());
-			c.add(Calendar.MONTH, getManagedBean().getCircularVer().getExtPeriod());
-			getManagedBean().getCircularVer().setExtendEndDate(c.getTime());
-		}else{
-			getManagedBean().getCircularVer().setExtendStartDate(null);
-			getManagedBean().getCircularVer().setExtendEndDate(null);
 		}
 	}
 	
