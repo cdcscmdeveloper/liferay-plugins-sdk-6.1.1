@@ -5660,9 +5660,12 @@ public class SpecificationBackingBean extends
 							new ArrayList<ScQtCheckListScore>());
 				}
 			} else {
-				toBeRemoveList.add(this.getManagedBean()
-						.getScQtCheckListScore());
+				if (null != this.getManagedBean().getScQtCheckListScore()) {
+					toBeRemoveList.add(this.getManagedBean()
+							.getScQtCheckListScore());
+				}
 			}
+			this.getManagedBean().setToBeRemoveList(toBeRemoveList);
 			this.getManagedBean().setChecklistScoreType(scoreType);
 		}
 	}
@@ -5691,9 +5694,12 @@ public class SpecificationBackingBean extends
 							new ArrayList<ScQtCheckListScore>());
 				}
 			} else {
-				toBeRemoveList.add(this.getManagedBean()
-						.getScQtCheckListScore());
+				if (null != this.getManagedBean().getScQtContractScore()) {
+					toBeRemoveList.add(this.getManagedBean()
+							.getScQtContractScore());
+				}
 			}
+			this.getManagedBean().setToBeRemoveList(toBeRemoveList);
 			this.getManagedBean().setCompanyScoreType(scoreType);
 		}
 	}
@@ -5822,6 +5828,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCheckListScore(
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setScoringForYears(
+						new ArrayList<ScQtCheckListScore>());
+				this.getManagedBean().setToBeRemoveList(
 						new ArrayList<ScQtCheckListScore>());
 				if (QTConstants.TECHNICAL_GOV_CODE.equalsIgnoreCase(checkList
 						.getPmDocument().getDocDefinitionKey())) {
@@ -6267,6 +6275,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setCheckListScore(
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setChecklistScoreType(null);
+				this.getManagedBean().setToBeRemoveList(
+						new ArrayList<ScQtCheckListScore>());
 				if (QTConstants.FINANCIAL_GOV_CODE.equalsIgnoreCase(checkList
 						.getPmDocument().getDocDefinitionKey())) {
 					reqDTO.setScQtCheckList(checkList);
@@ -7759,7 +7769,7 @@ public class SpecificationBackingBean extends
 			ScQtCheckListScore score = createCheckList();
 			score.setCriteriaType(new Integer(CriteriaType));
 			score.setScoreType(new BigDecimal(this.getManagedBean()
-					.getChecklistScoreType()));
+					.getCompanyScoreType()));
 			if (prevSpecScoring != null) {
 				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
 				/*
@@ -8343,8 +8353,11 @@ public class SpecificationBackingBean extends
 					.getToBeRemoveList();
 			if (null != removedList) {
 				for (int i = 0; i < removedList.size(); i++) {
-					if (null == removedList.get(i).getScQtCheckListScoreId()) {
-						removedList.remove(i);
+					ScQtCheckListScore checkListScore = removedList.get(i);
+					if (null != checkListScore) {
+						if (null == checkListScore.getScQtCheckListScoreId()) {
+							removedList.remove(i);
+						}
 					}
 				}
 			}
@@ -8593,8 +8606,11 @@ public class SpecificationBackingBean extends
 					.getToBeRemoveList();
 			if (null != removedList) {
 				for (int i = 0; i < removedList.size(); i++) {
-					if (null == removedList.get(i).getScQtCheckListScoreId()) {
-						removedList.remove(i);
+					ScQtCheckListScore checkListScore = removedList.get(i);
+					if (null != checkListScore) {
+						if (null == checkListScore.getScQtCheckListScoreId()) {
+							removedList.remove(i);
+						}
 					}
 				}
 			}
