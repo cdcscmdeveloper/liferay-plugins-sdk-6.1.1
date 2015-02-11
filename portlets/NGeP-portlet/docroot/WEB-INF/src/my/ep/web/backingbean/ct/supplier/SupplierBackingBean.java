@@ -154,8 +154,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		getManagedBean().getFactoring().setStatus(pmStatus);
 		getManagedBean().getFactoring().setCtContract(new CtContract());
 		getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
-		getManagedBean().setAccountNo(null);
-		getManagedBean().setFactoringBankName(null);
+		getManagedBean().setAccBankName(null);
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
@@ -686,8 +685,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	public void flush(){
-		this.getManagedBean().setAccountNo(null);
-		this.getManagedBean().setFactoringBankName(null);
+		this.getManagedBean().setAccBankName(null);
 	}
     
 	public SelectItem[] retrieveFinancialOrgList() throws NamingException {
@@ -734,9 +732,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				 
 				    reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 				    resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
-				    getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
-					getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
-					getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
+				    getManagedBean().setAccBankName(resDTO.getPmFinancialAcc().getAccountNo() +" " + resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
+				 	getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
 		    }
 		  }catch(Exception ex){
 			  ex.printStackTrace();

@@ -56,11 +56,10 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String contractNo;
 	private String contractName;
 	private String loginUser;
-	private String accountNo;
 	private String originalAccountNo;
 	private String factoringBankName;
-	private String factoringBankAddress;
-
+	private String accBankName;
+	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	private CtFactoring factoring;
@@ -293,14 +292,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.factoringBankName = factoringBankName;
 	}
 
-	public String getFactoringBankAddress() {
-		return factoringBankAddress;
-	}
-
-	public void setFactoringBankAddress(String factoringBankAddress) {
-		this.factoringBankAddress = factoringBankAddress;
-	}
-
 	public boolean isAgreeFactoringClause() {
 		return agreeFactoringClause;
 	}
@@ -327,14 +318,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setOriginalAccountNo(String originalAccountNo) {
 		this.originalAccountNo = originalAccountNo;
-	}
-
-	public String getAccountNo() {
-		return accountNo;
-	}
-
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
 	}
 
 	public String getFileDirectory() {
@@ -474,5 +457,13 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setSelectedContract(CtContract selectedContract) {
 		this.selectedContract = selectedContract;
+	}
+
+	public String getAccBankName() {
+		return accBankName;
+	}
+
+	public void setAccBankName(String accBankName) {
+		this.accBankName = accBankName;
 	}
 }
