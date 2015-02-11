@@ -3751,5 +3751,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		this.selectAllCheckbox = selectAllCheckbox;
 	}
 	
-	
+	public Double getItemMaxQuantity(PmUom uom){
+		Double maxQuantity =  Double.valueOf(9999999999L);
+		if(uom.getDecimalScale() == 1){
+			maxQuantity = 9999999999.9;
+		}else if(uom.getDecimalScale() == 2){
+			maxQuantity = 9999999999.99;
+		}else if(uom.getDecimalScale() == 3){
+			maxQuantity = 9999999999.999;
+		}	
+		return maxQuantity;
+	}
 }
