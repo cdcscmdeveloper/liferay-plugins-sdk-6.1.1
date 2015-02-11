@@ -37,7 +37,7 @@
 <table>
 	<tr class='bold-text'>
 		<td>
-			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>1PP No.</span>
+			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Treasury Circular (1PP) No.</span>
 		</td>
 		<td style='width:5px;'>:</td>
 		<td >
@@ -46,7 +46,7 @@
 	</tr>
 	<tr class='bold-text'>
 		<td>
-			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Physical 1PP No.</span>
+			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Physical Treasury Circular (1PP) No.</span>
 		</td>
 		<td style='width:5px;'>:</td>
 		<td >
@@ -55,7 +55,7 @@
 	</tr>	
 	<tr class='bold-text'>
 		<td>
-			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>1PP Name</span>
+			<span style='width:70px;font-size:11px;font-family: Albertus Medium;'>Treasury Circular (1PP) Name</span>
 		</td>
 		<td style='width:5px;'>:</td>
 		<td >
