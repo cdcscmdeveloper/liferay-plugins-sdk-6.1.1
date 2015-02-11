@@ -13,12 +13,12 @@
 					<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
 
 					<TD><p:selectOneMenu id="currentDayBidList"
-							style="width : 160px"
+							style="width : 145px"
 							value="#{onlineBiddingBB.selectedBidScheduleId}">
 							<f:selectItems var="bid"
 								value="#{onlineBiddingBB.activeBidSchedules}"
 								itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}" />
-							<p:ajax event="change" process="@this" partialSubmit="true" update="@this"
+							<p:ajax event="change" process="@this" partialSubmit="true" 
 								listener="#{onlineBiddingBB.selectedBidChangeListener()}" />
 
 						</p:selectOneMenu>
