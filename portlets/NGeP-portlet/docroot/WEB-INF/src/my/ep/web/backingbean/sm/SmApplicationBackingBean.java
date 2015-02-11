@@ -1485,12 +1485,22 @@ public class SmApplicationBackingBean extends
 					getManagedBean(), currentTab);
 			validSave = SmApplicationUtil.validateEquityCompanyAmount(
 					getManagedBean(), currentTab);
+			if (getManagedBean().getSmAppl().getSupplierType()
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				validSave = SmApplicationUtil.validatePersonnelAcademics(
+						validSave, getManagedBean(), currentTab);
+			}
 			validatePaidCaptialAmt(true);
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			validSave = SmApplicationUtil.validateEquityOwnerCount(
 					getManagedBean(), currentTab, currentPageType);
+			if (getManagedBean().getSmAppl().getSupplierType()
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				validSave = SmApplicationUtil.validatePersonnelAcademics(
+						validSave, getManagedBean(), currentTab);
+			}
 			validSave = SmApplicationUtil.validatePersonnelBeforeSave(
 					validSave, currentTab, getManagedBean());
 			calculateBumiPercentageTotals();
@@ -3869,24 +3879,24 @@ public class SmApplicationBackingBean extends
 			throw new EpException(SmCommonUtil.getMessage(
 					"lbl.sm.jobexperience.required.atleast.one", null));
 		}
+		// if (getManagedBean().getSmAppl().getSupplierType()
+		// .equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+		// && getManagedBean().getSelectedShareHolder().isEquityOwner()
+		// && (getManagedBean().getSelectedShareHolder()
+		// .getSmStaffAcademics() == null || getManagedBean()
+		// .getSelectedShareHolder().getSmStaffAcademics()
+		// .isEmpty())) {
+		//
+		// validShrHldr = false;
+		// throw new EpException(SmCommonUtil.getMessage(
+		// "lbl.sm.academicqualification.required.atleast.one", null));
+		// }
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-				&& getManagedBean().getSelectedShareHolder().isEquityOwner()
-				&& (getManagedBean().getSelectedShareHolder()
-						.getSmStaffAcademics() == null || getManagedBean()
-						.getSelectedShareHolder().getSmStaffAcademics()
-						.isEmpty())) {
-
-			validShrHldr = false;
-			throw new EpException(SmCommonUtil.getMessage(
-					"lbl.sm.academicqualification.required.atleast.one", null));
-		}
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-				&& (getManagedBean().getSelectedShareHolder().isProf()
-						|| getManagedBean().getSelectedShareHolder()
-								.isSemiProf() || getManagedBean()
-						.getSelectedShareHolder().isClerical())
+				// && (getManagedBean().getSelectedShareHolder().isProf()
+				// || getManagedBean().getSelectedShareHolder()
+				// .isSemiProf() || getManagedBean()
+				// .getSelectedShareHolder().isClerical())
 				&& (getManagedBean().getSelectedShareHolder()
 						.getSmStaffAcademics() == null || getManagedBean()
 						.getSelectedShareHolder().getSmStaffAcademics()
