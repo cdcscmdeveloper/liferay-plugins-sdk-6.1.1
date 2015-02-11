@@ -2461,6 +2461,10 @@ public class SmApplicationBackingBean extends
 		log.info("*** Delete AssocBodies ******* "
 				+ getManagedBean().getSelectedAssocBodyList().size());
 		if (getManagedBean().getSelectedAssocBodyList().size() > 0) {
+			if (getManagedBean().getSelectedAssocBodyList().size() == getManagedBean()
+					.getSmAppl().getSmAssociationBodies().size()) {
+				throw new EpException(MessageConst.ERROR_722597);
+			}
 			for (SmAssociationBody assoc : getManagedBean()
 					.getSelectedAssocBodyList()) {
 				getManagedBean().getSmAppl().getSmAssociationBodies()

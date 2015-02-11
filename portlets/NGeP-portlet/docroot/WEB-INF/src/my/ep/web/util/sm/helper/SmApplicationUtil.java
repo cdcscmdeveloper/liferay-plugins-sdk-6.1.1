@@ -946,6 +946,12 @@ public class SmApplicationUtil {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722557);
 			}
+			if (managedBean.getSmAppl().getSmAssociationBodies() == null
+					|| managedBean.getSmAppl().getSmAssociationBodies()
+							.isEmpty()) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_722598);
+			}
 		} else {
 			int validStfCont = 0;
 			for (SmStaffTotal stfTl : appl.getSmStaffTotals()) {
