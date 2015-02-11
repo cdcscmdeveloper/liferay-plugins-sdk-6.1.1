@@ -648,6 +648,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 	public void validateFactoringRequest(String action){
 		getManagedBean().setAutoUpdate(true);
+		
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+ 			if((remark == null || remark.length() == 0)) {
+ 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+ 			}
+			return;
+		}
+		
 		if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 			throw new EpException(MessageConst.ERROR_100022,	new String[] { "Copy Of Factoring Agreement" });
@@ -897,7 +906,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
   		        for (CtContract contractLoa : list) {  
   		        	ContractSupplierResDTO ctSupplierResDTO = contractSupplierSO.retrieveFactoringByLoaId(contractLoa.getLoa().getLoaId());
   		        	if(ctSupplierResDTO.getFactoring() != null && ctSupplierResDTO.getFactoring().getStatus() != null &&
-  		        			ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() !=  ContractStatusConst.RF_COMPLETE.longValue()) {
+  		        		(ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_PENDING_SUBMISSION.longValue() ||
+  		        		 ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_PENDING_ACKNOWLEDGEMENT.longValue() ||
+    					 ctSupplierResDTO.getFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_PENDING_ENDORSEMENT.longValue()) ) {
   		        		continue;
                 	} 
   		        	contractList.add(contractLoa);
