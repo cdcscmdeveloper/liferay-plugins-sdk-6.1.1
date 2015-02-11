@@ -22,7 +22,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:selectBooleanCheckbox>
 		      </p:column>
 			 
-			  <p:column headerText="#{lbl['lbl.ct.panel.coverage']}" style="white-space:pre-line;width:6%;">
+			  <p:column style="white-space:pre-line;width:6%;">
+			       <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.panel.coverage']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.panel.coverage']}"/>
+	               </f:facet>
 			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:95%;" 
 			       		disabled="#{panelBackingBean.managedBean.viewContract}">
 			             <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
