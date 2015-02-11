@@ -14,7 +14,7 @@
 				   </h:panelGrid>
 				   <h:panelGrid columns="2">
 				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="4"
-					 	required="true" maxlength="60"  disabled="#{panelBackingBean.managedBean.viewContract}"
+					 	required="true" maxlength="60"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"/>
 					<p:message for="circularNoTxt" display="icon" />
 				    </h:panelGrid>
@@ -54,17 +54,25 @@
 	         	            mindate="#{centralContractBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
 	         	            showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
 	         	            disabled="#{centralContractBackingBean.managedBean.viewContract}">
-	         	            <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
+	         	            <f:attribute name="startDate" value="#{centralContractBackingBean.managedBean.circularVer.startDate}" />
                  			<f:validator validatorId="primeDateRangeValidator" />
 	         	   		</p:calendar>
 	         	   		<p:message for="popupButtonCal1" display="icon" />
 	         		</h:panelGrid>
 			              
 			              
-			     	      <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+			     	<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 				    <p:inputText  style="width:170px;" maxlength="60" disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />
-				    <f:verbatim/><f:verbatim/>
+				   
+					<p:outputLabel value="#{lbl['lbl.ct.warranty.period']}" />
+					<h:panelGroup>
+						<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.warrantyPeriod}" 
+							disabled="#{centralContractBackingBean.managedBean.viewContract}"
+						  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
+						<p:spacer width="5" />
+						<h:outputText value="#{lbl['lbl.ct.months']}" />
+					</h:panelGroup>	
 				       
 				       <h:panelGrid columns="2" style="float:right;">
 				          <p:outputLabel value="*" styleClass="mandatory" />
