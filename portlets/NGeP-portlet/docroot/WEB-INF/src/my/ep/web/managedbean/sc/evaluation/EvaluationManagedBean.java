@@ -197,8 +197,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean memberOnly;
 	private List<ScQtCommitteRemarks> evaluationSignOffRemarks;
 	private Date today = new Date();
-	private BigDecimal userScores;
-	private BigDecimal contractScores;
+	private String userScores;
+	private String contractScores;
 	private int techindex = -1;
 	private boolean statusOnly;
 	private ScAttachment scAttachment;
@@ -1765,20 +1765,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.docDefinitionKey = docDefinitionKey;
 	}
 
-	/**
-	 * @return the userScores
-	 */
-	public BigDecimal getUserScores() {
-		return userScores;
-	}
-
-	/**
-	 * @param userScores
-	 *            the userScores to set
-	 */
-	public void setUserScores(BigDecimal userScores) {
-		this.userScores = userScores;
-	}
+	
 
 	
 
@@ -1997,19 +1984,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.evaluationFinancialCommitteeRemark = evaluationFinancialCommitteeRemark;
 	}
 
-	/**
-	 * @return the contractScores
-	 */
-	public BigDecimal getContractScores() {
-		return contractScores;
-	}
-
-	/**
-	 * @param contractScores the contractScores to set
-	 */
-	public void setContractScores(BigDecimal contractScores) {
-		this.contractScores = contractScores;
-	}
+	
 
 	/**
 	 * @return the withInVarieance
@@ -2151,6 +2126,34 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationTechnicalFinancialType(
 			String evaluationTechnicalFinancialType) {
 		this.evaluationTechnicalFinancialType = evaluationTechnicalFinancialType;
+	}
+
+	/**
+	 * @return the userScores
+	 */
+	public String getUserScores() {
+		return userScores;
+	}
+
+	/**
+	 * @param userScores the userScores to set
+	 */
+	public void setUserScores(String userScores) {
+		this.userScores = userScores;
+	}
+
+	/**
+	 * @return the contractScores
+	 */
+	public String getContractScores() {
+		return contractScores;
+	}
+
+	/**
+	 * @param contractScores the contractScores to set
+	 */
+	public void setContractScores(String contractScores) {
+		this.contractScores = contractScores;
 	}
 
 	
