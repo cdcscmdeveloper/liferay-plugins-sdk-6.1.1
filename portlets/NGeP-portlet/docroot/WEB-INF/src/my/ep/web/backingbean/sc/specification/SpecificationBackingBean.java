@@ -894,6 +894,12 @@ public class SpecificationBackingBean extends
 	public String committeeBackAction() {
 		// this.getManagedBean().setScQtCheckSt2techProposal(null);
 		// retriveTechnicalCheckList();
+		this.getManagedBean().setChecklistScoreType(null);
+		this.getManagedBean().setCompanyScoreType(null);
+		this.getManagedBean().setScQtCheckListScore(null);
+		this.getManagedBean().setScQtContractScore(null);
+		this.getManagedBean().setToBeRemoveList(
+				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
 		return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
@@ -5784,6 +5790,10 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setScQtChecklist(checkList);
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSpecType(specType);
+		this.getManagedBean().setToBeRemoveList(
+				new ArrayList<ScQtCheckListScore>());
+		this.getManagedBean().setScQtCheckListScore(null);
+		this.getManagedBean().setScQtContractScore(null);
 		try {
 
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -6045,7 +6055,7 @@ public class SpecificationBackingBean extends
 							|| resDTO.getCheckListScores().isEmpty()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
-
+						this.getManagedBean().setCompanyScoreType(null);
 						// ScQtCheckListValue checkListValue = new
 						// ScQtCheckListValue();
 						// setUserDetails(checkListValue);
@@ -6115,7 +6125,7 @@ public class SpecificationBackingBean extends
 							|| resDTO.getScQtCheckListValue() == null) {
 
 						this.getManagedBean().setChecklistScoreType(null);
-
+						this.getManagedBean().setCompanyScoreType(null);
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
 
@@ -6195,6 +6205,10 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setScQtChecklist(checkList);
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSpecType(specType);
+		this.getManagedBean().setToBeRemoveList(
+				new ArrayList<ScQtCheckListScore>());
+		this.getManagedBean().setScQtCheckListScore(null);
+		this.getManagedBean().setScQtContractScore(null);
 		try {
 			this.getManagedBean().setIndex(index);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -6274,7 +6288,10 @@ public class SpecificationBackingBean extends
 				setUserDetails(checkList);
 				this.getManagedBean().setCheckListScore(
 						new ArrayList<ScQtCheckListScore>());
+				this.getManagedBean().setScoringForYears(
+						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setChecklistScoreType(null);
+				this.getManagedBean().setCompanyScoreType(null);
 				this.getManagedBean().setToBeRemoveList(
 						new ArrayList<ScQtCheckListScore>());
 				if (QTConstants.FINANCIAL_GOV_CODE.equalsIgnoreCase(checkList
@@ -8215,6 +8232,7 @@ public class SpecificationBackingBean extends
 
 			IQTSpecSO specSo;
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setTobeRemoveScores(null);
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 
@@ -8412,6 +8430,7 @@ public class SpecificationBackingBean extends
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
 			// resDTO.getScQtCheckList();
 			ScQtCheckList updatedCheckList = resDTO.getScQtCheckList();
+
 			if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(this
 					.getManagedBean().getSpecType())) {
 				this.getManagedBean().getScQtCheckSt2techProposal()
@@ -8430,7 +8449,7 @@ public class SpecificationBackingBean extends
 				financialChecklistEditAction(this.getManagedBean().getIndex(),
 						updatedCheckList, QTConstants.FINANCIAL_SPEC_TYPE);
 			}
-
+			reqDTO.setTobeRemoveScores(null);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -8451,6 +8470,7 @@ public class SpecificationBackingBean extends
 		try {
 			IQTSpecSO specSo;
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setTobeRemoveScores(null);
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
@@ -8649,13 +8669,14 @@ public class SpecificationBackingBean extends
 			reqDTO.setCheckListValue(checkList.getScQtCheckListValue());
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
 			ScQtCheckList updatedCheckList = resDTO.getScQtCheckList();
+
 			this.getManagedBean().getScQtCheckSt2financeProposalList()
 					.remove(this.getManagedBean().getIndex());
 			this.getManagedBean().getScQtCheckSt2financeProposalList()
 					.add(this.getManagedBean().getIndex(), updatedCheckList);
 			financialChecklistEditAction(this.getManagedBean().getIndex(),
 					updatedCheckList, QTConstants.FINANCIAL_SPEC_TYPE);
-
+			reqDTO.setTobeRemoveScores(null);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
