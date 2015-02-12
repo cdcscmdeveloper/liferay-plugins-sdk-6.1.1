@@ -24,7 +24,7 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 		<div style="text-align: right; min-height: 40px;">	
 			<div style="float: left; clear: both;">
-				<p:commandButton value="<<" styleClass="ui-button" action="#{smTrackingDiaryBackingBean.backToPrev}" />
+				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{smTrackingDiaryBackingBean.backToPrev}" />
 			</div>
 		</div>
 		<ac:trackingDiaryDetail dataTable="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
