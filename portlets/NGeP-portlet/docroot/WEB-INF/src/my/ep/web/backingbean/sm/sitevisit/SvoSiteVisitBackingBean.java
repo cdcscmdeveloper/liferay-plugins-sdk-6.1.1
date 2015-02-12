@@ -1426,8 +1426,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			String preLocOwnerShip = lblOwnerShip != null ? ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale) : "";
 
 			DecimalFormat formatter = new DecimalFormat("###,##0.00");
-			String preLocPurchasePrice = smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
-			String preLocRentalRate = smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()).toString() : null;
+			String preLocPurchasePrice = smFacility != null && smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
+			String preLocRentalRate = smFacility != null &&  smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()).toString() : null;
 			
 			context.put("ownerShipType", preLocOwnerShip);
 			context.put("preLocPurchasePrice", preLocPurchasePrice);
@@ -1484,8 +1484,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			String preLocOwnerShip = lblOwnerShip != null ? ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale) : "";
 
 			DecimalFormat formatter = new DecimalFormat("###,##0.00");
-			String preLocPurchasePrice = smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
-			String preLocRentalRate = smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()).toString() : null;
+			String preLocPurchasePrice = smFacility != null && smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
+			String preLocRentalRate = smFacility != null && smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()).toString() : null;
 			
 			context.put("ownerShipType", preLocOwnerShip);
 			context.put("preLocPurchasePrice", preLocPurchasePrice);
