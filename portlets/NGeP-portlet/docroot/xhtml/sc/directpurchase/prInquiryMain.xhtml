@@ -66,7 +66,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					   <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 	
 	                   <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}">
-	                    <ac:spkiPopup id="spkiPopup" postSignAction="#{purchaseInquiryBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
+	                    <ac:spkiPopup id="spkiPopup" postSignAction="#{purchaseInquiryBackingBean.submitPrInquiryPrice(spkiBackingBean.pmDigiSign)}" />
 	                       <p:commandButton value="#{lbl[buttonLabel]}"
 							        styleClass="ui-button"
 								    update="spkiPopup"
