@@ -1659,50 +1659,50 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									additionalItemDesc = row.getCell(11).toString();
 									supplierItem.setItemDesc(additionalItemDesc);
 								}
-
-								//frequency
+								 // Removed Frequency for Bug#3664 
+								/*//frequency
 								if (row.getCell(12) != null && !row.getCell(12).toString().isEmpty()) {
 									frequency = row.getCell(12)
 											.getNumericCellValue();
 									supplierItem.setFrequency(new BigDecimal(
 											frequency));
-								}
+								}*/
 								
 								//model
-								if (row.getCell(13) != null
-										&& !row.getCell(13).toString()
+								if (row.getCell(12) != null
+										&& !row.getCell(12).toString()
 												.isEmpty()) {
-									modelNo = row.getCell(13).toString();
+									modelNo = row.getCell(12).toString();
 									supplierItem.setModelNumber(modelNo);
 								}
 
 								//sku number
-								if (row.getCell(14) != null
-										&& !row.getCell(14).toString()
+								if (row.getCell(13) != null
+										&& !row.getCell(13).toString()
 												.isEmpty()) {
-									skuNo = row.getCell(14).toString();
+									skuNo = row.getCell(13).toString();
 									supplierItem.setSkuNumber(skuNo);
 								}
 
 								//manufacturer no
-								if (row.getCell(15) != null
-										&& !row.getCell(15).toString()
+								if (row.getCell(14) != null
+										&& !row.getCell(14).toString()
 												.isEmpty()) {
-									manfPartNo = row.getCell(15).toString();
+									manfPartNo = row.getCell(14).toString();
 									supplierItem.setManufacturer(manfPartNo);
 								}
 
 								//min order
-								if (row.getCell(16) != null
-										&& !row.getCell(16).toString()
+								if (row.getCell(15) != null
+										&& !row.getCell(15).toString()
 												.isEmpty()) {
-									minOrder = row.getCell(16)
+									minOrder = row.getCell(15)
 											.getNumericCellValue();
 									supplierItem.setMinOrder(minOrder
 											.intValue());
 								}
-
-								//max order
+								 // Removed MaxOrder for Bug#3664 
+								/*//max order
 								if (row.getCell(17) != null
 										&& !row.getCell(17).toString()
 												.isEmpty()) {
@@ -1710,13 +1710,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											.getNumericCellValue();
 									supplierItem.setMaxOrder(maxOrder
 											.intValue());
-								}
+								}*/
 
 								//lead time
-								if (row.getCell(18) != null
-										&& !row.getCell(18).toString()
+								if (row.getCell(16) != null
+										&& !row.getCell(16).toString()
 												.isEmpty()) {
-									leadTime = row.getCell(18)
+									leadTime = row.getCell(16)
 											.getNumericCellValue();
 									supplierItem.setLeadTime(new BigDecimal(
 											leadTime));
@@ -1881,7 +1881,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			dataLs.add(cmItem.getCmMeasurement().getMeasurementName());
 			dataLs.add(cmItem.getCmColor().getColorName());
 
-			catalogueReqDTO = new CatalogueReqDTO();
+			/*catalogueReqDTO = new CatalogueReqDTO();
 			catalogueReqDTO.setSupplierItemId(catalog.getSupplierItemId());
 			CatalogueResDTO catalogueResDTO = catalogueSO.getAllPrice(catalogueReqDTO);
 
@@ -1892,30 +1892,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					cmPricing = pricing;
 				}
 			}
+*/
+			CmStandardPricing cmStandardPricing = catalog.getCmStandardPricing();
+			if(cmStandardPricing.getPricingType().equalsIgnoreCase("01"))
+			{
+				if (cmStandardPricing.getPrice() != null)
+					dataLs.add(cmStandardPricing.getPrice());
+				else
+					dataLs.add("");
 
-			if (cmPricing.getPrice() != null)
-				dataLs.add(cmPricing.getPrice());
-			else
-				dataLs.add("");
+				if (cmStandardPricing.getStartDate() != null)
+					dataLs.add(formater.format(cmStandardPricing.getStartDate()));
+				else
+					dataLs.add("");
 
-			if (cmPricing.getStartDate() != null)
-				dataLs.add(formater.format(cmPricing.getStartDate()));
-			else
-				dataLs.add("");
-
-			if (cmPricing.getEndDate() != null)
-				dataLs.add(formater.format(cmPricing.getEndDate()));
-			else
-				dataLs.add("");
-
+				if (cmStandardPricing.getEndDate() != null)
+					dataLs.add(formater.format(cmStandardPricing.getEndDate()));
+				else
+					dataLs.add("");
+			}
+            // Removed Frequency and MaxOrder for Bug#3664 and Default Value is '1' for MinOrder
 			dataLs.add(catalog.getPmUom().getUomName());
 			dataLs.add(catalog.getItemDesc());
-			dataLs.add(catalog.getFrequency());
+			//dataLs.add(catalog.getFrequency());
 			dataLs.add(catalog.getModelNumber());
 			dataLs.add(catalog.getSkuNumber());
 			dataLs.add(catalog.getManufacturer());
-			dataLs.add(catalog.getMinOrder());
-			dataLs.add(catalog.getMaxOrder());
+			dataLs.add(catalog.getMinOrder()!=null?catalog.getMinOrder():new Integer(1));
+			//dataLs.add(catalog.getMaxOrder());
 			dataLs.add(catalog.getLeadTime());
 
 			addCellToRow(product, no++, dataLs, catalogCellStyle, createHelper);
