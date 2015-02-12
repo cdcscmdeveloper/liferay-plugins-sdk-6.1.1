@@ -22,7 +22,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
-				action="#{evaluationBackingBean.saveEvalutionStageUploadDtls(evaluationBackingBean.managedBean.scQtChecklist)}" />
+				action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
 		</div>
 		<p:spacer height="25" />
 		<br />
@@ -87,11 +87,16 @@
 					<p:inputText style="text-align:right;" size="20" maxlength="18"
 						value="#{evaFinSupplier.totalUserScore}"
 						disabled="#{evaluationBackingBean.managedBean.readOnly}">
-						<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="14" integerOnly="true" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max"
+							value="#{evaluationBackingBean.managedBean.userScores}" />
 					</p:inputText>
 					<p:spacer width="5"></p:spacer>
 					<h:outputText
-						value="/#{evaluationBackingBean.managedBean.scQtChecklist.qtScoreWeightage.score}" />
+						value="/#{evaluationBackingBean.managedBean.userScores}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
