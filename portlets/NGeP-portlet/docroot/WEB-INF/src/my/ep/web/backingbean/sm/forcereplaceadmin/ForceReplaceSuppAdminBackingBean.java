@@ -157,6 +157,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 	}
 
 	private void validate() {
+
+		// check if new admin identificationNo same as existing admin
+		// identificationNo
+		if (getManagedBean()
+				.getReactivateBasic()
+				.getIdentificationNo()
+				.equals(getManagedBean().getReactivateBasic()
+						.getNewIdentificationNo())) {
+			throw new EpException(MessageConst.ERROR_722600);
+		}
+
 		List<SmPersonnel> latestActivePersonnels = getManagedBean()
 				.getSmSupplier().getSmAppl().getSmPersonnels();
 		if (latestActivePersonnels != null && !latestActivePersonnels.isEmpty()) {
@@ -230,7 +241,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				throw new EpException(MessageConst.ERROR_722595);
 			}
 		}
-
 
 	}
 
