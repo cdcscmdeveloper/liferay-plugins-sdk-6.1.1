@@ -136,6 +136,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 	private static final String CONTRACT_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
 	private static final String AGREEMENT_DOC_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true";
+	private static final String FULFILMENT_DOC_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true";
 
 	private boolean supplementValue = true;
 	private ContractBackingBean ctBB = null;
@@ -628,14 +629,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractVerId(contractVerId);
-    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+    	//ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.setValidateContractField(resDTO);
-		contractDetailsBB.getManagedBean().setViewContract(true);
+	//	contractDetailsBB.getManagedBean().setViewContract(true);
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
+//		contractDetailsBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
 		return CONTRACT_PAGE;
 	}
 
