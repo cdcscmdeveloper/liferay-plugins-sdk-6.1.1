@@ -136,7 +136,7 @@
 					
 					<td class="tdContent">
 						<p:selectOneRadio id="bumiId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.bumi']}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.bumiFlg}">
+							value="#{registrationBackingBean.managedBean.userBumiFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						</p:selectOneRadio>
@@ -150,7 +150,7 @@
 					
 					<td class="tdContent">
 						<p:selectOneRadio id="religionId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.religion']}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.muslimFlg}">
+							value="#{registrationBackingBean.managedBean.userMuslimFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
 						</p:selectOneRadio>
