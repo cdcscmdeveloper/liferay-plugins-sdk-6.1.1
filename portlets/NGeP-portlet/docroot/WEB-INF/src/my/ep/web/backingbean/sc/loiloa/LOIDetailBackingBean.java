@@ -1085,7 +1085,9 @@ public class LOIDetailBackingBean extends
 		}
 		getManagedBean().setEditFlag(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
+			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		}
 		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
