@@ -13,7 +13,7 @@
 			action="#{lOIDetailBackingBean.backToPrevious}" />
 
 		<p:commandButton value="Preview Letter" rendered="#{isPendingSubmissionStatus || isPendingNegotiation}"
-			process="@form" update="@all" partialSubmit = "true"
+			update="@all" 
 			action="#{lOIDetailBackingBean.previewLetter}"/>
 			
 					
