@@ -165,7 +165,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
-	
+	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
+
 	private String editorValue;
 	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
 	private BigDecimal balanceToPaid;
@@ -2284,6 +2285,24 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
 		return CONTRACT_PAGE;
+	}
+	
+	public String gotoCommonViewPage(Long contractId) {
+	
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		 ContractReqDTO reqDTO = new ContractReqDTO();
+		 reqDTO.setContractId(contractId);
+		 CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
+	     reqDTO.setContractVerId(latestContractVer.getContractVerId());
+		 reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		 reqDTO.setViewOnly(true);
+	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+	    setValidateContractField(resDTO); 
+	    ConstructSideTabMenu();
+	    getManagedBean().setSelectedTabIndex(0);
+	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
+	    getManagedBean().setWarningPercentage(percentage);
+		return CONTRACT_COMMON_PAGE;
 	}
 	
 	public String gotoUpdatePage(){
