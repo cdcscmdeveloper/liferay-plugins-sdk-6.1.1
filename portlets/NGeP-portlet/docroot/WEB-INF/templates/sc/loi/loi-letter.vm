@@ -34,6 +34,10 @@
          																																						<thead>
          																																						<tr>
          																																							<th>Item</th>
+         																																							<th>Kekerapan / Unit Ukuran</th>
+																																									<th>Bil. Unit Ukuran Sehari</th>
+																																									<th>Bil Hari utk Sebulan</th>
+																																									<th>Tempoh (Bulan)</th>
          																																							<th>Kuantiti</th>
          																																							<th>Unit Ukuran</th>
          																																							<th>Harga Ditawarkan(RM)</th>
@@ -44,10 +48,14 @@
          																																						#foreach( $scLoiLoaItem in $scLoiLoaItems )
          																																						<tr>
          																																							<td>$scLoiLoaItem.scRequestItem.itemName</td>
+																																									<td>$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency</td>
+																																									<td>$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay</td>
+																																									<td>$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth</td>
+																																									<td>$scLoiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth</td>
          																																							<td align="right">$numberDF.format($scLoiLoaItem.qty)</td>
          																																							<td>$scLoiLoaItem.scRequestItem.uom.uomName</td>
          																																							<td align="right">$amountDF.format($scLoiLoaItem.unitPrice)</td>
-         																																							<td align="right">$amountDF.format($scLoiLoaItem.totalPrice)</td>
+         																																							<td align="right">$amountDF.format($scLoiLoaItem.subTotal)</td>
          																																						</tr>
          																																						#end
          																																						</tbody>
