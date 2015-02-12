@@ -110,11 +110,11 @@
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
 			<p:selectOneMenu value="#{orgUnit.recordStatusFlg}"
-				 style="width:40px;">
+				 style="width:40px;" disabled="#{orgUnit.brandNew}">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-				<p:ajax event="change" listener="#{profileManagementBackingBean.orgUnitStatusChange(index)}" 
-			     		update=":form:tvRoleReceivingAddr:dtRoles"/>
+				<p:ajax event="change" listener="#{profileManagementBackingBean.orgUnitStatusChange(index)}" partialSubmit="true" process="@this" 
+			     		update=":form:tvRoleReceivingAddr"/>
 			</p:selectOneMenu>
 		</p:column>
 	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
