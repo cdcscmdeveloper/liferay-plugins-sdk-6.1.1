@@ -12,9 +12,9 @@
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
 							<span class="mandatory">* </span>
 						</ui:fragment>#{lbl['lbl.sc.sp.current.asset']}</LABEL></td>
-				<td colspan="3"><p:inputText id="currentAsset" style="text-align:right"
-						required="true" label="#{lbl['lbl.sc.sp.current.asset']}"
-						disabled="#{statusHide}"
+				<td colspan="3"><p:inputText id="currentAsset"
+						style="text-align:right" required="true"
+						label="#{lbl['lbl.sc.sp.current.asset']}" disabled="#{statusHide}"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
 						size="30">
 						<p:ajax event="blur" process="@this"
@@ -64,8 +64,14 @@
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						value="#{noOfContracts.userScore}" maxlength="18"
 						disabled="#{pageDisable}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '2'}"></p:inputText> <p:spacer
-						width="5"></p:spacer> <h:outputText value="/#{contractUserScore}"
+						rendered="#{ checklistScoreType eq '2'}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="14" integerOnly="true" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max" value="#{contractUserScore}" />
+					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+						value="/#{contractUserScore}"
 						rendered="#{ checklistScoreType eq '2'}" /></td>
 			</tr>
 		</table>
