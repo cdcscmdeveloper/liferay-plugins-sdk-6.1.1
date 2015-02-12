@@ -165,8 +165,11 @@
 				<td class="tdContent"><p:inputText required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
-						size="40" id="companyNameId"  disabled="#{!registrationBackingBean.managedBean.smAppl.smCompanyBasic.brandNew}" /> <p:message id="companyNameIdMsg"
-						for="companyNameId" display="icon" /></td>
+						size="40" id="companyNameId"  
+						disabled="#{!registrationBackingBean.managedBean.smAppl.smCompanyBasic.brandNew and 
+						(registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or 
+						registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)}" /> 
+						<p:message id="companyNameIdMsg" for="companyNameId" display="icon" /></td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.estdate']}" />
