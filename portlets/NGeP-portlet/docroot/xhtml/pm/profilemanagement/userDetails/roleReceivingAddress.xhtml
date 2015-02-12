@@ -43,7 +43,7 @@
 						width="15%">
 
 						<p:selectOneMenu value="#{role.recordStatusFlg}"
-							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew}">
+							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							<p:ajax event="change"
