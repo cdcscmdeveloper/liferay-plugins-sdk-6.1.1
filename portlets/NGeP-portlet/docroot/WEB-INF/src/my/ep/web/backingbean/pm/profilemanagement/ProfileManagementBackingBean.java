@@ -803,6 +803,22 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 	}
+	public void userStatusChange(){
+		logger.info("userStatusChange");
+		if(this.getManagedBean().getSelectedUser().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
+			for(PmUserOrg pmUserOrg : this.getManagedBean().getSelectedUser().getPmUserOrgs()){
+		    	pmUserOrg.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+			if(pmUserOrg.getPmUserRoles()!=null){
+				for(PmUserRole pmUserRole : pmUserOrg.getPmUserRoles()){
+					pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+					userRoleStatusChange(pmUserRole);
+				}
+			}
+		}
+		}
+		}
+	}
 	/*
 	public void changeResponsibleOrgDates(ValueChangeEvent changeEvent){
 		logger.info("changeResponsibleOrgDates");
