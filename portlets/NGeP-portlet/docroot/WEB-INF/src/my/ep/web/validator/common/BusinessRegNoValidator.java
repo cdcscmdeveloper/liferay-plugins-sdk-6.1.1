@@ -192,7 +192,7 @@ public class BusinessRegNoValidator implements Validator {
 			sdf.setLenient(false);
 			try{
 				Date tmpDate = sdf.parse(argValue);
-				if(tmpDate.getYear()>new Date().getYear()){
+				if(tmpDate.getTime()>new Date().getTime()){
 					retVal = false;
 				}
 			}catch(Exception ex){
