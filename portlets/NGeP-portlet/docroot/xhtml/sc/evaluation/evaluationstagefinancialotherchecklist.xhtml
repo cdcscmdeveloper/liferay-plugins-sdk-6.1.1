@@ -9,71 +9,75 @@
 
 
 	<h:panelGroup>
-	<h:panelGroup>
-				<div>
-					<p:commandButton value="#{lbl['lbl.btn.back']}"
-						style="float:left;"
-						action="#{evaluationBackingBean.evaluationBackaction}" />
+		<h:panelGroup>
+			<div>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{evaluationBackingBean.evaluationBackaction}" />
 
-				</div>
-			</h:panelGroup>
-			<p:spacer height="25" />
-			<br />
-			<br />
-			<h:panelGroup>
-				<table>
-					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-						<td><p:inputTextarea style="width:100%"
-								value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
-								rows="2" cols="150" disabled="true"></p:inputTextarea></td>
-					</tr>
-				</table>
-			</h:panelGroup>
+			</div>
+		</h:panelGroup>
+		<p:spacer height="25" />
+		<br />
+		<br />
+		<h:panelGroup>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea style="width:100%"
+							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
+							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
+				</tr>
+			</table>
+		</h:panelGroup>
 
-			<h:panelGroup>
-				<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}"
-					toggleable="true">
+		<h:panelGroup>
+			<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}"
+				toggleable="true">
 
-					<p:dataTable var="othersFinList" id="othersFinListId"
-						editable="true" rows="10"
-						value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
-						rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
-						<ac:paginator for="othersFinListId" />
-
-
-						<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
-							style="width:40%">
-
-							<h:outputText value="#{othersFinList.scQtProposal.supplierNo}"></h:outputText>
+				<p:dataTable var="othersFinList" id="othersFinListId"
+					editable="true" rows="10"
+					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
+					rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
+					<ac:paginator for="othersFinListId" />
 
 
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
+						style="width:40%">
+
+						<h:outputText value="#{othersFinList.scQtProposal.supplierNo}"></h:outputText>
 
 
-						<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
-							style="width:40%">
-							<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
-							style="width:15%">
+					</p:column>
 
 
-							<h:outputText
-								value="#{evaluationBackingBean.getStatusDescById(othersFinList.evaluationStatus.statusId)}"></h:outputText>
+					<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
+						style="width:40%">
+						<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
+					</p:column>
 
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
+						style="width:15%">
 
-						<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
-							style="width:20%">
 
-							<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
-								process="@this" partialSubmit="true"
-								action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList,index,'F')}" />
-						</p:column>
-					</p:dataTable>
-				</p:panel>
-			</h:panelGroup>
+						<h:outputText
+							value="#{evaluationBackingBean.getStatusDescById(othersFinList.evaluationStatus.statusId)}"></h:outputText>
+
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
+						style="width:20%">
+
+						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
+							rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
+							process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList,index,'F')}" />
+						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
+							rendered="#{othersFinList.evaluationStatus.statusId eq '61601'}"
+							process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList,index,'F')}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
 	</h:panelGroup>
 </ui:composition>
