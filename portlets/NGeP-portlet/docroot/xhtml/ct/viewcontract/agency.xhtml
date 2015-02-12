@@ -1,0 +1,103 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+   <p:panel id="agencyId" header="#{lbl['lbl.ct.panel.agency']}"  toggleable="true"  toggleSpeed="500">
+       
+       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/><br/>
+       <p:dataTable id="tableAgencyDetails" var="agencyData" 
+             value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" >
+            <ac:paginator for="tableAgencyDetails"/>
+                  
+     
+               <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:26%;white-space:normal;">
+				    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
+			   </p:column>
+			
+			   <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:32%;white-space:normal;">
+				   <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
+			    </p:column>
+			
+			    <p:column style="width:10%;white-space:normal;">
+			  	    <f:facet name="header">
+					   <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
+               		   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
+               	    </f:facet>
+           		   <h:outputText  value="#{agencyData.ceilingAmount}"  style="width:100px;" maxlength="23"  styleClass="ppRightBtn">
+			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 	    </h:outputText>
+		    	</p:column>
+		   
+		   	     <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;">
+			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"   size="8"  disabled="true"
+		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+		            </p:calendar>
+		          </p:column>
+		   	
+		   	      <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;">
+				  <h:outputText value="#{agencyData.expDate}">
+				      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
+		   	   </p:column>
+		   	
+		   	   <p:column style="width:8%;white-space:normal;">
+		   	 	   <f:facet name="header">
+					  <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
+               		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
+               	   </f:facet>
+		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;" disabled="true"
+		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != agencyData.orgProfile.parentOrgProfile.orgName}"/>
+		       </p:column>
+		        
+		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;">
+		   	        <p:outputLabel id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
+		       </p:column>
+			</p:dataTable> 
+	  	
+	  	<p:outputPanel id="agencyDeliveryAddress">
+	        <h:panelGroup  style="width:100%" rendered="#{contractDetailsBackingBean.managedBean.selectedAgency != null}">	     
+	           	<div style="clear:both" />
+	           	<p:spacer height="20"/>
+	           	<p:dataTable id="deliveryAddressTbl" var="deliveryAddress" 
+	           		value="#{contractDetailsBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
+					rowKey="#{deliveryAddress}" selection="#{contractDetailsBackingBean.managedBean.selectedListOfAddress}">
+					<ac:paginator for="deliveryAddressTbl"/>
+					<p:column selectionMode="multiple" style="width:3%"  
+						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+					<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="width:100%; white-space:normal;">
+					   <h:outputText value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" />
+					</p:column>
+				</p:dataTable>
+				<div>
+		   		<table style="width:100%; margin-top:5px">
+				<tr><td class="TableFieldLeft" width="80%"></td>
+			 	<td>
+			   	<table><tr>
+			   		<td>
+			   		<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE"
+						postUpdateListener="contractDetailsBackingBean.addDeliveryAddress(contractDetailsBackingBean.managedBean.addressTypeList)"
+						headerText="#{lbl['lbl.ct.delivery.address']}" 
+						buttonLabel="#{lbl['lbl.btn.add']}"
+						selectionMode="multiple"
+						saveObject="contractDetailsBackingBean.managedBean.addressTypeList"
+						conditionField="recordStatus^1|addressType^#{contractDetailsBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{contractDetailsBackingBean.managedBean.selectedAgency.orgProfile.orgProfileId}"
+						update=":form:deliveryAddressTbl"
+						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+					<ac:lovPopup />
+					</td>
+				</tr></table>
+				</td>
+			    </tr>
+				</table>
+	      		</div>
+		      
+				<p:spacer height="20"/>		
+			</h:panelGroup>
+	    </p:outputPanel> 
+	   </p:panel>  
+</ui:composition>                                      
