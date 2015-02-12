@@ -1564,12 +1564,12 @@ public class SmApplicationBackingBean extends
 		rqDto.setCompanyTypeCode(getManagedBean().getSmAppl().getSmSupplier()
 				.getBusinessType());
 		DocumentResDTO rsDTO = null;
-		if (rqDto.getCategoryL3Ids() != null
-				&& !rqDto.getCategoryL3Ids().isEmpty()) {
-			rsDTO = retrieveSupportingDocumentList(rqDto);
-		} else {
-			log.info(" **** Not calling supporting doc API as there are not categories for this supplier **** ");
-		}
+		// if (rqDto.getCategoryL3Ids() != null
+		// && !rqDto.getCategoryL3Ids().isEmpty()) {
+		rsDTO = retrieveSupportingDocumentList(rqDto);
+		// } else {
+		// log.info(" **** Not calling supporting doc API as there are not categories for this supplier **** ");
+		// }
 
 		if (rsDTO != null && rsDTO.getDocumentList() != null
 				&& !rsDTO.getDocumentList().isEmpty()) {
