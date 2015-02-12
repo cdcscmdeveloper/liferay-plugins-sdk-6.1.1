@@ -89,6 +89,9 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmAssociationBody[] selectedAssociationBodies;
 	
 	private Long myCountryId;
+
+	private Integer userBumiFlg;
+	private Integer userMuslimFlg;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -489,4 +492,19 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.myCountryId = myCountryId;
 	}
 
+	public Integer getUserMuslimFlg() {
+		return userMuslimFlg;
+	}
+
+	public void setUserMuslimFlg(Integer userMuslimFlg) {
+		this.userMuslimFlg = userMuslimFlg;
+	}
+
+	public Integer getUserBumiFlg() {
+		return userBumiFlg;
+	}
+
+	public void setUserBumiFlg(Integer userBumiFlg) {
+		this.userBumiFlg = userBumiFlg;
+	}
 }
