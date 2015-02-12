@@ -86,9 +86,9 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{flTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					icon="ui-icon-search" update="resultPanel" />
+					update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{flTrackingDiaryBackingBean.reset}" icon="ui-icon-reset" update=":form" />
+					action="#{flTrackingDiaryBackingBean.reset}" update=":form" />
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
