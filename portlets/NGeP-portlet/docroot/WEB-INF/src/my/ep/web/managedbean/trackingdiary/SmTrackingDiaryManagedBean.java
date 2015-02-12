@@ -3,6 +3,7 @@ package my.ep.web.managedbean.trackingdiary;
 import java.util.Date;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -14,6 +15,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -33,7 +35,17 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 	private String applicationType;
 	private SmSupplier smSupplier;
 	public IPagingDataModel<SmSupplier> smDocumentDataModel = new SearchPagingDataModel();
-	
+
+	@ManagedProperty(value="#{spkiBackingBean}")
+	private SpkiBackingBean spkiBackingBean;
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
+	}
+
 	public class SearchPagingDataModel extends PagingDataModel<SmSupplier> {
 
 		private static final long serialVersionUID = 1L;

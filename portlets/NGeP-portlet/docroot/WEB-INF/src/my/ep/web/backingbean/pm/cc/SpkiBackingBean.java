@@ -89,16 +89,6 @@ public class SpkiBackingBean {
 		logger.info(message);
 	}
 	
-
-	public PmDigiSign getPmDigiSign() {
-		return pmDigiSign;
-	}
-
-
-	public void setPmDigiSign(PmDigiSign pmDigiSign) {
-		this.pmDigiSign = pmDigiSign;
-	}
-
 	public void getChallengeQuestions(){ 
 	try{
 			// Create property file
@@ -138,6 +128,7 @@ public class SpkiBackingBean {
 			ex.printStackTrace();
 		}
 	}
+	
 	public String generateSecurityToken(){
 		File f = new File("kmc.properties");
 		String tok = null;
@@ -162,7 +153,6 @@ public class SpkiBackingBean {
 			ex.printStackTrace();
 //			fail(ex.getMessage());
 		}
-		
 		return tok;
 	}
 	
@@ -204,38 +194,39 @@ public class SpkiBackingBean {
 			challenges.put(challengeQues1, challengeAns1);
 
 			// Simulate the data ready to sign
-			String dataForSigning = "This is data for signing!";
+			String dataForSigning = originalText;
 			
 			// Simulate usel expression that maps to a server side
  
 			String pin = getPassword();
 			
+			System.out.println("SIGN" + getChallengeQues1() + getChallengeAns1() + getPassword());
 			// Request service to signData based on the answered challenges and data 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("800808081011","cdc", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("700101089093","eP-1400F5007", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				// application take over from here for the digital signature handling
 				// Here is sample to write the signature to file...
-				FileOutputStream fos = new FileOutputStream("sign.bin");
-				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				fos.flush();
-				fos.close();
-				System.out.println("Data signing successful. Signature saved to sign.bin");
-//				break;
+//				FileOutputStream fos = new FileOutputStream("sign.bin");
+//				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
+//				fos.flush();
+//				fos.close();
+//				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
+				String s = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
+				System.out.println("Data signing successful. " +  s);
+				break;
 
 			default:
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
 				return "SIGNEDTEXT";
 			}
 			
-			
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 		return "SIGNEDTEXT";
-
 	}
 	public void spkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
         String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("inputTextBeforeSign");
@@ -350,5 +341,13 @@ public class SpkiBackingBean {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
 	}
 }
