@@ -118,7 +118,6 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.type.sc.TermType;
 import my.ep.util.MessageUtils;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.CommonUIConst;
@@ -130,6 +129,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -647,7 +647,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
-		//retrieveLOIList(getManagedBean().getSourceId());
+		retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -1113,6 +1113,23 @@ public class LOIDetailBackingBean extends
 
 	private void populateLOIDetails(AwardSupplierResDTO resDTO) {
 		ScLoi scLoi = resDTO.getScLoi();
+		
+		// calc total items in award details
+		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
+			
+			BigDecimal subTotal = null;
+			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
+			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+				subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+				scLoiLoaItem.setSubTotal(subTotal);
+				totalAmount = totalAmount.add(subTotal);
+			}
+			scLoi.setLoiAmt(totalAmount);
+			scLoi.setScLoiLoaItems(scLoiLoaItems);
+		}
+
 		// loi details
 		getManagedBean().setScLoi(scLoi);
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -2116,15 +2133,37 @@ public class LOIDetailBackingBean extends
 		String title = scLoiLoa.getTitle();
 		title = title.replaceAll("&", "&#38;");
 		context.put("title", title);
-		
+		List<ScLoiLoaItem> loiloaItems= new ArrayList<ScLoiLoaItem>();
 		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
-			LOADetailBackingBean backingBean = new LOADetailBackingBean();
+			loiloaItems = scLoi.getScLoiLoaItems();
 			
-			for (ScLoiLoaItem scLoiLoaItem : scLoi.getScLoiLoaItems()) {
-				scLoiLoaItem.setTotalPrice(backingBean.calcSubTotalPrice(scLoiLoaItem));
+			for (ScLoiLoaItem scLoiLoaItem : loiloaItems) {
+				if(scLoiLoaItem.getScRequestItem().getItemName() != null && !scLoiLoaItem.getScRequestItem().getItemName().isEmpty()){
+					String itemName= scLoiLoaItem.getScRequestItem().getItemName();
+					itemName = itemName.replaceAll(" & ", "&#38;");
+					scLoiLoaItem.getScRequestItem().setItemName(itemName);
+				}
+
+				if(scLoiLoaItem.getScRequestItem().getTplSpecQuestion() != null && scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster() != null ){
+					BigDecimal  bigDecimal = BigDecimal.valueOf(0d);
+					if(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerDay() == null){
+						scLoiLoaItem.getScRequestItem().getTplSpecQuestion().setClUomPerDay(bigDecimal);
+					}
+
+					if(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomFrequency() == null){
+						scLoiLoaItem.getScRequestItem().getTplSpecQuestion().setClUomFrequency(bigDecimal);
+					}
+
+					if(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerMonth() == null){
+						scLoiLoaItem.getScRequestItem().getTplSpecQuestion().setClUomPerMonth(bigDecimal);
+					}
+
+					if(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth() == null){
+						scLoiLoaItem.getScRequestItem().getTplSpecQuestion().setClDurationMonth(bigDecimal);
+					}
+				}
 			}
-			
-			context.put("scLoiLoaItems", scLoi.getScLoiLoaItems());
+			context.put("scLoiLoaItems", loiloaItems);
 		}
 		
 		if (scLoi.getScNegoLocations() != null && scLoi.getScNegoLocations().size() > 0) {
@@ -3251,6 +3290,42 @@ public class LOIDetailBackingBean extends
 			}	
 		}
 	}
+	
+	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
+		BigDecimal total = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+		
+		/*		BigDecimal total = scLoiLoaItem.getUnitPrice();
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClUomFrequency() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClUomFrequency());
+		}
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClUomPerDay() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClUomPerDay());
+		}
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClUomPerMonth() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClUomPerMonth());
+		}
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClDurationMonth() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClDurationMonth());
+		}
+
+		total = total.multiply(scLoiLoaItem.getQty());*/
+
+		return total;
+	}
+	
 
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
