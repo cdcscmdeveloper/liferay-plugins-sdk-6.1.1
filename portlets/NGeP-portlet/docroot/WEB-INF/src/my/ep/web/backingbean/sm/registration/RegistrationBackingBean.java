@@ -215,12 +215,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String proceedToFirstUserRegistration() {
 		log.info("****proceedToFirstUserRegistration******");
 		
-		//added to init Bumi and Religion not to have default value for first user registration
-		if(getManagedBean().getSmPersonnel()!=null){
-			getManagedBean().getSmPersonnel().setBumiFlg(3);
-			getManagedBean().getSmPersonnel().setMuslimFlg(3);
-		}
-		
 		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			throw new EpException(MessageConst.ERROR_721011);
@@ -412,6 +406,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
 		smPersonnel.setClerical(true);
+		
+		//if businesstype is not individual, set personnel bumi flag or muslim flag 
+		if(!smSupp.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)){
+			smPersonnel.setBumiFlg(getManagedBean().getUserBumiFlg());
+			smPersonnel.setMuslimFlg(getManagedBean().getUserMuslimFlg());
+		}
 
 		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
 		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
