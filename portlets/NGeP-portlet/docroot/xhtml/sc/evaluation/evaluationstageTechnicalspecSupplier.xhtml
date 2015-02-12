@@ -11,8 +11,7 @@
 	<h:panelGroup>
 		<h:panelGroup>
 			<div>
-				<p:commandButton value="#{lbl['lbl.btn.back']}"
-					style="float:left;"
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 					action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			</div>
@@ -70,6 +69,12 @@
 
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 							process="@this" partialSubmit="true"
+							rendered="#{templateSpec.evaluationStatus.statusId eq '61600'}"
+							action="#{evaluationBackingBean.othersTechnicalEvaluate(templateSpec,index,'T')}" />
+
+						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
+							process="@this" partialSubmit="true"
+							rendered="#{templateSpec.evaluationStatus.statusId eq '61601'}"
 							action="#{evaluationBackingBean.othersTechnicalEvaluate(templateSpec,index,'T')}" />
 					</p:column>
 				</p:dataTable>
