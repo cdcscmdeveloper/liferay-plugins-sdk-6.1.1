@@ -228,14 +228,14 @@
 							          <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/>
 							     </f:facet>
 							
-								<h:outputLabel value="#{supplierItem.bestPrice}" >
+								<h:outputLabel value="#{supplierItem.bestPrice}" rendered="#{supplierItem.bestPrice>0}" >
 									<f:convertNumber pattern="#,###0.00" />
 								</h:outputLabel>
 								
 							</p:column>
 							
 							<p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
-								<h:outputLabel value="#{catalogueBackingBean.getPriceType(supplierItem.docId)}" />
+								<h:outputLabel value="#{catalogueBackingBean.getPriceType(supplierItem.docId, supplierItem.contractNo)}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.cm.action']}" rendered="#{unspscCodeBackingBean.requisitioner}">
