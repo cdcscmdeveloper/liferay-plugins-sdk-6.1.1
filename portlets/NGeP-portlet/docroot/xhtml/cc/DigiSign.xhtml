@@ -14,23 +14,23 @@
 	</ui:define>
    <ui:define name="contentSection">
 	 <h:panelGrid id="asd" columns="1" cellpadding="5">
-	   <p:commandLink value="Chall Resp Update" update="asd" action="#{spkiBackingBean.RequestChallRespUpdate}">
+	   <p:commandLink value="Chall Resp Update" update="asd" action="#{softCertMaintenanceBackingBean.RequestChallRespUpdate}">
 		</p:commandLink> 
 		<p:spacer width="13" />
-	      <p:commandLink value="Change PIN" update="asd" action="#{spkiBackingBean.RequestChangePIN}">
+	      <p:commandLink value="Change PIN" update="asd" action="#{softCertMaintenanceBackingBean.RequestChangePIN}">
 		</p:commandLink>
 		<p:spacer width="13" />
-		   <p:commandLink value="Reset PIN" update="asd" action="#{spkiBackingBean.RequestResetPIN}">
+		   <p:commandLink value="Reset PIN" update="asd" action="#{softCertMaintenanceBackingBean.RequestResetPIN}">
 		</p:commandLink>
 		<p:spacer width="32" />
-		   <p:commandLink value="Revoke Cert" update="asd" action="#{spkiBackingBean.RequestRevokeCert}">
+		   <p:commandLink value="Revoke Cert" update="asd" action="#{softCertMaintenanceBackingBean.RequestRevokeCert}">
 		</p:commandLink>
 		<p:spacer width="7" />
 	   </h:panelGrid>
 	<h:panelGrid columns="1" cellpadding="5">
 <p:commandButton value="Submit"  action="#{spkiBackingBean.getChallengeQuestions}" update="aasd" oncomplete="spki_dlg.show();"  />	 
 	</h:panelGrid>
- <ac:spkiPopup  id="aasd" textBeforeSign="123" postSignAction="#{gpkiBackingBean.gsignAction()}" /> 
+ <ac:spkiPopup  id="aasd" challengeQues1="#{spkiBackingBean.challengeQues1}"  /> 
 	</ui:define>
 		    
 </ui:composition>				
