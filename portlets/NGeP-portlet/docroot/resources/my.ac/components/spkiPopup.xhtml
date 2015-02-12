@@ -11,8 +11,10 @@
 <cc:interface>
 	<cc:attribute name="beforeSignText" />
 	<cc:attribute name="postSignAction" method-signature="java.lang.String action()" />
-	<cc:attribute name="enableAutoUpdate" required="false"
-			method-signature="void action()" />
+	<cc:attribute name="enableAutoUpdate" required="false" method-signature="void action()" />
+	<cc:attribute name="challengeQues1" />
+	<cc:attribute name="challengeAns1" />
+	<cc:attribute name="password" />
 </cc:interface>
 
 <cc:implementation>
@@ -38,11 +40,11 @@
         <span id="#{cc.clientId}">
 	        <h:outputLabel value="#{lbl['lbl.cc.spki.title']}" />
 			<h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
-	        	<h:outputLabel value="#{spkiBackingBean.challengeQues1}" />
-	           	<p:inputText value="#{spkiBackingBean.challsAnswer}" />
+	        	<h:outputLabel value="#{cc.attrs.challengeQues1}" />
+	           	<p:inputText value="#{cc.attrs.challengeAns1}" />
 	        	
 	            <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-	            <p:password binding="#{pin1}" id="password" value="#{spkiBackingBean.password}"  />
+	            <p:password binding="#{pin1}" id="password" value="#{cc.attrs.password}"  />
 	 			<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" />        
 			</h:panelGrid>
 		</span>
