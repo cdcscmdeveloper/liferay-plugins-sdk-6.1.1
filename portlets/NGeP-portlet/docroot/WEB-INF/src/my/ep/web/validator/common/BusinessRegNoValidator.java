@@ -35,7 +35,7 @@ public class BusinessRegNoValidator implements Validator {
 		String businessType = "";
 
 		if (value != null && StringUtils.isNotBlank(value.toString())) {
-			if (dropdown != null) {
+			if (dropdown != null && dropdown.getValue()!=null) {
 				businessType = dropdown.getValue().toString();
 
 				if (robList.contains(businessType)) {
