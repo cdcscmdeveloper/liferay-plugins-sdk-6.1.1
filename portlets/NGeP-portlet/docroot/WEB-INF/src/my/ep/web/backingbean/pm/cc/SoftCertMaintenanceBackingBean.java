@@ -27,16 +27,16 @@ import com.liferay.portal.kernel.exception.SystemException;
  * @author Alvin
  * 
  */
-@ManagedBean(name = "spkiBackingBean")
+@ManagedBean(name = "softCertMaintenanceBackingBean")
 @SessionScoped
-public class SoftCertMaintenance {
+public class SoftCertMaintenanceBackingBean {
 	
     FacesScopes facesScope = new FacesScopes();
 
-	public SoftCertMaintenance() {}
+	public SoftCertMaintenanceBackingBean() {}
 	
 	private static final Logger logger = EpLogger
-			.getLogger(SoftCertMaintenance.class);
+			.getLogger(SoftCertMaintenanceBackingBean.class);
 
 	public String generateSecurityToken(){
 		File f = new File("kmc.properties");
