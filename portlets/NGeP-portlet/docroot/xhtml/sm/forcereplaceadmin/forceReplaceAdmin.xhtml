@@ -1,0 +1,135 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection" />
+	
+	<ui:define name="contentSection">
+	
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	
+	<p:outputPanel id="verificationPanel">
+		<p:messages id="messages" showDetail="true" showSummary="false"
+					autoUpdate="true"
+					closable="true" escape="false" />
+		<table>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.businessregno']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText id="businessRegNo"
+						label="#{lbl['lbl.sm.businessregno']}"
+						value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.regNo}"
+						size="35" maxlength="20" required="true"  />
+					<p:message id="businessRegNoMsg" for="businessRegNo"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sm.estdate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td><p:calendar showOn="button" navigator="true"
+						display="inline" required="true" readonlyInput="true"
+						label="#{lbl['lbl.sm.estdate']}" id="estDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{forceReplaceSuppAdminBackingBean.getCurrDate()}"
+						value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.establishDate}" />
+					<p:message id="estDateMsg" for="estDate"
+							showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.suppAdmin.idno']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText
+						label="#{lbl['lbl.sm.person.composition.suppAdmin.idno']}"
+						required="true" id="idNo"
+						value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.identificationNo}"
+						size="35" maxlength="12">
+					</p:inputText>
+					<p:message id="idNoMsg" for="idNo"
+							showSummary="true" showDetail="false" display="icon" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idtype']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:selectOneMenu id="newAdminIdTypeId" required="true"
+						label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idtype']}"
+						value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationType}"
+						style="width:200px">
+						<f:selectItems
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.identificationTypes}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{forceReplaceSuppAdminBackingBean.assignIdentificationType}"
+							update="newAdminIdNoPanelId" />
+					</p:selectOneMenu>
+					<p:message id="newAdminIdTypeIdMsg" for="newAdminIdTypeId"
+						showSummary="true" showDetail="false" display="icon" />
+				</td>
+			</tr>
+			
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:outputPanel id="newAdminIdNoPanelId">
+							<p:inputText
+								label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}"
+								required="true" id="newAdminIcNo"
+								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq 'I'}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
+								size="35" maxlength="12">
+								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							</p:inputText>
+							<p:message id="newAdminIcNoMsg" for="newAdminIcNo"
+									showSummary="true" showDetail="false" display="icon" />
+							
+							<p:inputText
+								label="#{lbl['lbl.sm.userprofile.idno']}"
+								required="true" id="newAdminPasptNo"
+								rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode ne 'I'}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.reactivateBasic.newIdentificationNo}"
+								size="35" maxlength="15">
+							</p:inputText>
+							<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo"
+								showSummary="true" showDetail="false" display="icon" />
+						</p:outputPanel>
+					</td>
+				</tr>
+			
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"  process="verificationPanel" update="@form"
+						action="#{forceReplaceSuppAdminBackingBean.submit}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				</td>
+			</tr>
+	
+		</table>
+	</p:outputPanel>
+	
+	
+	<ui:include src="/xhtml/sm/shared/forcereplaceadmin/tncPopup.xhtml" />
+	
+	</ui:define>
+
+
+</ui:composition>
