@@ -110,7 +110,7 @@
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
 			<p:selectOneMenu value="#{orgUnit.recordStatusFlg}"
-				 style="width:40px;" disabled="#{orgUnit.brandNew}">
+				 style="width:40px;" disabled="#{orgUnit.brandNew or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<p:ajax event="change" listener="#{profileManagementBackingBean.orgUnitStatusChange(index)}" partialSubmit="true" process="@this" 
