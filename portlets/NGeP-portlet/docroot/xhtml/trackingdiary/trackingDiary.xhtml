@@ -24,15 +24,14 @@
 				<h:column>
 					<p:selectOneMenu value="#{trackingDiaryBackingBean.managedBean.codeType}">
 <!-- 						<f:selectItems value="#{trackingDiaryBackingBean.getModule()}" /> -->
-<!-- 						<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues('MOD')}" /> -->
-			 			<f:selectItem itemLabel="Select One" itemValue="" />
-			            <f:selectItem itemLabel="Supplier Management" itemValue="SM" />
-<!-- 			            <f:selectItem itemLabel="Procurement Plan" itemValue="PP" />					 -->
-			            <f:selectItem itemLabel="Contract Management" itemValue="CT" />
-			            <f:selectItem itemLabel="Order Fufillment" itemValue="FL" />					
-			            <f:selectItem itemLabel="Catalogue Management" itemValue="CM" />
-			            <f:selectItem itemLabel="Sourcing Management" itemValue="SC" />					
+<!-- 				<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('MOD')}" /> -->
+				 		<f:selectItem itemLabel="Select One" itemValue="" />
+			            <f:selectItem itemLabel="Catalogue" itemValue="CM" />
 			            <f:selectItem itemLabel="Codification" itemValue="CD" />					
+			            <f:selectItem itemLabel="Supplier Management" itemValue="SM" />
+			            <f:selectItem itemLabel="Contract Management" itemValue="CT" />
+			            <f:selectItem itemLabel="Quatation/Tender " itemValue="SC" />					
+			            <f:selectItem itemLabel="Fufillment" itemValue="FL" />					
 			        	<p:ajax event="change" partialSubmit="true" update="suppQualPnl"/>
 					</p:selectOneMenu>
 

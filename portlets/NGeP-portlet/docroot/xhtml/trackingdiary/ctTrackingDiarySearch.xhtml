@@ -60,21 +60,21 @@
 							value="#{ctTrackingDiaryBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/></td>
 				</tr>
-				<tr>
-					<td width="35%"><p:outputLabel
-							value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td>
-					<td width="35%"><p:calendar mode="popup" showOn="button"
-							readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							value="#{ctTrackingDiaryBackingBean.managedBean.searchContractFromDuration}">
-						</p:calendar>
-						<p:spacer width="5" />
-						<p:calendar mode="popup" showOn="button"
-							readonlyInput="true" 
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							value="#{ctTrackingDiaryBackingBean.managedBean.searchContractToDuration}">
-						</p:calendar></td>
-				</tr>
+<!-- 				<tr> -->
+<!-- 					<td width="35%"><p:outputLabel -->
+<!-- 							value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" /></td> -->
+<!-- 					<td width="35%"><p:calendar mode="popup" showOn="button" -->
+<!-- 							readonlyInput="true" -->
+<!-- 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
+<!-- 							value="#{ctTrackingDiaryBackingBean.managedBean.searchContractFromDuration}"> -->
+<!-- 						</p:calendar> -->
+<!-- 						<p:spacer width="5" /> -->
+<!-- 						<p:calendar mode="popup" showOn="button" -->
+<!-- 							readonlyInput="true"  -->
+<!-- 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
+<!-- 							value="#{ctTrackingDiaryBackingBean.managedBean.searchContractToDuration}"> -->
+<!-- 						</p:calendar></td> -->
+<!-- 				</tr> -->
 				<tr>
 					<td width="35%"><p:outputLabel value="Status" /></td>
 					<td width="35%"><p:selectOneMenu style="width: 314px;"
