@@ -70,7 +70,17 @@
 	  <p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
-				<f:event listener="#{contractDetailsBackingBean.preRenderView}"  type="preRenderView"  />	
+		<f:event listener="#{contractDetailsBackingBean.preRenderView}"  type="preRenderView"  />	
+		<table style="width: 100%;">
+		<tr>
+			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+					immediate="true"
+					rendered="#{contractDetailsBackingBean.managedBean.taskId==null}"
+					action="#{contractDetailsBackingBean.gotoBackPage}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /></td>
+		 </tr>
+		 </table>
+		 
 	  	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">

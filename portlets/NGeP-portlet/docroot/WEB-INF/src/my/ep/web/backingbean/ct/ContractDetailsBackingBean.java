@@ -2894,7 +2894,12 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		}	
 	}
 
-public void removeAddRow(){
+   public String gotoBackPage(){
+ 	    return getManagedBean().getGotoPreviewPage();
+    }
+   
+   
+  public void removeAddRow(){
 	try {
 		if(getManagedBean().getContractVer().getCtPerformanceBonds() != null){
 			Iterator<CtPerformanceBond> performanceBond = getManagedBean().getContractVer().getCtPerformanceBonds().iterator();

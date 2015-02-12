@@ -184,6 +184,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String textBeforeSign;
 	private String buttonAction;
 	private int counter;
+	private String gotoPreviewPage;
 	
 	private String financialAccNo;
 	private boolean buttonHideActive = true;
@@ -1106,6 +1107,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setCtContractStatus(Long ctContractStatus) {
 		this.ctContractStatus = ctContractStatus;
 	}	
+
+	public String getGotoPreviewPage() {
+		return gotoPreviewPage;
+	}
+
+	public void setGotoPreviewPage(String gotoPreviewPage) {
+		this.gotoPreviewPage = gotoPreviewPage;
+	}
 
 	public List<CtAgencyAddress> getSelectedListOfAddress() {
 		return selectedListOfAddress;
