@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		
+		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+	
+		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<p:commandButton value="#{lbl['lbl.btn.back']}"
+							immediate="true" action="#{forceReplaceSuppAdminBackingBean.cancelAddInFo}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					</td>
+					<td style="white-space: nowrap; float: right;">
+						<p:commandButton value="#{lbl['lbl.sm.button.save']}" update=":form"
+							action="#{forceReplaceSuppAdminBackingBean.replaceWithNewUser}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					</td>
+				</tr>
+			</table>	
+		</p:panel>
+		
+		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+			<p:panel id="addInfoPanel" 
+				styleClass="noBorders tr,noBorders td" style="width:100%;"
+				toggleable="true">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.forcereplaceadmin.headerpanel.addinfo']}" />
+				</f:facet>
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="newAdminName"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.name}"
+								size="35" required="true"
+								label="#{lbl['lbl.sm.userprofile.name']}"/>
+								<p:message id="newAdminNameMsg" for="newAdminName"
+								showSummary="true" showDetail="false" display="icon" /></td>
+		
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="newAdminNationality"
+								label="#{lbl['lbl.sm.userprofile.nationality']}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.pmCountry.countryId}"
+								style="width: 207px;margin-bottom: 5px;" required="true">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems
+									value="#{forceReplaceSuppAdminBackingBean.managedBean.nationalities}" />
+							</p:selectOneMenu>
+							<p:message id="newAdminNationalityMsg" for="newAdminNationality"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="newAdminEmail"
+								label="#{lbl['lbl.sm.userprofile.email']}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
+								size="40" required="true">
+								<f:validateRegex 
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+								</p:inputText>
+							<p:message id="newAdminEmailMsg" for="newAdminEmail"
+								showSummary="true" showDetail="false" display="icon" /></td>
+		
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="newAdminDesignation"
+								label="#{lbl['lbl.sm.userprofile.designation']}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.designation}"
+								size="35" required="true" />
+								<p:message id="newAdminDesignationMsg" for="newAdminDesignation"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.phone']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="newAdminPhone"
+								label="#{lbl['lbl.sm.userprofile.phone']}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.phoneNo}"
+								size="35" maxlength="12" required="true" 
+								validatorMessage="#{lbl['lbl.sm.userprofile.phone']} - #{lbl['lbl.sm.invalidNo']}">
+								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+								</p:inputText>
+							<p:message id="newAdminPhoneMsg" for="newAdminPhone"
+								showSummary="true" showDetail="false" display="icon" /></td>
+		
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.mobile']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="newAdminMobile"
+								label="#{lbl['lbl.sm.userprofile.mobile']}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileNo}"
+								size="35" maxlength="12" required="true" 
+								validatorMessage="#{lbl['lbl.sm.userprofile.mobile']} - #{lbl['lbl.sm.invalidNo']}">
+								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+								</p:inputText>
+							<p:message id="newAdminMobileMsg" for="newAdminMobile"
+								showSummary="true" showDetail="false" display="icon" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+									value="#{lbl['lbl.sm.userprofile.dob']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:calendar showOn="button" navigator="true"
+								display="inline" required="true" readonlyInput="true"
+								label="#{lbl['lbl.sm.person.dob']}" id="newAdminDob"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0" maxdate="#{forceReplaceSuppAdminBackingBean.getCurrDate()}"
+								value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.birthDate}" />
+							<p:message id="newAdminDobMsg" for="newAdminDob"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						<td></td>
+						<td></td>
+					</tr>
+		
+				</table>
+			</p:panel>
+		</p:panelGrid>
+		
+		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/addInfoAddress.xhtml" />
+
+	</ui:define>
+</ui:composition>
