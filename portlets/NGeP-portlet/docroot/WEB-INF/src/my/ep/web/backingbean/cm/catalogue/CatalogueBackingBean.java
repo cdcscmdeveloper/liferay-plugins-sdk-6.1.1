@@ -61,6 +61,7 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -3895,21 +3896,29 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "catalogMaintenanceFile";
 	}
 	
-	public String getPriceType(Long docId){
+	public String getPriceType(Long docId, String contractNo){
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
 		try{
-			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-			reqDTO.setSupplierItemId(docId);
-			reqDTO.setToken(new FacesScopes().getUserLocale().getLanguage());
-			CatalogueResDTO resDTO = catalogueSO.getAllPriceType(reqDTO);
-			
 			String allPrice = "";
-			if(resDTO.getList() != null){
-			   for(int i=0;i<resDTO.getList().size();i++){
-				   allPrice+=resDTO.getList().get(i);
-				   if(i!=resDTO.getList().size()-1)
-					   allPrice+=", "; 
-			   }
+			if(contractNo!=null && contractNo.length()>0) {
+				ContractItemReqDTO ctItemReqDTO = new ContractItemReqDTO();
+				ctItemReqDTO.setContractItemId(docId);
+				ContractItemResDTO ctItemResDTO = contractItemSO.getContractItem(ctItemReqDTO);
+				allPrice = this.getParameterDesc(ctItemResDTO.getCtContractItem().getPriceType());
+			} else {
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+				reqDTO.setSupplierItemId(docId);
+				reqDTO.setToken(new FacesScopes().getUserLocale().getLanguage());
+				CatalogueResDTO resDTO = catalogueSO.getAllPriceType(reqDTO);
+				
+				if(resDTO.getList() != null){
+				   for(int i=0;i<resDTO.getList().size();i++){
+					   allPrice+=resDTO.getList().get(i);
+					   if(i!=resDTO.getList().size()-1)
+						   allPrice+=", "; 
+				   }
+				}
 			}
 			return allPrice;
 		}catch(Exception e){
