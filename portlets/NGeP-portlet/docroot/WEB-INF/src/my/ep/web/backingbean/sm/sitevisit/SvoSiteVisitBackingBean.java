@@ -266,7 +266,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
-		//this.getManagedBean().setAppId(1257729);
+		//this.getManagedBean().setAppId(1257118);
 		//this.getManagedBean().setAppId(1257442);
 		//this.getManagedBean().setAppId(1257676); //FT
 		
@@ -1413,8 +1413,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			String eqBeatingParam = null;
 			
 			SmFacility smFacility = this.getManagedBean().getSmSvFacilityMap().get(templateType);
-			String lblOwnerShip =  smFacility.getOwnershipType().equalsIgnoreCase("O") ? "lbl.sm.facility.own" : "lbl.sm.facility.rent";
-			String preLocOwnerShip = ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
+			String lblOwnerShip = null;
+			if(smFacility != null){
+				if(smFacility.getOwnershipType().equalsIgnoreCase("O")){
+					lblOwnerShip = "lbl.sm.facility.own";
+				}else{
+					lblOwnerShip ="lbl.sm.facility.rent";
+				}
+			}
+			
+			//String lblOwnerShip =  smFacility.getOwnershipType().equalsIgnoreCase("O") ? "lbl.sm.facility.own" : "lbl.sm.facility.rent";
+			String preLocOwnerShip = lblOwnerShip != null ? ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale) : "";
 
 			DecimalFormat formatter = new DecimalFormat("###,##0.00");
 			String preLocPurchasePrice = smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
@@ -1462,8 +1471,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PRINTING_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
 			SmFacility smFacility = this.getManagedBean().getSmSvFacilityMap().get(templateType);
-			String lblOwnerShip =  smFacility.getOwnershipType().equalsIgnoreCase("O") ? "lbl.sm.facility.own" : "lbl.sm.facility.rent";
-			String preLocOwnerShip = ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
+			
+			String lblOwnerShip = null;
+			if(smFacility != null){
+				if(smFacility.getOwnershipType().equalsIgnoreCase("O")){
+					lblOwnerShip = "lbl.sm.facility.own";
+				}else{
+					lblOwnerShip ="lbl.sm.facility.rent";
+				}
+			}
+			//String lblOwnerShip =  smFacility.getOwnershipType().equalsIgnoreCase("O") ? "lbl.sm.facility.own" : "lbl.sm.facility.rent";
+			String preLocOwnerShip = lblOwnerShip != null ? ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale) : "";
 
 			DecimalFormat formatter = new DecimalFormat("###,##0.00");
 			String preLocPurchasePrice = smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()).toString() : null;
