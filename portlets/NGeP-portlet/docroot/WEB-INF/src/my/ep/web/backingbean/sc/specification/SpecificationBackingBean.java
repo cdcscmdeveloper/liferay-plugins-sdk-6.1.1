@@ -898,8 +898,9 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setCompanyScoreType(null);
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
-		this.getManagedBean().setToBeRemoveList(
-				new ArrayList<ScQtCheckListScore>());
+		this.getManagedBean().setToBeRemoveList(null);
+		this.getManagedBean().setCheckListScore(null);
+		this.getManagedBean().setScoringForYears(null);
 		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
 		return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
@@ -4739,6 +4740,13 @@ public class SpecificationBackingBean extends
 					if (null != scQt.getEstimatedAmount()
 							&& scQt.getEstimatedAmount().intValue() <= 500000) {
 						qtSupplierCriteria.setLocationLevel(null);
+					}
+				} else {
+					if (null != scQt.getScQtSupplierCriteria()
+							.getQtZoneCriterias()) {
+						qtSupplierCriteria.getQtZoneCriterias()
+								.setTplSpecZoneDtls(null);
+
 					}
 				}
 				qtSupplierCriteria.setScQt(scQt);
