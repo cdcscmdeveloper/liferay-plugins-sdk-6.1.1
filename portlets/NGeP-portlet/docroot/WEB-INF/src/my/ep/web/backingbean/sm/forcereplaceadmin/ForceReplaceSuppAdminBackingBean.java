@@ -153,6 +153,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 		return reqDTO;
 	}
 
