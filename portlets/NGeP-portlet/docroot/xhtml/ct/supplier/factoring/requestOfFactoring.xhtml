@@ -381,7 +381,7 @@
 					<td><p:commandButton id="notificationBtn"
 							disabled="#{!supplierBackingBean.isLetterGenerated()}"
 							value="#{lbl['lbl.ct.panel.notification.factoring']}"
-							process="@this" update="editorDisplay"
+							process="@this,approverpickList" update="editorDisplay"
 							actionListener="#{supplierBackingBean.previewAction()}"
 							oncomplete="factoringClauseDlg.show();" /></td>
 				</tr>
