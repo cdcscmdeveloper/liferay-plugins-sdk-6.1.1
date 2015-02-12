@@ -84,8 +84,14 @@
 						rendered="#{checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						disabled="#{pageDisable}" value="#{noOfContracts.userScore}"
 						maxlength="18" style="text-align:right"
-						rendered="#{ checklistScoreType eq '2'}"></p:inputText> <p:spacer
-						width="5"></p:spacer> <h:outputText value="/#{contractUserScore}"
+						rendered="#{ checklistScoreType eq '2'}">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="14" integerOnly="true" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max" value="#{contractUserScore}" />
+					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+						value="/#{contractUserScore}"
 						rendered="#{ checklistScoreType eq '2'}" /></td>
 			</tr>
 			<tr>
@@ -110,9 +116,14 @@
 						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
 						maxlength="18" style="text-align:right" disabled="#{pageDisable}"
 						value="#{noOfYears.userScore}"
-						rendered="#{companyScoreType eq '2'}"></p:inputText> <p:spacer
-						width="5"></p:spacer> <h:outputText value="/#{yearsUserScore} "
-						rendered="#{companyScoreType eq '2'}" /></td>
+						rendered="#{companyScoreType eq '2'}">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="14" integerOnly="true" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max" value="#{yearsUserScore}" />
+					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+						value="/#{yearsUserScore} " rendered="#{companyScoreType eq '2'}" /></td>
 			</tr>
 		</table>
 
