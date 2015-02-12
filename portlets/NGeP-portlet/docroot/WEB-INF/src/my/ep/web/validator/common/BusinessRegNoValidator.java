@@ -1,6 +1,8 @@
 package my.ep.web.validator.common;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -181,18 +183,22 @@ public class BusinessRegNoValidator implements Validator {
 				SmCommonUtil.getMessage(key, null)));
 	}
 	
-	private boolean isValidDate(String dateParam){
+	private boolean isValidDate(String argValue){
 		boolean retVal = true;
-		if(dateParam.length()!=8){
+		if(argValue.length()!=8){
 			retVal = false;
 		}else{
+			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+			sdf.setLenient(false);
 			try{
-				DateUtils.convertStringToDate("ddMMyyyy", dateParam);
+				Date tmpDate = sdf.parse(argValue);
+				if(tmpDate.getYear()>new Date().getYear()){
+					retVal = false;
+				}
 			}catch(Exception ex){
 				retVal = false;
 			}
 		}
-		
 		return retVal;
 	}
 }
