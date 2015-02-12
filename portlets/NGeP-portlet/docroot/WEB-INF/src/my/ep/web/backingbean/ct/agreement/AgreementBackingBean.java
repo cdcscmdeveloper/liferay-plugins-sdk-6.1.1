@@ -134,7 +134,7 @@ import com.liferay.portal.util.PortalUtil;
 public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
 
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
-	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
+	private static final String CONTRACT_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
 	private static final String AGREEMENT_DOC_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true";
 
 	private boolean supplementValue = true;
