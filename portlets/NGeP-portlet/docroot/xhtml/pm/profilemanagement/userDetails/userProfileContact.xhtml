@@ -13,10 +13,10 @@
 		        <td></td>
                 <th></th>
                 <td>
-		        	<p:selectBooleanCheckbox id="chkOrgAddr" value="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}">
+		        	<p:selectBooleanCheckbox id="chkOrgAddr" rendered="false" value="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}">
 						<p:ajax event="change" update="pUserAddress" listener="#{profileManagementBackingBean.addressEntered}" />
 					</p:selectBooleanCheckbox> 
-					<h:outputText value="#{lbl['lbl.pm.profiles.userdetails.isorgadress']}"/>
+					<h:outputText rendered="false" value="#{lbl['lbl.pm.profiles.userdetails.isorgadress']}"/>
 		        </td>	
             </tr>
 			<tr>		    
