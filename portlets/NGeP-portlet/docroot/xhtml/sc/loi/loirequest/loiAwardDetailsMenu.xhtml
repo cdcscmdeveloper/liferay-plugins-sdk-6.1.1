@@ -49,6 +49,37 @@
 				<h:outputText value="#{loiLoaItem.scRequestItem.itemName}" />
 			</p:column>
 
+
+			<p:column style="width:7%;white-space:normal;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column style="width:7%;white-space:normal;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+			</p:column>
+
+			<p:column style="width:8%;white-space:normal;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+			</p:column>
+
+			<p:column style="width:7%;white-space:normal;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.duration.month']}">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
 			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.qty']}"
 				style="width:10%;text-align:right;">
 				<h:outputText value="#{loiLoaItem.qty}">
@@ -76,7 +107,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.sub.total']}"
 				style="width:15%;text-align:right;">
-				<h:outputText value="#{loiLoaItem.qty * loiLoaItem.unitPrice}">
+				<h:outputText value="#{loiLoaItem.subTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				
