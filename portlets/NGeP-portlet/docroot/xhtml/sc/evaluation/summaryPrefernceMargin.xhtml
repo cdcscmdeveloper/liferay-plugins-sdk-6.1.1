@@ -45,7 +45,7 @@
 				style="width:20%">
 
 				<h:outputText
-					value="#{summaryqualSup.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
+					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
 
 
 			</p:column>
@@ -54,7 +54,8 @@
 				style="width:20%">
 
 				<h:outputLabel
-					value="#{summaryqualSup.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt}"
+					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt gt 0}"
+					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt}"
 					style="text-align:right">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -67,7 +68,8 @@
 				style="width:15%">
 
 				<h:outputLabel
-					value="#{summaryqualSup.qtEvaluationResult.scQtProposal.proposalAmount.percentageDifference}"
+					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.percentageDifference gt 0}"
+					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.percentageDifference}"
 					style="text-align:right">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -80,7 +82,8 @@
 				style="width:25%">
 
 				<h:outputLabel
-					value="#{summaryqualSup.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin}"
+					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin gt 0}"
+					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin}"
 					style="text-align:right">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -143,12 +146,12 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.price.diff']}"
 				style="width:20%">
 
-				<h:outputLabel
+				<!-- 	<h:outputLabel
 					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt}"
 					style="text-align:right">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputLabel>
+				</h:outputLabel> -->
 
 
 			</p:column>
@@ -156,12 +159,12 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.diff']}"
 				style="width:15%">
 
-				<h:outputLabel
+				<!-- <h:outputLabel
 					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.proposalAmount.percentageDifference}"
 					style="text-align:right">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-				</h:outputLabel>
+				</h:outputLabel> -->
 
 
 			</p:column>
@@ -169,11 +172,11 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
 				style="width:25%">
 
-				<h:outputLabel style="text-align:right"
+				<!-- 	<h:outputLabel style="text-align:right"
 					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-				</h:outputLabel>
+				</h:outputLabel> -->
 
 
 			</p:column>
