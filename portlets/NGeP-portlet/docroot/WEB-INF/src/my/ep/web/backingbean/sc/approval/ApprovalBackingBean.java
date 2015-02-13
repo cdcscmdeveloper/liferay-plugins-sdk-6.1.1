@@ -582,6 +582,8 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setPayLoad(this.getManagedBean()
 						.getQuotationTenderDataType());
 				committeReqDTO.setOutcome(outcome);
+				committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				committeReqDTO.setRoleCode(getUserRoleCode());
 				finalizeRemarks(this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
@@ -636,8 +638,11 @@ public class ApprovalBackingBean extends
 				qt.setScQtCommittees(null);
 				qtReqDTO.setPayLoad(this.getManagedBean()
 						.getQuotationTenderDataType());
-				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
+				FacesScopes facesScope = new FacesScopes();
+				qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
 				qtReqDTO.setQtdetail(qt);
+				qtReqDTO.setPmUser(facesScope.getUserSessionBean());
+				qtReqDTO.setRoleCode(getUserRoleCode());
 				qtReqDTO.setOutcome(outcome);
 
 				if (null != digiSign) {
