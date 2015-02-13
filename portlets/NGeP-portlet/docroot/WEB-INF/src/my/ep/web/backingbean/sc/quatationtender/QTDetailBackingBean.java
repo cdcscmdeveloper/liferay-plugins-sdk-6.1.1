@@ -1693,6 +1693,8 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				committeReqDTO.setPayLoad(res.getPojo());
 				committeReqDTO.setOutcome(outcome);
+				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+				committeReqDTO.setRoleCode(getUserRoleCode());
 				committeReqDTO.setScQt(qt);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 			} else if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
@@ -1751,7 +1753,10 @@ public class QTDetailBackingBean extends
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setPayLoad(res.getPojo());
 				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
+				FacesScopes facesScope = new FacesScopes();
+				qtReqDTO.setPmUser(facesScope.getUserSessionBean());
+				qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
+				qtReqDTO.setRoleCode(getUserRoleCode());
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
