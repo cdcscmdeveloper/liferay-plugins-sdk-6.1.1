@@ -19,7 +19,8 @@
 				process="@all"
 				partialSubmit="true"
 				update="@form"
-				action="#{suppFinalizationBackingBean.saveSupplierFinalization}" />
+				action="#{suppFinalizationBackingBean.saveSupplierFinalization}" 
+				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 					
 			<ui:repeat var="bpmAction" value="#{suppFinalizationBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />

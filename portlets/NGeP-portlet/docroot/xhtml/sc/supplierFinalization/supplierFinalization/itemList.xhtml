@@ -28,7 +28,7 @@
 				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
 				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
 				
-			<p:column style="width:2%;">
+			<p:column style="width:2%;" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
@@ -63,8 +63,11 @@
 					<h:outputText value="#{lbl['lbl.sc.recommend.by']}" />
 				</f:facet>
 				<h:column>
-					<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" required="false" label="#{lbl['lbl.sc.recommend.by']}">
-						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(item.requestItem.tplSpecQuestion.clPriceTypeCode, item)}" />
+					<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
+						required="false" label="#{lbl['lbl.sc.recommend.by']}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(
+														item.requestItem.tplSpecQuestion.clPriceTypeCode, item)}" />
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
 								listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
 								process="@this" partialSubmit="true"/>
@@ -98,7 +101,8 @@
 						<p:dataList var="rdetail" value="#{item.recommendDtls}" type="none">						
 							<p:column>
 								<h:inputText value="#{rdetail.awardQty}" maxlength="13" size="10" required="true" 
-											 style="text-align:right; width:120px;" label="#{lbl['lbl.sc.quantity']}">
+											 style="text-align:right; width:120px;" label="#{lbl['lbl.sc.quantity']}" 
+											 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 									<p:ajax partialSubmit="true" process="@this" update="@this"/>
 									<p:ajax event="blur" partialSubmit="true" process="@this" update="@([id$=itemSupplierListTblMultiple])" 
 											listener="#{suppFinalizationBackingBean.updateOfferedPrice(rdetail)}"/>
@@ -125,7 +129,8 @@
 				<h:outputLabel value="#{lbl['lbl.sc.award.supplier']}" />
 			</h:column>
 			<h:column>
-				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}">
+				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}" 
+					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
 					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" process="@this" update="@this"/>
@@ -135,7 +140,8 @@
 					process="@this"
 					partialSubmit="true"
 					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple],[id$=awardSupplier])"/>
+					update="@([id$=itemListTbl],[id$=supplierListTblMultiple],[id$=awardSupplier])"
+					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 			</h:column>
 			
 		</h:panelGrid>

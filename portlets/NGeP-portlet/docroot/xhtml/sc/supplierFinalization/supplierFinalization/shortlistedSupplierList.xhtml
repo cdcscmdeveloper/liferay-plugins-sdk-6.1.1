@@ -20,7 +20,8 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
-					value="#{suppFinalizationBackingBean.managedBean.recommendBy}">
+					value="#{suppFinalizationBackingBean.managedBean.recommendBy}"
+					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 					<f:selectItems value="#{suppFinalizationBackingBean.getPackageRecommendByDropDown()}" />
 					<p:ajax event="change" update="@([id$=recommendBy],[id$=onlineBiddingPanel],[id$=supplierListTblPanel])" 
 						listener="#{suppFinalizationBackingBean.packageRecommendByEvent}" process="@this" />
@@ -36,7 +37,7 @@
 				widgetVar="shortlistedSuppDtls"
 				value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
 				selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
-				editable="true" rowIndexVar="index" style="width:100%" rowKey="#{shortlistedSupp}"
+				editable="true" rowIndexVar="index" style="width:100%;" rowKey="#{shortlistedSupp}"
 				rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}">
 				<ac:paginator for="supplierListTblSingle" />
 					
@@ -125,7 +126,8 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" /> 
+				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
+					disabledSelection="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/> 
 			</p:dataTable>
 			
 			<p:dataTable id="supplierListTblMultiple"
@@ -233,7 +235,8 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"/>  
+				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
+						  disabledSelection="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>  
 			</p:dataTable>
 			
 			<p:dataTable id="itemSupplierListTblMultiple"
@@ -343,7 +346,8 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"/>  
+				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"
+					disabledSelection="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>  
 			</p:dataTable>			
 		</p:outputPanel>
 		<p:spacer height="20px" />
