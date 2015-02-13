@@ -55,7 +55,8 @@
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" icon="iconAttachment"
 					partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
-					value="#{lbl['lbl.txt.attach.file']}">
+					value="#{lbl['lbl.txt.attach.file']}" 
+					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}">
 				</p:commandButton>
 			</td>
 		</tr>
@@ -88,7 +89,8 @@
 							<p:spacer width="5" />
 							<p:commandLink
 								immediate="true"
-								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}"
+								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment and 
+											suppFinalizationBackingBean.managedBean.secretaryUser}"
 								update="attachFilesPanel">
 								<h:graphicImage library="ep/images/design"
 									name="icon_trash.png" styleClass="tasklist_title1" />

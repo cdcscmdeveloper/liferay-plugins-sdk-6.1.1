@@ -106,7 +106,7 @@
 								rowKey="#{committeeMember}" update="@this">
 								<ac:paginator for="memberListTbl" />
 					
-								<p:column selectionMode="multiple" style="width:2%" 
+								<p:column selectionMode="multiple" style="width:2%;" 
 									disabledSelection="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleMember}"/>
 								
 								<p:column headerText="#{lbl['lbl.sc.name']}">
