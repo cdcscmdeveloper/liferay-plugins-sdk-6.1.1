@@ -55,7 +55,7 @@
 		</table>
 
 		<p:panel header="#{lbl['lbl.sc.notice.board.pdate']}" id="publishdtl"
-			toggleable="true">
+			toggleable="true" collapsed="true">
 			<h:panelGroup id="recentPubDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
 					width="100%" columnClasses="nbColumnHeight"
@@ -105,7 +105,7 @@
 				columnClasses="nbColumnHeight"
 				rendered="#{!noticeBoardBackingBean.managedBean.pubShow}">
 
-				<h:outputText value="#{lbl['lbl.sc.notice.board.pass']}"
+				<h:outputText value="#{lbl['lbl.sc.notice.board.passed']}"
 					style="padding-right:5px;" />
 
 
@@ -124,7 +124,7 @@
 
 				<p:column
 					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
-					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}" />
+					<h:outputText value="#{lbl['lbl.qt.nb.fromdate']}" />
 				</p:column>
 
 				<p:column
@@ -135,7 +135,14 @@
 						size="10">
 						<p:ajax event="dateSelect" update="pubToDt" />
 					</p:calendar>
-
+				</p:column>
+				
+				<p:column
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
+					<h:outputText value="#{lbl['lbl.qt.nb.to']}" />
+				</p:column>
+				<p:column
+					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
 					<p:calendar showOn="button" readonlyInput="true" id="pubToDt"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						size="10"
@@ -143,7 +150,6 @@
 						mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
 					</p:calendar>
 				</p:column>
-
 			</h:panelGrid>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.bsv.attendance.location']}"
@@ -216,7 +222,7 @@
 
 
 		<p:panel header="#{lbl['lbl.qt.nb.briefingDate']}" id="briefingdtls"
-			toggleable="true">
+			toggleable="true" collapsed="true">
 			<h:panelGroup id="recentBriefDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
 					width="100%" columnClasses="nbColumnHeight"
@@ -283,7 +289,7 @@
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.qt.nb.sitevisitdate']}" id="sitevisitdtls"
-			toggleable="true">
+			toggleable="true" collapsed="true">
 			<h:panelGroup id="recentSiteVisitDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
 					width="100%" columnClasses="nbColumnHeight"
@@ -352,10 +358,10 @@
 
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.so.clsdt']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.so.clsdt']}" toggleable="true" collapsed="true">
 
 			<h:panelGrid columns="2" width="100%" columnClasses="nbColumnHeight">
-				<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}" />
+				<h:outputText value="#{lbl['lbl.qt.nb.fromdate']}" />
 				<p:column>
 					<p:calendar id="clsFromDt" showOn="button"
 						value="#{noticeBoardBackingBean.managedBean.clsDataBean.fromDate}"
@@ -364,15 +370,18 @@
 						size="10">
 						<p:ajax event="dateSelect" update="clsToDt" />
 					</p:calendar>
-					<p:calendar id="clsToDt" showOn="button"
+				</p:column>
+				<h:outputText value="#{lbl['lbl.qt.nb.to']}" />
+				<p:column>
+				<p:calendar id="clsToDt" showOn="button"
 						value="#{noticeBoardBackingBean.managedBean.clsDataBean.toDate}"
 						readonlyInput="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						size="10"
 						mindate="#{noticeBoardBackingBean.managedBean.clsDataBean.fromDate}">
 
-					</p:calendar>
-				</p:column>
+				</p:calendar>
+			</p:column>
 			</h:panelGrid>
 
 
