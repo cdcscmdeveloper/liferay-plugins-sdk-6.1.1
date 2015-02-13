@@ -36,9 +36,11 @@
 								test="#{backingBean.managedBean.overLappedCategoryExists}">
 								<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
 									action="#{spkiBackingBean.getChallengeQuestions}"
-									update="spkiPopup" oncomplete="spki_dlg.show();" />
-								<ac:spkiPopup id="spkiPopup"
-									postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, backingBean.managedBean.smAppl.applType)}" />
+									update="spkiOutPanel" oncomplete="spki_dlg.show();" />
+								<p:outputPanel id="spkiOutPanel">
+									<ac:spkiPopup id="spkiPopup"
+										postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, backingBean.managedBean.smAppl.applType)}" />
+								</p:outputPanel>
 							</c:when>
 							<c:otherwise>
 								<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
