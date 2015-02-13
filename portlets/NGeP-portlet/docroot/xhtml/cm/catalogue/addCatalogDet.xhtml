@@ -51,16 +51,16 @@ background: none;
 
 		<div style="text-align: right; min-height: 40px;">
 				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
+					<p:commandButton value="#{lbl['lbl.cm.back']}" 
 							action="#{catalogueBackingBean.navigate}">
 					</p:commandButton>
 				</div>
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
 
-				<p:commandButton value="#{lbl['lbl.btn.approve']}" icon="ui-icon-approve"
+				<p:commandButton value="#{lbl['lbl.btn.approve']}" 
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.reject']}" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.reject']}" 
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
 
