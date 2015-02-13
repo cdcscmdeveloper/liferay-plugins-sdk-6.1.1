@@ -71,8 +71,8 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
-					<h:outputText value="#{lbl['lbl.sm.userprofile.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
-					<h:outputText value="#{lbl['lbl.sm.userprofile.inactive']}" rendered="#{personnel.recordStatusFlg ne '1'}" />
+					<h:outputText value="#{lbl['lbl.sm.activation.status.activated']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.sm.activation.status.pending']}" rendered="#{personnel.recordStatusFlg eq '8'}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
