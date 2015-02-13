@@ -76,7 +76,7 @@
 					<p:commandLink id="chkQualIcon"
 						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}">
 						<p:graphicImage library="ep/images/design" name="tick.png"
-							value="/resources/ep/images/design/tick.png" />
+							value="/resources/ep/images/design/tick.png" rendered="#{noticeBoardBackingBean.displayImage}"/>
 					</p:commandLink>
 					<p:tooltip for="chkQualIcon"
 						value="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" />
