@@ -60,9 +60,9 @@
 					style="width:5%;white-space: normal;">
 
 					<p:commandLink
-						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
+						
 						action="#{bsvAttendanceBackingBean.registerSupplier(brfsitdtl)}"
-						process="@this">
+						process="@this" immediate="true">
 						<p:graphicImage library="ep/images/design" name="register.png"
 							value="/resources/ep/images/design/register.png" />
 

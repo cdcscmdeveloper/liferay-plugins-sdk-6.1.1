@@ -12,7 +12,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
@@ -103,8 +102,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private NoticeBoardSearchDataBean clsDataBean;
 
 	private List<ScQtContactPerson> contactPersons;
-	private List<ScQtBsvDtl> briefingDtls;
-	private List<ScQtBsvDtl> siteVisitDtls;
+	private ScQtBsvDtl briefingDtls;
+	//private List<ScQtBsvDtl> siteVisitDtls;
 
 	private List<TreeNode> locationNodes;
 
@@ -118,8 +117,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private String selectedTab = ParameterConst.NOTICE_BOARD_STATUS_PUBLISH;
 
-	private List<ScQtBsvDtl> selectedBriefingDtls;
-	private List<ScQtBsvDtl> selectedsiteVisitDtls;
+	
 	private List<TplSpecZoneDtl> zones;
 
 	private List<PmOrgProfile>ptjList;
@@ -134,9 +132,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private BriefingZoneBean normalBsvBean;
 	private List<ScQtProposalAmount> proposalAmts;
 	private String mofNumber;
-	private List<ScQtBsvAttendance> attendanceList;
 	
-	private List<ScQtBsvAttendance> selectedBsvAttandance;
 	
 	private int selectedZoneTabIndex = 0;
 	private MenuModel zoneMenuModel;
@@ -429,21 +425,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.contactPersons = contactPersons;
 	}
 
-	public List<ScQtBsvDtl> getBriefingDtls() {
-		return briefingDtls;
-	}
-
-	public void setBriefingDtls(List<ScQtBsvDtl> briefingDtls) {
-		this.briefingDtls = briefingDtls;
-	}
-
-	public List<ScQtBsvDtl> getSiteVisitDtls() {
-		return siteVisitDtls;
-	}
-
-	public void setSiteVisitDtls(List<ScQtBsvDtl> siteVisitDtls) {
-		this.siteVisitDtls = siteVisitDtls;
-	}
+	
 
 	public List<TreeNode> getLocationNodes() {
 		return locationNodes;
@@ -622,13 +604,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.mofNumber = mofNumber;
 	}
 
-	public List<ScQtBsvAttendance> getAttendanceList() {
-		return attendanceList;
-	}
-
-	public void setAttendanceList(List<ScQtBsvAttendance> attendanceList) {
-		this.attendanceList = attendanceList;
-	}
+	
 
 	public boolean isQualified() {
 		return qualified;
@@ -639,30 +615,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	
-	public List<ScQtBsvDtl> getSelectedBriefingDtls() {
-		return selectedBriefingDtls;
-	}
-
-	public void setSelectedBriefingDtls(List<ScQtBsvDtl> selectedBriefingDtls) {
-		this.selectedBriefingDtls = selectedBriefingDtls;
-	}
-
-	public List<ScQtBsvDtl> getSelectedsiteVisitDtls() {
-		return selectedsiteVisitDtls;
-	}
-
-	public void setSelectedsiteVisitDtls(List<ScQtBsvDtl> selectedsiteVisitDtls) {
-		this.selectedsiteVisitDtls = selectedsiteVisitDtls;
-	}
-
-	public List<ScQtBsvAttendance> getSelectedBsvAttandance() {
-		return selectedBsvAttandance;
-	}
-
-	public void setSelectedBsvAttandance(
-			List<ScQtBsvAttendance> selectedBsvAttandance) {
-		this.selectedBsvAttandance = selectedBsvAttandance;
-	}
+	
 
 	/**
 	 * @return the selectedZoneTabIndex
@@ -698,6 +651,15 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+
+	public ScQtBsvDtl getBriefingDtls() {
+		return briefingDtls;
+		
+	}
+
+	public void setBriefingDtls(ScQtBsvDtl briefingDtls) {
+		this.briefingDtls = briefingDtls;
 	}
 
 
