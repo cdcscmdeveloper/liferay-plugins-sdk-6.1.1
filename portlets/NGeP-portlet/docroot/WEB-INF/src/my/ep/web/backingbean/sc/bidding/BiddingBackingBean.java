@@ -32,7 +32,10 @@ import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.schedulermanager.SchedulerManagerBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingManagedBean;
+import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -304,7 +307,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			reqDTO.setScBidAction(this.getManagedBean().getBidAction());
 			BiddingResDTO resDTO = biddingSO.updateBidAction(reqDTO);
 			if (resDTO.isSuccessful()) {
-
+				if (BiddingConst.BID_ACTION_TYPE_RESUME.equals(resDTO.getScBidAction().getActionType())){
+					
+					SchedulerManagerBackingBean smBackingBean = new SchedulerManagerBackingBean();
+					EpSchedulerHelper.runBuildJobNow(smBackingBean.getJobKey(ScSchedulerConstants.EP_DAILY_JOB,ScSchedulerConstants.EP_JOB_GROUP));
+					
+				}
 			}
 
 		}
