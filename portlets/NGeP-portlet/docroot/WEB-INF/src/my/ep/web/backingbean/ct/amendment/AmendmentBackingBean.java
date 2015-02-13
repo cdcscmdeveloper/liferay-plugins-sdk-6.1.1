@@ -301,7 +301,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME) ||
 				       res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || 
 				       res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||
-				       res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				       res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
 				            outcome = new String[res.getAction().length+1];
 				            outcome[i++] = BpmOutcomeConst.BPM_SAVE;
 			     }
@@ -337,7 +337,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					        if(getManagedBean().getContractVer().getCtAmendment().isBpkApproved())
 					        	getManagedBean().setPbQcApproved("A");
 					  }
-	            } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+	            } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||  
+	            		res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME) ||
+	            		res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
 	            	getManagedBean().setLetterOfAcceptance(true);
 	            	getManagedBean().setPrepareLOA(true);
 	            	getManagedBean().setPbQcApproved(getManagedBean().getContractVer().getCtAmendment().isPbQcApproved() ? "A" : "R");
@@ -429,10 +431,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() != null) {		    	  
 		    	for(ScLoaWitness scLoaWitness : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()) {
 		    		   if((res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
-		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_AGENCY)) {
+		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME) ||
+		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) && 
+		    				scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_AGENCY)) {
 		    			       getManagedBean().setScLoaWitness(scLoaWitness);
 		    			       break;
-		    		    } if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_SUPPLIER)) {
+		    		    } if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && 
+		    		    	scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_SUPPLIER)) {
 		    		        	getManagedBean().setScLoaWitness(scLoaWitness);
 		    			        break;
 		    		     }		    		
@@ -585,11 +590,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		      getManagedBean().setDisableAmendDetails(false);
 		      if(getManagedBean().getTaskName() != null && 
 		    		  (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)
-		    		  		   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
-		    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
-		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
-		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
-		    				   ||getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME))) {
+    		  		   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
+    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)
+    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)
+    				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))) {
 		    	  getManagedBean().setDisableAmendDetails(true);
 		      }
 		      if(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)){
@@ -762,7 +768,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				        		 && ContractConst.DOC_TYPE_CONTRACT_AMENDMENT.equals(getManagedBean().getContractVer().getDocType())) {
 				        	 if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)) {
 				        		messageId = MessageConst.INFO_700060; 
-				        	 } else {
+				        	 } 
+				        	 else if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
+				        		 messageId = MessageConst.INFO_700061; 
+				        	 }				        	 
+				        	 else {
 					        	 if(getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()){
 					        		messageId = MessageConst.INFO_700007; 
 					        	 }else{
@@ -778,6 +788,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					        messageId = MessageConst.INFO_700013;
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null) {
 					         messageId = MessageConst.INFO_700026;
+					         if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
+					        	 messageId = getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isApprovalReq()
+						        		 ? MessageConst.INFO_700046 : MessageConst.INFO_700043;
+					         }
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
 								messageId = MessageConst.INFO_700001;
 					     } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {

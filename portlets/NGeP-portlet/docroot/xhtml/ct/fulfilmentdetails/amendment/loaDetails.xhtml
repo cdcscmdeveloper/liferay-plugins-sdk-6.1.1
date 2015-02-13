@@ -115,4 +115,19 @@
 		     </h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
+	<p:panel id="loaVerifier" header="#{lbl['lbl.ct.panel.loa.verifier']}" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
+		    <p:outputLabel value="#{lbl['lbl.ct.panel.loa.verifier']}" />
+			<p:inputText style="width:300px;" disabled="true"
+				value="#{amendmentBackingBean.managedBean.contractVer.approver.userName}" />
+			<p:outputLabel value="#{lbl['lbl.ct.required.loa.verifier']}" />			
+			<h:panelGrid columns="4">
+				<p:selectOneRadio id="reqLoaVerifier" disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.approvalReq}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
+				</p:selectOneRadio>
+			</h:panelGrid>			
+		</h:panelGrid>
+	</p:panel>
 </ui:composition>

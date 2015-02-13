@@ -63,7 +63,9 @@
     	  });
     	});
 	 </script> 	
-	  <ui:param name="isPendingLoaSubmission" value="#{amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission}" />
+	  <ui:param name="isPrepareLoa" value="#{amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaSubmission or
+	  amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaEndorsement or
+	  amendmentBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingLoaRevision}" />
 	  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
