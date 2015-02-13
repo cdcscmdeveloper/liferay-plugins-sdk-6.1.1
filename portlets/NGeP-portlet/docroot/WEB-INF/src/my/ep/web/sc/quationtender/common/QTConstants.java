@@ -75,6 +75,8 @@ public interface QTConstants {
 	public static final String SC_PERFORMANCE_BOND_TAB = "Performance Bond";
 	public static final String SC_PAYMENT_TAB = "Payment Details";
 	
+	public static final String  REC_TYPE_ONLINE_BIDDING = "BI";
+	
 	public static final Long SC_MEETING_PENDING_STATUS_ID = 62650L;
 	public static final Long SC_MEETING_CANCELLED_STATUS_ID = 62651L;
 	public static final Long SC_MEETING_DONE_STATUS_ID = 62652L;	
