@@ -124,7 +124,7 @@
 		<p:panel>
 			<table style="width: 100%">
 				<tr>
-					<td><p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add" id="addTierButton" style="float:right;"
+					<td><p:commandButton value="#{lbl['lbl.cm.add']}" id="addTierButton" style="float:right;"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || 
 							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
 								action="#{catalogueBackingBean.addNewTierPricing()}" disabled="#{catalogueBackingBean.disableAddTier()}"

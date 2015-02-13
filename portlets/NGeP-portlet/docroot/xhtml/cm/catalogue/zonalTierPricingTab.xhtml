@@ -148,7 +148,7 @@
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
 							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
 								disabled="#{catalogueBackingBean.disableAddZonalTier()}"
-								action="#{catalogueBackingBean.addNewZonalTierPricing()}" icon="ui-icon-add"
+								action="#{catalogueBackingBean.addNewZonalTierPricing()}" 
 								update="cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton" process="@this cmZonalTierPricingsId"></p:commandButton>
 					</td>
 					<td style="width: 20px">

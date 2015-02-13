@@ -118,7 +118,7 @@
 			<p:commandButton value="#{lbl['lbl.cm.add']}" 
 			rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
 			((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
-				action="#{catalogueBackingBean.addNewZonalStandardPricing()}" icon="ui-icon-add"
+				action="#{catalogueBackingBean.addNewZonalStandardPricing()}" 
 				update="zStanPriceTableId" process="@this zStanPriceId"></p:commandButton>
 		</div>
 
