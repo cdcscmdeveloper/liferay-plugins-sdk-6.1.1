@@ -187,6 +187,9 @@ public class SmPersonnelBackingBean extends
 				authorizedPersonnelList.remove(adminPersonnel);
 				getManagedBean().setSmPersonnelList(authorizedPersonnelList);
 				getManagedBean().setUpdateSmPersonnel(adminPersonnel);
+				SmCommonUtil.setRoleName(smSupplier.getSmAppl()
+						.getSupplierType(), getManagedBean()
+						.getSmPersonnelList());
 				if (!isHasSupplierUser) {
 					constructNoSupplierUserToDeactivateMsg(smSupplier);
 				}
