@@ -171,8 +171,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,ICatalogueSO.class);
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		ScQuote scQuote = getManagedBean().getScQuote();
-		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
-		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		if(scQuote == null){
 			scQuote = new ScQuote();
 		}
@@ -241,7 +239,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						prepareQuestions(selectedPanelItem , null  , isGeneralOrSpecific);
 						scQuote.setPanelItem(selectedPanelItem);   
 						getManagedBean().getPanelItems().add(selectedPanelItem);
-						getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
 						
 						if(scQuote.isZonal()){
 							zoneEvent();
@@ -937,7 +934,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setTitleChecker(true);
 		getManagedBean().setTabActiveIndex(0);
 		getManagedBean().setRnToSQFlag(true);
-		getManagedBean().setPanelItemBtnFlag(true);
 		getManagedBean().setPanelItemFlag(true);
 		getManagedBean().setEditableFlag(true);
 		getManagedBean().setSupplierViewBtn(true);
@@ -3081,7 +3077,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					getManagedBean().setPanelItemFlag(Boolean.FALSE);
 					getManagedBean().setNewableFlag(Boolean.FALSE);
 				}
-				getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
 			}
 			
 			// duration calc
