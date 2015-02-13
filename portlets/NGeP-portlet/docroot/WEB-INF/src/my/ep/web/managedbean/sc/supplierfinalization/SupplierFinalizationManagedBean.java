@@ -111,6 +111,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isMultipleLoi;
 	private boolean isItemRowSelect;
 	private boolean isSubmit;
+	private boolean isSecretaryUser;
 	
 	private ScQtEvaluationResult shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -501,6 +502,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSubmit(boolean isSubmit) {
 		this.isSubmit = isSubmit;
+	}
+
+	/**
+	 * @return the isSecretaryUser
+	 */
+	public boolean isSecretaryUser() {
+		return isSecretaryUser;
+	}
+
+	/**
+	 * @param isSecretaryUser the isSecretaryUser to set
+	 */
+	public void setSecretaryUser(boolean isSecretaryUser) {
+		this.isSecretaryUser = isSecretaryUser;
 	}
 
 	/**
