@@ -1482,7 +1482,7 @@ public class EvaluationBackingBean extends
 						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
 						&& !this.getManagedBean().isReadOnly()) {
 					evaluationStageCheck();
-					evaluationSo.prepareEvaluationResultsByStage(evalReqDTO);
+					evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
 				}
 
 				EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
@@ -1554,7 +1554,7 @@ public class EvaluationBackingBean extends
 					 */
 					evaluationStageCheck();
 					evaluationSo
-							.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
+							.prepareFinancialEvaluationSummary(summaryReqDTO);
 				}
 
 			}
@@ -1581,7 +1581,7 @@ public class EvaluationBackingBean extends
 								.isTechEvaluationReq()) {
 					evaluationStageCheck();
 					evaluationSo
-							.prepareEvaluationResultsSummaryForOneTier(summaryReqDTO);
+							.prepareFinancialEvaluationSummary(summaryReqDTO);
 				} else if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 						&& !this.getManagedBean().isReadOnly()
@@ -1594,7 +1594,7 @@ public class EvaluationBackingBean extends
 								.isTechEvaluationReq()) {
 					evaluationStageCheck();
 					evaluationSo
-							.prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO);
+							.prepareRecommendationEvaluationSummary(summaryReqDTO);
 				}
 
 			}
@@ -3686,17 +3686,17 @@ public class EvaluationBackingBean extends
 			evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 			evalReqDTO.setRecomandationType(3);
 			List<String> resultStg = new ArrayList<String>();
-			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENT_DEMO);
+			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
 			evalReqDTO.setResultStages(resultStg);
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
 					&& !this.getManagedBean().isReadOnly()) {
-				evaluationSo.prepareEvaluationResultsByStage(evalReqDTO);
+				evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
 			}
 			EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 			summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			List<String> resultStg2 = new ArrayList<String>();
-			resultStg2.add(SourcingConstants.EVAL_STAGE_PRESENT_DEMO);
+			resultStg2.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
 			summaryReqDTO.setResultStages(resultStg2);
 			evalResDTO = evaluationSo.retrieveSummaryDetails(summaryReqDTO);
 			this.getManagedBean().setEvaluationSummaryQualSuppliers(null);
