@@ -771,7 +771,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			          	   if(resDTO.isSuccessful()) {
 			          		      getManagedBean().setCtContract(resDTO.getContract());
 					               if(getManagedBean().getCtContract().getCtFactoring() != null &&  getManagedBean().getCtContract().isFactored() &&
-					            		   getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue() ) {
+					            	  (getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue() || 
+					            	   getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_ACKNOWLEDGEMENT_REJECTED.longValue() ||
+					            	   getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_REJECTED.longValue() )) {
 						                   getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
 						                   getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						                   getManagedBean().setRemoveFactoring(true);
