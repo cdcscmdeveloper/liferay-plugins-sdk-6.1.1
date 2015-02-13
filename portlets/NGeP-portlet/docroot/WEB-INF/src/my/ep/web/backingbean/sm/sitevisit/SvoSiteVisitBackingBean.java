@@ -1935,4 +1935,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			premiseLocation.setOtherEnvRemark(null);
 		}
 	}
+	
+	public void printMachineSelectOnChange(SmSvPrintmachine printMachine){
+		if(!printMachine.isSelected()){
+			printMachine.setBrand(null);
+			printMachine.setGuarantor(null);
+			printMachine.setQty(null);
+			printMachine.setRequisiteMethod(null);
+		}
+	}
 }
