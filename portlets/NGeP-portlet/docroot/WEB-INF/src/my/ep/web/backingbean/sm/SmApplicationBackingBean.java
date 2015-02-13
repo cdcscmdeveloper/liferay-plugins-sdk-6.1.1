@@ -6427,13 +6427,8 @@ public class SmApplicationBackingBean extends
 												.setPmRegStatus(
 														desc.getPmStatus()
 																.getPmRegStatus());
-										getManagedBean()
-												.getSmSupplier()
-												.setBumi(
-														getManagedBean()
-																.getSmAppl()
-																.getPmRegStatus()
-																.isBumiAppl());
+										getManagedBean().getSmSupplier()
+												.setBumi(true);
 									}
 								}
 							}
