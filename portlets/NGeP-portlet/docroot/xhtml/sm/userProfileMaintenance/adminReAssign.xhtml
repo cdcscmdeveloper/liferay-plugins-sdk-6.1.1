@@ -54,11 +54,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.userprofile.rolesincompany']}">
-					<h:outputText value="#{lbl['lbl.sm.person.dir']}" rendered="#{personnel.director}"/>
-					<h:outputText value="," rendered="#{personnel.higherManagement}"/>
-					<h:outputText value="#{lbl['lbl.sm.person.hghMngmt']}" rendered="#{personnel.higherManagement}"/>
-					<h:outputText value="," rendered="#{personnel.management}"/>
-					<h:outputText value="#{lbl['lbl.sm.person.mngmt']}" rendered="#{personnel.management}"/>
+					<h:outputText value="#{personnel.roleName}" />
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.userprofile.detailsicno']}">
