@@ -1925,4 +1925,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			svEquipment.setEquipmentQty(null);
 		}
 	}
+	
+	public void preLocationFloorEnvOnChange(SmSvFacility premiseLocation){
+		if(!premiseLocation.isOtherFloor()){
+			premiseLocation.setOtherFloorRemark(null);
+		}
+		
+		if(!premiseLocation.isOtherEnv()){
+			premiseLocation.setOtherEnvRemark(null);
+		}
+	}
 }
