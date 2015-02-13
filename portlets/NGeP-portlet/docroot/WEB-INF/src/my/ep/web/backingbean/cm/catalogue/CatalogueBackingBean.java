@@ -6014,6 +6014,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		}
 		
+		if(pricing.getPricingType().equals("08")) {
+			if(!priceInvalid) {
+				BigDecimal promotionTierPrice = pricing.getPrice();
+				BigDecimal parentTierPrice = pricing.getParentPrice().getPrice();
+	
+				if(parentTierPrice.compareTo(promotionTierPrice) <= 0) {
+					priceInvalid = true;
+				}
+			}
+		}
+		
 		if(priceInvalid){
 			pricing.setCheckOk(false);
 			this.getManagedBean().setError9(true);
