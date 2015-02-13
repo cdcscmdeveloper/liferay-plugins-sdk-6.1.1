@@ -9,15 +9,18 @@
 
 	<p:accordionPanel id="accordpnllist"
 		value="#{bsvAttendanceBackingBean.managedBean.zoneBean}"
-		var="zonePnlList"  activeIndex="#{bsvAttendanceBackingBean.managedBean.bsvZoneindx}">
-		<p:ajax event="tabChange" 
-			listener="#{bsvAttendanceBackingBean.onZoneTabChange}"/>
+		dynamic="true" var="zonePnlList"
+		activeIndex="#{bsvAttendanceBackingBean.managedBean.bsvZoneindx}">
+		<p:ajax event="tabChange"
+			listener="#{bsvAttendanceBackingBean.onZoneTabChange}"
+			update="@(.bsvattandanceZonesDtls)" />
 
 		<p:tab id="bsvzonetabs" title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
-			<ui:param name="bsvDetails"
-				value="#{bsvAttendanceBackingBean.managedBean.normalBsvBean}" />
-			<ui:include src="bsvdtls.xhtml"></ui:include>
-
+			<h:panelGroup styleClass="bsvattandanceZonesDtls">
+				<ui:param name="bsvDetails"
+					value="#{bsvAttendanceBackingBean.managedBean.normalBsvBean}" />
+				<ui:include src="bsvdtls.xhtml"></ui:include>
+			</h:panelGroup>
 		</p:tab>
 	</p:accordionPanel>
 </ui:composition>

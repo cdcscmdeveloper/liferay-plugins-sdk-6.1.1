@@ -12,10 +12,14 @@
 			<p:panel header="Briefing And Site Visit Details" toggleable="true">
 
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
-					selection="#{bsvDetails.selectedBriefingDtls}" style="width:100%"
-					rowKey="#{brfsitdtl}">
-
-					<p:column style="width:2%" selectionMode="multiple" />
+					style="width:100%" rowKey="#{brfsitdtl.qtBsvDtlId}"
+					selectionMode="single"
+					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
+					styleClass="bsvDtls">
+					<p:ajax event="rowSelect"
+						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
+						update="@all" partialSubmit="true" />
+					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
 						style="width:25%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
@@ -57,10 +61,14 @@
 			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
-					selection="#{bsvDetails.selectedBriefingDtls}"
-					rowKey="#{brfsitdtl}" rowIndexVar="index" style="width:100%">
-
-					<p:column style="width:2%" selectionMode="multiple" />
+					rowKey="#{brfsitdtl.qtBsvDtlId}" style="width:100%"
+					selectionMode="single"
+					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
+					styleClass="bsvDtls">
+					<p:ajax event="rowSelect"
+						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
+						update=":form:attendanceDetailstbl"  />
+					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
 						style="width:25%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
@@ -100,11 +108,14 @@
 			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
 
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
-					selection="#{bsvDetails.selectedSiteVisitDtls}"
-					rowKey="#{sitevisitDtls}" rowIndexVar="index">
+					rowKey="#{sitevisitDtls.qtBsvDtlId}" selectionMode="single"
+					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
+					styleClass="bsvDtls">
 
-					<p:column style="width:2%" selectionMode="multiple" />
-
+					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
+					<p:ajax event="rowSelect"
+						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
+						update=":form:attendanceDetailstbl" />
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
 						style="width:25%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
@@ -144,6 +155,7 @@
 			</p:panel>
 		</ui:fragment>
 
+
 		<p:panel header="#{lbl['lbl.qt.nb.supplierregistration']}"
 			toggleable="true">
 
@@ -151,22 +163,13 @@
 				width="100%">
 				<p:column>
 					<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.mof.regno']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
+
 				</p:column>
 				<p:column>
-					<p:selectOneMenu
+					<p:inputText id="regNumber"
 						value="#{noticeBoardBackingBean.managedBean.mofNumber}"
-						style="width:180px;margin-bottom:5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
-						<f:selectItems
-							value="#{noticeBoardBackingBean.managedBean.mofAccounts}"
-							var="mofAccount" itemLabel="#{mofAccount.mofNo}"
-							itemValue="#{mofAccount.mofNo}">
-						</f:selectItems>
-						<p:ajax event="change"
-							listener="#{noticeBoardBackingBean.mofNoOnchange}"
-							update="companyName,attendanceDetailstbl"></p:ajax>
-					</p:selectOneMenu>
+						readonly="true" size="29"></p:inputText>
+
 				</p:column>
 				<p:column>
 					<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.supp.name']}" />
@@ -180,8 +183,8 @@
 
 
 			<p:dataTable id="attendanceDetailstbl" var="bsvAttandance"
-				value="#{noticeBoardBackingBean.managedBean.attendanceList}"
-				rows="10" rowKey="#{bsvAttandance}" rowIndexVar="rowIndex">
+				value="#{noticeBoardBackingBean.managedBean.briefingDtls.tempRegistration.bsvAttendance}"
+				rows="10">
 
 				<p:columnGroup type="header">
 					<p:row>
@@ -226,12 +229,16 @@
 
 				<p:column style="width:5px;text-align:center">
 					<p:selectBooleanCheckbox value="#{bsvAttandance.preRegisterd}">
-						<p:ajax process="@all" listener="#{noticeBoardBackingBean.updateToBeAttandance}" update="@all"/>
+						<p:ajax process="@this"
+							listener="#{noticeBoardBackingBean.updateToBeAttandance}"
+							update="@form" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 
 
 			</p:dataTable>
 		</p:panel>
+
 	</p:panel>
+
 </ui:composition>
