@@ -100,6 +100,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
+
 /**
  * @author sri Notice Board Backing Bean
  */
@@ -113,7 +114,10 @@ public class NoticeBoardBackingBean extends
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private String mofNo;
 	private boolean visible;
-
+    private boolean displayImage;
+    
+   
+	
 	/**
 	 * Main Filtration For Notice Board
 	 */
@@ -794,6 +798,10 @@ public class NoticeBoardBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+					
+					setDisplayImage(isGuestUser());
+					
+					
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
@@ -806,6 +814,8 @@ public class NoticeBoardBackingBean extends
 				} else {
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+					setDisplayImage(isGuestUser());
+					
 				}
 
 				searchBean.getDataFilterBeans().add(
@@ -1422,7 +1432,7 @@ public class NoticeBoardBackingBean extends
 
 	public NoticeBoardBackingBean() {
 		// reset();
-
+		
 	}
 
 	public String getClosingDays(String clsDate) throws Exception {
@@ -1621,4 +1631,31 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 
 	}
+	
+	/**
+	 * Return false when getUserId contains null 
+	 * and assuming the logged user is a guest
+	 */
+	private boolean  isGuestUser() {
+		
+		boolean isGusetUser = false;
+		try {
+			FacesScopes fs = new FacesScopes();
+			PmUser pmUser = fs.getUserSessionBean();
+			isGusetUser = pmUser.getUserId() != null ?true:false;
+
+		} catch (EpException exception) {
+			log.info("Exception :" + exception.getMessage());
+		}
+		return isGusetUser;
+	}
+
+	public boolean isDisplayImage() {
+		return displayImage;
+	}
+
+	public void setDisplayImage(boolean displayImage) {
+		this.displayImage = displayImage;
+	}
+
 }
