@@ -38,7 +38,8 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.decision']}"
-					value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}">
+					value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
+					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 					<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 					<p:ajax event="change" 
 						update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],[id$=rePublishPanel],[id$=itemSupplierPanel],[id$=itemSupplierPanel])" 
@@ -57,7 +58,8 @@
 				</h:column>
 				<h:column>
 					<p:selectOneRadio id="recommendType" required="true" label="#{lbl['lbl.sc.recomend.type']}"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}">
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 						<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=onlineBiddingPanel])" 
 							listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" />
@@ -75,7 +77,8 @@
 					</h:column>
 					<h:column>
 						<p:selectOneRadio id="biddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
-							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}">
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
+							disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 							<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
 			   			</p:selectOneRadio>
 					</h:column>
@@ -91,7 +94,8 @@
 				</h:column>
 				<h:column>
 					<p:selectOneRadio id="loiLoaPreparedBy" required="true" label="#{lbl['lbl.sc.loi.loa.prepared.by']}"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}">
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
@@ -102,7 +106,8 @@
 				</h:column>
 				<h:column>
 					<p:selectOneRadio id="fwdHigherAuthority" required="true" label="#{lbl['lbl.sc.forward.to.higher.authority']}"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherAuthReq}">
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherAuthReq}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getFwdHigherAuthorityRadioBtn()}" />
 						<p:ajax event="change" update="@([id$=fwdHigherAuthorityPanel])" 
 							listener="#{suppFinalizationBackingBean.fwdHigherAuthorityEvent}" process="@this" />
@@ -122,13 +127,15 @@
 					
 					<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
 						<p:selectOneMenu id="finalizationCommittee" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterId}"
-										 required="true" label="#{lbl['lbl.sc.finalization.committee']}">
+										 required="true" label="#{lbl['lbl.sc.finalization.committee']}" 
+										 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 							<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationCommitteeDropDown()}" />
 							<p:ajax event="change" update="@([id$=committeeSecretary])" 
 								listener="#{suppFinalizationBackingBean.finalizationCommitteeEvent}" process="@this" />
 			   			</p:selectOneMenu>
 			   			<p:spacer width="5px" />
-			   			<p:inputText id="committeeSecretary" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userName}" disabled="true"/>
+			   			<p:inputText id="committeeSecretary" 
+			   				value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userName}" disabled="true"/>
 					</h:column>
 					
 					<h:column>
@@ -139,7 +146,8 @@
 					<h:column>
 						<p:selectOneRadio id="reason" layout="grid" columns="1" required="true" label="#{lbl['lbl.sc.reason']}" 
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}" 
-							rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
+							rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}" 
+							disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 							<f:selectItems value="#{suppFinalizationBackingBean.getReasonRadioBtn()}" />
 			   			</p:selectOneRadio>
 			   			
@@ -160,7 +168,8 @@
 				</h:column>
 				<h:column>
 					<p:selectOneRadio id="reEvaluateBy" required="true" label="#{lbl['lbl.sc.reevaluate.by']}"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}">
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
@@ -172,7 +181,8 @@
 					<h:column>
 						<div style="float:left; display:inline-block;">
 							<p:selectBooleanCheckbox id="reEvaluateReqForTech" 
-									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}"/>		
+									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}" 
+									disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>		
 							<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
 						</div>
 					</h:column>
@@ -182,7 +192,8 @@
 					<h:column>
 						<div style="float:left; display:inline-block;">
 							<p:selectBooleanCheckbox id="reEvaluateReqForFin" 
-								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" />	
+								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" 
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>	
 							<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
 						</div>									
 					</h:column>
@@ -202,7 +213,8 @@
 		   		<h:column>
 		   			<div class="checkbox">
 						<p:selectBooleanCheckbox id="reqSpecChanges" 
-							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.specChangeReq}" />
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.specChangeReq}" 
+							disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 					</div>
 				</h:column>
 			</h:panelGrid>
@@ -269,7 +281,8 @@
 								<td>
 									<p:inputTextarea cols="40"
 										value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}">
+										rendered="#{remarkVar.remarkId eq null}" 
+										disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 										<p:ajax partialSubmit="true" process="@this" update="@this"/>
 									</p:inputTextarea> 
 									<h:outputText

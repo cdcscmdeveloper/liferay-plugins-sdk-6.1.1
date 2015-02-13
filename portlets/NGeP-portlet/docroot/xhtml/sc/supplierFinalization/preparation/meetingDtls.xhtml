@@ -16,15 +16,18 @@
 						selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingList}">
 						<ac:paginator for="meetingDtlTbl" />
 
-						<p:column selectionMode="multiple" style="width:2%"></p:column>
+						<p:column selectionMode="multiple" style="width:2%" 
+							rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"></p:column>
 						
 						<p:column style="width:18%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 							</f:facet>
-							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
-								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
+								mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
+								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 								<p:ajax partialSubmit="true" process="@this" update="@this"/>
 							</p:calendar>
 						</p:column>
@@ -35,7 +38,8 @@
 								<h:outputText value="#{lbl['lbl.sc.location']}" />
 							</f:facet>
 							<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true" rows="2" cols="50" maxlength="255"
-								value="#{meetingDtl.meetingLocation}">
+								value="#{meetingDtl.meetingLocation}" 
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 								<p:ajax partialSubmit="true" process="@this" update="@this"/>
 							</p:inputTextarea>
 						</p:column>
@@ -45,14 +49,16 @@
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.status']}" />
 							</f:facet>
-							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false" value="#{meetingDtl.meetingStatusStr}">
+							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false" value="#{meetingDtl.meetingStatusStr}" 
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}"/>
 								<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.changeMeetingStatus(meetingDtl)}"/>
 							</p:selectOneMenu>
 						</p:column>
 						
 						<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%">
-							<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30">
+							<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30" 
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 								<p:ajax partialSubmit="true" process="@this" update="@this"/>
 							</p:inputTextarea>
 						</p:column>
@@ -64,12 +70,13 @@
 							process="@this,meetingDtlTbl" 
 							partialSubmit="true"
 							action="#{suppFinalizationBackingBean.addMeetingDtls}"
-							update="meetingDtlTbl" />
+							update="meetingDtlTbl" 
+							rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 							
 						<p:commandButton value="#{lbl['lbl.btn.delete']}"
 							process="@this, meetingDtlTbl" partialSubmit="true"
 							action="#{suppFinalizationBackingBean.deleteMeetingDetails(suppFinalizationBackingBean.managedBean.selectedMeetingList)}"
-							update="meetingDtlTbl" />
+							update="meetingDtlTbl" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 	
 					</div>
 				</p:panel> 
