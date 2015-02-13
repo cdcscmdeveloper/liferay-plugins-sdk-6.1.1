@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -43,6 +44,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.BiddingConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -58,6 +60,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.bidding.BiddingReqDTO;
+import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -204,8 +208,26 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setDocType(resDTO.getPmStatus().getDocType());
 
 			// Long sourceId = 1450L;
-
 			retrieveLOIList(sourceId);
+			
+			
+			if(getManagedBean().getDocType().equals(QTConstants.REC_TYPE_ONLINE_BIDDING)){
+				System.out.println("docType @@@@@@@@@@@@@@ "+ getManagedBean().getDocType());
+
+				IBiddingSO biddingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+				BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
+
+				biddingReqDTO.setDocId(sourceId);
+				biddingReqDTO.setRecommendType(getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode());
+				BiddingResDTO biddingResDTO = biddingSO.retriveBidSupplierItems(biddingReqDTO);
+				
+				
+				// rec supplier in loi list
+				//getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
+
+			} 
+			
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -2162,6 +2184,9 @@ public class LOIDetailBackingBean extends
 
 					if(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth() == null){
 						scLoiLoaItem.getScRequestItem().getTplSpecQuestion().setClDurationMonth(bigDecimal);
+					}
+					if(scLoiLoaItem.getSubTotal() == null){
+						scLoiLoaItem.setSubTotal(bigDecimal);
 					}
 				}
 			}
