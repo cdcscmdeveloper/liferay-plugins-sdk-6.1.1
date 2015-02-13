@@ -351,6 +351,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				null,
 				scQuote.getRemarks(),
 				ScSQRemark.class));
+		
+		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 		this.getManagedBean().setScQuote(scQuote);
 
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
