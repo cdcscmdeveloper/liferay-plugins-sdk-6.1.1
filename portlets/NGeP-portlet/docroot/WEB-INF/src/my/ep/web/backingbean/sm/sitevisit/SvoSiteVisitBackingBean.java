@@ -1918,4 +1918,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		else 
 			return null;
 	}
+	
+	public void svEquipmentOnChange(SmSvEquipment svEquipment){
+		//if equipment is unchecked, set the qty to null
+		if(!svEquipment.isEquipmentAvailable()){
+			svEquipment.setEquipmentQty(null);
+		}
+	}
 }
