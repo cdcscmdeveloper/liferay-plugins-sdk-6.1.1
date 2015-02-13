@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.sm.equipment.maintnce.ovrhl']}">
-		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentMain}" var="equipMaint" 
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentMain}" var="equipMaint" id="dtlEquipMain"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column>
 					<f:facet name="header">
@@ -22,7 +22,9 @@
 						#{lbl['lbl.sm.availableLbl']}
 					</f:facet>
 					
-					<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}" disabled="#{viewFlag}">
+						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipMaint)}" update="dtlEquipMain"></p:ajax>
+					</p:selectBooleanCheckbox>
 					
 			</p:column>
 			
@@ -30,13 +32,14 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.equipment.qtty.set']}
 					</f:facet>
-					<p:inputText value="#{equipMaint.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" disabled="#{viewFlag}"></p:inputText>
+					<p:inputText value="#{equipMaint.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" 
+					disabled="#{viewFlag || !equipMaint.equipmentAvailable}" required="#{equipMaint.equipmentAvailable}" ></p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sm.equipment.pnl.beat.spray.paint']}">
-		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentBeating}" var="equipBinding" 
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentBeating}" var="equipBinding" id="dtlEquipBinding"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column>
 					<f:facet name="header">
@@ -50,7 +53,9 @@
 						#{lbl['lbl.sm.availableLbl']}
 					</f:facet>
 					
-					<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}" disabled="#{viewFlag}">
+						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipBinding)}"  update="dtlEquipBinding"></p:ajax>
+					</p:selectBooleanCheckbox>
 					
 			</p:column>
 			
@@ -58,7 +63,8 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.equipment.qtty.set']}
 					</f:facet>
-					<p:inputText value="#{equipBinding.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" disabled="#{viewFlag}"></p:inputText>
+					<p:inputText value="#{equipBinding.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" 
+					disabled="#{viewFlag || !equipBinding.equipmentAvailable}" required="#{equipBinding.equipmentAvailable}"></p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
