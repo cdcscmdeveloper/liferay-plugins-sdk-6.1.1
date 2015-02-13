@@ -16,23 +16,23 @@
 </script>
 
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.upload']}" icon="ui-icon-upload"
+		<p:commandButton value="#{lbl['lbl.cm.upload']}" 
 			onclick="excelDialog.show(); clearInvalidFileMsg();"  />
 
 		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
-			update=":form" icon="ui-icon-download" ajax="false">
+			update=":form" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
 		
 		<ui:remove>
 		<p:commandButton id="reportLink" value="#{lbl['lbl.cm.download']} Report"
-			update=":form" icon="ui-icon-download" ajax="false">
+			update=":form"  ajax="false">
 			<p:fileDownload value="#{reportBackingBean.reportPdf}" />
 		</p:commandButton>		
 		</ui:remove>
 
 
-		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}" icon="ui-icon-submit" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
+		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"  disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
 
@@ -129,7 +129,7 @@
 	<div class="clear"></div>
 
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
+		<p:commandButton value="#{lbl['lbl.cm.add']}" 
 			action="#{catalogueBackingBean.navigateToSearchCode}" />
 
 	</div>

@@ -23,7 +23,7 @@
 						process="@this, zoneDetailsDataTable" partialSubmit="true"
 						update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable]), @([id$=zonePopupPanel])"
 						action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
-						style="float:right;" icon="ui-icon-save" />
+						style="float:right;"/>
 
 				</p:column>
 			</p:row>
@@ -70,8 +70,7 @@
 		<div align="right" style="width: 100%">
 			<p:commandButton value="#{lbl['lbl.cm.zm.btn.add']}" process="@this"
 				update=":form:ZL" partialSubmit="true" oncomplete="ZL.show();"
-				actionListener="#{zoneMaintenanceBackingBean.addNewZone}"
-				icon="ui-icon-add" />
+				actionListener="#{zoneMaintenanceBackingBean.addNewZone}" />
 		</div>
 
 		<p:dialog id="ZL" widgetVar="ZL"
@@ -124,7 +123,7 @@
 
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}"
-					style="float:right;" icon="ui-icon-cancel" immediate="true"
+					style="float:right;" immediate="true"
 					oncomplete="ZL.hide();"></p:commandButton>
 				&#160;&#160;
 
@@ -133,7 +132,7 @@
 					disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0}"
 					style="float:right;" oncomplete="ZL.hide(); blockWidget.hide();"
 					process="@all ,zoneNameId" update="@this, zonePopupPanel"
-					partialSubmit="true" icon="ui-icon-accept"
+					partialSubmit="true" 
 					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">
 				</p:commandButton>
 			</div>
