@@ -20,7 +20,7 @@
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
 											<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
-												listener="#{backingBean.managePersonnelRoles}" />
+												listener="#{backingBean.managePersonnelRoles('Y')}" />
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left"
 											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
@@ -34,14 +34,14 @@
 												value="#{backingBean.managedBean.selectedShareHolder.director}">
 												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
-													listener="#{backingBean.managePersonnelRoles}" />
+													listener="#{backingBean.managePersonnelRoles('Y')}" />
 											</p:selectBooleanCheckbox></td>
 										<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" /></td>
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
 												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
-													listener="#{backingBean.managePersonnelRoles}" />
+													listener="#{backingBean.managePersonnelRoles('Y')}" />
 											</p:selectBooleanCheckbox></td>
 										<td><p:outputLabel style="float: left"
 												value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
@@ -55,7 +55,7 @@
 											value="#{backingBean.managedBean.selectedShareHolder.management}">
 											<p:ajax event="change" update=":form:tt:shrRolesPanel"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
-												listener="#{backingBean.managePersonnelRoles}" />
+												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" /></td>
 									<td style="width: 20px"><p:selectBooleanCheckbox
@@ -86,7 +86,7 @@
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
 											<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
-												listener="#{backingBean.managePersonnelRoles}" />
+												listener="#{backingBean.managePersonnelRoles('Y')}" />
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left"
 											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
@@ -100,14 +100,14 @@
 												value="#{backingBean.managedBean.selectedShareHolder.director}">
 												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
-													listener="#{backingBean.managePersonnelRoles}" />
+													listener="#{backingBean.managePersonnelRoles('Y')}" />
 											</p:selectBooleanCheckbox></td>
 										<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" /></td>
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
 												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
-													listener="#{backingBean.managePersonnelRoles}" />
+													listener="#{backingBean.managePersonnelRoles('Y')}" />
 											</p:selectBooleanCheckbox></td>
 										<td><p:outputLabel style="float: left"
 												value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
@@ -116,7 +116,7 @@
 											value="#{backingBean.managedBean.selectedShareHolder.management}">
 											<p:ajax event="change" update=":form:tt:shrRolesPanel"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
-												listener="#{backingBean.managePersonnelRoles}" />
+												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" /></td>
 								</c:if>
@@ -128,7 +128,7 @@
 											value="#{backingBean.managedBean.selectedShareHolder.prof}">
 											<p:ajax event="change" update=":form:tt:shrRolesPanel"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
-												listener="#{backingBean.managePersonnelRoles}" />
+												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left"
 											value="#{lbl['lbl.sm.professional']}" /></td>
@@ -137,7 +137,7 @@
 											value="#{backingBean.managedBean.selectedShareHolder.semiProf}">
 											<p:ajax event="change" update=":form:tt:shrRolesPanel"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
-												listener="#{backingBean.managePersonnelRoles}" />
+												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left"
 											value="#{lbl['lbl.sm.professional.semi']}" /></td>

@@ -4133,7 +4133,7 @@ public class SmApplicationBackingBean extends
 		}
 		assignSelShareHolderAddress(shareHolderBean);
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
-		managePersonnelRoles();
+		managePersonnelRoles("Y");
 		manageEquityLimit(getManagedBean().getSelectedShareHolder());
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
 			getManagedBean().getSelectedShareHolder().setIdentificationType(
@@ -8062,7 +8062,7 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Manage personnel roles for the selected SmPersonnel in the application.
 	 */
-	public void managePersonnelRoles() {
+	public void managePersonnelRoles(String updateAddressDetails) {
 		log.info("**** Enter Manage Roles  ******");
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
@@ -8115,17 +8115,21 @@ public class SmApplicationBackingBean extends
 						false);
 			}
 		}
-		if (getManagedBean().getSelectedShareHolder().isEquityOwner()
-				|| getManagedBean().getSelectedShareHolder().isDirector()
-				|| getManagedBean().getSelectedShareHolder()
-						.isHigherManagement()) {
-			getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
-			getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
-			assignSelShareHolderAddress(getManagedBean()
-					.getSelectedShareHolder());
-		} else {
-			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
-			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
+
+		if (getManagedBean().getSelectedShareHolder().getPersonnelId() != null
+				&& updateAddressDetails.equalsIgnoreCase("Y")) {
+			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
+					|| getManagedBean().getSelectedShareHolder().isDirector()
+					|| getManagedBean().getSelectedShareHolder()
+							.isHigherManagement()) {
+				getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
+				getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
+				assignSelShareHolderAddress(getManagedBean()
+						.getSelectedShareHolder());
+			} else {
+				getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
+				getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
+			}
 		}
 	}
 
