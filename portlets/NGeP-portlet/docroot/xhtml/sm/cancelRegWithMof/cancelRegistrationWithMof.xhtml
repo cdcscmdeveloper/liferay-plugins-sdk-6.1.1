@@ -59,10 +59,11 @@
 			<div align="center">
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{backingBean.onDisplayConfirmCanceMofRegistration}"
-					update="spkiPopup,@([id$=Msg])"/>
-				<ac:spkiPopup id="spkiPopup"
-					postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForCancel)}" />
-
+					update="spkiOutPanel,@([id$=Msg])" />
+				<p:outputPanel id="spkiOutPanel">
+					<ac:spkiPopup id="spkiPopup"
+						postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForCancel)}" />
+				</p:outputPanel>
 			</div>
 		</p:panel>
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"

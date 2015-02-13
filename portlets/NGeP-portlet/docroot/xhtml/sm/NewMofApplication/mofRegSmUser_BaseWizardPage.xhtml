@@ -230,9 +230,11 @@
 														test="#{backingBean.managedBean.overLappedCategoryExists}">
 														<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
 															action="#{spkiBackingBean.getChallengeQuestions}"
-															update="spkiPopup" oncomplete="spki_dlg.show();" />
-														<ac:spkiPopup id="spkiPopup"
-															postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
+															update="spkiOutPanel" oncomplete="spki_dlg.show();" />
+														<p:outputPanel id="spkiOutPanel">
+															<ac:spkiPopup id="spkiPopup"
+																postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
+														</p:outputPanel>
 													</c:when>
 													<c:otherwise>
 														<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
@@ -275,9 +277,11 @@
 															test="#{backingBean.managedBean.overLappedCategoryExists}">
 															<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
 																action="#{spkiBackingBean.getChallengeQuestions}"
-																update="spkiPopup" oncomplete="spki_dlg.show();" />
-															<ac:spkiPopup id="spkiPopup"
-																postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
+																update="spkiOutPanel" oncomplete="spki_dlg.show();" />
+															<p:outputPanel id="spkiOutPanel">
+																<ac:spkiPopup id="spkiPopup"
+																	postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
+															</p:outputPanel>
 														</c:when>
 														<c:otherwise>
 															<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
