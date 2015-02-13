@@ -314,6 +314,18 @@ public class LOIDetailBackingBean extends
 				scLoi = awardSupplierResDTO.getScLoi();
 			}
 			
+			// calc sub total items in acceptance letter.
+			if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
+				BigDecimal  subTotal = BigDecimal.valueOf(0d);
+				List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
+				for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+							scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+					scLoiLoaItem.setSubTotal(subTotal);
+				}
+				scLoi.setScLoiLoaItems(scLoiLoaItems);
+			}
+			
 			getManagedBean().setScLoi(scLoi);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
