@@ -1,10 +1,9 @@
 package my.ep.web.backingbean.sc.loa;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -111,6 +110,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -449,10 +449,13 @@ public class LOADetailBackingBean extends
 	
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
-		System.out.println("===== ScLoaLoiItem : "
-				+ scLoa.getScLoiLoaItems().size());
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
+		
+		// calc total award details
+		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
+			scLoa.setLoaAmt(calcTotalAmount(scLoa.getScLoiLoaItems()));
+		}
 
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
@@ -2758,106 +2761,110 @@ public class LOADetailBackingBean extends
 
 	private void generateJadualHarga(ScAttachment attachment,
 			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList)
-			throws Exception {
+					throws Exception {
 		if (serviceList.size() > 0 || productList.size() > 0) {
 			try {
-				FileInputStream inputStream = new FileInputStream(new File(
+				/*	FileInputStream inputStream = new FileInputStream(new File(
 						FacesContext.getCurrentInstance().getExternalContext()
 								.getRealPath("/WEB-INF/templates")
-								+ "/sc/loa/jadual-harga.xlsx"));
-				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
-																	// HSSFWorkbook();
-				boolean emptyProductList = false;
-				Sheet productSheet = null;
-				Sheet serviceSheet = null;
-				Row row = null;
-				int rowIndex = 0;
-				int cellIndex = 0;
-				if (productList.size() > 0) {
-					rowIndex = 0;
-					productSheet = wb.getSheetAt(0);
-					wb.setSheetName(0, "ProductSheet");
-					for (JadualHargaBean product : productList) {
-						rowIndex++;
-						cellIndex = 0;
-						row = productSheet.createRow(rowIndex);
-						row.createCell(cellIndex++).setCellValue(
-								product.getZone());
-						row.createCell(cellIndex++).setCellValue(
-								product.getItem());
-						row.createCell(cellIndex++).setCellValue(
-								product.getUom());
-						row.createCell(cellIndex++).setCellValue(
-								product.getQuantity());
-						row.createCell(cellIndex++).setCellValue(
-								product.getSubSequence());
-						row.createCell(cellIndex++).setCellValue(
-								product.getUnitPrice());
-						row.createCell(cellIndex++).setCellValue(
-								product.getTotalAmount());
-					}
-					// Auto size all the columns
-					for (int x = 0; x < productSheet.getRow(0)
-							.getPhysicalNumberOfCells(); x++) {
-						productSheet.autoSizeColumn(x);
-					}
-				} else {
-					wb.removeSheetAt(0);
-					emptyProductList = true;
-				}
+								+ "/sc/loa/jadual-harga.xlsx"));*/
 
-				if (serviceList.size() > 0) {
-					rowIndex = 0;
-					if (emptyProductList) {
-						serviceSheet = wb.getSheetAt(0);
-						wb.setSheetName(0, "ServiceSheet");
+				final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
+				InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
+				if (inputStream != null) {
+					XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
+
+					boolean emptyProductList = false;
+					Sheet productSheet = null;
+					Sheet serviceSheet = null;
+					Row row = null;
+					int rowIndex = 0;
+					int cellIndex = 0;
+					if (productList.size() > 0) {
+						rowIndex = 0;
+						productSheet = wb.getSheetAt(0);
+						wb.setSheetName(0, "ProductSheet");
+						for (JadualHargaBean product : productList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = productSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(
+									product.getZone());
+							row.createCell(cellIndex++).setCellValue(
+									product.getItem());
+							row.createCell(cellIndex++).setCellValue(
+									product.getUom());
+							row.createCell(cellIndex++).setCellValue(
+									product.getQuantity());
+							row.createCell(cellIndex++).setCellValue(
+									product.getSubSequence());
+							row.createCell(cellIndex++).setCellValue(
+									product.getUnitPrice());
+							row.createCell(cellIndex++).setCellValue(
+									product.getTotalAmount());
+						}
+						// Auto size all the columns
+						for (int x = 0; x < productSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							productSheet.autoSizeColumn(x);
+						}
 					} else {
-						serviceSheet = wb.getSheetAt(1);
-						wb.setSheetName(1, "ServiceSheet");
+						wb.removeSheetAt(0);
+						emptyProductList = true;
 					}
 
-					for (JadualHargaBean service : serviceList) {
-						rowIndex++;
-						cellIndex = 0;
-						row = serviceSheet.createRow(rowIndex);
-						row.createCell(cellIndex++).setCellValue(
-								service.getZone());
-						row.createCell(cellIndex++).setCellValue(
-								service.getItem());
-						row.createCell(cellIndex++).setCellValue(
-								service.getUom());
-						row.createCell(cellIndex++).setCellValue(
-								service.getFreqUom());
-						row.createCell(cellIndex++).setCellValue(
-								service.getUomPerDay());
-						row.createCell(cellIndex++).setCellValue(
-								service.getUomPerMonth());
-						row.createCell(cellIndex++).setCellValue(
-								service.getUomPerYear());
-						row.createCell(cellIndex++).setCellValue(
-								service.getQuantity());
-						row.createCell(cellIndex++).setCellValue(
-								service.getUnitPrice());
-						row.createCell(cellIndex++).setCellValue(
-								service.getTotalAmount());
+					if (serviceList.size() > 0) {
+						rowIndex = 0;
+						if (emptyProductList) {
+							serviceSheet = wb.getSheetAt(0);
+							wb.setSheetName(0, "ServiceSheet");
+						} else {
+							serviceSheet = wb.getSheetAt(1);
+							wb.setSheetName(1, "ServiceSheet");
+						}
 
+						for (JadualHargaBean service : serviceList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = serviceSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(
+									service.getZone());
+							row.createCell(cellIndex++).setCellValue(
+									service.getItem());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUom());
+							row.createCell(cellIndex++).setCellValue(
+									service.getFreqUom());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUomPerDay());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUomPerMonth());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUomPerYear());
+							row.createCell(cellIndex++).setCellValue(
+									service.getQuantity());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUnitPrice());
+							row.createCell(cellIndex++).setCellValue(
+									service.getTotalAmount());
+
+						}
+
+						for (int x = 0; x < serviceSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							serviceSheet.autoSizeColumn(x);
+						}
+					} else {
+						wb.removeSheetAt(1);
 					}
 
-					for (int x = 0; x < serviceSheet.getRow(0)
-							.getPhysicalNumberOfCells(); x++) {
-						serviceSheet.autoSizeColumn(x);
-					}
-				} else {
-					wb.removeSheetAt(1);
+					wb.setActiveSheet(0);
+					FileOutputStream os = new FileOutputStream(
+							getActualFilePath(attachment));
+					wb.write(os);
+					os.flush();
+					os.close();
 				}
-
-				wb.setActiveSheet(0);
-				FileOutputStream os = new FileOutputStream(
-						getActualFilePath(attachment));
-				wb.write(os);
-				os.flush();
-				os.close();
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -3149,7 +3156,10 @@ public class LOADetailBackingBean extends
 	}
 
 	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
-		BigDecimal total = scLoiLoaItem.getUnitPrice();
+		BigDecimal total = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+		
+		/*		BigDecimal total = scLoiLoaItem.getUnitPrice();
 
 		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
 				.getClUomFrequency() != null) {
@@ -3175,10 +3185,23 @@ public class LOADetailBackingBean extends
 					.getTplSpecQuestion().getClDurationMonth());
 		}
 
-		total = total.multiply(scLoiLoaItem.getQty());
+		total = total.multiply(scLoiLoaItem.getQty());*/
 
 		return total;
 	}
+	
+	private BigDecimal calcTotalAmount(List<ScLoiLoaItem> scLoiLoaItems) {
+		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+
+		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+			totalAmount = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+					scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+			totalAmount = totalAmount.add(totalAmount);
+		}
+		return totalAmount;
+	}
+	
+	
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
