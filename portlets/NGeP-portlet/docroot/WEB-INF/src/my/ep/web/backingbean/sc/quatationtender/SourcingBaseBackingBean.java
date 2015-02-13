@@ -1002,6 +1002,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		roleCodes.add(RoleCode.RN_APPROVER.toString());
 		roleCodes.add(RoleCode.CT_APPROVER.toString());
 		roleCodes.add(RoleCode.BPK_APPROVER.toString());
+		roleCodes.add(RoleCode.DESK_OFFICER.toString());
+		roleCodes.add(RoleCode.SC_SECRETARY.toString());
+		roleCodes.add(RoleCode.SC_MEMBER.toString());
+		roleCodes.add(RoleCode.SC_CHAIRPERSON.toString());
 		
 		String roleCode = null;
 		

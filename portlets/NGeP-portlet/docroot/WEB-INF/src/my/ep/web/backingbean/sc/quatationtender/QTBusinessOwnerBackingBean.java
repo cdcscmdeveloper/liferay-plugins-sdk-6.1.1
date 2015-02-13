@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -872,6 +873,9 @@ public class QTBusinessOwnerBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			quationTenderReqDTO.setQtdetail(scQt);
 			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			quationTenderReqDTO.setRoleCode(getUserRoleCode());
 			detailSO.validateateBODetails(quationTenderReqDTO);
 			// setting removed committemebers list to committe.
 			if (null != this.getManagedBean().getToBeDelCommitteMemebers()
@@ -963,6 +967,9 @@ public class QTBusinessOwnerBackingBean extends
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean()
 					.getQuotationTenderDataType());
+			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			quationTenderReqDTO.setPmUser(facesScopes.getUserSessionBean());
+			quationTenderReqDTO.setRoleCode(getUserRoleCode());
 			detailSO.validateateBODetails(quationTenderReqDTO);
 			quationTenderResDTO = detailSO.submitQT(quationTenderReqDTO);
 			// To renew the session object..
@@ -1066,6 +1073,9 @@ public class QTBusinessOwnerBackingBean extends
 						IQTDetailSO.class);
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		QuationTenderResDTO resDTO = null;
+		quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_CANCEL);
+		quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		quationTenderReqDTO.setRoleCode(getUserRoleCode());
 		/*if (currStatus.getStatusId() > QTStatusConst.QT_PENDING_APPOINT_BO) {
 			quationTenderReqDTO.setQtdetail(qt);
 			resDTO = detailSO.cancleQT(quationTenderReqDTO);
