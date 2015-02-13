@@ -87,6 +87,36 @@ public class SchedulerManagerBackingBean extends
 			log.error(e.getMessage());
 		}
 	}
+	
+	
+	public JobKey getJobKey(String jobName,String searchGroupName){
+		JobKey returnJobKey = null;
+		try{
+		for (String groupName : getManagedBean().getScheduler()
+				.getJobGroupNames()) {
+			
+			if(searchGroupName.equalsIgnoreCase(groupName)){
+				for (JobKey jobKey : getManagedBean().getScheduler()
+						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+
+					if(jobKey.getName().equals(jobName)){
+						returnJobKey = jobKey;
+						break;				
+					}
+				}
+				
+				break;
+			}
+			
+		}
+		}
+		catch(Exception e){
+			log.error(e);
+		}
+		
+		return returnJobKey;
+
+	}
 
 	public void pauseOrResumeJob(EpJobVO epJobVO) {
 		try {
