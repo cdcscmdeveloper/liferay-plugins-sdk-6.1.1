@@ -154,7 +154,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
 	private boolean rnToSQFlag = Boolean.TRUE;
 	private boolean panelItemFlag = Boolean.TRUE;
-	private boolean panelItemBtnFlag = Boolean.TRUE;
 	
 	private boolean newableFlag = Boolean.TRUE;
 	private boolean editableFlag = Boolean.TRUE;
@@ -1335,18 +1334,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setPanelItemFlag(boolean panelItemFlag) {
 		this.panelItemFlag = panelItemFlag;
 	}
-	/**
-	 * @return the panelItemBtnFlag
-	 */
-	public boolean isPanelItemBtnFlag() {
-		return panelItemBtnFlag;
-	}
-	/**
-	 * @param panelItemBtnFlag the panelItemBtnFlag to set
-	 */
-	public void setPanelItemBtnFlag(boolean panelItemBtnFlag) {
-		this.panelItemBtnFlag = panelItemBtnFlag;
-	}
+	
 	/**
 	 * @return the promptMessage
 	 */
