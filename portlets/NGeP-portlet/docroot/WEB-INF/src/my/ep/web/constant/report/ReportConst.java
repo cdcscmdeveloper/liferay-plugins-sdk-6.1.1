@@ -706,4 +706,7 @@ public class ReportConst {
 	public static final String EXT_BRAND="Brand";
 	public static final String EXT_MEASUREMENT="Measurement";
 	public static final String EXT_COLOUR="Colour";
+	
+	//ERROR N EXCEPTIONS
+	public static final String ERR_999000_MORTHAN_TEN= "lbl.rpt.ERR_999000_MORTHAN_TEN";
 }

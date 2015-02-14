@@ -59,7 +59,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryMofRegNoView(true);							
             break;
 		case ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL:
-				rptGenBean.retrieveCategoryLevOne();				
+				rptGenBean.retrieveCategoryLevOne1();				
 				rptGenBean.retrieveState();
 				rptGenBean.setSmMandatoryCategoryView(true);
 	        	rptGenBean.setSmMandatoryStateView(true);
@@ -72,10 +72,11 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmMandatoryCreatedFromYearView(true);				
             break;
 		case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
-				rptGenBean.retrieveCategoryLevOne();				
+				rptGenBean.retrieveCategoryLevOne1();				
 				rptGenBean.retrieveState();	
 				rptGenBean.setSmMandatoryCategoryView(true);
 	        	rptGenBean.setSmMandatoryStaticByStateView(true);
+	        	rptGenBean.setSmExtraTwoColumnView(true);
             break;
 		 case ReportConst.SM_APPLICATION_VERIFICATION_RPT_VAL:		        	
 			 	//rptGenBean.setSmReceiveDateView(true);
@@ -96,9 +97,10 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL:					
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
-				rptGenBean.retrieveCategoryLevOne();
-				rptGenBean.setSmCategoryView(true);
-				rptGenBean.setSmCompanyNameView(true);					
+				rptGenBean.retrieveCategoryLevOne1();
+				rptGenBean.setSmMandatoryCategoryView(true);
+				rptGenBean.setSmCompanyNameView(true);
+				rptGenBean.setSmExtraTwoColumnView(true);
 	            break;
 		 case ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL:
 			    rptGenBean.generateYearList();
@@ -189,7 +191,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setToDateView(true);					
 	            break; 
 		 case ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL:
-			    rptGenBean.retrieveCategoryLevOne();
+			    rptGenBean.retrieveCategoryLevOne1();
 			    rptGenBean.retrieveState();
 				rptGenBean.setSmMandatoryCategoryView(true);
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
@@ -471,7 +473,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		}
 	}
 
-	public void retrieveCategoryLevOne(){
+	/*public void retrieveCategoryLevOne(){
 		levOneCatLst = new ArrayList<SelectItem>();		
 		ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
 		//CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
@@ -483,6 +485,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			selectItem.setValue(catOne.getCategoryL1Id());
 			levOneCatLst.add(selectItem);			
 		}
-	}
+	}*/
 
 }
