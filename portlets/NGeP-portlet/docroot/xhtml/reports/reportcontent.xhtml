@@ -48,16 +48,19 @@
 						 <ui:include src="ctreportcontent.xhtml"></ui:include>		
 					<div>
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
-						<TABLE style="margin-top:10px;width:43%;">
+						<TABLE style="margin-top:10px;width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.dtRange']}" style="width:158px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeFrm']}" style="width:158px;"/>
 								</TD>
 								<TD>
 									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
 									
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
 									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
 								</TD>				
 								<TD>
 									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
