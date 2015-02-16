@@ -7,9 +7,6 @@
    	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="resourceSection">
   <h:outputScript library="ep/gpki_js" name="gpki-api.js" />
-<!--   <h:outputScript  name="//code.jquery.com/jquery-1.11.0.min.js" /> -->
-<!--       <h:outputScript  name="jquery/jquery-2.1.1.js" /> -->
-   
 
 	</ui:define>
    <ui:define name="contentSection">
@@ -30,7 +27,10 @@
 	<h:panelGrid columns="1" cellpadding="5">
 <p:commandButton value="Submit"  action="#{smTrackingDiaryBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}" update="aasd" oncomplete="spki_dlg.show();"  />	 
 	</h:panelGrid>
- <ac:spkiPopup  id="aasd" password="#{smTrackingDiaryBackingBean.managedBean.spkiBackingBean.password}" challengeAns1="#{smTrackingDiaryBackingBean.managedBean.spkiBackingBean.challengeAns1}" challengeQues1="#{smTrackingDiaryBackingBean.managedBean.spkiBackingBean.challengeQues1}" postSignAction="#{smTrackingDiaryBackingBean.search}"  /> 
+ <ac:spkiPopup  id="aasd" password="#{smTrackingDiaryBackingBean.managedBean.spkiBackingBean.password}" 
+					 challengeAns1="#{smTrackingDiaryBackingBean.managedBean.spkiBackingBean.challengeAns1}" 
+					 challengeQues1="#{smTrackingDiaryBackingBean.managedBean.spkiBackingBean.challengeQues1}" 
+					 postSignAction="#{smTrackingDiaryBackingBean.search}"  /> 
 	</ui:define>
 		    
 </ui:composition>				
