@@ -12,13 +12,13 @@
     <style>
       .column-align-center { text-align: center !important;}
     </style>
-    <p:panel>
-       <p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
-       <p:messages id="messages" showDetail="true" 
+   
+    <p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+    <p:messages id="messages" showDetail="true" 
           showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
-    </p:panel>
+
      <p:panel id="searchId" header="#{lbl['lbl.btn.search']}" toggleable="true"  toggleSpeed="500">
      	<h:panelGrid columns="4" style="width:100%;" 
      	   columnClasses="columnWidth15,columnWidth20,columnWidth15,columnWidth20">
