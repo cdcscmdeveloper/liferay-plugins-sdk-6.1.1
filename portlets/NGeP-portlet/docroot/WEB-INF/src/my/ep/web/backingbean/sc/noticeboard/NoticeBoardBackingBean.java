@@ -799,7 +799,7 @@ public class NoticeBoardBackingBean extends
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 					
-					setDisplayImage(isGuestUser());
+					setDisplayImage(isUser());
 					
 					
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
@@ -814,7 +814,7 @@ public class NoticeBoardBackingBean extends
 				} else {
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-					setDisplayImage(isGuestUser());
+					setDisplayImage(isUser());
 					
 				}
 
@@ -1636,18 +1636,20 @@ public class NoticeBoardBackingBean extends
 	 * Return false when getUserId contains null 
 	 * and assuming the logged user is a guest
 	 */
-	private boolean  isGuestUser() {
+	private boolean  isUser() {
 		
-		boolean isGusetUser = false;
+		boolean isUser = false;
 		try {
 			FacesScopes fs = new FacesScopes();
 			PmUser pmUser = fs.getUserSessionBean();
-			isGusetUser = pmUser.getUserId() != null ?true:false;
+			if(null != pmUser && null != pmUser.getUserId()){
+				isUser =  true;
+			}
 
 		} catch (EpException exception) {
 			log.info("Exception :" + exception.getMessage());
 		}
-		return isGusetUser;
+		return isUser;
 	}
 
 	public boolean isDisplayImage() {
