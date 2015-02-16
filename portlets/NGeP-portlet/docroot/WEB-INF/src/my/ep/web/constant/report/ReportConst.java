@@ -681,6 +681,7 @@ public class ReportConst {
 	public static final String ENG_LANG = "en";
 	public static final String APPROVER_NAIK_TARAF = "APPROVER_NAIK_TARAF";
 	public static final String APPROVER = "APPROVER";
+	public static final String RN_APPROVER = "RN_APPROVER";
 	public static final String DESK_OFFICER = "DESK_OFFICER";
 	public static final String SUB_MOD_S1 = "S1";
 	
@@ -709,4 +710,5 @@ public class ReportConst {
 	
 	//ERROR N EXCEPTIONS
 	public static final String ERR_999000_MORTHAN_TEN= "lbl.rpt.ERR_999000_MORTHAN_TEN";
+	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
 }

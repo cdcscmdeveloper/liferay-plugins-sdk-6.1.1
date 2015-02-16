@@ -2914,8 +2914,8 @@ public class ReportBackingBean extends
 			String roleCode = ReportConst.EMPTY_VAL;
 			if (authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF)) {
 				roleCode = ReportConst.APPROVER_NAIK_TARAF;
-			} else if (authoriztionList.contains(ReportConst.APPROVER)) {
-				roleCode = ReportConst.APPROVER;
+			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)) {
+				roleCode = ReportConst.RN_APPROVER;
 			}
 			if (roleCode != null && roleCode != ReportConst.EMPTY_VAL) {
 				for (int i = 0; i < orgProfileList.size(); i++) {
@@ -3370,7 +3370,7 @@ public class ReportBackingBean extends
 					.substring(6, 10));
 			this.setSmCreatedToYear(outputDateFormat.format(currentDate)
 					.substring(6, 10));
-		}
+		}		
 		/*
 		 * if((getManagedBean().getModuleValue()!=null)&&((getManagedBean().
 		 * getReportValue()!=null))){
@@ -3402,6 +3402,39 @@ public class ReportBackingBean extends
 				this.setScSoneCrtdFromDate(newDate);
 			}
 		}
+	}
+	public void checkYearDefference() {
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+		String yearFrom=outputDateFormat.format(this.getFromDate()).substring(6, 10);
+		String yearTo=outputDateFormat.format(this.getToDate()).substring(6, 10);
+		String monthFrom=outputDateFormat.format(this.getFromDate()).substring(3, 5);
+		String monthTo=outputDateFormat.format(this.getToDate()).substring(3, 5);
+		String dayFrom=outputDateFormat.format(this.getFromDate()).substring(0, 2);
+		String dayTo=outputDateFormat.format(this.getToDate()).substring(0, 2);
+		int yearFromInt=Integer.parseInt(yearFrom);
+		int yearToInt=Integer.parseInt(yearTo);
+		int monthFromInt=Integer.parseInt(monthFrom);
+		int monthToInt=Integer.parseInt(monthTo);
+		int dayFromInt=Integer.parseInt(dayFrom);
+		int dayToInt=Integer.parseInt(dayTo);		
+		if(yearToInt==yearFromInt+1){
+			if(monthToInt==monthFromInt){
+				if(dayToInt>dayFromInt){
+					throw new EpException(
+							CommonMethod
+									.getMessageCommon(ReportConst.TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR));
+				}				
+			}else if(monthToInt>monthFromInt){
+				throw new EpException(
+						CommonMethod
+								.getMessageCommon(ReportConst.TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR));
+			}			
+		}else if(yearToInt>yearFromInt+1){			
+			throw new EpException(
+					CommonMethod
+							.getMessageCommon(ReportConst.TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR));
+		}		
 	}
 
 	public void retrieveState() {
@@ -3791,6 +3824,11 @@ public class ReportBackingBean extends
 					throw new EpException(
 							CommonMethod
 									.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}
+			if ((this.getFromDate() != null) && (this.getToDate() != null)) {
+				if (this.getToDate().after(this.getFromDate())) {
+					checkYearDefference();
 				}
 			}
 			/*
@@ -4654,7 +4692,7 @@ public class ReportBackingBean extends
 			String userRoleLogin = ReportConst.EMPTY_VAL;
 			if (authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF)) {
 				userRoleLogin = ReportConst.APPROVERNT;
-			} else if (authoriztionList.contains(ReportConst.APPROVER)) {
+			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)) {
 				userRoleLogin = ReportConst.APPROVER;
 			} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)) {
 				userRoleLogin = ReportConst.DESKOFFR;
