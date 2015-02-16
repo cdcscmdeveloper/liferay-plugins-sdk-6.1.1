@@ -33,7 +33,7 @@
 									  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscCodeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="8" value="#{reportBackingBean.cmUnspscCode}" style="margin-top:5px;width:290px;">
-									<p:ajax event="change" listener="#{reportBackingBean.enableExtension}" process="@this" partialSubmit="true" update="@all"/>																		
+									<p:ajax event="change" listener="#{reportBackingBean.enableExtensionTypes}" process="@this" partialSubmit="true" update="@all"/>																		
 									</p:inputText>									
 									</c:if>			
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscTitleView}">
