@@ -108,7 +108,7 @@
 									update=":form:tvRoleReceivingAddr:dtReceiveAddr"
 									saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes"
 									postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes)"
-									conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|addressType^D|recordStatus^1" />
+									conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|pmOrgProfile.orgProfileId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgProfileId}|addressType^D|recordStatus^1" />
 							</td>
 							<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
 									action="#{profileManagementBackingBean.deleteReceivingAddr}"
