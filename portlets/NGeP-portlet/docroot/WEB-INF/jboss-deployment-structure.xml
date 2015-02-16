@@ -8,6 +8,7 @@
         <module name="baseejb" />
         <module name="org.jboss.modules" />
         <module name="org.bouncycastle" slot="main" export="true" />
+        <module name="com.sun.xml.bind" /> 
         <!-- <module name="ngep-biz-client" />        
         
         <module name="eperolehan-biz-client" />
