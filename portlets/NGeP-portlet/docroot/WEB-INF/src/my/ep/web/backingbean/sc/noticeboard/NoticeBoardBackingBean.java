@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.noticeboard;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +61,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
-import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -84,7 +82,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -94,12 +91,12 @@ import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
-
 
 /**
  * @author sri Notice Board Backing Bean
@@ -295,7 +292,8 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void backBtn() {
 		log.info("** Back Button **");
-
+		this.getManagedBean().setMofNumber(null);
+		this.getManagedBean().setCompanyName(null);
 		String pageUrl = "/xhtml/sc/noticeboard/"
 				+ this.getManagedBean().getPreviousPage();
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -546,6 +544,14 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
 		retriveBsvDetails(qtId);
+
+		this.getManagedBean().setMofNumber(
+				this.getManagedBean().getSmSupplier().getSmMofAccount()
+						.getMofNo());
+		this.getManagedBean().setCompanyName(
+				this.getManagedBean().getSmSupplier().getCompanyName());
+		this.getManagedBean().setActiveTabIndex(0);
+		this.getManagedBean().setBriefingDtls(null);
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
 	}
 
@@ -553,18 +559,13 @@ public class NoticeBoardBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("bsvZoneTabChangeAction");
 		}
+		this.getManagedBean().setBriefingDtls(null);
+		BriefingZoneBean selectedBsvBean = this.getManagedBean().getZoneBean()
+				.get(selectedZoneTabIndex);
 
-		BriefingZoneBean selectedBsvBean = getManagedBean().getZoneBean().get(
-				selectedZoneTabIndex);
+		this.getManagedBean().setNormalBsvBean(selectedBsvBean);
+		this.getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
 
-		getManagedBean().setNormalBsvBean(selectedBsvBean);
-		getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
-
-		this.getManagedBean().setSelectedBsvAttandance(null);
-		this.getManagedBean().setAttendanceList(null);
-		this.getManagedBean().setSmSupplier(null);
-		this.getManagedBean().setCompanyName(null);
-		this.getManagedBean().setMofNumber(null);
 	}
 
 	public void hideAndShowDates(String dateType) {
@@ -622,6 +623,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public void zoneTabChange(TabChangeEvent changeEvent) {
+		this.getManagedBean().setBriefingDtls(null);
 		TplSpecZoneDtl specZoneDtl = ((BriefingZoneBean) changeEvent.getData())
 				.getTplSpecZoneDtl();
 
@@ -657,7 +659,7 @@ public class NoticeBoardBackingBean extends
 
 	public String showPriceSchedules(Long qtId) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		
+
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
@@ -1103,69 +1105,58 @@ public class NoticeBoardBackingBean extends
 	 * 
 	 * @param event
 	 */
-	public void mofNoOnchange(AjaxBehaviorEvent event) {
-
-		String mofNo = (String) event.getComponent().getAttributes()
-				.get("value");
-		SmSupplier supplier = null;
-		this.getManagedBean().setSelectedBsvAttandance(null);
-		this.getManagedBean().setAttendanceList(null);
-		this.getManagedBean().setSmSupplier(supplier);
-		this.getManagedBean().setCompanyName(null);
-		if (null != mofNo) {
-			List<SmMofAccount> accounts = this.getManagedBean()
-					.getMofAccounts();
-			for (SmMofAccount mofAccount : accounts) {
-				if (mofAccount.getMofNo().equalsIgnoreCase(mofNo)) {
-					supplier = mofAccount.getSmSupplier();
-					break;
-				}
-			}
-			this.getManagedBean().setSmSupplier(supplier);
-			this.getManagedBean().setCompanyName(supplier.getCompanyName());
-			ISupplierSearchSO supplierSearchSo = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierSearchSO.class);
-			SupplierSearchReqDTO searchReqDTO = new SupplierSearchReqDTO();
-			searchReqDTO.setMofAccountNo(mofNo);
-			SupplierSearchResDTO resDTO = supplierSearchSo
-					.retrieveAuthorizedPersonnelsByMofNo(searchReqDTO);
-
-			List<SmPersonnel> personal = resDTO.getPersonnels();
-			/*
-			 * IQTBriefingSO qtBriefingSO = BusinessDelegate.getInstance()
-			 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-			 * IQTBriefingSO.class); BriefingReqDTO reqDTO = new
-			 * BriefingReqDTO(); reqDTO.setSupplierId(supplier.getSupplierId());
-			 * 
-			 * BriefingResDTO briefingResDto = qtBriefingSO
-			 * .retrieveBriefingAttendanceList(reqDTO); List<ScQtBsvAttendance>
-			 * attandance = briefingResDto
-			 * .getBriefingAttResultBean().getResultList();
-			 */
-			// List<ScQtBsvAttendance> selectedBsvAttandance = new
-			// ArrayList<ScQtBsvAttendance>();
-			List<ScQtBsvAttendance> bsvAttandances = new ArrayList<ScQtBsvAttendance>();
-			// Code for to set selected personal if alredy done..
-
-			if (null != personal) {
-				for (SmPersonnel smPersonal : personal) {
-
-					ScQtBsvAttendance attendance = new ScQtBsvAttendance();
-					// attendance.setPreRegisterd(true);
-					attendance.setAuthorized(true);
-					attendance.setContactNo(smPersonal.getPhoneNo());
-					attendance.setIcPassPort(smPersonal.getIdentificationNo());
-					attendance.setEmail(smPersonal.getEmail());
-					attendance.setName(smPersonal.getName());
-					bsvAttandances.add(attendance);
-				}
-
-			}
-
-			this.getManagedBean().setAttendanceList(bsvAttandances);
-		}
-	}
+	/*
+	 * public void mofNoOnchange(AjaxBehaviorEvent event) {
+	 * 
+	 * String mofNo = (String) event.getComponent().getAttributes()
+	 * .get("value"); SmSupplier supplier = null;
+	 * this.getManagedBean().setSelectedBsvAttandance(null);
+	 * this.getManagedBean().setAttendanceList(null);
+	 * this.getManagedBean().setSmSupplier(supplier);
+	 * this.getManagedBean().setCompanyName(null); if (null != mofNo) {
+	 * List<SmMofAccount> accounts = this.getManagedBean() .getMofAccounts();
+	 * for (SmMofAccount mofAccount : accounts) { if
+	 * (mofAccount.getMofNo().equalsIgnoreCase(mofNo)) { supplier =
+	 * mofAccount.getSmSupplier(); break; } }
+	 * this.getManagedBean().setSmSupplier(supplier);
+	 * this.getManagedBean().setCompanyName(supplier.getCompanyName());
+	 * ISupplierSearchSO supplierSearchSo = BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+	 * ISupplierSearchSO.class); SupplierSearchReqDTO searchReqDTO = new
+	 * SupplierSearchReqDTO(); searchReqDTO.setMofAccountNo(mofNo);
+	 * SupplierSearchResDTO resDTO = supplierSearchSo
+	 * .retrieveAuthorizedPersonnelsByMofNo(searchReqDTO);
+	 * 
+	 * List<SmPersonnel> personal = resDTO.getPersonnels();
+	 * 
+	 * IQTBriefingSO qtBriefingSO = BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+	 * IQTBriefingSO.class); BriefingReqDTO reqDTO = new BriefingReqDTO();
+	 * reqDTO.setSupplierId(supplier.getSupplierId());
+	 * 
+	 * BriefingResDTO briefingResDto = qtBriefingSO
+	 * .retrieveBriefingAttendanceList(reqDTO); List<ScQtBsvAttendance>
+	 * attandance = briefingResDto .getBriefingAttResultBean().getResultList();
+	 * 
+	 * // List<ScQtBsvAttendance> selectedBsvAttandance = new //
+	 * ArrayList<ScQtBsvAttendance>(); List<ScQtBsvAttendance> bsvAttandances =
+	 * new ArrayList<ScQtBsvAttendance>(); // Code for to set selected personal
+	 * if alredy done..
+	 * 
+	 * if (null != personal) { for (SmPersonnel smPersonal : personal) {
+	 * 
+	 * ScQtBsvAttendance attendance = new ScQtBsvAttendance(); //
+	 * attendance.setPreRegisterd(true); attendance.setAuthorized(true);
+	 * attendance.setContactNo(smPersonal.getPhoneNo());
+	 * attendance.setIcPassPort(smPersonal.getIdentificationNo());
+	 * attendance.setEmail(smPersonal.getEmail());
+	 * attendance.setName(smPersonal.getName()); bsvAttandances.add(attendance);
+	 * }
+	 * 
+	 * }
+	 * 
+	 * this.getManagedBean().setAttendanceList(bsvAttandances); } }
+	 */
 
 	/**
 	 * @param smPersonal
@@ -1203,105 +1194,57 @@ public class NoticeBoardBackingBean extends
 			zoneBeans.add(this.getManagedBean().getNormalBsvBean());
 		}
 		for (BriefingZoneBean briefingZoneBean : zoneBeans) {
-			if (null != briefingZoneBean.getSelectedBriefingDtls()
-					&& !briefingZoneBean.getSelectedBriefingDtls().isEmpty()) {
-				bsvDetails.addAll(briefingZoneBean.getSelectedBriefingDtls());
-			}
-			if (null != briefingZoneBean.getSelectedSiteVisitDtls()
-					&& !briefingZoneBean.getSelectedSiteVisitDtls().isEmpty()) {
-				bsvDetails.addAll(briefingZoneBean.getSelectedSiteVisitDtls());
-			}
 
+			if (CollectionUtils.isNotEmpty(briefingZoneBean.getBriefingList())) {
+				bsvDetails.addAll(briefingZoneBean.getBriefingList());
+			}
+			if (CollectionUtils.isNotEmpty(briefingZoneBean.getSitevisitList())) {
+				bsvDetails.addAll(briefingZoneBean.getSitevisitList());
+			}
 		}
 
 		IQTBriefingSO qtBriefingSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTBriefingSO.class);
 		BriefingReqDTO reqDTO = new BriefingReqDTO();
-		List<ScQtBsvAttendance> avialAttandance = this.getManagedBean()
-				.getAttendanceList();
-		List<ScQtBsvAttendance> attandance = new ArrayList<ScQtBsvAttendance>();
-		isAttananceMarkedOrNot(avialAttandance, attandance);
 		List<ScQtBsvRegistration> registrations = new ArrayList<ScQtBsvRegistration>();
 
 		if (!bsvDetails.isEmpty()) {
 
 			for (ScQtBsvDtl bsvDetail : bsvDetails) {
+				if (null != bsvDetail.getTempRegistration()) {
 
-				if (bsvDetail.getToBeattand() <= 0) {
-					throw new EpException(MessageConst.ERROR_760184);
-				}
-				if (bsvDetail.getToBeattand() > bsvDetail
-						.getMaxNoOfAttendance()) {
-					throw new EpException(MessageConst.ERROR_760230,
-							new String[] { bsvDetail.getBsvDesc() });
-				}
-				reqDTO.setQtBriefingId(bsvDetail.getQtBsvDtlId());
-				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier()
-						.getSupplierId());
-				BriefingResDTO briefingResDTO = qtBriefingSO
-						.retrieveBriefingRegistrationList(reqDTO);
-				registrations = briefingResDTO.getBriefingRegResultBean()
-						.getResultList();
-				if (null == registrations || registrations.isEmpty()) {
-					ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
-					bsvRegistration.setBsvDtl(bsvDetail);
-					bsvRegistration.setSupplier(this.getManagedBean()
-							.getSmSupplier());
-					List<ScQtBsvAttendance> preAttandance = new ArrayList<ScQtBsvAttendance>();
-					for (ScQtBsvAttendance bsvAttendance : attandance) {
-
-						try {
-							ScQtBsvAttendance preBsvAttandance = (ScQtBsvAttendance) BeanUtils
-									.cloneBean(bsvAttendance);
-							preBsvAttandance.setQtBsvAttendanceId(null);
-							preBsvAttandance.setChangedBy(null);
-							preBsvAttandance.setChangedDate(null);
-							preBsvAttandance
-									.setBsvRegistration(bsvRegistration);
-							preBsvAttandance.setAttended(true);
-							preAttandance.add(preBsvAttandance);
-						} catch (IllegalAccessException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (InstantiationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (InvocationTargetException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (NoSuchMethodException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
+					isAttananceMarkedOrNot(bsvDetail.getTempRegistration()
+							.getBsvAttendance());
+					if (null != bsvDetail.getTempRegistration()
+							.getBsvAttendance()
+							&& !bsvDetail.getTempRegistration()
+									.getBsvAttendance().isEmpty()) {
+						registrations.add(bsvDetail.getTempRegistration());
 					}
-
-					bsvRegistration.setBsvAttendance(preAttandance);
-					registrations.add(bsvRegistration);
-				} else {
-
-					throw new EpException(MessageConst.ERROR_760233,
-							new String[] { bsvDetail.getBsvDesc() });
-
 				}
-				bsvDetail.setQtBsvRegistrations(registrations);
 			}
-
-			reqDTO.setQtBriefingList(bsvDetails);
-			reqDTO.setSupplierId(this.getManagedBean().getSmSupplier()
-					.getSupplierId());
+			if (CollectionUtils.isEmpty(registrations)) {
+				throw new EpException(MessageConst.ERROR_760244);
+			}
+			reqDTO.setBriefingReqDtls(registrations);
+			ScQt currentQt = this.getManagedBean().getScQt();
+			reqDTO.setScQt(currentQt);
 
 			BriefingResDTO resDto = qtBriefingSO.saveQTDtl(reqDTO);
 			if (resDto.isSuccessful()) {
 				String prvPage = this.getManagedBean().getPreviousPage();
-				ScQt currentQt = this.getManagedBean().getScQt();
+
 				SmSupplier supplier = this.getManagedBean().getSmSupplier();
+				String mofNumber = this.getManagedBean().getMofNumber();
+				String companyName = this.getManagedBean().getCompanyName();
 				renewSesionObject();
 				this.getManagedBean().setScQt(currentQt);
 				this.getManagedBean().setSmSupplier(supplier);
 				this.getManagedBean().setPreviousPage(prvPage);
 				retriveBsvDetails(currentQt.getQtId());
+				this.getManagedBean().setMofNumber(mofNumber);
+				this.getManagedBean().setCompanyName(companyName);
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -1320,13 +1263,18 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * @param attandance
 	 */
-	private void isAttananceMarkedOrNot(List<ScQtBsvAttendance> attandance,
+	private void isAttananceMarkedOrNot(
 			List<ScQtBsvAttendance> preRegisterdAttandance) {
-		if (CollectionUtils.isNotEmpty(attandance)) {
-			for (ScQtBsvAttendance attendance : attandance) {
-				if (attendance.isPreRegisterd()) {
-					attendance.setAttended(true);
-					preRegisterdAttandance.add(attendance);
+
+		if (CollectionUtils.isNotEmpty(preRegisterdAttandance)) {
+
+			for (int i = 0; i < preRegisterdAttandance.size(); i++) {
+				if (preRegisterdAttandance.get(i).isPreRegisterd()) {
+					preRegisterdAttandance.get(i).setAttended(true);
+
+				} else {
+					preRegisterdAttandance.remove(i--);
+
 				}
 			}
 		}
@@ -1432,7 +1380,7 @@ public class NoticeBoardBackingBean extends
 
 	public NoticeBoardBackingBean() {
 		// reset();
-		
+
 	}
 
 	public String getClosingDays(String clsDate) throws Exception {
@@ -1456,7 +1404,7 @@ public class NoticeBoardBackingBean extends
 				Long durationInMills = DateUtils.getDateDiffInMillis(
 						DateUtils.getCurrentDate(), closingDate);
 				if (durationInMills > 0) {
-					closingDays = DateUtils.durationFormatter(durationInMills);
+					closingDays = DateUtils.durationFormatter(durationInMills.longValue());
 				}
 			}
 		}
@@ -1517,7 +1465,7 @@ public class NoticeBoardBackingBean extends
 		ScQt scQt = resDTO.getScQt();
 		this.getManagedBean().setScQt(resDTO.getScQt());
 
-		this.getManagedBean().setMofAccounts(resDTO.getMofAccounts());
+		this.getManagedBean().setSmSupplier(resDTO.getSupplier());
 		if (!scQt.isZonal()) {
 			ScQtBsv scQtBsv = resDTO.getScQtBsv();
 
@@ -1541,6 +1489,8 @@ public class NoticeBoardBackingBean extends
 					briefingReqDTO.setQtId(scQt.getQtId());
 					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
 					briefingReqDTO.setAttandanceReq(true);
+					briefingReqDTO.setSupplierId(this.getManagedBean()
+							.getSmSupplier().getSupplierId());
 					IQTBriefingSO briefingSO = EpEjbBusinessDelegate
 							.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1557,6 +1507,8 @@ public class NoticeBoardBackingBean extends
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName());
 					zoneItem.setUpdate("@form");
+					// zoneItem.setPartialSubmit(true);
+					zoneItem.setProcess("@this");
 					zoneItem.setActionExpression(FacesScopes
 							.createMethodExpression(facesContext,
 									"#{noticeBoardBackingBean.bsvZoneTabChangeAction("
@@ -1568,7 +1520,7 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 
-			getManagedBean().setZoneMenuModel(zoneMenuModel);
+			this.getManagedBean().setZoneMenuModel(zoneMenuModel);
 			if (bsvZoneBeans.size() > 0) {
 				getManagedBean().setNormalBsvBean(bsvZoneBeans.get(0));
 			}
@@ -1592,38 +1544,111 @@ public class NoticeBoardBackingBean extends
 	public void updateToBeAttandance(AjaxBehaviorEvent event) {
 		boolean isChecked = ((SelectBooleanCheckbox) event.getSource())
 				.isSelected();
-		int i = 0;
 
-		if (isChecked) {
-			i = 1;
+		ScQtBsvDtl bsvDtl = this.getManagedBean().getBriefingDtls();
+
+		if (null != bsvDtl) {
+			if (isChecked) {
+
+				bsvDtl.setToBeattand(bsvDtl.getToBeattand() + 1);
+			} else {
+				bsvDtl.setToBeattand(bsvDtl.getToBeattand() - 1);
+			}
+			if (bsvDtl.getToBeattand() > bsvDtl.getMaxNoOfAttendance()) {
+				((SelectBooleanCheckbox) event.getSource()).setSelected(false);
+				throw new EpException(MessageConst.ERROR_760230,
+						new String[] { bsvDtl.getBsvDesc() });
+			}
 		} else {
-			i = -1;
+
 		}
+
+		List<ScQtBsvDtl> bsvDetails = this.getManagedBean().getNormalBsvBean()
+				.getBriefingList();
+		bsvDetails.set(bsvDetails.indexOf(bsvDtl), bsvDtl);
+
+	}
+
+	public void onRowSelect(SelectEvent event) {
+		this.getManagedBean().setBriefingDtls(null);
+		ScQtBsvDtl scQtBsvDtl = (ScQtBsvDtl) event.getObject();
+
 		BriefingZoneBean zoneBean = this.getManagedBean().getNormalBsvBean();
 
-		if (!zoneBean.getSelectedBriefingDtls().isEmpty()
-				|| !zoneBean.getSelectedSiteVisitDtls().isEmpty()) {
-			for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedBriefingDtls()) {
+		ScQtBsvRegistration bsvRegistration = scQtBsvDtl.getTempRegistration();
 
-				bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
-				if (bsvDtl.getToBeattand() < 0) {
-					bsvDtl.setToBeattand(0);
+		if (null == bsvRegistration || bsvRegistration.getBsvAttendance().isEmpty()) {
+			List<ScQtBsvAttendance> bsvAttandances = new ArrayList<ScQtBsvAttendance>();
+			IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+			briefingReqDTO.setQtBriefingId(scQtBsvDtl.getQtBsvDtlId());
+			briefingReqDTO.setSupplierId(this.getManagedBean().getSmSupplier()
+					.getSupplierId());
+			BriefingResDTO briefingResDTO = briefingSO
+					.retrieveBriefingRegistrationList(briefingReqDTO);
+
+			// ScQtBsvRegistration bsvRegistration = null;
+			if (briefingResDTO.getBriefingRegResultBean().getTotalRecord() == 0) {
+
+				bsvRegistration = new ScQtBsvRegistration();
+				bsvRegistration.setBsvDtl(scQtBsvDtl);
+				bsvRegistration.setSupplier(this.getManagedBean()
+						.getSmSupplier());
+			} else {
+				bsvRegistration = briefingResDTO.getBriefingRegResultBean()
+						.getResultList().get(0);
+			}
+			// Code to get authorize personal..
+			ISupplierSearchSO supplierSearchSo = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierSearchSO.class);
+			SupplierSearchReqDTO searchReqDTO = new SupplierSearchReqDTO();
+			searchReqDTO.setMofAccountNo(this.getManagedBean().getMofNumber());
+			SupplierSearchResDTO resDTO = supplierSearchSo
+					.retrieveAuthorizedPersonnelsByMofNo(searchReqDTO);
+
+			List<SmPersonnel> personal = resDTO.getPersonnels();
+
+			// Code for to set selected personal if alredy done..
+
+			if (null != personal) {
+
+				for (SmPersonnel smPersonal : personal) {
+					ScQtBsvAttendance attendance = new ScQtBsvAttendance();
+					// attendance.setPreRegisterd(true);
+					attendance.setAuthorized(true);
+					attendance.setContactNo(smPersonal.getPhoneNo());
+					attendance.setIcPassPort(smPersonal.getIdentificationNo());
+					attendance.setEmail(smPersonal.getEmail());
+					attendance.setName(smPersonal.getName());
+					attendance.setBsvRegistration(bsvRegistration);
+
+					bsvAttandances.add(attendance);
 				}
 
 			}
 
-			for (ScQtBsvDtl bsvDtl : zoneBean.getSelectedSiteVisitDtls()) {
+			List<ScQtBsvAttendance> existingAttandances = bsvRegistration
+					.getBsvAttendance();
+			if (CollectionUtils.isNotEmpty(existingAttandances)) {
+				for (ScQtBsvAttendance extAttandance : existingAttandances) {
+					if (bsvAttandances.contains(extAttandance)) {
+						bsvAttandances.remove(extAttandance);
 
-				bsvDtl.setToBeattand(bsvDtl.getToBeattand() + i);
-				if (bsvDtl.getToBeattand() < 0) {
-					bsvDtl.setToBeattand(0);
+					}
+					bsvAttandances.add(extAttandance);
 				}
 			}
-		} else {
-			((SelectBooleanCheckbox) event.getSource()).setSelected(false);
-			throw new EpException(MessageConst.ERROR_760185);
+			bsvRegistration.setBsvAttendance(bsvAttandances);
+			scQtBsvDtl.setTempRegistration(bsvRegistration);
 		}
 
+		this.getManagedBean().setBriefingDtls(scQtBsvDtl);
+		List<ScQtBsvDtl> bsvDetails = zoneBean.getBriefingList();
+		bsvDetails.set(bsvDetails.indexOf(scQtBsvDtl), scQtBsvDtl);
+		this.getManagedBean().setNormalBsvBean(zoneBean);
 	}
 
 	public void bsvZoneTabChange(TabChangeEvent event) {
@@ -1631,7 +1656,6 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 
 	}
-	
 	/**
 	 * Return false when getUserId contains null 
 	 * and assuming the logged user is a guest
