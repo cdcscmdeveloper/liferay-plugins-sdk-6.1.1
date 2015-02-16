@@ -1638,6 +1638,50 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 	}
+	
+	public void viewBusinessNature(){
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+
+		if(pmUser != null){
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+			SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0); 
+
+			log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
+
+			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+			reqDTO.setSupplierId(smSupp.getSupplierId());
+
+			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+			RegistrationResDTO resDTO = reqSO.retrieveBusinessNatureBySupplierId(reqDTO);
+			
+			this.getManagedBean().setSmSupp(resDTO.getSmSupp());
+			
+			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
+			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
+		}
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplierbusinessnature/businessNatureMaint.xhtml");
+	}
+	
+	public String updateBusinessNatureMaintenance(){
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
+		
+		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		RegistrationResDTO resDTO = reqSO.saveSupplierBusinessNature(reqDTO);
+		
+		if(resDTO.isSuccessful()){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
+					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
+			return "/xhtml/common/acknowledge.xhtml";
+		}
+		
+		return null;
+	}
 }
 
 
