@@ -3055,6 +3055,116 @@ public class ReportBackingBean extends
 			rptGenBean.setCmExtentionCodeView(false);
 		}
 	}
+	public void enableExtensionTypes() {
+		// this.setUnspid((long) 12392);
+		this.setCmExtentionBrand(null);
+		this.setCmExtentionType(null);
+		this.setCmExtentionMeasurment(null);
+		this.setCmExtentionColour(null);
+		brandList = new ArrayList<SelectItem>();
+		extTypeList = new ArrayList<SelectItem>();
+		measurmentList = new ArrayList<SelectItem>();
+		colorList = new ArrayList<SelectItem>();
+		rptGenBean.setCmExtentionBrandView(false);
+		rptGenBean.setCmExtentionTypeView(false);
+		rptGenBean.setCmExtentionMeasurmentView(false);
+		rptGenBean.setCmExtentionColourView(false);
+		
+		if (null != this.getCmUnspscCode()
+				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCmUnspscCode().length() == 8)) {
+				
+				
+				unspid = retrieveCMUnspcIdbyCode(this.getCmUnspscCode());
+				if (null != unspid) {
+					//rptGenBean.setCmExtentionCodeView(true);
+					retrieveBrand();
+					retrieveExtType();
+					retrieveMeasurement();
+					retrieveColor();
+					
+					rptGenBean.setCmExtentionBrandView(true);		
+					rptGenBean.setCmExtentionTypeView(true);		
+					rptGenBean.setCmExtentionMeasurmentView(true);	
+					rptGenBean.setCmExtentionColourView(true);
+				} else {
+					this.setCmUnspscCode(null);
+					//this.setCmExtentionCode(null);
+					//rptGenBean.setCmExtentionCodeView(false);
+					this.setCmUnspscCode(null);
+					this.setCmExtentionBrand(null);
+					this.setCmExtentionType(null);
+					this.setCmExtentionMeasurment(null);
+					this.setCmExtentionColour(null);
+					brandList = new ArrayList<SelectItem>();
+					extTypeList = new ArrayList<SelectItem>();
+					measurmentList = new ArrayList<SelectItem>();
+					colorList = new ArrayList<SelectItem>();
+					rptGenBean.setCmExtentionBrandView(false);
+					rptGenBean.setCmExtentionTypeView(false);
+					rptGenBean.setCmExtentionMeasurmentView(false);
+					rptGenBean.setCmExtentionColourView(false);
+					throw new EpException(
+							CommonMethod
+									.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+				}
+			} else {
+				//this.setCmExtentionCode(null);
+				this.setCmUnspscCode(null);
+				this.setCmExtentionBrand(null);
+				this.setCmExtentionType(null);
+				this.setCmExtentionMeasurment(null);
+				this.setCmExtentionColour(null);
+				brandList = new ArrayList<SelectItem>();
+				extTypeList = new ArrayList<SelectItem>();
+				measurmentList = new ArrayList<SelectItem>();
+				colorList = new ArrayList<SelectItem>();
+				rptGenBean.setCmExtentionBrandView(false);
+				rptGenBean.setCmExtentionTypeView(false);
+				rptGenBean.setCmExtentionMeasurmentView(false);
+				rptGenBean.setCmExtentionColourView(false);
+				throw new EpException(
+						CommonMethod
+								.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+			}
+		} else {
+			//this.setCmExtentionCode(null);
+			this.setCmUnspscCode(null);
+			this.setCmExtentionBrand(null);
+			this.setCmExtentionType(null);
+			this.setCmExtentionMeasurment(null);
+			this.setCmExtentionColour(null);
+			brandList = new ArrayList<SelectItem>();
+			extTypeList = new ArrayList<SelectItem>();
+			measurmentList = new ArrayList<SelectItem>();
+			colorList = new ArrayList<SelectItem>();
+			rptGenBean.setCmExtentionBrandView(false);
+			rptGenBean.setCmExtentionTypeView(false);
+			rptGenBean.setCmExtentionMeasurmentView(false);
+			rptGenBean.setCmExtentionColourView(false);
+		}
+		
+		if (null != this.getCmExtentionCode()) {
+			if (this.getCmExtentionCode().equals(ReportConst.EXT_BRAND)) {
+				rptGenBean.setCmExtentionBrandView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveBrand();
+			} else if (this.getCmExtentionCode().equals(ReportConst.EXT_TYPE)) {
+				rptGenBean.setCmExtentionTypeView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveExtType();
+			} else if (this.getCmExtentionCode().equals(
+					ReportConst.EXT_MEASUREMENT)) {
+				rptGenBean.setCmExtentionMeasurmentView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveMeasurement();
+			} else if (this.getCmExtentionCode().equals(ReportConst.EXT_COLOUR)) {
+				rptGenBean.setCmExtentionColourView(true);
+				rptGenBean.setExtraTwoColumnView(true);
+				retrieveColor();
+			}
+		}
+	}
 
 	public Long retrieveCMUnspcIdbyCode(String unspcCode) {
 		Long unspcid = null;
