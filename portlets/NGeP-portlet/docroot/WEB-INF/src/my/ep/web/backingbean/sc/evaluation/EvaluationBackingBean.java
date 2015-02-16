@@ -2880,6 +2880,15 @@ public class EvaluationBackingBean extends
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
 				templateSpecBean.setSpecMaster(proposalCheckList
 						.getScQtCheckList().getScQtDoc().getTplSpecMaster());
+				if (null != this.getManagedBean().getScQt()
+						&& this.getManagedBean().getScQt().isZonal()) {
+					if (null != this.getManagedBean().getSelectedZone()) {
+						templateSpecBean.setTplSpecZoneDtl(this
+								.getManagedBean().getSelectedZone());
+
+					}
+
+				}
 
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				specReqDTO.setSpecMaster(proposalCheckList.getScQtCheckList()
@@ -3647,6 +3656,9 @@ public class EvaluationBackingBean extends
 					for (TplSpecEstimation specEstimation : estimation) {
 						if (specEstimation.getTplSpecZoneDtl().getSpecZoneId()
 								.equals(zoneDtl.getSpecZoneId())) {
+							System.out.println("===zoneDtl.getSpecZoneId()"
+									+ zoneDtl.getSpecZoneId() + "spec cost"
+									+ specEstimation.getEstimatedCost());
 							if (null != specEstimation.getEstimatedCost()
 									&& null != specScorig.get(0).getRangeFrom()) {
 								int fromvariance = specEstimation
