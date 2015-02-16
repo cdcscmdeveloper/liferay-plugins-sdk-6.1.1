@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.InvalidAlgorithmParameterException;
@@ -108,6 +109,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtOpeningCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQtTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
@@ -117,6 +119,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.sc.EvaluationReport;
@@ -1739,7 +1742,7 @@ public class EvaluationBackingBean extends
 				// return "productServiceTechScoreSpec.xhtml";
 
 			} else {
-				
+
 				return "standardEvaluationTechList.xhtml";
 
 			}
@@ -1801,6 +1804,7 @@ public class EvaluationBackingBean extends
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
 							.getDefinationType().getParameterCode())) {
+
 				this.getManagedBean().setEvaluationCheckListType("FS");
 				EvaluationReqDTO specDtls = new EvaluationReqDTO();
 				specDtls.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -1821,7 +1825,8 @@ public class EvaluationBackingBean extends
 				}
 				EvaluationResDTO speczone = evaluationSo
 						.retrieveFinSpecDetailsByCheckListId(specDtls);
-
+				calculateFinSpecPackageVarieance(this.getManagedBean()
+						.getScQt(), speczone.getScoreOfferPrices());
 				if (null != speczone.getZones()
 						&& !speczone.getZones().isEmpty()) {
 					retriveFinancialSpecZones(speczone);
@@ -1950,6 +1955,31 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	private void calculateFinSpecPackageVarieance(ScQt scQt,
+			ScQtScoreOfferPrice packageOfferPrice) {
+		if (null != packageOfferPrice) {
+			BigDecimal estimatedPrice = scQt.getEstimatedAmount();
+			if (null != packageOfferPrice.getFromVariance()) {
+				int fromvarieance = estimatedPrice.intValue()
+						* packageOfferPrice.getFromVariance().intValue() / 100;
+				int packageamount = estimatedPrice.intValue() - fromvarieance;
+				this.getManagedBean().setPackageFromVarieance(
+						new BigDecimal(packageamount));
+
+			}
+			if (null != packageOfferPrice.getToVariance()) {
+				int tovarieance = estimatedPrice.intValue()
+						* packageOfferPrice.getToVariance().intValue() / 100;
+				int toamount = estimatedPrice.intValue() + tovarieance;
+				this.getManagedBean().setPackageToVarieance(
+						new BigDecimal(toamount));
+
+			}
+
+		}
+
+	}
+
 	public String evaluatefinancialEvaluation(ScQtCheckList checklist,
 			int index, String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
@@ -2028,7 +2058,8 @@ public class EvaluationBackingBean extends
 				}
 				EvaluationResDTO speczone = evaluationSo
 						.retrieveFinSpecDetailsByCheckListId(specDtls);
-
+				calculateFinSpecPackageVarieance(this.getManagedBean()
+						.getScQt(), speczone.getScoreOfferPrices());
 				if (null != speczone.getZones()
 						&& !speczone.getZones().isEmpty()) {
 
@@ -2878,10 +2909,15 @@ public class EvaluationBackingBean extends
 								&& specAnswers.getTplSpecQuestion()
 										.getScoreTypeCode().getParameterCode()
 										.equalsIgnoreCase("A")) {
-							this.getManagedBean()
-									.getSpecItemScoringList()
-									.addAll(specAnswers.getTplSpecQuestion()
-											.getTplSpecScorings());
+							List<TplSpecScoring> specScoring = calclateSpecItemVariance(
+									specAnswers.getTplSpecQuestion()
+											.getTplSpecEstimations(),
+									specAnswers.getTplSpecQuestion()
+											.getTplSpecScorings(), this
+											.getManagedBean().getScQt(), this
+											.getManagedBean().getSelectedZone());
+							this.getManagedBean().getSpecItemScoringList()
+									.add(specScoring.get(0));
 						}
 
 					}
@@ -3599,6 +3635,84 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().setEvaluationPage(evaluationPage);
 
 		return "financialotherchecklists.xhtml";
+	}
+
+	private List<TplSpecScoring> calclateSpecItemVariance(
+			List<TplSpecEstimation> specEstimations,
+			List<TplSpecScoring> specScorig, ScQt scQt, TplSpecZoneDtl zoneDtl) {
+		if (scQt.isZonal()) {
+			if (null != zoneDtl) {
+				if (null != specEstimations && !specEstimations.isEmpty()) {
+					List<TplSpecEstimation> estimation = specEstimations;
+					for (TplSpecEstimation specEstimation : estimation) {
+						if (specEstimation.getTplSpecZoneDtl().getSpecZoneId()
+								.equals(zoneDtl.getSpecZoneId())) {
+							if (null != specEstimation.getEstimatedCost()
+									&& null != specScorig.get(0).getRangeFrom()) {
+								int fromvariance = specEstimation
+										.getEstimatedCost().intValue()
+										* specScorig.get(0).getRangeFrom()
+												.intValue() / 100;
+								int fromvarianceAmount = specEstimation
+										.getEstimatedCost().intValue()
+										- fromvariance;
+								specScorig.get(0).setFromVariance(
+										new BigDecimal(fromvarianceAmount));
+							}
+							if (null != specEstimation.getEstimatedCost()
+									&& null != specScorig.get(0).getRangeTo()) {
+								int tovariance = specEstimation
+										.getEstimatedCost().intValue()
+										* specScorig.get(0).getRangeTo()
+												.intValue() / 100;
+								int tovarianceAmount = specEstimation
+										.getEstimatedCost().intValue()
+										+ tovariance;
+								specScorig.get(0).setToVariance(
+										new BigDecimal(tovarianceAmount));
+							}
+							break;
+						}
+
+					}
+
+				}
+
+			}
+
+		} else {
+			if (null != specScorig && !specScorig.isEmpty()) {
+				if (null != specEstimations && !specEstimations.isEmpty()) {
+					TplSpecEstimation estimation = specEstimations.get(0);
+					if (null != estimation.getEstimatedCost()
+							&& null != specScorig.get(0).getRangeFrom()) {
+						int fromvariance = estimation.getEstimatedCost()
+								.intValue()
+								* specScorig.get(0).getRangeFrom().intValue()
+								/ 100;
+						int fromvarianceAmount = estimation.getEstimatedCost()
+								.intValue() - fromvariance;
+						specScorig.get(0).setFromVariance(
+								new BigDecimal(fromvarianceAmount));
+					}
+					if (null != estimation.getEstimatedCost()
+							&& null != specScorig.get(0).getRangeTo()) {
+						int tovariance = estimation.getEstimatedCost()
+								.intValue()
+								* specScorig.get(0).getRangeTo().intValue()
+								/ 100;
+						int tovarianceAmount = estimation.getEstimatedCost()
+								.intValue() + tovariance;
+						specScorig.get(0).setToVariance(
+								new BigDecimal(tovarianceAmount));
+					}
+
+				}
+			}
+
+		}
+
+		return specScorig;
 	}
 
 	public void retrivePresetationDemoCheckList() {
