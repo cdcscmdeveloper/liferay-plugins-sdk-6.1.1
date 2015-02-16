@@ -23,15 +23,7 @@
 				</h:column>
 				<h:column>
 					<p:selectOneMenu value="#{trackingDiaryBackingBean.managedBean.codeType}">
-<!-- 						<f:selectItems value="#{trackingDiaryBackingBean.getModule()}" /> -->
-				<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('MOD')}" />
-<!-- 				 		<f:selectItem itemLabel="Select One" itemValue="" /> -->
-<!-- 			            <f:selectItem itemLabel="Catalogue" itemValue="CM" /> -->
-<!-- 			            <f:selectItem itemLabel="Codification" itemValue="CD" />					 -->
-<!-- 			            <f:selectItem itemLabel="Supplier Management" itemValue="SM" /> -->
-<!-- 			            <f:selectItem itemLabel="Contract Management" itemValue="CT" /> -->
-<!-- 			            <f:selectItem itemLabel="Quatation/Tender " itemValue="SC" />					 -->
-<!-- 			            <f:selectItem itemLabel="Fufillment" itemValue="FL" />					 -->
+						<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('MOD')}" />
 			        	<p:ajax event="change" partialSubmit="true" update="suppQualPnl"/>
 					</p:selectOneMenu>
 
@@ -42,9 +34,9 @@
 				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'SM'}">
 					<ui:include src="/xhtml/trackingdiary/smTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'PP'}">
-					<ui:include src="/xhtml/trackingdiary/ppTrackingDiarySearch.xhtml" />
-				</c:if>
+<!-- 				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'PP'}"> -->
+<!-- 					<ui:include src="/xhtml/trackingdiary/ppTrackingDiarySearch.xhtml" /> -->
+<!-- 				</c:if> -->
 				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CT'}">
 					<ui:include src="/xhtml/trackingdiary/ctTrackingDiarySearch.xhtml" />
 				</c:if>
@@ -58,7 +50,7 @@
 					<ui:include src="/xhtml/trackingdiary/scTrackingDiarySearch.xhtml" />
 				</c:if>
 				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'DP'}">
-					<ui:include src="/xhtml/trackingdiary/scTrackingDiarySearch.xhtml" />
+					<ui:include src="/xhtml/trackingdiary/dpTrackingDiarySearch.xhtml" />
 				</c:if>
 				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CD'}">
 					<ui:include src="/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml" />
