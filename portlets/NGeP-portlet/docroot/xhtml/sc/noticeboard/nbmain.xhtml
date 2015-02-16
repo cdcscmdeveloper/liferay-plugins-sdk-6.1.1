@@ -112,7 +112,7 @@
 				<p:column>
 					<p:inputMask size="5" styleClass="ppNumericAlign"
 						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}"
-						mask="99">
+						mask="99" style="width:111px">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('PbDate')}"
 							update="rangePubDatePG,recentPubDatePG" process="@this" />
