@@ -57,6 +57,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
 		//this.getManagedBean().setAppId(1257696);
 		//this.getManagedBean().setAppId(1257568);
+		//this.getManagedBean().setAppId(1372507);
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
@@ -89,7 +90,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 						this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDocSbhSrk);
 					}
 				}else{
-					if(applSuppDocSbhSrk.isReceived()){
+					if(!applSuppDocSbhSrk.isReceived()){
 						if(applSuppDocSbhSrk.getPmDocument().isMandatory()){
 							this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDocSbhSrk);
 						}
