@@ -2880,7 +2880,7 @@ public class EvaluationBackingBean extends
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
 				templateSpecBean.setSpecMaster(proposalCheckList
 						.getScQtCheckList().getScQtDoc().getTplSpecMaster());
-				/*if (null != this.getManagedBean().getScQt()
+			/*	if (null != this.getManagedBean().getScQt()
 						&& this.getManagedBean().getScQt().isZonal()) {
 					if (null != this.getManagedBean().getSelectedZone()) {
 						templateSpecBean.setTplSpecZoneDtl(this
