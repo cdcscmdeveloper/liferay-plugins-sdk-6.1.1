@@ -374,7 +374,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SearchMultiFilterBean agencyFilterBean = new SearchMultiFilterBean(ptjFilterBean, 
 						new SearchFilterBean("catType", SearchOperator.OPERATOR_NOT_EQUALS.value(), "MC", SearchCondition.CONDITION_OR.value()));
 				
-				searchBean.getDataFilterBeans().add(agencyFilterBean);
+				//searchBean.getDataFilterBeans().add(agencyFilterBean);
 				
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
