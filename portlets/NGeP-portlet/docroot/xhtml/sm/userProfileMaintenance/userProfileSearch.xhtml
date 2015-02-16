@@ -53,11 +53,11 @@
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
 						<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+							rendered="#{personnel.prevEpRole eq 'BASIC_SUPPLIER_ADMIN'}" />
 						<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
-							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER'}" />
+							rendered="#{personnel.prevEpRole eq 'BASIC_SUPPLIER_USER'}" />
 						<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
-							rendered="#{personnel.epRole eq 'CM_USER'}" />
+							rendered="#{personnel.prevEpRole eq 'CM_USER'}" />
 						<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
 							rendered="#{personnel.contractSigner}" />
 					</p:column>
