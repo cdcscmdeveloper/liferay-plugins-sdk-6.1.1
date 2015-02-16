@@ -108,17 +108,15 @@
 					</tr>
 				</c:if>
 			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
-							and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}">
-				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
-					<td>
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.issued']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
-					</td>
-				</tr>
-			</c:if>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.processing']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '3'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.requested']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.issued']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.notapplied']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
+				</td>
+			</tr>
 			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and 
 				(viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
 				<tr>
