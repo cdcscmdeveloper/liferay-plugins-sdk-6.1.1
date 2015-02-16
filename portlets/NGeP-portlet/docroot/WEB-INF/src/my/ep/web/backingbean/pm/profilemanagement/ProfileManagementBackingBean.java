@@ -1149,6 +1149,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						this.getManagedBean().getSelectedReceivingAddrTypes().add(addressTypeObj);
 					}
 				}
+				updateReceivingAddressFlag();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
