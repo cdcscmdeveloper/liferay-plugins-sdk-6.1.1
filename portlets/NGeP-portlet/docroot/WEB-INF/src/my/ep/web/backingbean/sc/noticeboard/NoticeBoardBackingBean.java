@@ -1311,11 +1311,12 @@ public class NoticeBoardBackingBean extends
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		// QuationTenderResDTO resDTO = null;
 		ScQt scQt = null;
+		NoticeBoardResDTO resDTO = null;
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 			reqDTO.setQtId(qtId);
-			NoticeBoardResDTO resDTO = qtNoticeBoardSO
+			resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			scQt = resDTO.getScQt();
 		} finally {
@@ -1341,8 +1342,9 @@ public class NoticeBoardBackingBean extends
 		qtDocumentsBackingBean.getManagedBean().setQt(null);
 		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
 
-		List<ScQtDocReport> scQtDocReports = getManagedBean()
-				.getScQtDocReports();
+		/*List<ScQtDocReport> scQtDocReports = getManagedBean()
+				.getScQtDocReports();*/
+		List<ScQtDocReport> scQtDocReports = resDTO.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
