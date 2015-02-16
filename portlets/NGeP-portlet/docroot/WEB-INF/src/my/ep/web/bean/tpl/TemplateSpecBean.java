@@ -7,6 +7,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 
 public class TemplateSpecBean {
 	private boolean selectAll;
@@ -18,7 +19,7 @@ public class TemplateSpecBean {
 	private TplSpecQuestion selectedSpecQuestion;
 	private TplSpecQuestion oriSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
-	
+	private TplSpecZoneDtl tplSpecZoneDtl;
 	public TemplateSpecBean() {
 		this(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 	}
@@ -151,5 +152,19 @@ public class TemplateSpecBean {
 	 */
 	public void setSpecAnswerList(List<TplSpecAnswer> specAnswerList) {
 		this.specAnswerList = specAnswerList;
+	}
+
+	/**
+	 * @return the tplSpecZoneDtl
+	 */
+	public TplSpecZoneDtl getTplSpecZoneDtl() {
+		return tplSpecZoneDtl;
+	}
+
+	/**
+	 * @param tplSpecZoneDtl the tplSpecZoneDtl to set
+	 */
+	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
 }
