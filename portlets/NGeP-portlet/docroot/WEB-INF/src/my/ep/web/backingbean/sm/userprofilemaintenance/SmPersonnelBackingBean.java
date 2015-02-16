@@ -636,93 +636,21 @@ public class SmPersonnelBackingBean extends
 
 	}
 
-	public List<SelectItem> getStateList(Long countryId) {
-
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
-		StateReqDTO reqDTO = new StateReqDTO();
-
-		reqDTO.setCountryId(countryId);
-
-		StateResDTO resDTO = stateSO.retriveStatesListByCountryID(reqDTO);
-
-		List<SelectItem> stateList = new ArrayList<SelectItem>();
-
-		for (PmState state : resDTO.getStateList()) {
-			SelectItem si = new SelectItem();
-			si.setLabel(state.getStateName());
-			si.setValue(state.getStateId());
-			stateList.add(si);
-		}
-
-		return stateList;
-
-	}
-
-	public List<SelectItem> getDistrictList(Long stateId) {
-
-		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDistrictSO.class);
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-
-		reqDTO.setStateId(stateId);
-
-		DistrictResDTO resDTO = districtSO.retriveDistrictListByStateID(reqDTO);
-
-		List<SelectItem> districtList = new ArrayList<SelectItem>();
-
-		for (PmDistrict district : resDTO.getDistrictList()) {
-			SelectItem si = new SelectItem();
-			si.setLabel(district.getDistrictName());
-			si.setValue(district.getDistrictId());
-			districtList.add(si);
-		}
-
-		return districtList;
-
-	}
-
-	public List<SelectItem> getCityList(Long districtId) {
-
-		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICitySO.class);
-		CityReqDTO reqDTO = new CityReqDTO();
-
-		reqDTO.setDistrictId(districtId);
-
-		CityResDTO resDTO = citySO.retriveCityListByDistrictId(reqDTO);
-
-		List<SelectItem> cityList = new ArrayList<SelectItem>();
-
-		for (PmCity city : resDTO.getCityList()) {
-			SelectItem si = new SelectItem();
-			si.setLabel(city.getCityName());
-			si.setValue(city.getCityId());
-			cityList.add(si);
-		}
-
-		return cityList;
-
-	}
-
 	public void updateMailAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
-			getManagedBean().setMailAddStateList(
+			getManagedBean().setMailAddStateList(SmCommonUtil.
 					getStateList(Long.valueOf(countryId)));
 			getManagedBean().setMailAddDistrictList(null);
 			getManagedBean().setMailAddCityList(null);
 		}
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
-			getManagedBean().setMailAddDistrictList(
+			getManagedBean().setMailAddDistrictList(SmCommonUtil.
 					getDistrictList(Long.valueOf(stateId)));
 			getManagedBean().setMailAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
-			getManagedBean().setMailAddCityList(
+			getManagedBean().setMailAddCityList(SmCommonUtil.
 					getCityList(Long.valueOf(districtId)));
 		}
 	}
@@ -730,18 +658,18 @@ public class SmPersonnelBackingBean extends
 	public void updatePermAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
-			getManagedBean().setPermAddStateList(
+			getManagedBean().setPermAddStateList(SmCommonUtil.
 					getStateList(Long.valueOf(countryId)));
 			getManagedBean().setPermAddDistrictList(null);
 			getManagedBean().setPermAddCityList(null);
 		}
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
-			getManagedBean().setPermAddDistrictList(
+			getManagedBean().setPermAddDistrictList(SmCommonUtil.
 					getDistrictList(Long.valueOf(stateId)));
 			getManagedBean().setPermAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
-			getManagedBean().setPermAddCityList(
+			getManagedBean().setPermAddCityList(SmCommonUtil.
 					getCityList(Long.valueOf(districtId)));
 		}
 	}

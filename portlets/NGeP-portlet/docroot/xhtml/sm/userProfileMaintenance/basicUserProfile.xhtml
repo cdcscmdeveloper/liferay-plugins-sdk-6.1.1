@@ -202,7 +202,6 @@
 					</tr>
 					
 					<tr>
-						<p:outputPanel id="basicBURolePanel" rendered="#{smPersonnelBackingBean.managedBean.accountStatus eq 1}">
 						<td><p:outputLabel id="basicBURoleLabel"
 								value="#{lbl['lbl.sm.userprofile.eprole']}" /> <p:outputLabel id="basicBURoleMandatory"
 								value="*" styleClass="mandatory" /></td>
@@ -220,7 +219,6 @@
 							</p:selectOneMenu>
 							<p:message id="basicBURoleMsg" for="basicBURole"
 								showSummary="true" showDetail="false" display="icon" /></td>
-						</p:outputPanel>
 								
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.dob']}" />
