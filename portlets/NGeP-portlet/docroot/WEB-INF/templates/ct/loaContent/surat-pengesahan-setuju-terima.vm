@@ -8,7 +8,11 @@
 			display: block; text-align: center;
 			position: running(footer);
 		}
-		li {text-align: justify;word-spacing: -10px;}
+		li {text-align: justify;word-spacing: -10px;}		
+        @media print {
+         .break {page-break-after: always;}
+        }
+        
 		
 	</style>
 </head>
@@ -336,12 +340,11 @@
 				<td>
 					$witnessEmail
 				</td>
-			</tr>	
-			<tr>
-				<td colspan="7">
-					<br /><br /><br/><br /><br /><br/>
-				</td>
 			</tr>
+			</table>
+			 <div class="break"></div>
+			
+			<table>
 			<tr>
 				<td>
 					No. Akaun Bank
