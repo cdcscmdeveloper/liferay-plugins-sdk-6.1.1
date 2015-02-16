@@ -378,6 +378,15 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setSmPersonnelList(resDTO.getSmPersonnelList());
 		}
 
+		// set prev epRole
+		if (getManagedBean().getSmPersonnelList() != null
+				&& !getManagedBean().getSmPersonnelList().isEmpty()) {
+			for (SmPersonnel smPersonnel : getManagedBean()
+					.getSmPersonnelList()) {
+				setPrevEpRole(smPersonnel);
+			}
+		}
+
 		getManagedBean().setDeactivatePersonnel(false);
 
 	}
@@ -1915,6 +1924,17 @@ public class SmPersonnelBackingBean extends
 				&& personnel.getPmUser().getPmUserOrgs() != null
 				&& !personnel.getPmUser().getPmUserOrgs().isEmpty()) {
 			getManagedBean().setDeactivatePersonnel(true);
+			setPrevEpRole(personnel);
+		}
+	}
+
+	private void setPrevEpRole(SmPersonnel personnel) {
+		personnel.setPrevEpRole(personnel.getEpRole());
+		if (personnel != null && personnel.getEpRole() == null
+				&& StringUtils.isBlank(personnel.getEpRole())
+				&& personnel.getPmUser() != null
+				&& personnel.getPmUser().getPmUserOrgs() != null
+				&& !personnel.getPmUser().getPmUserOrgs().isEmpty()) {
 			List<PmUserOrg> pmUserOrgs = personnel.getPmUser().getPmUserOrgs();
 			PmUserOrg pmUserOrg = new PmUserOrg();
 			for (PmUserOrg org : pmUserOrgs) {
@@ -1938,6 +1958,7 @@ public class SmPersonnelBackingBean extends
 									.equals(RoleCode.CM_USER.value())) {
 						personnel.setEpRole(pmUserRole.getPmRole()
 								.getRoleCode());
+						personnel.setPrevEpRole(personnel.getEpRole());
 						break;
 					}
 				}
