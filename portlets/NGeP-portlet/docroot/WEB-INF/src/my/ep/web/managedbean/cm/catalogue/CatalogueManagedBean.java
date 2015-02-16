@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.cm.catalogue;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -358,9 +360,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 				PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
-				String orgProfileId = "#"+userOrg.getPmOrgProfile().getOrgProfileId()+"#";
-				SearchMultiFilterBean agencyFilterBean = new SearchMultiFilterBean(new SearchFilterBean("agencyList", SearchOperator.OPERATOR_IS_NULL.value(), null), 
-						new SearchFilterBean("agencyList", SearchOperator.OPERATOR_LIKE.value(), orgProfileId, SearchCondition.CONDITION_OR.value()));
+
+				SearchMultiFilterBean dateFilterBean = new SearchMultiFilterBean(
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.effDate", SearchOperator.OPERATOR_GREATER.value(), getCurrentDateWithoutTime()),
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.expDate", SearchOperator.OPERATOR_LESS.value(), getCurrentDateWithoutTime(), SearchCondition.CONDITION_OR.value()));
+				SearchMultiFilterBean suspendFilterBean = new SearchMultiFilterBean(
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_SUSPENDED),
+						dateFilterBean);
+				SearchMultiFilterBean recordStatusFilterBean = new SearchMultiFilterBean(suspendFilterBean,
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE, SearchCondition.CONDITION_OR.value()));
+				SearchMultiFilterBean ptjFilterBean = new SearchMultiFilterBean(recordStatusFilterBean,
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.orgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), userOrg.getPmOrgProfile().getOrgProfileId()));
+				SearchMultiFilterBean agencyFilterBean = new SearchMultiFilterBean(ptjFilterBean, 
+						new SearchFilterBean("catType", SearchOperator.OPERATOR_NOT_EQUALS.value(), "MC", SearchCondition.CONDITION_OR.value()));
+				
 				searchBean.getDataFilterBeans().add(agencyFilterBean);
 				
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -423,6 +436,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	}
 
+	private Date getCurrentDateWithoutTime() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
 
 	public void searchCatalogue() {
 		log.info("In searchCatalogue");
