@@ -411,7 +411,7 @@
 				</h:panelGrid>
 				<div class="ppRightBtn">
        				<p:commandButton id="contractLoaSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableContractLoa"  
-       		   			action="#{supplierBackingBean.searchContractSupplierLoa}" process="@this"
+       		   			action="#{supplierBackingBean.searchContractLoa(ParameterConst.doctypeRequestFactoring)}" process="@this"
        		       		onstart="blkContratLoaTable.show();" oncomplete="blkContratLoaTable.hide();" /> 
 					<p:commandButton id="resetBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
 						action="#{supplierBackingBean.resetContractLoa}" update=":form:contractLoa"   />
