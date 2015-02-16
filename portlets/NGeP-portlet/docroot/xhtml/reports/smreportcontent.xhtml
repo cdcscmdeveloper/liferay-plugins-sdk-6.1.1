@@ -75,10 +75,15 @@
 							<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}"
 								style="margin-top:5px;width:160px;" />
 
-							<p:inputText maxlength="40"
-								value="#{reportBackingBean.smRegistrationStatus}"
-								style="margin-top:5px;width:290px;">
-							</p:inputText>
+							<p:selectOneMenu value="#{reportBackingBean.smRegistrationStatus}" 
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptr']}"
+													itemValue="#{lbl['lbl.rpt.bumiptr']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptrfrmhome']}"
+													itemValue="#{lbl['lbl.rpt.bumiptrfrmhome']}"></f:selectItem>
+											</p:selectOneMenu>
 						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryRegistrationStatusView}">
@@ -95,12 +100,19 @@
 							<p:column>
 								<table style="width: 100%">
 									<tr>
-										<td style="width: 84%"><p:inputText
+										<td style="width: 84%">
+										<p:selectOneMenu
 												label="#{lbl['lbl.rpt.rgstStatus']}" id="smManRegStatus"
-												maxlength="40"
-												value="#{reportBackingBean.smRegistrationStatus}"
-												required="true" style="margin-top:5px;width:290px;">
-											</p:inputText></td>
+												value="#{reportBackingBean.smRegistrationStatus}" required="true"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptr']}"
+													itemValue="#{lbl['lbl.rpt.bumiptr']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptrfrmhome']}"
+													itemValue="#{lbl['lbl.rpt.bumiptrfrmhome']}"></f:selectItem>
+											</p:selectOneMenu>
+										</td>
 										<td><p:message id="smManRegStatusMsg"
 												for="smManRegStatus" display="icon" /></td>
 									</tr>
@@ -802,12 +814,12 @@
 			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryFromDateView}">
 			<TABLE style="margin-top: 10px; width: 44%;">
 				<TR>
-					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRange']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeFrm']}"
 							style="width:130px;" /></TD>
 					<TD><p:outputLabel value="*" styleClass="mandatory"
 							style="width:5px;" /></TD>
 
-					<TD><p:calendar label="#{lbl['lbl.rpt.dtRange']}"
+					<TD><p:calendar label="#{lbl['lbl.rpt.dtRangeFrm']}"
 							id="MandatoryFromDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
@@ -816,7 +828,9 @@
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryFromDateMsg"
 							for="MandatoryFromDate" display="icon" /></TD>
-					<TD><p:calendar label="#{lbl['lbl.rpt.dtRange']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+							style="width:145px;" /></TD>
+					<TD><p:calendar label="#{lbl['lbl.rpt.dtRangeTo']}"
 							id="MandatoryToDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.toDate}" required="true"
