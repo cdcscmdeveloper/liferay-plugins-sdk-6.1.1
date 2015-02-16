@@ -217,6 +217,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String evaluationCheckListType;
 	private int evaluationCheckListIndex=-1;
 	private String evaluationTechnicalFinancialType;
+	private BigDecimal packageFromVarieance;
+	private BigDecimal packageToVarieance;
   
 	/**
 	 * @return the today
@@ -2154,6 +2156,34 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setContractScores(String contractScores) {
 		this.contractScores = contractScores;
+	}
+
+	/**
+	 * @return the packageFromVarieance
+	 */
+	public BigDecimal getPackageFromVarieance() {
+		return packageFromVarieance;
+	}
+
+	/**
+	 * @param packageFromVarieance the packageFromVarieance to set
+	 */
+	public void setPackageFromVarieance(BigDecimal packageFromVarieance) {
+		this.packageFromVarieance = packageFromVarieance;
+	}
+
+	/**
+	 * @return the packageToVarieance
+	 */
+	public BigDecimal getPackageToVarieance() {
+		return packageToVarieance;
+	}
+
+	/**
+	 * @param packageToVarieance the packageToVarieance to set
+	 */
+	public void setPackageToVarieance(BigDecimal packageToVarieance) {
+		this.packageToVarieance = packageToVarieance;
 	}
 
 	
