@@ -95,23 +95,19 @@
 		</h:panelGrid>
 
 		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
-			widgetVar="confirmDialog" modal="true" width="500" height="100" >
-			<p:panel id="dPanel" style="width:100%">
-				<table>
+			widgetVar="confirmDialog" modal="true" width="650px" height="100px" >
+			<p:panel id="dPanel">
+				<table style="width:100%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.search.userscount']}" /></td>
 					</tr>
-					<tr>
-						<td>
-							<div align="center">
-								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
-									action="#{smPersonnelBackingBean.navigateToAddNewUserPage}" />
-								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
-							</div>
-						</td>
-					</tr>
 				</table>
 			</p:panel>
+			<div align="center">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
+					action="#{smPersonnelBackingBean.navigateToAddNewUserPage}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+			</div>
 		</p:dialog>
 
 	</ui:define>
