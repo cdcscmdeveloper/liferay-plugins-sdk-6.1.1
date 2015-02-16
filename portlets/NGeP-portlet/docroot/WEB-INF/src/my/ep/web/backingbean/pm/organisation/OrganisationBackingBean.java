@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -47,6 +48,8 @@ import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -578,9 +581,16 @@ public class OrganisationBackingBean extends
 							IRegistrationSO.class);		
 		
 		if (getManagedBean().getOrgProfile().isGovtSeller()) {		
-				
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierSearchSO.class);
+			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+			suppSearchReqDTO.setSupplierId(orgProfile.getOrgProfileId());
+			SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
+			
 			// new Supplier
-			if (orgProfile.getSmSupplier() == null) {
+			if (orgProfile.getSmSupplier() == null && suppSearchResDTO.getSmSupplier() == null) {
 				log.info("Create new Supplier");
 				RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 				regReqDTO.setPmUsers(getManagedBean().getSupplierUsers());             
