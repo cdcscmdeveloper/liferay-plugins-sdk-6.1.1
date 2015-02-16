@@ -140,7 +140,8 @@
 				</tr>
 
 			</table>
-			<p:spacer height="5px" />
+	 <p:spacer height="5px" />
+	 <p:outputPanel autoUpdate="true" id="supplierview"> 
       <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) ne '0'}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
@@ -153,6 +154,7 @@
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 			title="#{lbl['lbl.ss.simple.quote.service.list']}" />
        </h:panelGroup>
+     </p:outputPanel>
 	</p:panel>
 	
 	<p:panel label="#{lbl['lbl.ss.simple.quote.remark']}" header="#{lbl['lbl.ss.simple.quote.remark']}" id="suppRmkId" toggleable="true" toggleSpeed="500">
