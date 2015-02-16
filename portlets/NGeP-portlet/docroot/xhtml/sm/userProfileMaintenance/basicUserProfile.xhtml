@@ -614,23 +614,19 @@
 		</p:panel>
 		
 		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
-			widgetVar="confirmDialog" modal="true" width="500" height="100">
-			<p:panel id="dPanel" style="width:100%">
-				<table>
+			widgetVar="confirmDialog" modal="true" width="700px" height="100px">
+			<p:panel id="dPanel">
+				<table style="width: 100%">
 					<tr>
 						<td><p:outputLabel value="#{smPersonnelBackingBean.managedBean.deactivateTerminateConfirmMsg}" /></td>
 					</tr>
-					<tr>
-						<td>
-							<div align="center">
-								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{smPersonnelBackingBean.deactivateOrTerminate}" 
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
-							</div>
-						</td>
-					</tr>
 				</table>
 			</p:panel>
+			<div align="center">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{smPersonnelBackingBean.deactivateOrTerminate}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+			</div>
 		</p:dialog>
 	</ui:define>
 </ui:composition>
