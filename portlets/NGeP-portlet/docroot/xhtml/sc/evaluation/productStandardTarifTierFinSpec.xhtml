@@ -48,20 +48,40 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sc.spec.fin.score.from.varience']}"
-							style="width:15%">
+							style="width:10%">
 							<h:outputLabel value="#{itemofferPricelist.rangeFrom}"
 								style="text-align:right"></h:outputLabel>
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.spec.fin.score.to.varience']}"
-							style="width:15%">
+							style="width:10%">
 							<h:outputLabel value="#{itemofferPricelist.rangeTo}"
 								style="text-align:right"></h:outputLabel>
 						</p:column>
 
+						<p:column headerText="#{lbl['lbl.sc.eva.from.varience.ringgit']}"
+							style="width:10%">
+							<h:outputLabel
+								value="#{itemofferPricelist.fromVariance}"
+								style="text-align:right">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputLabel>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.eva.to.varience.ringgit']}"
+							style="width:10%">
+							<h:outputLabel
+								value="#{itemofferPricelist.toVariance}"
+								style="text-align:right">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputLabel>
+						</p:column>
+
 						<p:column
 							headerText="#{lbl['lbl.sc.spec.fin.score.below.varience']}"
-							style="width:15%">
+							style="width:10%">
 							<h:outputLabel value="#{itemofferPricelist.belowScore}"
 								style="text-align:right"></h:outputLabel>
 						</p:column>
@@ -74,7 +94,7 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sc.spec.fin.score.above.variance']}"
-							style="width:15%">
+							style="width:10%">
 							<h:outputLabel value="#{itemofferPricelist.aboveScore}"
 								style="text-align:right"></h:outputLabel>
 						</p:column>
