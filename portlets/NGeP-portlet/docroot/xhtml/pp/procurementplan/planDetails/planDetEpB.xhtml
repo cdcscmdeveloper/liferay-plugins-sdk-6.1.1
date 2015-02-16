@@ -65,16 +65,22 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
 					    </f:facet>
 				    </p:column>
-				    <p:column width="5%">
-					    <f:facet name="header">
-					     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
-					    </f:facet>
-				    </p:column>
-				    <p:column width="5%">
-					    <f:facet name="header">
-					     	<h:outputText value="#{lbl['lbl.pp.ep.usage.target']}" />
-					    </f:facet>
-				    </p:column>
+				    <!-- hiding Fullfilment via ep column -->
+				    <ui:remove>
+				    	<p:column width="5%">
+					    	<f:facet name="header">
+					     		<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
+					    	</f:facet>
+				    	</p:column>
+				    </ui:remove>
+				    <!-- hiding ep usage target column -->
+					<ui:remove>
+				    	<p:column width="5%">
+					    	<f:facet name="header">
+					     		<h:outputText value="#{lbl['lbl.pp.ep.usage.target']}" />
+					    	</f:facet>
+				    	</p:column>
+				    </ui:remove>
 			      	<p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
@@ -148,12 +154,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 	        	</h:outputText>
 	        </p:column>
-	        <p:column>
-			    #{lbl['lbl.pp.no.available']}
-	        </p:column>
-	        <p:column>
-			    #{lbl['lbl.pp.no.available']}
-	        </p:column>
+	        <!-- hiding Fullfilment via ep column -->
+	        <ui:remove>
+	        	<p:column>
+			    	#{lbl['lbl.pp.no.available']}
+	        	</p:column>
+	        </ui:remove>
+	        <!-- hiding ep usage target column -->
+			<ui:remove>
+	        	<p:column>
+			    	#{lbl['lbl.pp.no.available']}
+	        	</p:column>
+	        </ui:remove>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
 			    	<p:ajax event="change" update="clEpReason"/>
@@ -217,16 +229,22 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	</h:outputText>
 					    </f:facet>
 					</p:column>
-					<p:column>
-						<f:facet name="footer">
-					     	#{lbl['lbl.pp.no.available']}
-					    </f:facet>
-					</p:column>
-					<p:column>
-						<f:facet name="footer">
-					     	#{lbl['lbl.pp.no.available']}
-					    </f:facet>
-					</p:column>
+					<!-- hiding Fullfilment via ep column -->
+					<ui:remove>
+						<p:column>
+							<f:facet name="footer">
+					     		#{lbl['lbl.pp.no.available']}
+					    	</f:facet>
+						</p:column>
+					</ui:remove>
+					<!-- hiding ep usage target column -->
+					<ui:remove>
+						<p:column>
+							<f:facet name="footer">
+					     		#{lbl['lbl.pp.no.available']}
+					    	</f:facet>
+						</p:column>
+					</ui:remove>
 					<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeReview}"/>
 					<p:column footerText="&#160;" />
 				 	<p:column footerText="&#160;"  rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}"/>
