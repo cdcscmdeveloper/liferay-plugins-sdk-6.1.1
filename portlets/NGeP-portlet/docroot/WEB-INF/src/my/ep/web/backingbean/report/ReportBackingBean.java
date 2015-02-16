@@ -3391,7 +3391,7 @@ public class ReportBackingBean extends
 		 */
 		if ((this.getModuleValue() != null) && (this.getSubModule() != null)) {
 			if ((this.getModuleValue()
-					.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))
+					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))
 					&& (this.getSubModule()
 							.equalsIgnoreCase(ReportConst.SUB_MOD_S1))) {
 				Date currentDate = new Date();
