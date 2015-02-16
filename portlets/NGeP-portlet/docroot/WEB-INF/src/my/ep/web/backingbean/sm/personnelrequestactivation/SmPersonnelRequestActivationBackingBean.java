@@ -44,7 +44,10 @@ public class SmPersonnelRequestActivationBackingBean {
 
 	public void resendActivation() {
 		validate();
+		FacesScopes fs = new FacesScopes();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setServerName(fs.getRequest().getServerName());
+		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setSmPersonnelList(selectedExpiredActivationPersonnels);
 		getPersonnelSO().resendPersonnelActivationEmail(reqDTO);
 
