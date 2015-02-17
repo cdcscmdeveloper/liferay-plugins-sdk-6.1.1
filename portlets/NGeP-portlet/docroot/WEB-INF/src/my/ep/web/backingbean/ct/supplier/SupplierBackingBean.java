@@ -740,24 +740,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			     contractSO = null;
 		   }
 	 }
-    
-	public void removeFileUpload(FileUploadEvent event) throws Exception{
-	
-		UploadedFile item = event.getFile();
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-		
-		String filePath = DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-				ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo());
-		File file = new File(filePath);
-		file.mkdirs();
-		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-		
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
-	    fileOuputStream.write(item.getContents());
-	    fileOuputStream.close();    	
-	    getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
-	    getManagedBean().getFactoring().setRemoveFilePath(filePath);
-	}
 	
     public void fileUpload(FileUploadEvent event) throws Exception {
     	UploadedFile item = event.getFile();
@@ -772,8 +754,19 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();    	
-	    getManagedBean().getFactoring().setFileName(item.getFileName());
-	    getManagedBean().getFactoring().setFilePath(filePath);
+	    
+	    if(getManagedBean().getIndex() == 1) {
+	         getManagedBean().getFactoring().setFactoringPayFilePath(item.getFileName());
+	         getManagedBean().getFactoring().setFactoringPayFilePath(filePath);
+	  
+	    } else if(getManagedBean().getIndex() == 2) {
+	         getManagedBean().getFactoring().setFileName(item.getFileName());
+	         getManagedBean().getFactoring().setFilePath(filePath);
+	  
+	    } else  if(getManagedBean().getIndex() == 3) {
+	    	  getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
+	  	    getManagedBean().getFactoring().setRemoveFilePath(filePath);
+	    }
     }
     
     public void downloadFile(String filePath, String fileName) throws IOException {
@@ -1210,6 +1203,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			return saveFactoringRequest(outcome);
 		}
 	}
+    
+    public void setUploadIndexValue(int index){
+    	getManagedBean().setIndex(index);
+    }
     
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
