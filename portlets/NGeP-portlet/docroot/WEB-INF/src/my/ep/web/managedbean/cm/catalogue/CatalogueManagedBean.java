@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.persistence.criteria.JoinType;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -362,19 +363,19 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
 
 				SearchMultiFilterBean dateFilterBean = new SearchMultiFilterBean(
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.effDate", SearchOperator.OPERATOR_GREATER.value(), getCurrentDateWithoutTime()),
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.expDate", SearchOperator.OPERATOR_LESS.value(), getCurrentDateWithoutTime(), SearchCondition.CONDITION_OR.value()));
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.effDate", SearchOperator.OPERATOR_GREATER.value(), getCurrentDateWithoutTime(), JoinType.LEFT),
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.expDate", SearchOperator.OPERATOR_LESS.value(), getCurrentDateWithoutTime(), SearchCondition.CONDITION_OR.value(), JoinType.LEFT));
 				SearchMultiFilterBean suspendFilterBean = new SearchMultiFilterBean(
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_SUSPENDED),
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_SUSPENDED, JoinType.LEFT),
 						dateFilterBean);
 				SearchMultiFilterBean recordStatusFilterBean = new SearchMultiFilterBean(suspendFilterBean,
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE, SearchCondition.CONDITION_OR.value()));
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE, SearchCondition.CONDITION_OR.value(), JoinType.LEFT));
 				SearchMultiFilterBean ptjFilterBean = new SearchMultiFilterBean(recordStatusFilterBean,
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.orgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), userOrg.getPmOrgProfile().getOrgProfileId()));
+						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.orgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), userOrg.getPmOrgProfile().getOrgProfileId(), JoinType.LEFT));
 				SearchMultiFilterBean agencyFilterBean = new SearchMultiFilterBean(ptjFilterBean, 
 						new SearchFilterBean("catType", SearchOperator.OPERATOR_NOT_EQUALS.value(), "MC", SearchCondition.CONDITION_OR.value()));
 				
-				//searchBean.getDataFilterBeans().add(agencyFilterBean);
+				searchBean.getDataFilterBeans().add(agencyFilterBean);
 				
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
