@@ -166,9 +166,7 @@ public class SmApplicationBackingBean extends
 	 * Instantiates a new sm application backing bean.
 	 */
 	public SmApplicationBackingBean() {
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
+		SmCommonUtil.setMDCUserId();
 	}
 
 	/**
