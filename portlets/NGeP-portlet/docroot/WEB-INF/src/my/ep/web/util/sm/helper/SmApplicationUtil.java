@@ -4680,7 +4680,9 @@ public class SmApplicationUtil {
 		boolean isAlreadyActivate = false;
 		try {
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IPersonnelSO.class);
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(identificationNo);
 			reqDTO.setSmSupplierId(supplierId);
