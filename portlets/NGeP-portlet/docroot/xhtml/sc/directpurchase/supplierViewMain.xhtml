@@ -13,14 +13,20 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<ac:spkiPopup id="spkiPopup" postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
-			<div class="ppRightBtn">
+		<ac:spkiPopup id="spkiPopup"
+			password="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
 
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
-					action="#{spkiBackingBean.getChallengeQuestions}"
-					update="spkiPopup" oncomplete="spki_dlg.show();"
-					rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}" />
-			</div>
-			<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />
+		<div class="ppRightBtn">
+
+			<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+				action="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
+				update="spkiPopup" oncomplete="spki_dlg.show();"
+				rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}" />
+
+		</div>
+		<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />
 	</ui:define>
 </ui:composition>

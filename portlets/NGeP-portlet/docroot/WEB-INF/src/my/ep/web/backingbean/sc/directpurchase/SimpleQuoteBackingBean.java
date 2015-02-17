@@ -3339,8 +3339,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if(scQuote.getMultipleQuote().equals(Boolean.TRUE)){
 					retrieveSupplierView(scQuote);
-					RequestContext context = RequestContext.getCurrentInstance();
-					context.execute(":form:suppViewId");
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");	
 				} else{
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
