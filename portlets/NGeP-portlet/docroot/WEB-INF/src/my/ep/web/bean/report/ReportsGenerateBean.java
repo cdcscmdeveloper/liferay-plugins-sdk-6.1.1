@@ -39,7 +39,7 @@ public class ReportsGenerateBean {
 	private boolean toDateView = false;
 	private long lngUserId;
 	private List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
-	
+	private boolean madatoryIndicatorView = false;	
 		//sc module
 		private boolean extraTwoColumnView = false;		
 		private boolean scQuotationNoView = false;
@@ -355,6 +355,12 @@ public class ReportsGenerateBean {
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isMadatoryIndicatorView() {
+			return madatoryIndicatorView;
+		}
+		public void setMadatoryIndicatorView(boolean madatoryIndicatorView) {
+			this.madatoryIndicatorView = madatoryIndicatorView;
+		}
 		public boolean isCtProcurementModeView() {
 			return ctProcurementModeView;
 		}
