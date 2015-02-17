@@ -32,7 +32,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtMinistryView(true);
 	        	rptGenBean.setCtPtjView(true);
 	        	rptGenBean.setCtGroupOneView(true);
-	        	//rptGenBean.setExtraTwoColumnView(true);
+	        	rptGenBean.setCtProcurementModeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
@@ -48,7 +48,8 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLoanNoView(true);
 	        	rptGenBean.setCtMinistryView(true);
 	        	rptGenBean.setCtPtjView(true);
-	        	rptGenBean.setCtGroupTwoView(true);
+	        	rptGenBean.setCtProcurementModeView(true);
+	        	rptGenBean.setCtGroupTwoView(true);	        	
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
