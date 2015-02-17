@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -66,6 +67,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -698,12 +700,13 @@ public class NoticeBoardBackingBean extends
 		}
 
 		try {
+			final Long qtId = this.getManagedBean().getScQt().getQtId();
 			IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTNoticeBoardSO.class);
 			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 			reqDTO.setMofNo(mofNo);
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setQtId(qtId);
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			NoticeBoardResDTO resDTO = boardSO
 					.checkSupplierQualificationStatus(reqDTO);
@@ -723,6 +726,16 @@ public class NoticeBoardBackingBean extends
 				}
 
 				setVisible(true);
+			}
+			
+			// construct the proposal/update url
+			if(this.getManagedBean().isQualified()){
+				StringBuffer proposalURL = new StringBuffer(85);
+				proposalURL.append(EpPropertiesUtils.getInstance()
+				.getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
+				proposalURL.append(SourcingConstants.SUPPLIER_PROPOSAL_PAGE);
+				proposalURL.append(qtId);
+				this.getManagedBean().setProposalURL(proposalURL.toString());
 			}
 		} finally {
 
