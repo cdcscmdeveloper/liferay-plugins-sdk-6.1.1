@@ -16,6 +16,7 @@ import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
 
 /**
  * @author Syazwan
@@ -110,6 +111,34 @@ public class EpSchedulerHelper {
 		}
 
 		return state;
+	}
+
+	public static JobKey getJobKey(Scheduler scheduler, String jobName,
+			String jobGroup) {
+		JobKey returnJobKey = null;
+		try {
+			for (String groupName : scheduler.getJobGroupNames()) {
+
+				if (jobGroup.equalsIgnoreCase(groupName)) {
+					for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher
+							.jobGroupEquals(groupName))) {
+
+						if (jobKey.getName().equals(jobName)) {
+							returnJobKey = jobKey;
+							break;
+						}
+					}
+
+					break;
+				}
+
+			}
+		} catch (Exception e) {
+			log.error(e);
+		}
+
+		return returnJobKey;
+
 	}
 
 	public static Scheduler getScheduler() {
