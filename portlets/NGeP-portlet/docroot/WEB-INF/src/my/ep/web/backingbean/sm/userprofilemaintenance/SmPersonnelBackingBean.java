@@ -639,38 +639,38 @@ public class SmPersonnelBackingBean extends
 	public void updateMailAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
-			getManagedBean().setMailAddStateList(SmCommonUtil.
-					getStateList(Long.valueOf(countryId)));
+			getManagedBean().setMailAddStateList(
+					SmCommonUtil.getStateList(Long.valueOf(countryId)));
 			getManagedBean().setMailAddDistrictList(null);
 			getManagedBean().setMailAddCityList(null);
 		}
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
-			getManagedBean().setMailAddDistrictList(SmCommonUtil.
-					getDistrictList(Long.valueOf(stateId)));
+			getManagedBean().setMailAddDistrictList(
+					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 			getManagedBean().setMailAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
-			getManagedBean().setMailAddCityList(SmCommonUtil.
-					getCityList(Long.valueOf(districtId)));
+			getManagedBean().setMailAddCityList(
+					SmCommonUtil.getCityList(Long.valueOf(districtId)));
 		}
 	}
 
 	public void updatePermAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
-			getManagedBean().setPermAddStateList(SmCommonUtil.
-					getStateList(Long.valueOf(countryId)));
+			getManagedBean().setPermAddStateList(
+					SmCommonUtil.getStateList(Long.valueOf(countryId)));
 			getManagedBean().setPermAddDistrictList(null);
 			getManagedBean().setPermAddCityList(null);
 		}
 		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
-			getManagedBean().setPermAddDistrictList(SmCommonUtil.
-					getDistrictList(Long.valueOf(stateId)));
+			getManagedBean().setPermAddDistrictList(
+					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 			getManagedBean().setPermAddCityList(null);
 		}
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
-			getManagedBean().setPermAddCityList(SmCommonUtil.
-					getCityList(Long.valueOf(districtId)));
+			getManagedBean().setPermAddCityList(
+					SmCommonUtil.getCityList(Long.valueOf(districtId)));
 		}
 	}
 
@@ -1857,7 +1857,15 @@ public class SmPersonnelBackingBean extends
 	}
 
 	private void setPrevEpRole(SmPersonnel personnel) {
-		personnel.setPrevEpRole(personnel.getEpRole());
+		if (personnel.getEpRole() == null) {
+			personnel.setPrevEpRole(getDeactivateEpRole(personnel));
+		} else {
+			personnel.setPrevEpRole(personnel.getEpRole());
+		}
+	}
+
+	private String getDeactivateEpRole(SmPersonnel personnel) {
+		String epRole = "";
 		if (personnel != null && personnel.getEpRole() == null
 				&& StringUtils.isBlank(personnel.getEpRole())
 				&& personnel.getPmUser() != null
@@ -1884,13 +1892,12 @@ public class SmPersonnelBackingBean extends
 											.value())
 							|| pmUserRole.getPmRole().getRoleCode()
 									.equals(RoleCode.CM_USER.value())) {
-						personnel.setEpRole(pmUserRole.getPmRole()
-								.getRoleCode());
-						personnel.setPrevEpRole(personnel.getEpRole());
+						epRole = pmUserRole.getPmRole().getRoleCode();
 						break;
 					}
 				}
 			}
 		}
+		return epRole;
 	}
 }
