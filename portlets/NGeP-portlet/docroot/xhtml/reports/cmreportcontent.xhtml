@@ -33,7 +33,7 @@
 									  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscCodeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="8" value="#{reportBackingBean.cmUnspscCode}" style="margin-top:5px;width:290px;">
-									<p:ajax event="change" listener="#{reportBackingBean.enableExtensionTypes}" process="@this" partialSubmit="true" update="@all"/>																		
+									<p:ajax event="change" listener="#{reportBackingBean.enableExtensionTypes}" process="@this" partialSubmit="true" update="rptCmExtention"/>																		
 									</p:inputText>									
 									</c:if>			
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscTitleView}">
@@ -79,7 +79,7 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}" itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}" itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
-										<p:ajax event="change" listener="#{reportBackingBean.enableRegistrationType}" process="@this"
+										<p:ajax event="change" listener="#{reportBackingBean.enableRegistrationType}" process="@this" 
 											 partialSubmit="true"  update="rptCmCriteriaRegtype"/>			
 									</p:selectOneMenu>
 									</c:if>

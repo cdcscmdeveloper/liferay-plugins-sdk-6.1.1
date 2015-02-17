@@ -2196,15 +2196,7 @@ public class ReportBackingBean extends
 	public void setSmCompanyName(String smCompanyName) {
 		this.smCompanyName = smCompanyName;
 	}
-
-	/*
-	 * public String getSmSupplier() { return smSupplier; } public void
-	 * setSmSupplier(String smSupplier) { this.smSupplier = smSupplier; } public
-	 * String getSmEpNumber() { return smEpNumber; } public void
-	 * setSmEpNumber(String smEpNumber) { this.smEpNumber = smEpNumber; } public
-	 * String getSmMofNumber() { return smMofNumber; } public void
-	 * setSmMofNumber(String smMofNumber) { this.smMofNumber = smMofNumber; }
-	 */
+	
 	public String getSmRegistrationType() {
 		return smRegistrationType;
 	}
@@ -2212,14 +2204,6 @@ public class ReportBackingBean extends
 	public void setSmRegistrationType(String smRegistrationType) {
 		this.smRegistrationType = smRegistrationType;
 	}
-
-	/*
-	 * public String getSmBusinessRegNo() { return smBusinessRegNo; } public
-	 * void setSmBusinessRegNo(String smBusinessRegNo) { this.smBusinessRegNo =
-	 * smBusinessRegNo; } public String getSmIcNumber() { return smIcNumber; }
-	 * public void setSmIcNumber(String smIcNumber) { this.smIcNumber =
-	 * smIcNumber; }
-	 */
 	public String getCmItemType() {
 		return cmItemType;
 	}
@@ -3075,10 +3059,10 @@ public class ReportBackingBean extends
 		extTypeList = new ArrayList<SelectItem>();
 		measurmentList = new ArrayList<SelectItem>();
 		colorList = new ArrayList<SelectItem>();
-		rptGenBean.setCmExtentionBrandView(false);
-		rptGenBean.setCmExtentionTypeView(false);
-		rptGenBean.setCmExtentionMeasurmentView(false);
-		rptGenBean.setCmExtentionColourView(false);
+		getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
+		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
+		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
+		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
 		
 		if (null != this.getCmUnspscCode()
 				&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
@@ -3093,10 +3077,10 @@ public class ReportBackingBean extends
 					retrieveMeasurement();
 					retrieveColor();
 					
-					rptGenBean.setCmExtentionBrandView(true);		
-					rptGenBean.setCmExtentionTypeView(true);		
-					rptGenBean.setCmExtentionMeasurmentView(true);	
-					rptGenBean.setCmExtentionColourView(true);
+					getManagedBean().getRptGenBean().setCmExtentionBrandView(true);		
+					getManagedBean().getRptGenBean().setCmExtentionTypeView(true);		
+					getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(true);	
+					getManagedBean().getRptGenBean().setCmExtentionColourView(true);
 				} else {
 					this.setCmUnspscCode(null);
 					//this.setCmExtentionCode(null);
@@ -3110,10 +3094,10 @@ public class ReportBackingBean extends
 					extTypeList = new ArrayList<SelectItem>();
 					measurmentList = new ArrayList<SelectItem>();
 					colorList = new ArrayList<SelectItem>();
-					rptGenBean.setCmExtentionBrandView(false);
-					rptGenBean.setCmExtentionTypeView(false);
-					rptGenBean.setCmExtentionMeasurmentView(false);
-					rptGenBean.setCmExtentionColourView(false);
+					getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
+					getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
+					getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
+					getManagedBean().getRptGenBean().setCmExtentionColourView(false);
 					throw new EpException(
 							CommonMethod
 									.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
@@ -3129,10 +3113,10 @@ public class ReportBackingBean extends
 				extTypeList = new ArrayList<SelectItem>();
 				measurmentList = new ArrayList<SelectItem>();
 				colorList = new ArrayList<SelectItem>();
-				rptGenBean.setCmExtentionBrandView(false);
-				rptGenBean.setCmExtentionTypeView(false);
-				rptGenBean.setCmExtentionMeasurmentView(false);
-				rptGenBean.setCmExtentionColourView(false);
+				getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
+				getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
+				getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
+				getManagedBean().getRptGenBean().setCmExtentionColourView(false);
 				throw new EpException(
 						CommonMethod
 								.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
@@ -3148,32 +3132,11 @@ public class ReportBackingBean extends
 			extTypeList = new ArrayList<SelectItem>();
 			measurmentList = new ArrayList<SelectItem>();
 			colorList = new ArrayList<SelectItem>();
-			rptGenBean.setCmExtentionBrandView(false);
-			rptGenBean.setCmExtentionTypeView(false);
-			rptGenBean.setCmExtentionMeasurmentView(false);
-			rptGenBean.setCmExtentionColourView(false);
-		}
-		
-		if (null != this.getCmExtentionCode()) {
-			if (this.getCmExtentionCode().equals(ReportConst.EXT_BRAND)) {
-				rptGenBean.setCmExtentionBrandView(true);
-				rptGenBean.setExtraTwoColumnView(true);
-				retrieveBrand();
-			} else if (this.getCmExtentionCode().equals(ReportConst.EXT_TYPE)) {
-				rptGenBean.setCmExtentionTypeView(true);
-				rptGenBean.setExtraTwoColumnView(true);
-				retrieveExtType();
-			} else if (this.getCmExtentionCode().equals(
-					ReportConst.EXT_MEASUREMENT)) {
-				rptGenBean.setCmExtentionMeasurmentView(true);
-				rptGenBean.setExtraTwoColumnView(true);
-				retrieveMeasurement();
-			} else if (this.getCmExtentionCode().equals(ReportConst.EXT_COLOUR)) {
-				rptGenBean.setCmExtentionColourView(true);
-				rptGenBean.setExtraTwoColumnView(true);
-				retrieveColor();
-			}
-		}
+			getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
+			getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
+			getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
+			getManagedBean().getRptGenBean().setCmExtentionColourView(false);
+		}		
 	}
 
 	public Long retrieveCMUnspcIdbyCode(String unspcCode) {
@@ -3501,42 +3464,7 @@ public class ReportBackingBean extends
 		return levOneCatLst;
 	}
 
-	public void retrieveCategoryLevOne2() {
-
-		levOneCatLst2 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne3() {
-		levOneCatLst3 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne4() {
-		levOneCatLst4 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne5() {
-		levOneCatLst5 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne6() {
-		levOneCatLst6 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne7() {
-		levOneCatLst7 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne8() {
-		levOneCatLst8 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne9() {
-		levOneCatLst9 = retrieveCategoryLevOne();
-	}
-
-	public void retrieveCategoryLevOne10() {
-		levOneCatLst10 = retrieveCategoryLevOne();
-	}
+	
 
 	public List<SelectItem> retrieveCategoryLevTwo(String mainCategory) {
 		levTwoCatLst = new ArrayList<SelectItem>();
@@ -3559,94 +3487,7 @@ public class ReportBackingBean extends
 		return levTwoCatLst;
 	}
 
-	public void retrieveCategoryLevTwo1() {
-		this.setSmSubCategory1(null);
-		this.setSmSubCategoryDivision1(null);
-		levTwoCatLst1 = new ArrayList<SelectItem>();
-		levThreeCatLst1 = new ArrayList<SelectItem>();
-		levTwoCatLst1 = retrieveCategoryLevTwo(this.getSmMainCategory1());
-		retrieveCategoryLevOne2();
-	}
-
-	public void retrieveCategoryLevTwo2() {
-		this.setSmSubCategory2(null);
-		this.setSmSubCategoryDivision2(null);
-		levTwoCatLst2 = new ArrayList<SelectItem>();
-		levThreeCatLst2 = new ArrayList<SelectItem>();
-		levTwoCatLst2 = retrieveCategoryLevTwo(this.getSmMainCategory2());
-		retrieveCategoryLevOne3();
-	}
-
-	public void retrieveCategoryLevTwo3() {
-		this.setSmSubCategory3(null);
-		this.setSmSubCategoryDivision3(null);
-		levTwoCatLst3 = new ArrayList<SelectItem>();
-		levThreeCatLst3 = new ArrayList<SelectItem>();
-		levTwoCatLst3 = retrieveCategoryLevTwo(this.getSmMainCategory3());
-		retrieveCategoryLevOne4();
-	}
-
-	public void retrieveCategoryLevTwo4() {
-		this.setSmSubCategory4(null);
-		this.setSmSubCategoryDivision4(null);
-		levTwoCatLst4 = new ArrayList<SelectItem>();
-		levThreeCatLst4 = new ArrayList<SelectItem>();
-		levTwoCatLst4 = retrieveCategoryLevTwo(this.getSmMainCategory4());
-		retrieveCategoryLevOne5();
-	}
-
-	public void retrieveCategoryLevTwo5() {
-		this.setSmSubCategory5(null);
-		this.setSmSubCategoryDivision5(null);
-		levTwoCatLst5 = new ArrayList<SelectItem>();
-		levThreeCatLst5 = new ArrayList<SelectItem>();
-		levTwoCatLst5 = retrieveCategoryLevTwo(this.getSmMainCategory5());
-		retrieveCategoryLevOne6();
-	}
-
-	public void retrieveCategoryLevTwo6() {
-		this.setSmSubCategory6(null);
-		this.setSmSubCategoryDivision6(null);
-		levTwoCatLst6 = new ArrayList<SelectItem>();
-		levThreeCatLst6 = new ArrayList<SelectItem>();
-		levTwoCatLst6 = retrieveCategoryLevTwo(this.getSmMainCategory6());
-		retrieveCategoryLevOne7();
-	}
-
-	public void retrieveCategoryLevTwo7() {
-		this.setSmSubCategory7(null);
-		this.setSmSubCategoryDivision7(null);
-		levTwoCatLst7 = new ArrayList<SelectItem>();
-		levThreeCatLst7 = new ArrayList<SelectItem>();
-		levTwoCatLst7 = retrieveCategoryLevTwo(this.getSmMainCategory7());
-		retrieveCategoryLevOne8();
-	}
-
-	public void retrieveCategoryLevTwo8() {
-		this.setSmSubCategory8(null);
-		this.setSmSubCategoryDivision8(null);
-		levTwoCatLst8 = new ArrayList<SelectItem>();
-		levThreeCatLst8 = new ArrayList<SelectItem>();
-		levTwoCatLst8 = retrieveCategoryLevTwo(this.getSmMainCategory8());
-		retrieveCategoryLevOne9();
-	}
-
-	public void retrieveCategoryLevTwo9() {
-		this.setSmSubCategory9(null);
-		this.setSmSubCategoryDivision9(null);
-		levTwoCatLst9 = new ArrayList<SelectItem>();
-		levThreeCatLst9 = new ArrayList<SelectItem>();
-		levTwoCatLst9 = retrieveCategoryLevTwo(this.getSmMainCategory9());
-		retrieveCategoryLevOne10();
-	}
-
-	public void retrieveCategoryLevTwo10() {
-		this.setSmSubCategory10(null);
-		this.setSmSubCategoryDivision10(null);
-		levTwoCatLst10 = new ArrayList<SelectItem>();
-		levThreeCatLst10 = new ArrayList<SelectItem>();
-		levTwoCatLst10 = retrieveCategoryLevTwo(this.getSmMainCategory10());
-	}
+	
 
 	public List<SelectItem> retrieveCategoryLevThree(String subCategory) {
 		levThreeCatLst = new ArrayList<SelectItem>();
@@ -3669,45 +3510,7 @@ public class ReportBackingBean extends
 		return levThreeCatLst;
 	}
 
-	public void retrieveCategoryLevThree1() {
-		levThreeCatLst1 = retrieveCategoryLevThree(this.getSmSubCategory1());
-	}
-
-	public void retrieveCategoryLevThree2() {
-		levThreeCatLst2 = retrieveCategoryLevThree(this.getSmSubCategory2());
-	}
-
-	public void retrieveCategoryLevThree3() {
-		levThreeCatLst3 = retrieveCategoryLevThree(this.getSmSubCategory3());
-	}
-
-	public void retrieveCategoryLevThree4() {
-		levThreeCatLst4 = retrieveCategoryLevThree(this.getSmSubCategory4());
-	}
-
-	public void retrieveCategoryLevThree5() {
-		levThreeCatLst5 = retrieveCategoryLevThree(this.getSmSubCategory5());
-	}
-
-	public void retrieveCategoryLevThree6() {
-		levThreeCatLst6 = retrieveCategoryLevThree(this.getSmSubCategory6());
-	}
-
-	public void retrieveCategoryLevThree7() {
-		levThreeCatLst7 = retrieveCategoryLevThree(this.getSmSubCategory7());
-	}
-
-	public void retrieveCategoryLevThree8() {
-		levThreeCatLst8 = retrieveCategoryLevThree(this.getSmSubCategory8());
-	}
-
-	public void retrieveCategoryLevThree9() {
-		levThreeCatLst9 = retrieveCategoryLevThree(this.getSmSubCategory9());
-	}
-
-	public void retrieveCategoryLevThree10() {
-		levThreeCatLst10 = retrieveCategoryLevThree(this.getSmSubCategory10());
-	}
+	
 
 	public void enableRegistrationType() {
 		this.setCmEpNumber(null);
@@ -4844,24 +4647,24 @@ public class ReportBackingBean extends
 			}
 			if ((this.getCmExtentionType() != null)
 					&& (this.getCmExtentionType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setExtentionTypeTotVar(ReportConst.AMP_EXT_TYPE_EQ
+				rptGenBean.setCmExtentionTypeVar(ReportConst.AMP_EXT_TYPE_EQ
 						+ this.getCmExtentionType());
 			}
 			if ((this.getCmExtentionBrand() != null)
 					&& (this.getCmExtentionBrand() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setExtentionBrandTotVar(ReportConst.AMP_EXT_BRAND_EQ
+				rptGenBean.setCmExtentionBrandVar(ReportConst.AMP_EXT_BRAND_EQ
 						+ this.getCmExtentionBrand());
 			}
 			if ((this.getCmExtentionMeasurment() != null)
 					&& (this.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
-						.setExtentionMeasurmentTotVar(ReportConst.AMP_EXT_MEASURMENT_EQ
+						.setCmExtentionMeasurmentVar(ReportConst.AMP_EXT_MEASURMENT_EQ
 								+ this.getCmExtentionMeasurment());
 			}
 			if ((this.getCmExtentionColour() != null)
 					&& (this.getCmExtentionColour() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
-						.setExtentionColourTotVar(ReportConst.AMP_EXT_COLOUR_EQ
+						.setCmExtentionColourVar(ReportConst.AMP_EXT_COLOUR_EQ
 								+ this.getCmExtentionColour());
 			}
 			if ((this.getCmExtentionCode() != null)
@@ -4934,27 +4737,7 @@ public class ReportBackingBean extends
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ
 						+ this.getCmExtention());
 			}
-			if ((this.getCmExtentionBrand() != null)
-					&& (this.getCmExtentionBrand() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCmExtentionBrandVar(ReportConst.CM_AMP_PEXT_EQ
-						+ this.getCmExtentionBrand());
-			}
-			if ((this.getCmExtentionType() != null)
-					&& (this.getCmExtentionType() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCmExtentionTypeVar(ReportConst.CM_AMP_PEXT_EQ
-						+ this.getCmExtentionType());
-			}
-			if ((this.getCmExtentionMeasurment() != null)
-					&& (this.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL)) {
-				rptGenBean
-						.setCmExtentionMeasurmentVar(ReportConst.CM_AMP_PEXT_EQ
-								+ this.getCmExtentionMeasurment());
-			}
-			if ((this.getCmExtentionColour() != null)
-					&& (this.getCmExtentionColour() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setCmExtentionColourVar(ReportConst.CM_AMP_PEXT_EQ
-						+ this.getCmExtentionColour());
-			}
+			
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.LST_REJ_CAT_ITM_RPT_VAL))) {
