@@ -133,6 +133,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSmSvFacilityMap(new HashMap<String, SmFacility>());
 		
 		Map<String, SmFacility> facilityMap = new HashMap<String,SmFacility>();
+		Map<Long, String> facilityTypeAddressMap = new HashMap<Long,String>();
 		
 		for(SmSvAddress smSvAddress:getManagedBean().getSmSvTask().getSmSvAddresses()){
 			reqDTO.setSmAddressId(smSvAddress.getSmAddress().getAddressId());
@@ -190,8 +191,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					//manufacturingAddress.add(smSvAddress);
 					//readMaterialAddress.add(smSvAddress);
 				}
+				
+				facilityTypeAddressMap.put(smSvAddress.getSvAddressId(), resDTO.getSmFacilityType());
 			}
 		}
+		this.getManagedBean().setFacilityTypeAddressMap(facilityTypeAddressMap);
+		this.getManagedBean().setAllFacilityMap(facilityMap);
 		
 		//added by Andrew : to set default to those without premise location
 		for(Map.Entry<String, SmSvTemplate> svTemplate : getManagedBean().getSmSvTemplateMap().entrySet()){
@@ -238,30 +243,39 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private void setSelectedSmSvFacility(String templateType){
+		log.info("*******setSelectedSmSvFacility*********");
 		SmFacility smFacility = getManagedBean().getSmSvFacilityMap().get(templateType);
 		SmSvFacility smSvFacility = null;
 		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility()!=null 
 				&& getManagedBean().getSelectedSvTemplate().getSmSvFacility().getSvFacilityId()!=null){
 			log.info("***already set smsvfacility***");
 		}else{
-			if(smFacility!=null){
-				NumberFormat formatter = new DecimalFormat("#0.00");
-				smSvFacility = new SmSvFacility();
-				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
-				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
-				if(smFacility.getAreaSquareFeet()!=null){
-					smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
-					smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
-				}
-				if(smFacility.getOwnershipType().equals("R")){
-					smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
-				}else{
-					smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
-				}
-				smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
-				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
+			log.info("allFacilityMap****" + this.getManagedBean().getAllFacilityMap().size());
+			if(smFacility == null){
+				// randomly assign a facility
+				String key = getManagedBean().getFacilityTypeAddressMap().get(getManagedBean().getSmSvTask().getSmSvAddresses().get(0).getSvAddressId());
+				smFacility = this.getManagedBean().getAllFacilityMap().get(key);
+				
+				log.info("******KEY************" + key);
+				log.info("******SmFacility******" + smFacility);
 			}
+			
+			NumberFormat formatter = new DecimalFormat("#0.00");
+			smSvFacility = new SmSvFacility();
+			smSvFacility.setOwnershipType(smFacility.getOwnershipType());
+			smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+			smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+			if(smFacility.getAreaSquareFeet()!=null){
+				smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
+				smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
+			}
+			if(smFacility.getOwnershipType().equals("R")){
+				smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
+			}else{
+				smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
+			}
+			smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
+			getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 		}
 	}
 	
@@ -269,6 +283,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1257118);
 		//this.getManagedBean().setAppId(1257442);
 		//this.getManagedBean().setAppId(1257676); //FT
+		//this.getManagedBean().setAppId(1257345);//FT
 		
 		this.getManagedBean().setActiveIndex(0);
 		
@@ -1944,4 +1959,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			printMachine.setRequisiteMethod(null);
 		}
 	}
+	
+	public String displayAddress(SmAddress svAddress){
+		return AddressUtils.getAddress(svAddress);
+	}
+
 }
