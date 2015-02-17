@@ -41,12 +41,6 @@
 						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}">
-							<h:outputText value="#{lbl['lbl.txt.yes']}"
-								rendered="#{person.equityOwner}" />
-							<h:outputText value="#{lbl['lbl.txt.no']}"
-								rendered="#{!person.equityOwner}" />
-						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"
 								rendered="#{person.authorizedFlg eq '1'}" />
@@ -66,10 +60,6 @@
 							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.notapplied']}"
 								rendered="#{person.softcertFlg eq '0' or person.smAppl.supplierType eq 'J'}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}"
-							style="white-space: normal;">
-							<h:outputText value="#{person.roleName}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
 							style="white-space: normal;">
@@ -96,23 +86,19 @@
 		</h:panelGrid>
 
 		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
-			widgetVar="confirmDialog" modal="true" width="500" height="100" >
-			<p:panel id="dPanel" style="width:100%">
-				<table>
+			widgetVar="confirmDialog" modal="true" width="500px" height="100px" >
+			<p:panel id="dPanel">
+				<table style="width:100%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.req.reactivation.confirmation.msg']}" /></td>
 					</tr>
-					<tr>
-						<td>
-							<div align="center">
-								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
-									action="#{bb.resendActivation}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
-							</div>
-						</td>
-					</tr>
 				</table>
 			</p:panel>
+			<div align="center">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
+					action="#{bb.resendActivation}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+			</div>
 		</p:dialog>
 
 	</ui:define>
