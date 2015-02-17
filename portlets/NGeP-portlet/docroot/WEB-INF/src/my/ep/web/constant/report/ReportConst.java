@@ -496,10 +496,10 @@ public class ReportConst {
 	public static final String AMP_PO_AMT_EQ = "&poamount=";
 	public static final String AMP_PR_NO_EQ = "&prno=";
 	public static final String AMP_PMO_EQ = "&pmo=";
-	public static final String AMP_EXT_TYPE_EQ = "&typeid=";
-	public static final String AMP_EXT_BRAND_EQ = "&brandid=";
-	public static final String AMP_EXT_MEASURMENT_EQ = "&measurementid=";
-	public static final String AMP_EXT_COLOUR_EQ = "&colorid=";
+	public static final String AMP_EXT_TYPE_EQ = "&PTYPE=";
+	public static final String AMP_EXT_BRAND_EQ = "&PBRAND=";
+	public static final String AMP_EXT_MEASURMENT_EQ = "&PMEAS=";
+	public static final String AMP_EXT_COLOUR_EQ = "&PCOLOR=";
 	
 	public static final String AMP_CREAT_FRM_DT_EQ = "&CREAFRDT=";
 	public static final String AMP_CREAT_TO_DT_EQ = "&CREATODT=";
