@@ -916,7 +916,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				        	          if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner()==null 
 							        		|| getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId()==null) {
 							        		 RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-								             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.signer", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								             throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.signer", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 							        	 }
 							        	 if(getManagedBean().getScLoaWitness()!=null) {
 							        		 if(getManagedBean().getScLoaWitness().getIdentificationNo()==null || getManagedBean().getScLoaWitness().getIdentificationNo().length()==0) {
