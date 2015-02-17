@@ -766,8 +766,20 @@ public class LOADetailBackingBean extends
 		if (contractSignerUser == null) {
 			contractSignerUser = new PmUser();
 		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+		if(scLoa.getLoaAmt() != null) {
+			userReqDTO.setApprovalLimit(scLoa.getLoaAmt());
+		}
+		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		
 		getManagedBean().setContractSignerUser(contractSignerUser);
-		getManagedBean().setContractSignerList(resDTO.getContractSignerList());
+		getManagedBean().setContractSignerList(userResDTO.getUserList());
 
 		// Approver
 		ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
@@ -3192,11 +3204,12 @@ public class LOADetailBackingBean extends
 	
 	private BigDecimal calcTotalAmount(List<ScLoiLoaItem> scLoiLoaItems) {
 		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+		BigDecimal  subTotal = null;
 
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-			totalAmount = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+			subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 					scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
-			totalAmount = totalAmount.add(totalAmount);
+			totalAmount = totalAmount.add(subTotal);
 		}
 		return totalAmount;
 	}
