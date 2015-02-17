@@ -96,6 +96,11 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
 									<p:inputText value="#{reportBackingBean.ctPtj}" style="margin-top:5px;width:290px;">
 									</p:inputText>		
+								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctProcurementModeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.procurementMode']}" style="margin-top:5px;width:160px;" />									
+									<p:inputText maxlength="100"  value="#{reportBackingBean.ctProcurementMode}" style="margin-top:5px;width:290px;">
+									</p:inputText>		
 								  </c:if> 			 			
 							    </h:panelGrid>							    
 						    </td>
