@@ -108,6 +108,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -2201,6 +2202,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public void showSupplierDetails(ScQtRecommend scQtRecommend, ScQtRecommendDtl selectedRecommendDtl) {
 		debugLogger("showSuppDetails");
 		
+		resetCompanyInfo();
+		
 		if (selectedRecommendDtl != null 
 				&& selectedRecommendDtl.getShortlistedSupplier() != null) {
 			this.getManagedBean().setShortlistedSupplier(selectedRecommendDtl.getShortlistedSupplier());
@@ -2251,7 +2254,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				
 				List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
 				for (SmPersonnel smPersonnel : smPersonnelList) {
-					if(smPersonnel.isContactPerson()){
+					if (smPersonnel.isContactPerson()) {
 						getManagedBean().setSmPersonnel(smPersonnel);
 						break;
 					}
@@ -2265,6 +2268,87 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Method to call Board of Directors Details pop up in supplier finalization
+	 */	
+	public void showBoardofDirectors(SmSupplier selectedSupplier) {
+		debugLogger("showBoardofDirectors");
+		
+		if (selectedSupplier == null) {
+			return;
+		}
+		log.info("Supplier Name :: " + selectedSupplier.getCompanyName());
+		
+		// The data has been hardcoded. Once the SM API to get the list of board of directors is implemented,
+		// removed the data below and call the API to fetch board of directors corresponding to the company selected.
+		List<SmPersonnel> boardofDirectors = new ArrayList<SmPersonnel>(); 
+		List<SmSupplier> smSuppliers = new ArrayList<SmSupplier>();
+		SmSupplier smSupplier = new SmSupplier();
+		smSupplier.setCompanyName("Company Name 1");
+		SmMofAccount mofAccount = new SmMofAccount();
+		mofAccount.setMofNo("MOF1");
+		smSupplier.setSmMofAccount(mofAccount);
+		smSuppliers.add(smSupplier);
+		SmPersonnel smPersonnel = new SmPersonnel();
+		smPersonnel.setSmAppl(new SmAppl());
+		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
+		smPersonnel.setName("BOD1");
+		boardofDirectors.add(smPersonnel);
+		
+		smSuppliers = new ArrayList<SmSupplier>();
+		smSupplier = new SmSupplier();
+		smSupplier.setCompanyName("Company Name 2");
+		mofAccount = new SmMofAccount();
+		mofAccount.setMofNo("MOF2");
+		smSupplier.setSmMofAccount(mofAccount);		
+		smSuppliers.add(smSupplier);
+		smPersonnel = new SmPersonnel();
+		smPersonnel.setSmAppl(new SmAppl());
+		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
+		smPersonnel.setName("BOD2");
+		boardofDirectors.add(smPersonnel);
+		
+		smSuppliers = new ArrayList<SmSupplier>();
+		smSupplier = new SmSupplier();
+		smSupplier.setCompanyName("Company Name 3");
+		mofAccount = new SmMofAccount();
+		mofAccount.setMofNo("MOF3");
+		smSupplier.setSmMofAccount(mofAccount);		
+		smSuppliers.add(smSupplier);
+		smPersonnel = new SmPersonnel();
+		smPersonnel.setSmAppl(new SmAppl());
+		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
+		smPersonnel.setName("BOD3");
+		boardofDirectors.add(smPersonnel);
+		
+		smSuppliers = new ArrayList<SmSupplier>();
+		smSupplier = new SmSupplier();
+		smSupplier.setCompanyName("Company Name 4");
+		mofAccount = new SmMofAccount();
+		mofAccount.setMofNo("MOF4");
+		smSupplier.setSmMofAccount(mofAccount);		
+		smSuppliers.add(smSupplier);
+		smPersonnel = new SmPersonnel();
+		smPersonnel.setSmAppl(new SmAppl());
+		smPersonnel.getSmAppl().setSmSuppliers(smSuppliers);
+		smPersonnel.setName("BOD3");
+		boardofDirectors.add(smPersonnel);		
+		
+		getManagedBean().setBoardofDirectors(boardofDirectors);
+	}
+	
+	/**
+	 * Method to reset company details
+	 */
+	private void resetCompanyInfo() {
+		this.getManagedBean().setSmSupplier(null);
+		this.getManagedBean().setSmMofAccount(null);
+		this.getManagedBean().setSmCompanyBasic(null);
+		this.getManagedBean().setSmPersonnel(null);
+		this.getManagedBean().setSupplierBranch(null);
+		this.getManagedBean().setSupplierAddress(null);
 	}
 	
 	/**
