@@ -1425,7 +1425,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					 selectItems = new ArrayList<SelectItem>();
 					 selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 					 
-					 if((schedStartYear == 0) || (schedStartYear == startYear && schedStartYear != endYear)) { 
+					 if(schedStartYear == 0 &&  startYear  == endYear) { 
+					      for(int i=startMonth; i <= endMonth; i++) 
+					    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
+			
+				    } else if((schedStartYear == 0) || (schedStartYear == startYear && schedStartYear != endYear)) { 
 					      for(int i=startMonth; i <= 12; i++) 
 					    	  selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 			
