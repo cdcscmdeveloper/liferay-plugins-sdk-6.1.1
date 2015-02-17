@@ -113,15 +113,14 @@ public class EpSchedulerHelper {
 		return state;
 	}
 
-	public static JobKey getJobKey(Scheduler scheduler, String jobName,
-			String jobGroup) {
+	public static JobKey getJobKey(String jobName, String jobGroup) {
 		JobKey returnJobKey = null;
 		try {
-			for (String groupName : scheduler.getJobGroupNames()) {
+			for (String groupName : getScheduler().getJobGroupNames()) {
 
 				if (jobGroup.equalsIgnoreCase(groupName)) {
-					for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher
-							.jobGroupEquals(groupName))) {
+					for (JobKey jobKey : getScheduler().getJobKeys(
+							GroupMatcher.jobGroupEquals(groupName))) {
 
 						if (jobKey.getName().equals(jobName)) {
 							returnJobKey = jobKey;
