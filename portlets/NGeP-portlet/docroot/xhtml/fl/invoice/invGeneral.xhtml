@@ -54,10 +54,11 @@
 						disabled="true" /></td>
 				
 			</tr>
-			<tr>			
+			<tr>	
 				<td><p:outputLabel value="#{lbl['lbl.fl.inv.contract.no']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
-				<td><p:inputText disabled="true" size="30" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}" 
-				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/></td>
+				<td><p:commandLink value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}" 
+				action="#{invoiceBackingBean.navigateDocument(ParameterConst.contract)}" 
+				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"></p:commandLink> </td>
 				
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
 				<td><p:inputText disabled="true" size="30" value="#{invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.ctContract.fulfillmentType)}" 

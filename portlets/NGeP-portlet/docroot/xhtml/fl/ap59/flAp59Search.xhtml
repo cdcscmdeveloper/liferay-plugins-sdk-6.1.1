@@ -61,7 +61,7 @@
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 			<p:dataTable lazy="true"  width="100%" id="flInvoiceListDt"
-			value="#{invoiceBackingBean.flInvoiceDataModel}" 
+			value="#{invoiceBackingBean.flInvoiceDataModel}" rows="10"
 				var="flInvoice">
 				<ac:paginator for="flInvoiceListDt" />
 				<p:column

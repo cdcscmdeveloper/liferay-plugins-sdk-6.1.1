@@ -9,7 +9,8 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.contract.no']} " /></td>
 				<td class="header-info-text">
-					#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractNo}
+				<p:commandLink value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractNo}" 
+				action="#{contractRequestBackingBean.navigateDocument(contractRequestBackingBean.managedBean.flRequest.ctContract.contractId)}"/>
 				</td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.contract.req.no']} " /></td>

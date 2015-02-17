@@ -7,23 +7,15 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<c:if test="#{empty flOrderBB.managedBean.buttonVal}">
-					<td><h:outputLabel value="#{lbl['lbl.fl.purchase.request.no']} " />
-					</td>
-					<td class="header-info-text">
-						#{flOrderBB.managedBean.flRequest.docNo}</td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.do.poco.no']} " /></td>
-					<td class="header-info-text">
-						#{flOrderBB.managedBean.fulfilmentOrder.docNo}</td>
-				</c:if>
-				<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
-					<td><h:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " />
-					</td>
-					<td class="header-info-text">
-						#{flOrderBB.managedBean.fulfilmentOrder.docNo}
-					</td>
-				</c:if>
+				<td><h:outputLabel
+						value="#{lbl['lbl.fl.purchase.request.no']} " /></td>
+				<td class="header-info-text"><p:commandLink
+						value="#{flOrderBB.managedBean.flRequest.docNo}"
+						action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.flRequest.docType)}"
+						immediate="true"></p:commandLink></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
+				<td class="header-info-text">
+					#{flOrderBB.managedBean.fulfilmentOrder.docNo}</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text">

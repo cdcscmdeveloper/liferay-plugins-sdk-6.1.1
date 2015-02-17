@@ -93,6 +93,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.dan.DebitAdjustmentNoteBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
@@ -1164,7 +1165,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	public String navigateDocument(String docType){
-		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) ||docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFlOrderId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getFulfilmentOrderId());
@@ -1242,6 +1243,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
 
 			return NAV_INVOICE;
+		}if(docType.equalsIgnoreCase(ParameterConst.CONTRACT)){
+			ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+			return ctDetBB.gotoCommonViewPage(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 		}
 		return null;
 	}

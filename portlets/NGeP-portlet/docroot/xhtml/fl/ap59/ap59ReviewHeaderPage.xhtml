@@ -10,10 +10,13 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docNo}</td>
+					<p:commandLink value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docNo}" immediate="true"
+					action="#{invoiceBackingBean.navigateDocument(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType)}"/>
+					</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/></td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}</td>
+				<p:commandLink value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}"  immediate="true"
+					action="#{invoiceBackingBean.navigateDocument(ParameterConst.contract)}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.contract.effective.date']}" />
 				</td>
 				<td class="header-info-text">
