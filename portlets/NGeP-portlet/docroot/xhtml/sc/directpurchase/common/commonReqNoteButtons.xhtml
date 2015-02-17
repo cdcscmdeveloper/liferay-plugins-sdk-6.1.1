@@ -5,78 +5,87 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-	  <div class="ppRightBtn">
-	   <c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
-	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" 
-	           	   id="backButton"
-	               partialSubmit="true" process="@this" 
-				   immediate="true" action="#{requestNoteBackingBean.backToPrevious}"  
-				   rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"
-				   title="#{lbl['lbl.sc.itemsearch.tooltip']}">
-				</p:commandButton>
-						
-				<p:commandButton value="#{lbl['lbl.sc.common.save']}" process="@this"
-				   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-				   action="#{requestNoteBackingBean.saveAction('')}"/>
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+			id="backPrevious" partialSubmit="true" process="@this" immediate="true"
+			action="#{requestNoteBackingBean.backToPrevious}"
+			rendered="#{requestNoteBackingBean.managedBean.viewOnly}">
+		</p:commandButton>
+	</div>
+	<h:panelGroup rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
+	<div class="ppRightBtn">
+		<c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
+			<p:commandButton
+				value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+				style="float:left;" id="backButton" partialSubmit="true"
+				process="@this" immediate="true"
+				action="#{requestNoteBackingBean.backToPrevious}"
+				rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"
+				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
+			</p:commandButton>
 
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])"
-				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					action="#{requestNoteBackingBean.submitAction('')}" process="@all"/>
-					
-			    <p:commandButton value="#{lbl['lbl.sc.common.cancel']}"  action="#{requestNoteBackingBean.cancel}"
-			      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			      style="float:right;" 
-			      process="@this"  partialSubmit="true"/>
-	    </c:if>
-	    </div>
-	   <div>
-	   <c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
-				<table style="width:100%">
-					<tr>
-						<td align="right">
-						      
-						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}">
-					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" process="@this" partialSubmit="true" 
-						           style="float:left;"  immediate="true" 
-						           action="#{requestNoteBackingBean.backToPrevious}"   
-						           rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"/>
-						  </c:if>
-						
-						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
+			<p:commandButton value="#{lbl['lbl.sc.common.save']}" process="@this"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{requestNoteBackingBean.saveAction('')}" />
+
+			<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+				update="@([id$=requestNoteId])" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
+				action="#{requestNoteBackingBean.submitAction('')}" process="@all" />
+
+			<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+				action="#{requestNoteBackingBean.cancel}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				style="float:right;" process="@this" partialSubmit="true" />
+		</c:if>
+	</div>
+	<div>
+		<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
+			<table style="width: 100%">
+				<tr>
+					<td align="right"><c:if
+							test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}">
+							<p:commandButton
+								value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+								process="@this" partialSubmit="true" style="float:left;"
+								immediate="true"
+								action="#{requestNoteBackingBean.backToPrevious}"
+								rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}" />
+						</c:if> <c:if
+							test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
 									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission 
 									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}">
-                              <p:commandButton value="#{lbl['lbl.sc.common.save']}" action="#{requestNoteBackingBean.saveAction('Save')}"
-                                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							        process="@this" />
+							<p:commandButton value="#{lbl['lbl.sc.common.save']}"
+								action="#{requestNoteBackingBean.saveAction('Save')}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								process="@this" />
 
-					     </c:if>
-					     
-					      <ui:repeat var="bpmAction" value="#{requestNoteBackingBean.managedBean.outComes}">
-					      <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-	                  
-						<!-- TODO later on should check base on the work flow status instead of check the Pr Inquiry -->
-						    <p:commandButton value="#{lbl[buttonLabel]}" process="@form" partialSubmit="true"
-								 rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
-								 styleClass="ui-button"
-								 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								 actionListener="#{requestNoteBackingBean.approverAction(bpmAction)}" />
+						</c:if> <ui:repeat var="bpmAction"
+							value="#{requestNoteBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-                            <ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
+							<!-- TODO later on should check base on the work flow status instead of check the Pr Inquiry -->
+							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
+								partialSubmit="true"
+								rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								actionListener="#{requestNoteBackingBean.approverAction(bpmAction)}" />
 
-						    <p:commandButton value="#{lbl[buttonLabel]}" 
+							<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
+
+							<p:commandButton value="#{lbl[buttonLabel]}"
 								rendered="#{unspscCodeBackingBean.isRequisitioner()}"
-							    partialSubmit="true"
-							    styleClass="ui-button"
+								partialSubmit="true" styleClass="ui-button"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 								update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 								actionListener="#{requestNoteBackingBean.submitAction(bpmAction)}" />
-					</ui:repeat>
-			 	
-		  </td>
-		 </tr>
-	 </table>
-	</c:if>
+						</ui:repeat></td>
+				</tr>
+			</table>
+		</c:if>
 	</div>
-	<p:spacer height="3px"></p:spacer>
+	</h:panelGroup>
 </ui:composition>
