@@ -98,6 +98,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private List<String> managementNames = new ArrayList<String>();
 	
 	private SmSvAdtMachine selectedAdtMachine;
+	private Map<Long, String> facilityTypeAddressMap; //for #2570, also use for 2870
+	private Map<String, SmFacility> allFacilityMap;
 	
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
@@ -551,6 +553,22 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	public void setSelectedAdtMachine(SmSvAdtMachine selectedAdtMachine) {
 		this.selectedAdtMachine = selectedAdtMachine;
+	}
+
+	public Map<Long, String> getFacilityTypeAddressMap() {
+		return facilityTypeAddressMap;
+	}
+
+	public void setFacilityTypeAddressMap(Map<Long, String> facilityTypeAddressMap) {
+		this.facilityTypeAddressMap = facilityTypeAddressMap;
+	}
+
+	public Map<String, SmFacility> getAllFacilityMap() {
+		return allFacilityMap;
+	}
+
+	public void setAllFacilityMap(Map<String, SmFacility> allFacilityMap) {
+		this.allFacilityMap = allFacilityMap;
 	}
 	
 
