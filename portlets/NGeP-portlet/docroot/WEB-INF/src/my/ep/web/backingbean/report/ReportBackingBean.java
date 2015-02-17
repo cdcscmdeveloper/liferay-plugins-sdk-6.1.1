@@ -881,6 +881,16 @@ public class ReportBackingBean extends
 	private String ctLoanNo;
 	private String ctMinistry;
 	private String ctPtj;
+	private String ctProcurementMode;
+	
+
+	public String getCtProcurementMode() {
+		return ctProcurementMode;
+	}
+
+	public void setCtProcurementMode(String ctProcurementMode) {
+		this.ctProcurementMode = ctProcurementMode;
+	}
 
 	public String getSmMainCategory1() {
 		return smMainCategory1;
@@ -4008,7 +4018,8 @@ public class ReportBackingBean extends
 				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))) {
+				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL)) 
+			    || ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL))) {
 			if ((this.getCtStatus() != null)
 					&& (this.getCtStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtStatusVar(ReportConst.CT_AMP_STATUS_EQ
@@ -4046,6 +4057,11 @@ public class ReportBackingBean extends
 					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setToDateVar(ReportConst.FL_AMP_TO_DATE_EQ
 						+ outputDateFormat.format(this.getToDate()));
+			}
+			if ((this.getCtProcurementMode() != null)
+					&& (this.getCtProcurementMode() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtProcurementModeVar(ReportConst.CT_AMP_PROCUREMENTMODE_EQ
+						+ this.getCtProcurementMode());
 			}
 			/*
 			 * if((getManagedBean().getReportValue()!=null)&&(getManagedBean().
@@ -4124,6 +4140,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getCtMinistryVar()
 						+ rptGenBean.getCtPtjVar()
 						+ rptGenBean.getCtLoanNoVar()
+						+ rptGenBean.getCtProcurementModeVar()
 						+ rptGenBean.getFromDateVar()
 						+ rptGenBean.getToDateVar()
 						+ rptGenBean.getReportValueIdVar()
@@ -5561,6 +5578,7 @@ public class ReportBackingBean extends
 		this.setCtLoanNo(null);
 		this.setCtMinistry(null);
 		this.setCtPtj(null);
+		this.setCtProcurementMode(null);
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
 		this.setFlGroupThree(null);

@@ -4,35 +4,21 @@ package my.ep.web.bean.report;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.model.SelectItem;
-
 import org.apache.log4j.Logger;
-
-import my.ep.biz.dto.rpt.PMReportReqDTO;
-import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.rpt.PMReport;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.report.ReportBackingBean;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -156,16 +142,7 @@ public class ReportsGenerateBean {
 		private boolean smBasicRegView = false;
 		private boolean smMandatoryBothSupplierTypeView = false;
 		private boolean smYearTextView = false;
-		private boolean smMainCategory1View = false;		
-		private boolean smMainCategory2View = false;		
-		private boolean smMainCategory3View = false;		
-		private boolean smMainCategory4View = false;		
-		private boolean smMainCategory5View = false;		
-		private boolean smMainCategory6View = false;		
-		private boolean smMainCategory7View = false;		
-		private boolean smMainCategory8View = false;		
-		private boolean smMainCategory9View = false;		
-		private boolean smMainCategory10View = false;
+		
 		
 		// FL module
 		private boolean flPtjView = false;
@@ -228,6 +205,7 @@ public class ReportsGenerateBean {
 		private boolean ctLoanNoView = false;
 		private boolean ctMinistryView = false;
 		private boolean ctPtjView = false;
+		private boolean ctProcurementModeView = false;
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -308,36 +286,7 @@ public class ReportsGenerateBean {
 		private String smMandatoryCreatedToYearVar=ReportConst.EMPTY_VAL;
 		private String smSVOUserVar=ReportConst.EMPTY_VAL;
 		private String smYearTextVar=ReportConst.EMPTY_VAL;
-		private String smMainCategory1Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory1Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision1Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory2Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory2Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision2Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory3Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory3Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision3Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory4Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory4Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision4Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory5Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory5Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision5Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory6Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory6Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision6Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory7Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory7Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision7Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory8Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory8Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision8Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory9Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory9Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision9Var=ReportConst.EMPTY_VAL;
-		private String smMainCategory10Var=ReportConst.EMPTY_VAL;
-		private String smSubCategory10Var=ReportConst.EMPTY_VAL;
-		private String smSubCategoryDivision10Var=ReportConst.EMPTY_VAL;
+		
 		
 				
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
@@ -383,6 +332,7 @@ public class ReportsGenerateBean {
 		private String ctLoanNoVar=ReportConst.EMPTY_VAL;
 		private String ctMinistryVar=ReportConst.EMPTY_VAL;
 		private String ctPtjVar=ReportConst.EMPTY_VAL;
+		private String ctProcurementModeVar=ReportConst.EMPTY_VAL;
 		//ct
 		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
 		private String flContractRequestVar=ReportConst.EMPTY_VAL;
@@ -405,6 +355,18 @@ public class ReportsGenerateBean {
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isCtProcurementModeView() {
+			return ctProcurementModeView;
+		}
+		public void setCtProcurementModeView(boolean ctProcurementModeView) {
+			this.ctProcurementModeView = ctProcurementModeView;
+		}
+		public String getCtProcurementModeVar() {
+			return ctProcurementModeVar;
+		}
+		public void setCtProcurementModeVar(String ctProcurementModeVar) {
+			this.ctProcurementModeVar = ctProcurementModeVar;
+		}
 		public List<SelectItem> getLevOneCatLst1() {
 			return levOneCatLst1;
 		}
