@@ -1852,7 +1852,7 @@ public class SmPersonnelBackingBean extends
 				&& personnel.getPmUser().getPmUserOrgs() != null
 				&& !personnel.getPmUser().getPmUserOrgs().isEmpty()) {
 			getManagedBean().setDeactivatePersonnel(true);
-			setPrevEpRole(personnel);
+			personnel.setEpRole(getDeactivateEpRole(personnel));
 		}
 	}
 
