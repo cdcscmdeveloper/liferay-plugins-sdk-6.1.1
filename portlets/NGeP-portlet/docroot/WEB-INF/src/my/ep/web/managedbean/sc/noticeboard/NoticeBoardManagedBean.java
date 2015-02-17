@@ -138,6 +138,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private MenuModel zoneMenuModel;
 	
 	private String companyName;
+	private String proposalURL;
+	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -662,7 +664,19 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.briefingDtls = briefingDtls;
 	}
 
+	/**
+	 * @return the proposalURL
+	 */
+	public String getProposalURL() {
+		return proposalURL;
+	}
 
-	
+	/**
+	 * @param proposalURL the proposalURL to set
+	 */
+	public void setProposalURL(String proposalURL) {
+		this.proposalURL = proposalURL;
+	}
+
 
 }
