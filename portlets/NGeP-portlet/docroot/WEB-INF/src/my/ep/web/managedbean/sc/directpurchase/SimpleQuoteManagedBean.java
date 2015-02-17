@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -36,8 +37,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.ZonesBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -173,6 +174,16 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private String supplierLocLevel;
 	private boolean selectedFlag;
     private boolean autoUpdate = Boolean.TRUE;
+    
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+    public SpkiBackingBean getSpkiBackingBean() {
+     return spkiBackingBean;
+    }
+
+    public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+     this.spkiBackingBean = spkiBackingBean;
+    }
     
 	public SimpleQuoteManagedBean() {
 		super();
