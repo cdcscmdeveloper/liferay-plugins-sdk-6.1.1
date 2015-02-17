@@ -72,6 +72,14 @@
 					style="font-size:18px;" escape="false"
 					rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 			</div>
+			<p:spacer height="10px"/>
+			<div style="text-align: center;">
+			<h:outputLink value="#{noticeBoardBackingBean.managedBean.proposalURL}" 
+			      rendered="#{noticeBoardBackingBean.managedBean.qualified}">
+				    <h:outputText value="#{lbl['lbl.nb.supplier.proposal.url.name']}" 
+				    style="font-size:14px;">	</h:outputText>			
+			</h:outputLink>
+			</div>
 		</p:panel>
 	</h:panelGroup>
 
