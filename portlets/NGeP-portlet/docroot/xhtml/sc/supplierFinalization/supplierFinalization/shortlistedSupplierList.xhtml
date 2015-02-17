@@ -73,8 +73,7 @@
 				</p:column>
 				
 				<p:column>
-					<p:commandLink update=":form:suppDtlPopUp"
-						action="#{suppFinalizationBackingBean.showSupplierDetails(null, null)}"
+					<p:commandLink update=":form:suppDtlPopUp" action="#{suppFinalizationBackingBean.showSupplierDetails(null, null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
 						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
@@ -123,7 +122,13 @@
 				</p:column>
 				
 				<p:column>
-					<h:outputText value="" />
+					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
+											 shortlistedSupp.scQtProposal.scQtSupplier.smSupplier)}" 
+		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
+						<p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png"
+							title="#{lbl['lbl.sc.sf.view.bod']}"/>
+	         		</p:commandLink> 
 				</p:column>
 				
 				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
@@ -232,7 +237,13 @@
 				</p:column>
 				
 				<p:column>
-					<h:outputText value="" />
+					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
+											 shortlistedSupp.scQtProposal.scQtSupplier.smSupplier)}" 
+		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
+						<p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png"
+							title="#{lbl['lbl.sc.sf.view.bod']}"/>
+	         		</p:commandLink> 
 				</p:column>
 				
 				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
@@ -343,7 +354,13 @@
 				</p:column>
 				
 				<p:column>
-					<h:outputText value="" />
+					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
+											 shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
+						<p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png"
+							title="#{lbl['lbl.sc.sf.view.bod']}"/>
+	         		</p:commandLink> 
 				</p:column>
 				
 				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"

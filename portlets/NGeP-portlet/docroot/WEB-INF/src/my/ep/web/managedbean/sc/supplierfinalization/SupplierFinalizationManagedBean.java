@@ -97,6 +97,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private SmPersonnel smPersonnel;
 	private SmAddress supplierAddress;
 	private SmMofAccount smMofAccount;
+	private List<SmPersonnel> boardofDirectors;
 	
 	private boolean isItemize;
 	private boolean isRecommendSupplier;
@@ -889,6 +890,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSmPersonnel(SmPersonnel smPersonnel) {
 		this.smPersonnel = smPersonnel;
+	}
+
+	/**
+	 * @return the boardofDirectors
+	 */
+	public List<SmPersonnel> getBoardofDirectors() {
+		return boardofDirectors;
+	}
+
+	/**
+	 * @param boardofDirectors the boardofDirectors to set
+	 */
+	public void setBoardofDirectors(List<SmPersonnel> boardofDirectors) {
+		this.boardofDirectors = boardofDirectors;
 	}
 
 	/**
