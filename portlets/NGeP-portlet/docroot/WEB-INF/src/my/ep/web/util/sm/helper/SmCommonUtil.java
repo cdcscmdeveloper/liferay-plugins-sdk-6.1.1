@@ -60,6 +60,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.sm.ApplType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -75,6 +76,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 
 // TODO: Auto-generated Javadoc
@@ -1501,6 +1503,20 @@ public class SmCommonUtil {
 				smPersonnel.setRoleName(sb.toString().substring(0,
 						sb.toString().length() - 1));
 			}
+		}
+	}
+
+	/**
+	 * Set MDC user_id value to be used in BaseEntity for auditing purposes
+	 */
+	public static void setMDCUserId() {
+		if (MDC.get(LogKey.USER_ID) == null) {
+			Long userId = 1L;
+			PmUser user = new FacesScopes().getUserSessionBean();
+			if (user != null) {
+				userId = user.getUserId();
+			}
+			MDC.put(LogKey.USER_ID, userId);
 		}
 	}
 }
