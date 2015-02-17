@@ -265,25 +265,28 @@
 					</p:calendar>
 					<p:message for="effdateCal" display="icon" />
 				</h:panelGrid>
-
+				
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.agreement']}" />
+					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.form.fee']}" />
 				</h:panelGrid>
-				<h:panelGroup id="uploadFactoringPg">
+				<h:panelGroup id="uploadFactoringFee">
 					<h:panelGrid columns="3">
 						<p:commandButton 
 							oncomplete="uploadFactoringDlg.show();return false;"
 							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"  immediate="true"
 							update="factoringPanel, uploadFactoringDlg"
+							actionListener="#{supplierBackingBean.setUploadIndexValue(1)}"
 							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() 
 										or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" />
+					   	<p:spacer width="1" />
+				     	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.fee']}" />
 						<p:spacer width="1" />
 						<h:commandLink
-							value="#{supplierBackingBean.managedBean.factoring.fileName}"
+							value="#{supplierBackingBean.managedBean.factoring.factoringPayFileName}"
 							style="float:left;" styleClass="blue_font"
-							rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
-							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
+							rendered="#{supplierBackingBean.managedBean.factoring.factoringPayFilePath != null}"
+							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.factoringPayFilePath, supplierBackingBean.managedBean.factoring.factoringPayFileName)}" />
 					</h:panelGrid>
 				</h:panelGroup>
 				
@@ -307,11 +310,31 @@
 					</p:calendar>
 					<p:message for="expdateCal" display="icon" />
 				</h:panelGrid>
+				
+				<h:panelGrid columns="2" style="float:right;">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.agreement']}" />
+				</h:panelGrid>
+				<h:panelGroup id="uploadFactoringPg">
+					<h:panelGrid columns="3">
+						<p:commandButton 
+							oncomplete="uploadFactoringDlg.show();return false;"
+							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"  immediate="true"
+							update="factoringPanel, uploadFactoringDlg"
+							actionListener="#{supplierBackingBean.setUploadIndexValue(2)}"
+							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() 
+										or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" />
+						<p:spacer width="1" />
+						<h:commandLink
+							value="#{supplierBackingBean.managedBean.factoring.fileName}"
+							style="float:left;" styleClass="blue_font"
+							rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
+							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
+					</h:panelGrid>
+				</h:panelGroup>
 
 				
-                <f:verbatim rendered="#{supplierBackingBean.managedBean.removeFactoring}"></f:verbatim>
-                <f:verbatim rendered="#{supplierBackingBean.managedBean.removeFactoring}"></f:verbatim>
-				<h:panelGrid columns="2" style="float:right;"
+             	<h:panelGrid columns="2" style="float:right;"
 					rendered="#{supplierBackingBean.managedBean.removeFactoring}">
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.removal']}" />
@@ -320,9 +343,10 @@
 					rendered="#{supplierBackingBean.managedBean.removeFactoring}">
 					<h:panelGrid columns="3">
 						<p:commandButton
-							oncomplete="uploadRemoveFactoringDlg.show();return false;"
+							oncomplete="uploadFactoringDlg.show();return false;"
 							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"
-							update="factoringPanel, uploadRemoveFactoringDlg"
+							actionListener="#{supplierBackingBean.setUploadIndexValue(3)}"
+							update="factoringPanel, uploadFactoringDlg"
 							disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() or supplierBackingBean.managedBean.viewOnly}" />
 						<p:spacer width="1" />
 						<h:commandLink
@@ -341,19 +365,6 @@
 				<p:ajax event="close" />
 				<p:fileUpload style="display:inline;" mode="advanced"
 					fileUploadListener="#{supplierBackingBean.fileUpload}"
-					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-					invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
-					update="factoringPanel">
-				</p:fileUpload>
-			</p:dialog>
-
-			<p:dialog id="uploadRemoveFactoringDlg"
-				widgetVar="uploadRemoveFactoringDlg" modal="false" resizable="false"
-				width="700px" height="350" styleClass="pop_up_top"
-				header="#{lbl['lbl.bpm.choose.file']}">
-				<p:ajax event="close" />
-				<p:fileUpload style="display:inline;" mode="advanced"
-					fileUploadListener="#{supplierBackingBean.removeFileUpload}"
 					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 					invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 					update="factoringPanel">
