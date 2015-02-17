@@ -81,7 +81,8 @@ public class SmPersonnelRequestActivationBackingBean {
 		} else {
 			expiredActivationPersonnels = new ArrayList<SmPersonnel>();
 		}
-		initPersonnelCompanyRole();
+		SmCommonUtil.setRoleName(smSupplier.getSmAppl().getSupplierType(),
+				expiredActivationPersonnels);
 
 	}
 
@@ -90,69 +91,6 @@ public class SmPersonnelRequestActivationBackingBean {
 			throw new EpException(MessageConst.ERROR_722587,
 					new String[] { SmCommonUtil.getMessage("lbl.sm.personnel",
 							null) });
-		}
-	}
-
-	private void initPersonnelCompanyRole() {
-		StringBuffer sb = null;
-		for (SmPersonnel per : expiredActivationPersonnels) {
-			sb = new StringBuffer();
-			if (per.isEquityOwner()) {
-				sb.append(
-						SmCommonUtil.getMessage(
-								SupplierManagementConst.PERSONNEL_EQUI_OWNER,
-								null)).append(",");
-			}
-			if (per.isDirector()) {
-				sb.append(
-						SmCommonUtil.getMessage(
-								SupplierManagementConst.PERSONNEL_DIR_ROLENAME,
-								null)).append(",");
-			}
-			if (per.isHigherManagement()) {
-				sb.append(
-						SmCommonUtil
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
-										null)).append(",");
-			}
-			if (per.isClerical()) {
-				if (per.getSmAppl()
-						.getSupplierType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONSULTANT)) {
-					sb.append(
-							SmCommonUtil
-									.getMessage(
-											SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
-											null)).append(",");
-				} else {
-					sb.append(
-							SmCommonUtil
-									.getMessage(
-											SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
-											null)).append(",");
-				}
-			}
-			if (per.isManagement()) {
-				sb.append(
-						SmCommonUtil
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
-										null)).append(",");
-			}
-			if (per.isSemiProf()) {
-				sb.append(
-						SmCommonUtil
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
-										null)).append(",");
-			}
-			if (!sb.toString().isEmpty() && sb.toString().length() > 0) {
-				per.setRoleName(sb.toString().substring(0,
-						sb.toString().length() - 1));
-			}
-			sb = null;
 		}
 	}
 
