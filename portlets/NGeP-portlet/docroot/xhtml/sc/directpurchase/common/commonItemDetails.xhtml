@@ -125,7 +125,7 @@
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
 									 update="@form"
 									 rendered="#{requestNoteDtl.brandNew}"  
-									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}" 
+									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
 							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
@@ -133,7 +133,7 @@
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
 									 update="@form"
-									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}" 
+									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="requestNoteItem.requestNoteItemId^#{requestNoteDtl.requestItem.requestNoteItemId}"
 			                         rendered="#{!requestNoteDtl.brandNew}">    
 								</ac:lov>
@@ -160,10 +160,12 @@
 					</f:facet>
 				
 					<h:selectOneMenu id="priceType" style="width:100px;"
-						required="#{!requestNoteDtl.selected}" label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
+						required="#{!requestNoteDtl.selected}" 
+						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
+						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems
+						<f:selectItems 
 							value="#{requestNoteBackingBean.getPriceTypeByPrice(requestNoteDtl.scRequestSupplierItem.supplierItemPrices)}"
 							var="pmParameter"
 							itemLabel="#{requestNoteBackingBean.getParameterDesc(pmParameter)}"
@@ -217,6 +219,7 @@
 					</f:facet>
 					<h:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:115px;" 
 					   id="prepareBy" label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.loa.prepare.by']}" 
+					   disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 					   required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					   <f:selectItems
@@ -262,7 +265,7 @@
 			</p:dataTable>
 		</h:panelGrid>
 		
-		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy" >
+		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy"  rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
 			<p:row>
 				<p:column>
 					<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}"/>

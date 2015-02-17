@@ -126,6 +126,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean autoUpdate = Boolean.TRUE;
     private String action;
     private Long purchaseInDefaultId;
+    private boolean viewOnly = false;
+    private String backToPreviousPage;
+    
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -929,5 +932,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	public void setPurchaseInDefaultId(Long purchaseInDefaultId) {
 		this.purchaseInDefaultId = purchaseInDefaultId;
+	}
+	public boolean isViewOnly() {
+		return viewOnly;
+	}
+	public void setViewOnly(boolean viewOnly) {
+		this.viewOnly = viewOnly;
+	}
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
 	}
 }
