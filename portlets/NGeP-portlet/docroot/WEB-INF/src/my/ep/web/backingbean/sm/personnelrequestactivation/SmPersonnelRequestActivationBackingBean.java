@@ -40,6 +40,7 @@ public class SmPersonnelRequestActivationBackingBean {
 		selectedExpiredActivationPersonnels = new ArrayList<SmPersonnel>();
 		smSupplier = SmApplicationUtil.getCurrentSupplier();
 		initExpiredPersonnels();
+		SmCommonUtil.setMDCUserId();
 	}
 
 	public void resendActivation() {
