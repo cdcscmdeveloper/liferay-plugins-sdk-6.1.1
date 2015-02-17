@@ -2812,8 +2812,15 @@ public class ReportBackingBean extends
 		getManagedBean().setReportList(reportList);
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
+		
 	}
-
+	public void madatoryIndicator() {
+		if(null!=this.getReportValue()){
+			getManagedBean().getRptGenBean().setMadatoryIndicatorView(true);
+		}else{
+			getManagedBean().getRptGenBean().setMadatoryIndicatorView(false);
+		}
+	}
 	public List<SelectItem> retriveReportListByModule(String module) {
 		reportList = new ArrayList<SelectItem>();
 
@@ -3311,6 +3318,7 @@ public class ReportBackingBean extends
 			resetReportForm();
 			retrieveDates();
 			getManagedBean().setRptGenBean(rptGenBean);
+			madatoryIndicator();
 		}
 	}
 

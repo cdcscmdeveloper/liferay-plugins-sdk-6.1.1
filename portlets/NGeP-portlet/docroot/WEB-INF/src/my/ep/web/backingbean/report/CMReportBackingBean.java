@@ -35,7 +35,8 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setToDateView(true);					
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 					rptGenBean.setCmCompanyNameView(true);
-					rptGenBean.setCmRegistrationTypeView(true);					
+					rptGenBean.setCmRegistrationTypeView(true);	
+					rptGenBean.setCmGroupOneView(true);
 				//};
 	            break;
 	        case ReportConst.LST_APPR_CAT_ITM_RPT_VAL:
@@ -49,6 +50,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 					rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmCompanyNameView(true);
 					rptGenBean.setCmRegistrationTypeView(true);
+					rptGenBean.setCmGroupOneView(true);
 					//rptGenBean.setCmProofIdentityView(true);
 					//rptGenBean.setCmItemCategoryView(false);
 				//};
@@ -78,6 +80,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 					rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmCompanyNameView(true);
 					rptGenBean.setCmRegistrationTypeView(true);
+					rptGenBean.setCmGroupOneView(true);
 					//rptGenBean.setCmProofIdentityView(true);
 					//rptGenBean.setCmItemCategoryView(false);
 				//};
@@ -92,6 +95,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 					rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmCompanyNameView(true);
 					rptGenBean.setCmRegistrationTypeView(true);
+					rptGenBean.setCmGroupOneView(true);
 				//};
 	            break;
 	        case ReportConst.TOT_CAT_ITM_STS_RPT_VAL:	        	
@@ -110,7 +114,8 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 					rptGenBean.setCmItemTypeView(true);
 					rptGenBean.setCmCompanyNameView(true);
-					rptGenBean.setCmRegistrationTypeView(true);					
+					rptGenBean.setCmRegistrationTypeView(true);	
+					rptGenBean.setCmGroupOneView(true);
 				//};
 	            break;
 	        case ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL:
