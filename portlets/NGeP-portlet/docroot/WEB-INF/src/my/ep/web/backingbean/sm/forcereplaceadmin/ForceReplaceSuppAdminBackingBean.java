@@ -149,6 +149,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
 		reqDTO.setSmPersonnel(getManagedBean().getNewAdmin());
+		reqDTO.setApplId(getManagedBean().getSmSupplier().getSmAppl()
+				.getApplId());
 		FacesScopes fs = new FacesScopes();
 		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 		reqDTO.setServerName(fs.getRequest().getServerName());
@@ -472,7 +474,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				IBpmSO.class);
 	}
 
-	public String getBpmAuthenticateToken() {
+	private String getBpmAuthenticateToken() {
 		PortletSession portletSession = (PortletSession) FacesContext
 				.getCurrentInstance().getExternalContext().getSession(false);
 		Object ctxToken = portletSession.getAttribute("BPM_AUTH_CONTEXT_TOKEN",
