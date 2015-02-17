@@ -171,6 +171,7 @@ import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -316,7 +317,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setFeeVoteFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
 		}
 	}
-
+	/**
+	 * save contract request 
+	 * 
+	 * @param String action
+	 * 
+	 * @return acknowledge page
+	 */
 	public String submitAction(String action) throws Exception {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -1035,7 +1042,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}else if(contractId != null){
 			renewSesionObject();
-			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -2117,19 +2123,26 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
-			validatePreparedOrgAndAgencies();
-			checkContractValidity(getManagedBean().getFlRequest());
+			if(!getManagedBean().isFlRequestLink()){
+				validatePreparedOrgAndAgencies();
+				checkContractValidity(getManagedBean().getFlRequest());
+			}
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
 		} else if(selectedTabIndex==2){
-			validatePreparedOrgAndAgencies();
-			validateOrderQuantity();
+			if(!getManagedBean().isFlRequestLink()){
+				validatePreparedOrgAndAgencies();
+				validateOrderQuantity();
+			}
 			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) { 
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			}
 		} else if(selectedTabIndex==3){
-			validatePreparedOrgAndAgencies();
-			validateOrderQuantity();
+			if(!getManagedBean().isFlRequestLink()){
+				validatePreparedOrgAndAgencies();
+				validateOrderQuantity();
+			}
+			
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
@@ -2142,8 +2155,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			}
 		} else if(selectedTabIndex==4){
-			chargeLineValidationBeforeApproverList();
-			validatePreparedOrgAndAgencies();
+			if(!getManagedBean().isFlRequestLink()){
+				chargeLineValidationBeforeApproverList();
+				validatePreparedOrgAndAgencies();
+			}
 			initializeApproverGroup();
 		}
 	}
@@ -3761,5 +3776,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			maxQuantity = 9999999999.999;
 		}	
 		return maxQuantity;
+	}
+	
+	public String navigateDocument(Long docId){
+		ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+		return ctDetBB.gotoCommonViewPage(docId);
+	}
+	
+	public String backToDocument() {
+		return getManagedBean().getBackToDocument();
 	}
 }

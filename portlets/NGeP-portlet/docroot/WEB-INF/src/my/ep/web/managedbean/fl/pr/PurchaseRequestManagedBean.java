@@ -272,6 +272,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String measurementNames;
 	
 	private boolean flDocMaintain = false;
+	private boolean isPurchaseRequestLink = false;
+	private String backToDocument;
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -2299,6 +2301,34 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFlDocMaintain(boolean flDocMaintain) {
 		this.flDocMaintain = flDocMaintain;
+	}
+
+	/**
+	 * @return the isPurchaseRequestLink
+	 */
+	public boolean isPurchaseRequestLink() {
+		return isPurchaseRequestLink;
+	}
+
+	/**
+	 * @param isPurchaseRequestLink the isPurchaseRequestLink to set
+	 */
+	public void setPurchaseRequestLink(boolean isPurchaseRequestLink) {
+		this.isPurchaseRequestLink = isPurchaseRequestLink;
+	}
+
+	/**
+	 * @return the backToDocument
+	 */
+	public String getBackToDocument() {
+		return backToDocument;
+	}
+
+	/**
+	 * @param backToDocument the backToDocument to set
+	 */
+	public void setBackToDocument(String backToDocument) {
+		this.backToDocument = backToDocument;
 	}
 
 }

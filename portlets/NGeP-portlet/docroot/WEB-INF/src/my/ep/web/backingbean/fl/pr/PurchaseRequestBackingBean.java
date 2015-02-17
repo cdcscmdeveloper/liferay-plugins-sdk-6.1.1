@@ -2781,4 +2781,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}	
 		return maxQuantity;
 	}
+	
+	public String backToDocument() {
+		return getManagedBean().getBackToDocument();
+	}
 }

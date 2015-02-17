@@ -9,7 +9,8 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.request.no']} " /></td>
 				<td class="header-info-text">
-					#{flOrderBB.managedBean.flRequest.docNo}</td>
+				<p:commandLink  value="#{flOrderBB.managedBean.flRequest.docNo}" 
+					action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.flRequest.docType)}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
 					#{flOrderBB.managedBean.fulfilmentOrder.docNo}</td>

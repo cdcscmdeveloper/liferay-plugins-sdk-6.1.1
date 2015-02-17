@@ -9,7 +9,9 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
-					#{stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docNo}
+					<p:commandLink value="#{stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docNo}" immediate="true"
+					action="#{stopInstrBB.navigateDocument(stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docType)}"/>
+					
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']} " /></td>
 				<td class="header-info-text">

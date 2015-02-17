@@ -165,7 +165,7 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/>
 			<p:dataTable id="flDocListDt"
 				value="#{flDocumentBackingBean.managedBean.flDocumentDataModel}" lazy="true"
-				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
+				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}" rows="10"
 				width="100%">
 				<ac:paginator for="flDocListDt" />
 				<p:column
