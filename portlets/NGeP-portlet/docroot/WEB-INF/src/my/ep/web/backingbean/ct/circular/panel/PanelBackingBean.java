@@ -1525,7 +1525,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	           	circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 	           	reqDTO = new CircularReqDTO();
 	           	reqDTO.setSupplier(panelSupplier.getSupplier());
-	            CircularResDTO resDTO = circularSO.retriveSupplierById(reqDTO);
+	            CircularResDTO resDTO = circularSO.retrieveSupplierById(reqDTO);
 		        if(resDTO.getSmSupplier().getSmAppl()!=null && resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!=null && 
 		             	resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()!=null) {
 			            for(SmCompanyAddress address : resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
