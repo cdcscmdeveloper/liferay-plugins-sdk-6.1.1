@@ -318,11 +318,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	/**
-	 * save contract request 
+	 * save,submit the contract request
 	 * 
-	 * @param String action
+	 * @param String action 
+	 *  <p>submit - save data into database and BPM process will route to the next respective user.
+	 * 	<p>save - save data into database.
 	 * 
-	 * @return acknowledge page
+	 * @return navigate to acknowledge page.
 	 */
 	public String submitAction(String action) throws Exception {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
@@ -438,7 +440,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		return null;
 	}
-
+	
+	/**
+	 * set fulfilment request attribute into managedbean
+	 * 
+	 * @param FulfilmentResDTO resDTO
+	 * 
+	 * 
+	 */
 	public void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
 		getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 		getManagedBean().getFlRequest().setTitle(getManagedBean().getFlRequest().getTitle().trim());
@@ -1042,6 +1051,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}else if(contractId != null){
 			renewSesionObject();
+			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
