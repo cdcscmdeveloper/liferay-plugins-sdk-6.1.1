@@ -51,6 +51,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
@@ -72,7 +73,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name="stopInstrBB")
 @RequestScoped
 public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
-
+	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -424,4 +425,20 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return getManagedBean().getBackToDocument();
 	}
 
+	public String navigateDocument(String docType){
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(docType);
+		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+		
+		FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
+		orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+		orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+
+		return NAV_ORDERNO;
+	}
+	
 }

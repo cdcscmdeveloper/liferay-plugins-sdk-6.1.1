@@ -104,7 +104,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String searchItemType;
 	private String searchItemCode;
 	private String searchItemName;
-	
+	private boolean isFlRequestLink = false;
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
@@ -263,6 +263,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String contactEmail;
 	private String contactPerson;
 	private String contactPhoneNo;
+	public String backToDocument;
 	
 	/**
 	 * @param chargeLineItemRoot the chargeLineItemRoot to set
@@ -2505,4 +2506,33 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setUomName(String uomName) {
 		this.uomName = uomName;
 	}
+
+	/**
+	 * @return the backToDocument
+	 */
+	public String getBackToDocument() {
+		return backToDocument;
+	}
+
+	/**
+	 * @param backToDocument the backToDocument to set
+	 */
+	public void setBackToDocument(String backToDocument) {
+		this.backToDocument = backToDocument;
+	}
+
+	/**
+	 * @return the isFlRequestLink
+	 */
+	public boolean isFlRequestLink() {
+		return isFlRequestLink;
+	}
+
+	/**
+	 * @param isFlRequestLink the isFlRequestLink to set
+	 */
+	public void setFlRequestLink(boolean isFlRequestLink) {
+		this.isFlRequestLink = isFlRequestLink;
+	}
+
 }

@@ -31,6 +31,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -92,7 +93,9 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -126,7 +129,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	private static Logger log = Logger.getLogger(InvoiceBackingBean.class);
 	private String className="@(.myInvClassName)";
 	private IPagingDataModel<FlInvoice> flInvoiceDataModel = new FlInvoicePagingDataModel();
-
+	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
 	
 	/**
 	 * get faces scopes
@@ -1209,5 +1213,43 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		public String backToDocument() {
 			return getManagedBean().getBackToDocument();
 		}
-	
+
+		public String navigateDocument(String docType){
+			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setFlOrderId(getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
+				reqDTO.setDocType(docType);
+				FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+				
+				FulfilmentOrderBackingBean orderBackingBean = new FulfilmentOrderBackingBean();
+				orderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+				orderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				FacesContext fc = FacesContext.getCurrentInstance();
+				orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+
+				return NAV_ORDERNO;
+			}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)){
+
+				IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setInvoiceId(getManagedBean().getInvoice().getInvoiceId());
+				reqDTO.setDocType(docType);
+				reqDTO.setInvoiceLink(true);
+				FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+				InvoiceBackingBean invBB = new InvoiceBackingBean();
+				invBB.getManagedBean().setInvoice(resDTO.getInvoice());
+				FacesContext fc = FacesContext.getCurrentInstance();
+				invBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+
+				return NAV_INVOICE;
+			
+			}else if(docType.equalsIgnoreCase(FulfilmentConst.CONTRACT)){
+				ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
+				FacesContext fc = FacesContext.getCurrentInstance();
+				ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+				return ctDetBB.gotoCommonViewPage(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+			}
+			return null;
+		}
 }

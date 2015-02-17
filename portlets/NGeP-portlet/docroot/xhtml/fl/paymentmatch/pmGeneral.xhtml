@@ -48,9 +48,8 @@
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.contract.no']}" /></td>
-				<td style="width: 25px;"><p:inputText size="20"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
-						disabled="true" /></td>	
+				<td style="width: 25px;"><p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.contract)}"/></td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
