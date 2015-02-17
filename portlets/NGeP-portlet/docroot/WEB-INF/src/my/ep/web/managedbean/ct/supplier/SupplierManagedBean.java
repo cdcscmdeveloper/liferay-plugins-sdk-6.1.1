@@ -91,6 +91,8 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private boolean autoUpdate;
 	private String textBeforeSign;
 	private String buttonAction;
+	
+	private int index;
 
 	public SupplierManagedBean() {
 
@@ -474,5 +476,13 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setAccBankName(String accBankName) {
 		this.accBankName = accBankName;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }
