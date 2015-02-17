@@ -22,6 +22,8 @@
 		<ac:gpkiPopup 
 			textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
 			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(gpkiBackingBean.pmDigiSign)}" />	
+		<ac:spkiPopup textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
+			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(spkiBackingBean.pmDigiSign)}"/>
 
 		<table style="width: 100%;">
 			<tr>
@@ -34,7 +36,7 @@
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" 
 							update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}" />
+							action="#{flOrderBB.signingAction(bpmAction)}" />
 					</ui:repeat>
 					</td>
 							<c:if test='#{flOrderBB.managedBean.buttonVal eq "Update"}'>
