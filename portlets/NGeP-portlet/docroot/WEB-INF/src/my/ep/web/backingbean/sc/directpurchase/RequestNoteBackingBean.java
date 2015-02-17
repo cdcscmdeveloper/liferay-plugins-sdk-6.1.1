@@ -547,6 +547,37 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 		}
 	}
+	
+	public void requestNoteView(Long requestNoteId) {
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		ScRequestNote	requestNote = null;
+		getManagedBean().setViewOnly(true);
+		requestNoteReqDTO.setRequestNoteId(requestNoteId);
+		RequestNoteResDTO requestNoteResDTO = getDirectPurchaseSO().getRequestNote(requestNoteReqDTO);
+		if(requestNoteResDTO.getRequestNoteDetail() != null){
+			requestNote = requestNoteResDTO.getRequestNoteDetail();
+		}
+
+		if(requestNote != null){
+			if (requestNote.getScRNZone() != null) {
+				getManagedBean().setScRNZone(requestNote.getScRNZone());	
+			} else {
+				getManagedBean().setScRNZone(new ScRNZone());	
+			}
+
+			retrieveRequestNoteDetails(requestNote,requestNote.getCurrentStatus().getPmStatus().getStatusId(), false);
+		}
+		// title checker
+		getManagedBean().setTitleChecker(Boolean.FALSE);
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+
+		// page nav. to common request note
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+	}
+	
+	
 
 	private void retrieveRequestNoteDetails(ScRequestNote requestNote , Long docStatusId , boolean zoneFlag) {
 		//RequestNote Details
@@ -1261,19 +1292,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/**
 	 * Page navigation to catalogue search page in Request Note
 	 */
-	public String backToPrevious() {
+	public void backToPrevious() {
 		log.info("backToPrevious");
 		getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
 		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 		ScRequestItem requestItem = new ScRequestItem();
-    	requestSupplierItem.setRequestNoteItem(requestItem);
+		requestSupplierItem.setRequestNoteItem(requestItem);
 		getManagedBean().setRequestSupplierItem(requestSupplierItem);
 		getManagedBean().setProcurementType(null);
 		getManagedBean().setJustification(null);
 		getManagedBean().setJustificationType(null);
-        getManagedBean().setProcTypeOption(Boolean.FALSE);
-		
-		return "catalogueSearch";
+		getManagedBean().setProcTypeOption(Boolean.FALSE);
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+		if(getManagedBean().getBackToPreviousPage() != null && !getManagedBean().getBackToPreviousPage().isEmpty()){
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
+		} else{
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");
+		}
 	}
 
 	public void addToRequestNote(boolean cartFlag) {

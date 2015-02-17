@@ -83,7 +83,7 @@
 					<td>
 					  <table>
 							<tr>
-								<td><p:inputText size="25" styleClass="ppNumericAlign"
+								<td><p:inputText size="25" styleClass="ppNumericAlign" disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.quantity}">
 										<f:convertNumber
@@ -108,7 +108,7 @@
 	      <p:panelGrid styleClass="noBorders tr,noBorders td">
 				<p:row>
 				<p:column width="60%" style="text-align:right">
-					<p:commandButton id="okBtn"
+					<p:commandButton id="okBtn" rendered="#{!requestNoteBackingBean.managedBean.viewOnly}"
 						value="#{lbl['lbl.sc.ok']}"
 						process="@this qtyId"
 						update="itemDetailsId" 
