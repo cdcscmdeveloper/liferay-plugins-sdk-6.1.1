@@ -47,11 +47,11 @@
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{agreementBackingBean.managedBean.selectedTabIndex}">
                    
-                    <p:menuitem value="#{lbl['lbl.ct.menu.create.agreement']}" update="@all">
+                    <p:menuitem value="#{agreementBackingBean.managedBean.agreementType eq 'supplemental' ? lbl['lbl.ct.menu.create.sup.agreement'] : lbl['lbl.ct.menu.create.agreement']}" update="@all">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.ct.menu.signing.agreement']}" update="@all">
+					<p:menuitem value="#{agreementBackingBean.managedBean.agreementType eq 'supplemental' ? lbl['lbl.ct.menu.signing.sup.agreement'] : lbl['lbl.ct.menu.signing.agreement']}" update="@all">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.ct.menu.signed']}" update="@all" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
