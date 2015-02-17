@@ -88,7 +88,7 @@ public class SmPersonnelBackingBean extends
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
 
 	public SmPersonnelBackingBean() {
-
+		SmCommonUtil.setMDCUserId();
 	}
 
 	public void preRenderSmPersonnel() {
