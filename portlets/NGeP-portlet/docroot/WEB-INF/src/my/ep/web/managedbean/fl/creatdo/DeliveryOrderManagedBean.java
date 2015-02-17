@@ -15,6 +15,7 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -101,6 +102,11 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	//uom
 	private String measurementCodes;	
 	private String measurementNames;
+	
+	private FlStopInstr flStopInstr;
+	private List<FlRemark> rejectedRemark;
+	private boolean displayStopIntrDetls;
+	private String reasonDesc;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -707,5 +713,62 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setMeasurementNames(String measurementNames) {
 		this.measurementNames = measurementNames;
 	}
+
+	/**
+	 * @return the flStopInstr
+	 */
+	public FlStopInstr getFlStopInstr() {
+		return flStopInstr;
+	}
+
+	/**
+	 * @param flStopInstr the flStopInstr to set
+	 */
+	public void setFlStopInstr(FlStopInstr flStopInstr) {
+		this.flStopInstr = flStopInstr;
+	}
+
+	/**
+	 * @return the rejectedRemark
+	 */
+	public List<FlRemark> getRejectedRemark() {
+		return rejectedRemark;
+	}
+
+	/**
+	 * @param rejectedRemark the rejectedRemark to set
+	 */
+	public void setRejectedRemark(List<FlRemark> rejectedRemark) {
+		this.rejectedRemark = rejectedRemark;
+	}
+
+	/**
+	 * @return the displayStopIntrDetls
+	 */
+	public boolean isDisplayStopIntrDetls() {
+		return displayStopIntrDetls;
+	}
+
+	/**
+	 * @param displayStopIntrDetls the displayStopIntrDetls to set
+	 */
+	public void setDisplayStopIntrDetls(boolean displayStopIntrDetls) {
+		this.displayStopIntrDetls = displayStopIntrDetls;
+	}
+
+	/**
+	 * @return the reasonDesc
+	 */
+	public String getReasonDesc() {
+		return reasonDesc;
+	}
+
+	/**
+	 * @param reasonDesc the reasonDesc to set
+	 */
+	public void setReasonDesc(String reasonDesc) {
+		this.reasonDesc = reasonDesc;
+	}
+
 	
 }

@@ -246,7 +246,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 	public String navigateToFlOrder(int index) {
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		IReasonSO reasonSO = (IReasonSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
 		reqDTO.setFlOrderId(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
@@ -261,7 +263,20 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					deliveryAddress.setSuppDelOrdNoDisabled(true);
 				}
 			}
-		}	
+		}
+		doMB.getManagedBean().setDisplayStopIntrDetls(false);
+		if(resDTO.getFlStopInstr() !=null){
+			doMB.getManagedBean().setDisplayStopIntrDetls(true);
+			doMB.getManagedBean().setFlStopInstr(resDTO.getFlStopInstr());
+			reasonReqDTO.setReasonId(resDTO.getFlStopInstr().getPmReason().getReasonId());
+			reasonReqDTO.setLanguage("en");
+			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonDescById(reasonReqDTO);
+			PmReasonDesc reasonDesc=reasonResDTO.getReasonDesc();
+			doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc());
+			doMB.getManagedBean().getFlStopInstr().setChangedDate(resDTO.getFlStopInstr().getChangedDate());
+			doMB.getManagedBean().getFlStopInstr().setStopInstrNo(resDTO.getFlStopInstr().getStopInstrNo());
+			doMB.getManagedBean().setRejectedRemark(resDTO.getStopInstrRejectedRemarkList());
+		}
 		doMB.sortOrderSummaryList(doMB.getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 		doMB.getManagedBean().setFromPageUrl("/xhtml/fl/dopending/doPendingTable.xhtml");
 		return NAV_TO_CREATE_DO;
