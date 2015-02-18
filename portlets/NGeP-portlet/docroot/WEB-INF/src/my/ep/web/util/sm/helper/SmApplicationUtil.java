@@ -4832,49 +4832,48 @@ public class SmApplicationUtil {
 
 	/**
 	 * get application status for header
+	 * 
 	 * @param smAppl
 	 * @return SmApplStatusInfoVO object
 	 */
 	public static SmApplStatusInfoVO getSmApplStatusInfoVO(SmAppl smAppl) {
 		SmApplStatusInfoVO applStatusInfo = new SmApplStatusInfoVO();
-		if(smAppl!=null){
-			SmPersonnel userCreated = null;
-			SmPersonnel userModified = null;
-			IPersonnelSO personnelSO;
+		if (smAppl != null) {
+			PmUser userCreated = null;
+			PmUser userModified = null;
+			IUserSO reqSO;
 			try {
-				personnelSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+				reqSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
-				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-				PersonnelResDTO resDTO = null;
+				UserReqDTO reqDTO = new UserReqDTO();
+				UserResDTO resDTO = null;
 				reqDTO.setUserId(smAppl.getCreatedBy());
-				resDTO = personnelSO.retrievePersonnelByUserId(reqDTO);
-				userCreated = resDTO.getSmPersonnel();
+				resDTO = reqSO.retrieveUserByUserId(reqDTO);
+				userCreated = resDTO.getPmUser();
 				reqDTO.setUserId(smAppl.getChangedBy());
-				resDTO = personnelSO.retrievePersonnelByUserId(reqDTO);
-				userModified = resDTO.getSmPersonnel();
+				resDTO = reqSO.retrieveUserByUserId(reqDTO);
+				userModified = resDTO.getPmUser();
 
 			} catch (Exception e) {
 
 			} finally {
-				personnelSO = null;
+				reqSO = null;
 			}
-			String[] dayLeftParam = { DateUtils.getDaysDifference(
-					smAppl.getDraftExpiryDate(), new Date())
-					+ "" };
-			applStatusInfo.setSubmissionDate(DateUtils.dateToString("dd-MMM-yyyy",
-					smAppl.getDraftExpiryDate()));
+			String[] dayLeftParam = { DateUtils.getDaysDifference(new Date(),
+					smAppl.getDraftExpiryDate()) + "" };
+			applStatusInfo.setSubmissionDate(DateUtils.dateToString(
+					"dd-MMM-yyyy", smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
 					"lbl.sm.appl.status.daysleft", dayLeftParam));
+			applStatusInfo.setCreatedByAndDate((userCreated == null ? "SYSTEM"
+					: userCreated.getUserName())
+					+ " ("
+					+ DateUtils.dateToString("dd-MMM-yyyy",
+							smAppl.getCreatedDate()) + ")");
 			applStatusInfo
-					.setCreatedByAndDate((userCreated == null ? "" : userCreated
-							.getName())
-							+ " ("
-							+ DateUtils.dateToString("dd-MMM-yyyy",
-									smAppl.getCreatedDate()) + ")");
-			applStatusInfo
-					.setModifiedByAndDate((userModified == null ? "" : userModified
-							.getName())
+					.setModifiedByAndDate((userModified == null ? "SYSTEM"
+							: userModified.getUserName())
 							+ " ("
 							+ DateUtils.dateToString("dd-MMM-yyyy",
 									smAppl.getChangedDate()) + ")");
