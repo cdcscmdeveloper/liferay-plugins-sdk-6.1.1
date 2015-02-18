@@ -204,7 +204,7 @@
 						</td>
 						<td style="color: red; font-weight: bolder; text-align: left; width: 200px;">
 							<h:outputText value="#{backingBean.managedBean.applStatusInfo.submissionDate} " />
-							<p:poll id="pollId" interval="3" listener="#{backingBean.refreshDaysLeft}" update="daysLeftId" />
+							<p:poll id="pollId" interval="1" listener="#{backingBean.refreshDaysLeft}" update="daysLeftId" />
 							<h:outputText id="daysLeftId" value="#{backingBean.managedBean.applStatusInfo.daysLeft}" />
 						</td>
 					</tr>
