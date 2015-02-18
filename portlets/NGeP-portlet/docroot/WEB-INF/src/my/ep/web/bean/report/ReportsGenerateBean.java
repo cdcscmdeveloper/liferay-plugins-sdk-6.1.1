@@ -142,7 +142,7 @@ public class ReportsGenerateBean {
 		private boolean smBasicRegView = false;
 		private boolean smMandatoryBothSupplierTypeView = false;
 		private boolean smYearTextView = false;
-		
+		private boolean smMandatoryReceivedFromDateView = false;
 		
 		// FL module
 		private boolean flPtjView = false;
@@ -355,6 +355,13 @@ public class ReportsGenerateBean {
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isSmMandatoryReceivedFromDateView() {
+			return smMandatoryReceivedFromDateView;
+		}
+		public void setSmMandatoryReceivedFromDateView(
+				boolean smMandatoryReceivedFromDateView) {
+			this.smMandatoryReceivedFromDateView = smMandatoryReceivedFromDateView;
+		}
 		public boolean isMadatoryIndicatorView() {
 			return madatoryIndicatorView;
 		}

@@ -181,7 +181,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
 	        	rptGenBean.setSmMandatoryBothSupplierTypeView(true);
 	        	rptGenBean.setSmReportTypeView(true);
-	        	rptGenBean.setSmMandatoryFromDateView(true);					
+	        	rptGenBean.setSmMandatoryReceivedFromDateView(true);					
 	            break;
 		 case ReportConst.SM_PAY_REGIS_FEE_RPT_VAL:
 			    rptGenBean.setSmCompanyNameView(true);	        	
