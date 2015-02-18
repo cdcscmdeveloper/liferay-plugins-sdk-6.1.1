@@ -1,3 +1,14 @@
+/*
+ * 
+ * ****************************************************
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.io.BufferedOutputStream;
@@ -149,22 +160,45 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
+
+/**
+ * 
+ * Class CatalogueBackingBean  
+ * @author hketan
+ */
 @ManagedBean(name = "catalogueBackingBean")
 //@ViewScoped
 @RequestScoped
 public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> {
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);
+	
+	/** The root. */
 	private TreeNode root;
+	
+	/** The selected node. */
 	private TreeNode selectedNode;
+	
+	/** The root1. */
 	private TreeNode root1;
+	
+	/** The root2. */
 	private TreeNode root2;
+	
+	/** The file. */
 	private StreamedContent file;
+	
+	/** The remark rendered. */
 	private boolean remarkRendered = false;
 
+	/** The status filter bean. */
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
 
+	/**
+	 * Instantiates a new CatalogueBackingBean.
+	 */
 	public CatalogueBackingBean() {
 
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -191,6 +225,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Catalog Items added to CatalogueMaintenance.
+	 * 
+	 * @return String(../catalogue/preRenderCatalogueMaintenanceFile.xhtml)  
+	 */
 	public String addServiceToMaintain() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -343,6 +382,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "../catalogue/preRenderCatalogueMaintenanceFile.xhtml";
 	}
 
+	/**
+	 * Supplier items added to CatalogMaintaince.
+	 * 
+	 * @return String(../catalogue/preRenderCatalogueMaintenanceFile.xhtml)
+	 */
 	public String addToMaintain() {
 		
 		CodificationBackingBean bb = new CodificationBackingBean();
@@ -524,6 +568,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "../catalogue/preRenderCatalogueMaintenanceFile.xhtml";
 	}
 
+	/**
+	 * Go to CatalogMaintain Screen
+	 * 
+	 * @return String(catalogueMaintenanceFile)
+	 */
 	public String GoToMaintain() {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -561,6 +610,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "catalogueMaintenanceFile";
 	}
 
+	/**
+	 * This method is used to deletes the draft items.
+	 * 
+	 * @param index
+	 *           (int index(mandatory))
+	 */
 	public void deleteDraftItem(int index) {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -597,6 +652,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Navigate to catalog details page.
+	 * 
+	 * @param index
+	 *            int index(mandatory)
+	 * @return String(editCatalogItem)
+	 */
 	public String navigateToCatalogDet(int index) {
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaintainItemList().get(index).getSupplierItemId());
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -690,6 +752,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Group prices by tier.
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param cmPricings
+	 *                (List<T> cmPricings(mandatory))
+	 * @param stand_id
+	 *                (String stand_id(mandatory))
+	 */
 	private <T extends CmPricing> void groupPricesByTier(List<T> cmPricings, String stand_id){
 		
 		if(stand_id.equalsIgnoreCase("S")){
@@ -752,6 +824,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 	
+	/**
+	 * Navigate to published item detailed tab.
+	 * 
+	 * @param index
+	 *            int index(mandatory)
+	 * @return String(editCatalogItem)
+	 */
 	public String navigateToPublishedItemDet(int index) {
 		
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
@@ -801,6 +880,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "editCatalogItem";
 	}
 
+	/**
+	 * Navigate to expired item details tab.
+	 * 
+	 * @param index
+	 *            int index(mandatory)
+	 * @return String(editCatalogItem)
+	 */
 	public String navigateToExpiredItemDet(int index) {
 		
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
@@ -850,6 +936,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "editCatalogItem";
 	}
 
+	/**
+	 * Navigate to approval item details tab .
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 * @return String(addCatalogItem)
+	 */
 	public String navigateToApprovalItemDet(int index) {
 
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
@@ -921,6 +1014,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//return "editCatalogItem";
 	}
 
+	/**
+	 * Navigate to approved item details tab.
+	 * 
+	 * @param index
+	 *            int index(mandatory)
+	 * @return String(addCatalogItem)
+	 */
 	public String navigateToApprovedItemDet(int index) {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -942,6 +1042,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//return "editCatalogItem";
 	}
 
+	/**
+	 * Navigate to rejected item details tab.
+	 * 
+	 * @param index
+	 *            int index(mandatory)
+	 * @return String(editCatalogItem)
+	 */
 	public String navigateToRejectedItemDet(int index) {
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
@@ -1017,6 +1124,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "editCatalogItem";
 	}
 
+	/**
+	 * Navigate to supplier item details.
+	 * 
+	 * @param supplierItem
+	 *            (VCmSupplierItem supplierItem(mandatory))
+	 * @return String(addCatalogView)
+	 */
 	public String navigateToSupplierItemDet(VCmSupplierItem supplierItem) {
 
 		System.out.println("getDocId" + supplierItem.getDocId());
@@ -1123,6 +1237,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "addCatalogView?faces-redirect=true";
 	}
 	
+	/**
+	 * get Contract Item Pricing.
+	 * 
+	 * @param cmSupplierItem
+	 *            (CmSupplierItem cmSupplierItem(mandatory))
+	 * @param ctContractItem
+	 *            (CtContractItem ctContractItem(mandatory))
+	 * 
+	 */
 	private void getContractItemPricing(CmSupplierItem cmSupplierItem, CtContractItem ctContractItem) {
 		Date today = new Date();
 		if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
@@ -1231,6 +1354,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	/**
+	 * Sets the supplier zone list.
+	 * 
+	 * @param contractZoneList
+	 *            (List<CtContractZone> contractZoneList(mandatory))
+	 */
 	private void setSupplierZoneList(List<CtContractZone> contractZoneList) {
 		List<CmSupplierZone> supplierZoneList = new ArrayList<CmSupplierZone>();
 		CmSupplierZone cmSupplierZone = null;
@@ -1243,6 +1372,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		getManagedBean().setSupplierZoneList(supplierZoneList);
 	}
 
+	/**
+	 * Count tier prices by stand group id.
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param cmPricings
+	 *            (List<T> cmPricings(mandatory))
+	 * @param standGroupId
+	 *            (int standGroupId(mandatory))
+	 * @return count of tier prices
+	 */
 	public <T extends CmPricing> int countTierPricesByStandGroupId(List<T> cmPricings, int standGroupId){
 		int count = 0;
 		
@@ -1254,6 +1394,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return count;
 	}
 	
+	/**
+	 * Disable add tier.
+	 * 
+	 * @return true, if successful
+	 *         false,if fail
+	 */
 	public boolean disableAddTier(){
 		boolean disable = false;
 		int lastStdGrpId = 0;
@@ -1273,6 +1419,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return disable;
 	}
 	
+	/**
+	 * Disable add zonal tier.
+	 * 
+	 * @return true, if successful
+	 *         false,if fail
+	 */       
 	public boolean disableAddZonalTier(){
 		boolean disable = false;
 		int lastStdGrpId = 0;
@@ -1292,6 +1444,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return disable;
 	}
 
+	/**
+	 * Adds the new tier pricing.
+	 */
 	public void addNewTierPricing() {
 
 		log.debug("*****addNewTierPricing*****");
@@ -1314,6 +1469,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.add(price);
 	}
 
+	/**
+	 * Adds the new promotion tier pricing.
+	 */
 	public void addNewPromotionTierPricing() {
 
 		log.debug("*****addNewPromotionTierPricing*****");
@@ -1323,6 +1481,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getCmPromotionTierPricings().add(price);
 	}
 
+	/**
+	 * Adds the new zonal tier pricing.
+	 */
 	public void addNewZonalTierPricing() {
 
 		CmZonalTierPricing price = new CmZonalTierPricing();
@@ -1346,6 +1507,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Adds the new zonal promotion tier pricing.
+	 */
 	public void addNewZonalPromotionTierPricing() {
 
 		CmZonalPromotionTierPricing price = new CmZonalPromotionTierPricing();
@@ -1355,6 +1519,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Adds the new zonal standard pricing.
+	 */
 	public void addNewZonalStandardPricing() {
 
 		CmZonalStandardPricing price = new CmZonalStandardPricing();
@@ -1364,6 +1531,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Adds the new zonal promotion pricing.
+	 */
 	public void addNewZonalPromotionPricing() {
 
 		CmZonalPromotionPricing price = new CmZonalPromotionPricing();
@@ -1398,6 +1568,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * }
 	 */
 
+	/**
+	 * District checked.
+	 */
 	public void districtChecked() {
 
 		log.debug("********hktan**********");
@@ -1411,12 +1584,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		 */
 	}
 
+	/**
+	 * Adds the new district pricing.
+	 */
 	public void addNewDistrictPricing() {
 		PricingVO price = new PricingVO();
 
 		this.getManagedBean().getDistrictPricingList().add(price);
 	}
 
+	/**
+	 * Cancel to maintenance file.
+	 * 
+	 * @return String(catalogMaintenanceFile)
+	 */
 	public String cancelToMaintenanceFile() {
 
 		log.info("*********cancelToMaintenanceFile*************");
@@ -1429,6 +1610,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "catalogMaintenanceFile";
 	}
 
+	/**
+	 * Cancel back to maintenance file.
+	 * 
+	 * @return String(catalogMaintenanceFile?faces-redirect=true)
+	 */
 	public String cancelBackToMaintenanceFile() {
 
 		log.info("*********cancelBackToMaintenanceFile*************");
@@ -1436,6 +1622,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "catalogMaintenanceFile?faces-redirect=true";
 	}
 
+	/**
+	 * Ok to maintenance file.
+	 * 
+	 * @return String(catalogMaintenanceFile?faces-redirect=true)
+	 */
 	public String okToMaintenanceFile() {
 
 		log.info("*********okToMaintenanceFile*************");
@@ -1449,6 +1640,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		// return "catalogMaintenanceFile";
 	}
 
+	/**
+	 * Advance search.
+	 */
 	public void advanceSearch() {
 
 		log.debug("#########advanceSearch#############"
@@ -1462,6 +1656,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * On node delete.
+	 */
 	public void onNodeDelete() {
 
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -1472,6 +1669,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.debug("***event.getTreeNode()*****:" + newCodes);
 	}
 
+	/**
+	 * Upload the catalog items  in CatalogMaintainFile by using excel.
+	 * 
+	 * @param event
+	 *            (FileUploadEvent event(mandatory))
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void uploadExcel(FileUploadEvent event) throws Exception {
 		try {
 			log.debug("uploadExcel");
@@ -1819,6 +2024,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * This method is used to download the catalog items in Excel sheet .
+	 * 
+	 * @return Excel sheet file
+	 * @throws Exception
+	 *             the exception
+	 */
 	public StreamedContent getFile() throws Exception {
 
 		log.debug("***write***");
@@ -1955,6 +2167,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return null;
 	}
 
+	/**
+	 * Adds the cell to row.
+	 * 
+	 * @param sheet
+	 *            (XSSFSheet sheet(mandatory))
+	 * @param count
+	 *            (int count(mandatory))
+	 * @param colValList
+	 *            (List colValList(mandatory))
+	 * @param catalogCellStyle
+	 *            (CellStyle catalogCellStyle(mandatory))
+	 * @param createHelper
+	 *            (CreationHelper createHelper(mandatory))
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void addCellToRow(XSSFSheet sheet, int count, List colValList,
 			CellStyle catalogCellStyle, CreationHelper createHelper) throws Exception {
 
@@ -2012,6 +2240,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * This method is used to upload the Image .
+	 * 
+	 * @param event
+	 *            (FileUploadEvent event(mandatory))
+	 */
 	public void imageUpload(FileUploadEvent event)  {
 
 		// String tempDir = System.getenv("windir");
@@ -2043,6 +2277,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Gen image.
+	 * 
+	 * @param imageObj
+	 *            (CmImage imageObj(mandatory))
+	 */
 	public void genImage(CmImage imageObj) {
 
 		try {
@@ -2105,6 +2345,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * }
 	 */
 
+	/**
+	 * To Save catalog item.
+	 * 
+	 * @return string(editCatalogItem or catalogMaintenanceFile)
+	 */
 	public String saveCatalogItem() {
 		log.info("In saveCatalogItem");
 		PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -2377,6 +2622,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//return "preRenderCatalogueMaintenanceFile";
 	}
 
+	/**
+	 * This method is used to review or publish the catalog items.
+	 * 
+	 * @return String(editCatalogItem or catalogMaintenanceFile)
+	 */
 	public String singleSubmitToReviewItems() {
 		log.info("submit catalogue");
 		PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -3462,6 +3712,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//return "preRenderCatalogueMaintenanceFile";
 	}
 
+	/**
+	 * This method is used to publish the items.
+	 * 
+	 * @return String(catalogMaintenanceFile)
+	 * @throws Exception
+	 *             the exception
+	 */
 	public String submitToReviewItems() throws Exception {
 		log.debug("submitToReviewItems");
 		
@@ -3896,6 +4153,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "catalogMaintenanceFile";
 	}
 	
+	/**
+	 * Gets the price type.
+	 * 
+	 * @param docId
+	 *            Long docId(mandatory)
+	 * @param contractNo
+	 *            String contractNo(optional)
+	 * @return ""
+	 */
 	public String getPriceType(Long docId, String contractNo){
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
@@ -3965,6 +4231,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * }
 	 */
 
+	/**
+	 * Compare indxe action.
+	 */
 	public void compareIndxeAction() {
 
 		log.debug("****index***" + this.getManagedBean().getCompareIndex());
@@ -3982,11 +4251,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Back to previous screen.
+	 * 
+	 * @return supplierItemView
+	 */
 	public String backToPervious() {
 
 		return "supplierItemView";
 	}
 
+	/**
+	 * This method is used On tab change at catalogMaintenance.
+	 * 
+	 * @param status
+	 *            (String status(mandatory))
+	 * @return String(catalogMaintenanceFile)
+	 */
 	public String onTabChange1(String status) {
 		System.out.println("******status*******" + status);
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -4151,11 +4432,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * }
 	 */
 
+	/**
+	 * View cart list item.
+	 * 
+	 * @return String(cartListItemView)
+	 */
 	public String viewCartListItem() {
 
 		return "cartListItemView";
 	}
 
+	/**
+	 * Delete cart item.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deleteCartItem(int index) {
 
 		this.getManagedBean().getCartList().remove(index);
@@ -4194,6 +4486,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * } }
 	 */
 
+	/**
+	 * Publish approved items.
+	 * 
+	 * @return String(catalogMaintenanceFile)
+	 */
 	public String publishApprovedItems() {
 		
 		if(this.getManagedBean().getSelectedApprovedItems() != null 
@@ -4243,6 +4540,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "catalogMaintenanceFile";
 	}
 	
+	/**
+	 * Publish catalog item.
+	 * 
+	 * @return String(catalogMaintenanceFile)
+	 */
 	public String publishCatalogItem() {
 		
 		if(this.getManagedBean().getSelectedApprovedItems().length < 1) {
@@ -4354,6 +4656,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "catalogMaintenanceFile";
 	}
 
+	/**
+	 * Compare supplier item prices.
+	 * 
+	 * @return String(compareCatalogue)
+	 */
 	public String compareSupplierItem() {
 
 		log.info("==============compareSupplierItem========================");
@@ -4447,6 +4754,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "compareCatalogue";
 	}
 
+	/**
+	 * add To Cart.
+	 * 
+	 * @param index
+	 *            (int index(mandatory)
+	 */
 	public void addToCart(int index) {
 
 		// for(CmSupplierItem supplierItem :
@@ -4467,6 +4780,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * trigger Compare.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void triggerCompare(int index) {
 
 		System.out.println("***********triggerCompare************" + index);
@@ -4483,6 +4802,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * adds Into WishList.
+	 */
 	public void addIntoWishList() {
 
 		this.getManagedBean().setSelectedSupplierItemList(null);
@@ -4519,6 +4841,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * delete Compared Item.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deleteComparedItem(int index) {
 
 		boolean removeFlag = false;
@@ -4547,6 +4875,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 	
 	
+	/**
+	 * pre Render Supplier Catalogue.
+	 */
 	public void preRenderSupplierCatalogue() {
 
 		
@@ -4602,6 +4933,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * pre Render Catalogue.
+	 */
 	public void preRenderCatalogue() {
 		log.debug("In preRenderCatalogue");
 		
@@ -4660,6 +4994,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * back To Previous.
+	 * 
+	 * @return string(supplierItemView)
+	 */
 	public String backToPrev() {
 
 		return "supplierItemView";
@@ -4808,6 +5147,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * }
 	 */
 
+	/**
+	 * adds catalogue remarks for item reject reason.
+	 */
 	public void addCatalogueRemarks() {
 
 		CmItemRejectReason reason = new CmItemRejectReason();
@@ -4818,6 +5160,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * search UNSPSC Code For Item.
+	 * 
+	 * @return String(codificationView)
+	 */
 	public String navigateToSearchCode() {
 //		CodificationBackingBean bb = new CodificationBackingBean();
 //		bb.titleFilterBean = null;
@@ -4833,6 +5180,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 	}
 
+	/**
+	 * cancel Supplier Item Search.
+	 * 
+	 * @return String(supplierItemView)
+	 */
 	public String cancelToSupplierItemSearch() {
 		
 		/*log.info("testing");
@@ -4851,6 +5203,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		*/return "supplierItemView";
 	}
 
+	/**
+	 * Enable remark.
+	 */
 	public void enableRemark() {
 
 		ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
@@ -4873,6 +5228,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * compare View Item.
+	 */
 	public void compareViewItem() {
 
 		System.out
@@ -4880,6 +5238,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						+ this.getManagedBean().getSelectViewItems());
 	}
 
+	/**
+	 * pop Up Pricing.
+	 * 
+	 * @param item
+	 *            (CmSupplierItem item(mandatory))
+	 */
 	public void popUpPricing(CmSupplierItem item) {
 
 		System.out.println("***************item*********************");
@@ -4983,6 +5347,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * find District.
+	 */
 	public void findDistrict() {
 
 		System.out.println("*****************findDistrict***************");
@@ -5014,6 +5381,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * refresh Image.
+	 */
 	public void refreshImage() {
 
 		log.info("********refreshImage*********");
@@ -5025,6 +5395,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * checks If Is Remark Rendered.
+	 * 
+	 * @return true-if is remark rendered, false-if is remark not rendered,
+	 */
 	public boolean isRemarkRendered() {
 
 		if(!this.remarkRendered){
@@ -5040,10 +5415,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return this.remarkRendered;
 	}
 
+	/**
+	 * sets Remark Rendered.
+	 * 
+	 * @param remarkRendered
+	 *            the new remark rendered
+	 */
 	public void setRemarkRendered(boolean remarkRendered) {
 		this.remarkRendered = remarkRendered;
 	}
 
+	/**
+	 * sets Row Index.
+	 */
 	public void setRowIndex() {
 
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -5056,6 +5440,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * sets Zonal Row Index.
+	 */
 	public void setZonalRowIndex() {
 
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -5068,6 +5455,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * delete Tier Price.
+	 */
 	public void deleteTierPrice() {
 
 		List<CmTierPricing> tierList = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings();
@@ -5113,6 +5503,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * delete Promotion Tier Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deletePromotionTierPrice(int index) {
 
 		List<CmPromotionTierPricing> promotionTierList = this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings();
@@ -5188,6 +5584,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesScopes().getUserLocale())));
 	}
 
+	/**
+	 * delete Zonal Promotion Tier Price.
+	 * 
+	 * @param index
+	 *           (int index(mandatory))
+	 */
 	public void deleteZonalPromotionTierPrice(int index) {
 
 		List<CmZonalPromotionTierPricing> zonalPromotionTierPricings = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings();
@@ -5270,6 +5672,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * delete Zonal Standard Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deleteZonalStandardPrice(int index) {
 		
 		boolean zonalStdRemove = true;
@@ -5289,11 +5697,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * delete Zonal Promotion Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deleteZonalPromotionPrice(int index) {
 		this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalPromotionPricings().remove(index);
 	}
 
+	/**
+	 * delete Zonal Tier Price.
+	 */
 	public void deleteZonalTierPrice() {
 
 		List<CmZonalTierPricing> tierList = this.getManagedBean()
@@ -5334,6 +5751,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * update To Quantity.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateToQty(int index) {
 
 		if (index < this.getManagedBean().getSelectedMaintainItem()
@@ -5349,6 +5772,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * update Zonal Tier Quantity.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateZonalTierToQty(int index) {
 
 		if (index < this.getManagedBean().getSelectedMaintainItem()
@@ -5364,6 +5793,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * update Validate Grouping Dates.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateValidateGroupingDates(int index) {
 
 		CmPromotionTierPricing promotionTierPricing = this.getManagedBean()
@@ -5421,6 +5856,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * update Validate Zonal Grouping Dates.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateValidateZonalGroupingDates(int index) {
 
 		CmZonalPromotionTierPricing zonal = this.getManagedBean()
@@ -5475,6 +5916,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setZonalTierPricingIndex(1);
 	}
 
+	/**
+	 * validate Promotion Tier Dates.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validatePromotionTierDates(int index) {
 
 		CmPromotionTierPricing tier = this.getManagedBean()
@@ -5522,6 +5969,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * validate Zonal Promotion Tier Dates.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validateZonalPromotionTierDates(int index) {
 
 		CmZonalPromotionTierPricing tier = this.getManagedBean()
@@ -5572,6 +6025,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * Gets the last index to clone.
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param cmPricings
+	 *            (List<T> cmPricings(mandatory)
+	 * @param standGroupId
+	 *            (Integer standGroupId(mandatory))
+	 * @return the last index to clone
+	 */
 	public <T extends CmPricing> int getLastIndexToClone(List<T> cmPricings, Integer standGroupId){
 		int addIndex = 0;
 		for(CmPricing pricing : cmPricings){
@@ -5582,6 +6046,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return addIndex;
 	}
 	
+	/**
+	 * clone Tier Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void cloneTierPrice(int index) {
 
 		CmTierPricing tier = new CmTierPricing();
@@ -5610,6 +6080,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 	}
 
+	/**
+	 * clone Zonal Tier Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void cloneZonalTierPrice(int index) {
 
 		CmZonalTierPricing tier = new CmZonalTierPricing();
@@ -5640,6 +6116,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * validate Date Overlap.
+	 * 
+	 * @param index
+	 *             (int index(mandatory))
+	 */
 	public void validateDateOverlap(int index) {
 
 		List<CmTierPricing> previousList = new ArrayList<CmTierPricing>();
@@ -5673,6 +6155,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * validate Zonal Standard Date Overlap.
+	 * 
+	 * @param index
+	 *            int index(mandatory))
+	 */
 	public void validateZonalStandardDateOverlap(int index) {
 
 		CmZonalStandardPricing zonalStandard = this.getManagedBean()
@@ -5739,6 +6227,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * validate Zonal Promo Date Overlap.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validateZonalPromoDateOverlap(int index) {
 
 		CmZonalPromotionPricing zonalPromo = this.getManagedBean()
@@ -5807,6 +6301,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * validate Zonal Tier Date Overlap.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validateZonalTierDateOverlap(int index) {
 
 		List<CmZonalTierPricing> previousList = new ArrayList<CmZonalTierPricing>();
@@ -5868,6 +6368,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 	}
 
+	/**
+	 * validate Zonal Tier Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validateZonalTierPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalTierPricings().get(index);
@@ -5886,6 +6392,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}	
 	}
 	
+	/**
+	 * validate Zonal Promotion Tier Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validateZonalPromotionTierPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index);
@@ -5903,6 +6415,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			updateValidateZonalGroupingDates(index);
 		}	
 	}
+	
+	/**
+	 * validate Tier Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validateTierPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmTierPricings().get(index);
@@ -5925,6 +6444,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 	}
 	
+	/**
+	 * update Tier Date.
+	 * 
+	 * @param standGroupId
+	 *            (int standGroupId(mandatory))
+	 * @param startDate
+	 *            (Date startDate(mandatory))
+	 * @param endDate
+	 *            (Date endDate(mandatory))
+	 * @param priceType
+	 *            (String priceType(mandatory))
+	 */
 	public void updateTierDate(int standGroupId, Date startDate, Date endDate, String priceType){
 
 		switch(priceType){
@@ -5971,6 +6502,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 	}
 	
+	/**
+	 * validate Tier Promotion Price.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void validateTierPromotionPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmPromotionTierPricings().get(index);
@@ -5990,9 +6527,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 	/**
-	 * To validate price on every keyup
+	 * to Validate Price On Every Keyup.
+	 * 
 	 * @param pricing
+	 *            (CmPricing pricing(mandatory))
 	 * @param pricings
+	 *            (List<CmPricing> pricings(mandatory))
 	 */
 	public void validatePriceValue(CmPricing pricing, List<CmPricing> pricings){
 		boolean priceInvalid = false;
@@ -6034,6 +6574,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	/**
+	 * compare Zones For Same Districts.
+	 * 
+	 * @param zone1
+	 *           (CmSupplierZone zone1(mandatory))
+	 * @param zone2
+	 *            (CmSupplierZone zone2(mandatory))
+	 * @return true, if successful
+	 *         false, if fail
+	 */
 	public boolean compareZonesForSameDistricts(CmSupplierZone zone1, CmSupplierZone zone2){
 		List<Long> districts1 = new ArrayList<Long>();
 		boolean inValid = false;
@@ -6077,6 +6627,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return inValid;
 	}
 	
+	/**
+	 * reset Error Dialog.
+	 */
 	public void resetErrorDialog() {
 			this.getManagedBean().setError1(false);
 			this.getManagedBean().setError2(false);
@@ -6089,6 +6642,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setError9(false);
 		}
 	
+	/**
+	 * update Error Dialog.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateErrorDialog(int index) {
 		CmTierPricing cmTierPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getCmTierPricings().get(index);
@@ -6122,6 +6681,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setTierPricingIndex(0);
 	}
 
+	/**
+	 * update Zonal Standard Error Dialog.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateZonalStandardErrorDialog(int index) {
 		CmZonalStandardPricing cmZonalStandardPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getzStdPrices().get(index);
@@ -6154,6 +6719,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setZonalPricingIndex(0);
 	}
 
+	/**
+	 * update Zonal Promo Error Dialog.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateZonalPromoErrorDialog(int index) {
 		CmZonalPromotionPricing promo = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalPromotionPricings()
@@ -6177,6 +6748,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setZonalPricingIndex(1);
 	}
 
+	/**
+	 * update Standard Error Eialog.
+	 * 
+	 * @param standardPricing
+	 *            (CmStandardPricing standardPricing(mandatory))
+	 */
 	public void updateStandardErrorDialog(CmStandardPricing standardPricing) {
 		resetErrorDialog();
 		
@@ -6216,6 +6793,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setError7(false);
 	}
 
+	/**
+	 * update Promotion Error Dialog.
+	 */
 	public void updatePromotionErrorDialog() {
 		resetErrorDialog();
 
@@ -6337,6 +6917,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * update Promotion Tier Error Dialog.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updatePromotionTierErrorDialog(int index) {
 
 		CmPromotionTierPricing cmPromotionTierPricing = this.getManagedBean()
@@ -6373,6 +6959,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * update Zonal Promotion Tier Error Dialog.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateZonalPromotionTierErrorDialog(int index) {
 
 		CmZonalPromotionTierPricing zonal = this.getManagedBean()
@@ -6403,6 +6995,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * update Zonal Tier Error Dialog.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void updateZonalTierErrorDialog(int index) {
 		CmZonalTierPricing cmZonalTierPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalTierPricings().get(index);
@@ -6438,6 +7036,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setZonalTierPricingIndex(0);
 	}
 
+	/**
+	 * validate Before Add To Zonal Promotion.
+	 * 
+	 * @param cmPricings
+	 *            (List<CmZonalTierPricing> cmPricings(mandatory))
+	 * @return true, if successful
+	 *          false, if fail
+	 */
 	public boolean validateBeforeAddToZonalPromotion(
 			List<CmZonalTierPricing> cmPricings) {
 
@@ -6458,6 +7064,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return valid;
 	}
 
+	/**
+	 * validate Before Add To Promotion.
+	 * 
+	 * @param cmPricings
+	 *            (List<CmTierPricing> cmPricings(mandatory))
+	 * @return true, if successful
+	 *         false, if fail
+	 */
 	public boolean validateBeforeAddToPromotion(List<CmTierPricing> cmPricings) {
 
 		boolean valid = true;
@@ -6477,6 +7091,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return valid;
 	}
 
+	/**
+	 * adds To Promotion.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void addToPromotion(int index) {
 
 		if (this.getManagedBean().getSelectedMaintainItem()
@@ -6660,6 +7280,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * adds To Zonal Promotion.
+	 * 
+	 * @param index
+	 *           (int index(mandatory))
+	 */
 	public void addToZonalPromotion(int index) {
 
 		if (this.getManagedBean().getSelectedMaintainItem()
@@ -6880,6 +7506,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * }
 	 */
 
+	/**
+	 * item Reject Reason.
+	 * 
+	 * @param id
+	 *            (long id(mandatory))
+	 * @return string
+	 */
 	public String itemRejectReason(long id) {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -6894,6 +7527,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 	}
 
+	/**
+	 * grouping Tier.
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param commonList
+	 *            (List<T> commonList(mandatory))
+	 * @return Map<Integer, List<T>>
+	 */
 	public <T extends CmPricing> Map groupingTier(List<T> commonList) {
 
 		Map<Integer, List<T>> tierMap = new HashMap<Integer, List<T>>();
@@ -6947,6 +7589,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * grouping Date.
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param commonList
+	 *            (List<T> commonList(mandatory))
+	 * @return Map<Date, List<T>>
+	 */
 	public <T extends CmPricing> Map groupingDate(List<T> commonList) {
 
 		Map<Date, List<T>> tierMap = new HashMap<Date, List<T>>();
@@ -6967,6 +7618,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * grouping Start Date.
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param tierMap
+	 *            (Map<Integer, List<T>> tierMap(mandatory))
+	 * @return List<Object>
+	 */
 	public <T extends CmPricing> List groupingStartDate(
 			Map<Integer, List<T>> tierMap) {
 
@@ -7003,6 +7663,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return sortedList;
 	}
 
+	/**
+	 * sort By Start Date.
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param commonList
+	 *           List<T> commonList
+	 * @return List<T>
+	 */
 	public <T extends CmPricing> List sortByStartDate(List<T> commonList) {
 
 		SimpleDateFormat formot = new SimpleDateFormat("YYYYMMdd");
@@ -7036,6 +7705,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * adds SupplierItem To Contract Request.
+	 * 
+	 * @param supplierItem
+	 *           (VCmSupplierItem supplierItem(mandatory))
+	 * @return string(supplierItemView)
+	 */
 	public String addToContractRequest(VCmSupplierItem supplierItem) {
 
 		System.out.println("************getContractNo***************"
@@ -7086,6 +7762,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * show Table View.
+	 */
 	public void showTableView() {
 
 		this.getManagedBean().setRenderTableView(true);
@@ -7095,6 +7774,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setCtRequestList(null);
 	}
 
+	/**
+	 * show Grid View.
+	 */
 	public void showGridView() {
 
 		this.getManagedBean().setRenderGridView(true);
@@ -7104,6 +7786,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setCtRequestList(null);
 	}
 
+	/**
+	 * sets Selected Item.
+	 * 
+	 * @param supplierItem
+	 *            (VCmSupplierItem supplierItem(mandatory))
+	 */
 	public void setAsSelectedItem(VCmSupplierItem supplierItem) {
 		if (this.getManagedBean().getSelectedIds().get(supplierItem.getDocId())) {
 			this.getManagedBean().getSelectViewItems().add(supplierItem);
@@ -7121,6 +7809,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	//
 	// }
 
+	/**
+	 * delete Image.
+	 * 
+	 * @param index
+	 *           (int index(mandatory))
+	 */
 	public void deleteImage(int index) {
 
 		this.getManagedBean().getSelectedMaintainItem().getCmImages()
@@ -7128,6 +7822,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * This method is used to Navigate contract request.
+	 * 
+	 * @return String(contractRequestView)
+	 */
 	public String navigateContractRequest() {
 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -7159,11 +7858,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "contractRequestView";
 	}
 
+	/**
+	 * back To Catalogue Search.
+	 * 
+	 * @return String(supplierItemView?faces-redirect=true)
+	 */
 	public String backTocatalogueSearch() {
 
 		return "supplierItemView?faces-redirect=true";
 	}
 
+	/**
+	 * this Method Is Used To Delete Contract Request Items.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deleteContractRequestItem(int index) {
 
 		VCmSupplierItem supplierItemView = this.getManagedBean()
@@ -7175,6 +7885,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	/**
+	 * navigate To CR.
+	 * 
+	 * @throws PortalException
+	 *             the portal exception
+	 * @throws SystemException
+	 *             the system exception
+	 */
 	public void navigateToCR() throws PortalException, SystemException {
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
@@ -7204,11 +7922,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	/**
+	 * back To Public Catalogue.
+	 * 
+	 * @return string(publicCatalogueView)
+	 */
 	public String backToPublicCatalogue(){
 		 System.out.println("..................cancelToPublicSearch..............");
 			return "publicCatalogueView";
 	}
 	
+	/**
+	 * This method is used to Reset catalogue search.
+	 */
 	public void resetCatalogueSearch() {
 //		this.getManagedBean().getItemNameFilterBean().setSearchValue("");
 //		this.getManagedBean().getItemCodeFilterBean().setSearchValue("");
@@ -7246,6 +7972,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	/**
+	 * adds CmSupplierItems To The List.
+	 * 
+	 * @param supplierItem
+	 *            (VCmSupplierItem supplierItem(mandatory))
+	 * @param optionListValue
+	 *            (Integer optionListValue(mandatory))
+	 */
 	public void addToList(VCmSupplierItem supplierItem,Integer optionListValue){
 		log.info("addToList trigger");
 		if(optionListValue.intValue()==1){
@@ -7310,6 +8044,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	/**
+	 * This Method is used to select the particular row .
+	 * 
+	 * @param event
+	 *            (SelectEvent event(mandatory))
+	 */
 	public void onRowSelect(SelectEvent event) {
 		VCmSupplierItem supplierItem = ((VCmSupplierItem)event.getObject());
 		boolean found = false;
@@ -7331,6 +8071,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
         
     }
 	
+	/**
+	 * on Row Unselect.
+	 * 
+	 * @param event
+	 *            (UnselectEvent event(mandatory))
+	 */
 	public void onRowUnselect(UnselectEvent event) {
 		VCmSupplierItem supplierItem = ((VCmSupplierItem)event.getObject());
 		log.info("onRowDeselect trigger");
@@ -7342,6 +8088,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
     }
 	
+	/**
+	 * Removes the SupplierItem from list.
+	 * 
+	 * @param supplierItem
+	 *            (VCmSupplierItem supplierItem(mandatory))
+	 */
 	public void removeFromList(VCmSupplierItem supplierItem){
 		log.info("removeFromList trigger");
 		for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
@@ -7352,6 +8104,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	/**
+	 * This method is used to navigate the previous screens .
+	 * 
+	 * @return string
+	 */
 	public String navigate(){
 		int a = this.getManagedBean().getPreviousScreen();
 		if (a==0)//0=catSearch
@@ -7364,6 +8121,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			return cancelToSupplierItemSearch();
 	}
 	
+	/**
+	 * This method is used to Show active promotion.
+	 * 
+	 * @param cmSupplierItem
+	 *            (CmSupplierItem cmSupplierItem(mandatory))
+	 * @return true, if successful
+	 */
 	public boolean showActivePromotion(CmSupplierItem cmSupplierItem){
 		log.info("showActivePromotion");
 		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
@@ -7379,58 +8143,126 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	/**
+	 * This method is used to navigate the pending task page.
+	 * 
+	 * @return String(/xhtml/cm/catalogue/catalogueTaskList.xhtml)
+	 */
 	public String cancelToPendingApprovalItem() {
 	    
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 	}
 
+	/**
+	 * Gets the status filter bean.
+	 * 
+	 * @return SearchFilterBean
+	 */
 	public SearchFilterBean getStatusFilterBean() {
 		return statusFilterBean;
 	}
 
+	/**
+	 * Sets the status filter bean.
+	 * 
+	 * @param statusFilterBean
+	 *                       SearchFilterBean statusFilterBean(mandatory)
+	 *            
+	 */
 	public void setStatusFilterBean(SearchFilterBean statusFilterBean) {
 		this.statusFilterBean = statusFilterBean;
 	}
 
+	/**
+	 * Gets the root.
+	 * 
+	 * @return TreeNode
+	 */
 	public TreeNode getRoot() {
 		return root;
 	}
 
+	/**
+	 * Sets the root.
+	 * 
+	 * @param root
+	 *           (TreeNode root(mandatory))
+	 */
 	public void setRoot(TreeNode root) {
 		this.root = root;
 	}
 
+	/**
+	 * Gets the root1.
+	 * 
+	 * @return TreeNode
+	 */
 	public TreeNode getRoot1() {
 		return root1;
 	}
 
+	/**
+	 * Sets the root1.
+	 * 
+	 * @param root1
+	 *           (TreeNode root1(mandatory))
+	 */
 	public void setRoot1(TreeNode root1) {
 		this.root1 = root1;
 	}
 
+	/**
+	 * Gets the root2.
+	 * 
+	 * @return TreeNode
+	 */
 	public TreeNode getRoot2() {
 		return root2;
 	}
 
+	/**
+	 * Sets the root2.
+	 * 
+	 * @param root2
+	 *            TreeNode(mandatory)
+	 */
 	public void setRoot2(TreeNode root2) {
 		this.root2 = root2;
 	}
 
+	/**
+	 * Gets the selected node.
+	 * 
+	 * @return TreeNode
+	 */
 	public TreeNode getSelectedNode() {
 		return selectedNode;
 	}
 
+	/**
+	 * Sets the selected node.
+	 * 
+	 * @param selectedNode
+	 *            (TreeNode selectedNode(mandatory))
+	 */
 	public void setSelectedNode(TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
 	}
 	
+	/**
+	 * Sets the file.
+	 * 
+	 * @param file
+	 *            (StreamedContent file(mandatory))
+	 */
 	public void setFile(StreamedContent file) {
 		this.file = file;
 	}
 	
 	/**
-	 * to return the all Supplier Item's status as a SelectItem list. 
-	 * @return
+	 * Return the all Supplier Item's status.
+	 * 
+	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getItemStatusOptions() {
 		List<SelectItem> options = new ArrayList<SelectItem>();

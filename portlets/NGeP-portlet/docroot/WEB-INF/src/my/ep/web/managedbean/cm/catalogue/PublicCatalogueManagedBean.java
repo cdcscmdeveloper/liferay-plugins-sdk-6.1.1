@@ -30,54 +30,129 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 
+
+/**
+ * The Class PublicCatalogueManagedBean.
+ * @author hketan
+ */
 @ManagedBean(name = "pCatalogueMB")
 @SessionScoped
 public class PublicCatalogueManagedBean extends BaseManagedBean {
 
+	/** The item name. */
 	private String itemName;
+	
+	/** The family list. */
 	private List <CmUnspsc> familyList;
+	
+	/** The catalogue list. */
 	private List <VCmPubSuppItem> catalogueList;
+	
+	/** The popular commodity list. */
 	private List <CmUnspsc> popularCommodityList;
+	
+	/** The front page. */
 	private boolean frontPage = true;
+	
+	/** The price form. */
 	private BigDecimal priceForm;
+	
+	/** The price to. */
 	private BigDecimal priceTo;
+	
+	/** The family code. */
 	private String familyCode;
+	
+	/** The commodity code. */
 	private String commodityCode;
+	
+	/** The family code list. */
 	private List<String> familyCodeList;
+	
+	/** The brand criteria. */
 	private List<SelectItem> brandCriteria;
+	
+	/** The brand id. */
 	private Long brandId;
+	
+	/** The key word. */
 	private boolean keyWord = true;
+	
+	/** The unspsc title. */
 	private String unspscTitle;
+	
+	/** The total number of cataloges. */
 	private long totalNumberOfCataloges;
+	
+	/** The last search item name. */
 	private String lastSearchItemName;
 	
+	/** The clone item names. */
 	private List<String> cloneItemNames = new ArrayList<String>();
 
+	/**
+	 * Gets the last search item name.
+	 * 
+	 * @return the last search item name
+	 */
 	public String getLastSearchItemName() {
 		return lastSearchItemName;
 	}
 
+	/**
+	 * Sets the last search item name.
+	 * 
+	 * @param lastSearchItemName
+	 *            the new last search item name
+	 */
 	public void setLastSearchItemName(String lastSearchItemName) {
 		this.lastSearchItemName = lastSearchItemName;
 	}
 
+	/**
+	 * Gets the total number of cataloges.
+	 * 
+	 * @return the total number of cataloges
+	 */
 	public long getTotalNumberOfCataloges() {
 		return totalNumberOfCataloges;
 	}
 
+	/**
+	 * Sets the total number of cataloges.
+	 * 
+	 * @param totalNumberOfCataloges
+	 *            the new total number of cataloges
+	 */
 	public void setTotalNumberOfCataloges(long totalNumberOfCataloges) {
 		this.totalNumberOfCataloges = totalNumberOfCataloges;
 	}
 
+	/**
+	 * Gets the item name.
+	 * 
+	 * @return the item name
+	 */
 	public String getItemName() {
 		return itemName;
 	}
 
+	/**
+	 * Sets the item name.
+	 * 
+	 * @param itemName
+	 *            the new item name
+	 */
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
 
 
+	/**
+	 * Gets the family list.
+	 * 
+	 * @return the family list
+	 */
 	public List<CmUnspsc> getFamilyList() {
 		if(familyList==null)
 			familyList = new ArrayList<CmUnspsc>();
@@ -85,10 +160,21 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
+	/**
+	 * Sets the family list.
+	 * 
+	 * @param familyList
+	 *            the new family list
+	 */
 	public void setFamilyList(List<CmUnspsc> familyList) {
 		this.familyList = familyList;
 	}
 
+	/**
+	 * Gets the catalogue list.
+	 * 
+	 * @return the catalogue list
+	 */
 	public List<VCmPubSuppItem> getCatalogueList() {
 		if(this.catalogueList == null){
 			this.catalogueList = new ArrayList<VCmPubSuppItem>();
@@ -96,50 +182,105 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 		return catalogueList;
 	}
 
+	/**
+	 * Sets the catalogue list.
+	 * 
+	 * @param catalogueList
+	 *            the new catalogue list
+	 */
 	public void setCatalogueList(List<VCmPubSuppItem> catalogueList) {
 		this.catalogueList = catalogueList;
 	}
 
+	/**
+	 * Checks if is front page.
+	 * 
+	 * @return true, if is front page
+	 */
 	public boolean isFrontPage() {
 		return frontPage;
 	}
 
 
+	/**
+	 * Sets the front page.
+	 * 
+	 * @param frontPage
+	 *            the new front page
+	 */
 	public void setFrontPage(boolean frontPage) {
 		this.frontPage = frontPage;
 	}
 
 
+	/**
+	 * Gets the price form.
+	 * 
+	 * @return the price form
+	 */
 	public BigDecimal getPriceForm() {
 		return priceForm;
 	}
 
 
+	/**
+	 * Sets the price form.
+	 * 
+	 * @param priceForm
+	 *            the new price form
+	 */
 	public void setPriceForm(BigDecimal priceForm) {
 		this.priceForm = priceForm;
 	}
 
 
+	/**
+	 * Gets the price to.
+	 * 
+	 * @return the price to
+	 */
 	public BigDecimal getPriceTo() {
 		return priceTo;
 	}
 
 
+	/**
+	 * Sets the price to.
+	 * 
+	 * @param priceTo
+	 *            the new price to
+	 */
 	public void setPriceTo(BigDecimal priceTo) {
 		this.priceTo = priceTo;
 	}
 
 
+	/**
+	 * Gets the family code.
+	 * 
+	 * @return the family code
+	 */
 	public String getFamilyCode() {
 		return familyCode;
 	}
 
 
+	/**
+	 * Sets the family code.
+	 * 
+	 * @param familyCode
+	 *            the new family code
+	 */
 	public void setFamilyCode(String familyCode) {
 		this.familyCode = familyCode;
 	}
 
 
+	/**
+	 * Gets the family code list.
+	 * 
+	 * @return the family code list
+	 */
 	public List<String> getFamilyCodeList() {
 		if(familyCodeList==null){
 			familyCodeList = new ArrayList<String>();
@@ -148,11 +289,22 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
+	/**
+	 * Sets the family code list.
+	 * 
+	 * @param familyCodeList
+	 *            the new family code list
+	 */
 	public void setFamilyCodeList(List<String> familyCodeList) {
 		this.familyCodeList = familyCodeList;
 	}
 
 
+	/**
+	 * Gets the popular commodity list.
+	 * 
+	 * @return the popular commodity list
+	 */
 	public List<CmUnspsc> getPopularCommodityList() {
 		if(popularCommodityList==null)
 			popularCommodityList = new ArrayList<CmUnspsc>();
@@ -160,11 +312,22 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
+	/**
+	 * Sets the popular commodity list.
+	 * 
+	 * @param popularCommodityList
+	 *            the new popular commodity list
+	 */
 	public void setPopularCommodityList(List<CmUnspsc> popularCommodityList) {
 		this.popularCommodityList = popularCommodityList;
 	}
 
 
+	/**
+	 * Gets the brand criteria.
+	 * 
+	 * @return the brand criteria
+	 */
 	public List<SelectItem> getBrandCriteria() {
 		if (brandCriteria == null)
 			brandCriteria = new ArrayList<SelectItem>();
@@ -172,41 +335,85 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
+	/**
+	 * Sets the brand criteria.
+	 * 
+	 * @param brandCriteria
+	 *            the new brand criteria
+	 */
 	public void setBrandCriteria(List<SelectItem> brandCriteria) {
 		this.brandCriteria = brandCriteria;
 	}
 
 
+	/**
+	 * Gets the brand id.
+	 * 
+	 * @return the brand id
+	 */
 	public Long getBrandId() {
 		return brandId;
 	}
 
 
+	/**
+	 * Sets the brand id.
+	 * 
+	 * @param brandId
+	 *            the new brand id
+	 */
 	public void setBrandId(Long brandId) {
 		this.brandId = brandId;
 	}
 
 
+	/**
+	 * Checks if is key word.
+	 * 
+	 * @return true, if is key word
+	 */
 	public boolean isKeyWord() {
 		return keyWord;
 	}
 
 
+	/**
+	 * Sets the key word.
+	 * 
+	 * @param keyWord
+	 *            the new key word
+	 */
 	public void setKeyWord(boolean keyWord) {
 		this.keyWord = keyWord;
 	}
 
 
+	/**
+	 * Gets the unspsc title.
+	 * 
+	 * @return the unspsc title
+	 */
 	public String getUnspscTitle() {
 		return unspscTitle;
 	}
 
 
+	/**
+	 * Sets the unspsc title.
+	 * 
+	 * @param unspscTitle
+	 *            the new unspsc title
+	 */
 	public void setUnspscTitle(String unspscTitle) {
 		this.unspscTitle = unspscTitle;
 	}
 
 
+	/**
+	 * Gets the clone item names.
+	 * 
+	 * @return the clone item names
+	 */
 	public List<String> getCloneItemNames() {
 		
 		if(cloneItemNames==null)
@@ -215,29 +422,34 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
+	/**
+	 * Sets the clone item names.
+	 * 
+	 * @param cloneItemNames
+	 *            the new clone item names
+	 */
 	public void setCloneItemNames(List<String> cloneItemNames) {
 		this.cloneItemNames = cloneItemNames;
 	}
 
+	/**
+	 * Gets the commodity code.
+	 * 
+	 * @return the commodity code
+	 */
 	public String getCommodityCode() {
 		return commodityCode;
 	}
 
+	/**
+	 * Sets the commodity code.
+	 * 
+	 * @param commodityCode
+	 *            the new commodity code
+	 */
 	public void setCommodityCode(String commodityCode) {
 		this.commodityCode = commodityCode;
 	}
 
 	
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
 }
