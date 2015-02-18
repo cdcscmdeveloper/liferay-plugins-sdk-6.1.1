@@ -11,9 +11,9 @@ public class SmApplStatusInfoVO implements Serializable {
 
 	private String submissionDate;
 	private String daysLeft;
+	private String daysLeftOriginal;
 	private String createdByAndDate;
 	private String modifiedByAndDate;
-	private boolean show;
 
 	public String getSubmissionDate() {
 		return submissionDate;
@@ -47,12 +47,12 @@ public class SmApplStatusInfoVO implements Serializable {
 		this.modifiedByAndDate = modifiedByAndDate;
 	}
 
-	public boolean isShow() {
-		return show;
+	public String getDaysLeftOriginal() {
+		return daysLeftOriginal;
 	}
 
-	public void setShow(boolean show) {
-		this.show = show;
+	public void setDaysLeftOriginal(String daysLeftOriginal) {
+		this.daysLeftOriginal = daysLeftOriginal;
 	}
 
 }
