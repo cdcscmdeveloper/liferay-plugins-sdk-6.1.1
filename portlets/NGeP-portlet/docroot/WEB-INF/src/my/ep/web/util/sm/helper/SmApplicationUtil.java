@@ -4831,12 +4831,12 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * set application header information
+	 * get application status for header
 	 * @param smAppl
-	 * @param applStatusInfo
+	 * @return SmApplStatusInfoVO object
 	 */
-	public static void setSmApplStatusInfoVO(SmAppl smAppl,
-			SmApplStatusInfoVO applStatusInfo) {
+	public static SmApplStatusInfoVO getSmApplStatusInfoVO(SmAppl smAppl) {
+		SmApplStatusInfoVO applStatusInfo = new SmApplStatusInfoVO();
 		if(smAppl!=null){
 			SmPersonnel userCreated = null;
 			SmPersonnel userModified = null;
@@ -4862,7 +4862,6 @@ public class SmApplicationUtil {
 			String[] dayLeftParam = { DateUtils.getDaysDifference(
 					smAppl.getDraftExpiryDate(), new Date())
 					+ "" };
-			applStatusInfo = new SmApplStatusInfoVO();
 			applStatusInfo.setSubmissionDate(DateUtils.dateToString("dd-MMM-yyyy",
 					smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
@@ -4881,5 +4880,6 @@ public class SmApplicationUtil {
 									smAppl.getChangedDate()) + ")");
 			applStatusInfo.setShow(true);
 		}
+		return applStatusInfo;
 	}
 }
