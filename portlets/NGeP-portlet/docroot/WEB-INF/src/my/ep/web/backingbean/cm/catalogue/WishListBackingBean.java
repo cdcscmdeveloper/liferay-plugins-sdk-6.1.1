@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1 . 00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.cm.catalogue;
 
 import javax.faces.bean.ManagedBean;
@@ -15,16 +25,28 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * The Class WishListBackingBean.
+ * @author hketan
+ */
 @ManagedBean(name="wishListBackingBean")
 @RequestScoped
 public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(WishListBackingBean.class);
 
+	/**
+	 * Instantiates a new wish list backing bean.
+	 */
 	public WishListBackingBean(){
 		log.info("*******WishListBackingBean************");
 	}
 
+	/**
+	 * Save wish list.
+	 */
 	public void saveWishList(){
 
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
@@ -49,6 +71,9 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 	}
 
 
+	/**
+	 * Adds item into wish list.
+	 */
 	public void addItemIntoWishList(){
 
 		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
@@ -80,6 +105,11 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 	}
 
 
+	/**
+	 * View wish list item.
+	 * 
+	 * @return the string
+	 */
 	public String viewWishListItem(){
 
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
@@ -90,6 +120,12 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 	}
 
 
+	/**
+	 * Filter wish list type.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void filterWishListType(int index){
 
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
@@ -105,6 +141,12 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 	}
 	
 	
+	/**
+	 * Filter wish list type pop up.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void filterWishListTypePopUp(int index){
 
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
@@ -113,6 +155,12 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 		
 	}
 	
+	/**
+	 * Delete favorite wish list.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deleteFavoriteWishList(int index){
 		
 		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
@@ -129,6 +177,12 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 	}
 	
 	
+	/**
+	 * Delete wish list item.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
 	public void deleteWishListItem(int index){
 		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
 		WishListReqDTO reqDTO = new WishListReqDTO();

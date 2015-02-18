@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1 . 00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.util.ArrayList;
@@ -46,17 +56,29 @@ import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
 import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+
+/**
+ * The Class ZoneMaintenanceBackingBean.
+ * @author hketan
+ */
 @ManagedBean(name = "zoneMaintenanceBackingBean")
 @ViewScoped
 public class ZoneMaintenanceBackingBean extends
 BaseBackingBean<ZoneMaintenanceManagedBean> {
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(ZoneMaintenanceBackingBean.class);
 	
+	/**
+	 * Instantiates a new zone maintenance backing bean.
+	 */
 	public ZoneMaintenanceBackingBean() {
 		System.out.println("********************ZoneMaintenanceBackingBean Constructor***************");
 	}
 
+	/**
+	 * Pre render zone view.
+	 */
 	public void preRenderZoneView(){
 		System.out.println("********************ZoneMaintenanceBackingBean PreRender***************");
 		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
@@ -74,6 +96,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 
 	}
 	
+	/**
+	 * Gets the zone.
+	 * 
+	 * @param zoneLocation
+	 *            (TreeNode zoneLocation(mandatory))
+	 * @return CmSupplierZone
+	 */
 	private CmSupplierZone getZone(TreeNode zoneLocation) {
 		CmSupplierZone result = null;
 		if (zoneLocation.getData() instanceof CmSupplierZoneStateDistrictDTO) {
@@ -100,6 +129,12 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		return result;
 	}
 
+	/**
+	 * Delete tree nodes.
+	 * 
+	 * @param rootZoneLocation
+	 *           (TreeNode rootZoneLocation(mandatory))
+	 */
 	public void deleteTreeNodes(TreeNode rootZoneLocation) {
 		CmSupplierZone zone = getZone(rootZoneLocation);
 		List<CmSupplierZone> deleteList = new ArrayList<CmSupplierZone>();
@@ -125,6 +160,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 	  }
 	
+	/**
+	 * Delete Cmsupplier zones.
+	 */
 	public void deleteCmSupplierZones(){
 		System.out.println("********************ZoneMaintenanceBackingBean deleteCmSupplierZones***************");
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
@@ -147,7 +185,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 	
 	/**
-	 * saveCmSupplierZone method
+	 * save CmSupplierZones .
+	 * 
+	 * @return string
 	 */
 	public String saveCmSupplierZones() {
 		System.out.println("********************ZoneMaintenanceBackingBean saveCmSupplierZones***************");
@@ -193,6 +233,14 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 //		}
 	}
 	
+	/**
+	 * Edits the zone.
+	 * 
+	 * @param rootZoneLocation
+	 *            (TreeNode rootZoneLocation(mandatory))
+	 * @param zoneIndex
+	 *            (int zoneIndex(mandatory))
+	 */
 	public void editZone(TreeNode rootZoneLocation, int zoneIndex) {
 		getManagedBean().setEditMode(true);
 //		List<CmSupplierZoneStateDistrictDTO> detailDTOs = getDetails(rootZoneLocation);
@@ -220,6 +268,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		}
 	}
 	
+	/**
+	 * Adds the new zone.
+	 */
 	public void addNewZone() {
 		System.out.println("********************ZoneMaintenanceBackingBean addNewZone***************");
 		getManagedBean().setEditMode(false);
@@ -231,8 +282,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 	
 	/**
-    * showZonePopup method for zone popup
-    */
+	 * To Show Zone Popup.
+	 */
 	public void showZonePopup() {
 		SmSupplier smSupplier = getManagedBean().getCurrentSupplier();
 		if(smSupplier != null && smSupplier.getSupplierId() != null){
@@ -253,6 +304,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 		
 	
+	/**
+	 * Gets the current user supplier.
+	 * 
+	 * @return SmSupplier
+	 */
 	private SmSupplier getCurrentUserSupplier() {
 		SmSupplier smSupp = new SmSupplier();
 		try {
@@ -285,7 +341,14 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		return results;
 	}
 */	
-	private List<PmState> getPmStates(List<TreeNode> treeNodes) {
+	/**
+ * Gets the pm states.
+ * 
+ * @param  treeNodes
+ *         (List<TreeNode> treeNodes(mandatory))
+ * @return List<PmState>
+ */
+private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		List<PmState> results = new ArrayList<PmState>();
 		for (TreeNode rootNode : treeNodes) {
 			for (TreeNode treeNode : rootNode.getChildren()) {
@@ -300,6 +363,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		return results;
 	}
 	
+	/**
+	 * Gets the Pm divisions.
+	 * 
+	 * @param treeNodes
+	 *           (List<TreeNode> treeNodes(mandatory))
+	 * @return List<PmDivision>
+	 */
 	private List<PmDivision> getPmDivisions(List<TreeNode> treeNodes) {
 		List<PmDivision> results = new ArrayList<PmDivision>();
 		for (TreeNode rootNode : treeNodes) {
@@ -317,6 +387,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		return results;
 	}
 	
+	/**
+	 * Gets the Pm districts.
+	 * 
+	 * @param treeNodes
+	 *            List<TreeNode> treeNodes(mandatory))
+	 * @return List<PmDistrict>
+	 */
 	private List<PmDistrict> getPmDistricts(List<TreeNode> treeNodes) {
 		List<PmDistrict> results = new ArrayList<PmDistrict>();
 		for (TreeNode treeNode : treeNodes) {
@@ -335,6 +412,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 
 	
+	/**
+	 * Update zone list on pop up close.
+	 */
 	public void updateZoneListOnPopUpClose(){
 		System.out.println("********************ZoneMaintenanceBackingBean updateZoneListOnPopUpClose***************");
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
@@ -648,11 +728,17 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 	}
 	
+	/**
+	 * Assign val reqd to true.
+	 */
 	private void assignValReqdToTrue() {
 		getManagedBean().setShowParentMsg(false);
 		getManagedBean().setValueReqd(true);
 	}
 
+	/**
+	 * Assign val reqd to false.
+	 */
 	private void assignValReqdToFalse() {
 		getManagedBean().setShowParentMsg(true);
 		getManagedBean().setValueReqd(false);
