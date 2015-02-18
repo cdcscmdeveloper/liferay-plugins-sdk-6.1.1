@@ -150,6 +150,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -4827,5 +4828,57 @@ public class SmApplicationUtil {
 			}
 		}
 		return academics;
+	}
+
+	/**
+	 * set application header information
+	 * @param smAppl
+	 * @param applStatusInfo
+	 */
+	public static void setSmApplStatusInfoVO(SmAppl smAppl,
+			SmApplStatusInfoVO applStatusInfo) {
+		if(smAppl!=null){
+			SmPersonnel userCreated = null;
+			SmPersonnel userModified = null;
+			IPersonnelSO personnelSO;
+			try {
+				personnelSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+
+				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				PersonnelResDTO resDTO = null;
+				reqDTO.setUserId(smAppl.getCreatedBy());
+				resDTO = personnelSO.retrievePersonnelByUserId(reqDTO);
+				userCreated = resDTO.getSmPersonnel();
+				reqDTO.setUserId(smAppl.getChangedBy());
+				resDTO = personnelSO.retrievePersonnelByUserId(reqDTO);
+				userModified = resDTO.getSmPersonnel();
+
+			} catch (Exception e) {
+
+			} finally {
+				personnelSO = null;
+			}
+			String[] dayLeftParam = { DateUtils.getDaysDifference(
+					smAppl.getApplSubmitDate(), new Date())
+					+ "" };
+			applStatusInfo = new SmApplStatusInfoVO();
+			applStatusInfo.setSubmissionDate(DateUtils.dateToString("dd-MMM-yyyy",
+					smAppl.getApplSubmitDate()));
+			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
+					"lbl.sm.appl.status.daysleft", dayLeftParam));
+			applStatusInfo
+					.setCreatedByAndDate((userCreated == null ? "" : userCreated
+							.getName())
+							+ " ("
+							+ DateUtils.dateToString("dd-MMM-yyyy",
+									smAppl.getCreatedDate()) + ")");
+			applStatusInfo
+					.setModifiedByAndDate((userModified == null ? "" : userModified
+							.getName())
+							+ " ("
+							+ DateUtils.dateToString("dd-MMM-yyyy",
+									smAppl.getChangedDate()) + ")");
+		}
 	}
 }
