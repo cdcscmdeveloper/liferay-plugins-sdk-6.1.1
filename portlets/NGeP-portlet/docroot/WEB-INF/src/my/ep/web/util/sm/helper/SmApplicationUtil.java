@@ -4860,11 +4860,11 @@ public class SmApplicationUtil {
 				personnelSO = null;
 			}
 			String[] dayLeftParam = { DateUtils.getDaysDifference(
-					smAppl.getApplSubmitDate(), new Date())
+					smAppl.getDraftExpiryDate(), new Date())
 					+ "" };
 			applStatusInfo = new SmApplStatusInfoVO();
 			applStatusInfo.setSubmissionDate(DateUtils.dateToString("dd-MMM-yyyy",
-					smAppl.getApplSubmitDate()));
+					smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
 					"lbl.sm.appl.status.daysleft", dayLeftParam));
 			applStatusInfo
@@ -4879,6 +4879,7 @@ public class SmApplicationUtil {
 							+ " ("
 							+ DateUtils.dateToString("dd-MMM-yyyy",
 									smAppl.getChangedDate()) + ")");
+			applStatusInfo.setShow(true);
 		}
 	}
 }
