@@ -1152,6 +1152,7 @@ public class SmPersonnelBackingBean extends
 
 	private PersonnelResDTO updatePersonnel(SmPersonnel smPersonnel)
 			throws Exception {
+		setAuthorizedFlag(smPersonnel);
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
 			SmAddress address = cloneAddress(getManagedBean()
 					.getBasicSmPersonnelPermanentAddress().getSmAddress());
