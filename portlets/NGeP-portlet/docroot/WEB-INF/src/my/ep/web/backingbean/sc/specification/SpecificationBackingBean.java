@@ -746,22 +746,24 @@ public class SpecificationBackingBean extends
 		}
 
 		if (!this.getManagedBean().getScQt().isPanel()) {
-
-			if (this.getManagedBean().getScQt().isPanel() != this
-					.getManagedBean().isPanelChange()) {
+			//this.getManagedBean().setSelectPanelItem(false);
+			ScQt scQt = this.getManagedBean().getScQt();
+			if (null == scQt.getZoneLocationLevel()) {
 				this.getManagedBean().getScQt().setZonal(false);
-				removespecDtls();
-				if (null == this.getManagedBean().getScQt()
-						.getPmProcurementCategory()) {
-					this.getManagedBean().getScQt()
-							.setPmProcurementCategory(new PmParameter());
-				}
-				this.getManagedBean().getScQt().setZonal(false);
-				getManagedBean().setZoneGeneralTrees(null);
-				getManagedBean().setZoneTrees(null);
 			}
+			ScQtSupplierCriteria supplierCriteria = scQt
+					.getScQtSupplierCriteria();
 
-			return "specificationCreation.xhtml?faces-redirect=true";
+			if (null != supplierCriteria
+					&& null != supplierCriteria.getQtSupplierCriteriaId()
+					&& (this.getManagedBean().getScQt().isPanel() != this
+							.getManagedBean().isPanelChange())) {
+				RequestContext.getCurrentInstance().execute(
+						"panelApprovalDlgs.show()");
+			} else {
+
+				return "specificationCreation.xhtml?faces-redirect=true";
+			}
 
 		} else {
 			if (null == this.getManagedBean().getCtCircularVer()) {
@@ -788,39 +790,11 @@ public class SpecificationBackingBean extends
 						new ArrayList<TreeNode>());
 				ScQtSupplierCriteria supplierCriteria = scQt
 						.getScQtSupplierCriteria();
-				if (supplierCriteria != null
-						&& this.getManagedBean().getScQt().isPanel() != this
-								.getManagedBean().isPanelChange()) {
-					supplierCriteria.setCtPanelItem(this.getManagedBean()
-							.getCtPanelItem());
-					removespecDtls();
-					if (null == this.getManagedBean().getScQt()
-							.getPmProcurementCategory()) {
-						this.getManagedBean().getScQt()
-								.setPmProcurementCategory(new PmParameter());
-					}
 
-				} else {
-					if (supplierCriteria != null
-							&& !supplierCriteria
-									.getCtPanelItem()
-									.getPanelItemId()
-									.equals(this.getManagedBean()
-											.getCtPanelItem())) {
-						supplierCriteria.setCtPanelItem(this.getManagedBean()
-								.getCtPanelItem());
-						removespecDtls();
-						if (null == this.getManagedBean().getScQt()
-								.getPmProcurementCategory()) {
-							this.getManagedBean()
-									.getScQt()
-									.setPmProcurementCategory(new PmParameter());
-						}
-					}
-				}
-
-				if (null == this.getManagedBean().getScQt()
-						.getScQtSupplierCriteria()) {
+				if ((null == supplierCriteria)
+						|| (null != supplierCriteria && null == supplierCriteria
+								.getQtSupplierCriteriaId())) {
+					this.getManagedBean().setScQtCheckSt2techProposal(null);
 					supplierCriteria = new ScQtSupplierCriteria();
 					supplierCriteria.setScQt(scQt);
 					supplierCriteria.setCtPanelItem(this.getManagedBean()
@@ -828,23 +802,66 @@ public class SpecificationBackingBean extends
 					setUserDetails(supplierCriteria);
 					this.getManagedBean().getScQt()
 							.setScQtSupplierCriteria(supplierCriteria);
-				}
+					if (null != this.getManagedBean().getCtPanelItem()
+							&& null != this.getManagedBean().getCtPanelItem()
+									.getPanelItemId()) {
 
-				if (null != this.getManagedBean().getCtPanelItem()
-						&& null != this.getManagedBean().getCtPanelItem()
-								.getPanelItemId()) {
-
-					this.getManagedBean().getScQt().setZonal(false);
-					retriveZonesByCircularNo();
-					if (null != this.getManagedBean().getZoneGeneralTrees()
-							&& !this.getManagedBean().getZoneGeneralTrees()
-									.isEmpty()) {
-						this.getManagedBean().getScQt().setZonal(true);
+						this.getManagedBean().getScQt().setZonal(false);
+						retriveZonesByCircularNo();
+						if (null != this.getManagedBean().getZoneGeneralTrees()
+								&& !this.getManagedBean().getZoneGeneralTrees()
+										.isEmpty()) {
+							this.getManagedBean().getScQt().setZonal(true);
+						}
 					}
+					return "specificationCreation.xhtml?faces-redirect=true";
+				} else {
+
+					if (null != supplierCriteria
+							&& null != supplierCriteria
+									.getQtSupplierCriteriaId()
+							&& (this.getManagedBean().getScQt().isPanel() != this
+									.getManagedBean().isPanelChange())) {
+
+						RequestContext.getCurrentInstance().execute(
+								"panelApprovalDlgs.show()");
+					} else {
+						if (null != this.getManagedBean().getCtPanelItem()) {
+							if (supplierCriteria != null
+									&& !supplierCriteria
+											.getCtPanelItem()
+											.getPanelItemId()
+											.equals(this.getManagedBean()
+													.getCtPanelItem()
+													.getPanelItemId())) {
+								supplierCriteria.setCtPanelItem(this
+										.getManagedBean().getCtPanelItem());
+								removespecDtls();
+								if (null == this.getManagedBean().getScQt()
+										.getPmProcurementCategory()) {
+									this.getManagedBean()
+											.getScQt()
+											.setPmProcurementCategory(
+													new PmParameter());
+								}
+								this.getManagedBean().getScQt().setZonal(false);
+								retriveZonesByCircularNo();
+								if (null != this.getManagedBean()
+										.getZoneGeneralTrees()
+										&& !this.getManagedBean()
+												.getZoneGeneralTrees()
+												.isEmpty()) {
+									this.getManagedBean().getScQt()
+											.setZonal(true);
+								}
+							}
+
+						}
+						return "specificationCreation.xhtml?faces-redirect=true";
+					}
+
 				}
 
-				this.getManagedBean().setScQtCheckSt2techProposal(null);
-				return "specificationCreation.xhtml?faces-redirect=true";
 				// return
 				// "searchCircularPanelContract.xhtml?faces-redirect=true";
 			}
@@ -1947,6 +1964,7 @@ public class SpecificationBackingBean extends
 
 						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 						getManagedBean().setZoneTrees(null);
+						this.getManagedBean().setPanelItemCategory("");
 						if (null != tenderResDTO.getLocationDetails()) {
 
 							if (null == this.getManagedBean()
@@ -2282,9 +2300,11 @@ public class SpecificationBackingBean extends
 
 		try {
 
-			if (QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
-					.getManagedBean().getPanelItemCategory())
-					&& this.getManagedBean().isSelectPanelItem()) {
+			if (null != this.getManagedBean().getPanelItemCategory()
+					&& QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
+							.getManagedBean().getPanelItemCategory())
+					&& this.getManagedBean().isSelectPanelItem()
+					&& this.getManagedBean().getScQt().isPanel()) {
 				createCircularItemSpec(this.getManagedBean().getCtPanelItem());
 				this.getManagedBean().setSelectPanelItem(false);
 			}
@@ -5080,6 +5100,100 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getScQt().setPanel(false);
 		} else {
 			this.getManagedBean().getScQt().setPanel(true);
+		}
+
+	}
+
+	public String panelConformationDelete() {
+		if (!this.getManagedBean().getScQt().isPanel()) {
+
+			if (this.getManagedBean().getScQt().isPanel() != this
+					.getManagedBean().isPanelChange()) {
+				this.getManagedBean().getScQt().setZonal(false);
+				removespecDtls();
+				if (null == this.getManagedBean().getScQt()
+						.getPmProcurementCategory()) {
+					this.getManagedBean().getScQt()
+							.setPmProcurementCategory(new PmParameter());
+				}
+				this.getManagedBean().getScQt().setZonal(false);
+				getManagedBean().setZoneGeneralTrees(null);
+				getManagedBean().setZoneTrees(null);
+			}
+			return "specificationCreation.xhtml?faces-redirect=true";
+		} else {
+			if (null == this.getManagedBean().getCtCircularVer()) {
+				throw new EpException(MessageConst.ERROR_760157);
+			}
+			if (QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
+					.getManagedBean().getCircularType())) {
+				if (null == this.getManagedBean().getCtPanelItem()) {
+					throw new EpException(MessageConst.ERROR_760157);
+				}
+			}
+			if (this.getManagedBean().getScQt().isPanel()
+					&& QTConstants.CIRCULAR_PANEL_TYPE.equalsIgnoreCase(this
+							.getManagedBean().getCircularType())
+					&& QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
+							.getManagedBean().getPanelItemCategory())
+					|| QTConstants.ITEM_GENERAL_TYPE.equalsIgnoreCase(this
+							.getManagedBean().getPanelItemCategory())) {
+
+				ScQt scQt = this.getManagedBean().getScQt();
+				scQt.setZonal(false);
+				scQt.setQtType(QTConstants.OPEN_TYPE);
+				this.getManagedBean().setCtZoneSuppliers(
+						new ArrayList<TreeNode>());
+				ScQtSupplierCriteria supplierCriteria = scQt
+						.getScQtSupplierCriteria();
+				if (supplierCriteria != null
+						&& this.getManagedBean().getScQt().isPanel() != this
+								.getManagedBean().isPanelChange()) {
+					supplierCriteria.setCtPanelItem(this.getManagedBean()
+							.getCtPanelItem());
+					removespecDtls();
+					if (null == this.getManagedBean().getScQt()
+							.getPmProcurementCategory()) {
+						this.getManagedBean().getScQt()
+								.setPmProcurementCategory(new PmParameter());
+					}
+
+				} else {
+					if (supplierCriteria != null
+							&& !supplierCriteria
+									.getCtPanelItem()
+									.getPanelItemId()
+									.equals(this.getManagedBean()
+											.getCtPanelItem())) {
+						supplierCriteria.setCtPanelItem(this.getManagedBean()
+								.getCtPanelItem());
+						removespecDtls();
+						if (null == this.getManagedBean().getScQt()
+								.getPmProcurementCategory()) {
+							this.getManagedBean()
+									.getScQt()
+									.setPmProcurementCategory(new PmParameter());
+						}
+					}
+				}
+
+				if (null != this.getManagedBean().getCtPanelItem()
+						&& null != this.getManagedBean().getCtPanelItem()
+								.getPanelItemId()) {
+
+					this.getManagedBean().getScQt().setZonal(false);
+					retriveZonesByCircularNo();
+					if (null != this.getManagedBean().getZoneGeneralTrees()
+							&& !this.getManagedBean().getZoneGeneralTrees()
+									.isEmpty()) {
+						this.getManagedBean().getScQt().setZonal(true);
+					}
+				}
+
+				this.getManagedBean().setScQtCheckSt2techProposal(null);
+
+			}
+			return "specificationCreation.xhtml?faces-redirect=true";
 		}
 
 	}
