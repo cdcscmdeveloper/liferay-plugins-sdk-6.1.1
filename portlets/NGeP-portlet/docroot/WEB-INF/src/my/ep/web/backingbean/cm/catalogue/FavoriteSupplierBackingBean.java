@@ -1,3 +1,12 @@
+/* **************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1 . 00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.cm.catalogue;
 
 import javax.faces.application.FacesMessage;
@@ -23,18 +32,35 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Class FavoriteSupplierBackingBean.
+ * @author hketan
+ */
 @ManagedBean(name="favoriteSupplierBackingBean")
 @RequestScoped
 public class FavoriteSupplierBackingBean extends BaseBackingBean<FavoriteSupplierManagedBean>{
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(FavoriteSupplierBackingBean.class);
+	
+	/** The status filter bean. */
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
+	/**
+	 * Instantiates a new favorite supplier backing bean.
+	 */
 	public FavoriteSupplierBackingBean(){
 		log.info("*******favoriteSupplierBackingBean************");
 	}
 
 
+	/**
+	 * Adds to favorite supplier.
+	 * 
+	 * @param supplierId
+	 *            (Long supplierId(mandatory))
+	 */
 	public void addToFavoriteSupplier(Long supplierId){
 		System.out.println("supplierId:"+supplierId);
 		IFavoriteSupplierSO favoriteSupplierSO = (IFavoriteSupplierSO) BusinessDelegate.getInstance().getServiceObject("cm",IFavoriteSupplierSO.class);
@@ -63,6 +89,12 @@ public class FavoriteSupplierBackingBean extends BaseBackingBean<FavoriteSupplie
 	}
 
 
+	/**
+	 * Filter favorite supplier items.
+	 * 
+	 * @param supplierId
+	 *           (Long supplierId(mandatory))
+	 */
 	public void filterFavoriteSupplierItems(Long supplierId){
 
 		log.info("*******filterFavoriteSupplierItems************");  
@@ -87,6 +119,12 @@ public class FavoriteSupplierBackingBean extends BaseBackingBean<FavoriteSupplie
 	}
 
 
+	/**
+	 * Delete favorite supplier.
+	 * 
+	 * @param index
+	 *           (int index(mandatory))
+	 */
 	public void deleteFavoriteSupplier(int index){
 
 		CatalogueBackingBean catBB = new CatalogueBackingBean();

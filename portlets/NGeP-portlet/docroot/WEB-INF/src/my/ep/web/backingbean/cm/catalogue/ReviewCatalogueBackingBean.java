@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1 . 00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.util.ArrayList;
@@ -32,13 +42,21 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 
+
+/**
+ * Class ReviewCatalogueBackingBean.
+ * @author hketan
+ */
 @ManagedBean(name = "reviewCatBackingBean")
 @RequestScoped
 public class ReviewCatalogueBackingBean extends
 		BaseBackingBean<ReviewCatalogueManagedBean> {
 
+	/** The status filter bean. */
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(ReviewCatalogueBackingBean.class);
 
 /*	public ReviewCatalogueBackingBean() {
@@ -56,7 +74,10 @@ public class ReviewCatalogueBackingBean extends
 
 	}*/
 
-	public void refreshCatalogueList() {
+	/**
+ * Refresh catalogue list.
+ */
+public void refreshCatalogueList() {
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -70,6 +91,11 @@ public class ReviewCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Navigate to catalog details page.
+	 * 
+	 * @return string(addCatalogItem)
+	 */
 	public String navigateToCatalogDet() {
 
 		System.out.println("************navigateToCatalogDet*************");
@@ -128,6 +154,11 @@ public class ReviewCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Approve catalogue item.
+	 * 
+	 * @return String(/xhtml/cm/catalogue/catalogueTaskList.xhtml)
+	 */
 	public String approveCatalogueItem() {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -166,6 +197,11 @@ public class ReviewCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Reject catalogue item.
+	 * 
+	 * @return String(addCatalogView or /xhtml/cm/catalogue/catalogueTaskList.xhtml )
+	 */
 	public String rejectCatalogueItem() {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -254,11 +290,19 @@ public class ReviewCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Cancel to pending approval item.
+	 * 
+	 * @return String(/xhtml/cm/catalogue/catalogueTaskList.xhtml)
+	 */
 	public String cancelToPendingApprovalItem() {
     
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 	}
 
+	/**
+	 * Pre render catalogue task list.
+	 */
 	public void preRenderCatalogueTaskList() {
 		
 		renewSesionObject();

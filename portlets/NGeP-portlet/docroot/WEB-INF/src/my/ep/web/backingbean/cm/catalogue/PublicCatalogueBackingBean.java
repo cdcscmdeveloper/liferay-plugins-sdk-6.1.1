@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.math.BigDecimal;
@@ -34,11 +44,17 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * Class PublicCatalogueBackingBean.
+ * @author hketan
+ */
 @ManagedBean(name = "pCatalogueBackingBean")
 @RequestScoped
 public class PublicCatalogueBackingBean extends
 		BaseBackingBean<PublicCatalogueManagedBean> {
 
+	/** The log. */
 	private static Logger log = Logger
 			.getLogger(PublicCatalogueBackingBean.class);
 
@@ -46,7 +62,14 @@ public class PublicCatalogueBackingBean extends
 		System.out.println("in constructor:::::::::");
 //		this.getManagedBean().setItemName(null);
 	}*/
-	public List<String> autoCompleteItemName(String query) {
+	/**
+ * Auto complete item name.
+ * 
+ * @param query
+ *           (String query(mandatory))
+ * @return List<String>
+ */
+public List<String> autoCompleteItemName(String query) {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 
@@ -68,6 +91,9 @@ public class PublicCatalogueBackingBean extends
 		return itemNames;
 	}
 
+	/**
+	 * Find popular commodity.
+	 */
 	public void findPopularCommodity() {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -101,6 +127,11 @@ public class PublicCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Search catalogue.
+	 * 
+	 * @return string
+	 */
 	public String searchCatalogue() {
 	
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -206,10 +237,16 @@ public class PublicCatalogueBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Clear serach.
+	 */
 	public void clearSerach() {
 		this.getManagedBean().setItemName(null);
 	}
 
+	/**
+	 * Pre render public cat view.
+	 */
 	public void preRenderPublicCatView() {
 
 		this.getManagedBean().setFrontPage(true);
@@ -221,6 +258,9 @@ public class PublicCatalogueBackingBean extends
 				.handleNavigation(fc, null, "publicCatalogueView");
 	}
 
+	/**
+	 * Search catalogue by price.
+	 */
 	public void searchCatalogueByPrice() {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -285,6 +325,12 @@ public class PublicCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Search catalogue by family level.
+	 * 
+	 * @param commodity
+	 *            (CmUnspsc commodity(mandatory))
+	 */
 	public void searchCatalogueByFamilyLevel(CmUnspsc commodity) {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -370,6 +416,13 @@ public class PublicCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Navigate to supplier item det.
+	 * 
+	 * @param vpsi
+	 *            (VCmPubSuppItem vpsi(mandatory))
+	 * @return String(publicCatalogueDetail.xhtml)
+	 */
 	public String navigateToSupplierItemDet(VCmPubSuppItem vpsi) {
 		log.info("...............navigateToSupplierItemDet................");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -421,11 +474,19 @@ public class PublicCatalogueBackingBean extends
 		// return "../catalogue/addCatalogView.xhtml";
 	}
 
+	/**
+	 * Cancel to public search.
+	 * 
+	 * @return String(publicCatalogueView)
+	 */
 	public String cancelToPublicSearch() {
 		log.debug("..................cancelToPublicSearch..............");
 		return "publicCatalogueView";
 	}
 
+	/**
+	 * Reset catalogue.
+	 */
 	public void resetCatalogue() {
 
 		this.getManagedBean().setPriceForm(null);
@@ -433,6 +494,9 @@ public class PublicCatalogueBackingBean extends
 		this.getManagedBean().setBrandId(0L);
 	}
 
+	/**
+	 * Back to list.
+	 */
 	public void backToList() {
 
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
@@ -500,6 +564,12 @@ public class PublicCatalogueBackingBean extends
 
 	}
 
+	/**
+	 * Search catalogue by commodity code.
+	 * 
+	 * @param commodityCode
+	 *           (CmUnspsc commodityCode(mandatory))
+	 */
 	public void searchCatalogueByCommodityCode(CmUnspsc commodityCode) {
 		log.debug("..............searchCatalogueByCommodityCode..................");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
