@@ -432,12 +432,10 @@
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperecieved']}"
-									itemValue="#{lbl['lbl.rpt.rpttyperecieved']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttypeapproved']}"
-									itemValue="#{lbl['lbl.rpt.rpttypeapproved']}"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperejected']}"
-									itemValue="#{lbl['lbl.rpt.rpttyperejected']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.responserpt']}"
+									itemValue="#{lbl['lbl.rpt.response']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.summaryrpt']}"
+									itemValue="#{lbl['lbl.rpt.summary']}"></f:selectItem>								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -873,6 +871,40 @@
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 						</p:selectOneMenu></TD>
 					<TD><p:message id="MandatoryToYearMsg" for="MandatoryToYear"
+							display="icon" /></TD>
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
+	<div>
+		<c:if
+			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceivedFromDateView}">
+			<TABLE style="margin-top: 10px; width: 44%;">
+				<TR>
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.receiveddatefrom']}"
+							style="width:130px;" /></TD>
+					<TD><p:outputLabel value="*" styleClass="mandatory"
+							style="width:5px;" /></TD>
+
+					<TD><p:calendar label="#{lbl['lbl.rpt.receiveddatefrom']}"
+							id="MandatoryReceivedFromDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar></TD>
+					<TD><p:message id="MandatoryReceivedFromDateMsg"
+							for="MandatoryReceivedFromDate" display="icon" /></TD>
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+							style="width:145px;" /></TD>
+					<TD><p:calendar label="#{lbl['lbl.rpt.dtRangeTo']}"
+							id="MandatoryReceivedToDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.toDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar></TD>
+					<TD><p:message id="MandatoryReceivedToDateMsg" for="MandatoryReceivedToDate"
 							display="icon" /></TD>
 				</TR>
 			</TABLE>
