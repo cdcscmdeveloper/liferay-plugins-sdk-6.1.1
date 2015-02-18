@@ -4866,6 +4866,7 @@ public class SmApplicationUtil {
 					"dd-MMM-yyyy", smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
 					"lbl.sm.appl.status.daysleft", dayLeftParam));
+			applStatusInfo.setDaysLeftOriginal(applStatusInfo.getDaysLeft());
 			applStatusInfo.setCreatedByAndDate((userCreated == null ? "SYSTEM"
 					: userCreated.getUserName())
 					+ " ("
@@ -4877,7 +4878,6 @@ public class SmApplicationUtil {
 							+ " ("
 							+ DateUtils.dateToString("dd-MMM-yyyy",
 									smAppl.getChangedDate()) + ")");
-			applStatusInfo.setShow(true);
 		}
 		return applStatusInfo;
 	}

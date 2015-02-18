@@ -24,6 +24,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
@@ -117,7 +118,6 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -139,7 +139,6 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
@@ -748,8 +747,8 @@ public class SmApplicationBackingBean extends
 							.getPrevApprovedPersonnelDirectorOwner(smAppl));
 
 			// set application header info
-			SmApplicationUtil.setSmApplStatusInfoVO(smAppl, getManagedBean()
-					.getApplStatusInfo());
+			getManagedBean().setApplStatusInfo(
+					SmApplicationUtil.getSmApplStatusInfoVO(smAppl));
 
 			getManagedBean()
 					.setSupplierParentCatList(
@@ -8717,6 +8716,16 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return finalList;
+	}
+
+	public void refreshDaysLeft() {
+		if (StringUtils.isBlank(getManagedBean().getApplStatusInfo()
+				.getDaysLeft())) {
+			getManagedBean().getApplStatusInfo().setDaysLeft(
+					getManagedBean().getApplStatusInfo().getDaysLeftOriginal());
+		} else {
+			getManagedBean().getApplStatusInfo().setDaysLeft("");
+		}
 	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
