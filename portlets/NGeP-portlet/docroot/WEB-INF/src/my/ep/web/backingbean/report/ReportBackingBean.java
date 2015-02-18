@@ -4744,16 +4744,11 @@ public class ReportBackingBean extends
 					&& (this.getCmExtention() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ
 						+ this.getCmExtention());
-			}
-			
-			if ((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.LST_REJ_CAT_ITM_RPT_VAL))) {
-				if ((this.getCmGroupOne() != null)
+			}			
+			if ((this.getCmGroupOne() != null)
 						&& (this.getCmGroupOne() != ReportConst.EMPTY_VAL)) {
 					rptGenBean.setCmGroupOneVar(ReportConst.CM_AMP_PGROUP_EQ
 							+ this.getCmGroupOne());
-				}
 			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
