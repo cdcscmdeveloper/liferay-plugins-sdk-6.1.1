@@ -137,7 +137,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.retrieveState();
 			    rptGenBean.setSmMandatoryFromDateView(true);
 	        	rptGenBean.setSmStateView(true);
-	        	rptGenBean.setSmDistrictView(true);						
+	        	rptGenBean.setSmDistrictView(true);
+	        	rptGenBean.setSmZoneView(true);
+	        	
 	            break;
 		 case ReportConst.SM_QUESTIONAIRE_RPT_VAL:	
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
