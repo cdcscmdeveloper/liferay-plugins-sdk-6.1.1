@@ -41,8 +41,8 @@
 					</table></td>
 			</tr>
 		</table>
-		<p:dialog id="revicepanelDlgs" widgetVar="reviceApprovalDlgs"
-			header="Panel Confirmation" resizable="false" width="325" height="150"
+		<p:dialog id="revicepanelDlgs" widgetVar="panelApprovalDlgs"
+			header="Panel Confirmation" resizable="false" width="325" height="200"
 			closable="false">
 			<table>
 				<tr>
@@ -53,11 +53,11 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					oncomplete="reviceApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate"
-					action="#{specificationBackingBean.panelChangeValue}" />
+					oncomplete="panelApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate"
+					action="#{specificationBackingBean.panelConformationDelete}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					actionListener="#{specificationBackingBean.panelNoConformation}"
-					oncomplete="reviceApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate" />
+					oncomplete="panelApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate" />
 			</div>
 		</p:dialog>
 	</p:panel>
@@ -72,7 +72,7 @@
 
 	<div align="right" style="width: 100%;">
 
-		<p:commandButton value="#{lbl['lbl.sm.next']} " process="@form"
+		<p:commandButton value="#{lbl['lbl.sm.next']} " process="@all"
 			partialSubmit="true" style="float-right;"
 			action="#{specificationBackingBean.newProceedAction}" />
 	</div>
