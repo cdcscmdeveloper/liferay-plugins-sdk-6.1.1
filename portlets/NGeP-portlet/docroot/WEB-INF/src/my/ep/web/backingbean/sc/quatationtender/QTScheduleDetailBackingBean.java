@@ -6,20 +6,28 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -28,9 +36,12 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.sc.quationtender.BriefingReqDTO;
+import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -39,12 +50,17 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -98,23 +114,23 @@ public class QTScheduleDetailBackingBean extends
 			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 			CountryResDTO countryResDTO = countrySo
 					.retrieveCountryByCode(countryReqDTo);
-			
+
 			List<PmState> stateList = PmCommonUtil
 					.retrievePmStateList(countryResDTO.getPmCountry()
 							.getCountryId());
 			this.getManagedBean().setStates(stateList);
 
 		}
-		//retrievePmDistrictList();
+		// retrievePmDistrictList();
 		retrievePmDivisions();
 	}
-	
+
 	public void retrievePmDivisions() {
 		debugLogger("retrievePmDistrictList");
 		this.getManagedBean().setStateCode(false);
 		if (null != this.getManagedBean().getScQtSampleSubmission()) {
-			Long stateId = this.getManagedBean().getScQtSampleSubmission().getAddress()
-					.getPmState().getStateId();
+			Long stateId = this.getManagedBean().getScQtSampleSubmission()
+					.getAddress().getPmState().getStateId();
 			this.getManagedBean().setDivisionList(null);
 			this.getManagedBean().setDistrictList(null);
 			this.getManagedBean().setCitys(null);
@@ -127,14 +143,16 @@ public class QTScheduleDetailBackingBean extends
 					this.getManagedBean().setDivisionList(
 							PmCommonUtil.retrievePmDivisionList(stateId));
 				} else {
-					PmDivision division = this.getManagedBean().getScQtSampleSubmission()
-							.getAddress().getPmDivision();
+					PmDivision division = this.getManagedBean()
+							.getScQtSampleSubmission().getAddress()
+							.getPmDivision();
 					if (null != division) {
-						this.getManagedBean().getScQtSampleSubmission().getAddress()
-								.getPmDivision().setDivisionId(null);
+						this.getManagedBean().getScQtSampleSubmission()
+								.getAddress().getPmDivision()
+								.setDivisionId(null);
 					} else {
-						this.getManagedBean().getScQtSampleSubmission().getAddress()
-								.setPmDivision(new PmDivision());
+						this.getManagedBean().getScQtSampleSubmission()
+								.getAddress().setPmDivision(new PmDivision());
 					}
 				}
 			}
@@ -148,8 +166,8 @@ public class QTScheduleDetailBackingBean extends
 			this.getManagedBean().setDistricts(null);
 			Long divisionId = this.getManagedBean().getScQtSampleSubmission()
 					.getAddress().getPmDivision().getDivisionId();
-			Long stateId = this.getManagedBean().getScQtSampleSubmission().getAddress()
-					.getPmState().getStateId();
+			Long stateId = this.getManagedBean().getScQtSampleSubmission()
+					.getAddress().getPmState().getStateId();
 			if (!this.getManagedBean().isStateCode() && divisionId == null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(stateId);
@@ -354,14 +372,14 @@ public class QTScheduleDetailBackingBean extends
 			address.setPmDistrict(new PmDistrict());
 			address.setPmDivision(new PmDivision());
 			PmCountry country = new PmCountry();
-			ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			ICountrySO countrySo = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICountrySO.class);
 			CountryReqDTO countryReqDTo = new CountryReqDTO();
 			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 			CountryResDTO countryResDTO = countrySo
 					.retrieveCountryByCode(countryReqDTo);
-			country.setCountryId(countryResDTO.getPmCountry()
-					.getCountryId());
+			country.setCountryId(countryResDTO.getPmCountry().getCountryId());
 			address.setPmCountry(country);
 			sampleSubmission.setAddress(address);
 			this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
@@ -444,21 +462,22 @@ public class QTScheduleDetailBackingBean extends
 			address.setPmDistrict(new PmDistrict());
 			address.setPmDivision(new PmDivision());
 			PmCountry country = new PmCountry();
-			ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			ICountrySO countrySo = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICountrySO.class);
 			CountryReqDTO countryReqDTo = new CountryReqDTO();
 			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 			CountryResDTO countryResDTO = countrySo
 					.retrieveCountryByCode(countryReqDTo);
-			country.setCountryId(countryResDTO.getPmCountry()
-					.getCountryId());
+			country.setCountryId(countryResDTO.getPmCountry().getCountryId());
 			address.setPmCountry(country);
 			sampleSubmission.setAddress(address);
 		}
 		this.getManagedBean().setSampleAddressIndex(index);
 		this.getManagedBean().setActionType(SourcingConstants.ACTION_EDIT);
 		this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
-		this.getManagedBean().getScQtSampleSubmissionList().set(index, this.getManagedBean().getScQtSampleSubmission());
+		this.getManagedBean().getScQtSampleSubmissionList()
+				.set(index, this.getManagedBean().getScQtSampleSubmission());
 		retrievePmStateList();
 		RequestContext.getCurrentInstance().execute("sampledlg.show();");
 	}
@@ -489,4 +508,101 @@ public class QTScheduleDetailBackingBean extends
 
 	}
 
+	public void preRenderView() {
+
+		SCSiteVisitProposalDataType payLoad = getBpmTaskDetails(SCSiteVisitProposalDataType.class);
+
+		if (SCProcessNameConst.APPROVE_SUPPLIER_ADD.equalsIgnoreCase(this
+				.getManagedBean().getTaskName())) {
+			IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+			briefingReqDTO.setQtId(payLoad.getQtId());
+			BriefingResDTO briefingResDTO = briefingSO
+					.retrieveRegistartionDtlsByQt(briefingReqDTO);
+			this.getManagedBean().setQt(briefingResDTO.getScQt());
+			this.getManagedBean().setBriefingRegistrationList(
+					briefingResDTO.getBriefingRegResultBean().getResultList());
+			this.getManagedBean().setQtBriefing(
+					briefingResDTO.getScQtBriefing());
+			initializeRemarks(briefingResDTO.getScQtBriefing().getScQtBsv(),
+					null, briefingResDTO.getScQtBriefing().getScQtBsv()
+							.getBsvRemarks(), ScQtBSVRemark.class);
+		}
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"/xhtml/sc/bsvattendance/additionalAttandanceApproval.xhtml");
+	}
+
+	public String submitRegistarionDetails(String outcome) {
+
+		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctxToken);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+
+		IQTBriefingSO briefingSO;
+		try {
+
+			briefingReqDTO.setBriefingReqDtls(this.getManagedBean()
+					.getBriefingRegistrationList());
+			briefingReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			briefingReqDTO.setToken(ctxToken);
+			briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			briefingReqDTO.setPayLoad(res.getPojo());
+			briefingReqDTO.setOutcome(outcome);
+			briefingReqDTO.setTplSpecZoneDtl(this.getManagedBean()
+					.getQtBriefing().getScQtBsv().getTplSpecZoneDtl());
+			briefingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+
+			BriefingResDTO resDTO = briefingSO
+					.updateSupplierRegistionsNSendNotifications(briefingReqDTO);
+
+			if (resDTO.isSuccessful()) {
+
+				renewSesionObject();
+
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMsgCodeByOutCome(outcome),
+														new String[] {
+																"BSV additional attandance For",
+																"" },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}
+		} finally {
+			briefingSO = null;
+		}
+		return "";
+	}
+
+	private String getMsgCodeByOutCome(String outCome) {
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outCome)) {
+			return MessageConst.INFO_700007;
+		}
+		return MessageConst.INFO_700008;
+	}
 }

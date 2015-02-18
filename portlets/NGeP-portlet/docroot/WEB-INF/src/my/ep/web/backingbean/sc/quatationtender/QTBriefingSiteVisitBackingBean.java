@@ -328,8 +328,10 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 
 	public String gotoAttandanceDtl(ScQtBsvDtl scQtBriefing) {
+		
 		BSVAttendanceBackingBean attendanceBackingBean= new BSVAttendanceBackingBean();
 		attendanceBackingBean.registerSupplier(scQtBriefing);
+		attendanceBackingBean.getManagedBean().setScQt(this.getManagedBean().getQt());
 		return NAV_TO_BSV_ATTENDANCE_PAGE + "?faces-redirect=true";
 	}
 
