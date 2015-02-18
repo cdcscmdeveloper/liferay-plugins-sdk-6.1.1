@@ -747,6 +747,10 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil
 							.getPrevApprovedPersonnelDirectorOwner(smAppl));
 
+			// set application header info
+			SmApplicationUtil.setSmApplStatusInfoVO(smAppl, getManagedBean()
+					.getApplStatusInfo());
+
 			getManagedBean()
 					.setSupplierParentCatList(
 							SmApplicationUtil

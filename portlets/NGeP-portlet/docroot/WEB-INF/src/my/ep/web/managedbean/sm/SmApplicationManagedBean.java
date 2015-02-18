@@ -60,6 +60,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -338,7 +339,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter diploma;
 	private List<SelectItem> acadQualifications;
 	private Long prevBasicStateId;
-	
+	private SmApplStatusInfoVO applStatusInfo;
 	private PmDigiSign pmDigiSign;
 
 	public List<String> getSupplierToPOList() {
@@ -2604,6 +2605,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPrevBasicStateId(Long prevBasicStateId) {
 		this.prevBasicStateId = prevBasicStateId;
+	}
+
+	public SmApplStatusInfoVO getApplStatusInfo() {
+		return applStatusInfo;
+	}
+
+	public void setApplStatusInfo(SmApplStatusInfoVO applStatusInfo) {
+		this.applStatusInfo = applStatusInfo;
 	}
 	
 }
