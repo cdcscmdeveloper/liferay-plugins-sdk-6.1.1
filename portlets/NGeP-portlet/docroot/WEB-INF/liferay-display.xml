@@ -122,6 +122,8 @@
 		    <portlet id="Review Simple Quote"></portlet>
 		    <portlet id="Review Supplier View"></portlet>
 		    <portlet id="scRequestNoteSearch" />
+		      <portlet id="scAddtionalAttandance" />
+		    
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
