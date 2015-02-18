@@ -2880,15 +2880,17 @@ public class EvaluationBackingBean extends
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
 				templateSpecBean.setSpecMaster(proposalCheckList
 						.getScQtCheckList().getScQtDoc().getTplSpecMaster());
-			/*	if (null != this.getManagedBean().getScQt()
-						&& this.getManagedBean().getScQt().isZonal()) {
-					if (null != this.getManagedBean().getSelectedZone()) {
-						templateSpecBean.setTplSpecZoneDtl(this
-								.getManagedBean().getSelectedZone());
-
-					}
-
-				}*/
+				/*
+				 * if (null != this.getManagedBean().getScQt() &&
+				 * this.getManagedBean().getScQt().isZonal()) { if (null !=
+				 * this.getManagedBean().getSelectedZone()) {
+				 * templateSpecBean.setTplSpecZoneDtl(this
+				 * .getManagedBean().getSelectedZone());
+				 * 
+				 * }
+				 * 
+				 * }
+				 */
 
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				specReqDTO.setSpecMaster(proposalCheckList.getScQtCheckList()
@@ -4105,6 +4107,15 @@ public class EvaluationBackingBean extends
 			// this.currentTab = currentTab;
 			// this.outputTab = outputTab;
 			if (outputTab == 1) {
+				if (((ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType()) && !this.getManagedBean()
+						.isReadOnly()) || (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType()) && !this.getManagedBean()
+						.isReadOnly()))) {
+					saveMeetingDtls(false);
+				}
 				retriveComplianceTechnical();
 				// retrives1Details();
 			} else if (outputTab == 2) {
@@ -4144,12 +4155,22 @@ public class EvaluationBackingBean extends
 						|| ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 								.equalsIgnoreCase(this.getManagedBean()
 										.getCommitteeType())) {
+					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())
+							&& !this.getManagedBean().isReadOnly()) {
+						saveMeetingDtls(false);
+						// retriveTechnicalEvaluationStage();
+					}
 					retriveTechnicalEvaluationStage();
 				}
 
 				if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
+					if (!this.getManagedBean().isReadOnly()) {
+						saveMeetingDtls(false);
+					}
 					retriveFinancialEvaluationStage();
 				}
 
