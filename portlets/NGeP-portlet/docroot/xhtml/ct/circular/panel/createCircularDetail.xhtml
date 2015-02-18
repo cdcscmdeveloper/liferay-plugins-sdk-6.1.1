@@ -48,14 +48,20 @@
 			                <p:message for="popupButtonCal" display="icon" />
 			              </h:panelGrid>
 			              
-			              <h:outputLabel value="#{lbl['lbl.ct.complaint.deadline']}" />
-			            <h:panelGroup>
-				            <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
-				     	        disabled="#{panelBackingBean.managedBean.viewContract}"
-				       	        maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.int.deadline']}" />
-				           <p:spacer width="5" />
-				          <h:outputText value="#{lbl['lbl.ct.months']}" />
-			        </h:panelGroup>	
+			              
+			               <h:panelGrid columns="2" style="float:right;">
+			     <p:outputLabel value="*" styleClass="mandatory" />
+				 <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+			</h:panelGrid>
+		
+		        <h:panelGroup id="uploadCircularPg">
+				   <p:commandButton icon="iconAttachment" 
+					update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
+					value="#{lbl['lbl.bpm.choose.file']}" disabled="#{panelBackingBean.managedBean.viewContract}"/>	
+					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile(1)}" />				
+			  </h:panelGroup>	
+			              
 			              
 		               <h:panelGrid columns="2" style="float:right;">
 		                    <p:outputLabel value="*" styleClass="mandatory" />
@@ -72,63 +78,6 @@
 		         	   </p:calendar>
 		         	   <p:message for="popupButtonCal1" display="icon" />
 		         	</h:panelGrid>			        
-			        <h:outputLabel value="#{lbl['lbl.ct.payment.day']}" />
-			        <h:panelGroup>
-				       <p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" 
-					     disabled="#{panelBackingBean.managedBean.viewContract}"
-				         maxlength="4" style="text-align:right; width:50px;margin-top:2px;" label="#{lbl['lbl.ct.payment.day']}" />
-				      <p:spacer width="5" />
-				     <h:outputText value="#{lbl['lbl.ct.days']}" />
-			      </h:panelGroup>
-			
-			     <h:outputLabel value="#{lbl['lbl.ct.delivery.period']}" /> 
-			     <h:panelGroup>
-				    <p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" 
-					disabled="#{panelBackingBean.managedBean.viewContract}"
-				    maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.delivery.period']}" />
-				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.days']}" />
-			</h:panelGroup>	
-			
-			<h:outputLabel value="#{lbl['lbl.ct.contract.effective.end.date']}" />
-			<h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" 
-					disabled="#{panelBackingBean.managedBean.viewContract}"
-				     maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.contract.effective.end.date']}" />
-				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.days']}" />
-			</h:panelGroup>
-			
-			<h:outputLabel value="#{lbl['lbl.ct.replacement.day']}" />
-			<h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" 
-					disabled="#{panelBackingBean.managedBean.viewContract}"
-				  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.replacement.day']}" />
-				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.days']}" />
-			</h:panelGroup>	
-			
-			<h:outputLabel value="#{lbl['lbl.ct.warranty.period']}" />
-			<h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" 
-					disabled="#{panelBackingBean.managedBean.viewContract}"
-				  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
-				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.months']}" />
-			</h:panelGroup>	
-			
-			 <h:panelGrid columns="2" style="float:right;">
-			     <p:outputLabel value="*" styleClass="mandatory" />
-				 <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-			</h:panelGrid>
-		
-		        <h:panelGroup id="uploadCircularPg">
-				   <p:commandButton icon="iconAttachment" 
-					update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
-					value="#{lbl['lbl.bpm.choose.file']}" disabled="#{panelBackingBean.managedBean.viewContract}"/>	
-					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile(1)}" />				
-			  </h:panelGroup>	
 			</h:panelGrid>
 	
 	 
