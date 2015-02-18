@@ -1,168 +1,201 @@
-<ui:composition xmlns:p="http://primefaces.org/ui"
+
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.qt.bsv.reqstingptj']}" toggleable="true">
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
 
-		<h:panelGrid columns="2" style="width:100%;"
+		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<ui:repeat var="bpmAction"
+						value="#{qTScheduleDetailBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+							styleClass="ui-button" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
+							action="#{qTScheduleDetailBackingBean.submitRegistarionDetails(bpmAction)}" />
+					</ui:repeat>
+				</p:column>
+			</p:row>
 
-			<h:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']}"></h:outputLabel>
-			<p:inputText></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.sc.notice.board.jabatan']}"></h:outputLabel>
-			<p:inputText></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.sc.notice.board.ptj']}"></h:outputLabel>
-			<p:inputText></p:inputText>
-		</h:panelGrid>
+		</p:panelGrid>
 
-		<h:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
+		<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true">
+			<table>
+				<tr>
+					<td style="width: 150px;"><p:outputLabel
+							value="#{lbl['lbl.qt.nb.ministry']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
+							disabled="true" readonly="true" size="80" /></td>
+					<td />
+					<td />
+				</tr>
+				<!-- <tr>
+				<td><p:outputLabel value="#{lbl['lbl.qt.nb.jabatan']}" /></td>
+				<td><p:inputText
+						value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
+						disabled="true" readonly="true" size="80" /></td>
+				<td />
+				<td />
+			</tr> -->
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.qt.nb.ptj']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.orgName}"
+							disabled="true" readonly="true" size="80" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.qt.bsv.requestor']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.retriveUserName(qTScheduleDetailBackingBean.managedBean.qt.createdBy)}"
+							disabled="true" readonly="true" size="80" /></td>
+					<td style="width: 250px;"><p:outputLabel value="Request Date" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.createdDate}"
+							disabled="true" readonly="true" size="30">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.qtnno']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.qtNo}"
+							disabled="true" readonly="true" size="30" /></td>
+					<td><p:outputLabel value="Procurement Mode" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.getParameterDesc(qTScheduleDetailBackingBean.managedBean.qt.procurementMode)}"
+							disabled="true" readonly="true" size="30" /></td>
+				</tr>
+				<tr>
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
+					<td colspan="3"><p:inputTextarea
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.qtTitle}"
+							cols="170" rows="3" style=" margin-bottom:5px; width: 98%;"
+							disabled="true" /></td>
+				</tr>
+			</table>
+		</p:panel>
 
-			<h:outputLabel value="#{lbl['lbl.qt.bsv.requestor']}"></h:outputLabel>
-			<p:inputText></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.ss.simple.quote.supp.req.date']}"></h:outputLabel>
-			<p:inputText></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.so.qtnno']}"></h:outputLabel>
-			<p:inputText></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.so.procmode']}"></h:outputLabel>
-			<p:inputText></p:inputText>
-		</h:panelGrid>
-		<h:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<h:outputLabel value="#{lbl['lbl.so.title']}"></h:outputLabel>
-			<p:inputText size="50"></p:inputText>
-		</h:panelGrid>
-	</p:panel>
 
-	<p:panel header="Briefing Details" toggleable="true">
+		<p:panel header="Briefing/Site Visit Details" toggleable="true">
+			<!-- <h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
+				<h:outputText value="* All Attandence required for Briefing"
+					rendered="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.allBriefingReq}"
+					style="font-weight:bold;text-align: left;" />
 
-		<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
-		<p:dataTable var="brfsitdtl"
-			value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}">
+				<h:outputText
+					value="At Least #{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
+					rendered="#{!qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.allBriefingReq}"
+					style="font-weight:bold;text-align: left;" />
 
-			<ac:paginator for="brfsitdtl"></ac:paginator>
-			<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-				<h:outputText value="#{brfsitdtl.briefingDesc}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-				style="width:100px;">
-				<h:outputText value="#{brfsitdtl.briefingDate}">
-					<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
-				</h:outputText>
-			</p:column>
+			</h:panelGroup> -->
 
-			<p:column headerText="#{lbl['lbl.so.location']}" style="width:120px;">
-				<p:commandLink style="margin-right:20px;"
-					actionListener="#{bsvAttendanceBackingBean.showLocationDtls(brfsitdtl)}"
-					oncomplete="popupLoc.show()">
+			<p:dataTable id="samebsvdtls" var="brfsitdtl"
+				value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing}"
+				style="width:100%">
+
+				<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+					style="width:25%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.bsvDesc}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.bsvDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.location']}"
+					style="width:20%;white-space: normal;">
+
 					<h:outputText value="#{brfsitdtl.location}" />
-				</p:commandLink>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
-				<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-				style="width:120px;">
-				<h:outputLabel value="#{brfsitdtl.maxNoAttendance}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
-				style="width:120px;">
-				<h:outputText value="#{brfsitdtl.maxNoAttendance}" />
-			</p:column>
 
-		</p:dataTable>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+					style="width:18%;white-space: normal;">
+					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+					style="width:5%;white-space: normal;">
+					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+					style="width:9%;white-space: normal;">
+					<h:outputText
+						value="#{qTScheduleDetailBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
+				</p:column>
 
-	</p:panel>
-	<p:panel header="ADDITIONAL SUPPLIER LIST FOR BRIEFING DETAILS"
-		toggleable="true">
-		<p:dataTable>
+			</p:dataTable>
 
-		</p:dataTable>
-	</p:panel>
-	<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
-		<h:outputText value="All/At Least X Attandence required for Briefing"></h:outputText>
 
-		<p:dataTable var="sitevisitDtls"
-			value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}">
+		</p:panel>
+		<p:panel header="ADDITIONAL SUPPLIER LIST FOR BRIEFING DETAILS "
+			toggleable="true" id="attRegPnl">
 
-			<ac:paginator for="sitevisitDtls"></ac:paginator>
+			<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
+				value="#{qTScheduleDetailBackingBean.managedBean.briefingRegistrationList}">
 
-			<p:column headerText="#{lbl['lbl.qt.nb.description']}">
-				<h:outputText value="#{sitevisitDtls.briefingDesc}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
-				style="width:100px;">
-				<h:outputText value="#{sitevisitDtls.briefingDate}">
-					<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
-				</h:outputText>
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
 
-			<p:column headerText="#{lbl['lbl.so.location']}" style="width:120px;">
-				<p:commandLink style="margin-right:20px;"
-					action="#{bsvAttendanceBackingBean.showLocationDtls(sitevisitDtls)}"
-					oncomplete="popupLoc.show()" update="@(.locationpopup)">
-					<h:outputText value="#{sitevisitDtls.location}" />
-				</p:commandLink>
+					<h:outputText value="#{scQtBriefReg.supplier.companyName}" />
+				</p:column>
 
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.co']}" style="width:120px;">
-				<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
-				style="width:120px;">
-				<h:outputLabel value="#{sitevisitDtls.maxNoAttendance}" />
-			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
-				style="width:120px;">
-				<h:outputText value="#{brfsitdtl.maxAttendance}" />
-			</p:column>
 
-		</p:dataTable>
+			</p:dataTable>
+		</p:panel>
+		<p:panel header="Remarks" toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td class="TableFieldLeft" width="24%"><h:outputLabel
+							value="Remark" /></td>
+					<td class="TableFieldRight"><p:dataGrid
+							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.bsvRemarks}"
+							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 
-	</p:panel>
-	<p:panel header="ADDITIONAL SUPPLIER LIST FOR SITEVISIT"
-		toggleable="true">
-		<p:dataTable>
-
-		</p:dataTable>
-	</p:panel>
-
-	<p:panel header="Remarks" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td class="TableFieldLeft" width="24%"><h:outputLabel
-						value="Remark" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-						value="#{ctBackingBean.managedBean.remarkList}" var="remarkVar"
-						rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
-									<h:outputText value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkIndex==0}" /> <h:outputText
-										value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" />
-								</td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
-	</p:panel>
+							<table>
+								<tr>
+									<td rowspan="2" valign="top"><h:graphicImage
+											value="#{qTScheduleDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+											height="30" width="30" /></td>
+									<td width="5"></td>
+									<td><h:outputText
+											value="#{remarkVar.createdUser.userName}"></h:outputText>, <h:outputText
+											value="#{remarkVar.changedDate}">
+											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+										</h:outputText></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+											rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+											value="#{remarkVar.remark}"
+											rendered="#{remarkVar.remarkId ne null}"
+											style="display: inline-block; width:220px;word-wrap: break-word;" />
+									</td>
+								</tr>
+							</table>
+						</p:dataGrid></td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:define>
 </ui:composition>

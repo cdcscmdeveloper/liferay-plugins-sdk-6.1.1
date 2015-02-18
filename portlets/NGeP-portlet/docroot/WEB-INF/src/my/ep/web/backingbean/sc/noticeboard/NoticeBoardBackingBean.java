@@ -113,10 +113,8 @@ public class NoticeBoardBackingBean extends
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private String mofNo;
 	private boolean visible;
-    private boolean displayImage;
-    
-   
-	
+	private boolean displayImage;
+
 	/**
 	 * Main Filtration For Notice Board
 	 */
@@ -531,7 +529,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public String gotoSupplierQualificationCriteria(Long qtId) {
-		
+
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
 		ScQt scQt = new ScQt();
@@ -542,7 +540,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public String gotoSupplierRegistration(Long qtId) {
-		
+
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
 		retriveBsvDetails(qtId);
@@ -727,12 +725,12 @@ public class NoticeBoardBackingBean extends
 
 				setVisible(true);
 			}
-			
+
 			// construct the proposal/update url
-			if(this.getManagedBean().isQualified()){
+			if (this.getManagedBean().isQualified()) {
 				StringBuffer proposalURL = new StringBuffer(85);
-				proposalURL.append(EpPropertiesUtils.getInstance()
-				.getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL));
+				proposalURL.append(EpPropertiesUtils.getInstance().getProperty(
+						EpPropertiesConst.PORTAL_APPLICATION_URL));
 				proposalURL.append(SourcingConstants.SUPPLIER_PROPOSAL_PAGE);
 				proposalURL.append(qtId);
 				this.getManagedBean().setProposalURL(proposalURL.toString());
@@ -813,10 +811,9 @@ public class NoticeBoardBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(), 1));
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-					
+
 					setDisplayImage(isUser());
-					
-					
+
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
@@ -830,7 +827,7 @@ public class NoticeBoardBackingBean extends
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 					setDisplayImage(isUser());
-					
+
 				}
 
 				searchBean.getDataFilterBeans().add(
@@ -1329,8 +1326,7 @@ public class NoticeBoardBackingBean extends
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 			reqDTO.setQtId(qtId);
-			resDTO = qtNoticeBoardSO
-					.retrieveQtNoticeDtl(reqDTO);
+			resDTO = qtNoticeBoardSO.retrieveQtNoticeDtl(reqDTO);
 			scQt = resDTO.getScQt();
 		} finally {
 			qtNoticeBoardSO = null;
@@ -1355,8 +1351,10 @@ public class NoticeBoardBackingBean extends
 		qtDocumentsBackingBean.getManagedBean().setQt(null);
 		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
 
-		/*List<ScQtDocReport> scQtDocReports = getManagedBean()
-				.getScQtDocReports();*/
+		/*
+		 * List<ScQtDocReport> scQtDocReports = getManagedBean()
+		 * .getScQtDocReports();
+		 */
 		List<ScQtDocReport> scQtDocReports = resDTO.getScQtDocReports();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
@@ -1419,7 +1417,8 @@ public class NoticeBoardBackingBean extends
 				Long durationInMills = DateUtils.getDateDiffInMillis(
 						DateUtils.getCurrentDate(), closingDate);
 				if (durationInMills > 0) {
-					closingDays = DateUtils.durationFormatter(durationInMills.longValue());
+					closingDays = DateUtils.durationFormatter(durationInMills
+							.longValue());
 				}
 			}
 		}
@@ -1570,7 +1569,9 @@ public class NoticeBoardBackingBean extends
 				bsvDtl.setToBeattand(bsvDtl.getToBeattand() - 1);
 			}
 			if (bsvDtl.getToBeattand() > bsvDtl.getMaxNoOfAttendance()) {
+
 				((SelectBooleanCheckbox) event.getSource()).setSelected(false);
+				bsvDtl.setToBeattand(bsvDtl.getToBeattand() - 1);
 				throw new EpException(MessageConst.ERROR_760230,
 						new String[] { bsvDtl.getBsvDesc() });
 			}
@@ -1592,7 +1593,8 @@ public class NoticeBoardBackingBean extends
 
 		ScQtBsvRegistration bsvRegistration = scQtBsvDtl.getTempRegistration();
 
-		if (null == bsvRegistration || bsvRegistration.getBsvAttendance().isEmpty()) {
+		if (null == bsvRegistration
+				|| bsvRegistration.getBsvAttendance().isEmpty()) {
 			List<ScQtBsvAttendance> bsvAttandances = new ArrayList<ScQtBsvAttendance>();
 			IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1671,18 +1673,19 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 
 	}
+
 	/**
-	 * Return false when getUserId contains null 
-	 * and assuming the logged user is a guest
+	 * Return false when getUserId contains null and assuming the logged user is
+	 * a guest
 	 */
-	private boolean  isUser() {
-		
+	private boolean isUser() {
+
 		boolean isUser = false;
 		try {
 			FacesScopes fs = new FacesScopes();
 			PmUser pmUser = fs.getUserSessionBean();
-			if(null != pmUser && null != pmUser.getUserId()){
-				isUser =  true;
+			if (null != pmUser && null != pmUser.getUserId()) {
+				isUser = true;
 			}
 
 		} catch (EpException exception) {
