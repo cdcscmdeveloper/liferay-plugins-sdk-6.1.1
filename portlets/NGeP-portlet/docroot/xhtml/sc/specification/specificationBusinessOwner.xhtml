@@ -187,6 +187,7 @@
 						value="#{lbl['lbl.sc.spec.peocure.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procCategory" required="true"
+						style="margin-bottom:5px;"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.peocure.category']}"
 						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
@@ -195,6 +196,17 @@
 						<p:ajax event="change"
 							listener="#{specificationBackingBean.procurementChange}"></p:ajax>
 					</p:selectOneMenu> <p:message id="titleMsg" for="procCategory" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq}">
+					<td><p:outputLabel
+							value="#{lbl['lbl.so.ministry.spec.secretary']}" /></td>
+					<td><p:inputText size="30" style="margin-bottom:5px;"
+							value="#{lbl[specificationBackingBean.managedBean.scQt.specApprovalReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+							readonly="true"></p:inputText></td>
+				</ui:fragment>
 			</tr>
 
 
@@ -284,8 +296,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
-					/>
+					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					action="#{specificationBackingBean.deleteTreeNode}"
@@ -357,7 +368,7 @@
 
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-			style="float:right;" onclick="ZoneGeneral.hide();"/>
+			style="float:right;" onclick="ZoneGeneral.hide();" />
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 			style="float:right;" process="@all"
