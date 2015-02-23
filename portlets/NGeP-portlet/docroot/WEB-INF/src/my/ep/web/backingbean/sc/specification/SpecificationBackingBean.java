@@ -746,7 +746,7 @@ public class SpecificationBackingBean extends
 		}
 
 		if (!this.getManagedBean().getScQt().isPanel()) {
-			//this.getManagedBean().setSelectPanelItem(false);
+			// this.getManagedBean().setSelectPanelItem(false);
 			ScQt scQt = this.getManagedBean().getScQt();
 			if (null == scQt.getZoneLocationLevel()) {
 				this.getManagedBean().getScQt().setZonal(false);
@@ -2441,12 +2441,10 @@ public class SpecificationBackingBean extends
 						// Collections.sort(resDTO.getTechnicalCheckList());
 						for (ScQtCheckList checklist : resDTO
 								.getTechnicalCheckList()) {
-							if (checklist.getPmDocument() != null) {
-								if (!checklist
-										.getPmDocument()
-										.getDocDefinitionKey()
-										.contains(
-												SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE)) {
+							if (checklist.getPmDocument() != null ) {
+								if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
+										.contains(checklist.getPmDocument()
+												.getDocDefinitionKey())) {
 									localcheckList.add(checklist);
 								}
 							} else {
@@ -7448,10 +7446,10 @@ public class SpecificationBackingBean extends
 					// Collections.sort(resDTO.getTechnicalCheckList());
 					for (PmDocument checklist : resDTO.getDocumentList()) {
 
-						if (!checklist
+						if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
+								.equalsIgnoreCase(checklist
 
-						.getDocDefinitionKey().contains(
-								SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE)) {
+								.getDocDefinitionKey())) {
 							localcheckList.add(checklist);
 						}
 
