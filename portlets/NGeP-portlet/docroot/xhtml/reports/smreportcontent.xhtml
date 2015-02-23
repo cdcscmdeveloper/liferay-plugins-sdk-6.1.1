@@ -812,8 +812,18 @@
 			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryFromDateView}">
 			<TABLE style="margin-top: 10px; width: 50%;">
 				<TR>
+				    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smExpiryDateView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.expirydatefrom']}"
+							style="width:130px;" /></TD>
+					</c:if>
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationDateView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.applicationdatefrom']}"
+							style="width:130px;" /></TD>
+					</c:if>								
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryDateView}">
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeFrm']}"
 							style="width:130px;" /></TD>
+					</c:if>		
 					<TD><p:outputLabel value="*" styleClass="mandatory"
 							style="width:5px;" /></TD>
 
@@ -846,12 +856,12 @@
 			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryCreatedFromYearView}">
 			<TABLE style="margin-top: 10px; width: 50%;">
 				<TR>
-					<TD><p:outputLabel value="#{lbl['lbl.rpt.createdFrom']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.registeredyearfrom']}"
 							style="width:145px;" /></TD>
 					<TD><p:outputLabel value="*" styleClass="mandatory"
 							style="width:5px;" /></TD>
 
-					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.createdFrom']}"
+					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.registeredyearfrom']}"
 							id="MandatoryFromYear"
 							value="#{reportBackingBean.smCreatedFromYear}" required="true"
 							style="margin-top:5px;width:80px;">
@@ -881,12 +891,12 @@
 			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceivedFromDateView}">
 			<TABLE style="margin-top: 10px; width: 50%;">
 				<TR>
-					<TD><p:outputLabel value="#{lbl['lbl.rpt.receiveddatefrom']}"
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.createddatefrom']}"
 							style="width:130px;" /></TD>
 					<TD><p:outputLabel value="*" styleClass="mandatory"
 							style="width:5px;" /></TD>
 
-					<TD><p:calendar label="#{lbl['lbl.rpt.receiveddatefrom']}"
+					<TD><p:calendar label="#{lbl['lbl.rpt.createddatefrom']}"
 							id="MandatoryReceivedFromDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
@@ -910,7 +920,39 @@
 			</TABLE>
 		</c:if>
 	</div>
-
+    <div>
+						<c:if test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryDateView}">
+						<TABLE style="margin-top:10px;width:50%;">
+							<TR>
+							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smRejectedDateView}">
+							    <TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.rejecteddatefrom']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smScheduleSiteVisitDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.schedulesitevisitdatefrom']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<TD>
+									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
+									
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
+									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
+																							
+									</p:calendar> 
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
 
 
 
