@@ -24,16 +24,8 @@
 							src="smAddtnlCatApplnSideMenuItem.xhtml" /></td>
 					<td><p:outputPanel id="addCatStep3OnlySuppPan"
 							rendered="#{backingBean.managedBean.supplierUser}">
-							<table style="width: 98%">
-								<tr>
-									<td class="smLastSubmitLabel"><h:outputText
-											value="#{lbl['lbl.sm.lastSubmitDate']}" /></td>
-									<td class="smLastSubmitDateVal"><h:outputText
-											value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
-											<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
-										</h:outputText></td>
-								</tr>
-							</table>
+							<ui:include
+							src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
 
 							<div align="right" style="width: 99%" class="button-wrapper">
 								<ui:include
