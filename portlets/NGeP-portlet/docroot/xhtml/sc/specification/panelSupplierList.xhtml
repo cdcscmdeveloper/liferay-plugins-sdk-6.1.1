@@ -40,8 +40,12 @@
 						</p:tree>
 					</p:column>
 				</p:dataTable>
-
-
+				<div align="right" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						action="#{specificationBackingBean.deletePanelTreeNode}"
+						update="ctZoneList" />
+				</div>
 
 			</p:panel>
 		</ui:fragment>
