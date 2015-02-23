@@ -4,21 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<script type="text/javascript" language="javascript">
-	 	window.onload=blinkOn;
-		function blinkOn()
-		{
-		  document.getElementById("blink").style.color="red"
-		  setTimeout("blinkOff()",1000)
-		}
-		 
-		function blinkOff()
-		{
-		  document.getElementById("blink").style.color=""
-		  setTimeout("blinkOn()",1000)
-		}
-	</script>
 
 	<table style="width: 100%">
 		<tr>
@@ -30,9 +15,8 @@
 				style="color: red; font-weight: bolder; text-align: left; width: 200px;">
 				<h:outputText
 					value="#{backingBean.managedBean.applStatusInfo.submissionDate} " />
-				<!-- <p:poll id="pollId" interval="1" process="@this"
-					listener="#{backingBean.refreshDaysLeft}" update="daysLeftId"  />  --><div id="blink"><h:outputText id="daysLeftId"
-					value="#{backingBean.managedBean.applStatusInfo.daysLeft}" /></div>
+				<h:outputText id="daysLeftId"
+					value="#{backingBean.managedBean.applStatusInfo.daysLeft}" />
 			</td>
 		</tr>
 		<tr>
