@@ -181,6 +181,8 @@ public class ReportBackingBean extends
 	private List<SelectItem> levThreeCatLst9 = new ArrayList<SelectItem>();
 	private List<SelectItem> levTwoCatLst10 = new ArrayList<SelectItem>();
 	private List<SelectItem> levThreeCatLst10 = new ArrayList<SelectItem>();
+	private List<String> roleCodeList = new ArrayList<String>();
+	private List<String> supplCompanyList = new ArrayList<String>();
 	private boolean valueReqd;
 	private boolean showParentMsg;
 	private List<SmSupplierCategory> selectedCatList;
@@ -202,6 +204,23 @@ public class ReportBackingBean extends
 	private List<PmCategoryL1> supplierParentCatList;
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
+	
+
+	public List<String> getRoleCodeList() {
+		return roleCodeList;
+	}
+
+	public void setRoleCodeList(List<String> roleCodeList) {
+		this.roleCodeList = roleCodeList;
+	}
+
+	public List<String> getSupplCompanyList() {
+		return supplCompanyList;
+	}
+
+	public void setSupplCompanyList(List<String> supplCompanyList) {
+		this.supplCompanyList = supplCompanyList;
+	}
 
 	public boolean isShowParentMsg() {
 		return showParentMsg;
@@ -2812,6 +2831,7 @@ public class ReportBackingBean extends
 		getManagedBean().setReportList(reportList);
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
+		retrieveRolecode();
 		
 	}
 	public void madatoryIndicator() {
@@ -3246,7 +3266,24 @@ public class ReportBackingBean extends
 			colorList.add(selectItem);
 		}
 	}
-
+	public void retrieveRolecode() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+		List<String> rolecodeLst = reportSO.retrieveRolecode(lngUserId);
+		for (int i = 0; i < rolecodeLst.size(); i++) {
+			this.getRoleCodeList().add(rolecodeLst.get(i));
+		}
+	}
+	public void retrieveSupplierCompName() {
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+						IPMReportSO.class);
+		List<String> supplCompNameLst = reportSO.retrieveSupplierCompName(lngUserId);
+		for (int i = 0; i < supplCompNameLst.size(); i++) {
+			this.getSupplCompanyList().add(supplCompNameLst.get(i));
+		}
+	}
 	/*
 	 * Enable criteria variables by report name
 	 */
@@ -4744,15 +4781,14 @@ public class ReportBackingBean extends
 					&& (this.getCmExtention() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ
 						+ this.getCmExtention());
-			}			
-			if ((this.getCmGroupOne() != null)
-						&& (this.getCmGroupOne() != ReportConst.EMPTY_VAL)) {
+			}
+			if ((this.getCmGroupOne() != null)&& (this.getCmGroupOne() != ReportConst.EMPTY_VAL)) {
 					rptGenBean.setCmGroupOneVar(ReportConst.CM_AMP_PGROUP_EQ
 							+ this.getCmGroupOne());
 			}
+			
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
-			if ((rptGenBean.getUrlReportJSPName() != null)
-					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
+			if ((rptGenBean.getUrlReportJSPName() != null)&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getItemNameTotVar()
