@@ -8,16 +8,16 @@
 
 	<style type="text/css">
 		.sidemenu>.ui-tabmenu-nav {
-			padding-bottom: 90px !important;
-			margin-bottom: -90px !important;
+			padding-bottom: 80px !important;
+			margin-bottom: -80px !important;
 		}	
 	</style>
 	<table style="border: 0px;width:100%;">
 		<tr>
 			<td width="16%" style="vertical-align: baseline;">
-				<p:tabMenu styleClass="sidemenu"
+				<p:tabMenu styleClass="sidemenu" 
 					activeIndex="#{suppFinalizationBackingBean.managedBean.prepareActiveIndex}"
-					style="display : table-caption;">
+					style="display : table-caption; width:160%;">
 					
 					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
 						action="#{suppFinalizationBackingBean.retrieveMeetingDtls}"
