@@ -203,6 +203,8 @@ public class ReportsGenerateBean {
 		private boolean flGroupFourteenView = false;
 		private boolean flGroupFifteenView = false;
 		private boolean flGroupSixteenView = false;
+		private boolean flSupplierTextView = false;
+		private boolean flSupplierDropdownView = false;
 		//CT
 		private boolean ctContractNoView = false;
 		private boolean ctAgreementView = false;
@@ -366,6 +368,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isFlSupplierTextView() {
+			return flSupplierTextView;
+		}
+		public void setFlSupplierTextView(boolean flSupplierTextView) {
+			this.flSupplierTextView = flSupplierTextView;
+		}
+		public boolean isFlSupplierDropdownView() {
+			return flSupplierDropdownView;
+		}
+		public void setFlSupplierDropdownView(boolean flSupplierDropdownView) {
+			this.flSupplierDropdownView = flSupplierDropdownView;
+		}
 		public boolean isSmApplicationDateView() {
 			return smApplicationDateView;
 		}
