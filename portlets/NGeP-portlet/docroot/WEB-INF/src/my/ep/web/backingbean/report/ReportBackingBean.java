@@ -3291,6 +3291,19 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 		}
 	}
+	
+	public void changeDateBasedOnRegType() {
+		getManagedBean().getRptGenBean().setSmMandatoryFromDateView(false);
+		getManagedBean().getRptGenBean().setSmActivationDateView(false);
+		getManagedBean().getRptGenBean().setSmSubmissionDateView(false);
+		if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals("Basic"))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
+			getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
+			getManagedBean().getRptGenBean().setSmActivationDateView(true);
+		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals("MOF"))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
+			getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
+			getManagedBean().getRptGenBean().setSmSubmissionDateView(true);
+		}
+	}
 	/*
 	 * Enable criteria variables by report name
 	 */
