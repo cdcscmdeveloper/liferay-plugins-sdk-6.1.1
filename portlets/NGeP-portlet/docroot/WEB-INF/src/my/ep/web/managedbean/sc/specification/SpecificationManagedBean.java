@@ -337,6 +337,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private SmMofAccount smMofAccount;
 	
 	private boolean newTemplateSpec;
+	private TreeNode deletePanelTreenode;
 
 	/**
 	 * @return the specComplete
@@ -3393,6 +3394,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
+	}
+
+	/**
+	 * @return the deletePanelTreenode
+	 */
+	public TreeNode getDeletePanelTreenode() {
+		return deletePanelTreenode;
+	}
+
+	/**
+	 * @param deletePanelTreenode the deletePanelTreenode to set
+	 */
+	public void setDeletePanelTreenode(TreeNode deletePanelTreenode) {
+		this.deletePanelTreenode = deletePanelTreenode;
 	}
 
 }
