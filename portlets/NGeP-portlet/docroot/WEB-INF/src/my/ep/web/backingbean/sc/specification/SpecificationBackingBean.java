@@ -1958,13 +1958,14 @@ public class SpecificationBackingBean extends
 						}
 						scQt.getScQtSupplierCriteria().setAllState(false);
 					}
+					this.getManagedBean().setPanelItemCategory("");
 					if ((!scQt.isZonal())
 							|| (scQt.getEstimatedAmount().intValue() > 500000 && !scQt
 									.getScQtSupplierCriteria().isAllState())) {
 
 						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 						getManagedBean().setZoneTrees(null);
-						this.getManagedBean().setPanelItemCategory("");
+
 						if (null != tenderResDTO.getLocationDetails()) {
 
 							if (null == this.getManagedBean()
@@ -9080,12 +9081,11 @@ public class SpecificationBackingBean extends
 
 							getManagedBean()
 									.getZoneGeneralTrees()
-									.add(LocationSingleton
-											.getInstance()
+									.add(LocationSingleton.getInstance()
 											.buildTreeWithDisabledChilds(
 													tplSpecZoneDtl, states,
 													districts, null, null,
-													false, TplSpecZoneLoc.class));
+													true, TplSpecZoneLoc.class));
 							/*
 							 * getManagedBean() .getZoneGeneralTrees()
 							 * .add(LocationSingleton .getInstance()
@@ -9210,15 +9210,89 @@ public class SpecificationBackingBean extends
 
 	}
 
+	private TplSpecZoneDtl retriveTplSpecZoneDtls(TreeNode selectedTreeNode) {
+		TplSpecZoneDtl tplSpecZoneDtl = null;
+		List<TreeNode> zoneNodes = selectedTreeNode.getChildren();
+
+		if (null != zoneNodes && zoneNodes.size() > 0) {
+			for (TreeNode treeNode1 : zoneNodes) {
+
+				List<TreeNode> stateNodes = treeNode1.getChildren();
+
+				for (TreeNode treeNode2 : stateNodes) {
+
+					List<TreeNode> district = treeNode2.getChildren();
+					if (null != district && !district.isEmpty()) {
+						for (TreeNode devision : district) {
+
+							if (devision.getChildCount() > 0) {
+								for (TreeNode districtNode : devision
+										.getChildren()) {
+
+									TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
+											.getData();
+
+									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+											.getData()));
+									tplSpecZoneDtl = criteria
+											.getTplSpecZoneDtl();
+
+								}
+
+							} else {
+
+								TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
+										.getData();
+
+								criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+										.getData()));
+								tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
+
+							}
+
+						}
+					} else {
+
+						TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
+								.getData();
+
+						criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+								.getData()));
+						tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
+
+					}
+
+				}
+				if (null != stateNodes && stateNodes.size() == 0) {
+					TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode1
+							.getData();
+					criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+							.getData()));
+					tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
+				}
+
+			}
+		}
+		return tplSpecZoneDtl;
+	}
+
 	public void retriveZoneBySupplier(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
+		TplSpecZoneDtl tplSpecZoneDtl = null;
 		selectedTreeNode.setSelected(true);
-		TplSpecZoneDtl ctPanelzone = (TplSpecZoneDtl) event.getTreeNode()
-				.getData();
+		this.getManagedBean().setDeletePanelTreenode(null);
+		if (null != selectedTreeNode) {
+			this.getManagedBean().setDeletePanelTreenode(selectedTreeNode);
+			tplSpecZoneDtl = retriveTplSpecZoneDtls(selectedTreeNode);
+
+		}
 
 		PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-		reqDTO.setCircularZoneId(ctPanelzone.getPanelZone().getPanelZoneId());
+		if (null != tplSpecZoneDtl) {
+			reqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
+					.getPanelZoneId());
+		}
 		IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT,
@@ -11563,6 +11637,41 @@ public class SpecificationBackingBean extends
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(false);
+	}
+
+	/**
+	 * To delete the selected TreeNode from list..
+	 */
+	public void deletePanelTreeNode() {
+
+		TreeNode selectedTreeNode = this.getManagedBean()
+				.getDeletePanelTreenode();
+
+		if (null != selectedTreeNode) {
+			List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
+			if (null != getManagedBean().getZoneGeneralTrees()) {
+				if (getManagedBean().getZoneGeneralTrees().size() > 1) {
+					for (TreeNode treenode : this.getManagedBean()
+							.getZoneGeneralTrees()) {
+						for (TreeNode node : treenode.getChildren()) {
+
+							if (!node.equals(selectedTreeNode)) {
+								zoneGeneralTrees.add(treenode);
+							}
+						}
+						this.getManagedBean().setZoneGeneralTrees(
+								zoneGeneralTrees);
+					}
+				} else {
+
+					throw new EpException(MessageConst.ERROR_760245);
+
+				}
+			}
+
+		} else {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
 	}
 
 	/**
