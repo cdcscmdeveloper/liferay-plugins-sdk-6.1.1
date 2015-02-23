@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -16,10 +17,16 @@ import java.util.List;
 import java.util.Scanner;
 
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.web.integration.eperunding.AssociatedCompany;
 import my.ep.web.integration.eperunding.BoardOfDirector;
+import my.ep.web.integration.eperunding.BranchCompany;
+import my.ep.web.integration.eperunding.CompanyOwner;
 import my.ep.web.integration.eperunding.ConsultantProfile;
+import my.ep.web.integration.eperunding.DeletedCompany;
 import my.ep.web.integration.eperunding.EquityOwner;
+import my.ep.web.integration.eperunding.GovernmentProject;
 import my.ep.web.integration.eperunding.ManagementPersonnel;
+import my.ep.web.integration.eperunding.RegisteredCategory;
 import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
@@ -45,6 +52,9 @@ import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
 
 public class FileUtility {
+	
+	SFTPUtility sftpUtility = new SFTPUtility();
+	OsbUtility osbUtility = new OsbUtility();
 
 	/**
 	 * Write character data to a big file - use BufferedWriter
@@ -1065,6 +1075,7 @@ public class FileUtility {
 	public void equityOwnerOutPutStream(List<EquityOwner> content,
 			String filePath) {
 		String fileName = "EquityOwner.txt";
+		String SERVICE_CODE = "EPE04";
 
 		Writer writer = null;
 
@@ -1080,41 +1091,42 @@ public class FileUtility {
 
 					line.append(System.getProperty("line.separator"));
 
-					line.append(formatString(eOwner.getMOFNo()));
+					line.append(formatString(eOwner.getMOFNo(),20));
 
-					line.append(formatString(eOwner.getOwner().getIsEquityOwner()));
-					line.append(formatString(eOwner.getOwner().getName()));
-					line.append(formatString(eOwner.getOwner().getNewICNo()));
-					line.append(formatString(eOwner.getOwner().getPassport()));
-					line.append(formatString(eOwner.getOwner().getIsBumi()));
+					line.append(formatString(eOwner.getOwner().getIsEquityOwner(),1));
+					line.append(formatString(eOwner.getOwner().getName(),50));
+					line.append(formatString(eOwner.getOwner().getNewICNo(),12));
+					line.append(formatString(eOwner.getOwner().getPassport(),20));
+					line.append(formatString(eOwner.getOwner().getIsBumi(),1));
 					line.append(formatInt(eOwner.getOwner().getCitizenOf()));
-					line.append(formatString(eOwner.getOwner().getEquityValue()));
-					line.append(formatString(eOwner.getOwner()
-						.getEquityPercentage()));
-					line.append(formatString(eOwner.getOwner().getRace()));
-					line.append(formatString(eOwner.getOwner().getDesignation()));
+					line.append(formatString(eOwner.getOwner().getEquityValue(),20));
+					line.append(formatString(eOwner.getOwner().getEquityPercentage(),5));
+					line.append(formatString(eOwner.getOwner().getRace(),100));
+					line.append(formatString(eOwner.getOwner().getDesignation(),50));
 
-					line.append(formatString(eOwner.getQualification().getMajorIn()));
-					line.append(formatString(eOwner.getQualification().getQualification()));
-					line.append(formatInt(eOwner.getQualification()
-						.getQualificationLevel()));
-					line.append(formatString(eOwner.getQualification()
-						.getInstitute()));
-					line.append(formatString(eOwner.getQualification().getYear()));
-					line.append(formatString(eOwner.getQualification().getEducationField()));
+					line.append(formatString(eOwner.getQualification().getMajorIn(),300));
+					line.append(formatString(eOwner.getQualification().getQualification(),300));
+					line.append(formatInt(eOwner.getQualification().getQualificationLevel()));
+					line.append(formatString(eOwner.getQualification().getInstitute(),255));
+					line.append(formatString(eOwner.getQualification().getYear(),30));
+					line.append(formatString(eOwner.getQualification().getEducationField(),12));
 
-					line.append(formatString(eOwner.getProfBodyDetail()
-						.getProfBody()));
-					line.append(formatString(eOwner.getProfBodyDetail()
-						.getProfBodyNo()));
-					line.append(formatDateEperunding(eOwner.getProfBodyDetail()
-						.getProfBodyExpiry()));
+					line.append(formatString(eOwner.getProfBodyDetail().getProfBody(),12));
+					line.append(formatString(eOwner.getProfBodyDetail().getProfBodyNo(),30));
+					line.append(formatDateEperunding(eOwner.getProfBodyDetail().getProfBodyExpiry(),false));
 
 					line.append(String.format("%s", eOwner.getExpertise().getCategoryClassification()));
 
 				writer.write(line.toString());
 			}
 			}
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1134,12 +1146,11 @@ public class FileUtility {
 			List<ConsultantProfile> content, String filePath) {
 
 		String fileName = "ConsultantProfiles.txt";
+		String SERVICE_CODE = "EPE01";
 		Writer writer = null;
 
 		try {
 
-			// Using OutputStreamWriter you don't have to convert the String to
-			// byte[]
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
@@ -1151,71 +1162,64 @@ public class FileUtility {
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 
-				line.append(formatString(cProfile.getCompanyName()));
-				line.append(formatString(cProfile.getSSMNo()));
-				line.append(formatString(cProfile.getMOFNo()));
-				line.append(formatString(cProfile.getCompanyType()));
-				line.append(formatString(cProfile.getAddress1()));
-				line.append(formatString(cProfile.getAddress2()));
-				line.append(formatString(cProfile.getAddress3()));
-				line.append(formatString(cProfile.getPostcode()));
-				line.append(formatString(cProfile.getCity()));
-				line.append(formatString(cProfile.getDistrict()));
-				line.append(formatString(cProfile.getState()));
-				line.append(formatString(cProfile.getCountry()));
-				line.append(formatString(cProfile.getTelCountryCode()));
-				line.append(formatString(cProfile.getTelAreaCode()));
-				line.append(formatString(cProfile.getTelNo()));
-				line.append(formatString(cProfile.getFaxCountryCode()));
-				line.append(formatString(cProfile.getFaxAreaCode()));
-				line.append(formatString(cProfile.getFaxNo()));
+				line.append(formatString(cProfile.getCompanyName(),100));
+				line.append(formatString(cProfile.getSSMNo(),20));
+				line.append(formatString(cProfile.getMOFNo(),20));
+				line.append(formatString(cProfile.getCompanyType(),5));
+				line.append(formatString(cProfile.getAddress1(),100));
+				line.append(formatString(cProfile.getAddress2(),100));
+				line.append(formatString(cProfile.getAddress3(),100));
+				line.append(formatString(cProfile.getPostcode(),15));
+				line.append(formatString(cProfile.getCity(),50));
+				line.append(formatString(cProfile.getDistrict(),12));
+				line.append(formatString(cProfile.getState(),12));
+				line.append(formatString(cProfile.getCountry(),12));
+				line.append(formatString(cProfile.getTelCountryCode(),5));
+				line.append(formatString(cProfile.getTelAreaCode(),5));
+				line.append(formatString(cProfile.getTelNo(),20));
+				line.append(formatString(cProfile.getFaxCountryCode(),5));
+				line.append(formatString(cProfile.getFaxAreaCode(),5));
+				line.append(formatString(cProfile.getFaxNo(),20));
 				line.append(formatFloat(cProfile.getAccumulatedCapital()));
-				line.append(formatString(cProfile.getAuthorisedCapital()));
-				line.append(formatString(cProfile.getPaidUpCapital()));
+				line.append(formatString(cProfile.getAuthorisedCapital(),20));
+				line.append(formatString(cProfile.getPaidUpCapital(),20));
 				line.append(formatFloat(cProfile.getAccumulatedShare()));
 				line.append(formatFloat(cProfile.getBumiputeraPercentage()));
 				line.append(formatFloat(cProfile.getNonBumiPercentage()));
 				line.append(formatInt(cProfile.getRegStatus()));
-				line.append(formatDateEperunding(cProfile.getEffectDateTo()));
-				line.append(formatDateEperunding(cProfile.getEstablishedDate()));
-				line.append(formatDateEperunding(cProfile.getEffectDateFrom()));
-				line.append(formatString(cProfile.getDisciplinary()));
-				line.append(formatString(cProfile.getIsAssociatedCompany()));
-				line.append(formatDateEperunding(cProfile.getProfileUpdateDate()));
+				line.append(formatDateEperunding(cProfile.getEffectDateTo(),false));
+				line.append(formatDateEperunding(cProfile.getEstablishedDate(),false));
+				line.append(formatDateEperunding(cProfile.getEffectDateFrom(),false));
+				line.append(formatString(cProfile.getDisciplinary(),1));
+				line.append(formatString(cProfile.getIsAssociatedCompany(),1));
+				line.append(formatDateEperunding(cProfile.getProfileUpdateDate(),false));
 
-				line.append(formatString(cProfile.getProfBodyDetail()
-						.getProfBody()));
-				line.append(formatString(cProfile.getProfBodyDetail()
-						.getProfBodyNo()));
-				line.append(formatDateEperunding(cProfile.getProfBodyDetail()
-						.getProfBodyExpiry()));
+				line.append(formatString(cProfile.getProfBodyDetail().getProfBody(),12));
+				line.append(formatString(cProfile.getProfBodyDetail().getProfBodyNo(),30));
+				line.append(formatDateEperunding(cProfile.getProfBodyDetail().getProfBodyExpiry(),false));
 
-				line.append(formatDateEperunding(cProfile.getRegistrationHistory()
-						.getDateStart()));
-				line.append(formatDateEperunding(cProfile.getRegistrationHistory()
-						.getDateEnd()));
+				line.append(formatDateEperunding(cProfile.getRegistrationHistory().getDateStart(),false));
+				line.append(formatDateEperunding(cProfile.getRegistrationHistory().getDateEnd(),false));
 
-				line.append(formatString(cProfile.getCapitalProportion()
-						.getBumi()));
-				line.append(formatString(cProfile.getCapitalProportion()
-						.getNonBumi()));
-				line.append(formatString(cProfile.getCapitalProportion()
-						.getNonMalaysian()));
-				line.append(formatString(cProfile.getCapitalProportion()
-						.getGovAgency()));
-				line.append(formatString(cProfile.getCapitalProportion()
-						.getGovEquity()));
-				line.append(formatString(cProfile.getCapitalProportion()
-						.getLocalCo()));
-				line.append(formatString(cProfile.getCapitalProportion()
-						.getForeignCo()));
-				line.append(formatFloat(cProfile.getCapitalProportion()
-						.getTotalMember()));
-				line.append(String.format("%.0f", cProfile
-						.getCapitalProportion().getTotalShare()));
+				line.append(formatString(cProfile.getCapitalProportion().getBumi(),20));
+				line.append(formatString(cProfile.getCapitalProportion().getNonBumi(),20));
+				line.append(formatString(cProfile.getCapitalProportion().getNonMalaysian(),20));
+				line.append(formatString(cProfile.getCapitalProportion().getGovAgency(),20));
+				line.append(formatString(cProfile.getCapitalProportion().getGovEquity(),20));
+				line.append(formatString(cProfile.getCapitalProportion().getLocalCo(),20));
+				line.append(formatString(cProfile.getCapitalProportion().getForeignCo(),20));
+				line.append(formatFloat(cProfile.getCapitalProportion().getTotalMember()));
+				line.append(String.format("%.0f", cProfile.getCapitalProportion().getTotalShare()));
 
 				writer.write(line.toString());
 			}
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1234,6 +1238,7 @@ public class FileUtility {
 	public void signatoryFileOutPutStream(List<Signatory> content,
 			String filePath) {
 		String fileName = "Signatory.txt";
+		String SERVICE_CODE = "EPE07";
 
 		Writer writer = null;
 
@@ -1247,17 +1252,23 @@ public class FileUtility {
 			for (Signatory signatory : content) {
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
-				line.append(formatString(signatory.getMOFNo()));
-				line.append(formatString(signatory.getAuthorizedSignatory().getName()));
-				line.append(formatString(signatory.getAuthorizedSignatory().getNewICNo()));
-				line.append(formatString(signatory.getAuthorizedSignatory().getPassport()));
-				line.append(formatString(signatory.getAuthorizedSignatory().getIsBumi()));
+				line.append(formatString(signatory.getMOFNo(),20));
+				line.append(formatString(signatory.getAuthorizedSignatory().getName(),20));
+				line.append(formatString(signatory.getAuthorizedSignatory().getNewICNo(),12));
+				line.append(formatString(signatory.getAuthorizedSignatory().getPassport(),20));
+				line.append(formatString(signatory.getAuthorizedSignatory().getIsBumi(),1));
 				line.append(String.format("%s", signatory.getAuthorizedSignatory().getDesignation()));
 
 				// line.append(System.getProperty("line.separator"));
 				writer.write(line.toString());
 			}
-			System.out.println("line :" + line.toString());
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1273,10 +1284,11 @@ public class FileUtility {
 		}
 	}
 
-	public void manageProfileFileOutPutStream(
+	public void managementProfileFileOutPutStream(
 			List<ManagementPersonnel> content, String filePath) {
 
 		String fileName = "ManagementPersonnel.txt";
+		String SERVICE_CODE = "EPE06";
 
 		Writer writer = null;
 
@@ -1291,54 +1303,43 @@ public class FileUtility {
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 
-				line.append(formatString(mPersonnel.getMOFNo()));
+				line.append(formatString(mPersonnel.getMOFNo(),20));
 
-				line.append(formatString(mPersonnel.getPersonnel()
-						.getIsManagement()));
-				line.append(formatString(mPersonnel.getPersonnel()
-						.getIsProfessional()));
-				line.append(formatString(mPersonnel.getPersonnel()
-						.getIsSemiProf()));
-				line.append(formatString(mPersonnel.getPersonnel()
-						.getIsClerical()));
-				line.append(formatString(mPersonnel.getPersonnel().getName()));
-				line.append(formatString(mPersonnel.getPersonnel().getNewICNo()));
-				line.append(formatString(mPersonnel.getPersonnel()
-						.getPassport()));
-				line.append(formatString(mPersonnel.getPersonnel().getIsBumi()));
+				line.append(formatString(mPersonnel.getPersonnel().getIsManagement(),1));
+				line.append(formatString(mPersonnel.getPersonnel().getIsProfessional(),1));
+				line.append(formatString(mPersonnel.getPersonnel().getIsSemiProf(),1));
+				line.append(formatString(mPersonnel.getPersonnel().getIsClerical(),1));
+				line.append(formatString(mPersonnel.getPersonnel().getName(),50));
+				line.append(formatString(mPersonnel.getPersonnel().getNewICNo(),12));
+				line.append(formatString(mPersonnel.getPersonnel().getPassport(),20));
+				line.append(formatString(mPersonnel.getPersonnel().getIsBumi(),1));
 				line.append(formatInt(mPersonnel.getPersonnel().getCitizenOf()));
-				line.append(formatString(mPersonnel.getPersonnel().getRace()));
-				line.append(formatString(mPersonnel.getPersonnel()
-						.getDesignation()));
-				line.append(formatInt(mPersonnel.getPersonnel()
-						.getWorkExperience()));
+				line.append(formatString(mPersonnel.getPersonnel().getRace(),100));
+				line.append(formatString(mPersonnel.getPersonnel().getDesignation(),50));
+				line.append(formatInt(mPersonnel.getPersonnel().getWorkExperience()));
 
-				line.append(formatString(mPersonnel.getQualification()
-						.getMajorIn()));
-				line.append(formatString(mPersonnel.getQualification()
-						.getQualification()));
-				line.append(formatInt(mPersonnel.getQualification()
-						.getQualificationLevel()));
-				line.append(formatString(mPersonnel.getQualification()
-						.getInstitute()));
-				line.append(formatString(mPersonnel.getQualification()
-						.getYear()));
-				line.append(formatString(mPersonnel.getQualification()
-						.getEducationField()));
+				line.append(formatString(mPersonnel.getQualification().getMajorIn(),300));
+				line.append(formatString(mPersonnel.getQualification().getQualification(),300));
+				line.append(formatInt(mPersonnel.getQualification().getQualificationLevel()));
+				line.append(formatString(mPersonnel.getQualification().getInstitute(),255));
+				line.append(formatString(mPersonnel.getQualification().getYear(),30));
+				line.append(formatString(mPersonnel.getQualification().getEducationField(),12));
 
-				line.append(formatString(mPersonnel.getProfBodyDetail()
-						.getProfBody()));
-				line.append(formatString(mPersonnel.getProfBodyDetail()
-						.getProfBodyNo()));
-				line.append(formatDateEperunding(mPersonnel.getProfBodyDetail()
-						.getProfBodyExpiry()));
+				line.append(formatString(mPersonnel.getProfBodyDetail().getProfBody(),12));
+				line.append(formatString(mPersonnel.getProfBodyDetail().getProfBodyNo(),30));
+				line.append(formatDateEperunding(mPersonnel.getProfBodyDetail().getProfBodyExpiry(),false));
 
-				line.append(String.format("%s", mPersonnel.getExpertise()
-						.getCategoryClassification()));
+				line.append(String.format("%s", mPersonnel.getExpertise().getCategoryClassification()));
 
-				// line.append(System.getProperty("line.separator"));
 				writer.write(line.toString());
 			}
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1358,6 +1359,7 @@ public class FileUtility {
 			String filePath) {
 
 		String fileName = "BoardOfDirector.txt";
+		String SERVICE_CODE = "EPE05";
 
 		Writer writer = null;
 
@@ -1373,45 +1375,41 @@ public class FileUtility {
 
 				line.append(System.getProperty("line.separator"));
 
-				line.append(formatString(bDirector.getMOFNo()));
+				line.append(formatString(bDirector.getMOFNo(),20));
 
-				line.append(formatString(bDirector.getDirector().getIsBOD()));
-				line.append(formatString(bDirector.getDirector().getIsCEO()));
-				line.append(formatString(bDirector.getDirector().getName()));
-				line.append(formatString(bDirector.getDirector().getNewICNo()));
-				line.append(formatString(bDirector.getDirector().getPassport()));
-				line.append(formatString(bDirector.getDirector().getIsBumi()));
+				line.append(formatString(bDirector.getDirector().getIsBOD(),1));
+				line.append(formatString(bDirector.getDirector().getIsCEO(),1));
+				line.append(formatString(bDirector.getDirector().getName(),50));
+				line.append(formatString(bDirector.getDirector().getNewICNo(),12));
+				line.append(formatString(bDirector.getDirector().getPassport(),20));
+				line.append(formatString(bDirector.getDirector().getIsBumi(),1));
 				line.append(formatInt(bDirector.getDirector().getCitizenOf()));
-				line.append(formatString(bDirector.getDirector().getRace()));
-				line.append(formatString(bDirector.getDirector()
-						.getDesignation()));
-				line.append(formatInt(bDirector.getDirector()
-						.getWorkExperience()));
+				line.append(formatString(bDirector.getDirector().getRace(),100));
+				line.append(formatString(bDirector.getDirector().getDesignation(),50));
+				line.append(formatInt(bDirector.getDirector().getWorkExperience()));
 
-				line.append(formatString(bDirector.getQualification()
-						.getMajorIn()));
-				line.append(formatString(bDirector.getQualification()
-						.getQualification()));
-				line.append(formatInt(bDirector.getQualification()
-						.getQualificationLevel()));
-				line.append(formatString(bDirector.getQualification()
-						.getInstitute()));
-				line.append(formatString(bDirector.getQualification().getYear()));
-				line.append(formatString(bDirector.getQualification().getEducationField()));
+				line.append(formatString(bDirector.getQualification().getMajorIn(),300));
+				line.append(formatString(bDirector.getQualification().getQualification(),300));
+				line.append(formatInt(bDirector.getQualification().getQualificationLevel()));
+				line.append(formatString(bDirector.getQualification().getInstitute(),255));
+				line.append(formatString(bDirector.getQualification().getYear(),30));
+				line.append(formatString(bDirector.getQualification().getEducationField(),12));
 
-				line.append(formatString(bDirector.getProfBodyDetail()
-						.getProfBody()));
-				line.append(formatString(bDirector.getProfBodyDetail()
-						.getProfBodyNo()));
-				line.append(formatDateEperunding(bDirector.getProfBodyDetail()
-						.getProfBodyExpiry()));
+				line.append(formatString(bDirector.getProfBodyDetail().getProfBody(),12));
+				line.append(formatString(bDirector.getProfBodyDetail().getProfBodyNo(),30));
+				line.append(formatDateEperunding(bDirector.getProfBodyDetail().getProfBodyExpiry(),false));
 
-				line.append(String.format("%s", bDirector.getExpertise()
-						.getCategoryClassification()));
+				line.append(String.format("%s", bDirector.getExpertise().getCategoryClassification()));
 
-				// line.append(System.getProperty("line.separator"));
 				writer.write(line.toString());
 			}
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1426,6 +1424,352 @@ public class FileUtility {
 			}
 		}
 	}
+	
+	
+	public void branchCompanyOutPutStream(List<BranchCompany> content,
+			String filePath) {
+
+		String fileName = "BranchCompany.txt";
+		String SERVICE_CODE = "EPE08";
+
+		Writer writer = null;
+
+		try {
+
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			StringBuffer line;
+			writer.write("         " + content.size() + " Rows Selected");
+			for (BranchCompany branchCompany : content) {
+				line = new StringBuffer();
+
+				line.append(System.getProperty("line.separator"));
+
+				line.append(formatString(branchCompany.getMOFNo(),20));
+
+				line.append(formatString(branchCompany.getBranch().getBranchName(),100));
+				line.append(formatString(branchCompany.getBranch().getAddress1(),100));
+				line.append(formatString(branchCompany.getBranch().getAddress2(),100));
+				line.append(formatString(branchCompany.getBranch().getAddress3(),100));
+				line.append(formatString(branchCompany.getBranch().getPostcode(),15));
+				line.append(formatString(branchCompany.getBranch().getCity(),50));
+				line.append(formatString(branchCompany.getBranch().getDistrict(),12));
+				line.append(formatString(branchCompany.getBranch().getState(),12));
+				line.append(String.format("%s", branchCompany.getBranch().getCountry()));
+
+				writer.write(line.toString());
+			}
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	
+	public void registeredCategoryOutPutStream(List<RegisteredCategory> content,
+			String filePath) {
+
+		String fileName = "RegisteredCategory.txt";
+		String SERVICE_CODE = "EPE09";
+
+		Writer writer = null;
+
+		try {
+
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			StringBuffer line;
+			writer.write("         " + content.size() + " Rows Selected");
+			for (RegisteredCategory registeredCategory : content) {
+				line = new StringBuffer();
+
+				line.append(System.getProperty("line.separator"));
+
+				line.append(formatString(registeredCategory.getmOFNo(),20));
+
+				line.append(formatString(registeredCategory.getCategory().getMainCat(),12));
+				line.append(formatString(registeredCategory.getCategory().getSubCat(),12));
+				line.append(formatString(registeredCategory.getCategory().getSubCatDivision(),12));
+				line.append(String.format("%s", registeredCategory.getCategory().getStatus()));
+
+				writer.write(line.toString());
+			}
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	
+	public void governmentProjectOutPutStream(List<GovernmentProject> content,
+			String filePath) {
+
+		String fileName = "GovernmentProject.txt";
+		String SERVICE_CODE = "EPE10";
+
+		Writer writer = null;
+
+		try {
+
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			StringBuffer line;
+			writer.write("         " + content.size() + " Rows Selected");
+			for (GovernmentProject governmentProject : content) {
+				line = new StringBuffer();
+
+				line.append(System.getProperty("line.separator"));
+
+				line.append(formatString(governmentProject.getmOFNo(),20));
+
+				line.append(formatString(governmentProject.getProject().getProjectNo(),50));
+				line.append(formatString(governmentProject.getProject().getProjectName(),255));
+				line.append(formatString(governmentProject.getProject().getProjectLocation(),255));
+				line.append(formatString(governmentProject.getProject().getClient(),255));
+				line.append(formatDateEperunding(governmentProject.getProject().getApppointmentDate(),false));
+				line.append(formatString(governmentProject.getProject().getCost(),20));
+				line.append(formatString(governmentProject.getProject().getServiceDesc(),500));
+				line.append(formatString(governmentProject.getProject().getWorkProgress(),1));
+				line.append(formatString(governmentProject.getProject().getWorkProgressOthers(),255));
+				line.append(formatString(governmentProject.getProject().getConsultantFee(),20));
+				line.append(String.format("%s", governmentProject.getProject().getPaymentMethod()));
+
+				writer.write(line.toString());
+			}
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	
+	public void deletedCompanyOutPutStream(List<DeletedCompany> content,
+			String filePath) {
+		
+		String fileName = "DeletedCompany.txt";
+		String SERVICE_CODE = "EPE11";
+
+		Writer writer = null;
+
+		try {
+
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			StringBuffer line;
+			writer.write("         " + content.size() + " Rows Selected");
+			for (DeletedCompany deletedCompany : content) {
+				line = new StringBuffer();
+
+				line.append(System.getProperty("line.separator"));
+				line.append(formatString(deletedCompany.getmOFNo(),20));
+				line.append(formatString(deletedCompany.getReason(),2000));
+				line.append(formatDateEperunding(deletedCompany.getDateDeleted(),true));
+
+				writer.write(line.toString());
+				writer.flush();
+			}
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	
+	public void companyOwnerOutPutStream(
+			List<CompanyOwner> content, String filePath) {
+
+		String fileName = "CompanyOwner.txt";
+		String SERVICE_CODE = "EPE03";
+		Writer writer = null;
+
+		try {
+
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			StringBuffer line;
+		
+			writer.write("         " + content.size() + " Rows Selected");
+			for (CompanyOwner companyOwner : content) {
+
+				line = new StringBuffer();
+				line.append(System.getProperty("line.separator"));
+
+				line.append(formatString(companyOwner.getmOFNo(),20));
+				
+				line.append(formatString(companyOwner.getCompanyName(),100));
+				line.append(formatString(companyOwner.getsSMNo(),20));
+				line.append(formatString(companyOwner.getCompanyOwnerMOFNo(),20));
+				line.append(formatBigDecimal(companyOwner.getShareholdingAmount()));
+				line.append(formatBigDecimal(companyOwner.getShareholdingPercentage()));
+				line.append(formatString(companyOwner.getAddress1(),100));
+				line.append(formatString(companyOwner.getAddress2(),100));
+				line.append(formatString(companyOwner.getAddress3(),100));
+				line.append(formatString(companyOwner.getPostcode(),15));
+				line.append(formatString(companyOwner.getCity(),50));
+				line.append(formatString(companyOwner.getDistrict(),12));
+				line.append(formatString(companyOwner.getState(),12));
+				line.append(formatString(companyOwner.getCountry(),12));
+				line.append(formatString(companyOwner.getTelCountryCode(),5));
+				line.append(formatString(companyOwner.getTelAreaCode(),5));
+				line.append(formatString(companyOwner.getTelNo(),20));
+				line.append(formatString(companyOwner.getFaxCountryCode(),5));
+				line.append(formatString(companyOwner.getFaxAreaCode(),5));
+				line.append(String.format("%S", companyOwner.getFaxNo()));
+
+				writer.write(line.toString());
+			}
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	
+	public void AssociatedCompanyOutPutStream(
+			List<AssociatedCompany> content, String filePath) {
+
+		String fileName = "AssociatedCompany.txt";
+		String SERVICE_CODE = "EPE02";
+		Writer writer = null;
+
+		try {
+
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			StringBuffer line;
+		
+			writer.write("         " + content.size() + " Rows Selected");
+			for (AssociatedCompany associatedCompany : content) {
+
+				line = new StringBuffer();
+				line.append(System.getProperty("line.separator"));
+
+				line.append(formatString(associatedCompany.getmOFNo(),20));
+			
+				line.append(formatString(associatedCompany.getCompanyName(),100));
+				line.append(formatString(associatedCompany.getsSMNO(),20));
+				line.append(formatString(associatedCompany.getAssociatedCompanyMOFNO(),20));
+				line.append(formatString(associatedCompany.getShareholding(),1));
+				line.append(formatString(associatedCompany.getAddress1(),100));
+				line.append(formatString(associatedCompany.getAddress2(),100));
+				line.append(formatString(associatedCompany.getAddress3(),100));
+				line.append(formatString(associatedCompany.getPostcode(),15));
+				line.append(formatString(associatedCompany.getCity(),50));
+				line.append(formatString(associatedCompany.getDistrict(),12));
+				line.append(formatString(associatedCompany.getState(),12));
+				line.append(formatString(associatedCompany.getCountry(),12));
+				line.append(formatString(associatedCompany.getTelCountryCode(),5));
+				line.append(formatString(associatedCompany.getTelAreaCode(),5));
+				line.append(formatString(associatedCompany.getTelNo(),20));
+				line.append(formatString(associatedCompany.getFaxCountryCode(),5));
+				line.append(formatString(associatedCompany.getFaxAreaCode(),5));
+				line.append(String.format("%S", associatedCompany.getFaxNo()));
+
+				writer.write(line.toString());
+			}
+			
+			//upload the txt file to sftp server
+			
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			
+			//once upload is done cal web service osb integration to transfer file.
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
+	
+	
+	
+	
 	// PHIS PM Modules
 	public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
 		String SERVICE_CODE = "PHS-090";
@@ -1659,24 +2003,31 @@ public class FileUtility {
 	}
 	//End of PHIS PM
 	
-	public String formatString(String input) {
-
+	public String formatString(String input,int length) {
+		
+		String checkInput=null;
 		if (input == null)
 			return "NULL|";
 		if (input.isEmpty() && input.length() == 0)
 			return "|";
-		return String.format("%s|", input.trim());
+		if(input.length()<=length)
+			checkInput = input;
+		else
+			checkInput = input.substring(0, length-1);
+		return String.format("%s|", checkInput.trim());
 	}
 
 	// for ePerunding
-	public String formatDateEperunding(Date date) {
+	public String formatDateEperunding(Date date,boolean isEOF) {
 
 		if (date == null)
 			return "|";
 
 		SimpleDateFormat dt1 = new SimpleDateFormat("yyyMMdd");
-
-		return String.format("%s|", dt1.format(date));
+		if(isEOF)
+			return String.format("%s", dt1.format(date));
+		else
+			return String.format("%s|", dt1.format(date));
 	}
 
 	public String formatFloat(float value) {
@@ -1687,6 +2038,13 @@ public class FileUtility {
 	public String formatInt(int value) {
 
 		return String.format("%d|", value);
+
+	}
+	
+	public String formatBigDecimal(BigDecimal value) {
+
+		return value.toString()+"|";
+//		return String.format("%", value);
 
 	}
 
@@ -1704,11 +2062,7 @@ public class FileUtility {
 		} else {
 			System.out.println("Directory is already exists!");
 		}
-		
-			System.out.println("file.getAbsoluteFile() "+file.getAbsolutePath());
-			
-			return file.getAbsolutePath();
-
+		return file.getAbsolutePath()+"/";
 	}
 	
 	public String getValue(String line,int begin,int size){
