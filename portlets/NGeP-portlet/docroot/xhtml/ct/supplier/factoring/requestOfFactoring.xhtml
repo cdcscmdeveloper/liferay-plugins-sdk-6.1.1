@@ -440,10 +440,10 @@
 					<p:ajax event="rowSelect" update="@([id$=selectBtn])" />           			
            			<ac:paginator for="tableContractLoa"/>      
            			<p:column headerText="#{lbl['lbl.ct.contract.no']}">
-                       <p:outputLabel value="#{contractVar.contractNo}" style="float:left;"/>
+                        #{contractVar.contractNo}
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.loa.no']}" >
-                      <p:outputLabel value="#{contractVar.loa.loaNo}" style="float:left;"/>
+                      	#{contractVar.loa.loaNo}
 					</p:column>
 			 	</p:dataTable>
 			  	<p:blockUI widgetVar="blkContratLoaTable" trigger="contractLoaSearchId"  block=":form:contractLoa">  
