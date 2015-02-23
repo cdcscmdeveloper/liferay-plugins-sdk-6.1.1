@@ -117,7 +117,9 @@
 						       </h:outputText>
 					       </p:column>
 				
-				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}">
+				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" 
+				    	   		rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
+						           		amendmentBackingBean.managedBean.selectedItem.chkStatus}">
 						        <p:commandLink update=":form:ctItemMaxQtyTable"
 						           process="@form" disabled="#{itemMaxQtiesVar.chkIndexOfRow}" 
 						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
@@ -254,7 +256,9 @@
 									</h:outputText>
 								</p:column>
 								
-								<p:column headerText="#{lbl['lbl.ct.action']}" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}"
+								<p:column headerText="#{lbl['lbl.ct.action']}" 
+									rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
+						           		amendmentBackingBean.managedBean.selectedItem.chkStatus}"
 								    styleClass="column-align-center" style="width:10%; white-space:normal;">
 									<p:commandLink update=":form:itemId" process="@form" 
 										disabled="#{itemPriceVar.chkIndexOfRow}"
@@ -440,7 +444,9 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}">
+					<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;" 
+						rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
+								amendmentBackingBean.managedBean.selectedServiceItem.chkStatus}">
 						<p:commandLink update=":form:servicePriceTable" process="@form" rendered="#{!ItemPricesVar.changePrice and ItemPricesVar.editable}"
 							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}"
 							 disabled="#{ItemPricesVar.chkIndexOfRow}">
