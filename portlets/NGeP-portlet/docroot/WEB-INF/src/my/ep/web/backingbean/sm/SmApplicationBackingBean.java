@@ -8718,15 +8718,6 @@ public class SmApplicationBackingBean extends
 		return finalList;
 	}
 
-	public void refreshDaysLeft() {
-		if (StringUtils.isBlank(getManagedBean().getApplStatusInfo()
-				.getDaysLeft())) {
-			getManagedBean().getApplStatusInfo().setDaysLeft(
-					getManagedBean().getApplStatusInfo().getDaysLeftOriginal());
-		} else {
-			getManagedBean().getApplStatusInfo().setDaysLeft("");
-		}
-	}
 	// private void generateSuppDocPdfFile(VelocityContext context)
 	// throws Exception {
 	// String appNo = getManagedBean().getSmAppl().getApplNo();
