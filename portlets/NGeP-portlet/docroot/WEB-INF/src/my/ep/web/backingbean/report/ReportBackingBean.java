@@ -2833,6 +2833,7 @@ public class ReportBackingBean extends
 		resetReportForm();
 		retrieveRolecode();
 		
+		
 	}
 	public void madatoryIndicator() {
 		if(null!=this.getReportValue()){
@@ -3276,12 +3277,18 @@ public class ReportBackingBean extends
 		}
 	}
 	public void retrieveSupplierCompName() {
+		supplCompanyList = new ArrayList<String>();
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
 		List<String> supplCompNameLst = reportSO.retrieveSupplierCompName(lngUserId);
 		for (int i = 0; i < supplCompNameLst.size(); i++) {
 			this.getSupplCompanyList().add(supplCompNameLst.get(i));
+		}
+		if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
+			getManagedBean().getRptGenBean().setFlSupplierDropdownView(true);
+		}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
+			getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 		}
 	}
 	/*
@@ -3356,6 +3363,7 @@ public class ReportBackingBean extends
 			retrieveDates();
 			getManagedBean().setRptGenBean(rptGenBean);
 			madatoryIndicator();
+			retrieveSupplierCompName();
 		}
 	}
 
