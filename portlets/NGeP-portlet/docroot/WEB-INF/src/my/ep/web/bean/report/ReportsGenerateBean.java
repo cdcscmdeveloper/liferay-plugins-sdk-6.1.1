@@ -143,6 +143,16 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryBothSupplierTypeView = false;
 		private boolean smYearTextView = false;
 		private boolean smMandatoryReceivedFromDateView = false;
+		private boolean smRejectedDateView = false;
+		private boolean smRegisteredDateView = false;
+		private boolean smScheduleSiteVisitDateView = false;
+		private boolean smActivationDateView = false;
+		private boolean smSubmissionDateView = false;
+		private boolean smExpiryDateView = false;
+		private boolean smCreatedDateView = false;
+		private boolean smApplicationDateView = false;
+		private boolean smMandatoryDateView = false;
+		private boolean smNonMandatoryDateView = false;
 		
 		// FL module
 		private boolean flPtjView = false;
@@ -355,6 +365,67 @@ public class ReportsGenerateBean {
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		
 		
+		
+		public boolean isSmApplicationDateView() {
+			return smApplicationDateView;
+		}
+		public void setSmApplicationDateView(boolean smApplicationDateView) {
+			this.smApplicationDateView = smApplicationDateView;
+		}
+		public boolean isSmMandatoryDateView() {
+			return smMandatoryDateView;
+		}
+		public void setSmMandatoryDateView(boolean smMandatoryDateView) {
+			this.smMandatoryDateView = smMandatoryDateView;
+		}
+		public boolean isSmNonMandatoryDateView() {
+			return smNonMandatoryDateView;
+		}
+		public void setSmNonMandatoryDateView(boolean smNonMandatoryDateView) {
+			this.smNonMandatoryDateView = smNonMandatoryDateView;
+		}
+		public boolean isSmRejectedDateView() {
+			return smRejectedDateView;
+		}
+		public void setSmRejectedDateView(boolean smRejectedDateView) {
+			this.smRejectedDateView = smRejectedDateView;
+		}
+		public boolean isSmRegisteredDateView() {
+			return smRegisteredDateView;
+		}
+		public void setSmRegisteredDateView(boolean smRegisteredDateView) {
+			this.smRegisteredDateView = smRegisteredDateView;
+		}
+		public boolean isSmScheduleSiteVisitDateView() {
+			return smScheduleSiteVisitDateView;
+		}
+		public void setSmScheduleSiteVisitDateView(boolean smScheduleSiteVisitDateView) {
+			this.smScheduleSiteVisitDateView = smScheduleSiteVisitDateView;
+		}
+		public boolean isSmActivationDateView() {
+			return smActivationDateView;
+		}
+		public void setSmActivationDateView(boolean smActivationDateView) {
+			this.smActivationDateView = smActivationDateView;
+		}
+		public boolean isSmSubmissionDateView() {
+			return smSubmissionDateView;
+		}
+		public void setSmSubmissionDateView(boolean smSubmissionDateView) {
+			this.smSubmissionDateView = smSubmissionDateView;
+		}
+		public boolean isSmExpiryDateView() {
+			return smExpiryDateView;
+		}
+		public void setSmExpiryDateView(boolean smExpiryDateView) {
+			this.smExpiryDateView = smExpiryDateView;
+		}
+		public boolean isSmCreatedDateView() {
+			return smCreatedDateView;
+		}
+		public void setSmCreatedDateView(boolean smCreatedDateView) {
+			this.smCreatedDateView = smCreatedDateView;
+		}
 		public boolean isSmMandatoryReceivedFromDateView() {
 			return smMandatoryReceivedFromDateView;
 		}
