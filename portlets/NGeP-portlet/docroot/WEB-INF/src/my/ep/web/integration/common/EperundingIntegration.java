@@ -10,51 +10,80 @@ import java.util.List;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.util.lookupservice.EpEjbRemoteBusinessDelegate;
+import my.ep.web.integration.eperunding.AssociatedCompany;
 import my.ep.web.integration.eperunding.AuthorizedSignatory;
 import my.ep.web.integration.eperunding.BoardOfDirector;
+import my.ep.web.integration.eperunding.Branch;
+import my.ep.web.integration.eperunding.BranchCompany;
 import my.ep.web.integration.eperunding.CapitalProportion;
+import my.ep.web.integration.eperunding.Category;
+import my.ep.web.integration.eperunding.CompanyOwner;
 import my.ep.web.integration.eperunding.ConsultantProfile;
+import my.ep.web.integration.eperunding.DeletedCompany;
 import my.ep.web.integration.eperunding.Director;
 import my.ep.web.integration.eperunding.EquityOwner;
 import my.ep.web.integration.eperunding.Expertise;
+import my.ep.web.integration.eperunding.GovernmentProject;
 import my.ep.web.integration.eperunding.ManagementPersonnel;
 import my.ep.web.integration.eperunding.Owner;
 import my.ep.web.integration.eperunding.Personnel;
 import my.ep.web.integration.eperunding.ProfBodyDetail;
+import my.ep.web.integration.eperunding.Project;
 import my.ep.web.integration.eperunding.Qualification;
+import my.ep.web.integration.eperunding.RegisteredCategory;
 import my.ep.web.integration.eperunding.RegistrationHistory;
 import my.ep.web.integration.eperunding.Signatory;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /*
  *  @author Ganga prasad
  */
 public class EperundingIntegration {
 	
-	String path = createDirectory(new Date(),IntegrationConstants.FILE_PATH);
+	OsbUtility osbUtility = new OsbUtility();
 	FileUtility fileUtility = new FileUtility();
+	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.FILE_PATH);;
 	
-	public static void main(String args[]){
-		
-		EperundingIntegration integration = new EperundingIntegration();
-		integration.createFilesforEperunding();
-	}
 	
 	public void createFilesforEperunding(){
 		EperundingIntegration integration = new EperundingIntegration();
 		
-		SupplierSearchResDTO resDTO = retriveSmSupplierBycreationDate();
+		SupplierSearchResDTO resDTO = retriveSmSupplierBycreationDate("1");
+		
 		if(resDTO.isSuccessful()){
 			integration.createAuthorizedSignatory(resDTO);
 			integration.createEquiytyOwner(resDTO);
 			integration.createBoardOfDirector(resDTO);
 			integration.createManagementPersonnel(resDTO);
 		//	integration.createConsultantProfile(resDTO);  // under development
+			integration.createDeletedCompany(resDTO);
+			integration.createGovernmentProject(resDTO);
+			integration.createRegisteredCategory(resDTO);
+			
 		}
+		SupplierSearchResDTO resDTO1 = retriveSmSupplierBycreationDate("2");
+		
+		if(resDTO1.isSuccessful()){
+			integration.createBranchCompany(resDTO1);
+		}
+		
+		SupplierSearchResDTO resDTO2 = retriveSmSupplierBycreationDate("3");
+		
+		if(resDTO2.isSuccessful()){
+			integration.createCompanyOwner(resDTO2);
+			integration.createAssociatedCompany(resDTO2);
+		}
+		
+		
 	}
 	
 	public void createEquiytyOwner(SupplierSearchResDTO resDTO) {
@@ -145,7 +174,6 @@ public class EperundingIntegration {
 				}
 		}
 		
-	//	FileUtility fileUtility = new FileUtility();
 		fileUtility.equityOwnerOutPutStream(equityOwnerList, path);
 		
 	}
@@ -239,7 +267,6 @@ public class EperundingIntegration {
 				
 		}
 
-	//	FileUtility fileUtility = new FileUtility();
 		fileUtility.boardOfDirectorOutPutStream(boardOfDirectorsList, path);
 		System.out.println("success");
 	}
@@ -346,8 +373,8 @@ public class EperundingIntegration {
 				
 		}
 		
-		FileUtility fileUtility = new FileUtility();
-		fileUtility.manageProfileFileOutPutStream(managementPersonnelsList, path);
+		
+		fileUtility.managementProfileFileOutPutStream(managementPersonnelsList, path);
 	}
 	
 	public void createAuthorizedSignatory(SupplierSearchResDTO resDTO) {
@@ -383,17 +410,14 @@ public class EperundingIntegration {
 				}
 		}
 		
-	//	FileUtility fileUtility = new FileUtility();
 		fileUtility.signatoryFileOutPutStream(signatoryList, path);
 	}
 
 	/**
 	 * @return SupplierSearchResDTO
 	 */
-	public SupplierSearchResDTO retriveSmSupplierBycreationDate() {
-		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		
-		System.out.println("createAuthorizedSignatory ");
+	public SupplierSearchResDTO retriveSmSupplierBycreationDate(String taskId) {
+		ISupplierSearchSO supplierSearchSO = EpEjbRemoteBusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 		
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -408,6 +432,7 @@ public class EperundingIntegration {
 		System.out.println("date :"+date);
 		
 		reqDTO.setCreateDate(date);
+		reqDTO.setTaskId(taskId);
 		
 		SupplierSearchResDTO resDTO = supplierSearchSO.getSmSupplierforEperundingByCreatedDate(reqDTO);
 		return resDTO;
@@ -421,12 +446,12 @@ public class EperundingIntegration {
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 				if (null!=smSupplier.getSmAppl()) {
-					if(smSupplier.getSmAppl().getSupplierType()=="J"){  // for consultant profiles
+					if(smSupplier.getSmAppl().getSupplierType().equalsIgnoreCase(IntegrationConstants.CONSULTANT_PROFILE_CODE)){  // for consultant profiles
 						profile = new ConsultantProfile();
 						
 						profile.setCompanyName("THL CONSULTANTS     ");
 						profile.setSSMNo("1086516-V");
-						profile.setMOFNo("465-02032414");
+						profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 						profile.setCompanyType("1");
 						profile.setAddress1("2-2-2, JALAN SEMARAK API 3    ");
 						profile.setAddress2("DIAMOND SQUARE");
@@ -485,6 +510,285 @@ public class EperundingIntegration {
 		}
 		
 		fileUtility.consultantProfileFileOutPutStream(consultantProfileList, path);
+	}
+	
+	public void createDeletedCompany(SupplierSearchResDTO resDTO) {
+		
+		List<DeletedCompany> deletedCompanyList = new ArrayList<DeletedCompany>();
+		DeletedCompany deletedCompany = null;
+		
+		System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
+		
+		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+				if (null!=smSupplier.getSmAppl()) {
+					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
+						for (SmPersonnel smPersonnel : smSupplier.getSmAppl().getSmPersonnels()) {
+							if (null!=smPersonnel) {
+								deletedCompany = new DeletedCompany();
+								deletedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+								
+								deletedCompany.setReason(smPersonnel.getName());
+								deletedCompany.setDateDeleted(smPersonnel.getCreatedDate());
+								deletedCompanyList.add(deletedCompany);
+								
+							}
+						}
+					}
+				}
+		}
+		
+		fileUtility.deletedCompanyOutPutStream(deletedCompanyList, path);
+	}
+
+
+	public void createGovernmentProject(SupplierSearchResDTO resDTO) {
+		
+		List<GovernmentProject> governmentProjectList = new ArrayList<GovernmentProject>();
+		GovernmentProject governmentProject = null;
+		Project project = null;
+	
+		System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
+	
+		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			if (null!=smSupplier.getSmAppl()) {
+				if(null!=smSupplier.getSmAppl().getSmCompanyExperiences()){
+					for (SmCompanyExperience smCompanyExperience : smSupplier.getSmAppl().getSmCompanyExperiences()) {
+						if (null!=smCompanyExperience) {
+							governmentProject = new GovernmentProject();
+							project = new Project();
+							governmentProject.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+						
+							project.setProjectNo(smCompanyExperience.getRevNo()+"");
+							project.setProjectName(smCompanyExperience.getTitle());
+							project.setProjectLocation(smCompanyExperience.getProjectLocation());
+							project.setClient(smCompanyExperience.getClientName());
+							project.setApppointmentDate(smCompanyExperience.getContractStartDate());
+							project.setCost(smCompanyExperience.getContractValue().toString());
+							project.setServiceDesc(smCompanyExperience.getWorkServiceDesc());
+							project.setWorkProgress(smCompanyExperience.getProgressStatus());
+							project.setWorkProgressOthers("");
+//							project.setConsultantFee(smCompanyExperience.getConsultantFee().toString());
+//							project.setPaymentMethod(smCompanyExperience.getPaymentMethodId().toString());
+							governmentProject.setProject(project);
+							
+							governmentProjectList.add(governmentProject);
+							
+							}
+						}
+					}
+				}
+			}
+	
+		fileUtility.governmentProjectOutPutStream(governmentProjectList, path);
+	}
+	
+	public void createRegisteredCategory(SupplierSearchResDTO resDTO) {
+		
+		List<RegisteredCategory> registeredCategoryList = new ArrayList<RegisteredCategory>();
+		RegisteredCategory registeredCategory = null;
+		Category category = null;
+		
+		System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
+		
+		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+				if (null!=smSupplier.getSmAppl()) {
+					if(null!=smSupplier.getSmAppl().getSmSupplierCategories()){
+						for (SmSupplierCategory smSupplierCategory : smSupplier.getSmAppl().getSmSupplierCategories()) {
+							if (null!=smSupplierCategory) {
+								registeredCategory = new RegisteredCategory();
+								category = new Category();
+								registeredCategory.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+								
+								if(smSupplierCategory.getPmCategoryL1().getCategoryL1Id()==26||smSupplierCategory.getPmCategoryL1().getCategoryL1Id()==25){
+									category.setMainCat(smSupplierCategory.getPmCategoryL1().getCategoryL1Code());
+									category.setSubCat(smSupplierCategory.getPmCategoryL2().getCategoryL2Code());
+									category.setSubCatDivision(smSupplierCategory.getPmCategoryL3().getCategoryL3Code());
+									category.setStatus("66"+smSupplierCategory.getRecordStatusFlg());
+									registeredCategory.setCategory(category);
+									registeredCategoryList.add(registeredCategory);
+								}
+								
+								
+								}
+							}
+						}
+					}
+				}
+		
+			fileUtility.registeredCategoryOutPutStream(registeredCategoryList, path);
+		}
+	
+	public void createBranchCompany(SupplierSearchResDTO resDTO) {
+		
+		List<BranchCompany> branchCompanyList = new ArrayList<BranchCompany>();
+		BranchCompany branchCompany = null;
+		Branch branch = null;
+		
+		System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
+		
+		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+				if (null!=smSupplier.getSmAppl()) {
+					if(null!=smSupplier.getSmAppl().getSmSupplierBranches()&&!(smSupplier.getSmAppl().getSmSupplierBranches().isEmpty())){
+						System.out.println("getSmSupplierBranches  :"+smSupplier.getSmAppl().getSmSupplierBranches().size());
+						
+						for (SmSupplierBranch smSupplierBranch : smSupplier.getSmAppl().getSmSupplierBranches()) {
+							if (null!=smSupplierBranch) {
+								System.out.println("smSupplierBranch :"+smSupplierBranch.getSupplierBranchId());
+								branchCompany = new BranchCompany();
+								branch = new Branch();
+								branchCompany.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+							
+								branch.setBranchName(smSupplierBranch.getBranchName());
+								branch.setAddress1(smSupplierBranch.getSmAddress().getAddress1());
+								branch.setAddress2(smSupplierBranch.getSmAddress().getAddress2());
+								branch.setAddress3(smSupplierBranch.getSmAddress().getAddress3());
+								branch.setPostcode(smSupplierBranch.getSmAddress().getPostcode());
+								if(null!=smSupplierBranch.getSmAddress().getPmCity())
+									branch.setCity(smSupplierBranch.getSmAddress().getPmCity().getCityName());
+								else
+									branch.setCity(null);
+								if(null!=smSupplierBranch.getSmAddress().getPmDistrict())
+									branch.setDistrict(smSupplierBranch.getSmAddress().getPmDistrict().getDistrictName());
+								else
+									branch.setDistrict(null);
+								if(null!=smSupplierBranch.getSmAddress().getPmState())	
+									branch.setState(smSupplierBranch.getSmAddress().getPmState().getStateName());
+								else
+									branch.setState(null);
+								if(null!=smSupplierBranch.getSmAddress().getPmCountry())
+									branch.setCountry(smSupplierBranch.getSmAddress().getPmCountry().getCountryName());
+								else
+									branch.setCountry(null);
+								branchCompany.setBranch(branch);
+								
+								branchCompanyList.add(branchCompany);
+								
+								}
+							}
+						}
+					}
+				}
+		
+			fileUtility.branchCompanyOutPutStream(branchCompanyList, path);
+		}
+	
+	public void createCompanyOwner(SupplierSearchResDTO resDTO) {
+		
+		List<CompanyOwner> companyOwnerList = new ArrayList<CompanyOwner>();
+		CompanyOwner companyOwner = null;
+		
+		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+				if (null!=smSupplier.getSmAppl()) {
+					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
+					for (SmEquityCompany equityCompany : smSupplier.getSmAppl().getSmEquityCompanies()) {
+						
+						companyOwner = new CompanyOwner();
+					
+						if (null!=equityCompany) {
+							
+							companyOwner.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+							companyOwner.setCompanyName(equityCompany.getCompanyName());
+							companyOwner.setsSMNo(equityCompany.getRegNo());
+							companyOwner.setCompanyOwnerMOFNo(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setShareholdingAmount(equityCompany.getShareAmt());
+							companyOwner.setShareholdingPercentage(equityCompany.getSharePercentage());
+							companyOwner.setAddress1(equityCompany.getSmAddress().getAddress1());
+							companyOwner.setAddress2(equityCompany.getSmAddress().getAddress2());
+							companyOwner.setAddress3(equityCompany.getSmAddress().getAddress3());
+							companyOwner.setPostcode(equityCompany.getSmAddress().getPostcode());
+							if(null!=equityCompany.getSmAddress().getPmCity())
+								companyOwner.setCity(equityCompany.getSmAddress().getPmCity().getCityName());
+							else
+								companyOwner.setCity(null);
+							if(null!=equityCompany.getSmAddress().getPmDistrict())
+								companyOwner.setDistrict(equityCompany.getSmAddress().getPmDistrict().getDistrictName());
+							else
+								companyOwner.setDistrict(null);
+							if(null!=equityCompany.getSmAddress().getPmState())	
+								companyOwner.setState(equityCompany.getSmAddress().getPmState().getStateName());
+							else
+								companyOwner.setState(null);
+							if(null!=equityCompany.getSmAddress().getPmCountry())
+								companyOwner.setCountry(equityCompany.getSmAddress().getPmCountry().getCountryName());
+							else
+								companyOwner.setCountry(null);
+							companyOwner.setTelCountryCode(equityCompany.getPhoneNo());
+							companyOwner.setTelAreaCode(equityCompany.getPhoneNo());
+							companyOwner.setTelNo(equityCompany.getPhoneNo());
+							companyOwner.setFaxCountryCode(equityCompany.getFaxNo());
+							companyOwner.setFaxAreaCode(equityCompany.getFaxNo());
+							companyOwner.setFaxNo(equityCompany.getFaxNo());
+							
+							if(!companyOwnerList.contains(companyOwner))
+								companyOwnerList.add(companyOwner);
+									
+						}
+						
+					}
+					}
+				}
+		}
+		
+		fileUtility.companyOwnerOutPutStream(companyOwnerList, path);
+		
+	}
+	
+	public void createAssociatedCompany(SupplierSearchResDTO resDTO) {
+		
+		List<AssociatedCompany> associatedCompanyList = new ArrayList<AssociatedCompany>();
+		AssociatedCompany associatedCompany = null;
+		
+		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+				if (null!=smSupplier.getSmAppl()) {
+					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
+					for (SmAssociateCompany associateCompany : smSupplier.getSmAppl().getSmAssociateCompanies()) {
+						
+						if(null!=associateCompany){
+							
+							associatedCompany = new AssociatedCompany();
+							associatedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+							associatedCompany.setCompanyName(associateCompany.getCompanyName());
+							associatedCompany.setsSMNO(associateCompany.getRegNo());
+							associatedCompany.setAssociatedCompanyMOFNO(IntegrationConstants.EMPTY_TRING);
+							associatedCompany.setShareholding(associateCompany.getIsShareholding().toString());
+							associatedCompany.setAddress1(associateCompany.getSmAddress().getAddress1());
+							associatedCompany.setAddress2(associateCompany.getSmAddress().getAddress2());
+							associatedCompany.setAddress3(associateCompany.getSmAddress().getAddress3());
+							associatedCompany.setPostcode(associateCompany.getSmAddress().getPostcode());
+							if(null!=associateCompany.getSmAddress().getPmCity())
+								associatedCompany.setCity(associateCompany.getSmAddress().getPmCity().getCityName());
+							else
+								associatedCompany.setCity(null);
+							if(null!=associateCompany.getSmAddress().getPmDistrict())
+								associatedCompany.setDistrict(associateCompany.getSmAddress().getPmDistrict().getDistrictName());
+							else
+								associatedCompany.setDistrict(null);
+							if(null!=associateCompany.getSmAddress().getPmState())	
+								associatedCompany.setState(associateCompany.getSmAddress().getPmState().getStateName());
+							else
+								associatedCompany.setState(null);
+							if(null!=associateCompany.getSmAddress().getPmCountry())
+								associatedCompany.setCountry(associateCompany.getSmAddress().getPmCountry().getCountryName());
+							else
+								associatedCompany.setCountry(null);
+							
+							associatedCompany.setTelCountryCode(associateCompany.getPhoneNo());
+							associatedCompany.setTelAreaCode(associateCompany.getPhoneNo());
+							associatedCompany.setTelNo(associateCompany.getPhoneNo());
+							associatedCompany.setFaxCountryCode(associateCompany.getFaxNo());
+							associatedCompany.setFaxAreaCode(associateCompany.getFaxNo());
+							associatedCompany.setFaxNo(associateCompany.getFaxNo());
+						
+							if(!associatedCompanyList.contains(associatedCompany))
+								associatedCompanyList.add(associatedCompany);
+						}
+					}
+						
+				}
+			}
+		}
+		fileUtility.AssociatedCompanyOutPutStream(associatedCompanyList, path);
+		
 	}
 	
 	
