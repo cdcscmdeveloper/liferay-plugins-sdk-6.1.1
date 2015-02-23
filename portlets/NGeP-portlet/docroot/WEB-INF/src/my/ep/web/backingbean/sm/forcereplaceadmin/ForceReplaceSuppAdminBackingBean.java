@@ -72,6 +72,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		initIdentificationTypes();
 		initCountries();
 		initStatest();
+		SmCommonUtil.setMDCUserId();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "forceReplaceAdmin.xhtml");
