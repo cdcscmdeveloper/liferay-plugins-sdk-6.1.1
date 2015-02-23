@@ -201,10 +201,10 @@
 		               </f:facet>
                     </p:column>       
                     <p:column headerText="#{lbl['lbl.ct.ptj.code']}">
-                       <p:outputLabel value="#{pmVar.orgCode}" style="float:left;"/>
+                       	#{pmVar.orgCode}
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
-                      <p:outputLabel value="#{pmVar.orgName}" style="float:left;"/>
+                      	#{pmVar.orgName}
 					</p:column>
 			 </p:dataTable>
 			  <p:blockUI widgetVar="blkAgencyTable" trigger="agencySearchId"  block=":form:agencyies">  
