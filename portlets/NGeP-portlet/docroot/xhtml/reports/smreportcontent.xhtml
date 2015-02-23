@@ -523,7 +523,8 @@
 													itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
 													itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
-
+                                                <p:ajax event="change" listener="#{reportBackingBean.changeDateBasedOnRegType}" process="@this"
+					 			                      partialSubmit="true" update="@all"/>
 											</p:selectOneMenu></td>
 										<td><p:message id="RegistrationTypeMsg"
 												for="RegistrationType" display="icon" /></td>
@@ -819,7 +820,15 @@
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationDateView}">
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.applicationdatefrom']}"
 							style="width:130px;" /></TD>
-					</c:if>								
+					</c:if>	
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActivationDateView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.activationdatefrom']}"
+							style="width:130px;" /></TD>
+					</c:if>
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smSubmissionDateView}">
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.submissiondatefrom']}"
+							style="width:130px;" /></TD>
+					</c:if>							
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryDateView}">
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeFrm']}"
 							style="width:130px;" /></TD>
@@ -827,7 +836,7 @@
 					<TD><p:outputLabel value="*" styleClass="mandatory"
 							style="width:5px;" /></TD>
 
-					<TD><p:calendar label="#{lbl['lbl.rpt.dtRangeFrm']}"
+					<TD><p:calendar label="#{lbl['lbl.rpt.frmdate']}"
 							id="MandatoryFromDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
@@ -838,7 +847,7 @@
 							for="MandatoryFromDate" display="icon" /></TD>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							style="width:145px;" /></TD>
-					<TD><p:calendar label="#{lbl['lbl.rpt.dtRangeTo']}"
+					<TD><p:calendar label="#{lbl['lbl.rpt.todate']}"
 							id="MandatoryToDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.toDate}" required="true"
@@ -896,7 +905,7 @@
 					<TD><p:outputLabel value="*" styleClass="mandatory"
 							style="width:5px;" /></TD>
 
-					<TD><p:calendar label="#{lbl['lbl.rpt.createddatefrom']}"
+					<TD><p:calendar label="#{lbl['lbl.rpt.frmdate']}"
 							id="MandatoryReceivedFromDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
@@ -907,7 +916,7 @@
 							for="MandatoryReceivedFromDate" display="icon" /></TD>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							style="width:145px;" /></TD>
-					<TD><p:calendar label="#{lbl['lbl.rpt.dtRangeTo']}"
+					<TD><p:calendar label="#{lbl['lbl.rpt.todate']}"
 							id="MandatoryReceivedToDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.toDate}" required="true"
