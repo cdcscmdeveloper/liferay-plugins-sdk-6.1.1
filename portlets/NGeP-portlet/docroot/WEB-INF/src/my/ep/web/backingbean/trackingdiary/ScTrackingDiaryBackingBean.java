@@ -60,19 +60,19 @@ public class ScTrackingDiaryBackingBean extends
 
 		try {
 
-			items = new SelectItem[9];
+			items = new SelectItem[5];
 
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
-			items[1] = new SelectItem(new String("SQ"), new String("Simple Quote"));
-			items[2] = new SelectItem(new String("PI"), new String("Purchase Inquiry"));
-			items[3] = new SelectItem(new String("PD"), new String("Purchase In Default"));
-			items[4] = new SelectItem(new String("RN"), new String("Request Note"));
-			items[5] = new SelectItem(new String("QT"), new String("Quotation Tender"));
-			items[6] = new SelectItem(new String("BD"), new String("Online Bidding"));
-			items[7] = new SelectItem(new String("LI"), new String("Letter of Intent"));
-			items[8] = new SelectItem(new String("LA"), new String("Letter of Acceptance"));
+//			items[1] = new SelectItem(new String("SQ"), new String("Simple Quote"));
+//			items[2] = new SelectItem(new String("PI"), new String("Purchase Inquiry"));
+//			items[3] = new SelectItem(new String("PD"), new String("Purchase In Default"));
+//			items[4] = new SelectItem(new String("RN"), new String("Request Note"));
+			items[1] = new SelectItem(new String("QT"), new String("Quotation Tender"));
+			items[2] = new SelectItem(new String("BD"), new String("Online Bidding"));
+			items[3] = new SelectItem(new String("LI"), new String("Letter of Intent"));
+			items[4] = new SelectItem(new String("LA"), new String("Letter of Acceptance"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -173,7 +173,7 @@ public class ScTrackingDiaryBackingBean extends
 	}
 
 	public String goToTrackingDiarySearch(Object[] scObj) {
-		getManagedBean().setSearchDocNo(scObj[1].toString());
+		getManagedBean().setScObj(scObj);
 		searchTrackingDiaryDataModel.reloadData();
 		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
 	}
