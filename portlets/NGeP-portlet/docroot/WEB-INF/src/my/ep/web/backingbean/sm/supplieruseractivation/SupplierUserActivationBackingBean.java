@@ -37,6 +37,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supplieruseractivation.SupplierUserActivationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -94,7 +95,10 @@ public class SupplierUserActivationBackingBean extends
 				personnel = resDTO.getSmPersonnel();
 				supplierProfile = personnel.getSmAppl().getSmSupplier();
 			}
-		} finally {
+		} catch(Exception ex){
+			getManagedBean().setValidActivation(false);
+		}
+		finally {
 			personnelSO = null;
 		}
 		//log.info("hash supplier id: " + SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())));
@@ -144,7 +148,7 @@ public class SupplierUserActivationBackingBean extends
 		}
 		
 		log.info("****Activation - no personnel/supplierProfile ******");
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/prerenderSupplierUser.xhtml");
+		redirectToInvalidActivationPage(fc);
 	}
 	
 	public String activateSupplierUser() {
@@ -459,6 +463,16 @@ public class SupplierUserActivationBackingBean extends
 		} catch (Exception ex) {
 		}
 		return retVal;
+	}
+	
+	//redirect to invalid activation page
+	private void redirectToInvalidActivationPage(FacesContext fc) {
+		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				SmCommonUtil.getMessage("lbl.sm.activation.invalid", null)));
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						SmApplicationUtil.getApplicationErrorPage());
 	}
 
 	public String getTempPassword() {
