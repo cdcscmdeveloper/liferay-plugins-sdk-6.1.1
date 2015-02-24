@@ -1780,7 +1780,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  	}
 			
 			CtAgency ctAgency = new CtAgency();
-			ctAgency.setEffDate(new Date());
+			if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(getCurrentDate())) {
+				ctAgency.setEffDate(getCurrentDate());
+			}
+			else {
+				ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			}
 			ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			ctAgency.setCeilingAmount(new BigDecimal(0));
 			ctAgency.setChkStatus(true);
