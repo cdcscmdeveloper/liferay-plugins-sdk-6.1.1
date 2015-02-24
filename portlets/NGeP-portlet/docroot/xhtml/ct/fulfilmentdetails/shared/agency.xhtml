@@ -45,7 +45,9 @@
 		   
 		   	     <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;">
 			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="8"
-		               readonlyInput="true"   mindate="#{contractDetailsBackingBean.currentDate}" maxdate="#{agencyData.expDate}"			             
+		               readonlyInput="true" 
+		               mindate="#{(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate gt contractDetailsBackingBean.currentDate) ? contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate : contractDetailsBackingBean.currentDate}" 
+		               maxdate="#{agencyData.expDate}"			             
 		               showOn="button"  disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		           	   <p:ajax event="dateSelect" update="agenyStatus" listener="#{contractDetailsBackingBean.checkAgencyStatus(agencyData)}"  /> 
