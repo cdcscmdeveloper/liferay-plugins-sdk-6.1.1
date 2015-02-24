@@ -30,7 +30,7 @@
 					postUpdateListener="organisationBackingBean.updateOrgCode
 					(organisationBackingBean.managedBean.profileGroup[#{index}].authorizedOrgProfile, #{index})"
 					saveObject="organisationBackingBean.managedBean.profileGroup[#{index}].authorizedOrgProfile"
-					conditionField="parentOrgProfile.orgProfileId^#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgProfileId}|recordStatus^1"
+					conditionField="#{organisationBackingBean.constuctConditionFields()}"
 					
 					>
 				</ac:lov> 
