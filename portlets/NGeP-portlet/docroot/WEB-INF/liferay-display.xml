@@ -122,7 +122,8 @@
 		    <portlet id="Review Simple Quote"></portlet>
 		    <portlet id="Review Supplier View"></portlet>
 		    <portlet id="scRequestNoteSearch" />
-		      <portlet id="scAddtionalAttandance" />
+		    <portlet id="Direct Nego"></portlet>
+		    <portlet id="scAddtionalAttandance" />
 		    
 		</category>
 
