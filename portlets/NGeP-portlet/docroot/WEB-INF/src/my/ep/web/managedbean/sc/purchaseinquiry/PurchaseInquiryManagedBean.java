@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -23,6 +24,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -60,7 +62,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private Integer stockAvailable;
 	private boolean stockAvailabilityFlag;
 	private String pageNavToRequestNote;
-	private SelectItem[] procurementTypes; // for procuremment type dropdown
+	private SelectItem[] procurementTypes; // for procurement type dropdown
 	
 	private boolean titleChecker = Boolean.TRUE;
 	private boolean rnToPIFlag;
@@ -69,7 +71,17 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
     
     private String action;
-	
+    
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+    public SpkiBackingBean getSpkiBackingBean() {
+    	return spkiBackingBean;
+    }
+
+    public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+    	this.spkiBackingBean = spkiBackingBean;
+    }
+
 	public Map<String, TplSpecZoneDtl> getZoneDtlMap() {
 		return zoneDtlMap;
 	}
