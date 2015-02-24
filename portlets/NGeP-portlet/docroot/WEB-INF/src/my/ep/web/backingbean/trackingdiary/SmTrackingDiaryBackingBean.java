@@ -43,6 +43,7 @@ public class SmTrackingDiaryBackingBean extends
 //			throw new EpException(MessageConst.ERROR_716006);
 //		}
 		System.out.println("SmTrackingDiaryBackingBean search");
+		getManagedBean().getSpkiBackingBean().spkiSignTransaction("qqqqqqqqqqq");
 		getManagedBean().getSmDocumentDataModel().reloadData();
 	}
 
@@ -61,7 +62,7 @@ public class SmTrackingDiaryBackingBean extends
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSmSupplier().getSmAppl().getApplNo()));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),"RN150000000005580"));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"SM"));
 			System.out.println("getSmDocumentDataModel docNo " + getManagedBean().getSmSupplier().getSmAppl().getApplNo());
 
 			reqDTO.setSearchBean(searchBean);
