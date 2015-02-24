@@ -126,8 +126,8 @@
 			<p:spacer height="30px" />
 
 			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}"
-				style="font-weight:bold;text-align: left;" />
-			<p:spacer height="20px" />
+				style="font-weight:bold;text-align: left;font-size: 14px;" />
+			<p:spacer height="30px" />
 
 			<p:dataTable style="width:100%"
 				value="#{noticeBoardBackingBean.managedBean.categoryList}"
@@ -162,12 +162,12 @@
 						disabled="true" />
 				</p:column>
 			</p:dataTable>
-			<p:spacer height="20px"></p:spacer>
+			<p:spacer height="30px"></p:spacer>
 
 			<c:if
 				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and !noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<h:outputText value="#{lbl['lbl.so.location.list']}"
-					style="font-weight:bold;text-align: left;" />
+					style="font-weight:bold;text-align: left;font-size:14px;" />
 				<p:spacer height="10px"></p:spacer>
 
 				<p:dataTable
@@ -196,7 +196,7 @@
 			<c:if
 				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<h:outputText value="#{lbl['lbl.sc.nb.zone.details']}"
-					style="font-weight:bold;text-align: left;" />
+					style="font-weight:bold;text-align: left;font-size: 14px;" />
 				<p:spacer height="10px"></p:spacer>
 
 				<p:dataTable
