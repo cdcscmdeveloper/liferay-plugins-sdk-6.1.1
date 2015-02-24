@@ -80,29 +80,36 @@ import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
+// TODO: Auto-generated Javadoc
 /**
- * Backing Bean for Create Purchase Order
- * 
+ * Backing Bean for Create Purchase Order.
+ *
  * @author Giribabu
  * @since 7/10/2013
  */
 @ManagedBean(name = "createDOBackingBean")
 @RequestScoped
 public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManagedBean> {
+	
 	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
 	private static Logger log = Logger.getLogger(DeliveryOrderBackingBean.class);
-	/**
-	 * get faces scopes
-	 * @return FacesScopes
-	 */
 	private FlFulfilmentItemAddr amountSectionItemRow;
+	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	
+	/**
+	 * Gets the faces scopes.
+	 *
+	 * @return the faces scopes
+	 */
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
 	
+	/**
+	 * Instantiates a new delivery order backing bean.
+	 */
 	public DeliveryOrderBackingBean(){
 		if (getManagedBean().getFlDeliveryOrder() == null) {
 			getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
@@ -119,6 +126,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 
+	/**
+	 * Gets the user role.
+	 *
+	 * @return the user role
+	 */
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) 
 			return RoleCode.MOF_SUPPLIER_ADMIN.value();
@@ -136,6 +148,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			return null;
 	}
 	
+	/**
+	 * save,submit delivery order.
+	 * </br>submit - save data into database and BPM process will route to the next respective user.
+	 * </br>save - save data into database.
+	 * @param action the action
+	 * navigate to acknowledge page.
+	 */
 	public String createDeliveryOrder(String action) {
 		FacesScopes facesScopes = new FacesScopes();
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -315,6 +334,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return null;
 	}
 	
+	/**
+	 * Before Save do validation for delivery amount
+	 */
 	private void reValidateRetrieveDelAmt() {
 		BigDecimal remainingQty=new BigDecimal(0.0);
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -335,6 +357,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 	}
 
+	/**
+	 * Sets the delivery order.
+	 *
+	 * @param resDTO the new delivery order
+	 */
 	public void setDeliveryOrder(FulfilmentResDTO resDTO) {
 		FlFulfilmentOrder flOrder = resDTO.getFlOrder();
 		
@@ -374,7 +401,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 	
-	// this method do validations for items with Delivery Address,Delivery order and Delivery Amount
+	/**
+	 * this method do validations for items with Delivery Address,Delivery order and Delivery Amount
+	 *
+	 * @param actionName the action name
+	 */
 	private void checkItemsWithDoAddress(String actionName) {
 		boolean anyAddressSelected = false;
 		for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -423,12 +454,20 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 	
+	/**
+	 * Calculate delivery amount based on unit price and delivery quantity.
+	 *
+	 * @param delOrder the del order
+	 */
 	public void calculateDelAmt(FlDeliveryOrder delOrder){
 		for(FlDelOrderItem orderItem : delOrder.getFlDelOrderItem()){
 			orderItem.setDeliveredAmt(new BigDecimal(orderItem.getFlFulfilmentItemAddr().getUnitPrice().intValue() * orderItem.getDeliveredQty().intValue()));
 		}
 	}
 	
+	/**
+	 * Select item event.
+	 */
 	public void selectItemEvent() {
 		getManagedBean().setSelectedItemRowCalList(new ArrayList<FlFulfilmentItemAddr>());
 		FlFulfilmentItemAddr selectedAddressItem=new FlFulfilmentItemAddr();
@@ -438,6 +477,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getManagedBean().setItemSelectedForCal("S");
 		
 	}
+	
+	/**
+	 * Calculate delivery amount based on unit price and delivery quantity.
+	 *
+	 * @param itemAddress the item address
+	 */
 	public void retrieveDelAmount(FlFulfilmentItemAddr itemAddress){
 		
 		BigDecimal unitPriceCal = BigDecimal.ZERO;
@@ -483,6 +528,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 	}
 	
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		log.debug("preRenderView()");
 		IDeliveryOrderSO deliveryOrderSO = null;
@@ -528,6 +576,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 
+	/**
+	 * Retrieve rejection data.
+	 *
+	 * @param flFulfilmentItemAddr the fl fulfilment item addr
+	 */
 	public void retrieveRejectionData(FlFulfilmentItemAddr flFulfilmentItemAddr) {
 		getManagedBean().setRejectionList(new ArrayList<FlFulfilmentNoteItem>());
 		for(FlDelOrderItem delOrderItem : flFulfilmentItemAddr.getTempFlDelOrderItems()) {
@@ -539,6 +592,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 	
+	/**
+	 * Gets the portlet title.
+	 *
+	 * @return the portlet title
+	 */
 	public String getPortletTitle() {
 		String portletTitle = " Fulfilment Document Maintenance";
 		if(getManagedBean().isModificationCancel()) {
@@ -546,6 +604,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 		return portletTitle;
 	}
+	
+	/**
+	 * Checks if is fl fulfilment supplier.
+	 *
+	 * @return true, if is fl fulfilment supplier
+	 */
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
@@ -555,6 +619,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				|| facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	
+	/**
+	 * On tab change.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null && getManagedBean().getButtonVal()==null) {
@@ -566,6 +635,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	// sorting Item for OrderSummary Tab
+	/**
+	 * Sort order summary list.
+	 *
+	 * @param deliveryAddressList the delivery address list
+	 */
 	public void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
 		// Creating Comparator
 		if (null == deliveryAddressList || deliveryAddressList.isEmpty()) {
@@ -576,6 +650,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 
+	/**
+	 * Sort items.
+	 *
+	 * @param flItemAddressList the fl item address list
+	 */
 	public void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
 		// Creating Comparator
 		if (null == flItemAddressList || flItemAddressList.isEmpty()) {
@@ -593,6 +672,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		Collections.sort(flItemAddressList, comparator);
 	}
 
+	/**
+	 * Sort address.
+	 *
+	 * @param flDelAddressList the fl del address list
+	 */
 	public void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
 		// Creating Comparator
 		if (null == flDelAddressList || flDelAddressList.isEmpty()) {
@@ -615,6 +699,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	
 	
 	/**
+	 * Gets the amount section item row.
+	 *
 	 * @return the amountSectionItemRow
 	 */
 	public FlFulfilmentItemAddr getAmountSectionItemRow() {
@@ -622,16 +708,29 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 
 	/**
+	 * Sets the amount section item row.
+	 *
 	 * @param amountSectionItemRow the amountSectionItemRow to set
 	 */
 	public void setAmountSectionItemRow(FlFulfilmentItemAddr amountSectionItemRow) {
 		this.amountSectionItemRow = amountSectionItemRow;
 	}
 
+	/**
+	 * Back action.
+	 *
+	 * @return the string
+	 */
 	public String backAction() {
 		return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
 	}
 	
+	/**
+	 * Retrieve mof no based on Supplier Id.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -644,12 +743,21 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	/**
-	 * Page navigation to FLDoc search page inDo
+	 * Page navigation to FLDoc search page .
+	 *
+	 * @return the string
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
 	}
 	
+	/**
+	 * Signing action.
+	 *
+	 * @param outcome the outcome
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
@@ -681,6 +789,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	
+	/**
+	 * Validate delivery order before signing Action.
+	 */
 	private void validateDeliveryOrder() {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		if(getManagedBean().getFulfilmentRequest().getCtContract() != null){
@@ -707,6 +818,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		checkItemsWithDoAddress(getManagedBean().getButtonAction());
 	}
 
+	/**
+	 * Gets the delivery order amt.
+	 *
+	 * @return the delivery order amt
+	 */
 	private String getDeliveryOrderAmt() {
 		String doAmt = "";
 		BigDecimal totalAmt = new BigDecimal(0);
@@ -720,6 +836,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return doAmt;
 	}
 
+	/**
+	 * Pre submit delivery order.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitDeliveryOrder(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
@@ -745,11 +868,19 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return createDeliveryOrder(getManagedBean().getButtonAction());
 	}
 	
+	/**
+	 * Enable auto update.
+	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
 	
+	/**
+	 * Checks if is supplier role.
+	 *
+	 * @return true, if is supplier role
+	 */
 	private boolean isSupplierRole(){
 		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
@@ -765,13 +896,24 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return Boolean.FALSE;
 	}
 	
+	/**
+	 * The Class UnitOfMeasurementPagingDataModel.
+	 */
 	private class UnitOfMeasurementPagingDataModel extends PagingDataModel<PmUom> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new unit of measurement paging data model.
+		 */
 		public UnitOfMeasurementPagingDataModel() {
 			super("measurementSR");
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<PmUom> pageChangeListener(ISearchBean<PmUom> searchBean) {
 			try {	
@@ -791,6 +933,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 	
+	/**
+	 * Gets the measurement search bean data.
+	 *
+	 * @param searchBean the search bean
+	 * @return the measurement search bean data
+	 */
 	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean){
 		
 		if (getManagedBean().getMeasurementCodes() != null
@@ -821,19 +969,35 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return searchBean;
 	}
 
+	/**
+	 * Gets the unit of measurement data model.
+	 *
+	 * @return the unit of measurement data model
+	 */
 	public IPagingDataModel<PmUom> getUnitOfMeasurementDataModel() {
 		return unitOfMeasurementDataModel;
 	}
 
+	/**
+	 * Sets the unit of measurement data model.
+	 *
+	 * @param unitOfMeasurementDataModel the new unit of measurement data model
+	 */
 	public void setUnitOfMeasurementDataModel(
 			IPagingDataModel<PmUom> unitOfMeasurementDataModel) {
 		this.unitOfMeasurementDataModel = unitOfMeasurementDataModel;
 	}	
 	
+	/**
+	 * Retrieve measurement.
+	 */
 	public void retrieveMeasurement(){		
 		unitOfMeasurementDataModel.reloadData();		
 	}
 	
+	/**
+	 * Reset measurement search.
+	 */
 	public void resetMeasurementSearch() {		
 		this.getManagedBean().setMeasurementCodes(null);
 		this.getManagedBean().setMeasurementNames(null);
@@ -842,6 +1006,15 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}	
 	
 	// To update digisign data for spki
+	/**
+	 * Update spki digi sign data.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @param docType the doc type
+	 * @param docId the doc id
+	 * @param docNumber the doc number
+	 * @param textBeforeSign the text before sign
+	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber , String textBeforeSign) {
 		FacesScopes facesScope = new FacesScopes();
@@ -859,6 +1032,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		pmDigiSign.setSignedData(signedData);
 	}
 	
+	/**
+	 * Navigate to orderNo Hyper link page.
+	 *
+	 * @param docType the doc type
+	 * @return the string
+	 */
 	public String navigateOrderNoPage(String docType){
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
