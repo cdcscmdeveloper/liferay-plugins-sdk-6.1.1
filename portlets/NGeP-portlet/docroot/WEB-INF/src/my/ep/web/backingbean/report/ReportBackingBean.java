@@ -8,7 +8,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,13 +20,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
-import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -39,8 +33,6 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.cm.codification.CodificationReqDTO;
-import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -55,11 +47,9 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -68,28 +58,17 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
-import my.ep.persistence.entity.sm.SmCompanyExperience;
-import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
-
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
@@ -197,8 +176,6 @@ public class ReportBackingBean extends
 		this.selectCatDeletionList = selectCatDeletionList;
 	}
 
-	// private SmCompanyExperience selectedCompanyExperience;
-	// private List<SmCompanyExperienceCat> smCompanyExperienceCats;
 	private boolean selectedAll;
 	private boolean selected;
 	private List<PmCategoryL1> supplierParentCatList;
@@ -280,12 +257,6 @@ public class ReportBackingBean extends
 		this.selectedCatList = selectedCatList;
 	}
 
-	/*
-	 * public SmCompanyExperience getSelectedCompanyExperience() { return
-	 * selectedCompanyExperience; } public void setSelectedCompanyExperience(
-	 * SmCompanyExperience selectedCompanyExperience) {
-	 * this.selectedCompanyExperience = selectedCompanyExperience; }
-	 */
 	public boolean isValueReqd() {
 		return valueReqd;
 	}
@@ -720,10 +691,6 @@ public class ReportBackingBean extends
 
 	private String localToDateVar;
 
-	/*
-	 * public List<PmOrgProfile> getPtjList() { return ptjList; } public void
-	 * setPtjList(List<PmOrgProfile> ptjList) { this.ptjList = ptjList; }
-	 */
 	private String userId;
 	private long lngUserId;
 	private String roleCode;
@@ -1985,20 +1952,7 @@ public class ReportBackingBean extends
 		this.flItemName = flItemName;
 	}
 
-	/*
-	 * public String getSmSupportingDocument() { return smSupportingDocument; }
-	 * public void setSmSupportingDocument(String smSupportingDocument) {
-	 * this.smSupportingDocument = smSupportingDocument; } public String
-	 * getSmDocStatus() { return smDocStatus; } public void
-	 * setSmDocStatus(String smDocStatus) { this.smDocStatus = smDocStatus; }
-	 * public String getSmSuppDocStatus() { return smSuppDocStatus; } public
-	 * void setSmSuppDocStatus(String smSuppDocStatus) { this.smSuppDocStatus =
-	 * smSuppDocStatus; } public String getSmRegistrationNo() { return
-	 * smRegistrationNo; } public void setSmRegistrationNo(String
-	 * smRegistrationNo) { this.smRegistrationNo = smRegistrationNo; } public
-	 * String getSmEpNo() { return smEpNo; } public void setSmEpNo(String
-	 * smEpNo) { this.smEpNo = smEpNo; }
-	 */
+	
 	public String getSmApplicationNo() {
 		return smApplicationNo;
 	}
@@ -2030,14 +1984,6 @@ public class ReportBackingBean extends
 	public void setSmMofRegNo(String smMofRegNo) {
 		this.smMofRegNo = smMofRegNo;
 	}
-
-	/*
-	 * public String getSmMofRegNoFrom() { return smMofRegNoFrom; } public void
-	 * setSmMofRegNoFrom(String smMofRegNoFrom) { this.smMofRegNoFrom =
-	 * smMofRegNoFrom; } public String getSmMofRegNoTo() { return smMofRegNoTo;
-	 * } public void setSmMofRegNoTo(String smMofRegNoTo) { this.smMofRegNoTo =
-	 * smMofRegNoTo; }
-	 */
 	public String getSmRegistrationStatus() {
 		return smRegistrationStatus;
 	}
@@ -2046,17 +1992,6 @@ public class ReportBackingBean extends
 		this.smRegistrationStatus = smRegistrationStatus;
 	}
 
-	/*
-	 * public String getSmCapitalNaccumFrm() { return smCapitalNaccumFrm; }
-	 * public void setSmCapitalNaccumFrm(String smCapitalNaccumFrm) {
-	 * this.smCapitalNaccumFrm = smCapitalNaccumFrm; } public String
-	 * getSmCapitalNaccumTo() { return smCapitalNaccumTo; } public void
-	 * setSmCapitalNaccumTo(String smCapitalNaccumTo) { this.smCapitalNaccumTo =
-	 * smCapitalNaccumTo; } public String getSmPaidUpCapitalNaccumShare() {
-	 * return smPaidUpCapitalNaccumShare; } public void
-	 * setSmPaidUpCapitalNaccumShare(String smPaidUpCapitalNaccumShare) {
-	 * this.smPaidUpCapitalNaccumShare = smPaidUpCapitalNaccumShare; }
-	 */
 	public String getSmcategory() {
 		return smcategory;
 	}
@@ -2065,11 +2000,6 @@ public class ReportBackingBean extends
 		this.smcategory = smcategory;
 	}
 
-	/*
-	 * public String getSmNoOfCategory() { return smNoOfCategory; } public void
-	 * setSmNoOfCategory(String smNoOfCategory) { this.smNoOfCategory =
-	 * smNoOfCategory; }
-	 */
 	public String getSmMainCategory() {
 		return smMainCategory;
 	}
@@ -2093,11 +2023,6 @@ public class ReportBackingBean extends
 	public void setSmSubCategoryDivision(String smSubCategoryDivision) {
 		this.smSubCategoryDivision = smSubCategoryDivision;
 	}
-
-	/*
-	 * public String getSmRole() { return smRole; } public void setSmRole(String
-	 * smRole) { this.smRole = smRole; }
-	 */
 	public String getSmApplicationStatus() {
 		return smApplicationStatus;
 	}
@@ -2105,12 +2030,6 @@ public class ReportBackingBean extends
 	public void setSmApplicationStatus(String smApplicationStatus) {
 		this.smApplicationStatus = smApplicationStatus;
 	}
-
-	/*
-	 * public String getSmCancelledBy() { return smCancelledBy; } public void
-	 * setSmCancelledBy(String smCancelledBy) { this.smCancelledBy =
-	 * smCancelledBy; }
-	 */
 	public String getSmPaymentType() {
 		return smPaymentType;
 	}
@@ -2142,12 +2061,6 @@ public class ReportBackingBean extends
 	public void setSmDistrict(String smDistrict) {
 		this.smDistrict = smDistrict;
 	}
-
-	/*
-	 * public String getSmSupplierName() { return smSupplierName; } public void
-	 * setSmSupplierName(String smSupplierName) { this.smSupplierName =
-	 * smSupplierName; }
-	 */
 	public String getSmReportType() {
 		return smReportType;
 	}
@@ -2156,58 +2069,6 @@ public class ReportBackingBean extends
 		this.smReportType = smReportType;
 	}
 
-	/*
-	 * public String getSmOrganizationType() { return smOrganizationType; }
-	 * public void setSmOrganizationType(String smOrganizationType) {
-	 * this.smOrganizationType = smOrganizationType; } public String
-	 * getSmKementerian() { return smKementerian; } public void
-	 * setSmKementerian(String smKementerian) { this.smKementerian =
-	 * smKementerian; } public String getSmNamaAgensi() { return smNamaAgensi; }
-	 * public void setSmNamaAgensi(String smNamaAgensi) { this.smNamaAgensi =
-	 * smNamaAgensi; } public String getSmComplaintNo() { return smComplaintNo;
-	 * } public void setSmComplaintNo(String smComplaintNo) { this.smComplaintNo
-	 * = smComplaintNo; } public String getSmProofIdentity() { return
-	 * smProofIdentity; } public void setSmProofIdentity(String smProofIdentity)
-	 * { this.smProofIdentity = smProofIdentity; } public String
-	 * getSmCompanyStatus() { return smCompanyStatus; } public void
-	 * setSmCompanyStatus(String smCompanyStatus) { this.smCompanyStatus =
-	 * smCompanyStatus; } public String getSmCaseNo() { return smCaseNo; }
-	 * public void setSmCaseNo(String smCaseNo) { this.smCaseNo = smCaseNo; }
-	 * public String getSmCompApplStatus() { return smCompApplStatus; } public
-	 * void setSmCompApplStatus(String smCompApplStatus) { this.smCompApplStatus
-	 * = smCompApplStatus; } public String getSmCategoryCode() { return
-	 * smCategoryCode; } public void setSmCategoryCode(String smCategoryCode) {
-	 * this.smCategoryCode = smCategoryCode; } public String
-	 * getSmSiteVisitOfficer() { return smSiteVisitOfficer; } public void
-	 * setSmSiteVisitOfficer(String smSiteVisitOfficer) {
-	 * this.smSiteVisitOfficer = smSiteVisitOfficer; } public Date
-	 * getSmReleaseFromDate() { return smReleaseFromDate; } public void
-	 * setSmReleaseFromDate(Date smReleaseFromDate) { this.smReleaseFromDate =
-	 * smReleaseFromDate; } public Date getSmReleaseToDate() { return
-	 * smReleaseToDate; } public void setSmReleaseToDate(Date smReleaseToDate) {
-	 * this.smReleaseToDate = smReleaseToDate; } public Date
-	 * getSmApplicationFromDate() { return smApplicationFromDate; } public void
-	 * setSmApplicationFromDate(Date smApplicationFromDate) {
-	 * this.smApplicationFromDate = smApplicationFromDate; } public Date
-	 * getSmApplicationToDate() { return smApplicationToDate; } public void
-	 * setSmApplicationToDate(Date smApplicationToDate) {
-	 * this.smApplicationToDate = smApplicationToDate; } public Date
-	 * getSmReceiveFromDate() { return smReceiveFromDate; } public void
-	 * setSmReceiveFromDate(Date smReceiveFromDate) { this.smReceiveFromDate =
-	 * smReceiveFromDate; } public Date getSmReceiveToDate() { return
-	 * smReceiveToDate; } public void setSmReceiveToDate(Date smReceiveToDate) {
-	 * this.smReceiveToDate = smReceiveToDate; } public Date
-	 * getSmExpiryFromDate() { return smExpiryFromDate; } public void
-	 * setSmExpiryFromDate(Date smExpiryFromDate) { this.smExpiryFromDate =
-	 * smExpiryFromDate; } public Date getSmExpiryToDate() { return
-	 * smExpiryToDate; } public void setSmExpiryToDate(Date smExpiryToDate) {
-	 * this.smExpiryToDate = smExpiryToDate; } public Date
-	 * getSmPrintedFromDate() { return smPrintedFromDate; } public void
-	 * setSmPrintedFromDate(Date smPrintedFromDate) { this.smPrintedFromDate =
-	 * smPrintedFromDate; } public Date getSmPrintedToDate() { return
-	 * smPrintedToDate; } public void setSmPrintedToDate(Date smPrintedToDate) {
-	 * this.smPrintedToDate = smPrintedToDate; }
-	 */
 	public String getSmCompanyName() {
 		return smCompanyName;
 	}
@@ -2552,7 +2413,7 @@ public class ReportBackingBean extends
 	}
 
 	public void assignNewCompanyExperience(List<SmSupplierCategory> catList) {
-		log.info("***** Assign New Company Exp ***********");
+		
 		if (catList == null) {
 			catList = new ArrayList<SmSupplierCategory>();
 		}
@@ -2728,8 +2589,7 @@ public class ReportBackingBean extends
 	}
 
 	public void deleteSelectedCodes() {
-		System.out.println("*** Selected value **** "
-				+ this.getSelectCatDeletionList().size());
+		
 		for (SmSupplierCategory cat : this.getSelectCatDeletionList()) {
 			this.getSelectedCatList().remove(cat);
 
@@ -2737,7 +2597,7 @@ public class ReportBackingBean extends
 	}
 
 	public void assignCategoryForCompExperience() {
-		log.info("*****  ***********");
+		
 		SmSupplierCategory cat = new SmSupplierCategory();		
 		if ((this.getSelectedCatList().size()>9)) {
 			throw new EpException(ReportConst.ERR_999000_MORTHAN_TEN);
@@ -2874,7 +2734,6 @@ public class ReportBackingBean extends
 					selectItem.setLabel(label);
 					reportList.add(selectItem);
 				}
-
 			}
 			// retrieveCMUnspc();
 		} else {
