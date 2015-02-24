@@ -98,6 +98,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private boolean editFlag;
 	private boolean verifyBtnFlag= true;
 	private String backToPreviousPage;
+	
+	private List<PmOrgProfile> ptjDropdownList; // direct nego
 
 	public LOADetailManagedBean() {
 	}
@@ -780,4 +782,13 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setBackToPreviousPage(String backToPreviousPage) {
 		this.backToPreviousPage = backToPreviousPage;
 	}
+
+	public List<PmOrgProfile> getPtjDropdownList() {
+		return ptjDropdownList;
+	}
+
+	public void setPtjDropdownList(List<PmOrgProfile> ptjDropdownList) {
+		this.ptjDropdownList = ptjDropdownList;
+	}
+	
 }

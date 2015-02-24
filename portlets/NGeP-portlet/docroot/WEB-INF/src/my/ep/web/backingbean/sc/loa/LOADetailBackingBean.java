@@ -88,7 +88,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.aut.SearchOperator;
@@ -3229,7 +3231,9 @@ public class LOADetailBackingBean extends
 
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getManagedBean().getScLoa().getLoaNo());
+		if(getManagedBean().getScLoa() != null){
+			sb.append(getManagedBean().getScLoa().getLoaNo());
+		}
 		sb.append(new FacesScopes().getUserSessionBean().getUserId());
 		textBeforeSign = sb.toString();
 		return textBeforeSign;
@@ -3248,4 +3252,88 @@ public class LOADetailBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
+	
+	
+	/**
+	 * preRenderDirectNegoView method to pre render to direct nego.
+	 */
+	public void preRenderDirectNegoView() {
+		debugLogger("preRenderDirectNegoView");
+
+		ScLoa scLoa = new ScLoa();
+		PmParameter pmParameter = new PmParameter();
+		scLoa.setContractType(pmParameter);
+				
+		ScLoiLoa  scLoiLoa = new ScLoiLoa();
+		scLoiLoa.setSmSupplier(new SmSupplier());
+		scLoa.setScLoiLoa(scLoiLoa);
+		scLoa.setContractAdmin(new PmUser());
+		scLoa.setPmOrgProfile(new PmOrgProfile());
+		
+		getManagedBean().setScLoa(scLoa);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
+	}
+	
+	
+	/**
+	 * mofNoListener method to pre render to direct nego.
+	 */
+	public void mofNoListener(SmMofAccount mofAccount) {
+		debugLogger("mofNoListener");
+		
+		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(mofAccount.getSmSupplier());
+		getManagedBean().getScLoa().getScLoiLoa().setMofNo(mofAccount.getMofNo());
+		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(mofAccount.getSmSupplier().getCompanyName());
+
+	}
+	
+	/**
+	 * preRenderDirectNegoView method to pre render to direct nego.
+	 */
+	public void supplierListener(SmSupplier suSmSupplier) {
+		debugLogger("supplierListener");
+		System.out.println("supplier : "+suSmSupplier.getCompanyName());
+		
+	}
+	
+	/**
+	 * 
+	 */
+	public List<PmOrgProfile> ptjDropdownList() {
+		debugLogger("ptjDropdownList");
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null && user.getUserId() != null) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setUserId(user.getUserId());
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			// reqDTO.setParentOrgProfileId(parentOrgProfileId);
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+			this.getManagedBean().setPtjDropdownList(pmOrgProfiles);
+			return pmOrgProfiles;
+		}
+		return null;
+	}
+
+	public void ptjChangeListener(PmOrgProfile orgProfile) {
+		List<PmOrgProfile> orgProfileList = getManagedBean()
+				.getPtjDropdownList();
+		if (null != orgProfileList) {
+			for (PmOrgProfile pmOrgProfile : orgProfileList) {
+				if (pmOrgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
+					getManagedBean().getScLoa().setPmOrgProfile(pmOrgProfile);
+				}
+			}
+		} else {
+			debugLogger("org profile list should not be empty");
+		}
+	}
+	
+	
 }
