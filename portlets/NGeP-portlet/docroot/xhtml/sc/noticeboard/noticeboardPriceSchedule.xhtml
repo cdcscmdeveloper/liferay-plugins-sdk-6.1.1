@@ -67,6 +67,40 @@
 					readonly="true" />
 
 			</h:panelGrid>
+			<p:spacer height="5" />
+			<!-- Start Committee members table -->
+			<p:panel header="#{lbl['lbl.sc.eva.cmt.member.list']}" toggleable="true">
+							
+				<p:dataTable id="committeeId"
+					value="#{noticeBoardBackingBean.managedBean.scCommitteeMembers}"
+					var="specificationcommittee" rowIndexVar="index" editable="true"
+					rowKey="#{specificationcommittee}">
+					
+					<p:column headerText="#{lbl['lbl.so.bo.name']}">
+						<h:outputText value="#{specificationcommittee.memberName}"
+							style="white-space: normal;" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+						style="white-space: normal;">
+						<h:outputText value="#{specificationcommittee.icPassport}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.so.bo.designation']}"
+						style="widht: 15%">
+						<h:outputText value="#{specificationcommittee.designation}"
+							style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.role']}" style="width: 15%">
+						<h:outputText
+							value="#{noticeBoardBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+			<!-- End of Committee members -->
+			<p:spacer height="5" />
 			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<ui:include src="/xhtml/sc/noticeboard/offerpricesuppliers.xhtml"></ui:include>
 			</c:if>
