@@ -41,9 +41,8 @@
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 			
-			<p:outputLabel value="#{lbl['lbl.ct.pub.date']}" rendered="#{!amendmentBackingBean.managedBean.directPurchase}"/>
-			<p:inputText style="width:170px;" disabled="true" rendered="#{!amendmentBackingBean.managedBean.directPurchase}"
-				value="#{amendmentBackingBean.managedBean.ctContract.publishDate}">
+			<p:outputLabel value="#{lbl['lbl.ct.pub.date']}" />
+			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.ctContract.publishDate}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>			
 			

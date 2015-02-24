@@ -2460,8 +2460,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	/*Implementation of search method for agency*/
 	public void searchAgencyDetails() {
-		try { 
-			getManagedBean().setCounter(0);  
+		try {
 			agencyDataModel.reloadData();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2491,7 +2490,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		private static final long serialVersionUID = 1L;
 
 		public AgencyPagingDataModel() {
-			super("tableAgency");
+			super("tableAgency", false);
 		}
 		
 		@Override
@@ -2502,9 +2501,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			try {
 				// Filter By - parameterType
-				if(getManagedBean().getCounter() == 0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
-				
+			
 				// Filter By - Org Type
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
 				
@@ -2537,7 +2535,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				 if(resDTO.isSuccessful()) {
 					 return resDTO.getOrgProfileResultBean();
 				 }
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -2643,7 +2640,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
 		getManagedBean().setPtjCodeName(null);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
-		getManagedBean().setCounter(1);
 		agencyDataModel.resetData();
 	}
 	

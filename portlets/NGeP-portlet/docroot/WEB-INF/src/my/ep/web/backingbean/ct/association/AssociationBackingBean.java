@@ -38,7 +38,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.managedbean.association.AssociationManagedBean;
+import my.ep.web.managedbean.ct.association.AssociationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -332,7 +332,6 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				reqDTO.setSearchBean(searchBean);
 				ContractAssociationResDTO resDTO = contractAssociationSO.searchAssociation(reqDTO);
 				getManagedBean().setAssociationList(resDTO.getResultBean().getResultList());
-				getManagedBean().setSelectedIndex(0);
 				 log.info("BackingBean: Performance Testing  SearchAssociation Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
 					log.info("BackingBean: Performance Testing  SearchAssociation Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 				
@@ -393,7 +392,6 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				reqDTO.setContractSearchBean(searchBean);
 				reqDTO.setFilterByAssocContract(true);
 				ContractResDTO resDTO = contractSO.searchContract(reqDTO);
-				getManagedBean().setSelectedIndex(0);
 				
 				log.info("BackingBean: Performance Testing  Search Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
 				log.info("BackingBean: Performance Testing  Search Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);

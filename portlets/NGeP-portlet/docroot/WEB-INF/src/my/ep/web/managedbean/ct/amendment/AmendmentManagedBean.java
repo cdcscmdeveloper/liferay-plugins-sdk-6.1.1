@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
@@ -32,7 +31,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
-import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -46,31 +44,32 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class AmendmentManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+	private String[] action;	
 	private String taskName;
-	private String[] action;
-	private String processName;
 	private String ackFA;
 	private String showItem;
-	private String selectedRadioButton="1";
-	private String name = null;
+	private String selectedRadioButton = "1";
+	private String committeeName = null;
 	private String identificationNo = null;
 	private String identificationType;
 	private String witnessHeader;
 	private String witnessHeaderTooltip;
 	private String editorValue;
 	private String fileDirectory;
-	
+	private String pbQcApproved;
+	private String textBeforeSign;
+	private String buttonAction;
+	private String committeeType;
 	private Long meetingStatusId;
+	private Long secretaryId;	
 	private int selectedTabIndex;
-	private MenuModel amendMenuModel;
-	
+	private int attachFileIndex;	
+	private double performanceBondRuleAmt;	
 	private boolean itemProductExist;
 	private boolean itemServiceExist;
 	private boolean termAndConditionFlg;
 	private boolean existingUsers = true;
 	private boolean newUsers;
-	private boolean directPurchase;
 	private boolean chkClause;
 	private boolean chkConceValue;
 	private boolean chkAmendOtherValue;
@@ -84,10 +83,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean signOffDecision;
 	private boolean signUpdateDecision;
 	private boolean decisionPbQcLOA;
-	private boolean tabMenuHide;
-	private boolean tabMenuShowForZone;
-	private boolean tabMenuShowNoZone;
-	private boolean tabMenuShowNoZoneNoItem;
 	private boolean productItem = true;
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
@@ -95,438 +90,894 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean selectAll;
 	private boolean showPrintButton;
 	private boolean bpmActionFlag = true;
-	private String pbQcApproved;
-	
-	private List<CtItemPrice> itemPriceList;
+	private boolean autoUpdate = true;	
+	private boolean disableAmendDetails;
+	private boolean disablefinalAmendDetails;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
+	private List<CtContractVer> amendHistoryList;
+	private List<CtContractItem> ctItemList;
+	private List<CtContractItem> ctServiceItemList;
+	private List<String> finalListOfSideMenu;
+	private DualListModel<String> approverModel;
+	private Map<String, PmUser> userMap;
     private CtContractItem selectedServiceItem;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-	private List<CtContractVer> amendHistoryList;
 	private CtPerformanceBond ctPerformanceBond;
-	private TreeNode ctZoneTrees;
-	private List<CtContractItem> ctItemList;
-	private List<CtContractItem> ctServiceItemList;
-	private CtItemPrice selectedIndexOfPrice;
-	private CtItemCeilingQty selectedIndexOfCeilingQty;
-	private CtCommitteeMember ctCommitteeMember;
-	private List<PmUser> externalUsers;
-	private SelectItem[] roleTypes; 
-	private List<CtCommitteeMember> ctCommitteeMembers;
-    private SmSupplierBank supplierBank;
 	private CtItemMaxQty ctItemMaxQty;
 	private CtItemPrice ctItemPrices;
 	private CtItemCeilingQty ctItemCeilingQtys;
-	private ScLoaWitness scLoaWitness;
-	private ScLoaReport selectedScLoaReports;
 	private CtContractItem selectedItem;
 	private CtItemPrice ctServiceItemPrices;
-	private List<String> finalListOfSideMenu;
 	private CtCommitteeMember newCommitteMembers;
-	
-	private double performanceBondRuleAmt;
-	
+	private TreeNode ctZoneTrees;
+	private MenuModel amendMenuModel;
+	private ScLoaWitness scLoaWitness;
+	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate = true;
-	private String textBeforeSign;
-	private String buttonAction;
-	private int attachFileIndex;
 	
-	private DualListModel<String> approverModel;
-	private Map<String, PmUser> userMap;
-	private List<SelectItem> representativesTypeslist;
-	private String committetype;
-	private boolean disableAmendDetails;
-	private boolean disablefinalAmendDetails;
-	private Long secretaryId;
-
-	public CtContractVer getContractVer() {
-		return contractVer;
-	}
-
-	public void setContractVer(CtContractVer contractVer) {
-		this.contractVer = contractVer;
-	}
-
-	public String getTaskName() {
-		return taskName;
-	}
-
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
-
+	/**
+	 * @return the action
+	 */
 	public String[] getAction() {
 		return action;
 	}
-
+	
+	/**
+	 * @param action the action to set
+	 */
 	public void setAction(String[] action) {
 		this.action = action;
 	}
-
-	public String getProcessName() {
-		return processName;
+	
+	/**
+	 * @return the taskName
+	 */
+	public String getTaskName() {
+		return taskName;
 	}
-
-	public void setProcessName(String processName) {
-		this.processName = processName;
+	
+	/**
+	 * @param taskName the taskName to set
+	 */
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
-
-	public CtContract getCtContract() {
-		return ctContract;
+	
+	/**
+	 * @return the ackFA
+	 */
+	public String getAckFA() {
+		return ackFA;
 	}
-
-	public void setCtContract(CtContract ctContract) {
-		this.ctContract = ctContract;
+	
+	/**
+	 * @param ackFA the ackFA to set
+	 */
+	public void setAckFA(String ackFA) {
+		this.ackFA = ackFA;
 	}
-
+	
+	/**
+	 * @return the showItem
+	 */
+	public String getShowItem() {
+		return showItem;
+	}
+	
+	/**
+	 * @param showItem the showItem to set
+	 */
+	public void setShowItem(String showItem) {
+		this.showItem = showItem;
+	}
+	
+	/**
+	 * @return the selectedRadioButton
+	 */
+	public String getSelectedRadioButton() {
+		return selectedRadioButton;
+	}
+	
+	/**
+	 * @param selectedRadioButton the selectedRadioButton to set
+	 */
+	public void setSelectedRadioButton(String selectedRadioButton) {
+		this.selectedRadioButton = selectedRadioButton;
+	}
+	
+	/**
+	 * @return the committeeName
+	 */
+	public String getCommitteeName() {
+		return committeeName;
+	}
+	/**
+	 * @param committeeName the committeeName to set
+	 */
+	public void setCommitteeName(String committeeName) {
+		this.committeeName = committeeName;
+	}
+	/**
+	 * @return the identificationNo
+	 */
+	public String getIdentificationNo() {
+		return identificationNo;
+	}
+	/**
+	 * @param identificationNo the identificationNo to set
+	 */
+	public void setIdentificationNo(String identificationNo) {
+		this.identificationNo = identificationNo;
+	}
+	/**
+	 * @return the identificationType
+	 */
+	public String getIdentificationType() {
+		return identificationType;
+	}
+	/**
+	 * @param identificationType the identificationType to set
+	 */
+	public void setIdentificationType(String identificationType) {
+		this.identificationType = identificationType;
+	}
+	/**
+	 * @return the witnessHeader
+	 */
+	public String getWitnessHeader() {
+		return witnessHeader;
+	}
+	/**
+	 * @param witnessHeader the witnessHeader to set
+	 */
+	public void setWitnessHeader(String witnessHeader) {
+		this.witnessHeader = witnessHeader;
+	}
+	/**
+	 * @return the witnessHeaderTooltip
+	 */
+	public String getWitnessHeaderTooltip() {
+		return witnessHeaderTooltip;
+	}
+	/**
+	 * @param witnessHeaderTooltip the witnessHeaderTooltip to set
+	 */
+	public void setWitnessHeaderTooltip(String witnessHeaderTooltip) {
+		this.witnessHeaderTooltip = witnessHeaderTooltip;
+	}
+	/**
+	 * @return the editorValue
+	 */
+	public String getEditorValue() {
+		return editorValue;
+	}
+	/**
+	 * @param editorValue the editorValue to set
+	 */
+	public void setEditorValue(String editorValue) {
+		this.editorValue = editorValue;
+	}
+	/**
+	 * @return the fileDirectory
+	 */
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+	/**
+	 * @param fileDirectory the fileDirectory to set
+	 */
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
+	/**
+	 * @return the pbQcApproved
+	 */
+	public String getPbQcApproved() {
+		return pbQcApproved;
+	}
+	/**
+	 * @param pbQcApproved the pbQcApproved to set
+	 */
+	public void setPbQcApproved(String pbQcApproved) {
+		this.pbQcApproved = pbQcApproved;
+	}
+	/**
+	 * @return the textBeforeSign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+	/**
+	 * @return the buttonAction
+	 */
+	public String getButtonAction() {
+		return buttonAction;
+	}
+	/**
+	 * @param buttonAction the buttonAction to set
+	 */
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
+	}
+	/**
+	 * @return the committeeType
+	 */
+	public String getCommitteeType() {
+		return committeeType;
+	}
+	/**
+	 * @param committeeType the committeeType to set
+	 */
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
+	}
+	/**
+	 * @return the meetingStatusId
+	 */
+	public Long getMeetingStatusId() {
+		return meetingStatusId;
+	}
+	/**
+	 * @param meetingStatusId the meetingStatusId to set
+	 */
+	public void setMeetingStatusId(Long meetingStatusId) {
+		this.meetingStatusId = meetingStatusId;
+	}
+	/**
+	 * @return the secretaryId
+	 */
+	public Long getSecretaryId() {
+		return secretaryId;
+	}
+	/**
+	 * @param secretaryId the secretaryId to set
+	 */
+	public void setSecretaryId(Long secretaryId) {
+		this.secretaryId = secretaryId;
+	}
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+	/**
+	 * @return the attachFileIndex
+	 */
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+	/**
+	 * @param attachFileIndex the attachFileIndex to set
+	 */
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
+	/**
+	 * @return the performanceBondRuleAmt
+	 */
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+	/**
+	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
+	 */
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
+	}
+	/**
+	 * @return the itemProductExist
+	 */
+	public boolean isItemProductExist() {
+		return itemProductExist;
+	}
+	/**
+	 * @param itemProductExist the itemProductExist to set
+	 */
+	public void setItemProductExist(boolean itemProductExist) {
+		this.itemProductExist = itemProductExist;
+	}
+	/**
+	 * @return the itemServiceExist
+	 */
+	public boolean isItemServiceExist() {
+		return itemServiceExist;
+	}
+	/**
+	 * @param itemServiceExist the itemServiceExist to set
+	 */
+	public void setItemServiceExist(boolean itemServiceExist) {
+		this.itemServiceExist = itemServiceExist;
+	}
+	/**
+	 * @return the termAndConditionFlg
+	 */
+	public boolean isTermAndConditionFlg() {
+		return termAndConditionFlg;
+	}
+	/**
+	 * @param termAndConditionFlg the termAndConditionFlg to set
+	 */
+	public void setTermAndConditionFlg(boolean termAndConditionFlg) {
+		this.termAndConditionFlg = termAndConditionFlg;
+	}
+	/**
+	 * @return the existingUsers
+	 */
+	public boolean isExistingUsers() {
+		return existingUsers;
+	}
+	/**
+	 * @param existingUsers the existingUsers to set
+	 */
+	public void setExistingUsers(boolean existingUsers) {
+		this.existingUsers = existingUsers;
+	}
+	/**
+	 * @return the newUsers
+	 */
+	public boolean isNewUsers() {
+		return newUsers;
+	}
+	/**
+	 * @param newUsers the newUsers to set
+	 */
+	public void setNewUsers(boolean newUsers) {
+		this.newUsers = newUsers;
+	}
+	/**
+	 * @return the chkClause
+	 */
+	public boolean isChkClause() {
+		return chkClause;
+	}
+	/**
+	 * @param chkClause the chkClause to set
+	 */
+	public void setChkClause(boolean chkClause) {
+		this.chkClause = chkClause;
+	}
+	/**
+	 * @return the chkConceValue
+	 */
+	public boolean isChkConceValue() {
+		return chkConceValue;
+	}
+	/**
+	 * @param chkConceValue the chkConceValue to set
+	 */
+	public void setChkConceValue(boolean chkConceValue) {
+		this.chkConceValue = chkConceValue;
+	}
+	/**
+	 * @return the chkAmendOtherValue
+	 */
+	public boolean isChkAmendOtherValue() {
+		return chkAmendOtherValue;
+	}
+	/**
+	 * @param chkAmendOtherValue the chkAmendOtherValue to set
+	 */
+	public void setChkAmendOtherValue(boolean chkAmendOtherValue) {
+		this.chkAmendOtherValue = chkAmendOtherValue;
+	}
+	/**
+	 * @return the chkAmendExtendValue
+	 */
+	public boolean isChkAmendExtendValue() {
+		return chkAmendExtendValue;
+	}
+	/**
+	 * @param chkAmendExtendValue the chkAmendExtendValue to set
+	 */
+	public void setChkAmendExtendValue(boolean chkAmendExtendValue) {
+		this.chkAmendExtendValue = chkAmendExtendValue;
+	}
+	/**
+	 * @return the chkAmendAllValue
+	 */
+	public boolean isChkAmendAllValue() {
+		return chkAmendAllValue;
+	}
+	/**
+	 * @param chkAmendAllValue the chkAmendAllValue to set
+	 */
+	public void setChkAmendAllValue(boolean chkAmendAllValue) {
+		this.chkAmendAllValue = chkAmendAllValue;
+	}
+	/**
+	 * @return the pbConfirmMeeting
+	 */
+	public boolean isPbConfirmMeeting() {
+		return pbConfirmMeeting;
+	}
+	/**
+	 * @param pbConfirmMeeting the pbConfirmMeeting to set
+	 */
+	public void setPbConfirmMeeting(boolean pbConfirmMeeting) {
+		this.pbConfirmMeeting = pbConfirmMeeting;
+	}
+	/**
+	 * @return the memberSignOff
+	 */
 	public boolean isMemberSignOff() {
 		return memberSignOff;
 	}
-
+	/**
+	 * @param memberSignOff the memberSignOff to set
+	 */
 	public void setMemberSignOff(boolean memberSignOff) {
 		this.memberSignOff = memberSignOff;
 	}
-
+	/**
+	 * @return the letterOfAcceptance
+	 */
 	public boolean isLetterOfAcceptance() {
 		return letterOfAcceptance;
 	}
-
+	/**
+	 * @param letterOfAcceptance the letterOfAcceptance to set
+	 */
 	public void setLetterOfAcceptance(boolean letterOfAcceptance) {
 		this.letterOfAcceptance = letterOfAcceptance;
 	}
-
+	/**
+	 * @return the bpkSaSkApprover
+	 */
+	public boolean isBpkSaSkApprover() {
+		return bpkSaSkApprover;
+	}
+	/**
+	 * @param bpkSaSkApprover the bpkSaSkApprover to set
+	 */
+	public void setBpkSaSkApprover(boolean bpkSaSkApprover) {
+		this.bpkSaSkApprover = bpkSaSkApprover;
+	}
+	/**
+	 * @return the prepareLOA
+	 */
+	public boolean isPrepareLOA() {
+		return prepareLOA;
+	}
+	/**
+	 * @param prepareLOA the prepareLOA to set
+	 */
+	public void setPrepareLOA(boolean prepareLOA) {
+		this.prepareLOA = prepareLOA;
+	}
+	/**
+	 * @return the signOffDecision
+	 */
+	public boolean isSignOffDecision() {
+		return signOffDecision;
+	}
+	/**
+	 * @param signOffDecision the signOffDecision to set
+	 */
+	public void setSignOffDecision(boolean signOffDecision) {
+		this.signOffDecision = signOffDecision;
+	}
+	/**
+	 * @return the signUpdateDecision
+	 */
+	public boolean isSignUpdateDecision() {
+		return signUpdateDecision;
+	}
+	/**
+	 * @param signUpdateDecision the signUpdateDecision to set
+	 */
+	public void setSignUpdateDecision(boolean signUpdateDecision) {
+		this.signUpdateDecision = signUpdateDecision;
+	}
+	/**
+	 * @return the decisionPbQcLOA
+	 */
+	public boolean isDecisionPbQcLOA() {
+		return decisionPbQcLOA;
+	}
+	/**
+	 * @param decisionPbQcLOA the decisionPbQcLOA to set
+	 */
+	public void setDecisionPbQcLOA(boolean decisionPbQcLOA) {
+		this.decisionPbQcLOA = decisionPbQcLOA;
+	}
+	/**
+	 * @return the productItem
+	 */
+	public boolean isProductItem() {
+		return productItem;
+	}
+	/**
+	 * @param productItem the productItem to set
+	 */
+	public void setProductItem(boolean productItem) {
+		this.productItem = productItem;
+	}
+	/**
+	 * @return the itemPricing
+	 */
+	public boolean isItemPricing() {
+		return itemPricing;
+	}
+	/**
+	 * @param itemPricing the itemPricing to set
+	 */
+	public void setItemPricing(boolean itemPricing) {
+		this.itemPricing = itemPricing;
+	}
+	/**
+	 * @return the itemCeilingQuantity
+	 */
+	public boolean isItemCeilingQuantity() {
+		return itemCeilingQuantity;
+	}
+	/**
+	 * @param itemCeilingQuantity the itemCeilingQuantity to set
+	 */
+	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
+		this.itemCeilingQuantity = itemCeilingQuantity;
+	}
+	/**
+	 * @return the confirmMeeting
+	 */
+	public boolean isConfirmMeeting() {
+		return confirmMeeting;
+	}
+	/**
+	 * @param confirmMeeting the confirmMeeting to set
+	 */
+	public void setConfirmMeeting(boolean confirmMeeting) {
+		this.confirmMeeting = confirmMeeting;
+	}
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+	/**
+	 * @return the showPrintButton
+	 */
+	public boolean isShowPrintButton() {
+		return showPrintButton;
+	}
+	/**
+	 * @param showPrintButton the showPrintButton to set
+	 */
+	public void setShowPrintButton(boolean showPrintButton) {
+		this.showPrintButton = showPrintButton;
+	}
+	/**
+	 * @return the bpmActionFlag
+	 */
+	public boolean isBpmActionFlag() {
+		return bpmActionFlag;
+	}
+	/**
+	 * @param bpmActionFlag the bpmActionFlag to set
+	 */
+	public void setBpmActionFlag(boolean bpmActionFlag) {
+		this.bpmActionFlag = bpmActionFlag;
+	}
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+	/**
+	 * @return the disableAmendDetails
+	 */
+	public boolean isDisableAmendDetails() {
+		return disableAmendDetails;
+	}
+	/**
+	 * @param disableAmendDetails the disableAmendDetails to set
+	 */
+	public void setDisableAmendDetails(boolean disableAmendDetails) {
+		this.disableAmendDetails = disableAmendDetails;
+	}
+	/**
+	 * @return the disablefinalAmendDetails
+	 */
+	public boolean isDisablefinalAmendDetails() {
+		return disablefinalAmendDetails;
+	}
+	/**
+	 * @param disablefinalAmendDetails the disablefinalAmendDetails to set
+	 */
+	public void setDisablefinalAmendDetails(boolean disablefinalAmendDetails) {
+		this.disablefinalAmendDetails = disablefinalAmendDetails;
+	}
+	/**
+	 * @return the remarkList
+	 */
 	public List<CtRemark> getRemarkList() {
-		if(remarkList == null)
+		if (remarkList == null) {
 			remarkList = new ArrayList<CtRemark>();
+		}
 		return remarkList;
 	}
-
+	/**
+	 * @param remarkList the remarkList to set
+	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
-
+	/**
+	 * @return the attachmentList
+	 */
 	public List<CtAttachment> getAttachmentList() {
-		if(attachmentList == null){
+		if (attachmentList == null){
 			attachmentList = new ArrayList<CtAttachment>();		
 		}
 		return attachmentList;
 	}
-
+	/**
+	 * @param attachmentList the attachmentList to set
+	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
-
-	public boolean isProductItem() {
-		return productItem;
-	}
-
-	public void setProductItem(boolean productItem) {
-		this.productItem = productItem;
-	}
-
-	public String getShowItem() {
-		return showItem;
-	}
-
-	public void setShowItem(String showItem) {
-		this.showItem = showItem;
-	}
-
-	public boolean isItemPricing() {
-		return itemPricing;
-	}
-
-	public void setItemPricing(boolean itemPricing) {
-		this.itemPricing = itemPricing;
-	}
-
-	public boolean isItemCeilingQuantity() {
-		return itemCeilingQuantity;
-	}
-
-	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
-		this.itemCeilingQuantity = itemCeilingQuantity;
-	}
-
-	public List<CtItemPrice> getItemPriceList() {
-		if(itemPriceList == null)
-			itemPriceList = new ArrayList<CtItemPrice>();
-		return itemPriceList;
-	}
-
-	public void setItemPriceList(List<CtItemPrice> itemPriceList) {
-		this.itemPriceList = itemPriceList;
-	}
-
+	/**
+	 * @return the amendHistoryList
+	 */
 	public List<CtContractVer> getAmendHistoryList() {
-		if(amendHistoryList==null) {
+		if (amendHistoryList == null) {
 			amendHistoryList = new ArrayList<CtContractVer>();
 		}
 		return amendHistoryList;
 	}
-
+	/**
+	 * @param amendHistoryList the amendHistoryList to set
+	 */
 	public void setAmendHistoryList(List<CtContractVer> amendHistoryList) {
 		this.amendHistoryList = amendHistoryList;
 	}
-
-	public CtContractItem getSelectedItem() {
-		return selectedItem;
-	}
-
-	public void setSelectedItem(CtContractItem selectedItem) {
-		this.selectedItem = selectedItem;
-	}
-
-	public CtContractItem getSelectedServiceItem() {
-		return selectedServiceItem;
-	}
-
-	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
-		this.selectedServiceItem = selectedServiceItem;
-	}
-
-	public CtPerformanceBond getCtPerformanceBond() {
-		return ctPerformanceBond;
-	}
-
-	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
-		this.ctPerformanceBond = ctPerformanceBond;
-	}
-
-	public boolean isDirectPurchase() {
-		return directPurchase;
-	}
-
-	public void setDirectPurchase(boolean directPurchase) {
-		this.directPurchase = directPurchase;
-	}
-
-	public boolean isChkClause() {
-		return chkClause;
-	}
-
-	public void setChkClause(boolean chkClause) {
-		this.chkClause = chkClause;
-	}
-
-	public boolean isChkAmendOtherValue() {
-		return chkAmendOtherValue;
-	}
-
-	public void setChkAmendOtherValue(boolean chkAmendOtherValue) {
-		this.chkAmendOtherValue = chkAmendOtherValue;
-	}
-
-	public boolean isChkAmendExtendValue() {
-		return chkAmendExtendValue;
-	}
-
-	public void setChkAmendExtendValue(boolean chkAmendExtendValue) {
-		this.chkAmendExtendValue = chkAmendExtendValue;
-	}
-
-	public boolean isChkAmendAllValue() {
-		return chkAmendAllValue;
-	}
-
-	public void setChkAmendAllValue(boolean chkAmendAllValue) {
-		this.chkAmendAllValue = chkAmendAllValue;
-	}
-
-	public TreeNode getCtZoneTrees() {
-		return ctZoneTrees;
-	}
-
-	public void setCtZoneTrees(TreeNode ctZoneTrees) {
-		this.ctZoneTrees = ctZoneTrees;
-	}
-
+	/**
+	 * @return the ctItemList
+	 */
 	public List<CtContractItem> getCtItemList() {
-		if(ctItemList == null)
+		if (ctItemList == null) {
 			ctItemList = new ArrayList<CtContractItem>();
+		}
 		return ctItemList;
 	}
-
+	/**
+	 * @param ctItemList the ctItemList to set
+	 */
 	public void setCtItemList(List<CtContractItem> ctItemList) {
 		this.ctItemList = ctItemList;
 	}
-
+	/**
+	 * @return the ctServiceItemList
+	 */
+	public List<CtContractItem> getCtServiceItemList() {
+		if (ctServiceItemList == null) {
+			ctServiceItemList = new ArrayList<CtContractItem>();
+		}
+		return ctServiceItemList;
+	}
+	/**
+	 * @param ctServiceItemList the ctServiceItemList to set
+	 */
+	public void setCtServiceItemList(List<CtContractItem> ctServiceItemList) {
+		this.ctServiceItemList = ctServiceItemList;
+	}
+	/**
+	 * @return the finalListOfSideMenu
+	 */
+	public List<String> getFinalListOfSideMenu() {
+		return finalListOfSideMenu;
+	}
+	/**
+	 * @param finalListOfSideMenu the finalListOfSideMenu to set
+	 */
+	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
+		this.finalListOfSideMenu = finalListOfSideMenu;
+	}
+	/**
+	 * @return the approverModel
+	 */
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+	/**
+	 * @param approverModel the approverModel to set
+	 */
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+	/**
+	 * @return the userMap
+	 */
+	public Map<String, PmUser> getUserMap() {
+		if (userMap == null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
+	}
+	/**
+	 * @param userMap the userMap to set
+	 */
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
+	}
+	/**
+	 * @return the selectedServiceItem
+	 */
+	public CtContractItem getSelectedServiceItem() {
+		return selectedServiceItem;
+	}
+	/**
+	 * @param selectedServiceItem the selectedServiceItem to set
+	 */
+	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
+		this.selectedServiceItem = selectedServiceItem;
+	}
+	/**
+	 * @return the ctContract
+	 */
+	public CtContract getCtContract() {
+		return ctContract;
+	}
+	/**
+	 * @param ctContract the ctContract to set
+	 */
+	public void setCtContract(CtContract ctContract) {
+		this.ctContract = ctContract;
+	}
+	/**
+	 * @return the contractVer
+	 */
+	public CtContractVer getContractVer() {
+		return contractVer;
+	}
+	/**
+	 * @param contractVer the contractVer to set
+	 */
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
+	}
+	/**
+	 * @return the ctPerformanceBond
+	 */
+	public CtPerformanceBond getCtPerformanceBond() {
+		return ctPerformanceBond;
+	}
+	/**
+	 * @param ctPerformanceBond the ctPerformanceBond to set
+	 */
+	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
+		this.ctPerformanceBond = ctPerformanceBond;
+	}
+	/**
+	 * @return the ctItemMaxQty
+	 */
+	public CtItemMaxQty getCtItemMaxQty() {
+		return ctItemMaxQty;
+	}
+	/**
+	 * @param ctItemMaxQty the ctItemMaxQty to set
+	 */
+	public void setCtItemMaxQty(CtItemMaxQty ctItemMaxQty) {
+		this.ctItemMaxQty = ctItemMaxQty;
+	}
+	/**
+	 * @return the ctItemPrices
+	 */
 	public CtItemPrice getCtItemPrices() {
 		return ctItemPrices;
 	}
-
+	/**
+	 * @param ctItemPrices the ctItemPrices to set
+	 */
 	public void setCtItemPrices(CtItemPrice ctItemPrices) {
 		this.ctItemPrices = ctItemPrices;
 	}
-
+	/**
+	 * @return the ctItemCeilingQtys
+	 */
 	public CtItemCeilingQty getCtItemCeilingQtys() {
 		return ctItemCeilingQtys;
 	}
-
+	/**
+	 * @param ctItemCeilingQtys the ctItemCeilingQtys to set
+	 */
 	public void setCtItemCeilingQtys(CtItemCeilingQty ctItemCeilingQtys) {
 		this.ctItemCeilingQtys = ctItemCeilingQtys;
 	}
-
-	public boolean isChkConceValue() {
-		return chkConceValue;
+	/**
+	 * @return the selectedItem
+	 */
+	public CtContractItem getSelectedItem() {
+		return selectedItem;
 	}
-
-	public void setChkConceValue(boolean chkConceValue) {
-		this.chkConceValue = chkConceValue;
+	/**
+	 * @param selectedItem the selectedItem to set
+	 */
+	public void setSelectedItem(CtContractItem selectedItem) {
+		this.selectedItem = selectedItem;
 	}
-
-	public CtItemPrice getSelectedIndexOfPrice() {
-		return selectedIndexOfPrice;
+	/**
+	 * @return the ctServiceItemPrices
+	 */
+	public CtItemPrice getCtServiceItemPrices() {
+		return ctServiceItemPrices;
 	}
-
-	public void setSelectedIndexOfPrice(CtItemPrice selectedIndexOfPrice) {
-		this.selectedIndexOfPrice = selectedIndexOfPrice;
+	/**
+	 * @param ctServiceItemPrices the ctServiceItemPrices to set
+	 */
+	public void setCtServiceItemPrices(CtItemPrice ctServiceItemPrices) {
+		this.ctServiceItemPrices = ctServiceItemPrices;
 	}
-
-	public CtItemCeilingQty getSelectedIndexOfCeilingQty() {
-		return selectedIndexOfCeilingQty;
+	/**
+	 * @return the newCommitteMembers
+	 */
+	public CtCommitteeMember getNewCommitteMembers() {
+		return newCommitteMembers;
 	}
-
-	public void setSelectedIndexOfCeilingQty(
-			CtItemCeilingQty selectedIndexOfCeilingQty) {
-		this.selectedIndexOfCeilingQty = selectedIndexOfCeilingQty;
+	/**
+	 * @param newCommitteMembers the newCommitteMembers to set
+	 */
+	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
+		this.newCommitteMembers = newCommitteMembers;
 	}
-
-	public boolean isBpkSaSkApprover() {
-		return bpkSaSkApprover;
+	/**
+	 * @return the ctZoneTrees
+	 */
+	public TreeNode getCtZoneTrees() {
+		return ctZoneTrees;
 	}
-
-	public void setBpkSaSkApprover(boolean bpkSaSkApprover) {
-		this.bpkSaSkApprover = bpkSaSkApprover;
+	/**
+	 * @param ctZoneTrees the ctZoneTrees to set
+	 */
+	public void setCtZoneTrees(TreeNode ctZoneTrees) {
+		this.ctZoneTrees = ctZoneTrees;
 	}
-
-	public boolean isPrepareLOA() {
-		return prepareLOA;
+	/**
+	 * @return the amendMenuModel
+	 */
+	public MenuModel getAmendMenuModel() {
+		return amendMenuModel;
 	}
-
-	public void setPrepareLOA(boolean prepareLOA) {
-		this.prepareLOA = prepareLOA;
+	/**
+	 * @param amendMenuModel the amendMenuModel to set
+	 */
+	public void setAmendMenuModel(MenuModel amendMenuModel) {
+		this.amendMenuModel = amendMenuModel;
 	}
-
-	public boolean isExistingUsers() {
-		return existingUsers;
-	}
-
-	public void setExistingUsers(boolean existingUsers) {
-		this.existingUsers = existingUsers;
-	}
-
-	public boolean isNewUsers() {
-		return newUsers;
-	}
-
-	public void setNewUsers(boolean newUsers) {
-		this.newUsers = newUsers;
-	}
-
-	public String getSelectedRadioButton() {
-		return selectedRadioButton;
-	}
-
-	public void setSelectedRadioButton(String selectedRadioButton) {
-		this.selectedRadioButton = selectedRadioButton;
-	}
-
-	public CtCommitteeMember getCtCommitteeMember() {
-		return ctCommitteeMember;
-	}
-
-	public void setCtCommitteeMember(CtCommitteeMember ctCommitteeMember) {
-		this.ctCommitteeMember = ctCommitteeMember;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getIdentificationNo() {
-		return identificationNo;
-	}
-
-	public void setIdentificationNo(String identificationNo) {
-		this.identificationNo = identificationNo;
-	}
-	
-	public String getIdentificationType() {
-		return identificationType;
-	}
-	
-	public void setIdentificationType(String identificationType) {
-		this.identificationType = identificationType;
-	}
-
-	public List<PmUser> getExternalUsers() {
-		return externalUsers;
-	}
-
-	public void setExternalUsers(List<PmUser> externalUsers) {
-		this.externalUsers = externalUsers;
-	}
-
-	public SelectItem[] getRoleTypes() {
-		return roleTypes;
-	}
-
-	public void setRoleTypes(SelectItem[] roleTypes) {
-		this.roleTypes = roleTypes;
-	}
-
-	public List<CtCommitteeMember> getCtCommitteeMembers() {
-		if(ctCommitteeMembers==null) {
-			ctCommitteeMembers = new ArrayList<CtCommitteeMember>();
-		}
-		return ctCommitteeMembers;
-	}
-
-	public void setCtCommitteeMembers(List<CtCommitteeMember> ctCommitteeMembers) {
-		this.ctCommitteeMembers = ctCommitteeMembers;
-	}
-
-	public boolean isPbConfirmMeeting() {
-		return pbConfirmMeeting;
-	}
-
-	public void setPbConfirmMeeting(boolean pbConfirmMeeting) {
-		this.pbConfirmMeeting = pbConfirmMeeting;
-	}
-
-	public boolean isSignOffDecision() {
-		return signOffDecision;
-	}
-
-	public void setSignOffDecision(boolean signOffDecision) {
-		this.signOffDecision = signOffDecision;
-	}
-
-	public Long getMeetingStatusId() {
-		return meetingStatusId;
-	}
-
-	public void setMeetingStatusId(Long meetingStatusId) {
-		this.meetingStatusId = meetingStatusId;
-	}
-
-	public boolean isSignUpdateDecision() {
-		return signUpdateDecision;
-	}
-
-	public void setSignUpdateDecision(boolean signUpdateDecision) {
-		this.signUpdateDecision = signUpdateDecision;
-	}
-
+	/**
+	 * @return the scLoaWitness
+	 */
 	public ScLoaWitness getScLoaWitness() {
-		if(scLoaWitness==null) {
+		if (scLoaWitness == null) {
 			scLoaWitness = new ScLoaWitness();
 			String taskName = this.getTaskName();
 			if(taskName.equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
@@ -537,338 +988,36 @@ public class AmendmentManagedBean extends BaseManagedBean {
 				scLoaWitness.setPartyType(ContractConst.WITNES_TYPE_SUPPLIER);
 			}
 		}
-		
 		return scLoaWitness;
 	}
-
+	/**
+	 * @param scLoaWitness the scLoaWitness to set
+	 */
 	public void setScLoaWitness(ScLoaWitness scLoaWitness) {
 		this.scLoaWitness = scLoaWitness;
 	}
-
-	public String getWitnessHeader() {
-		return witnessHeader;
-	}
-
-	public void setWitnessHeader(String witnessHeader) {
-		this.witnessHeader = witnessHeader;
-	}
-	
-	public String getWitnessHeaderTooltip() {
-		return witnessHeaderTooltip;
-	}
-
-	public void setWitnessHeaderTooltip(String witnessHeaderTooltip) {
-		this.witnessHeaderTooltip = witnessHeaderTooltip;
-	}
-
-	public String getAckFA() {
-		return ackFA;
-	}
-
-	public void setAckFA(String ackFA) {
-		this.ackFA = ackFA;
-	}
-
-	public SmSupplierBank getSupplierBank() {
-		return supplierBank;
-	}
-
-	public void setSupplierBank(SmSupplierBank supplierBank) {
-		this.supplierBank = supplierBank;
-	}
-
-	public CtItemMaxQty getCtItemMaxQty() {
-		return ctItemMaxQty;
-	}
-
-	public void setCtItemMaxQty(CtItemMaxQty ctItemMaxQty) {
-		this.ctItemMaxQty = ctItemMaxQty;
-	}
-
-	public boolean isItemProductExist() {
-		return itemProductExist;
-	}
-
-	public void setItemProductExist(boolean itemProductExist) {
-		this.itemProductExist = itemProductExist;
-	}
-
-	public boolean isItemServiceExist() {
-		return itemServiceExist;
-	}
-
-	public void setItemServiceExist(boolean itemServiceExist) {
-		this.itemServiceExist = itemServiceExist;
-	}
-
-	public String getEditorValue() {
-		return editorValue;
-	}
-
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
-	}
-
-	public boolean isTermAndConditionFlg() {
-		return termAndConditionFlg;
-	}
-
-	public void setTermAndConditionFlg(boolean termAndConditionFlg) {
-		this.termAndConditionFlg = termAndConditionFlg;
-	}
-
-	public int getSelectedTabIndex() {
-		return selectedTabIndex;
-	}
-
-	public void setSelectedTabIndex(int selectedTabIndex) {
-		this.selectedTabIndex = selectedTabIndex;
-	}
-
-	public boolean isDecisionPbQcLOA() {
-		return decisionPbQcLOA;
-	}
-
-	public void setDecisionPbQcLOA(boolean decisionPbQcLOA) {
-		this.decisionPbQcLOA = decisionPbQcLOA;
-	}
-
-	public boolean isTabMenuHide() {
-		return tabMenuHide;
-	}
-
-	public void setTabMenuHide(boolean tabMenuHide) {
-		this.tabMenuHide = tabMenuHide;
-	}
-
-	public boolean isTabMenuShowForZone() {
-		return tabMenuShowForZone;
-	}
-
-	public void setTabMenuShowForZone(boolean tabMenuShowForZone) {
-		this.tabMenuShowForZone = tabMenuShowForZone;
-	}
-
-	public boolean isTabMenuShowNoZone() {
-		return tabMenuShowNoZone;
-	}
-
-	public void setTabMenuShowNoZone(boolean tabMenuShowNoZone) {
-		this.tabMenuShowNoZone = tabMenuShowNoZone;
-	}
-
-	public boolean isTabMenuShowNoZoneNoItem() {
-		return tabMenuShowNoZoneNoItem;
-	}
-
-	public void setTabMenuShowNoZoneNoItem(boolean tabMenuShowNoZoneNoItem) {
-		this.tabMenuShowNoZoneNoItem = tabMenuShowNoZoneNoItem;
-	}
-
+	/**
+	 * @return the selectedScLoaReports
+	 */
 	public ScLoaReport getSelectedScLoaReports() {
 		return selectedScLoaReports;
 	}
-
+	/**
+	 * @param selectedScLoaReports the selectedScLoaReports to set
+	 */
 	public void setSelectedScLoaReports(ScLoaReport selectedScLoaReports) {
 		this.selectedScLoaReports = selectedScLoaReports;
 	}
-
-	public String getFileDirectory() {
-		return fileDirectory;
-	}
-
-	public void setFileDirectory(String fileDirectory) {
-		this.fileDirectory = fileDirectory;
-	}
-
-	public CtItemPrice getCtServiceItemPrices() {
-		return ctServiceItemPrices;
-	}
-
-	public void setCtServiceItemPrices(CtItemPrice ctServiceItemPrices) {
-		this.ctServiceItemPrices = ctServiceItemPrices;
-	}
-
-	public List<CtContractItem> getCtServiceItemList() {
-		if(ctServiceItemList == null)
-			ctServiceItemList = new ArrayList<CtContractItem>();
-		return ctServiceItemList;
-	}
-
-	public void setCtServiceItemList(List<CtContractItem> ctServiceItemList) {
-		this.ctServiceItemList = ctServiceItemList;
-	}
-
-	public List<String> getFinalListOfSideMenu() {
-		return finalListOfSideMenu;
-	}
-
-	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
-		this.finalListOfSideMenu = finalListOfSideMenu;
-	}
-
-	public MenuModel getAmendMenuModel() {
-		return amendMenuModel;
-	}
-
-	public void setAmendMenuModel(MenuModel amendMenuModel) {
-		this.amendMenuModel = amendMenuModel;
-	}
-
-	public CtCommitteeMember getNewCommitteMembers() {
-		return newCommitteMembers;
-	}
-
-	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
-		this.newCommitteMembers = newCommitteMembers;
-	}
-
-	public double getPerformanceBondRuleAmt() {
-		return performanceBondRuleAmt;
-	}
-
-	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
-		this.performanceBondRuleAmt = performanceBondRuleAmt;
-	}
-
+	/**
+	 * @return the pmDigiSign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
-
+	/**
+	 * @param pmDigiSign the pmDigiSign to set
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
-	}
-
-	public boolean isAutoUpdate() {
-		return autoUpdate;
-	}
-
-	public void setAutoUpdate(boolean autoUpdate) {
-		this.autoUpdate = autoUpdate;
-	}
-
-	public String getTextBeforeSign() {
-		return textBeforeSign;
-	}
-
-	public void setTextBeforeSign(String textBeforeSign) {
-		this.textBeforeSign = textBeforeSign;
-	}
-
-	public String getButtonAction() {
-		return buttonAction;
-	}
-
-	public void setButtonAction(String buttonAction) {
-		this.buttonAction = buttonAction;
-	}
-
-	public int getAttachFileIndex() {
-		return attachFileIndex;
-	}
-
-	public void setAttachFileIndex(int attachFileIndex) {
-		this.attachFileIndex = attachFileIndex;
-	}
-
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
-	}
-
-	public Map<String, PmUser> getUserMap() {
-		if(userMap==null) {
-			userMap = new HashMap<String, PmUser>();
-		}
-		return userMap;
-	}
-
-	public void setUserMap(Map<String, PmUser> userMap) {
-		this.userMap = userMap;
-	}
-
-	public boolean isConfirmMeeting() {
-		return confirmMeeting;
-	}
-
-	public void setConfirmMeeting(boolean confirmMeeting) {
-		this.confirmMeeting = confirmMeeting;
-	}
-
-	public List<SelectItem> getRepresentativesTypeslist() {
-		return representativesTypeslist;
-	}
-
-	public void setRepresentativesTypeslist(
-			List<SelectItem> representativesTypeslist) {
-		this.representativesTypeslist = representativesTypeslist;
-	}
-
-	public boolean isSelectAll() {
-		return selectAll;
-	}
-
-	public void setSelectAll(boolean selectAll) {
-		this.selectAll = selectAll;
-	}
-
-	public String getPbQcApproved() {
-		return pbQcApproved;
-	}
-
-	public void setPbQcApproved(String pbQcApproved) {
-		this.pbQcApproved = pbQcApproved;
-	}
-
-	public String getCommittetype() {
-		return committetype;
-	}
-
-	public void setCommittetype(String committetype) {
-		this.committetype = committetype;
-	}
-
-	public boolean isDisableAmendDetails() {
-		return disableAmendDetails;
-	}
-
-	public void setDisableAmendDetails(boolean disableAmendDetails) {
-		this.disableAmendDetails = disableAmendDetails;
-	}
-
-	public boolean isDisablefinalAmendDetails() {
-		return disablefinalAmendDetails;
-	}
-
-	public void setDisablefinalAmendDetails(boolean disablefinalAmendDetails) {
-		this.disablefinalAmendDetails = disablefinalAmendDetails;
-	}
-
-	public boolean isShowPrintButton() {
-		return showPrintButton;
-	}
-
-	public void setShowPrintButton(boolean showPrintButton) {
-		this.showPrintButton = showPrintButton;
-	}
-
-	public boolean isBpmActionFlag() {
-		return bpmActionFlag;
-	}
-
-	public void setBpmActionFlag(boolean bpmActionFlag) {
-		this.bpmActionFlag = bpmActionFlag;
-	}
-
-	public Long getSecretaryId() {
-		return secretaryId;
-	}
-
-	public void setSecretaryId(Long secretaryId) {
-		this.secretaryId = secretaryId;
-	}
-	
+	}	
 }

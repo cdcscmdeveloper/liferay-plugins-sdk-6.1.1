@@ -11,7 +11,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.assoc.CtAssocContract;
 import my.ep.persistence.entity.ct.assoc.CtAssociation;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -23,153 +22,193 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean(name ="associationManagedBean")
 @SessionScoped
-public class AssociationManagedBean extends BaseManagedBean{
+public class AssociationManagedBean extends BaseManagedBean {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;	
 	private String ctName;
 	private String ctNumber;
-	private Date ctDateEnd;
-	private Date ctDateStart;
 	private String projectName;
 	private String ctProductCode;
 	private String ctSupplierName;
 	private String projectDescription;
-	
-	private int selectedIndex;
-	private List<CtContract> contractList; 
+	private Date ctDateStart;
+	private Date ctDateEnd;
 	private List<CtContract> associateSearchList;
 	private List<CtAssociation> associationList;
-	
 	private CtAssociation ctAssociation;
 	private CtAssociation ctUpdateAssociation;
-	private CtContract assocoiateCtContract;
-	private CtAssocContract ctDelAssocContract;
-	private CtAssocContract ctAssocContract;
 	
+	/**
+	 * @return the ctName
+	 */
 	public String getCtName() {
 		return ctName;
 	}
+	
+	/**
+	 * @param ctName the ctName to set
+	 */
 	public void setCtName(String ctName) {
 		this.ctName = ctName;
 	}
 	
-	public Date getCtDateEnd() {
-		return ctDateEnd;
-	}
-	public void setCtDateEnd(Date ctDateEnd) {
-		this.ctDateEnd = ctDateEnd;
-	}
-	public Date getCtDateStart() {
-		return ctDateStart;
-	}
-	public void setCtDateStart(Date ctDateStart) {
-		this.ctDateStart = ctDateStart;
-	}
-	public String getProjectName() {
-		return projectName;
-	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-	public String getCtProductCode() {
-		return ctProductCode;
-	}
-	public void setCtProductCode(String ctProductCode) {
-		this.ctProductCode = ctProductCode;
-	}
-	public String getCtSupplierName() {
-		return ctSupplierName;
-	}
-	public void setCtSupplierName(String ctSupplierName) {
-		this.ctSupplierName = ctSupplierName;
-	}
-	public String getProjectDescription() {
-		return projectDescription;
-	}
-	public void setProjectDescription(String projectDescription) {
-		this.projectDescription = projectDescription;
-	}
-	
-	public int getSelectedIndex() {
-		return selectedIndex;
-	}
-	
-	public void setSelectedIndex(int selectedIndex) {
-		this.selectedIndex = selectedIndex;
-	}
-	
-	public CtAssociation getCtAssociation() {
-		return ctAssociation;
-	}
-
-	public void setCtAssociation(CtAssociation ctAssociation) {
-		this.ctAssociation = ctAssociation;
-	}
-
-	public List<CtAssociation> getAssociationList() {
-		if(associationList == null)
-			associationList = new ArrayList<CtAssociation>();
-		return associationList;
-	}
-
-	public void setAssociationList(List<CtAssociation> associationList) {
-		
-		this.associationList = associationList;
-	}
-
-	public List<CtContract> getAssociateSearchList() {
-		if(associateSearchList == null)
-			associateSearchList = new ArrayList<CtContract>();
-		return associateSearchList;
-	}
-
-	public void setAssociateSearchList(List<CtContract> associateSearchList) {
-		this.associateSearchList = associateSearchList;
-	}
-
-	public CtContract getAssocoiateCtContract() {
-		return assocoiateCtContract;
-	}
-
-	public void setAssocoiateCtContract(CtContract assocoiateCtContract) {
-		this.assocoiateCtContract = assocoiateCtContract;
-	}
-	
-	public CtAssocContract getCtDelAssocContract() {
-		return ctDelAssocContract;
-	}
-
-	public void setCtDelAssocContract(CtAssocContract ctDelAssocContract) {
-		this.ctDelAssocContract = ctDelAssocContract;
-	}
-	
+	/**
+	 * @return the ctNumber
+	 */
 	public String getCtNumber() {
 		return ctNumber;
 	}
 	
+	/**
+	 * @param ctNumber the ctNumber to set
+	 */
 	public void setCtNumber(String ctNumber) {
 		this.ctNumber = ctNumber;
 	}
-	public List<CtContract> getContractList() {
-		if(contractList == null)
-			contractList = new ArrayList<CtContract>();
-		return contractList;
+	
+	/**
+	 * @return the projectName
+	 */
+	public String getProjectName() {
+		return projectName;
 	}
-	public void setContractList(List<CtContract> contractList) {
-		this.contractList = contractList;
+	
+	/**
+	 * @param projectName the projectName to set
+	 */
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
-	public CtAssocContract getCtAssocContract() {
-		return ctAssocContract;
+	
+	/**
+	 * @return the ctProductCode
+	 */
+	public String getCtProductCode() {
+		return ctProductCode;
 	}
-	public void setCtAssocContract(CtAssocContract ctAssocContract) {
-		this.ctAssocContract = ctAssocContract;
+	
+	/**
+	 * @param ctProductCode the ctProductCode to set
+	 */
+	public void setCtProductCode(String ctProductCode) {
+		this.ctProductCode = ctProductCode;
 	}
+	
+	/**
+	 * @return the ctSupplierName
+	 */
+	public String getCtSupplierName() {
+		return ctSupplierName;
+	}
+	
+	/**
+	 * @param ctSupplierName the ctSupplierName to set
+	 */
+	public void setCtSupplierName(String ctSupplierName) {
+		this.ctSupplierName = ctSupplierName;
+	}
+	
+	/**
+	 * @return the projectDescription
+	 */
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+	
+	/**
+	 * @param projectDescription the projectDescription to set
+	 */
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+	
+	/**
+	 * @return the ctDateStart
+	 */
+	public Date getCtDateStart() {
+		return ctDateStart;
+	}
+	
+	/**
+	 * @param ctDateStart the ctDateStart to set
+	 */
+	public void setCtDateStart(Date ctDateStart) {
+		this.ctDateStart = ctDateStart;
+	}
+	
+	/**
+	 * @return the ctDateEnd
+	 */
+	public Date getCtDateEnd() {
+		return ctDateEnd;
+	}
+	
+	/**
+	 * @param ctDateEnd the ctDateEnd to set
+	 */
+	public void setCtDateEnd(Date ctDateEnd) {
+		this.ctDateEnd = ctDateEnd;
+	}
+	
+	/**
+	 * @return the associateSearchList
+	 */
+	public List<CtContract> getAssociateSearchList() {
+		if (associateSearchList == null) {
+			associateSearchList = new ArrayList<CtContract>();
+		}
+		return associateSearchList;
+	}
+	
+	/**
+	 * @param associateSearchList the associateSearchList to set
+	 */
+	public void setAssociateSearchList(List<CtContract> associateSearchList) {
+		this.associateSearchList = associateSearchList;
+	}
+	
+	/**
+	 * @return the associationList
+	 */
+	public List<CtAssociation> getAssociationList() {
+		if (associationList == null) {
+			associationList = new ArrayList<CtAssociation>();
+		}
+		return associationList;
+	}
+	
+	/**
+	 * @param associationList the associationList to set
+	 */
+	public void setAssociationList(List<CtAssociation> associationList) {
+		this.associationList = associationList;
+	}
+	
+	/**
+	 * @return the ctAssociation
+	 */
+	public CtAssociation getCtAssociation() {
+		return ctAssociation;
+	}
+	
+	/**
+	 * @param ctAssociation the ctAssociation to set
+	 */
+	public void setCtAssociation(CtAssociation ctAssociation) {
+		this.ctAssociation = ctAssociation;
+	}
+	
+	/**
+	 * @return the ctUpdateAssociation
+	 */
 	public CtAssociation getCtUpdateAssociation() {
 		return ctUpdateAssociation;
 	}
+	
+	/**
+	 * @param ctUpdateAssociation the ctUpdateAssociation to set
+	 */
 	public void setCtUpdateAssociation(CtAssociation ctUpdateAssociation) {
 		this.ctUpdateAssociation = ctUpdateAssociation;
 	}
-
-	
 }
