@@ -114,16 +114,17 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
+// TODO: Auto-generated Javadoc
 /**
- * Payment Match Backing Bean
+ * Payment Match Backing Bean.
+ *
  * @author KK LIM
  * @since 30/10/2013
- *
  */
 @ManagedBean(name = "paymentMatchBackingBean")
 @RequestScoped
 public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManagedBean>{
-
+	
 	private static Logger log = Logger.getLogger(PaymentMatchBackingBean.class);
 	private String className="@(.myPmClassName)";
 	
@@ -137,26 +138,38 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	private static final String NAV_ADJ = "/xhtml/fl/shared/hyperlinkView/adjustmentPage/adjustmentHyperlink.xhtml";
 	private static final String NAV_SI = "/xhtml/fl/shared/hyperlinkView/stopInstrPage/stopInstrHyperlink.xhtml";
 	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
+	
 	/**
+	 * Gets the class name.
+	 *
 	 * @return the className
 	 */
 	public String getClassName() {
 		return className;
 	}
+	
 	/**
+	 * Sets the class name.
+	 *
 	 * @param className the className to set
 	 */
 	public void setClassName(String className) {
 		this.className = className;
 	}
+	
 	/**
-	 * get faces scopes
+	 * get faces scopes.
+	 *
 	 * @return FacesScopes
 	 */
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	public void init() {
 		if (getManagedBean().getFulfilmentRequest() == null) {
@@ -171,6 +184,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * save,submit payment match details.
+	 * </br>submit - save data into database and BPM process will route to the next respective user.
+	 * </br>save - save data into database.
+	 * @param action the action
+	 * navigate to acknowledge page.
+	 */
 	public String submitAction(String action){
 		log.debug("PaymentMatchBackingBean.submitAction()");
 		IPaymentMatchSO paymentSO = null;
@@ -248,6 +268,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return null;
 	}
 
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -344,6 +367,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Initialize payment advice.
+	 *
+	 * @param resDTO the res dto
+	 * @return the fl payment advice
+	 */
 	private FlPaymentAdvice initializePaymentAdvice(FulfilmentResDTO resDTO) {
 		FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 		paymentAdvice.setFlInvoice(resDTO.getInvoice());
@@ -384,6 +413,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return paymentAdvice;
 	}
 	
+	/**
+	 * set adjustment details into managedbean for save payment match details.
+	 *
+	 * @param flInvoice the new adjustment doc no
+	 */
 	public void setAdjustmentDocNo(FlInvoice flInvoice) {
 		String adjustmentDocNo = "";
 		for(FlAdjustment flAdjustment : flInvoice.getFlAdjustments()) {
@@ -403,6 +437,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setAdjustmentDocNo(adjustmentDocNo);
 	}
 	
+	/**
+	 * Sets the stop instruction no based on Fulfilment Order Id.
+	 *
+	 * @param flFulfilmentOrder the new stop instr no
+	 */
 	public void setStopInstrNo(FlFulfilmentOrder flFulfilmentOrder) {
 		IFulfilmentOrderSO fulfilmentOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		
@@ -414,6 +453,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Gets the factoring details based on financial org id and address type if  isFactored.
+	 *
+	 * @return the factoring dtl
+	 */
 	public void getFactoringDtl(){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		getManagedBean().setSupplierAddress(null);
@@ -441,6 +485,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 		}
 	}
+	
+	/**
+	 * On tab change.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==0){
 		}
@@ -466,6 +516,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Recalculate advance payment.
+	 */
 	private void recalculateAdvancePayment() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		BigDecimal deductionAmt = new BigDecimal(0);
@@ -494,6 +547,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 		getManagedBean().setBalanceAmt(deductionAmt.subtract(newPaidAmt));
 	}
+	
+	/**
+	 * Validate advanced payment.
+	 */
 	private void validateAdvancedPayment() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractResDTO resDTO = new ContractResDTO();
@@ -536,6 +593,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 		}
 	}
+	
+	/**
+	 * Gets the number of contract order based on contract id.
+	 *
+	 * @return the number of contract order
+	 */
 	private void getNumberOfContractOrder() {
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -543,6 +606,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		FulfilmentResDTO resDTO = orderSO.getIssuedContractOrderCountByContractId(reqDTO);
 		getManagedBean().setNumberOfCO(resDTO.getCount());
 	}
+	
+	/**
+	 * Populate charge line data.
+	 */
 	public void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		 
@@ -623,6 +690,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setDanAmtGrandTotal(grandTotalDanAmt);
 	}
 	
+	/**
+	 * Calculate payment match summary.
+	 */
 	public void calPmSummary(){
 		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
@@ -741,6 +811,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt);
 	}
 	
+	/**
+	 * charge line On node select.
+	 */
 	public void onNodeSelect() {
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
@@ -780,6 +853,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * charge line On node un select.
+	 */
 	public void onNodeUnSelect() {
 		getManagedBean().setVotFundCode("");
 		getManagedBean().setAssetIndCode("");
@@ -792,78 +868,117 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	/**
+	 * Gets the vot fund code map.
+	 *
 	 * @return the votFundCodeMap
 	 */
 	public static Map<Long, PmVotFund> getVotFundCodeMap() {
 		return votFundCodeMap;
 	}
+	
 	/**
+	 * Sets the vot fund code map.
+	 *
 	 * @param votFundCodeMap the votFundCodeMap to set
 	 */
 	public static void setVotFundCodeMap(Map<Long, PmVotFund> votFundCodeMap) {
 		PaymentMatchBackingBean.votFundCodeMap = votFundCodeMap;
 	}
+	
 	/**
+	 * Gets the gl account code map.
+	 *
 	 * @return the glAccountCodeMap
 	 */
 	public static Map<Long, PmGlAccount> getGlAccountCodeMap() {
 		return glAccountCodeMap;
 	}
+	
 	/**
+	 * Sets the gl account code map.
+	 *
 	 * @param glAccountCodeMap the glAccountCodeMap to set
 	 */
 	public static void setGlAccountCodeMap(Map<Long, PmGlAccount> glAccountCodeMap) {
 		PaymentMatchBackingBean.glAccountCodeMap = glAccountCodeMap;
 	}
+	
 	/**
+	 * Gets the progm activity code map.
+	 *
 	 * @return the progmActivityCodeMap
 	 */
 	public static Map<Long, PmPrgActivity> getProgmActivityCodeMap() {
 		return progmActivityCodeMap;
 	}
+	
 	/**
+	 * Sets the progm activity code map.
+	 *
 	 * @param progmActivityCodeMap the progmActivityCodeMap to set
 	 */
 	public static void setProgmActivityCodeMap(
 			Map<Long, PmPrgActivity> progmActivityCodeMap) {
 		PaymentMatchBackingBean.progmActivityCodeMap = progmActivityCodeMap;
 	}
+	
 	/**
+	 * Gets the project code map.
+	 *
 	 * @return the projectCodeMap
 	 */
 	public static Map<Long, PmProject> getProjectCodeMap() {
 		return projectCodeMap;
 	}
+	
 	/**
+	 * Sets the project code map.
+	 *
 	 * @param projectCodeMap the projectCodeMap to set
 	 */
 	public static void setProjectCodeMap(Map<Long, PmProject> projectCodeMap) {
 		PaymentMatchBackingBean.projectCodeMap = projectCodeMap;
 	}
+	
 	/**
+	 * Gets the setia code map.
+	 *
 	 * @return the setiaCodeMap
 	 */
 	public static Map<Long, PmSetia> getSetiaCodeMap() {
 		return setiaCodeMap;
 	}
+	
 	/**
+	 * Sets the setia code map.
+	 *
 	 * @param setiaCodeMap the setiaCodeMap to set
 	 */
 	public static void setSetiaCodeMap(Map<Long, PmSetia> setiaCodeMap) {
 		PaymentMatchBackingBean.setiaCodeMap = setiaCodeMap;
 	}
+	
 	/**
+	 * Gets the sub setia code map.
+	 *
 	 * @return the subSetiaCodeMap
 	 */
 	public static Map<Long, PmSubSetia> getSubSetiaCodeMap() {
 		return subSetiaCodeMap;
 	}
+	
 	/**
+	 * Sets the sub setia code map.
+	 *
 	 * @param subSetiaCodeMap the subSetiaCodeMap to set
 	 */
 	public static void setSubSetiaCodeMap(Map<Long, PmSubSetia> subSetiaCodeMap) {
 		PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
 	}
+	
+	/**
+	 * Adds the payment match deduction row.
+	 */
 	public void addDeductionRow(){
 		
 		FlPaymentDeduction paymentDeduction = new FlPaymentDeduction();
@@ -875,6 +990,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().getPaymentAdvice().getFlPaymentDeduction().add(paymentDeduction);
 	}
 	
+	/**
+	 * Retrieve clauses.
+	 *
+	 * @param deduction the deduction
+	 */
 	public void retrieveClauses(FlPaymentDeduction deduction){
 		if(deduction.getDeductionType().getParameterCode() != null){
 			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
@@ -885,6 +1005,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Retrieve mof no based on supplier id.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -897,12 +1023,17 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	/**
-	 * Page navigation to FLDoc search page in PA
+	 * Page navigation to FLDoc search page in PA.
+	 *
+	 * @return the string
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
 	}
 	
+	/**
+	 * Removes Payment match deduction row.
+	 */
 	public void removeAddRow(){
 		try {
 			if(this.getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null){
@@ -921,6 +1052,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Check deduction list based on parameter id.
+	 *
+	 * @param deduction the deduction
+	 */
 	public void checkDeductionList(FlPaymentDeduction deduction){
 		IParameterSO parameterSO = null;
 		ParameterReqDTO reqDTO = null;
@@ -946,6 +1082,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Gets the dropdown values by ct details.
+	 *
+	 * @return the dropdown values by ct details
+	 */
 	public List<SelectItem> getDropdownValuesByCtDetails(){
 		if(getManagedBean().getPopulateDeductionList()== null || getManagedBean().getPopulateDeductionList().isEmpty()){
 			if (this.getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions() != null) {
@@ -960,6 +1101,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return getManagedBean().getPopulateDeductionList();
 	}
 	
+	/**
+	 * Validate duplicate deduction.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void validateDuplicateDeduction(String outcome){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		List<String> deductionList = new ArrayList<>();
@@ -1051,6 +1197,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 		}
 	}
+	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
 			validatePaymentMatch(outcome);
@@ -1071,6 +1223,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Pre submit action.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitAction(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
@@ -1079,10 +1238,19 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
+	/**
+	 * Enable auto update.
+	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
+	
+	/**
+	 * Validate payment match.
+	 *
+	 * @param outcome the outcome
+	 */
 	private void validatePaymentMatch(String outcome){
 		IPaymentMatchSO paymentSO = null;
 		try {	
@@ -1108,6 +1276,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Check have advanced payment.
+	 *
+	 * @param paymentAdvice the payment advice
+	 */
 	public void checkHaveAdvancedPayment(FlPaymentAdvice paymentAdvice){
 		if(paymentAdvice.getFlRequest().getCtContract() != null){
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
@@ -1135,6 +1308,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Gets the deduction table.
+	 *
+	 * @return the deduction table
+	 */
 	public List<FlPaymentDeduction> getDeductionTable(){
 		List<FlPaymentDeduction> deductionTable = new ArrayList<FlPaymentDeduction>();
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()){
@@ -1148,6 +1326,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return deductionTable;
 	}
 	
+	/**
+	 * Validate deduction amount .
+	 */
 	public void validateDeductionAmt(){
 		BigDecimal totalDeductionAmt = new BigDecimal(0);
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()) {
@@ -1164,6 +1345,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
+	/**
+	 * Navigate to other page based on document type.
+	 *
+	 * @param docType the doc type
+	 * @return the string
+	 */
 	public String navigateDocument(String docType){
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) ||docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
