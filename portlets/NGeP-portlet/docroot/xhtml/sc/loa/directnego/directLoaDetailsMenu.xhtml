@@ -1,0 +1,533 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<ac:lovPopup />
+	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+			</td>
+			<td  colspan="3">
+	              <ac:lov id="supplierMofNo"
+						lovId="SM_SUPPLIER_MOFNO"
+						postUpdateListener="lOADetailBackingBean.mofNoListener(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount)"
+						headerText="Supplier MOF No Lov"
+						selectionMode="single"
+						readonly="true"
+						size="34"
+						saveObject="lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.smMofAccount"
+						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
+						update="@form" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
+			</td>
+			<td colspan="3">
+				 <ac:lov id="supplierId" lovId="SM_SUPPLIER"
+						postUpdateListener="lOADetailBackingBean.supplierListener(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier)"
+						headerText="Supplier Lov" 
+						selectionMode="single"
+					    saveObject="lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier"
+						readonly="true"
+						size="34"
+						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
+						update="@form"/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.branch']}"/>
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td colspan="3">
+					<p:selectOneMenu id="branch"
+						value="#{lOADetailBackingBean.managedBean.selectedSupplierBranchName}"
+						style="width: 244px;margin-bottom: 5px;"
+						label="#{lbl['lbl.sc.loiloa.branch']}">
+						<f:selectItem itemLabel="HQ" itemValue="#{null}" />
+						<f:selectItems
+							value="#{lOADetailBackingBean.managedBean.branchsList}"
+							var="smSupplierBranch" 
+							itemValue="#{smSupplierBranch.branchName}" itemLabel="#{smSupplierBranch.branchName}" />
+						<p:ajax event="change"
+							listener="#{lOADetailBackingBean.handleBranchDetailsChanged}"
+							partialSubmit="true" process="@this" update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail" />
+					</p:selectOneMenu>
+					<p:message id="branchMsg" for="branch" display="icon" />
+				
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" />
+			</td>
+			<td width="32%">
+				<p:inputTextarea id="suppAddr" cols="36"
+				    disabled="true"
+					rows="5"
+					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.supplierAddress)}"
+					style=" margin-bottom:5px;"/>
+			</td>	
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.contact.person']}" />
+			</td>
+			<td>
+				<p:inputText id="suppContact" size="35"
+				    disabled="true"
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierContact}"/>
+			</td>
+			
+		</tr>
+		<tr>
+		<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" />
+			</td>
+			<td width="32%">
+				<p:inputText id="suppPhoneNo" size="35"
+				    disabled="true"
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierPhoneNo}"/>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" />
+			</td>
+			<td>
+				<p:inputText id="suppFaxNo" size="35"
+				    disabled="true"
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierFaxNo}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+			</td>
+			<td>
+				<p:inputText id="suppMobNo" size="35"
+				    disabled="true"
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierMobNo}"/>
+			</td>
+		</tr>
+		
+		<tr>
+		<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
+			</td>
+			<td colspan="3">
+				<p:inputText id="suppEmail" size="97" style=" margin-bottom:5px;"
+				    disabled="true"
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierEmail}"/>
+			</td>
+		</tr>
+		
+		</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.details']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="18%"><h:outputLabel
+						value="#{lbl['lbl.sc.select.ptj']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td style="white-space: nowrap;"><p:selectOneMenu style="margin-bottom: 5px;
+						id="ptjselect" required="true" label="#{lbl['lbl.sc.select.ptj']}"
+						value="#{lOADetailBackingBean.managedBean.scLoa.pmOrgProfile.orgProfileId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{lOADetailBackingBean.ptjDropdownList()}"
+							var="pmOrgProfile"
+							itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+							itemValue="#{pmOrgProfile.orgProfileId}" />
+						<p:ajax event="change"
+							listener="#{lOADetailBackingBean.ptjChangeListener(lOADetailBackingBean.managedBean.scLoa.pmOrgProfile)}" />
+					</p:selectOneMenu> 
+				</td>
+			</tr>
+
+			<tr>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td colspan="3" width="82%">
+				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="97"
+					label="#{lbl['lbl.sc.loiloa.loa.title']}"
+					maxlength="100" />
+				<p:message id="titleMsg" for="title" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.file.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td colspan="3">
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="42" />
+				<p:inputText id="fileExtNo" styleClass="ppNumericAlign"
+					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="1"
+					label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
+					maxlength="3"/>
+				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<p:outputLabel value="LOA type" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+				<td><p:selectOneMenu id="loatypeId"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.directLoaType)}" />
+					</p:selectOneMenu> 
+				</td>
+			</tr>
+		
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.res.due.date']}" />
+			</td>
+			<td colspan="3">
+				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.ackDueDate}" size="14" >
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>	
+				<p:spacer width="8px" />
+				<p:inputText styleClass="ppNumericAlign"
+				    disabled="true"
+					value="#{!empty lOADetailBackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.ackDueDate) : ''}"
+					 size="8" />
+				#{lbl['lbl.sc.days']}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.off.price']}" />
+			</td>
+			<td colspan="3">
+				<p:inputText styleClass="ppNumericAlign"
+					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
+					 size="30">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</td>
+		</tr>
+		<tr>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td width="32%">
+				<p:selectOneRadio id="insWarranty"
+					value="#{lOADetailBackingBean.managedBean.scLoa.insWarrantyReq}"
+					label="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}">
+					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+				</p:selectOneRadio>
+				<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
+			</td>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td width="32%">
+				<p:selectOneRadio id="bondReq"
+					value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
+					label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
+					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+					<p:ajax partialSubmit="true" process="@this" update="menuTab" />
+				</p:selectOneRadio>
+				<p:message id="bondReqMsg" for="bondReq" display="icon" />
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.details']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td colspan="3">
+					<p:selectOneMenu id="contractType"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId}"
+						style="width: 178px;margin-bottom: 5px;"
+						
+						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
+						<f:selectItems
+							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
+						<p:ajax event="change"
+							listener="#{lOADetailBackingBean.contractTypeChanged()}"
+							partialSubmit="true" process="@this"
+							update="contractAgencyPG,contractAdmin" />
+					</p:selectOneMenu>
+					<p:message id="contractTypeMsg" for="contractType" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td width="32%">
+					<h:panelGroup id="contractAgencyPG">
+					<p:selectOneMenu id="contractAgencyProf"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgProfileId}"
+						style="width: 280px;margin-bottom: 5px;"
+						
+						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
+						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+						
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems
+							value="#{lOADetailBackingBean.managedBean.agencyProfileDDList}"
+							var="pmOrgProfile" itemLabel="#{pmOrgProfile[1]}"
+							itemValue="#{pmOrgProfile[0]}" />
+						<p:ajax event="change" 
+							listener="#{lOADetailBackingBean.contractAgencyChanged()}"
+							partialSubmit="true" process="@this"
+							update="contractAdmin" />
+					</p:selectOneMenu>
+					<p:message id="contractAgencyProfMsg" for="contractAgencyProf" display="icon" />
+					
+					<p:selectOneMenu id="contractAgency"
+						value="#{lOADetailBackingBean.managedBean.selectedContractAgency}"
+						style="width: 280px;margin-bottom: 5px;"
+						
+						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
+						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode != ParameterConst.contractTypeMinistry}">
+						
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems
+							value="#{lOADetailBackingBean.managedBean.agencyList}"
+							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+							itemValue="#{pmParameterDesc.pmParameter.parameterCode}" />
+						<p:ajax event="change" 
+							listener="#{lOADetailBackingBean.contractAgencyChanged()}"
+							partialSubmit="true" process="@this"
+							update="contractAdmin" />
+					</p:selectOneMenu>
+					<p:message id="contractAgencyMsg" for="contractAgency" display="icon" />
+					</h:panelGroup>
+				
+			</td>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td width="32%">
+					<p:selectOneMenu id="contractAdmin"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
+						style="width: 280px;margin-bottom: 5px;"
+						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
+						
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems
+							value="#{lOADetailBackingBean.managedBean.contractAdminList}"
+							var="pmuser" itemLabel="#{pmuser.userName}"
+							itemValue="#{pmuser.userId}" />
+						<p:ajax event="change"
+							listener="#{lOADetailBackingBean.contractAdminChanged()}"
+							partialSubmit="true" process="@this" update="@this" />
+					</p:selectOneMenu>
+					<p:message id="contractAdminMsg" for="contractAdmin" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
+			</td>
+			<td colspan="3">
+				<p:inputText styleClass="ppNumericAlign"
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration}"
+					 size="30" />
+			</td>
+		</tr>
+		<ui:param name="lbleffDate" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
+		<ui:param name="lblexpDate" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.exp.date' : 'lbl.sc.loiloa.loa.cont.exp.date'}" />
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl[lbleffDate]}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td>
+				<p:calendar id="effdate"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+					showOn="button"
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
+					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
+					
+					label="#{lbl[lbleffDate]}"
+					size="25"
+					disabled="#{!isEditableStatus}">
+					<p:ajax event="dateSelect" listener="#{lOADetailBackingBean.contractEffDateChanged()}" update="expdate" />
+				</p:calendar>
+				<p:message id="effdateMsg" for="effdate" display="icon" />
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl[lblexpDate]}" />
+			</td>
+			<td>
+				<p:calendar id="expdate"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+					showOn="button"
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractExpDate}"
+					mindate="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
+					
+					label="#{lbl[lblexpDate]}"
+					size="25" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.agree']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td>
+				<p:selectOneRadio id="agreementReq"
+					value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
+					
+					label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+					disabled="#{!isEditableStatus}">
+					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+				</p:selectOneRadio>
+				<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.agency.witness.detail']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td colspan="3">
+				<p:inputText id="witnessName" size="50"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.witnessName}"
+					
+					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
+					maxlength="50"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.ic.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td colspan="3">
+				<p:inputText id="identificationNo" size="50"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
+					
+					label="#{lbl['lbl.sc.loiloa.witness.ic.no']}"
+					maxlength="15"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.designation']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td colspan="3">
+				<p:inputText id="designation" size="50"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
+					
+					maxlength="30"
+					label="#{lbl['lbl.sc.loiloa.witness.designation']}"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="designationMsg" for="designation" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3" valign="top" width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td rowspan="3" width="32%">
+				<p:inputTextarea id="address"
+					cols="50" rows="5"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
+					style=" margin-bottom:5px;"
+					
+					maxlength="200"
+					label="#{lbl['lbl.sc.loiloa.address']}"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="addressMsg" for="address" display="icon" />
+			</td>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td width="32%">
+				<p:inputText id="phoneNo" size="30"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.phoneNo}"
+					
+					maxlength="20"
+					validator="#{webappBean.checkPhoneNumber}"
+					label="#{lbl['lbl.sc.loiloa.tel.no']}"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+			</td>
+			<td>
+				<p:inputText id="faxNo" size="30"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.faxNo}"
+					maxlength="20"
+					validator="#{webappBean.checkPhoneNumber}"
+					label="#{lbl['lbl.sc.loiloa.fax.no']}"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="faxNoMsg" for="faxNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+			</td>
+			<td>
+				<p:inputText id="mobileNo" size="30"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.mobileNo}"			
+					maxlength="20"
+					validator="#{webappBean.checkPhoneNumber}"
+					label="#{lbl['lbl.sc.loiloa.mobile.no']}"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
+			</td>
+			<td colspan="3">
+				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
+					maxlength="80"
+					validator="#{webappBean.checkEmail}"
+					label="#{lbl['lbl.sc.loiloa.email']}"
+					disabled="#{!isEditableStatus}" />
+				<p:message id="emailMsg" for="email" display="icon" />
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+</ui:composition>
