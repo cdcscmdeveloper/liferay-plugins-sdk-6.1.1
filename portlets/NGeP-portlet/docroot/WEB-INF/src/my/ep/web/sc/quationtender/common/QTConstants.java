@@ -65,6 +65,7 @@ public interface QTConstants {
 	public static final String MULTI_LOI_PAGE = "loiNegotiationResultMenu.xhtml";
 	public static final String QT_LOA_LIST_PAGE = "/xhtml/sc/loa/qtLoaList/qtLoaList.xhtml"; 
 	public static final String QT_SUPPLIER_A1_PAGE = "/xhtml/sc/loa/supplierresponse/a1form/loaSupplierAOneMaint.xhtml";
+	public static final String SC_DIRECT_LOA_MAIN_PAGE = "/xhtml/sc/loa/directnego/directLoaDetailsMain.xhtml";
 
 	public static final String SC_LOI_TAB = "LOI";
 	public static final String SC_AWARD_TAB = "Award Details";
