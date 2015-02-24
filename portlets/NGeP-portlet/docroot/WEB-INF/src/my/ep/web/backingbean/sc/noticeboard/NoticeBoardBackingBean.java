@@ -22,6 +22,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -40,6 +41,8 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
@@ -60,6 +63,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -67,6 +71,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.sc.CommitteType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -77,6 +82,7 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -659,7 +665,8 @@ public class NoticeBoardBackingBean extends
 
 	public String showPriceSchedules(Long qtId) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
-
+		ScQtCommittee evalCommitte = null;
+		
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
@@ -676,6 +683,20 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setQualificationBean(
 						resDTO.getQualificationBean());
 			}
+			
+			// Get EC members for 1 tier & OC for 2 tier
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())) {
+				evalCommitte = getQtCommiteDtlsByQtIdNType(
+						CommitteType.getValue("EvaluationCommittee"), qtId);
+
+			} else {
+				evalCommitte = getQtCommiteDtlsByQtIdNType(
+						CommitteType.getValue("OpeningCommittee"), qtId);
+			}
+			this.getManagedBean().setScCommitteeMembers(
+					evalCommitte != null ? evalCommitte.getScCommittee()
+							.getScCommitteeMembers() : null);
 		} finally {
 		}
 		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml?faces-redirect=true";
@@ -1702,4 +1723,30 @@ public class NoticeBoardBackingBean extends
 		this.displayImage = displayImage;
 	}
 
+	/**
+	 * Get any Committee member details through 
+	 * retrieveCommitteByQtIdNCommType method
+	 * 
+	 * @param commType
+	 * @param qtId
+	 * @return qtCommitte
+	 */
+	private ScQtCommittee getQtCommiteDtlsByQtIdNType(String commType, Long qtId) {
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setCommitteeType(commType);
+		reqDTO.setQtId(qtId);
+		CommitteResDTO resDTO = null;
+		ScQtCommittee qtCommitte = null;
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
+			qtCommitte = resDTO.getScQtCommittee();
+		} finally {
+			committeSO = null;
+		}
+		return qtCommitte;
+	}
+	
 }
