@@ -64,9 +64,10 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
+// TODO: Auto-generated Javadoc
 /**
- * Backingbean for Stop Instruction
- * 
+ * Backingbean for Stop Instruction.
+ *
  * @author Kieyun
  * @since 7/7/2014
  */
@@ -74,15 +75,27 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	
+	/**
+	 * Gets the faces scopes.
+	 *
+	 * @return the faces scopes
+	 */
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
+	
 	private IFulfilmentOrderSO getFulfilmentOrderSO() {
 		return (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 	}
 	
+	/**
+	 * Save stop instruction.
+	 *
+	 * @param action the action
+	 * navigate to acknowledge page.
+	 */
 	public String saveStopInstruction(String action) {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		
@@ -130,6 +143,9 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -166,6 +182,11 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		}
 	}
 	
+	/**
+	 * Gets the populate reason list based on language and reason category.
+	 *
+	 * @return the populate reason list
+	 */
 	public List<SelectItem> getPopulateReasonList() {
 		IReasonSO reasonSO = (IReasonSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
 		
@@ -184,6 +205,9 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return populateReasonList;
 	}
 	
+	/**
+	 * Populate stop instr item.
+	 */
 	public void populateStopInstrItem() {
 		FlStopInstrItem flStopInstrItem = null;
 		List<FlStopInstrItem> stopInstrItems = new ArrayList<FlStopInstrItem>();
@@ -208,6 +232,9 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		getManagedBean().getStopInstr().setStopInstrItems(stopInstrItems);
 	}
 	
+	/**
+	 * Populate charge line data.
+	 */
 	public void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		
@@ -269,6 +296,11 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		}
 	}
 		
+	/**
+	 * Gets the user role.
+	 *
+	 * @return the user role
+	 */
 	private String getUserRole() {
 		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
 			return RoleCode.FL_APPROVER.value();
@@ -286,10 +318,20 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
 	private boolean isFlFulfilmentApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
+	/**
+	 * On tab change.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			if(null==getManagedBean().getChargeLineItemRoot()){
@@ -298,6 +340,12 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		}
 	}
 	
+	/**
+	 * Retrieve mof no based on supplier id.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -310,12 +358,21 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	}
 	
 	/**
-	 * Page navigation to FLDoc search page in StopInstr
+	 * Page navigation to FLDoc search page in StopInstr.
+	 *
+	 * @return the string
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
 	}
 	
+	/**
+	 * Signing action.
+	 *
+	 * @param outcome the outcome
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
@@ -360,6 +417,13 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	}
 	
 	
+	/**
+	 * Pre submit stop instruction.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitStopInstruction(
 			PmDigiSign pmDigiSign) throws Exception {
 		this.getManagedBean().setPmDigiSign(pmDigiSign);
@@ -383,11 +447,19 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return saveStopInstruction(getManagedBean().getButtonAction());
 	}
 	
+	/**
+	 * Enable auto update.
+	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
 	
+	/**
+	 * Checks if is supplier role.
+	 *
+	 * @return true, if is supplier role
+	 */
 	private boolean isSupplierRole(){
 		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
@@ -404,6 +476,15 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	}
 	
 	// To update digisign data for spki
+	/**
+	 * Update spki digi sign data.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @param docType the doc type
+	 * @param docId the doc id
+	 * @param docNumber the doc number
+	 * @param textBeforeSign the text before sign
+	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber , String textBeforeSign) {
 		FacesScopes facesScope = new FacesScopes();
@@ -421,10 +502,21 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		pmDigiSign.setSignedData(signedData);
 	}
 	
+	/**
+	 * Back to document.
+	 *
+	 * @return the string
+	 */
 	public String backToDocument() {
 		return getManagedBean().getBackToDocument();
 	}
 
+	/**
+	 * Navigate to order No Hyper link page ,if doc type is FL.
+	 *
+	 * @param docType the doc type
+	 * @return the string
+	 */
 	public String navigateDocument(String docType){
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
