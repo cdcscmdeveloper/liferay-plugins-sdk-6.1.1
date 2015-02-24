@@ -11,8 +11,8 @@
 		<table style="width: 100%" >
 			<tr>
 				<td>
-				<p:panel style="width: 100%;border:0;" header="REPORT CRITERIA"
-						toggleable="true" id="rptModuleId" >
+				<p:panel style="width: 100%;" header="REPORT CRITERIA"
+						 id="rptModuleId" >
 						 <table style="margin-top: 10px; width: 100%;">
 						  <tr>
 						    <td width="100%">
@@ -36,26 +36,28 @@
 						    </tr>
 						    
 						     <tr>
-						    <td width="100%">					
-						  		<p:outputLabel value="#{reportBackingBean.reportName}" 
-							 	style="font-size:17px;margin-top:17px;font-weight:bold;white-space:normal;float:left;"/>
-							</td>
-						  </tr>	
-						  
-						  <c:if test="#{reportBackingBean.managedBean.rptGenBean.madatoryIndicatorView}">
+						     <td width="100%">
+						 <p:panel style="width: 100%;" header="#{reportBackingBean.reportName}"
+						 id="rptNameId" toggleable="true">    
+						 <table  style="width: 100%;margin-top:17px;"  >
+						 <c:if test="#{reportBackingBean.managedBean.rptGenBean.madatoryIndicatorView}">
 						  <tr>
 						    <td width="100%">
 								<p:outputLabel value="*" styleClass="mandatory" style="float:left;margin-left:20px;"/><p:outputLabel value=" Indicates required field" style="white-space:normal;float:left;"/>
 							    </td>
 						  </tr>
-						  </c:if>							    
-						  </table>	
-						 <ui:include src="screportcontent.xhtml"></ui:include>
+						  </c:if>
+						  <tr>
+						  <td>
+						  <ui:include src="screportcontent.xhtml"></ui:include>
 						 <ui:include src="cmreportcontent.xhtml"></ui:include>						
 						 <ui:include src="flreportcontent.xhtml"></ui:include>
 						 <ui:include src="smreportcontent.xhtml"></ui:include>
-						 <ui:include src="ctreportcontent.xhtml"></ui:include>		
-					<div>
+						 <ui:include src="ctreportcontent.xhtml"></ui:include>
+						  </td>
+						  </tr>
+							</table>
+							<div>
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
 						<TABLE style="margin-top:10px;width:50%;">
 							<TR>
@@ -80,8 +82,8 @@
 							</TR>
 						</TABLE>
 						</c:if>							
-		            </div>		            
-		           <h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
+		            </div>
+					<h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
 		            <div align="right">	
 		            <p:commandButton value="#{lbl['lbl.btn.generate']}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
 		            update="@form" partialSubmit="true" process="@form">
@@ -91,7 +93,10 @@
 					update="@form"  partialSubmit="true" process="@form"/>					        					
 				   </div>
 				   </h:panelGroup>
-				   
+				  </p:panel>
+				  </td>
+				  </tr>								    
+				  </table>	
 					<p:dialog id="reportGenDialog" widgetVar="reportGenDialog"
 						modal="true" header="Report" width="1100" height="500" 
 						resizable="false" position="right" closable="true"
