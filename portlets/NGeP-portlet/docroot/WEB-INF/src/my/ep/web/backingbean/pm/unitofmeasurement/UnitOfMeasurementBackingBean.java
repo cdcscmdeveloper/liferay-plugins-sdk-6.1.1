@@ -6,28 +6,30 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.unitofmeasurement.UnitOfMeasurementManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -327,8 +329,28 @@ public class UnitOfMeasurementBackingBean extends
 				this.getManagedBean().setPmUom(resDTO.getPmUom());
 		 
 		 if(resDTO.isSuccessful()){
+//			 FacesContext.getCurrentInstance().addMessage(null,
+//				new FacesMessage(FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
+			 if(uom.isBrandNew()){
 			 FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_780091, new String[]{resDTO.getPmUom().getUomCode()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
+			 
+			 } else{
+				 FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(
+							    FacesMessage.SEVERITY_INFO,
+							    null,
+					    		MessageUtils.getMessage(MessageConst.INFO_780092, new String[]{resDTO.getPmUom().getUomCode()}, 
+						    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+						    		new FacesScopes().getUserLocale())
+					    		));
+			 }
 			 
 			}
 	
