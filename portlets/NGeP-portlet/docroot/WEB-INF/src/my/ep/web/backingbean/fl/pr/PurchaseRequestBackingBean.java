@@ -155,9 +155,10 @@ import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
+// TODO: Auto-generated Javadoc
 /**
- * Backing Bean for Create Purchase Order
- * 
+ * Backing Bean for Create Purchase Order.
+ *
  * @author Giribabu
  * @since 7/10/2013
  */
@@ -174,6 +175,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private boolean selectAllCheckbox;
 	
 	/**
+	 * Gets the class name.
+	 *
 	 * @return the className
 	 */
 	public String getClassName() {
@@ -181,6 +184,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the class name.
+	 *
 	 * @param className the className to set
 	 */
 	public void setClassName(String className) {
@@ -196,9 +201,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
 	
-	
-	private String test;
-	
 	private String queryItemCode;
 	private String queryItemName;
 	private String queryDesc;
@@ -206,8 +208,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
 
 	/**
-	 * get faces scopes
-	 * 
+	 * get faces scopes.
+	 *
 	 * @return FacesScopes
 	 */
 	private FacesScopes getFacesScopes() {
@@ -215,6 +217,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return facesScopes;
 	}
 
+	/**
+	 * Instantiates a new purchase request backing bean.
+	 */
 	public PurchaseRequestBackingBean() {
 		if(getManagedBean().getFeeVoteFund()==null) {
 			IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
@@ -223,6 +228,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	public void init() {
 		if (getManagedBean().getFulfilmentRequest() == null) {
@@ -285,6 +293,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setDeleteButtonHide(true);
 	}
 
+	/**
+	 * save,submit the purchase request
+	 * 
+	 * * @param String action 
+	 *  <p>submit - save data into database and BPM process will route to the next respective user.
+	 * 	<p>save - save data into database.
+	 *  navigate to acknowledge page.
+	 */
 	public String fulfillmentRequestAction(String action) throws Exception {
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -336,12 +352,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						MessageUtils.getMessage(messageId, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-//							MessageUtils.getMessage(MessageConst.INFO_700002, 
-//									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER), resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, 
-//									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}	
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 //					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -367,6 +377,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return null;
 	}
 
+	/**
+	 * set fulfilment request attribute into managedbean for save purchase request details.
+	 *
+	 * @param resDTO the new fulfilment request field
+	 */
 	public void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
 		PurchaseRequestReqDTO scReqDTO = new PurchaseRequestReqDTO();
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
@@ -502,6 +517,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 
+	/**
+	 * flDeliveryAddrList method get Delivery address list based on OrgProfileId and AddressType.
+	 */
 	public void flDeliveryAddrList() {
 		AddressReqDTO reqDTO = new AddressReqDTO();
 		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
@@ -512,6 +530,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		sortAddressType(getManagedBean().getAddressTypesList());
 	}
 	
+	/**
+	 * flManualDeliveryAddr Method loads country List.
+	 * default selected one is Malaysia.
+	 * loads states list based malaysia country.
+	 */
 	public void flManualDeliveryAddr() {
 		getManagedBean().setEmailValidate(false);
 		retrieveCountryList();
@@ -548,6 +571,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}		
 	}
 	
+	/**
+	 * API for updating the user selected delivery addresses to delivery address list(intended address for goods delivery).
+	 * <br/>
+	 *  It does not allow the duplicate addresses selected. If any,it will give the "Address already Slected" Message.
+	 *  <br/>
+	 *  Sorts delivery addresses based on the address.
+	 */
 	public void updateDeliveryAddrDt() {
 		if (null == getManagedBean().getSelectedPmDelAddrList()
 				|| getManagedBean().getSelectedPmDelAddrList().isEmpty()) {
@@ -590,6 +620,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		selectAddrEvent();
 	}
+	
+	/**
+	 * Method Update manual delivery address  List.
+	 */
 	public void updateManualDeliveryAddrDt() {
 		getManagedBean().setEmailValidate(true);
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
@@ -631,6 +665,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
 	
+	/**
+	 * Close listener.
+	 */
 	public void closeListener() {
 		log.info("closeListener");
 		getManagedBean().setEmailValidate(true);
@@ -639,9 +676,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
+	 * Checks if is delivery address contains in delivery address list.
+	 *
 	 * @param addrType selected delivery address.
 	 * @param flDeliveryAddresses list of delivery addresses.
-	 * @return returns true if selected delivery address is already added,otherwise false.
+	 * @return returns true if selected delivery address is already added in delivery address list,otherwise false.
 	 */
 	private boolean isDeliveryAddressContains(PmAddressType addrType,
 			List<FlDeliveryAddress> flDeliveryAddresses) {
@@ -658,6 +697,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	
+	/**
+	 * if any checkbox selected from delivery address  List,show the deleted button for delete the particular delivery address from delivery address  List.
+	 * <br/>
+	 * if all check boxes unselected,hide the delete button.
+	 *
+	 * @param e the e
+	 */
 	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
 		boolean delAddrSelected=(boolean) e.getComponent().getAttributes().get("value");
@@ -694,6 +740,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return isAnyAddrSelected;
 	}
 
+	/**
+	 * Removes the selected delivery addresses from delivery Address List.
+	 */
 	public void removeAddRow(){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
@@ -780,12 +829,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Select addr event.
+	 */
 	public void selectAddrEvent() {
 		populateItemsForSelectedAddress();
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.reset("form:itemDetPanelGroup");
 	}
 
+	/**
+	 * assign items to selected delivery address ,once user key in Ordered Quantity to item from item list
+	 * </br>
+	 * populating items for selected delivery address from delivery address list.
+	 */
 	private void populateItemsForSelectedAddress() {
 		List<FlFulfilmentItemAddr> itemsList = new ArrayList<FlFulfilmentItemAddr>();
 
@@ -820,6 +877,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setShowAllItemsRows(itemsList);
 	}
 	
+	/**
+	 * Validate price type.
+	 *
+	 * @param itemsList the items list
+	 */
 	private void validatePriceType(List<FlFulfilmentItemAddr> itemsList) {
 		if(getManagedBean().getPmPriceType() != null){
 			IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
@@ -842,6 +904,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 
+	/**
+	 * Method get item list based on PurchaseRequestId.
+	 */
 	public void addPurchsedItems() {
 		FlFulfilmentItemAddr flItemAddr = null;
 		
@@ -916,6 +981,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 
+	/**
+	 * Checks if is purchase item contains.
+	 *
+	 * @param purchaseItem the purchase item
+	 * @param showAllItemsRows the show all items rows
+	 * @return true, if is purchase item contains
+	 */
 	private boolean isPurchaseItemContains(ScRequestNoteDtl purchaseItem,
 			List<FlFulfilmentItemAddr> showAllItemsRows) {
 		boolean isContains=false;
@@ -931,22 +1003,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 
+	/**
+	 * Selected item row.
+	 */
 	public void selectedItemRow() {
 		getManagedBean().setSelectedRowFlg(true);
 	}
-
-	public String removeItemRow() {
-		int delItemsListSize = getManagedBean().getSelectedItemsRows().size();
-		if (delItemsListSize == getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().size()) {
-			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().clear();
-		} else {
-			for (FlFulfilmentItemAddr fulfilmentItem : getManagedBean().getSelectedItemsRows()) {
-				getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().remove(fulfilmentItem);
-			}
-		}
-		return null;
-	}
-
+	
+	/**
+	 * Method calculate Order Amount based on order quantity.
+	 *
+	 * @param flItemAddr the fl item addr
+	 */
 	public void retrieveOrderAmount(FlFulfilmentItemAddr flItemAddr){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
@@ -1190,6 +1258,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	
+	/**
+	 * Items to selected address.
+	 *
+	 * @param flItemAddr the fl item addr
+	 */
 	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItemAddr) {
 		if(null== flItemAddr.getOrderedQty() || flItemAddr.getOrderedQty().doubleValue()==0) {
 			for(FlFulfilmentItemAddr item:getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
@@ -1234,6 +1307,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -1283,10 +1359,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");
 	}
 
+	/**
+	 * Calculate sub total.
+	 *
+	 * @param quantity the quantity
+	 */
 	public void calculateSubTotal(BigDecimal quantity){
 		getManagedBean().getSelectedItemAddr().setSubTotal(quantity);
 	}
 	
+	/**
+	 * Method get approver group and approver List.
+	 */
 	private void initializeApproverGroup() {
 		IFulfilmentRequestSO requestSO = null;
 		try {
@@ -1342,6 +1426,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Gets the user group dropdown.
+	 *
+	 * @return the user group dropdown
+	 */
 	public SelectItem[] getUserGroupDropdown() {
 		SelectItem[] items = null;
 		if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null) {
@@ -1355,6 +1444,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	    return items;
 	}
 	
+	/**
+	 * User group change listener.
+	 */
 	public void userGroupChangeListener() {
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1374,16 +1466,31 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().getApproverModel().setTarget(target);
 	}
 	
+	/**
+	 * Checks if user is  fl fulfillment requisitioner.
+	 *
+	 * @return true, if is fl fulfilment requisitioner
+	 */
 	public boolean isFlFulfilmentRequisitioner() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
 	public boolean isFlFulfilmentApprover() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
+	/**
+	 * Gets the login user org.
+	 *
+	 * @return the login user org
+	 */
 	private void getLoginUserOrg(){
 		PmUser user = getFacesScopes().getUserSessionBean();
 		UserReqDTO reqDTO = new UserReqDTO();
@@ -1395,6 +1502,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
+	 * Checks if is check flg.
+	 *
 	 * @return the checkFlg
 	 */
 	public boolean isCheckFlg() {
@@ -1402,12 +1511,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
+	 * Sets the check flg.
+	 *
 	 * @param checkFlg the checkFlg to set
 	 */
 	public void setCheckFlg(boolean checkFlg) {
 		this.checkFlg = checkFlg;
 	}
 	
+	/**
+	 * Gets the received ptj list.
+	 *
+	 * @return the received ptj list
+	 */
 	public List<SelectItem> getReceivedPTJList() {
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
@@ -1428,6 +1544,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return retrievePTJList;
 	}
 	
+	/**
+	 * Edits the manual address.
+	 *
+	 * @param flDelAddress the fl del address
+	 */
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
 		//retrieveCountryList();
 		getManagedBean().setEmailValidate(false);
@@ -1483,6 +1604,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		flDelAddress.setEditable(true);
 	}
 	
+	/**
+	 * Receiving officer list based on address Id.
+	 *
+	 * @param flDelAddress the fl del address
+	 */
 	public void receivingOfficerList(FlDeliveryAddress flDelAddress){
 		Long addressId = flDelAddress.getPmAddress().getAddressId();
 		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
@@ -1497,6 +1623,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 	}
 	
+	/**
+	 * Retrieve country list.
+	 */
 	public void retrieveCountryList() {
 		
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
@@ -1504,6 +1633,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setCountryList(resDTO.getCountryList());
 	}
 	
+	/**
+	 * Retrieve state list based on CountryID.
+	 *
+	 * @param e the e
+	 */
 	public void retrieveStateList(AjaxBehaviorEvent e) {
 		Long countryIdId = (Long) e.getComponent().getAttributes().get("value");
 		StateReqDTO reqDTO = new StateReqDTO();
@@ -1513,6 +1647,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setStateList(resDTO.getStateList());
 	}
 	
+	/**
+	 * Retrieve division list based on stateId.
+	 *
+	 * @param e the e
+	 */
 	public void retrieveDivisionList(AjaxBehaviorEvent e){
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
 		DivisionReqDTO reqDTO= new DivisionReqDTO();
@@ -1530,6 +1669,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Retrieve district list based on divisionId.
+	 *
+	 * @param e the e
+	 */
 	public void retrieveDistrictList(AjaxBehaviorEvent e) {
 		Long divisionId = (Long) e.getComponent().getAttributes().get("value");
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
@@ -1540,6 +1684,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 	
+	/**
+	 * Retrieve city list based on districtId.
+	 *
+	 * @param e the e
+	 */
 	public void retrieveCityList(AjaxBehaviorEvent e) {
 		Long districtId = (Long) e.getComponent().getAttributes().get("value");
 		CityReqDTO reqDTO = new CityReqDTO();
@@ -1549,6 +1698,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.getManagedBean().setCityList(resDTO.getCityList());
 	}
 	
+	/**
+	 * Select item node event.
+	 */
 	public void selectItemNodeEvent() {
 		if(null != getManagedBean().getSelectedNodes() && getManagedBean().getSelectedNodes().length >1){
 			for(TreeNode selectedNode:getManagedBean().getSelectedNodes()){
@@ -1563,6 +1715,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * display the charge line details,if charge line applied for selected node,
+	 */
 	public void onNodeSelect() {
 		//reset the checkboxes already selected.
 		resetSelectedTreeNodes();
@@ -1603,6 +1758,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * clear the charge line details,if node is unselected,
+	 */
 	public void onNodeUnSelect() {
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
@@ -1626,6 +1784,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setFinancingTypeCode("");		
 	}
 	
+	/**
+	 * Clear popup lists.
+	 */
 	public void clearPopupLists(){
 		updateSelectedTreeNodes();
 		if(getManagedBean().getSelectedNodes().length==0) {
@@ -1647,6 +1808,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		RequestContext.getCurrentInstance().execute("applyBulkCharge.show()");
 	}
 	
+	/**
+	 * Charge line apply for selected nodes.
+	 */
 	public void chargeLineApply() {
 		IParameterSO parameterSO = null;
 		try {
@@ -1728,6 +1892,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Populate charge line data.
+	 *
+	 * @param retainPreviousSelection the retain previous selection
+	 */
 	private void populateChargeLineData(boolean retainPreviousSelection) {
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
@@ -1801,6 +1970,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 	}
 
+	/**
+	 * Charge line validation.
+	 */
 	private void chargeLineValidation() {
 		if(getManagedBean().getVotFundId()==null) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{
@@ -1873,6 +2045,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Update selected tree nodes.
+	 */
 	private void updateSelectedTreeNodes() {
 		List<TreeNode> selectedNodes=new ArrayList<TreeNode>();
 		TreeNode root=getManagedBean().getChargeLineItemRoot();
@@ -1890,6 +2065,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 
+	/**
+	 * Update all items with charge drops.
+	 */
 	private void updateAllItemsWithChargeDrops() {
 		updateSelectedTreeNodes();
 		if(getManagedBean().getSelectedNodes().length==0) {
@@ -1909,6 +2087,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 
+	/**
+	 * Show item query.
+	 *
+	 * @param flItemAddress the fl item address
+	 */
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
 		flItemAddress.getScRequestItem().getItemName();
 		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
@@ -1919,6 +2102,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
+	 * Checks if is display item pnl.
+	 *
 	 * @return the displayItemPnl
 	 */
 	public boolean isDisplayItemPnl() {
@@ -1926,6 +2111,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the display item pnl.
+	 *
 	 * @param displayItemPnl the displayItemPnl to set
 	 */
 	public void setDisplayItemPnl(boolean displayItemPnl) {
@@ -1933,6 +2120,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
+	 * Gets the pm prj setia.
+	 *
 	 * @return the pmPrjSetia
 	 */
 	public Long getPmPrjSetia() {
@@ -1940,6 +2129,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the pm prj setia.
+	 *
 	 * @param pmPrjSetia the pmPrjSetia to set
 	 */
 	public void setPmPrjSetia(Long pmPrjSetia) {
@@ -1947,20 +2138,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
-	 * @return the test
-	 */
-	public String getTest() {
-		return test;
-	}
-
-	/**
-	 * @param test the test to set
-	 */
-	public void setTest(String test) {
-		this.test = test;
-	}
-
-	/**
+	 * Gets the pm prg activity.
+	 *
 	 * @return the pmPrgActivity
 	 */
 	public Long getPmPrgActivity() {
@@ -1968,6 +2147,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the pm prg activity.
+	 *
 	 * @param pmPrgActivity the pmPrgActivity to set
 	 */
 	public void setPmPrgActivity(Long pmPrgActivity) {
@@ -1975,6 +2156,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Gets the query item code.
+	 *
 	 * @return the queryItemCode
 	 */
 	public String getQueryItemCode() {
@@ -1982,6 +2165,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the query item code.
+	 *
 	 * @param queryItemCode the queryItemCode to set
 	 */
 	public void setQueryItemCode(String queryItemCode) {
@@ -1989,6 +2174,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Gets the query item name.
+	 *
 	 * @return the queryItemName
 	 */
 	public String getQueryItemName() {
@@ -1996,6 +2183,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the query item name.
+	 *
 	 * @param queryItemName the queryItemName to set
 	 */
 	public void setQueryItemName(String queryItemName) {
@@ -2003,6 +2192,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Gets the query desc.
+	 *
 	 * @return the queryDesc
 	 */
 	public String getQueryDesc() {
@@ -2010,6 +2201,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the query desc.
+	 *
 	 * @param queryDesc the queryDesc to set
 	 */
 	public void setQueryDesc(String queryDesc) {
@@ -2017,6 +2210,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Gets the dis pm prj setia.
+	 *
 	 * @return the disPmPrjSetia
 	 */
 	public Long getDisPmPrjSetia() {
@@ -2024,6 +2219,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the dis pm prj setia.
+	 *
 	 * @param disPmPrjSetia the disPmPrjSetia to set
 	 */
 	public void setDisPmPrjSetia(Long disPmPrjSetia) {
@@ -2031,6 +2228,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Gets the dis pm prg activity.
+	 *
 	 * @return the disPmPrgActivity
 	 */
 	public Long getDisPmPrgActivity() {
@@ -2038,6 +2237,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the dis pm prg activity.
+	 *
 	 * @param disPmPrgActivity the disPmPrgActivity to set
 	 */
 	public void setDisPmPrgActivity(Long disPmPrgActivity) {
@@ -2045,6 +2246,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Checks if is selected all charge item.
+	 *
 	 * @return the selectedAllChargeItem
 	 */
 	public boolean isSelectedAllChargeItem() {
@@ -2052,12 +2255,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the selected all charge item.
+	 *
 	 * @param selectedAllChargeItem the selectedAllChargeItem to set
 	 */
 	public void setSelectedAllChargeItem(boolean selectedAllChargeItem) {
 		this.selectedAllChargeItem = selectedAllChargeItem;
 	}
 	
+	/**
+	 * Gets the vot fund list based on profileId.
+	 *
+	 * @param profileId the profile id
+	 * @return the vot fund list
+	 */
 	public void getVotFundList(Long profileId){
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -2073,6 +2284,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setVotFundList(votFundRes.getVotFundList());
 	}
 	
+	/**
+	 * Gets the financing type based on subSetiaId.
+	 *
+	 * @param e the e
+	 * @return the financing type
+	 */
 	public void getFinancingType(AjaxBehaviorEvent e) {
 		Long subSetiaId = (Long) e.getComponent().getAttributes().get("value");
 		if(subSetiaId!=null) {
@@ -2084,6 +2301,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Gets the user profiles based on LoginId.
+	 *
+	 * @return the user profiles
+	 */
 	public void getUserProfiles(){
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -2093,6 +2315,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		fulfilmentReqDTO.setPmUser(userResDTO.getPmUser());
 	}
 	
+	/**
+	 * Gets the receiving officer list based on addressId and addressType.
+	 *
+	 * @param addressId the address id
+	 * @param addressType the address type
+	 * @return the receiving officer list
+	 */
 	public AddressResDTO getReceivingOfficerList(Long addressId, String addressType){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
 		AddressReqDTO reqDTO = new AddressReqDTO();
@@ -2105,6 +2334,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return resDTO;
 	}
 	
+	/**
+	 * Gets the ag account based on IssuedOrgProfile.
+	 *
+	 * @return the ag account
+	 */
 	public void getAgAccount(){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
@@ -2122,6 +2356,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 	
+	/**
+	 * Initialize deliver address.
+	 */
 	private void initializeDelAddr() {
 		if(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
 			getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().clear();
@@ -2133,6 +2370,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 
+	/**
+	 * Check ptj group and initialize.
+	 */
 	private void checkPtjGroupAndInitialize() {
 		getManagedBean().setCurrentPtjGroupId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getPmPtjGroup().getPtjGroupId());
 		if(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId() != getManagedBean().getCurrentPtjGroupId()){
@@ -2151,6 +2391,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 
+	/**
+	 * Sets the manual address list.
+	 */
 	private void setManualAddressList(){
 		Map<Long, List<PmAddressType>> addressTypeMap = new HashMap<Long, List<PmAddressType>>();
 		if(getManagedBean().getAddressTypesList()==null || getManagedBean().getAddressTypesList().size()==0) {
@@ -2166,6 +2409,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setManualAddressMap(addressTypeMap);
 	}
 	
+	/**
+	 * Retrieve delivery address list based on districtId for manual address popup.
+	 *
+	 * @param e the e
+	 */
 	public void retrieveDeliveryAddressList(AjaxBehaviorEvent e) {
 		Long districtId = (Long) e.getComponent().getAttributes().get("value");
 		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(districtId));
@@ -2179,6 +2427,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setManualAddrList(manualAddrList);
 	}
 	
+	/**
+	 * Gets the supplier branches list based on SupplierId.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the supplier branches list
+	 */
 	private void getSupplierBranchesList(SmSupplier smSupplier){
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		
@@ -2193,6 +2447,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 	}
 	
+	/**
+	 * Gets the selected supplier branch details based on supplier BranchId.
+	 *
+	 * @param e the e
+	 * @return the selected supplier branch dtl
+	 */
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
 		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
 		if(supplierBranchId!=null) {
@@ -2245,6 +2505,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
+	 * Gets the vot fund code map.
+	 *
 	 * @return the votFundCodeMap
 	 */
 	public static Map<Long, PmVotFund> getVotFundCodeMap() {
@@ -2252,12 +2514,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the vot fund code map.
+	 *
 	 * @param votFundCodeMap the votFundCodeMap to set
 	 */
 	public static void setVotFundCodeMap(Map<Long, PmVotFund> votFundCodeMap) {
 		PurchaseRequestBackingBean.votFundCodeMap = votFundCodeMap;
 	}
 
+	/**
+	 * On tab change.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
@@ -2284,6 +2553,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Update delivery date based on delivery Term and uomCode.
+	 */
 	public void updateDeliveryDate() {
 		Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
 		int deliveryTerm = 0;
@@ -2312,13 +2584,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
-	//update delivery address based on endDate change
+	/**
+	 * update delivery address based on endDate change
+	 */
 	public void updateDeliveryEndDate() {
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 			flDeliveryAddress.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 		}
 	}
-	// sorting Item for OrderSummary Tab
+	/**
+	 * sorting  Order Summary List.
+	 *
+	 * @param deliveryAddressList the delivery address list
+	 */
 	public void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
 		//Creating Comparator
 		if(null==deliveryAddressList || deliveryAddressList.isEmpty()){
@@ -2328,7 +2606,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			sortItems(flDeliveryAddress.getFlFulfilmentItemAddr());
 		}
     }
-	// sorting all the items showing in DelAddress and Item Tab
+	/**
+	 * sorting all the items showing in DelAddress and Item Tab
+	 *
+	 * @param flItemAddressList the fl item address list
+	 */
 	public void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
 		//Creating Comparator
 		if(null==flItemAddressList || flItemAddressList.isEmpty()){
@@ -2347,6 +2629,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			Collections.sort(flItemAddressList, comparator);
     }
 	
+	/**
+	 * Sort delivery address list.
+	 *
+	 * @param flDelAddressList the fl del address list
+	 */
 	public void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
 		//Creating Comparator
 		if(null==flDelAddressList || flDelAddressList.isEmpty()){
@@ -2367,6 +2654,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	// get the Request Item Information based on ReqItemId and SuppId
 	
+	/**
+	 * item info list based on RequestNoteItemId,SupplierId and PriceType.
+	 *
+	 * @param flItemAddr the fl item addr
+	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 		if(null == flItemAddr.getScRequestItem().getQuantity()){
@@ -2417,6 +2709,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 	
+	/**
+	 * Sort address type.
+	 *
+	 * @param addressTypeList the address type list
+	 */
 	private void sortAddressType(List<PmAddressType> addressTypeList) {
 		  // Creating Comparator
 		  if (null == addressTypeList || addressTypeList.isEmpty()) {
@@ -2434,7 +2731,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		  Collections.sort(addressTypeList, comparator);
 	}
 	
-	// chargeLine Panel enable if  checkbox selected
+	/**
+	 * chargeLine Panel enable if  checkbox selected
+	 *
+	 * @param e the e
+	 */
 	public void selectCheckbox(AjaxBehaviorEvent e){
 		onNodeUnSelect();
 		getManagedBean().setProgramLov(false);
@@ -2489,6 +2790,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		} 
 	}
 	
+	/**
+	 * Select all checkboxes.
+	 * chargeLine Panel enable if  checkboxes selected
+	 */
 	public void selectAllCheckboxes(){
 		onNodeUnSelect();
 		getManagedBean().setProgramLov(false);
@@ -2506,6 +2811,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Retrieve mof no based on SupplierId.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -2516,6 +2827,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		return null;
 	}
+	
+	/**
+	 * Check vot fund lov.
+	 */
 	public void checkVotFundLov(){
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
@@ -2535,6 +2850,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Check vot fund dropdown.
+	 */
 	public void checkVotFundDropdown(){
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
@@ -2565,16 +2883,26 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Page navigation to FLDoc search page in PR
+	 * Page navigation to FLDoc search page in PR.
+	 *
+	 * @return the string
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
 	}
 	
+	/**
+	 * Checks if is requisitioner.
+	 *
+	 * @return true, if is requisitioner
+	 */
 	public boolean isRequisitioner() {
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	
+	/**
+	 * Not remove address row.
+	 */
 	public void notRemoveAddressRow(){
 		getManagedBean().setDeleteButtonHide(true);
 		if(null !=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -2585,6 +2913,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 	}
+	
+	/**
+	 * Reset selected tree nodes.
+	 */
 	private void resetSelectedTreeNodes() {
 		TreeNode root=getManagedBean().getChargeLineItemRoot();
 		for(TreeNode node:root.getChildren()){
@@ -2593,6 +2925,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param outcome the outcome
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
 				|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
@@ -2614,6 +2953,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	
+	/**
+	 * Pre submit fulfillment request.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitFulfillmentRequest(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
@@ -2624,11 +2970,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return fulfillmentRequestAction(getManagedBean().getButtonAction());
 	}
 	
+	/**
+	 * Enable auto update.
+	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
 	
+	/**
+	 * Method do validations Before save purchase request details
+	 *
+	 * @param outcome the outcome
+	 */
 	private void validateFulfilmentRequest(String outcome){		
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -2662,6 +3016,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			fulfilmentRequestSO = null;
 		}
 	}
+	
+	/**
+	 * Charge line validation before click the approver list tab.
+	 */
 	public void chargeLineValidationBeforeApproverList(){
 		if(getManagedBean().getChargeLineItemRoot()!=null) {
 			FlFulfilmentItemAddr itemAddress = null;
@@ -2680,13 +3038,22 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 
+	/**
+	 * The Class UnitOfMeasurementPagingDataModel.
+	 */
 	private class UnitOfMeasurementPagingDataModel extends PagingDataModel<PmUom> {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new unit of measurement paging data model.
+		 */
 		public UnitOfMeasurementPagingDataModel() {
 			super("measurementSR");
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<PmUom> pageChangeListener(ISearchBean<PmUom> searchBean) {
 			try {	
@@ -2706,6 +3073,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Gets the measurement search bean data.
+	 *
+	 * @param searchBean the search bean
+	 * @return the measurement search bean data
+	 */
 	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean){
 		
 		if (getManagedBean().getMeasurementCodes() != null
@@ -2736,19 +3109,35 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return searchBean;
 	}
 
+	/**
+	 * Gets the unit of measurement data model.
+	 *
+	 * @return the unit of measurement data model
+	 */
 	public IPagingDataModel<PmUom> getUnitOfMeasurementDataModel() {
 		return unitOfMeasurementDataModel;
 	}
 
+	/**
+	 * Sets the unit of measurement data model.
+	 *
+	 * @param unitOfMeasurementDataModel the new unit of measurement data model
+	 */
 	public void setUnitOfMeasurementDataModel(
 			IPagingDataModel<PmUom> unitOfMeasurementDataModel) {
 		this.unitOfMeasurementDataModel = unitOfMeasurementDataModel;
 	}	
 	
+	/**
+	 * Retrieve measurement.
+	 */
 	public void retrieveMeasurement(){		
 		unitOfMeasurementDataModel.reloadData();		
 	}
 	
+	/**
+	 * Reset measurement search.
+	 */
 	public void resetMeasurementSearch() {		
 		this.getManagedBean().setMeasurementCodes(null);
 		this.getManagedBean().setMeasurementNames(null);
@@ -2757,6 +3146,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Checks if is select all checkbox.
+	 *
 	 * @return the selectAllCheckbox
 	 */
 	public boolean isSelectAllCheckbox() {
@@ -2764,12 +3155,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
+	 * Sets the select all checkbox.
+	 *
 	 * @param selectAllCheckbox the selectAllCheckbox to set
 	 */
 	public void setSelectAllCheckbox(boolean selectAllCheckbox) {
 		this.selectAllCheckbox = selectAllCheckbox;
 	}
 	
+	/**
+	 * Gets the item max quantity.
+	 *
+	 * @param uom the uom
+	 * @return the item max quantity
+	 */
 	public Double getItemMaxQuantity(PmUom uom){
 		Double maxQuantity =  Double.valueOf(9999999999L);
 		if(uom.getDecimalScale() == 1){
