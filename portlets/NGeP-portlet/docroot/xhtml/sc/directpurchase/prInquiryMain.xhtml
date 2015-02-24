@@ -66,14 +66,21 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					   <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 	
 	                   <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}">
-	                    <ac:spkiPopup id="spkiPopup" postSignAction="#{purchaseInquiryBackingBean.submitPrInquiryPrice(spkiBackingBean.pmDigiSign)}" />
+				                
+				           <ac:spkiPopup id="spkiPopup"
+								password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
+								challengeAns1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+								challengeQues1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+								postSignAction="#{purchaseInquiryBackingBean.submitPrInquiryPrice(spkiBackingBean.pmDigiSign)}" />
+								
 	                       <p:commandButton value="#{lbl[buttonLabel]}"
 							        styleClass="ui-button"
 								    update="spkiPopup"
-								    action="#{spkiBackingBean.getChallengeQuestions}"
+								    action="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 									oncomplete="spki_dlg.show();">
 									<f:setPropertyActionListener value="#{bpmAction}" target="#{purchaseInquiryBackingBean.managedBean.action}" />
 							</p:commandButton>
+							
 	                  </c:if>
 					</ui:repeat>
 				</c:when>
