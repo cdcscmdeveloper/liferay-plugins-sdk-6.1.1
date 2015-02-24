@@ -1415,6 +1415,36 @@ public class OrganisationBackingBean extends
 		}else{
 			pmState.setStateCode(null);
 		}
+	}	
+	
+	public String constuctConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("parentOrgProfile.orgProfileId^");
+		sb.append(getManagedBean().getOrgProfile().getParentOrgProfile().getOrgProfileId());
+		sb.append("|recordStatus^1");
+		sb.append("|groupOrg^0");
+		sb.append("|orgProfileId^");
+		sb.append(getManagedBean().getOrgProfile().getOrgProfileId());
+		sb.append("^2");
+		
+		StringBuilder childIds = new StringBuilder();
+		for(int i = 0; i< getManagedBean().getProfileGroup().size(); i++){
+			PmProfileGroup profileGroup =  getManagedBean().getProfileGroup().get(i);
+			if(profileGroup.getAuthorizedOrgProfile() != null){
+				if(i != 0){
+					childIds.append(",");
+				}
+				childIds.append(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
+			}
+		}
+		
+		if(sb.length() > 0 ){
+			sb.append("|orgProfileId^");
+			sb.append(childIds.toString());
+			sb.append("^10");
+		}
+		
+		return sb.toString();
 	}
 
 }
