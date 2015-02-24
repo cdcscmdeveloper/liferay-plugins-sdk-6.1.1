@@ -68,7 +68,6 @@
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierDropdownView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.supplier']}" style="margin-bottom:5px;width:160px;"/>
 									<p:selectOneMenu value="#{reportBackingBean.flSupplier}" style="margin-bottom:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.supplCompanyList}"></f:selectItems>										
 									</p:selectOneMenu>
 									</c:if>
