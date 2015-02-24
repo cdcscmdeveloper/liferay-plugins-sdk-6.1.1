@@ -76,12 +76,14 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -804,8 +806,9 @@ public class OrganisationBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Org Name : ",
-							this.getManagedBean().getOrgProfile().getOrgName()
-									+ "Submit successfully."));
+							ResourceBundleUtils.getMessage("lbl.pm.org.created.successfully", 
+									new String[]{getManagedBean().getOrgProfile().getOrgName(),getManagedBean().getOrgProfile().getOrgCode()},ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+						));
 		}
 
 		return NAV_TO_SEARCH;
