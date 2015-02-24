@@ -110,6 +110,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.logging.LogKey;
@@ -1709,7 +1710,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
-	
 	/**
 	 * check whether request note dtl is prod or service in Request Note
 	 */
@@ -1724,11 +1724,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				CharSequence charSeq = ItemCode.subSequence(0, 2); 
 				Integer itemCode = Integer.valueOf(charSeq.toString()); 
 
-				// TODO checking first two digits in itemCode whether service or product 
-				if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-					prodOrService = false;
-				} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
-					prodOrService = true;
+				if(ItemCode != null && !ItemCode.isEmpty()){
+					// TODO checking first two digits in itemCode whether service or product 
+					if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
+						prodOrService = false;
+					} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
+						prodOrService = true;
+					} 
+				} else{
+					if(requestItem.getTplSpecQuestion() != null){
+						TplSpecQuestion specQuestion =requestItem.getTplSpecQuestion();
+						if (ParameterConst.ITEM_TYPE_SERVICE.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode())) {	
+							prodOrService = false;
+						} else if (ParameterConst.ITEM_TYPE_PRODUCT.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode())) {	
+							prodOrService = true;
+						}
+					}
 				}
 			}
 		}
