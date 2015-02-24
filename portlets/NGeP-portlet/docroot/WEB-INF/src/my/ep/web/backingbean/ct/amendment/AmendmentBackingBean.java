@@ -586,7 +586,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			  extResDTO = contractSO.retrieveExtensionHistory(reqDTO);
 			  getManagedBean().setAmendHistoryList(extResDTO.getExtensionHistoryList());
-		      getManagedBean().setCommittetype(getCommitteTye());
+		      getManagedBean().setCommitteeType(getCommitteeType());
 		      getManagedBean().setDisableAmendDetails(false);
 		      if(getManagedBean().getTaskName() != null && 
 		    		  (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)
@@ -602,8 +602,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	  getManagedBean().setDisablefinalAmendDetails(true);
 		      }
 		      //Default the secretary
-		      if ((getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) ||
-		    		  getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) &&
+		      if ((getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) ||
+		    		  getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) &&
 		    		  getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) &&
 		    		  !getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() &&
 		    		  !getManagedBean().isDisableAmendDetails()) {
@@ -833,10 +833,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		  UserReqDTO userReqDTO = new UserReqDTO();
 	    			  IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	    			  
-		    		  if (!getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) &&
-		    				  !getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+		    		  if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) &&
+		    				  !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
 		   			   	  
-		    			  userReqDTO.setRoleCode(getManagedBean().getCommittetype()+"_SECRETARY");	
+		    			  userReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");	
 		   			   	  if(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null)
 		   			   		  userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
 					      else 
@@ -960,8 +960,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			        	   	if(!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
 				                 if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) &&
 						                  getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO) ) {
-				                	 if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) ||
-						    				  getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				                	 if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) ||
+						    				  getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
 				                		 if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 					                        	RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					                        	throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -2572,7 +2572,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    }
 	    
 	    public void searchExistingCommitteMemberReset(){
-			this.getManagedBean().setName(null);
+			this.getManagedBean().setCommitteeName(null);
 			this.getManagedBean().setIdentificationType(null);	
 			this.getManagedBean().setIdentificationNo(null);	
 			committeDataModel.resetData();
@@ -3108,8 +3108,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			IUserSO userSO  = null;
 			try {
 				    userReqDTO = new UserReqDTO();
-					if(getManagedBean().getName() != null && !"".equalsIgnoreCase(getManagedBean().getName())){
-						SearchFilterBean filterBean = new SearchFilterBean("userName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getName());
+					if(getManagedBean().getCommitteeName() != null && !"".equalsIgnoreCase(getManagedBean().getCommitteeName())){
+						SearchFilterBean filterBean = new SearchFilterBean("userName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCommitteeName());
 						filterBean.setCaseInsensitive(true);
 					    searchBean.getDataFilterBeans().add(filterBean);
 					}
@@ -3505,7 +3505,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					   throw new EpException("Role is mandatory");
 			 }
 		}*/
-		getManagedBean().setName(null);
+		getManagedBean().setCommitteeName(null);
 		getManagedBean().setIdentificationNo(null);
 		getManagedBean().setIdentificationType(null);
 		getCommitteDataModel().resetData();
@@ -3554,24 +3554,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	         }
 	    } 
     	String representativeRole ="";
-	   if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+	   if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
 		       representativeRole =ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
-        } else if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+        } else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
         	representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
-        } else if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+        } else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
         	representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
-        } else if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+        } else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
         	representativeRole = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
        }
 
  	return getDropdownValues(representativeRole);
-	}
-	
-	public void retriveCommitteType() {
-		
-		
-		               
-		 
 	}
 	
 	public void selectAll(){
@@ -3627,12 +3620,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return false;
 	}
 	
-	public String  getCommitteTye(){
+	public String  getCommitteeType(){
 	    
 		    IContractSO contractSO = null;
 		    try{
 		    	   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		    	   return contractSO.getCommitteType(getManagedBean().getContractVer());
+		    	   return contractSO.getCommitteeType(getManagedBean().getContractVer());
 		 
 		    }catch(Exception ex){
 			   
@@ -3671,7 +3664,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		                 
     	                if(committeObj.getRepresentativeType() != null && committeObj.getRepresentativeType().getParameterCode() != null){
    		  
-    	                      if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+    	                      if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
         	                        if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
         		                         ReresentativeJ = false;
         	                        }else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_SECRETARY_HEAD_DEPARTMENT)) {
@@ -3679,7 +3672,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
         	                        } 
 		                       }
 	      
-							  if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+							  if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
 						          if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
 						        		  ReresentativeJ = false;  
 								  } else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_BPK)) {
@@ -3687,7 +3680,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 							     }
 						   }
 	  
-						  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+						  if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
 							  if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)) {
 					    		  ReresentativeP = false;  
 						      } else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)) {
@@ -3697,7 +3690,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						      }
 						 }
 	
-						  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+						  if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 							    if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
 					    		     ReresentativeS = false;  
 						        } else if(committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK )) {
@@ -3720,8 +3713,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				  
 				       }
 				       
-				       if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) ||
-		                		 getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
+				       if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) ||
+		                		 getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)){
 				    	   if(members){
 					    	   RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					    	   throw new EpException(MessageConst.ERROR_100022, 
@@ -3729,19 +3722,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				    	   }
 				       }
 				       
-				       if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
+				       if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
 				    	    if(ReresentativeJ){
 				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from JKR"});
 				    	    } else if(ReresentativeS){
 				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from setiausaha bahagian/Ketua bahagian"});
 				    	    }
-				     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+				     } else if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
 				    	    if(ReresentativeJ){
 				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative from JKR"});
 				    	    } else if(ReresentativeBpk){
 				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for representative BPK"});
 				    	    }
-				     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+				     } else if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
 				    	    if(ReresentativeP){
 				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Pegawai kemajuan Negeri Sabah"});
 				    	    }else if(ReresentativeK){
@@ -3749,7 +3742,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				    	    }else if(ReresentativeS){
 				    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Setiausaha PM Sabah"});
 				    	    }
-				     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
+				     } else if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
 				    	    if(ReresentativeS){
 				    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Attendance for Setiausaha PM Sarawak"});
 				    	    }else if(ReresentativeP){
@@ -3784,8 +3777,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
                  	
                  	  } else if(parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)){
  		    	    	  members = false;
- 		    	    	  if(!getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
- 		    	    			  && !getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+ 		    	    	  if(!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
+ 		    	    			  && !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
  		    	    	       if(committeMember.getRepresentativeType() == null || committeMember.getRepresentativeType().getParameterId() == null) {
  		    	    		       RequestContext.getCurrentInstance().addCallbackParam("epException", true);
  		    	    		        throw new EpException(MessageConst.ERROR_100022, 
@@ -3796,7 +3789,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
  		    	     }
                  }
 		    		      
-		    		      if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
+		    		      if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
                      	  if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
                      		  ReresentativeJ = false;
                      	  }else if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_SECRETARY_HEAD_DEPARTMENT)) {
@@ -3804,7 +3797,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
                      	  } 
  		    		  }
 		    		      
-		    		      if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+		    		      if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
                      	  if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR)) {
                      		  ReresentativeJ = false;  
  		    		  }else if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_BPK)) {
@@ -3812,7 +3805,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		  }
 		    	      }
 		    		  
-		    		  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+		    		  if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
 		    			  if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)) {
                  		  ReresentativeP = false;  
 		    		      } else if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)) {
@@ -3822,7 +3815,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		      }
 		    		 }
 		    		
-		    		  if (getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+		    		  if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 		    			    if(representativeCode.equalsIgnoreCase(ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
                  		     ReresentativeS = false;  
 		    		        } else if(representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK )) {
@@ -3855,19 +3848,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        			 new String[]{ResourceBundleUtils.getMessage("lbl.ct.member", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
  	     }
 		    
-		    if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
+		    if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
 		    	    if(ReresentativeJ){
 		    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Representative from JKR"});
 		    	    } else if(ReresentativeS){
 		    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Representative from Setiausaha Bahagian/Ketua Bahagian"});
 		    	    }
-		     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+		     } else if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
 		    	    if(ReresentativeJ){
 		    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Representative from JKR"});
 		    	    } else if(ReresentativeBpk){
 		    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Representative BPK"});
 		    	    }
-		     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+		     } else if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
 		    	    if(ReresentativeP){
 		    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Pegawai kemajuan Negeri Sabah"});
 		    	    }else if(ReresentativeK){
@@ -3875,7 +3868,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	    }else if(ReresentativeS){
 		    	    	  throw new EpException(MessageConst.ERROR_100022,  new String[]{"Setiausaha PM Sabah"});
 		    	    }
-		     } else if(getManagedBean().getCommittetype().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
+		     } else if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
 		    	    if(ReresentativeS){
 		    	    	 throw new EpException(MessageConst.ERROR_100022,  new String[]{"Setiausaha PM Sarawak"});
 		    	    }else if(ReresentativeP){
@@ -3944,7 +3937,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   	}
 		   	
 		   	UserReqDTO reqDTO = new UserReqDTO();
-		   	reqDTO.setRoleCode(getManagedBean().getCommittetype()+"_SECRETARY");
+		   	reqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
 			orgProfileIds.add(ownerOrgProfileId);
 		   	reqDTO.setOrgProfileIds(orgProfileIds);
 		   	

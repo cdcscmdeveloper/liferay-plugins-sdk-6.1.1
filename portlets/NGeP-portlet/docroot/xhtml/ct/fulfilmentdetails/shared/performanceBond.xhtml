@@ -16,7 +16,7 @@
 		 <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/> -->
 		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
 			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
-			  selection="#{contractDetailsBackingBean.managedBean.performanceBondList}" rowKey="#{rowKeyObj}"
+			  rowKey="#{rowKeyObj}"
 			  first="#{contractDetailsBackingBean.managedBean.firstRowSelected}">
 			  <ac:paginator for="tableBond" />
 			  

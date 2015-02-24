@@ -21,50 +21,88 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean(name="ctManagedBean")
 @SessionScoped
-public class ContractManagedBean extends BaseManagedBean{
+public class ContractManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
 	private String fileDirectory;
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
 	private int attachFileIndex;
 	private boolean viewContract = false;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
 	
+	/**
+	 * @return the fileDirectory
+	 */
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+	
+	/**
+	 * @param fileDirectory the fileDirectory to set
+	 */
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}	
+	
+	/**
+	 * @return the attachFileIndex
+	 */
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+	
+	/**
+	 * @param attachFileIndex the attachFileIndex to set
+	 */
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
+	
+	/**
+	 * @return the viewContract
+	 */
+	public boolean isViewContract() {
+		return viewContract;
+	}
+	
+	/**
+	 * @param viewContract the viewContract to set
+	 */
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
+	}
+	
+	/**
+	 * @return the remarkList
+	 */
 	public List<CtRemark> getRemarkList() {
-		if(remarkList==null) {
+		if (remarkList == null) {
 			remarkList = new ArrayList<CtRemark>();
 		}
 		return remarkList;
 	}
+	
+	/**
+	 * @param remarkList the remarkList to set
+	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
+	
+	/**
+	 * @return the attachmentList
+	 */
 	public List<CtAttachment> getAttachmentList() {
-		if(attachmentList==null) {
+		if (attachmentList == null) {
 			attachmentList = new ArrayList<CtAttachment>();
 		}
 		return attachmentList;
 	}
+	
+	/**
+	 * @param attachmentList the attachmentList to set
+	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
-	}
-	public String getFileDirectory() {
-		return fileDirectory;
-	}
-	public void setFileDirectory(String fileDirectory) {
-		this.fileDirectory = fileDirectory;
-	}
-	public int getAttachFileIndex() {
-		return attachFileIndex;
-	}
-	public void setAttachFileIndex(int attachFileIndex) {
-		this.attachFileIndex = attachFileIndex;
-	}
-	public boolean isViewContract() {
-		return viewContract;
-	}
-	public void setViewContract(boolean viewContract) {
-		this.viewContract = viewContract;
 	}
 }
