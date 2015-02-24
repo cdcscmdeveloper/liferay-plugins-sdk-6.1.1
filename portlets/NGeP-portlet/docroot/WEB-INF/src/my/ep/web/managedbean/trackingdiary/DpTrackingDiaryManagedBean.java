@@ -66,7 +66,8 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 					throw new EpException(MessageConst.ERROR_740023);
 				}
 				System.out.println("ISearchResultBean<ScRequestNote>");
-	
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD",SearchOperator.OPERATOR_EQUALS.value(),"DP"));
+
 				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
 					System.out.println("transactionType");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentType()));
@@ -86,14 +87,14 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 							new Date(System.currentTimeMillis() + (30*24*60*60*1000)),
 							new Date(System.currentTimeMillis()))));
 				}
-				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("dp", ISourcingIntegrationSO.class);
+				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("sc", ISourcingIntegrationSO.class);
 				SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
 				reqDTO.setSourcingDocSearchBean(searchBean);
 				SourcingIntegrationResDTO resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 				System.out.println("Result : "+resDTO.getSourcingDocSearchResultBean().getResultList().size());
 				return resDTO.getSourcingDocSearchResultBean();
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.printStackTrace();String hu = new String((String) dpObj[0]);
 			}
 			return null;
 		}
@@ -155,14 +156,6 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchDocumentToDuration = searchDocumentToDuration;
 	}
 
-	public Object[] getObject() {
-		return object;
-	}
-
-	public void setObject(Object[] object) {
-		this.object = object;
-	}
-
 	public IPagingDataModel<Object[]> getDpDocumentDataModel() {
 		return dpDocumentDataModel;
 	}
@@ -170,14 +163,14 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setDpDocumentDataModel(IPagingDataModel<Object[]> dpDocumentDataModel) {
 		this.dpDocumentDataModel = dpDocumentDataModel;
 	}
-//	Object[] dpObj = new Object[6];
-//	public Object[] getScObj() {
-//		return dpObj;
-//	}
-//
-//	public void setScObj(Object[] dpObj) {
-//		this.dpObj = dpObj;
-//	}
+	Object[] dpObj = new Object[6];
+	public Object[] getDpObj() {
+		return dpObj;
+	}
+
+	public void setDpObj(Object[] dpObj) {
+		this.dpObj = dpObj;
+	}
 
 
 }

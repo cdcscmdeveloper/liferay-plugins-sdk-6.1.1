@@ -60,7 +60,7 @@ public class DpTrackingDiaryBackingBean extends
 
 		try {
 
-			items = new SelectItem[9];
+			items = new SelectItem[6];
 
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -69,10 +69,10 @@ public class DpTrackingDiaryBackingBean extends
 			items[2] = new SelectItem(new String("PI"), new String("Purchase Inquiry"));
 			items[3] = new SelectItem(new String("PD"), new String("Purchase In Default"));
 			items[4] = new SelectItem(new String("RN"), new String("Request Note"));
-			items[5] = new SelectItem(new String("QT"), new String("Quotation Tender"));
-			items[6] = new SelectItem(new String("BD"), new String("Online Bidding"));
-			items[7] = new SelectItem(new String("LI"), new String("Letter of Intent"));
-			items[8] = new SelectItem(new String("LA"), new String("Letter of Acceptance"));
+//			items[5] = new SelectItem(new String("QT"), new String("Quotation Tender"));
+//			items[6] = new SelectItem(new String("BD"), new String("Online Bidding"));
+//			items[7] = new SelectItem(new String("LI"), new String("Letter of Intent"));
+			items[5] = new SelectItem(new String("LA"), new String("Letter of Acceptance"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -151,12 +151,12 @@ public class DpTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
+			Object[] ss = getManagedBean().getDpObj();
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchDocNo()));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocType()));
-			System.out.println("Sc TrackingDiary docNo  " + getManagedBean().getSearchDocNo());
-
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),ss[3]));
+			System.out.println("Sc TrackingDiary docNo  " +ss[3]+ getManagedBean().getSearchDocNo());
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
@@ -172,8 +172,8 @@ public class DpTrackingDiaryBackingBean extends
 		}
 	}
 
-	public String goToTrackingDiarySearch(Object[] scObj) {
-		getManagedBean().setSearchDocNo(scObj[1].toString());
+	public String goToTrackingDiarySearch(Object[] dpObj) {
+		getManagedBean().setDpObj(dpObj);
 		searchTrackingDiaryDataModel.reloadData();
 		return NAV_TO_DETAIL_SEARCH + "?faces-redirect=true";
 	}

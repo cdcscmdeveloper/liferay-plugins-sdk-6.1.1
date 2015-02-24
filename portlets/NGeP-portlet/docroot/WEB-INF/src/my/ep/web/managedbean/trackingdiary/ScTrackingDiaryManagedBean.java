@@ -82,7 +82,8 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 					throw new EpException(MessageConst.ERROR_740023);
 				}
 				System.out.println("ISearchResultBean<ScRequestNote>");
-	
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD",SearchOperator.OPERATOR_EQUALS.value(),"SC"));
+
 				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
 					System.out.println("transactionType");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentType()));
@@ -186,14 +187,14 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setScRNDocumentDataModel(IPagingDataModel<Object[]> scRNDocumentDataModel) {
 		this.scRNDocumentDataModel = scRNDocumentDataModel;
 	}
-//	Object[] scObj = new Object[6];
-//	public Object[] getScObj() {
-//		return scObj;
-//	}
-//
-//	public void setScObj(Object[] scObj) {
-//		this.scObj = scObj;
-//	}
+	Object[] scObj = new Object[6];
+	public Object[] getScObj() {
+		return scObj;
+	}
+
+	public void setScObj(Object[] scObj) {
+		this.scObj = scObj;
+	}
 
 
 }
