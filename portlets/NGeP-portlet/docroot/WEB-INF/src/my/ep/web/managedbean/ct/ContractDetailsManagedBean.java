@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -35,21 +34,16 @@ import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
-import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
-import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
-import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -61,6 +55,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
+
 /**
  * Managed Bean For Contract Details
  * 
@@ -69,16 +64,14 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name ="contractDetailsManagedBean")
 @SessionScoped
-public class ContractDetailsManagedBean extends BaseManagedBean{
+public class ContractDetailsManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-
-	private String taskName;
 	private String[] action;
-	private String processName;
+	private String taskName;
 	private String itemType;
 	private String showItem;
-	private String popupForImportedItems ="L";
+	private String popupForImportedItems = "L";
 	private String ctName;
 	private String ctLOANo;
 	private String ctNumber;
@@ -88,782 +81,1079 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ctCircularName;
 	private String ctSupplierName;
 	private String supplierAddress;
-	private	String	zoneName;
 	private String supplierCompanyName;
-	private String supplierLocation;
-	private String contractType;
 	private String externalPageUrl;
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
 	private String frequencySchedule;
 	private String warningPercentage;
-	
-	private int selectedIndex;
-	private int ctStatus;
+	private String textBeforeSign;
+	private String buttonAction;	
+	private String gotoPreviewPage;	
+	private String financialAccNo;
+	private String fileDirectory;
 	private Long ctContractStatus;
 	private Long terminationTypeId;
 	private Long ministryProfileId;
-	private Long departmentProfileId;
-    private double advancePaymentAmt;
-    private double performanceBondRuleAmt;
     private BigDecimal paidAdvancePaymentAmt;
     private BigDecimal paidInvoiceAmt;
-	private int selectedTabIndex =0;
-	
-	private MenuModel fulfilmentMenuModel;
-	
-	private Date ctDateStart;
+    private Date ctDateStart;
 	private Date ctDateEnd;
-	
-	private boolean bpkApprover=true;
+	private int selectedTabIndex = 0;
+	private int ctStatus;	
+	private int attachFileIndex;
+    private int firstRowSelected;
+    private double advancePaymentAmt;
+    private double performanceBondRuleAmt;	
+	private boolean selectAll;
 	private boolean serviceItem;
 	private boolean productItem = true;
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
 	private boolean directPurchase;
-	private boolean scheduleType;
 	private boolean chkProgressive;
 	private boolean chkSchedule;
-	private boolean chkScheduleNulValue;
-	private boolean chkProgressiveNulValue;
 	private boolean disableScheduleRadio;
-	private boolean disableProgessiveRadio;
 	private boolean updateSupplierAddress;
 	private boolean updateCompanyName;
 	private boolean showZoneDetails;
-	private boolean chkButton;
 	private boolean updateContract = false;
 	private boolean viewContract = false;
-	private boolean validateScheduleDate;
 	private boolean chkJustification;
 	private boolean flgPaymentTracking;
 	private boolean chkConceValue;
-	private boolean tabMenuShowForZone;
-	private boolean tabMenuShowFactored;
-
-	private CtContractVer contractVer;
-	private CtContract ctContract;
-	private List<VCtContract> contractList;
-	private List<CtAgency> listOfAgency;
-	private List<PmOrgProfile> pmOrgProfileList;
-	private CtContractItem selectedItem;
-	private CtContractItem selectedCCItem;
-	private CtContractItem selectedServiceItem;
+	private boolean progSchedButtonDeactive;
+	private boolean autoUpdate = true;
+	private boolean buttonHideActive = true;
 	private List<CtContractItem> ctItemList;
 	private List<CtContractItem> ctItemServiceList;
-	private CtDeduction ctDeductionDel;
-	private CtDeduction selectedDeduction;
-	private List<CtDeductionClause> ctDeductionClauseList;
-	private CtSchedule ctSchedulesDel;
-	private CtProgressivePayment ctProgressivePaymentDel;
-	private DualListModel<String> approverModel;
-	private Map<Long, PmUserGroup> userGroupMap;
-	private HashMap<String, PmUserGroupUser> approverMap;
+	private List<CtContractZoneDtl> ctContractZoneDtls;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
-	private SmAddress smAddress;
-	private CtPerformanceBond ctPerformanceBond;
-	private CtContractZone selectedCtZone;
-	private TreeNode ctZoneTrees ;
-	private List<CtContractZoneDtl> ctContractZoneDtls;
-	private Map<String, PmUser> userMap;
-	private SmSupplierBank smSupplierBanks;
-	private Map<String,Object> radioButtonSchedule;
 	private List<String> finalListOfSideMenu;
 	private List<String> yearList;
-	private String fileDirectory;
-	private CtAgency selectedAgency;
-	
-	private List<SelectItem> monthList;
-	private int attachFileIndex;
-	private boolean percentExceeded;
-	private boolean  progSchedButtonDeactive;
-	
-	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate = true;
-	private String textBeforeSign;
-	private String buttonAction;
-	private int counter;
-	private String gotoPreviewPage;
-	
-	private String financialAccNo;
-	private boolean buttonHideActive = true;
-	private List<CtPerformanceBond> performanceBondList;
-	private int firstRowSelected;
-	private boolean selectAll;
-	private List <CtAgencyAddress> selectedListOfAddress;
-	private List <PmAddressType> addressTypeList;
-	
+	private List<CtAgencyAddress> selectedListOfAddress;
+	private List<PmAddressType> addressTypeList;
+	private DualListModel<String> approverModel;
+	private Map<Long, PmUserGroup> userGroupMap;
+	private Map<String, PmUser> userMap;
+	private Map<String,Object> radioButtonSchedule;
+	private HashMap<String, PmUserGroupUser> approverMap;
+	private CtContractVer contractVer;
+	private CtContract ctContract;
+	private CtContractItem selectedItem;
+	private CtContractItem selectedServiceItem;
+	private CtDeduction selectedDeduction;
+	private CtPerformanceBond ctPerformanceBond;
+	private CtContractZone selectedCtZone;
 	private CtAmendment ctAmendment;
+	private CtAgency selectedAgency;
+	private TreeNode ctZoneTrees;
+	private MenuModel fulfilmentMenuModel;	
+	private SmAddress smAddress;
+	private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
-	
+		
+	/**
+	 * @return the action
+	 */
 	public String[] getAction() {
 		return action;
 	}
-	
+
+	/**
+	 * @param action the action to set
+	 */
 	public void setAction(String[] action) {
 		this.action = action;
 	}
 	
+	/**
+	 * @return the taskName
+	 */
 	public String getTaskName() {
 		return taskName;
 	}
-	
+
+	/**
+	 * @param taskName the taskName to set
+	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
-	
-	public String getProcessName() {
-		return processName;
-	}
-	
-	public void setProcessName(String processName) {
-		this.processName = processName;
-	}
-	
-	public CtContractVer getContractVer() {
-		return contractVer;
-	}
-	
-	public void setContractVer(CtContractVer contractVer) {
-		this.contractVer = contractVer;
-	}
-	
-	public CtDeduction getCtDeductionDel() {
-		return ctDeductionDel;
-	}
-	
-	public void setCtDeductionDel(CtDeduction ctDeductionDel) {
-		this.ctDeductionDel = ctDeductionDel;
-	}
-	
-	public String getShowItem() {
-		return showItem;
-	}
-	
-	public void setShowItem(String showItem) {
-		this.showItem = showItem;
-	}
-	
-	public boolean isItemPricing() {
-		return itemPricing;
-	}
-	
-	public void setItemPricing(boolean itemPricing) {
-		this.itemPricing = itemPricing;
-	}
-	
-	public boolean isItemCeilingQuantity() {
-		return itemCeilingQuantity;
-	}
-	
-	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
-		this.itemCeilingQuantity = itemCeilingQuantity;
-	}
 
-	public boolean isChkSchedule() {
-		return chkSchedule;
-	}
-
-	public void setChkSchedule(boolean chkSchedule) {
-		this.chkSchedule = chkSchedule;
-	}
-
-	public boolean isChkProgressive() {
-		return chkProgressive;
-	}
-
-	public void setChkProgressive(boolean chkProgressive) {
-		this.chkProgressive = chkProgressive;
-	}
-
-	public CtSchedule getCtSchedulesDel() {
-		return ctSchedulesDel;
-	}
-
-	public void setCtSchedulesDel(CtSchedule ctSchedulesDel) {
-		this.ctSchedulesDel = ctSchedulesDel;
-	}
-
-	public CtProgressivePayment getCtProgressivePaymentDel() {
-		return ctProgressivePaymentDel;
-	}
-
-	public void setCtProgressivePaymentDel(
-			CtProgressivePayment ctProgressivePaymentDel) {
-		this.ctProgressivePaymentDel = ctProgressivePaymentDel;
-	}
-
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
-	}
-
-	public List<CtRemark> getRemarkList() {
-		if(remarkList == null)
-			remarkList = new ArrayList<CtRemark>();
-		return remarkList;
-	}
-
-	public void setRemarkList(List<CtRemark> remarkList) {
-		this.remarkList = remarkList;
-	}
-
-	public List<CtAttachment> getAttachmentList() {
-		if(attachmentList == null)
-		   attachmentList = new ArrayList<CtAttachment>();
-		return attachmentList;
-	}
-
-	public void setAttachmentList(List<CtAttachment> attachmentList) {
-		this.attachmentList = attachmentList;
-	}
-
-	public String getCtNumber() {
-		return ctNumber;
-	}
-
-	public void setCtNumber(String ctNumber) {
-		this.ctNumber = ctNumber;
-	}
-
-	public String getCtName() {
-		return ctName;
-	}
-
-	public void setCtName(String ctName) {
-		this.ctName = ctName;
-	}
-
-	public String getCtCircularNo() {
-		return ctCircularNo;
-	}
-
-	public void setCtCircularNo(String ctCircularNo) {
-		this.ctCircularNo = ctCircularNo;
-	}
-
-	public String getCtCircularName() {
-		return ctCircularName;
-	}
-
-	public void setCtCircularName(String ctCircularName) {
-		this.ctCircularName = ctCircularName;
-	}
-
-	public String getCtSupplierId() {
-		return ctSupplierId;
-	}
-
-	public void setCtSupplierId(String ctSupplierId) {
-		this.ctSupplierId = ctSupplierId;
-	}
-
-	public String getCtSupplierName() {
-		return ctSupplierName;
-	}
-
-	public void setCtSupplierName(String ctSupplierName) {
-		this.ctSupplierName = ctSupplierName;
-	}
-
-	public String getCtLOANo() {
-		return ctLOANo;
-	}
-
-	public void setCtLOANo(String ctLOANo) {
-		this.ctLOANo = ctLOANo;
-	}
-
-	public List<VCtContract> getContractList() {
-		 if(contractList == null)
-			 contractList = new ArrayList<VCtContract>();
-		return contractList;
-	}
-
-	public void setContractList(List<VCtContract> contractList) {
-		this.contractList = contractList;
-	}
-
-	public int getSelectedIndex() {
-		return selectedIndex;
-	}
-
-	public void setSelectedIndex(int selectedIndex) {
-		this.selectedIndex = selectedIndex;
-	}
-
-	public CtContract getCtContract() {
-		return ctContract;
-	}
-
-	public void setCtContract(CtContract ctContract) {
-		this.ctContract = ctContract;
-	}
-	
-	public HashMap<String, PmUserGroupUser> getApproverMap() {
-		if(approverMap == null){
-			setApproverMap(new HashMap<String,PmUserGroupUser>());
-		}
-		return approverMap;
-	}
-
-	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
-		this.approverMap = approverMap;
-	}
-
-	public Map<Long, PmUserGroup> getUserGroupMap() {
-		return userGroupMap;
-	}
-
-	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
-		this.userGroupMap = userGroupMap;
-	}
-	
-
-	public List<CtContractItem> getCtItemList() {
-		if(ctItemList == null)
-			ctItemList = new ArrayList<CtContractItem>();
-		return ctItemList;
-	}
-
-	public void setCtItemList(List<CtContractItem> ctItemList) {
-		this.ctItemList = ctItemList;
-	}
-
-	public List<CtContractItem> getCtItemServiceList() {
-		if(ctItemServiceList == null)
-			ctItemServiceList = new ArrayList<CtContractItem>();
-		return ctItemServiceList;
-	}
-
-	public void setCtItemServiceList(List<CtContractItem> ctItemServiceList) {
-		this.ctItemServiceList = ctItemServiceList;
-	}
-
-	public boolean isBpkApprover() {
-		return bpkApprover;
-	}
-
-	public void setBpkApprover(boolean bpkApprover) {
-		this.bpkApprover = bpkApprover;
-	}
-
+	/**
+	 * @return the itemType
+	 */
 	public String getItemType() {
 		return itemType;
 	}
 
+	/**
+	 * @param itemType the itemType to set
+	 */
 	public void setItemType(String itemType) {
 		this.itemType = itemType;
 	}
 
-	public boolean isServiceItem() {
-		return serviceItem;
+	/**
+	 * @return the showItem
+	 */
+	public String getShowItem() {
+		return showItem;
 	}
 
-	public void setServiceItem(boolean serviceItem) {
-		this.serviceItem = serviceItem;
+	/**
+	 * @param showItem the showItem to set
+	 */
+	public void setShowItem(String showItem) {
+		this.showItem = showItem;
 	}
 
-	public boolean isProductItem() {
-		return productItem;
-	}
-
-	public void setProductItem(boolean productItem) {
-		this.productItem = productItem;
-	}
-
-	public CtContractItem getSelectedItem() {
-		return selectedItem;
-	}
-
-	public void setSelectedItem(CtContractItem selectedItem) {
-		this.selectedItem = selectedItem;
-	}
-
-	public CtContractItem getSelectedServiceItem() {
-		return selectedServiceItem;
-	}
-
-	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
-		this.selectedServiceItem = selectedServiceItem;
-	}
-
-	public String getSupplierAddress() {
-		return supplierAddress;
-	}
-
-	public void setSupplierAddress(String supplierAddress) {
-		this.supplierAddress = supplierAddress;
-	}
-
-	public SmAddress getSmAddress() {
-		return smAddress;
-	}
-
-	public void setSmAddress(SmAddress smAddress) {
-		this.smAddress = smAddress;
-	}
-	
-	public String getSupplierCompanyName() {
-		return supplierCompanyName;
-	}
-
-	public void setSupplierCompanyName(String supplierCompanyName) {
-		this.supplierCompanyName = supplierCompanyName;
-	}
-
-	public boolean isUpdateCompanyName() {
-		return updateCompanyName;
-	}
-	
-	public void setUpdateCompanyName(boolean updateCompanyName) {
-		this.updateCompanyName = updateCompanyName;
-	}
-
-	public boolean isUpdateSupplierAddress() {
-		return updateSupplierAddress;
-	}
-	
-	public void setUpdateSupplierAddress(boolean updateSupplierAddress) {
-		this.updateSupplierAddress = updateSupplierAddress;
-	}
-
-	public CtPerformanceBond getCtPerformanceBond() {
-		return ctPerformanceBond;
-	}
-
-	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
-		this.ctPerformanceBond = ctPerformanceBond;
-	}
-
-	public CtContractZone getSelectedCtZone() {
-		return selectedCtZone;
-	}
-
-	public void setSelectedCtZone(CtContractZone selectedCtZone) {
-		this.selectedCtZone = selectedCtZone;
-	}
-
-	public List<CtContractZoneDtl> getCtContractZoneDtls() {
-		return ctContractZoneDtls;
-	}
-
-	public void setCtContractZoneDtls(List<CtContractZoneDtl> ctContractZoneDtls) {
-		this.ctContractZoneDtls = ctContractZoneDtls;
-	}
-
-	public boolean isShowZoneDetails() {
-		return showZoneDetails;
-	}
-
-	public void setShowZoneDetails(boolean showZoneDetails) {
-		this.showZoneDetails = showZoneDetails;
-	}
-
-	public boolean isDisableScheduleRadio() {
-		return disableScheduleRadio;
-	}
-
-	public void setDisableScheduleRadio(boolean disableScheduleRadio) {
-		this.disableScheduleRadio = disableScheduleRadio;
-	}
-
-	public boolean isDisableProgessiveRadio() {
-		return disableProgessiveRadio;
-	}
-
-	public void setDisableProgessiveRadio(boolean disableProgessiveRadio) {
-		this.disableProgessiveRadio = disableProgessiveRadio;
-	}
-
-	public boolean isChkButton() {
-		return chkButton;
-	}
-
-	public void setChkButton(boolean chkButton) {
-		this.chkButton = chkButton;
-	}
-
-	public boolean isChkScheduleNulValue() {
-		return chkScheduleNulValue;
-	}
-
-	public void setChkScheduleNulValue(boolean chkScheduleNulValue) {
-		this.chkScheduleNulValue = chkScheduleNulValue;
-	}
-
-	public boolean isChkProgressiveNulValue() {
-		return chkProgressiveNulValue;
-	}
-
-	public void setChkProgressiveNulValue(boolean chkProgressiveNulValue) {
-		this.chkProgressiveNulValue = chkProgressiveNulValue;
-	}
-
-	public Long getMinistryProfileId() {
-		return ministryProfileId;
-	}
-
-	public void setMinistryProfileId(Long ministryProfileId) {
-		this.ministryProfileId = ministryProfileId;
-	}
-
-	public Long getDepartmentProfileId() {
-		return departmentProfileId;
-	}
-
-	public void setDepartmentProfileId(Long departmentProfileId) {
-		this.departmentProfileId = departmentProfileId;
-	}
-
-	public List<PmOrgProfile> getPmOrgProfileList() {
-		   if(pmOrgProfileList == null)
-			   pmOrgProfileList = new ArrayList<PmOrgProfile>();
-			return pmOrgProfileList;
-	}
-
-	public void setPmOrgProfileList(List<PmOrgProfile> pmOrgProfileList) {
-		this.pmOrgProfileList = pmOrgProfileList;
-	}
-
-	public List<CtAgency> getListOfAgency() {
-		if(listOfAgency == null)
-			listOfAgency = new ArrayList<CtAgency>();
-		return listOfAgency;
-	}
-
-	public void setListOfAgency(List<CtAgency> listOfAgency) {
-		this.listOfAgency = listOfAgency;
-	}
-
-	public CtDeduction getSelectedDeduction() {
-		return selectedDeduction;
-	}
-
-	public void setSelectedDeduction(CtDeduction selectedDeduction) {
-		this.selectedDeduction = selectedDeduction;
-	}
-
-	public List<CtDeductionClause> getCtDeductionClauseList() {
-		if(ctDeductionClauseList==null) {
-			ctDeductionClauseList = new ArrayList<CtDeductionClause>();
-		}
-		return ctDeductionClauseList;
-	}
-
-	public void setCtDeductionClauseList(List<CtDeductionClause> ctDeductionClauseList) {
-		this.ctDeductionClauseList = ctDeductionClauseList;
-	}
-
-	public String getCtPhysicalNo() {
-		return ctPhysicalNo;
-	}
-
-	public void setCtPhysicalNo(String ctPhysicalNo) {
-		this.ctPhysicalNo = ctPhysicalNo;
-	}
-
-	public boolean isViewContract() {
-		return viewContract;
-	}
-
-	public void setViewContract(boolean viewContract) {
-		this.viewContract = viewContract;
-	}
-
-	public boolean isScheduleType() {
-		return scheduleType;
-	}
-
-	public void setScheduleType(boolean scheduleType) {
-		this.scheduleType = scheduleType;
-	}
-
-	public CtContractItem getSelectedCCItem() {
-		return selectedCCItem;
-	}
-
-	public void setSelectedCCItem(CtContractItem selectedCCItem) {
-		this.selectedCCItem = selectedCCItem;
-	}
-
-	public boolean isDirectPurchase() {
-		return directPurchase;
-	}
-
-	public void setDirectPurchase(boolean directPurchase) {
-		this.directPurchase = directPurchase;
-	}
-
-	public boolean isUpdateContract() {
-		return updateContract;
-	}
-
-	public void setUpdateContract(boolean updateContract) {
-		this.updateContract = updateContract;
-	}
-
-	public String getSupplierLocation() {
-		return supplierLocation;
-	}
-
-	public void setSupplierLocation(String supplierLocation) {
-		this.supplierLocation = supplierLocation;
-	}
-
-	public String getZoneName() {
-		return zoneName;
-	}
-
-	public void setZoneName(String zoneName) {
-		this.zoneName = zoneName;
-	}
-
+	/**
+	 * @return the popupForImportedItems
+	 */
 	public String getPopupForImportedItems() {
 		return popupForImportedItems;
 	}
 
+	/**
+	 * @param popupForImportedItems the popupForImportedItems to set
+	 */
 	public void setPopupForImportedItems(String popupForImportedItems) {
 		this.popupForImportedItems = popupForImportedItems;
 	}
 
-	public String getContractType() {
-		return contractType;
+	/**
+	 * @return the ctName
+	 */
+	public String getCtName() {
+		return ctName;
 	}
 
-	public void setContractType(String contractType) {
-		this.contractType = contractType;
+	/**
+	 * @param ctName the ctName to set
+	 */
+	public void setCtName(String ctName) {
+		this.ctName = ctName;
 	}
 
-	public boolean isValidateScheduleDate() {
-		return validateScheduleDate;
+	/**
+	 * @return the ctLOANo
+	 */
+	public String getCtLOANo() {
+		return ctLOANo;
+	}
+	
+	/**
+	 * @param ctLOANo the ctLOANo to set
+	 */
+	public void setCtLOANo(String ctLOANo) {
+		this.ctLOANo = ctLOANo;
 	}
 
-	public void setValidateScheduleDate(boolean validateScheduleDate) {
-		this.validateScheduleDate = validateScheduleDate;
+	/**
+	 * @return the ctNumber
+	 */
+	public String getCtNumber() {
+		return ctNumber;
 	}
 
-	public TreeNode getCtZoneTrees() {
-		return ctZoneTrees;
+	/**
+	 * @param ctNumber the ctNumber to set
+	 */
+	public void setCtNumber(String ctNumber) {
+		this.ctNumber = ctNumber;
+	}
+	
+	/**
+	 * @return the ctCircularNo
+	 */
+	public String getCtCircularNo() {
+		return ctCircularNo;
 	}
 
-	public void setCtZoneTrees(TreeNode ctZoneTrees) {
-		this.ctZoneTrees = ctZoneTrees;
+	/**
+	 * @param ctCircularNo the ctCircularNo to set
+	 */
+	public void setCtCircularNo(String ctCircularNo) {
+		this.ctCircularNo = ctCircularNo;
 	}
 
-	public boolean isChkJustification() {
-		return chkJustification;
+	/**
+	 * @return the ctSupplierId
+	 */
+	public String getCtSupplierId() {
+		return ctSupplierId;
 	}
 
-	public void setChkJustification(boolean chkJustification) {
-		this.chkJustification = chkJustification;
+	/**
+	 * @param ctSupplierId the ctSupplierId to set
+	 */
+	public void setCtSupplierId(String ctSupplierId) {
+		this.ctSupplierId = ctSupplierId;
 	}
 
-	public boolean isFlgPaymentTracking() {
-		return flgPaymentTracking;
+	/**
+	 * @return the ctPhysicalNo
+	 */
+	public String getCtPhysicalNo() {
+		return ctPhysicalNo;
 	}
 
-	public void setFlgPaymentTracking(boolean flgPaymentTracking) {
-		this.flgPaymentTracking = flgPaymentTracking;
+	/**
+	 * @param ctPhysicalNo the ctPhysicalNo to set
+	 */
+	public void setCtPhysicalNo(String ctPhysicalNo) {
+		this.ctPhysicalNo = ctPhysicalNo;
 	}
 
-	public double getAdvancePaymentAmt() {
-		return advancePaymentAmt;
+	/**
+	 * @return the ctCircularName
+	 */
+	public String getCtCircularName() {
+		return ctCircularName;
 	}
 
-	public void setAdvancePaymentAmt(double advancePaymentAmt) {
-		this.advancePaymentAmt = advancePaymentAmt;
+	/**
+	 * @param ctCircularName the ctCircularName to set
+	 */
+	public void setCtCircularName(String ctCircularName) {
+		this.ctCircularName = ctCircularName;
 	}
 
+	/**
+	 * @return the ctSupplierName
+	 */
+	public String getCtSupplierName() {
+		return ctSupplierName;
+	}
+
+	/**
+	 * @param ctSupplierName the ctSupplierName to set
+	 */
+	public void setCtSupplierName(String ctSupplierName) {
+		this.ctSupplierName = ctSupplierName;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+	
+	/**
+	 * @return the supplierCompanyName
+	 */
+	public String getSupplierCompanyName() {
+		return supplierCompanyName;
+	}
+
+	/**
+	 * @param supplierCompanyName the supplierCompanyName to set
+	 */
+	public void setSupplierCompanyName(String supplierCompanyName) {
+		this.supplierCompanyName = supplierCompanyName;
+	}
+
+	/**
+	 * @return the externalPageUrl
+	 */
+	public String getExternalPageUrl() {
+		return externalPageUrl;
+	}
+
+	/**
+	 * @param externalPageUrl the externalPageUrl to set
+	 */
+	public void setExternalPageUrl(String externalPageUrl) {
+		this.externalPageUrl = externalPageUrl;
+	}
+
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	/**
+	 * @param ptjCodeName the ptjCodeName to set
+	 */
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	/**
+	 * @return the ptjCodeNameSearchValues
+	 */
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	/**
+	 * @param ptjCodeNameSearchValues the ptjCodeNameSearchValues to set
+	 */
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+
+	/**
+	 * @return the frequencySchedule
+	 */
+	public String getFrequencySchedule() {
+		return frequencySchedule;
+	}
+
+	/**
+	 * @param frequencySchedule the frequencySchedule to set
+	 */
+	public void setFrequencySchedule(String frequencySchedule) {
+		this.frequencySchedule = frequencySchedule;
+	}
+
+	/**
+	 * @return the warningPercentage
+	 */
+	public String getWarningPercentage() {
+		return warningPercentage;
+	}
+
+	/**
+	 * @param warningPercentage the warningPercentage to set
+	 */
+	public void setWarningPercentage(String warningPercentage) {
+		this.warningPercentage = warningPercentage;
+	}
+
+	/**
+	 * @return the textBeforeSign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	/**
+	 * @return the buttonAction
+	 */
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	/**
+	 * @param buttonAction the buttonAction to set
+	 */
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
+	}
+
+	/**
+	 * @return the gotoPreviewPage
+	 */
+	public String getGotoPreviewPage() {
+		return gotoPreviewPage;
+	}
+
+	/**
+	 * @param gotoPreviewPage the gotoPreviewPage to set
+	 */
+	public void setGotoPreviewPage(String gotoPreviewPage) {
+		this.gotoPreviewPage = gotoPreviewPage;
+	}
+
+	/**
+	 * @return the financialAccNo
+	 */
+	public String getFinancialAccNo() {
+		return financialAccNo;
+	}
+
+	/**
+	 * @param financialAccNo the financialAccNo to set
+	 */
+	public void setFinancialAccNo(String financialAccNo) {
+		this.financialAccNo = financialAccNo;
+	}
+
+	/**
+	 * @return the fileDirectory
+	 */
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	/**
+	 * @param fileDirectory the fileDirectory to set
+	 */
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
+
+	/**
+	 * @return the ctContractStatus
+	 */
+	public Long getCtContractStatus() {
+		return ctContractStatus;
+	}
+
+	/**
+	 * @param ctContractStatus the ctContractStatus to set
+	 */
+	public void setCtContractStatus(Long ctContractStatus) {
+		this.ctContractStatus = ctContractStatus;
+	}
+
+	/**
+	 * @return the terminationTypeId
+	 */
+	public Long getTerminationTypeId() {
+		return terminationTypeId;
+	}
+
+	/**
+	 * @param terminationTypeId the terminationTypeId to set
+	 */
+	public void setTerminationTypeId(Long terminationTypeId) {
+		this.terminationTypeId = terminationTypeId;
+	}
+
+	/**
+	 * @return the ministryProfileId
+	 */
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	/**
+	 * @param ministryProfileId the ministryProfileId to set
+	 */
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	/**
+	 * @return the paidAdvancePaymentAmt
+	 */
 	public BigDecimal getPaidAdvancePaymentAmt() {
 		return paidAdvancePaymentAmt;
 	}
 
+	/**
+	 * @param paidAdvancePaymentAmt the paidAdvancePaymentAmt to set
+	 */
 	public void setPaidAdvancePaymentAmt(BigDecimal paidAdvancePaymentAmt) {
 		this.paidAdvancePaymentAmt = paidAdvancePaymentAmt;
 	}
 
+	/**
+	 * @return the paidInvoiceAmt
+	 */
 	public BigDecimal getPaidInvoiceAmt() {
 		return paidInvoiceAmt;
 	}
 
+	/**
+	 * @param paidInvoiceAmt the paidInvoiceAmt to set
+	 */
 	public void setPaidInvoiceAmt(BigDecimal paidInvoiceAmt) {
 		this.paidInvoiceAmt = paidInvoiceAmt;
 	}
 
+	/**
+	 * @return the ctDateStart
+	 */
+	public Date getCtDateStart() {
+		return ctDateStart;
+	}
+
+	/**
+	 * @param ctDateStart the ctDateStart to set
+	 */
+	public void setCtDateStart(Date ctDateStart) {
+		this.ctDateStart = ctDateStart;
+	}
+
+	/**
+	 * @return the ctDateEnd
+	 */
+	public Date getCtDateEnd() {
+		return ctDateEnd;
+	}
+
+	/**
+	 * @param ctDateEnd the ctDateEnd to set
+	 */
+	public void setCtDateEnd(Date ctDateEnd) {
+		this.ctDateEnd = ctDateEnd;
+	}
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the ctStatus
+	 */
+	public int getCtStatus() {
+		return ctStatus;
+	}
+
+	/**
+	 * @param ctStatus the ctStatus to set
+	 */
+	public void setCtStatus(int ctStatus) {
+		this.ctStatus = ctStatus;
+	}
+
+	/**
+	 * @return the attachFileIndex
+	 */
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+
+	/**
+	 * @param attachFileIndex the attachFileIndex to set
+	 */
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
+
+	/**
+	 * @return the firstRowSelected
+	 */
+	public int getFirstRowSelected() {
+		return firstRowSelected;
+	}
+
+	/**
+	 * @param firstRowSelected the firstRowSelected to set
+	 */
+	public void setFirstRowSelected(int firstRowSelected) {
+		this.firstRowSelected = firstRowSelected;
+	}
+
+	/**
+	 * @return the advancePaymentAmt
+	 */
+	public double getAdvancePaymentAmt() {
+		return advancePaymentAmt;
+	}
+
+	/**
+	 * @param advancePaymentAmt the advancePaymentAmt to set
+	 */
+	public void setAdvancePaymentAmt(double advancePaymentAmt) {
+		this.advancePaymentAmt = advancePaymentAmt;
+	}
+
+	/**
+	 * @return the performanceBondRuleAmt
+	 */
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+
+	/**
+	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
+	 */
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
+	}
+
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	/**
+	 * @return the serviceItem
+	 */
+	public boolean isServiceItem() {
+		return serviceItem;
+	}
+
+	/**
+	 * @param serviceItem the serviceItem to set
+	 */
+	public void setServiceItem(boolean serviceItem) {
+		this.serviceItem = serviceItem;
+	}
+
+	/**
+	 * @return the productItem
+	 */
+	public boolean isProductItem() {
+		return productItem;
+	}
+
+	/**
+	 * @param productItem the productItem to set
+	 */
+	public void setProductItem(boolean productItem) {
+		this.productItem = productItem;
+	}
+
+	/**
+	 * @return the itemPricing
+	 */
+	public boolean isItemPricing() {
+		return itemPricing;
+	}
+
+	/**
+	 * @param itemPricing the itemPricing to set
+	 */
+	public void setItemPricing(boolean itemPricing) {
+		this.itemPricing = itemPricing;
+	}
+
+	/**
+	 * @return the itemCeilingQuantity
+	 */
+	public boolean isItemCeilingQuantity() {
+		return itemCeilingQuantity;
+	}
+
+	/**
+	 * @param itemCeilingQuantity the itemCeilingQuantity to set
+	 */
+	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
+		this.itemCeilingQuantity = itemCeilingQuantity;
+	}
+
+	/**
+	 * @return the directPurchase
+	 */
+	public boolean isDirectPurchase() {
+		return directPurchase;
+	}
+
+	/**
+	 * @param directPurchase the directPurchase to set
+	 */
+	public void setDirectPurchase(boolean directPurchase) {
+		this.directPurchase = directPurchase;
+	}
+
+	/**
+	 * @return the chkProgressive
+	 */
+	public boolean isChkProgressive() {
+		return chkProgressive;
+	}
+
+	/**
+	 * @param chkProgressive the chkProgressive to set
+	 */
+	public void setChkProgressive(boolean chkProgressive) {
+		this.chkProgressive = chkProgressive;
+	}
+
+	/**
+	 * @return the chkSchedule
+	 */
+	public boolean isChkSchedule() {
+		return chkSchedule;
+	}
+
+	/**
+	 * @param chkSchedule the chkSchedule to set
+	 */
+	public void setChkSchedule(boolean chkSchedule) {
+		this.chkSchedule = chkSchedule;
+	}
+
+	/**
+	 * @return the disableScheduleRadio
+	 */
+	public boolean isDisableScheduleRadio() {
+		return disableScheduleRadio;
+	}
+
+	/**
+	 * @param disableScheduleRadio the disableScheduleRadio to set
+	 */
+	public void setDisableScheduleRadio(boolean disableScheduleRadio) {
+		this.disableScheduleRadio = disableScheduleRadio;
+	}
+
+	/**
+	 * @return the updateSupplierAddress
+	 */
+	public boolean isUpdateSupplierAddress() {
+		return updateSupplierAddress;
+	}
+
+	/**
+	 * @param updateSupplierAddress the updateSupplierAddress to set
+	 */
+	public void setUpdateSupplierAddress(boolean updateSupplierAddress) {
+		this.updateSupplierAddress = updateSupplierAddress;
+	}
+
+	/**
+	 * @return the updateCompanyName
+	 */
+	public boolean isUpdateCompanyName() {
+		return updateCompanyName;
+	}
+
+	/**
+	 * @param updateCompanyName the updateCompanyName to set
+	 */
+	public void setUpdateCompanyName(boolean updateCompanyName) {
+		this.updateCompanyName = updateCompanyName;
+	}
+
+	/**
+	 * @return the showZoneDetails
+	 */
+	public boolean isShowZoneDetails() {
+		return showZoneDetails;
+	}
+
+	/**
+	 * @param showZoneDetails the showZoneDetails to set
+	 */
+	public void setShowZoneDetails(boolean showZoneDetails) {
+		this.showZoneDetails = showZoneDetails;
+	}
+
+	/**
+	 * @return the updateContract
+	 */
+	public boolean isUpdateContract() {
+		return updateContract;
+	}
+
+	/**
+	 * @param updateContract the updateContract to set
+	 */
+	public void setUpdateContract(boolean updateContract) {
+		this.updateContract = updateContract;
+	}
+
+	/**
+	 * @return the viewContract
+	 */
+	public boolean isViewContract() {
+		return viewContract;
+	}
+
+	/**
+	 * @param viewContract the viewContract to set
+	 */
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
+	}
+
+	/**
+	 * @return the chkJustification
+	 */
+	public boolean isChkJustification() {
+		return chkJustification;
+	}
+
+	/**
+	 * @param chkJustification the chkJustification to set
+	 */
+	public void setChkJustification(boolean chkJustification) {
+		this.chkJustification = chkJustification;
+	}
+
+	/**
+	 * @return the flgPaymentTracking
+	 */
+	public boolean isFlgPaymentTracking() {
+		return flgPaymentTracking;
+	}
+
+	/**
+	 * @param flgPaymentTracking the flgPaymentTracking to set
+	 */
+	public void setFlgPaymentTracking(boolean flgPaymentTracking) {
+		this.flgPaymentTracking = flgPaymentTracking;
+	}
+
+	/**
+	 * @return the chkConceValue
+	 */
+	public boolean isChkConceValue() {
+		return chkConceValue;
+	}
+
+	/**
+	 * @param chkConceValue the chkConceValue to set
+	 */
+	public void setChkConceValue(boolean chkConceValue) {
+		this.chkConceValue = chkConceValue;
+	}
+
+	/**
+	 * @return the progSchedButtonDeactive
+	 */
+	public boolean isProgSchedButtonDeactive() {
+		return progSchedButtonDeactive;
+	}
+
+	/**
+	 * @param progSchedButtonDeactive the progSchedButtonDeactive to set
+	 */
+	public void setProgSchedButtonDeactive(boolean progSchedButtonDeactive) {
+		this.progSchedButtonDeactive = progSchedButtonDeactive;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the buttonHideActive
+	 */
+	public boolean isButtonHideActive() {
+		return buttonHideActive;
+	}
+
+	/**
+	 * @param buttonHideActive the buttonHideActive to set
+	 */
+	public void setButtonHideActive(boolean buttonHideActive) {
+		this.buttonHideActive = buttonHideActive;
+	}
+
+	/**
+	 * @return the ctItemList
+	 */
+	public List<CtContractItem> getCtItemList() {
+		if (ctItemList == null) {
+			ctItemList = new ArrayList<CtContractItem>();
+		}
+		return ctItemList;
+	}
+
+	/**
+	 * @param ctItemList the ctItemList to set
+	 */
+	public void setCtItemList(List<CtContractItem> ctItemList) {
+		this.ctItemList = ctItemList;
+	}
+
+	/**
+	 * @return the ctItemServiceList
+	 */
+	public List<CtContractItem> getCtItemServiceList() {
+		if (ctItemServiceList == null) {
+			ctItemServiceList = new ArrayList<CtContractItem>();
+		}
+		return ctItemServiceList;
+	}
+
+	/**
+	 * @param ctItemServiceList the ctItemServiceList to set
+	 */
+	public void setCtItemServiceList(List<CtContractItem> ctItemServiceList) {
+		this.ctItemServiceList = ctItemServiceList;
+	}
+
+	/**
+	 * @return the ctContractZoneDtls
+	 */
+	public List<CtContractZoneDtl> getCtContractZoneDtls() {
+		return ctContractZoneDtls;
+	}
+
+	/**
+	 * @param ctContractZoneDtls the ctContractZoneDtls to set
+	 */
+	public void setCtContractZoneDtls(List<CtContractZoneDtl> ctContractZoneDtls) {
+		this.ctContractZoneDtls = ctContractZoneDtls;
+	}
+
+	/**
+	 * @return the remarkList
+	 */
+	public List<CtRemark> getRemarkList() {
+		if (remarkList == null) {
+			remarkList = new ArrayList<CtRemark>();
+		}
+		return remarkList;
+	}
+
+	/**
+	 * @param remarkList the remarkList to set
+	 */
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	/**
+	 * @return the attachmentList
+	 */
+	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList == null) {
+			   attachmentList = new ArrayList<CtAttachment>();
+		}
+		return attachmentList;
+	}
+
+	/**
+	 * @param attachmentList the attachmentList to set
+	 */
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
+
+	/**
+	 * @return the finalListOfSideMenu
+	 */
+	public List<String> getFinalListOfSideMenu() {
+		return finalListOfSideMenu;
+	}
+
+	/**
+	 * @param finalListOfSideMenu the finalListOfSideMenu to set
+	 */
+	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
+		this.finalListOfSideMenu = finalListOfSideMenu;
+	}
+
+	/**
+	 * @return the yearList
+	 */
+	public List<String> getYearList() {
+		return yearList;
+	}
+
+	/**
+	 * @param yearList the yearList to set
+	 */
+	public void setYearList(List<String> yearList) {
+		this.yearList = yearList;
+	}
+
+	/**
+	 * @return the selectedListOfAddress
+	 */
+	public List<CtAgencyAddress> getSelectedListOfAddress() {
+		return selectedListOfAddress;
+	}
+
+	/**
+	 * @param selectedListOfAddress the selectedListOfAddress to set
+	 */
+	public void setSelectedListOfAddress(List<CtAgencyAddress> selectedListOfAddress) {
+		this.selectedListOfAddress = selectedListOfAddress;
+	}
+
+	/**
+	 * @return the addressTypeList
+	 */
+	public List<PmAddressType> getAddressTypeList() {
+		return addressTypeList;
+	}
+
+	/**
+	 * @param addressTypeList the addressTypeList to set
+	 */
+	public void setAddressTypeList(List<PmAddressType> addressTypeList) {
+		this.addressTypeList = addressTypeList;
+	}
+
+	/**
+	 * @return the approverModel
+	 */
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	/**
+	 * @param approverModel the approverModel to set
+	 */
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	/**
+	 * @return the userGroupMap
+	 */
+	public Map<Long, PmUserGroup> getUserGroupMap() {
+		return userGroupMap;
+	}
+
+	/**
+	 * @param userGroupMap the userGroupMap to set
+	 */
+	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
+		this.userGroupMap = userGroupMap;
+	}
+
+	/**
+	 * @return the userMap
+	 */
 	public Map<String, PmUser> getUserMap() {
-		if(userMap==null) {
+		if (userMap == null) {
 			userMap = new HashMap<String, PmUser>();
 		}
 		return userMap;
 	}
 
+	/**
+	 * @param userMap the userMap to set
+	 */
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
 	}
 
-	public SmSupplierBank getSmSupplierBanks() {
-		return smSupplierBanks;
-	}
-
-	public void setSmSupplierBanks(SmSupplierBank smSupplierBanks) {
-		this.smSupplierBanks = smSupplierBanks;
-	}
-
-	public int getCtStatus() {
-		return ctStatus;
-	}
-
-	public void setCtStatus(int ctStatus) {
-		this.ctStatus = ctStatus;
-	}
-
-	public boolean isChkConceValue() {
-		return chkConceValue;
-	}
-
-	public void setChkConceValue(boolean chkConceValue) {
-		this.chkConceValue = chkConceValue;
-	}
-
-	public Date getCtDateStart() {
-		return ctDateStart;
-	}
-
-	public void setCtDateStart(Date ctDateStart) {
-		this.ctDateStart = ctDateStart;
-	}
-
-	public Date getCtDateEnd() {
-		return ctDateEnd;
-	}
-
-	public void setCtDateEnd(Date ctDateEnd) {
-		this.ctDateEnd = ctDateEnd;
-	}
-	
-	public Long getTerminationTypeId() {
-		return terminationTypeId;
-	}
-
-	public void setTerminationTypeId(Long terminationTypeId) {
-		this.terminationTypeId = terminationTypeId;
-	}
-
-	public int getSelectedTabIndex() {
-		return selectedTabIndex;
-	}
-
-	public void setSelectedTabIndex(int selectedTabIndex) {
-		this.selectedTabIndex = selectedTabIndex;
-	}
-
+	/**
+	 * @return the radioButtonSchedule
+	 */
 	public Map<String, Object> getRadioButtonSchedule() {
-		if(radioButtonSchedule == null){
+		if (radioButtonSchedule == null) {
 			radioButtonSchedule = new LinkedHashMap<String,Object>();
 			FacesScopes face = new FacesScopes();
 			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
@@ -872,274 +1162,229 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		return radioButtonSchedule;
 	}
 
+	/**
+	 * @param radioButtonSchedule the radioButtonSchedule to set
+	 */
 	public void setRadioButtonSchedule(Map<String, Object> radioButtonSchedule) {
 		this.radioButtonSchedule = radioButtonSchedule;
 	}
 
-	public String getFrequencySchedule() {
-		return frequencySchedule;
+	/**
+	 * @return the approverMap
+	 */
+	public HashMap<String, PmUserGroupUser> getApproverMap() {
+		if (approverMap == null) {
+			setApproverMap(new HashMap<String,PmUserGroupUser>());
+		}
+		return approverMap;
 	}
 
-	public void setFrequencySchedule(String frequencySchedule) {
-		this.frequencySchedule = frequencySchedule;
-	}
-	
-	public String getExternalPageUrl() {
-		return externalPageUrl;
-	}
-	
-	public void setExternalPageUrl(String externalPageUrl) {
-		this.externalPageUrl = externalPageUrl;
+	/**
+	 * @param approverMap the approverMap to set
+	 */
+	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+		this.approverMap = approverMap;
 	}
 
-	public String getPtjCodeName() {
-		return ptjCodeName;
+	/**
+	 * @return the contractVer
+	 */
+	public CtContractVer getContractVer() {
+		return contractVer;
 	}
 
-	public void setPtjCodeName(String ptjCodeName) {
-		this.ptjCodeName = ptjCodeName;
+	/**
+	 * @param contractVer the contractVer to set
+	 */
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
 	}
 
-	public String getPtjCodeNameSearchValues() {
-		return ptjCodeNameSearchValues;
+	/**
+	 * @return the ctContract
+	 */
+	public CtContract getCtContract() {
+		return ctContract;
 	}
 
-	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
-		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
-	}
-	
-	public String getFileDirectory() {
-		return fileDirectory;
-	}
-
-	public void setFileDirectory(String fileDirectory) {
-		this.fileDirectory = fileDirectory;
+	/**
+	 * @param ctContract the ctContract to set
+	 */
+	public void setCtContract(CtContract ctContract) {
+		this.ctContract = ctContract;
 	}
 
-	public boolean isTabMenuShowForZone() {
-		return tabMenuShowForZone;
+	/**
+	 * @return the selectedItem
+	 */
+	public CtContractItem getSelectedItem() {
+		return selectedItem;
 	}
 
-	public void setTabMenuShowForZone(boolean tabMenuShowForZone) {
-		this.tabMenuShowForZone = tabMenuShowForZone;
+	/**
+	 * @param selectedItem the selectedItem to set
+	 */
+	public void setSelectedItem(CtContractItem selectedItem) {
+		this.selectedItem = selectedItem;
 	}
 
-	public boolean isTabMenuShowFactored() {
-		return tabMenuShowFactored;
+	/**
+	 * @return the selectedServiceItem
+	 */
+	public CtContractItem getSelectedServiceItem() {
+		return selectedServiceItem;
 	}
 
-	public void setTabMenuShowFactored(boolean tabMenuShowFactored) {
-		this.tabMenuShowFactored = tabMenuShowFactored;
+	/**
+	 * @param selectedServiceItem the selectedServiceItem to set
+	 */
+	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
+		this.selectedServiceItem = selectedServiceItem;
 	}
 
-	public MenuModel getFulfilmentMenuModel() {
-		return fulfilmentMenuModel;
+	/**
+	 * @return the selectedDeduction
+	 */
+	public CtDeduction getSelectedDeduction() {
+		return selectedDeduction;
 	}
 
-	public void setFulfilmentMenuModel(MenuModel fulfilmentMenuModel) {
-		this.fulfilmentMenuModel = fulfilmentMenuModel;
+	/**
+	 * @param selectedDeduction the selectedDeduction to set
+	 */
+	public void setSelectedDeduction(CtDeduction selectedDeduction) {
+		this.selectedDeduction = selectedDeduction;
 	}
 
-	public List<String> getFinalListOfSideMenu() {
-		return finalListOfSideMenu;
+	/**
+	 * @return the ctPerformanceBond
+	 */
+	public CtPerformanceBond getCtPerformanceBond() {
+		return ctPerformanceBond;
 	}
 
-	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
-		this.finalListOfSideMenu = finalListOfSideMenu;
+	/**
+	 * @param ctPerformanceBond the ctPerformanceBond to set
+	 */
+	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
+		this.ctPerformanceBond = ctPerformanceBond;
 	}
 
-	public CtAgency getSelectedAgency() {
-		return selectedAgency;
+	/**
+	 * @return the selectedCtZone
+	 */
+	public CtContractZone getSelectedCtZone() {
+		return selectedCtZone;
 	}
 
-	public void setSelectedAgency(CtAgency selectedAgency) {
-		this.selectedAgency = selectedAgency;
+	/**
+	 * @param selectedCtZone the selectedCtZone to set
+	 */
+	public void setSelectedCtZone(CtContractZone selectedCtZone) {
+		this.selectedCtZone = selectedCtZone;
 	}
 
-	public List<SelectItem> getMonthList() {
-		return monthList;
-	}
-
-	public void setMonthList(List<SelectItem> monthList) {
-		this.monthList = monthList;
-	}
-
-	public int getAttachFileIndex() {
-		return attachFileIndex;
-	}
-
-	public void setAttachFileIndex(int attachFileIndex) {
-		this.attachFileIndex = attachFileIndex;
-	}
-
-	public boolean isPercentExceeded() {
-		return percentExceeded;
-	}
-
-	public void setPercentExceeded(boolean percentExceeded) {
-		this.percentExceeded = percentExceeded;
-	}
-
-	public boolean isProgSchedButtonDeactive() {
-		return progSchedButtonDeactive;
-	}
-
-	public void setProgSchedButtonDeactive(boolean progSchedButtonDeactive) {
-		this.progSchedButtonDeactive = progSchedButtonDeactive;
-	}
-
-	public List<String> getYearList() {
-		return yearList;
-	}
-
-	public void setYearList(List<String> yearList) {
-		this.yearList = yearList;
-	}
-
-	public double getPerformanceBondRuleAmt() {
-		return performanceBondRuleAmt;
-	}
-
-	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
-		this.performanceBondRuleAmt = performanceBondRuleAmt;
-	}
-
-	public PmDigiSign getPmDigiSign() {
-		return pmDigiSign;
-	}
-
-	public void setPmDigiSign(PmDigiSign pmDigiSign) {
-		this.pmDigiSign = pmDigiSign;
-	}
-
-	public boolean isAutoUpdate() {
-		return autoUpdate;
-	}
-
-	public void setAutoUpdate(boolean autoUpdate) {
-		this.autoUpdate = autoUpdate;
-	}
-
-	public String getButtonAction() {
-		return buttonAction;
-	}
-
-	public void setButtonAction(String buttonAction) {
-		this.buttonAction = buttonAction;
-	}
-
-	public String getTextBeforeSign() {
-		return textBeforeSign;
-	}
-
-	public void setTextBeforeSign(String textBeforeSign) {
-		this.textBeforeSign = textBeforeSign;
-	}
-
-	public int getCounter() {
-		return counter;
-	}
-
-	public void setCounter(int counter) {
-		this.counter = counter;
-	}
-
-	public String getFinancialAccNo() {
-		return financialAccNo;
-	}
-
-	public void setFinancialAccNo(String financialAccNo) {
-		this.financialAccNo = financialAccNo;
-	}
-
-	public String getWarningPercentage() {
-		return warningPercentage;
-	}
-
-	public void setWarningPercentage(String warningPercentage) {
-		this.warningPercentage = warningPercentage;
-	}
-
-	public boolean isButtonHideActive() {
-		return buttonHideActive;
-	}
-
-	public void setButtonHideActive(boolean buttonHideActive) {
-		this.buttonHideActive = buttonHideActive;
-	}
-
-	public List<CtPerformanceBond> getPerformanceBondList() {
-		return performanceBondList;
-	}
-
-	public void setPerformanceBondList(List<CtPerformanceBond> performanceBondList) {
-		this.performanceBondList = performanceBondList;
-	}
-
-	public int getFirstRowSelected() {
-		return firstRowSelected;
-	}
-
-	public void setFirstRowSelected(int firstRowSelected) {
-		this.firstRowSelected = firstRowSelected;
-	}
-
-	public boolean isSelectAll() {
-		return selectAll;
-	}
-
-	public void setSelectAll(boolean selectAll) {
-		this.selectAll = selectAll;
-	}
-
+	/**
+	 * @return the ctAmendment
+	 */
 	public CtAmendment getCtAmendment() {
 		return ctAmendment;
 	}
 
+	/**
+	 * @param ctAmendment the ctAmendment to set
+	 */
 	public void setCtAmendment(CtAmendment ctAmendment) {
 		this.ctAmendment = ctAmendment;
 	}
-	
-	public Long getCtContractStatus() {
-		return ctContractStatus;
+
+	/**
+	 * @return the selectedAgency
+	 */
+	public CtAgency getSelectedAgency() {
+		return selectedAgency;
 	}
 
-	public void setCtContractStatus(Long ctContractStatus) {
-		this.ctContractStatus = ctContractStatus;
-	}	
-
-	public String getGotoPreviewPage() {
-		return gotoPreviewPage;
+	/**
+	 * @param selectedAgency the selectedAgency to set
+	 */
+	public void setSelectedAgency(CtAgency selectedAgency) {
+		this.selectedAgency = selectedAgency;
 	}
 
-	public void setGotoPreviewPage(String gotoPreviewPage) {
-		this.gotoPreviewPage = gotoPreviewPage;
+	/**
+	 * @return the ctZoneTrees
+	 */
+	public TreeNode getCtZoneTrees() {
+		return ctZoneTrees;
 	}
 
-	public List<CtAgencyAddress> getSelectedListOfAddress() {
-		return selectedListOfAddress;
+	/**
+	 * @param ctZoneTrees the ctZoneTrees to set
+	 */
+	public void setCtZoneTrees(TreeNode ctZoneTrees) {
+		this.ctZoneTrees = ctZoneTrees;
 	}
 
-	public void setSelectedListOfAddress(List<CtAgencyAddress> selectedListOfAddress) {
-		this.selectedListOfAddress = selectedListOfAddress;
-	}	
-
-	public List<PmAddressType> getAddressTypeList() {
-		return addressTypeList;
+	/**
+	 * @return the fulfilmentMenuModel
+	 */
+	public MenuModel getFulfilmentMenuModel() {
+		return fulfilmentMenuModel;
 	}
 
-	public void setAddressTypeList(List<PmAddressType> addressTypeList) {
-		this.addressTypeList = addressTypeList;
+	/**
+	 * @param fulfilmentMenuModel the fulfilmentMenuModel to set
+	 */
+	public void setFulfilmentMenuModel(MenuModel fulfilmentMenuModel) {
+		this.fulfilmentMenuModel = fulfilmentMenuModel;
 	}
 
+	/**
+	 * @return the smAddress
+	 */
+	public SmAddress getSmAddress() {
+		return smAddress;
+	}
+
+	/**
+	 * @param smAddress the smAddress to set
+	 */
+	public void setSmAddress(SmAddress smAddress) {
+		this.smAddress = smAddress;
+	}
+
+	/**
+	 * @return the pmDigiSign
+	 */
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	/**
+	 * @param pmDigiSign the pmDigiSign to set
+	 */
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	/**
+	 * @return the contractDataModel
+	 */
 	public IPagingDataModel<VCtContract> getContractDataModel() {
 		return contractDataModel;
 	}
 
+	/**
+	 * @param contractDataModel the contractDataModel to set
+	 */
 	public void setContractDataModel(IPagingDataModel<VCtContract> contractDataModel) {
 		this.contractDataModel = contractDataModel;
 	}
 
+	/**
+	 * pagination for contract search list
+	 */
 	private class ContractPagingDataModel extends PagingDataModel<VCtContract> {
 		private static final long serialVersionUID = 1L;
 
@@ -1147,99 +1392,108 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 			super("contractTbl");
 		}
 		
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
 			IContractSO contractSO = null;
 			try {
-				if(getCtNumber()!=null && getCtNumber().length()>0) {
+				if (getCtNumber() != null && getCtNumber().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
 													getCtNumber());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if(getCtName()!=null && getCtName().length()>0) {
+				if (getCtName() != null && getCtName().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
 													getCtName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if(getCtCircularNo()!=null && getCtCircularNo().length()>0) {
+				if (getCtCircularNo() != null && getCtCircularNo().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
 													getCtCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if(getCtCircularName()!=null && getCtCircularName().length()>0) {
+				if (getCtCircularName() != null && getCtCircularName().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.name",SearchOperator.OPERATOR_LIKE.value(),
 													getCtCircularName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if(getCtSupplierId()!=null && getCtSupplierId().length()>0) {
+				if (getCtSupplierId() != null && getCtSupplierId().length() > 0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
 					getCtSupplierId()));
 				}
-				if(getCtSupplierName()!=null && getCtSupplierName().length()>0) {
+				if (getCtSupplierName() != null && getCtSupplierName().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
 													getCtSupplierName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
-				if(getCtDateStart()!=null && getCtDateEnd()!=null) {
+				if (getCtDateStart() != null && getCtDateEnd() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getCtDateStart()));	
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getCtDateEnd()));		
 				
 				}
-				if(getCtDateStart()!=null && getCtDateEnd()==null) {
+				if (getCtDateStart() != null && getCtDateEnd() == null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_EQUALS.value(), getCtDateStart()));					
 				}
-				if(getCtDateStart()==null && getCtDateEnd()!=null) {
+				if (getCtDateStart() == null && getCtDateEnd() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(), getCtDateEnd()));	
 				}
-				if(getCtPhysicalNo()!=null && getCtPhysicalNo().length()>0) {
+				if (getCtPhysicalNo() != null && getCtPhysicalNo().length() > 0) {
 				   	SearchFilterBean filterBean = new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 				   									getCtPhysicalNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
-				if(getCtLOANo()!=null && getCtLOANo().length()>0) {
+				if (getCtLOANo() != null && getCtLOANo().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
 													getCtLOANo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
-				if(getCtStatus()>0) {
+				if (getCtStatus() > 0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
 					getCtStatus()));					
 				}
-				if(getTerminationTypeId() != null) {
+				if (getTerminationTypeId() != null) {
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
 					reqDTO.setParameterId(getTerminationTypeId());
 					reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+					
 					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 					String parameterCode = resDTO.getPmParameter().getParameterCode();
-					if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
+					
+					if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					}
-					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+					else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					}
-					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
+					else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					}
 				}
 				
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
-				if(getCtContractStatus() != null) {
+				if (getCtContractStatus() != null) {
 					reqDTO.setStatusId(getCtContractStatus());
 				}
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
-				setSelectedIndex(0);
+				setSelectedTabIndex(0);
 					
-				if(resDTO.isSuccessful()) {
+				if (resDTO.isSuccessful()) {
 					return resDTO.getvCtContractResultBean();
 				}
 			} catch (Exception e) {
