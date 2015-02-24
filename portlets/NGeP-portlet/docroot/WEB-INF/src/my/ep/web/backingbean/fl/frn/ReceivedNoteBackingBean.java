@@ -73,9 +73,10 @@ import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
+// TODO: Auto-generated Javadoc
 /**
- * Backing Bean for Create Received Note 
- * 
+ * Backing Bean for Create Received Note .
+ *
  * @author Giribabu
  * @since 7/10/2013
  */
@@ -86,7 +87,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	private String className="@(.myFrnEvalClassName)";
 	private static final String NAV_DELIVERYORDER_PAGE = "/xhtml/fl/shared/hyperlinkView/deliveryOrderPage/doHyperlink.xhtml";
 	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	
 	/**
+	 * Gets the class name.
+	 *
 	 * @return the className
 	 */
 	public String getClassName() {
@@ -94,6 +98,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 
 	/**
+	 * Sets the class name.
+	 *
 	 * @param className the className to set
 	 */
 	public void setClassName(String className) {
@@ -101,7 +107,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 
 	/**
-	 * get faces scopes
+	 * get faces scopes.
+	 *
 	 * @return FacesScopes
 	 */
 	private FacesScopes getFacesScopes(){
@@ -109,6 +116,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		return facesScopes;
 	}
 	
+	/**
+	 * save,submit received note.
+	 * </br>submit - save data into database and BPM process will route to the next respective user.
+	 * </br>save - save data into database.
+	 * @param action the action
+	 * navigate to acknowledge page.
+	 */
 	public String submitAction(String action) {
 		log.debug("ReceivedNoteBackingBean.submitAction()");
 		IReceivedNoteSO receivedNoteSO = null;
@@ -207,6 +221,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		return null;
 	}
 	
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -343,6 +360,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 	}
 	
+	/**
+	 * calculate  received amount based on received quantity and unit price.
+	 *
+	 * @param item the item
+	 */
 	public void retrieveReceivedAmt(FlFulfilmentNoteItem item) {
 		if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
 			item.setReceivedQty(BigDecimal.ZERO);
@@ -363,6 +385,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 	}
 	 
+	/**
+	 * Retrieve criteria list.
+	 */
 	private void retrieveCriteriaList() {
 		ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
 		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
@@ -377,6 +402,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 	}
 	
+	/**
+	 * Gets the criteria description based on language and criteria id.
+	 *
+	 * @param pmCriteria the pm criteria
+	 * @return the criteria desc
+	 */
 	public String getCriteriaDesc(PmCriteria pmCriteria) {
 		ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
 		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
@@ -386,6 +417,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		return resDTO.getPmCriteriaDesc().getCriteria();
 	}
 	
+	/**
+	 * Validate fulfilment note before submit and gpki Sign Action.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void validateFulfilmentNote(String outcome) {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
@@ -432,10 +468,20 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 	}
 	
+	/**
+	 * Gets the current date.
+	 *
+	 * @return the current date
+	 */
 	public Date getCurrentDate() {
 		return new Date();
 	}
 	
+	/**
+	 * Check supplier Evaluation score.
+	 * supplier Evaluation score between the 1 and 5
+	 * @param supplierEvaluation the supplier evaluation
+	 */
 	public void checkScore(FlSupplierEvaluation supplierEvaluation){
 		if(supplierEvaluation.getScore()!=null) {
 			if(supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0){
@@ -446,6 +492,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 	}
 	
+	/**
+	 * Received amount validation.
+	 * </br>Received Amount must be less than or equal to Delivery Amount.
+	 * @param item the item
+	 */
 	public void receivedAmtValidation(FlFulfilmentNoteItem item) {
 		if(item.getReceivedAmt().doubleValue() > item.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
 			item.setReceivedAmt(new BigDecimal(0));
@@ -458,6 +509,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 //		}
 	}
 	
+	/**
+	 * Retrieve mof no based on Supplier Id.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -470,12 +527,19 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	/**
-	 * Page navigation to FLDoc search page in FRN
+	 * Page navigation to FLDoc search page in FRN.
+	 *
+	 * @return the string
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
 	}
 	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			// Temp setTextBeforeSign : DocNo+Type
@@ -493,6 +557,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 	}
 	
+	/**
+	 * Pre submit action.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitAction(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
@@ -503,6 +574,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
+	/**
+	 * Gets the user role.
+	 *
+	 * @return the user role
+	 */
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 			return RoleCode.MOF_SUPPLIER_ADMIN.value();
@@ -523,12 +599,24 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			return null;
 	}
 	
+	/**
+	 * Gets the remaining quantity.
+	 *
+	 * @param flFulfilmentNoteItem the fl fulfilment note item
+	 * @return the remaining quantity
+	 */
 	public double getRemainingQuantity(FlFulfilmentNoteItem flFulfilmentNoteItem) {
 		double orderQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().doubleValue();
 		double receivedQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getReceivedQty().doubleValue();
 		return orderQty - receivedQty - flFulfilmentNoteItem.getReceivedQty().doubleValue();	
 	}
 	
+	/**
+	 * Navigate to do Hyper link page if doc type is DO.
+	 * Navigate to order No Hyper link page if doc type is PO.
+	 * @param docType the doc type
+	 * @return the string
+	 */
 	public String navigateDocument(String docType){
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
