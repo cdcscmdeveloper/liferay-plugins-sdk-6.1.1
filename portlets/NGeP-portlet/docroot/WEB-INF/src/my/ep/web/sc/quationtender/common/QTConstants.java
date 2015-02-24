@@ -196,5 +196,6 @@ public interface QTConstants {
 	public static final String PUBLICATION_APPROVAL = "Publication Approval";
 	public static final String QT_ALL = "A";
 	public static final String QT_BUMIPUTRA = "B";
+	public static final String QT_OPEN = "Open";
 
 }
