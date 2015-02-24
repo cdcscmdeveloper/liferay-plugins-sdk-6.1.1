@@ -47,7 +47,7 @@
 					value="#{address.deliveryTerm} #{contractRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.fl.delivery.start']}"  style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.delivery.start']}"  >
 				<p:calendar value="#{address.startDate}" id="calStartDate"   
 					mindate="#{address.startDate}"
 					readonlyInput="true"
@@ -60,7 +60,7 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  >
 				<p:calendar value="#{address.endDate}" id="calEndDate" 
 					mindate="#{address.startDate}"
 					readonlyInput="true"
