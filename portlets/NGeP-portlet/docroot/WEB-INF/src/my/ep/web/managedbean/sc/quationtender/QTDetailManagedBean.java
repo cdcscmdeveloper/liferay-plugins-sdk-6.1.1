@@ -484,7 +484,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isSaveFlow;
 	private boolean cloneNeeded;
 	private List<QTActivityBean> qtActivityBeans;
-
+	
+	// newly Added.
+	private String stateCodes;
+	
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
@@ -2886,6 +2889,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSupplierValidation(boolean isSupplierValidation) {
 		this.isSupplierValidation = isSupplierValidation;
+	}
+
+	public String getStateCodes() {
+		return stateCodes;
+	}
+
+	public void setStateCodes(String stateCodes) {
+		this.stateCodes = stateCodes;
 	}
 
 }
