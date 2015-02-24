@@ -52,6 +52,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -839,12 +840,21 @@ public class FinancialOrgBackingBean extends
 	
 			if (resDTO.isSuccessful()) {
 				result = resDTO.isSuccessful();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Financial Org successfully.", "Org Name : "
-										+ this.getManagedBean().getFinancialOrg()
-												.getFinOrgName()));
+//				FacesContext.getCurrentInstance().addMessage(
+//						null,
+//						new FacesMessage(FacesMessage.SEVERITY_INFO,
+//								"Financial Org successfully.", "Org Name : "
+//										+ this.getManagedBean().getFinancialOrg()
+//												.getFinOrgName()));
+				
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_780093, new String[]{resDTO.getPmFinancialOrg().getFinOrgName()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
 	
 			}
 		}
