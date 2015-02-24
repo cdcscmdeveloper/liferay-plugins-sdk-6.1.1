@@ -25,7 +25,7 @@
 				</th>	  
 		        <td>
 		        	<p:selectOneMenu value="#{profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId}" 
-		        		disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}"
+		        		disabled="false"
 		        		styleClass="ppDropDownWidthL" id="somCountry" 
 		        		required="#{!profileManagementBackingBean.managedBean.selectedUser.orgAddress 
 		        			and profileManagementBackingBean.managedBean.addressEntered}"
@@ -49,7 +49,7 @@
 			    		and profileManagementBackingBean.managedBean.addressEntered}" 
 			    		label="#{lbl['lbl.pm.profiles.userdetails.addressone']}"
 			    		value="#{profileManagementBackingBean.managedBean.userAddress.address1}" styleClass="ppDisplayTextL" maxlength="35"
-			    		disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}" />
+			    		disabled="false" />
 		    		<p:message id="itUserAdd1Msg" for="itUserAdd1" display="icon" />
 		    	</td>	
 			    <th></th>
@@ -59,7 +59,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addresstwo']}" /></th>	  
 			    <td>
 			    	<p:inputText value="#{profileManagementBackingBean.managedBean.userAddress.address2}" 
-			    		styleClass="ppDisplayTextL" maxlength="35" disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}"/>
+			    		styleClass="ppDisplayTextL" maxlength="35" disabled="false"/>
 		    	</td>	   
 			    <th></th>
                 <td></td>
@@ -68,7 +68,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressthree']}" /></th>	  
 			    <td>
 			    	<p:inputText value="#{profileManagementBackingBean.managedBean.userAddress.address3}" 
-			    		styleClass="ppDisplayTextL" maxlength="35" disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}"/>
+			    		styleClass="ppDisplayTextL" maxlength="35" disabled="false"/>
 		    	</td>	
 			    <th></th>
                 <td></td> 
@@ -77,7 +77,7 @@
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressfour']}" /></th>	  
 		    	<td>
 		    		<p:inputText value="#{profileManagementBackingBean.managedBean.userAddress.address4}" 
-		    			styleClass="ppDisplayTextL" maxlength="35" disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}"/>
+		    			styleClass="ppDisplayTextL" maxlength="35" disabled="false"/>
 	    		</td>	 
 		    	<th></th>
                	<td></td>	
@@ -91,7 +91,7 @@
 		    			and profileManagementBackingBean.managedBean.addressEntered}" 
 		    			label="#{lbl['lbl.pm.profiles.userdetails.postcode']}"
 		    			value="#{profileManagementBackingBean.managedBean.userAddress.postcode}" styleClass="ppDisplayTextL" maxlength="10"
-		    			disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress}">
+		    			disabled="false">
 	    				<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 	    			</p:inputText>
 	    			<p:message id="itPostcodeMsg" for="itPostcode" display="icon" />
@@ -108,7 +108,7 @@
 		        		required="#{!profileManagementBackingBean.managedBean.selectedUser.orgAddress 
 		        			and profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId!=null}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.state']}"
-		        		disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress or profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
+		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId}" >
 					   	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 					   	<f:selectItems
@@ -125,7 +125,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />
                	</th>  
 		        <td>
-		        	<p:selectOneMenu id="somDivisionC" disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress or !profileManagementBackingBean.managedBean.divisionFlagC}"
+		        	<p:selectOneMenu id="somDivisionC" disabled="#{!profileManagementBackingBean.managedBean.divisionFlagC}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmDivision.divisionId}"
 		        		required="#{profileManagementBackingBean.managedBean.divisionFlagC
 		        		and !profileManagementBackingBean.managedBean.selectedUser.orgAddress}" 
@@ -147,7 +147,7 @@
 		        	<p:selectOneMenu id="somDistrictC" required="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId!=null
 		        		and !profileManagementBackingBean.managedBean.selectedUser.orgAddress}" 
 		        		label="#{lbl['lbl.pm.profiles.userdetails.district']}"
-		        		disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress or profileManagementBackingBean.managedBean.userAddress.pmState.stateId==null}"
+		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId}"
 		              	styleClass="ppDropDownWidthL"> 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
@@ -166,8 +166,7 @@
 		        	<p:selectOneMenu id="somCityC" required="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId!=null
 		        		and !profileManagementBackingBean.managedBean.selectedUser.orgAddress}" 
 		        		label="#{lbl['lbl.pm.profiles.userdetails.citytown']}"
-		        		disabled="#{profileManagementBackingBean.managedBean.selectedUser.orgAddress
-		        			or profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId==null
+		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId==null
 		        			or profileManagementBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmCity.cityId}"
     					styleClass="ppDropDownWidthL"> 
