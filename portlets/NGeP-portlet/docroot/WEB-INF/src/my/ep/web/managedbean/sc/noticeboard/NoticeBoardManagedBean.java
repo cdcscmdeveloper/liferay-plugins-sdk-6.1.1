@@ -10,6 +10,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -139,6 +140,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	
 	private String companyName;
 	private String proposalURL;
+	private List<ScCommitteeMember> scCommitteeMembers;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -676,6 +678,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setProposalURL(String proposalURL) {
 		this.proposalURL = proposalURL;
+	}
+
+	/**
+	 * @return the scCommitteeMembers
+	 */
+	public List<ScCommitteeMember> getScCommitteeMembers() {
+		return scCommitteeMembers;
+	}
+
+	/**
+	 * @param scCommitteeMembers the scCommitteeMembers to set
+	 */
+	public void setScCommitteeMembers(List<ScCommitteeMember> scCommitteeMembers) {
+		this.scCommitteeMembers = scCommitteeMembers;
 	}
 
 
