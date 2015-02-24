@@ -1668,16 +1668,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public String updateBusinessNatureMaintenance(){
-		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
-		
-		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
-		RegistrationResDTO resDTO = reqSO.saveSupplierBusinessNature(reqDTO);
-		
-		if(resDTO.isSuccessful()){
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
-			return "/xhtml/common/acknowledge.xhtml";
+		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
+			throw new EpException(MessageConst.ERROR_721011);
+		}else{
+			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+			reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
+
+			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+			RegistrationResDTO resDTO = reqSO.saveSupplierBusinessNature(reqDTO);
+
+			if(resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
+				return "/xhtml/common/acknowledge.xhtml";
+			}
 		}
 		
 		return null;
