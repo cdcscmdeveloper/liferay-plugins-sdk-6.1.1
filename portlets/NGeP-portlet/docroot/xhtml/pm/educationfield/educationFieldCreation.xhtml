@@ -16,7 +16,7 @@
 	  <tr>	  	
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText id="eduCode" style="text-transform:uppercase" value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" 
+		<td><p:inputText style="text-transform:uppercase" value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" 
 			 disabled="#{!educationBackingBean.managedBean.pmEduField.brandNew}" size="30" maxlength="10" >
 			 <f:validateLength minimum="3" />
 			 </p:inputText>
@@ -34,14 +34,15 @@
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
      	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
      			value="#{educationBackingBean.managedBean.pmEduField.recordStatusFlg}" 
-     			disabled="#{educationBackingBean.managedBean.pmEduField.brandNew}">
+     	        disabled="#{educationBackingBean.managedBean.pmEduField.brandNew}" >
      	       <f:selectItems value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems> 	 	    	
   	        </p:selectOneMenu></td>				
 	    </tr>	    	    
 	</table>
 	<p:spacer height="50"></p:spacer>	
    </p:panel>
-   <!-- 	 <p:panel header="Education Field Restriction" toggleable="true">
+   <ui:remove>
+    <p:panel header="Education Field Restriction" toggleable="true">
 	<ac:lovPopup />
 	<p:dataTable id="educationfieldres" 
 		selection="#{educationBackingBean.managedBean.eduRestrDeleteList}" rowKey="#{eduFieldRes}"
@@ -91,6 +92,7 @@
 		 </tr>
 	  </table>
 			</div>    
-   </p:panel> -->   
+   </p:panel> 
+   </ui:remove>   
    
 </ui:composition>
