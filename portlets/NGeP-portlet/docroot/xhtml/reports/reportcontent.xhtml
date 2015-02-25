@@ -78,6 +78,7 @@
 						    
 						     <tr>
 						     <td width="100%">
+						<c:if test="#{reportBackingBean.managedBean.rptGenBean.enableCriteriaMenuView}">     
 						 <p:panel style="width: 100%;" header="#{reportBackingBean.reportName}"
 						 id="rptNameId" toggleable="true">    
 						 <table  style="width: 100%;margin-top:17px;"  >
@@ -135,6 +136,7 @@
 				   </div>
 				   </h:panelGroup>
 				  </p:panel>
+				  </c:if>
 				  </td>
 				  </tr>								    
 				  </table>	
