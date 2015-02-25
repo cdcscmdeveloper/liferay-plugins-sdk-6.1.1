@@ -18,13 +18,20 @@
 	</script>
 
 	<table style="width: 100%">
+		<tr height="10"><td colspan="4"></td></tr>
 		<tr>
-			<td
-				style="color: red; font-weight: bolder; padding-right: 5px; text-align: right;">
-				<h:outputText value="#{lbl['lbl.sm.lastSubmitDate']}" />
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sm.appl.status.createdbydate']}" styleClass="outputLabel-view-label"/>
+			</td>
+			<td>
+				<p:outputLabel value="#{backingBean.managedBean.applStatusInfo.createdByAndDate}" styleClass="outputLabel-view"/>
 			</td>
 			<td
-				style="color: red; font-weight: bolder; text-align: left; width: 200px;">
+				style="color: red; font-weight: bolder; text-align: right;">
+				<h:outputText value="#{lbl['lbl.sm.lastSubmitDate']} " />
+			</td>
+			<td
+				style="color: red; font-weight: bolder; text-align: left;">
 				<h:outputText
 					value="#{backingBean.managedBean.applStatusInfo.submissionDate} " />
 				<span id="blinkId"><h:outputText id="daysLeftId"
@@ -32,26 +39,15 @@
 			</td>
 		</tr>
 		<tr>
-			<td
-				style="color: red; font-weight: bolder; padding-right: 5px; text-align: right;">
-				<h:outputText value="#{lbl['lbl.sm.appl.status.createdbydate']} :" />
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sm.appl.status.modifiedbydate']}" styleClass="outputLabel-view-label"/>
 			</td>
-			<td
-				style="color: red; font-weight: bolder; text-align: left; width: 200px;">
-				<h:outputText
-					value="#{backingBean.managedBean.applStatusInfo.createdByAndDate}" />
-			</td>
-		</tr>
-		<tr>
-			<td
-				style="color: red; font-weight: bolder; padding-right: 5px; text-align: right;">
-				<h:outputText value="#{lbl['lbl.sm.appl.status.modifiedbydate']} :" />
-			</td>
-			<td
-				style="color: red; font-weight: bolder; text-align: left; width: 200px;">
-				<h:outputText
+			<td>
+				<p:outputLabel styleClass="outputLabel-view"
 					value="#{backingBean.managedBean.applStatusInfo.modifiedByAndDate}" />
 			</td>
+			<td></td>
+			<td></td>
 		</tr>
 	</table>
 
