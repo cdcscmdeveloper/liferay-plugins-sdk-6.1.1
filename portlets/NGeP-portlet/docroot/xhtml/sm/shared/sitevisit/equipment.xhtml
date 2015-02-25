@@ -23,7 +23,7 @@
 					</f:facet>
 					
 					<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}" disabled="#{viewFlag}">
-						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipMaint)}" update="dtlEquipMain"></p:ajax>
+						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipMaint)}" update="dtlEquipMainQtySetId"></p:ajax>
 					</p:selectBooleanCheckbox>
 					
 			</p:column>
@@ -32,8 +32,12 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.equipment.qtty.set']}
 					</f:facet>
-					<p:inputText value="#{equipMaint.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" 
-					disabled="#{viewFlag || !equipMaint.equipmentAvailable}" required="#{equipMaint.equipmentAvailable}" ></p:inputText>
+					<p:inputText value="#{equipMaint.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" id="dtlEquipMainQtySetId" maxlength="8"
+						converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
+						validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
+						disabled="#{viewFlag || !equipMaint.equipmentAvailable}" required="#{equipMaint.equipmentAvailable}" >
+						<f:validateLongRange minimum="1"  for="dtlEquipMainQtySetId"></f:validateLongRange>
+					</p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -54,7 +58,7 @@
 					</f:facet>
 					
 					<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}" disabled="#{viewFlag}">
-						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipBinding)}"  update="dtlEquipBinding"></p:ajax>
+						<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipBinding)}" update="dtlEquipBeatingQtySetId"></p:ajax>
 					</p:selectBooleanCheckbox>
 					
 			</p:column>
@@ -63,8 +67,12 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.equipment.qtty.set']}
 					</f:facet>
-					<p:inputText value="#{equipBinding.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" 
-					disabled="#{viewFlag || !equipBinding.equipmentAvailable}" required="#{equipBinding.equipmentAvailable}"></p:inputText>
+					<p:inputText value="#{equipBinding.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" id="dtlEquipBeatingQtySetId"
+						converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
+						validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
+						disabled="#{viewFlag || !equipBinding.equipmentAvailable}" required="#{equipBinding.equipmentAvailable}">
+							<f:validateLongRange minimum="1" for="dtlEquipBeatingQtySetId"></f:validateLongRange>
+					</p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
