@@ -21,7 +21,6 @@ import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduFieldRestr;
@@ -97,9 +96,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	public String createEducation() {
 		debugLogger("createEducation");
 		PmEduField pmEduField = new PmEduField();
-		List<PmEduFieldRestr> pmEduFieldRestr = new ArrayList<PmEduFieldRestr>();
+//		List<PmEduFieldRestr> pmEduFieldRestr = new ArrayList<PmEduFieldRestr>();
 		this.getManagedBean().setPmEduField(pmEduField);
-		this.getManagedBean().setEduRestrList(pmEduFieldRestr);
+		//this.getManagedBean().setEduRestrList(pmEduFieldRestr);
 
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 
@@ -287,7 +286,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_770091, new String[] {
+										MessageConst.INFO_780094, new String[] {
 												resDTO.getEduField()
 												.getFieldCode(),
 												resDTO.getEduField()
@@ -299,7 +298,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_770092, new String[] {
+										MessageConst.INFO_780095, new String[] {
 												resDTO.getEduField()
 												.getFieldCode(),
 												resDTO.getEduField()
