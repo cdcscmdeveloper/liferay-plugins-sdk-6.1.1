@@ -3163,6 +3163,13 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setSmSubmissionDateView(true);
 		}
 	}
+	public void enableCriteriaMenu() {
+		getManagedBean().getRptGenBean().setEnableCriteriaMenuView(false);
+		if((this.getReportValue()!=null)&&(!this.getReportValue().equals(""))){
+			getManagedBean().getRptGenBean().setEnableCriteriaMenuView(true);
+		}
+		
+	}
 	/*
 	 * Enable criteria variables by report name
 	 */
@@ -3236,6 +3243,7 @@ public class ReportBackingBean extends
 			getManagedBean().setRptGenBean(rptGenBean);
 			madatoryIndicator();
 			retrieveSupplierCompName();
+			enableCriteriaMenu();
 		}
 	}
 
