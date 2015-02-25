@@ -37,152 +37,231 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
 	private String taskName;
-	private String[] action;
-	private String editorValue;
-	
-	private CtContract ctContract;
-	private List<CtRemark> remarkList;
-	private CtContractVer contractVer;
-	private List<CtAttachment> attachmentList;
-	private List<CtContractItem> ctItemFilter;
 	private String fileDirectory;
+	private String textBeforeSign;
+	private String buttonAction;
+	
+	private boolean autoUpdate = true;
+	private boolean viewOnly = false;
 	
 	private double performanceBondRuleAmt;
 	
 	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate = true;
-	private String textBeforeSign;
-	private String buttonAction;
-	private boolean viewOnly = false;
+	private CtContract ctContract;
+	private CtContractVer contractVer;
+	
+	private String[] action;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private List<CtContractItem> ctItemFilter;
 	private HashMap<Long, CtAgency> agencyMap;
 	private HashMap<Long, CtContractItem> itemMap;	
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
-	
-	public String getEditorValue() {
-		return editorValue;
-	}
 
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
-	}
-
+	/**
+	 * @return the taskName
+	 */
 	public String getTaskName() {
 		return taskName;
 	}
 
+	/**
+	 * @param taskName, the taskName to set
+	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
 
+	/**
+	 * @return the action
+	 */
 	public String[] getAction() {
 		return action;
 	}
 
+	/**
+	 * @param action the action to set
+	 */
 	public void setAction(String[] action) {
 		this.action = action;
 	}
 
+	/**
+	 * @return the ctContract
+	 */
 	public CtContract getCtContract() {
 		return ctContract;
 	}
 
+	/**
+	 * @param ctContract the ctContract to set
+	 */
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
 
+	/**
+	 * @return the contractVer
+	 */
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
 
+	/**
+	 * @param contractVer the contractVer to set
+	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
 
+	/**
+	 * @return the remarkList
+	 */
 	public List<CtRemark> getRemarkList() {
 		if(remarkList == null)
 			remarkList = new ArrayList<CtRemark>();
 		return remarkList;
 	}
 
+	/**
+	 * @param remarkList the remarkList to set
+	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
 
+	/**
+	 * @return the attachmentList
+	 */
 	public List<CtAttachment> getAttachmentList() {
 		if(attachmentList == null)
 			attachmentList = new ArrayList<CtAttachment>();
 		return attachmentList;
 	}
 
+	/**
+	 * @param attachmentList the attachmentList to set
+	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
 
+	/**
+	 * @return the ctItemFilter
+	 */
 	public List<CtContractItem> getCtItemFilter() {
 		return ctItemFilter;
 	}
 
+	/**
+	 * @param ctItemFilter the ctItemFilter to set
+	 */
 	public void setCtItemFilter(List<CtContractItem> ctItemFilter) {
 		this.ctItemFilter = ctItemFilter;
 	}
 
+	/**
+	 * @return the fileDirectory
+	 */
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
 
+	/**
+	 * @param fileDirectory the fileDirectory to set
+	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
 
+	/**
+	 * @return the performanceBondRuleAmt
+	 */
 	public double getPerformanceBondRuleAmt() {
 		return performanceBondRuleAmt;
 	}
 
+	/**
+	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
+	 */
 	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
 		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 
+	/**
+	 * @return the pmDigiSign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * @param pmDigiSign the pmDigiSign to set
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * @return the autoUpdate
+	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
 
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
 
+	/**
+	 * @return the textBeforeSign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
 
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
 
+	/**
+	 * @return the buttonAction
+	 */
 	public String getButtonAction() {
 		return buttonAction;
 	}
 
+	/**
+	 * @param buttonAction the buttonAction to set
+	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
 
+	/**
+	 * @return the viewOnly
+	 */
 	public boolean isViewOnly() {
 		return viewOnly;
 	}
 
+	/**
+	 * @param viewOnly the viewOnly to set
+	 */
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
 
+	/**
+	 * @return the agencyMap
+	 */
 	public HashMap<Long, CtAgency> getAgencyMap() {
 		if(agencyMap == null) {
 			setAgencyMap(new HashMap<Long, CtAgency>());
@@ -190,10 +269,16 @@ public class SuspensionManagedBean extends BaseManagedBean {
 		return agencyMap;
 	}
 
+	/**
+	 * @param agencyMap the agencyMap to set
+	 */
 	public void setAgencyMap(HashMap<Long, CtAgency> agencyMap) {
 		this.agencyMap = agencyMap;
 	}
 	
+	/**
+	 * @return the itemMap
+	 */
 	public HashMap<Long, CtContractItem> getItemMap() {
 		if(itemMap == null) {
 			setItemMap(new HashMap<Long, CtContractItem>());
@@ -201,18 +286,30 @@ public class SuspensionManagedBean extends BaseManagedBean {
 		return itemMap;
 	}
 
+	/**
+	 * @param itemMap the itemMap to set
+	 */
 	public void setItemMap(HashMap<Long, CtContractItem> itemMap) {
 		this.itemMap = itemMap;
 	}
 	
+	/**
+	 * @return the approverModel
+	 */
 	public DualListModel<String> getApproverModel() {
 		return approverModel;
 	}
 
+	/**
+	 * @param approverModel the approverModel to set
+	 */
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
 	}
 
+	/**
+	 * @return the userMap
+	 */
 	public Map<String, PmUser> getUserMap() {
 		if(userMap==null) {
 			userMap = new HashMap<String, PmUser>();
@@ -220,6 +317,9 @@ public class SuspensionManagedBean extends BaseManagedBean {
 		return userMap;
 	}
 
+	/**
+	 * @param userMap the userMap to set
+	 */
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
 	}
