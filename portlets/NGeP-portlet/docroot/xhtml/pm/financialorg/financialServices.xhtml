@@ -1,12 +1,11 @@
-<ui:composition 
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	<p:outputPanel id="pFacFinancialService">
-	<br/>
+		<br />
 		<p:dataTable id="financialsrvid" var="financialsrv"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialSvcs}"
 			rowKey="#{financialsrv}" rowIndexVar="rowIndex"
@@ -20,18 +19,21 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
 				</f:facet>
-		
+
 				<p:selectOneMenu id="svcType"
 					value="#{financialsrv.serviceTypeCode.parameterId}"
 					disabled="#{!financialsrv.brandNew || financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}"
 					label="#{lbl['lbl.pm.financialorg.servicetype']}" required="false"
 					styleClass="ppDropDownWidthL">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-					<f:selectItems var="serviceType" itemLabel="#{serviceType.codeName}" itemValue="#{serviceType.pmParameter.parameterId}" 
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
+					<f:selectItems var="serviceType"
+						itemLabel="#{serviceType.codeName}"
+						itemValue="#{serviceType.pmParameter.parameterId}"
 						value="#{financialOrgBackingBean.getServiceTypeList()}" />
 					<p:ajax event="change"
-						listener="#{financialOrgBackingBean.updateService}"
-						update="@form" process="@all" />
+						listener="#{financialOrgBackingBean.updateService}" update="@form"
+						process="@all" />
 				</p:selectOneMenu>
 				<p:message for="svcType" id="svcTypeMsg" display="icon" />
 
@@ -39,13 +41,15 @@
 
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
+				<ui:fragment
+					rendered="#{financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}">
 
-				<p:inputText value="#{financialsrv.bankCode}"
-					styleClass="ppDisplayTextM" size="30" maxlength="20"
-					disabled="true" />
+					<p:inputText value="#{financialsrv.bankCode}" disabled="true"
+						styleClass="ppDisplayTextM" size="30" maxlength="20" />
+				</ui:fragment>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu styleClass="ppDropDownWidthS" 
+				<p:selectOneMenu styleClass="ppDropDownWidthS"
 					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
 					value="#{financialsrv.recordStatusFlg}" required="true"
 					style="width: 135px;margin-bottom: 5px;">
@@ -54,7 +58,6 @@
 				</p:selectOneMenu>
 
 			</p:column>
-
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
@@ -63,8 +66,7 @@
 				update="financialsrvid" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				update="financialsrvid, @form" 
-				partialSubmit="true"
+				update="financialsrvid, @form" partialSubmit="true"
 				process="@this,financialsrvid"
 				action="#{financialOrgBackingBean.deleteFinancialService}" />
 
