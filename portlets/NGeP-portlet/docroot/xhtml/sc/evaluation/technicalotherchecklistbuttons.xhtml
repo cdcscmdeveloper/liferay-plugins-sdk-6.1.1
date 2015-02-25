@@ -70,12 +70,12 @@
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 							rendered="#{othersList.evaluationStatus.statusId eq '61600'}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.othersTechnicalEvaluate(othersList,index,'T')}" />
+							action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,index,'T')}" />
 
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
 							rendered="#{othersList.evaluationStatus.statusId eq '61601'}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.othersTechnicalEvaluate(othersList,index,'T')}" />
+							action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,index,'T')}" />
 					</p:column>
 				</p:dataTable>
 			</p:panel>

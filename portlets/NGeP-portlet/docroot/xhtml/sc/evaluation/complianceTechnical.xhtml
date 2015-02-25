@@ -36,15 +36,16 @@
 					value="#{evaluationBackingBean.getParameterDesc(complianceTech.definationType)}"></h:outputText>
 
 			</p:column>
-			
-				<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
-					style="width:15%;white-space: normal;">
+
+			<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
+				style="width:15%;white-space: normal;">
 
 
-					<h:outputText rendered="#{complianceTech.definationType.parameterCode eq 'UP'}"
-						value="#{evaluationBackingBean.getStatusDescById(complianceTech.pmEvalStatus.statusId)}"></h:outputText>
+				<h:outputText
+					rendered="#{complianceTech.definationType.parameterCode eq 'UP'}"
+					value="#{evaluationBackingBean.getStatusDescById(complianceTech.pmEvalStatus.statusId)}"></h:outputText>
 
-				</p:column>
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
@@ -52,7 +53,7 @@
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
 					rendered="#{complianceTech.definationType.parameterCode eq 'UP'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.technicalComplianceAction(complianceTech,index,'T')}" />
+					action="#{evaluationBackingBean.complianceUploadCheckList(complianceTech,index,'T')}" />
 
 
 			</p:column>
