@@ -24,100 +24,213 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class PaymentMatchManagedBean.
+ *
  * @author admin
- * 
  */
 @ManagedBean(name = "pmMB")
 @SessionScoped
 public class PaymentMatchManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The payment advice. */
 	private FlPaymentAdvice paymentAdvice;
+	
+	/** The selected deductions. */
 	private List<FlPaymentDeduction> selectedDeductions;
+	
+	/** The ct deduction. */
 	private CtDeduction ctDeduction;
+	
+	/** The ct deduction clause list. */
 	private List<CtDeductionClause> ctDeductionClauseList;
+	
+	/** The gl account list. */
 	private List<PmGlAccount> glAccountList;
+	
+	/** The vot fund list. */
 	private List<PmVotFund> votFundList;
+	
+	/** The fee vot fund. */
 	private PmVotFund feeVotFund;
+	
+	/** The ct deduction list. */
 	private List<CtDeduction> ctDeductionList;
+	
+	/** The populate deduction list. */
 	private List<SelectItem> populateDeductionList;
 
 	// for Deduction panel display
+	/** The doc type. */
 	private String docType;
 
+	/** The charge line item root. */
 	private TreeNode chargeLineItemRoot;
+	
+	/** The selected node. */
 	private TreeNode selectedNode;
 
 	// set chargeline for selected items
+	/** The vot fund code. */
 	private String votFundCode;
+	
+	/** The asset ind code. */
 	private String assetIndCode;
+	
+	/** The gl account code. */
 	private String glAccountCode;
+	
+	/** The project code. */
 	private String projectCode;
+	
+	/** The setia code. */
 	private String setiaCode;
+	
+	/** The sub setia code. */
 	private String subSetiaCode;
+	
+	/** The prg activity code. */
 	private String prgActivityCode;
+	
+	/** The vot fund type. */
 	private String votFundType;
 
+	/** The vot fund id. */
 	private Long votFundId;
+	
+	/** The asset ind id. */
 	private Long assetIndId;
+	
+	/** The gl account id. */
 	private Long glAccountId;
+	
+	/** The project id. */
 	private Long projectId;
+	
+	/** The setia id. */
 	private Long setiaId;
+	
+	/** The sub setia id. */
 	private Long subSetiaId;
+	
+	/** The prg activity id. */
 	private Long prgActivityId;
+	
+	/** The financing type code. */
 	private String financingTypeCode;
+	
+	/** The deduction id. */
 	private Long deductionId;
+	
+	/** The invoice date. */
 	private String invoiceDate;
 
+	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
 
+	/** The ordered amt grand total. */
 	private BigDecimal orderedAmtGrandTotal;
+	
+	/** The received amt grand total. */
 	private BigDecimal receivedAmtGrandTotal;
+	
+	/** The inv amt grand total. */
 	private BigDecimal invAmtGrandTotal;
+	
+	/** The can amt grand total. */
 	private BigDecimal canAmtGrandTotal;
+	
+	/** The dan amt grand total. */
 	private BigDecimal danAmtGrandTotal;
+	
+	/** The service charge. */
 	private String serviceCharge;
 
+	/** The deduction amt. */
 	private BigDecimal deductionAmt;
+	
+	/** The have advanced pymt. */
 	private boolean haveAdvancedPymt;
+	
+	/** The paid amt. */
 	private BigDecimal paidAmt;
+	
+	/** The balance amt. */
 	private BigDecimal balanceAmt;
+	
+	/** The paid perc. */
 	private BigDecimal paidPerc;
+	
+	/** The number of co. */
 	private int numberOfCO;
+	
+	/** The show deduction tab. */
 	private boolean showDeductionTab;
 
+	/** The button val. */
 	private String buttonVal;
+	
+	/** The pm user. */
 	private PmUser pmUser;
 
 	// getSuplier address details
+	/** The supplier address. */
 	private String supplierAddress;
+	
+	/** The phone no. */
 	private String phoneNo;
+	
+	/** The fax no. */
 	private String faxNo;
+	
+	/** The contact email. */
 	private String contactEmail;
+	
+	/** The contact person. */
 	private String contactPerson;
+	
+	/** The contact phone no. */
 	private String contactPhoneNo;
 
 	// tab menu
+	/** The selected tab index. */
 	private int selectedTabIndex;
 
+	/** The adjustment doc no. */
 	private String adjustmentDocNo;
+	
+	/** The adjustment dan doc no. */
 	private String adjustmentDanDocNo;
+	
+	/** The adjustment can doc no. */
 	private String adjustmentCanDocNo;
+	
+	/** The stop instr no. */
 	private String stopInstrNo;
 	
 	//gpki signing
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The auto update. */
 	private boolean autoUpdate = true;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
+	
+	/** The button action. */
 	private String buttonAction;
+	
+	/** The validated. */
 	private boolean validated = false;
 
 	/**
+	 * Gets the doc type.
+	 *
 	 * @return the docType
 	 */
 	public String getDocType() {
@@ -125,14 +238,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param docType
-	 *            the docType to set
+	 * Sets the doc type.
+	 *
+	 * @param docType            the docType to set
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
 	}
 
 	/**
+	 * Gets the payment advice.
+	 *
 	 * @return the paymentAdvice
 	 */
 	public FlPaymentAdvice getPaymentAdvice() {
@@ -140,14 +256,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param paymentAdvice
-	 *            the paymentAdvice to set
+	 * Sets the payment advice.
+	 *
+	 * @param paymentAdvice            the paymentAdvice to set
 	 */
 	public void setPaymentAdvice(FlPaymentAdvice paymentAdvice) {
 		this.paymentAdvice = paymentAdvice;
 	}
 
 	/**
+	 * Gets the supplier address.
+	 *
 	 * @return the supplierAddress
 	 */
 	public String getSupplierAddress() {
@@ -155,14 +274,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierAddress
-	 *            the supplierAddress to set
+	 * Sets the supplier address.
+	 *
+	 * @param supplierAddress            the supplierAddress to set
 	 */
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
 	}
 
 	/**
+	 * Gets the charge line item root.
+	 *
 	 * @return the chargeLineItemRoot
 	 */
 	public TreeNode getChargeLineItemRoot() {
@@ -170,14 +292,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param chargeLineItemRoot
-	 *            the chargeLineItemRoot to set
+	 * Sets the charge line item root.
+	 *
+	 * @param chargeLineItemRoot            the chargeLineItemRoot to set
 	 */
 	public void setChargeLineItemRoot(TreeNode chargeLineItemRoot) {
 		this.chargeLineItemRoot = chargeLineItemRoot;
 	}
 
 	/**
+	 * Gets the fulfilment request.
+	 *
 	 * @return the fulfilmentRequest
 	 */
 	public FlFulfilmentRequest getFulfilmentRequest() {
@@ -185,14 +310,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param fulfilmentRequest
-	 *            the fulfilmentRequest to set
+	 * Sets the fulfilment request.
+	 *
+	 * @param fulfilmentRequest            the fulfilmentRequest to set
 	 */
 	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
 		this.fulfilmentRequest = fulfilmentRequest;
 	}
 
 	/**
+	 * Gets the ordered amt grand total.
+	 *
 	 * @return the orderedAmtGrandTotal
 	 */
 	public BigDecimal getOrderedAmtGrandTotal() {
@@ -200,14 +328,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param orderedAmtGrandTotal
-	 *            the orderedAmtGrandTotal to set
+	 * Sets the ordered amt grand total.
+	 *
+	 * @param orderedAmtGrandTotal            the orderedAmtGrandTotal to set
 	 */
 	public void setOrderedAmtGrandTotal(BigDecimal orderedAmtGrandTotal) {
 		this.orderedAmtGrandTotal = orderedAmtGrandTotal;
 	}
 
 	/**
+	 * Gets the received amt grand total.
+	 *
 	 * @return the receivedAmtGrandTotal
 	 */
 	public BigDecimal getReceivedAmtGrandTotal() {
@@ -215,14 +346,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param receivedAmtGrandTotal
-	 *            the receivedAmtGrandTotal to set
+	 * Sets the received amt grand total.
+	 *
+	 * @param receivedAmtGrandTotal            the receivedAmtGrandTotal to set
 	 */
 	public void setReceivedAmtGrandTotal(BigDecimal receivedAmtGrandTotal) {
 		this.receivedAmtGrandTotal = receivedAmtGrandTotal;
 	}
 
 	/**
+	 * Gets the inv amt grand total.
+	 *
 	 * @return the invAmtGrandTotal
 	 */
 	public BigDecimal getInvAmtGrandTotal() {
@@ -230,14 +364,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param invAmtGrandTotal
-	 *            the invAmtGrandTotal to set
+	 * Sets the inv amt grand total.
+	 *
+	 * @param invAmtGrandTotal            the invAmtGrandTotal to set
 	 */
 	public void setInvAmtGrandTotal(BigDecimal invAmtGrandTotal) {
 		this.invAmtGrandTotal = invAmtGrandTotal;
 	}
 
 	/**
+	 * Gets the service charge.
+	 *
 	 * @return the serviceCharge
 	 */
 	public String getServiceCharge() {
@@ -245,14 +382,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param serviceCharge
-	 *            the serviceCharge to set
+	 * Sets the service charge.
+	 *
+	 * @param serviceCharge            the serviceCharge to set
 	 */
 	public void setServiceCharge(String serviceCharge) {
 		this.serviceCharge = serviceCharge;
 	}
 
 	/**
+	 * Gets the selected node.
+	 *
 	 * @return the selectedNode
 	 */
 	public TreeNode getSelectedNode() {
@@ -260,14 +400,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedNode
-	 *            the selectedNode to set
+	 * Sets the selected node.
+	 *
+	 * @param selectedNode            the selectedNode to set
 	 */
 	public void setSelectedNode(TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
 	}
 
 	/**
+	 * Gets the vot fund code.
+	 *
 	 * @return the votFundCode
 	 */
 	public String getVotFundCode() {
@@ -275,14 +418,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param votFundCode
-	 *            the votFundCode to set
+	 * Sets the vot fund code.
+	 *
+	 * @param votFundCode            the votFundCode to set
 	 */
 	public void setVotFundCode(String votFundCode) {
 		this.votFundCode = votFundCode;
 	}
 
 	/**
+	 * Gets the project code.
+	 *
 	 * @return the projectCode
 	 */
 	public String getProjectCode() {
@@ -290,14 +436,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param projectCode
-	 *            the projectCode to set
+	 * Sets the project code.
+	 *
+	 * @param projectCode            the projectCode to set
 	 */
 	public void setProjectCode(String projectCode) {
 		this.projectCode = projectCode;
 	}
 
 	/**
+	 * Gets the setia code.
+	 *
 	 * @return the setiaCode
 	 */
 	public String getSetiaCode() {
@@ -305,14 +454,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param setiaCode
-	 *            the setiaCode to set
+	 * Sets the setia code.
+	 *
+	 * @param setiaCode            the setiaCode to set
 	 */
 	public void setSetiaCode(String setiaCode) {
 		this.setiaCode = setiaCode;
 	}
 
 	/**
+	 * Gets the sub setia code.
+	 *
 	 * @return the subSetiaCode
 	 */
 	public String getSubSetiaCode() {
@@ -320,14 +472,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param subSetiaCode
-	 *            the subSetiaCode to set
+	 * Sets the sub setia code.
+	 *
+	 * @param subSetiaCode            the subSetiaCode to set
 	 */
 	public void setSubSetiaCode(String subSetiaCode) {
 		this.subSetiaCode = subSetiaCode;
 	}
 
 	/**
+	 * Gets the prg activity code.
+	 *
 	 * @return the prgActivityCode
 	 */
 	public String getPrgActivityCode() {
@@ -335,14 +490,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param prgActivityCode
-	 *            the prgActivityCode to set
+	 * Sets the prg activity code.
+	 *
+	 * @param prgActivityCode            the prgActivityCode to set
 	 */
 	public void setPrgActivityCode(String prgActivityCode) {
 		this.prgActivityCode = prgActivityCode;
 	}
 
 	/**
+	 * Gets the deduction amt.
+	 *
 	 * @return the deductionAmt
 	 */
 	public BigDecimal getDeductionAmt() {
@@ -350,14 +508,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deductionAmt
-	 *            the deductionAmt to set
+	 * Sets the deduction amt.
+	 *
+	 * @param deductionAmt            the deductionAmt to set
 	 */
 	public void setDeductionAmt(BigDecimal deductionAmt) {
 		this.deductionAmt = deductionAmt;
 	}
 
 	/**
+	 * Gets the button val.
+	 *
 	 * @return the buttonVal
 	 */
 	public String getButtonVal() {
@@ -365,14 +526,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param buttonVal
-	 *            the buttonVal to set
+	 * Sets the button val.
+	 *
+	 * @param buttonVal            the buttonVal to set
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
 	}
 
 	/**
+	 * Gets the selected tab index.
+	 *
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
@@ -380,14 +544,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedTabIndex
-	 *            the selectedTabIndex to set
+	 * Sets the selected tab index.
+	 *
+	 * @param selectedTabIndex            the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
 
 	/**
+	 * Gets the pm user.
+	 *
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
@@ -395,14 +562,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmUser
-	 *            the pmUser to set
+	 * Sets the pm user.
+	 *
+	 * @param pmUser            the pmUser to set
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
 	}
 
 	/**
+	 * Gets the phone no.
+	 *
 	 * @return the phoneNo
 	 */
 	public String getPhoneNo() {
@@ -410,14 +580,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param phoneNo
-	 *            the phoneNo to set
+	 * Sets the phone no.
+	 *
+	 * @param phoneNo            the phoneNo to set
 	 */
 	public void setPhoneNo(String phoneNo) {
 		this.phoneNo = phoneNo;
 	}
 
 	/**
+	 * Gets the fax no.
+	 *
 	 * @return the faxNo
 	 */
 	public String getFaxNo() {
@@ -425,14 +598,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param faxNo
-	 *            the faxNo to set
+	 * Sets the fax no.
+	 *
+	 * @param faxNo            the faxNo to set
 	 */
 	public void setFaxNo(String faxNo) {
 		this.faxNo = faxNo;
 	}
 
 	/**
+	 * Gets the contact email.
+	 *
 	 * @return the contactEmail
 	 */
 	public String getContactEmail() {
@@ -440,14 +616,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param contactEmail
-	 *            the contactEmail to set
+	 * Sets the contact email.
+	 *
+	 * @param contactEmail            the contactEmail to set
 	 */
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
 	}
 
 	/**
+	 * Gets the contact person.
+	 *
 	 * @return the contactPerson
 	 */
 	public String getContactPerson() {
@@ -455,14 +634,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param contactPerson
-	 *            the contactPerson to set
+	 * Sets the contact person.
+	 *
+	 * @param contactPerson            the contactPerson to set
 	 */
 	public void setContactPerson(String contactPerson) {
 		this.contactPerson = contactPerson;
 	}
 
 	/**
+	 * Gets the contact phone no.
+	 *
 	 * @return the contactPhoneNo
 	 */
 	public String getContactPhoneNo() {
@@ -470,14 +652,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param contactPhoneNo
-	 *            the contactPhoneNo to set
+	 * Sets the contact phone no.
+	 *
+	 * @param contactPhoneNo            the contactPhoneNo to set
 	 */
 	public void setContactPhoneNo(String contactPhoneNo) {
 		this.contactPhoneNo = contactPhoneNo;
 	}
 
 	/**
+	 * Gets the asset ind code.
+	 *
 	 * @return the assetIndCode
 	 */
 	public String getAssetIndCode() {
@@ -485,14 +670,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param assetIndCode
-	 *            the assetIndCode to set
+	 * Sets the asset ind code.
+	 *
+	 * @param assetIndCode            the assetIndCode to set
 	 */
 	public void setAssetIndCode(String assetIndCode) {
 		this.assetIndCode = assetIndCode;
 	}
 
 	/**
+	 * Gets the gl account code.
+	 *
 	 * @return the glAccountCode
 	 */
 	public String getGlAccountCode() {
@@ -500,14 +688,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param glAccountCode
-	 *            the glAccountCode to set
+	 * Sets the gl account code.
+	 *
+	 * @param glAccountCode            the glAccountCode to set
 	 */
 	public void setGlAccountCode(String glAccountCode) {
 		this.glAccountCode = glAccountCode;
 	}
 
 	/**
+	 * Gets the vot fund type.
+	 *
 	 * @return the votFundType
 	 */
 	public String getVotFundType() {
@@ -515,14 +706,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param votFundType
-	 *            the votFundType to set
+	 * Sets the vot fund type.
+	 *
+	 * @param votFundType            the votFundType to set
 	 */
 	public void setVotFundType(String votFundType) {
 		this.votFundType = votFundType;
 	}
 
 	/**
+	 * Gets the vot fund id.
+	 *
 	 * @return the votFundId
 	 */
 	public Long getVotFundId() {
@@ -530,14 +724,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param votFundId
-	 *            the votFundId to set
+	 * Sets the vot fund id.
+	 *
+	 * @param votFundId            the votFundId to set
 	 */
 	public void setVotFundId(Long votFundId) {
 		this.votFundId = votFundId;
 	}
 
 	/**
+	 * Gets the asset ind id.
+	 *
 	 * @return the assetIndId
 	 */
 	public Long getAssetIndId() {
@@ -545,14 +742,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param assetIndId
-	 *            the assetIndId to set
+	 * Sets the asset ind id.
+	 *
+	 * @param assetIndId            the assetIndId to set
 	 */
 	public void setAssetIndId(Long assetIndId) {
 		this.assetIndId = assetIndId;
 	}
 
 	/**
+	 * Gets the gl account id.
+	 *
 	 * @return the glAccountId
 	 */
 	public Long getGlAccountId() {
@@ -560,14 +760,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param glAccountId
-	 *            the glAccountId to set
+	 * Sets the gl account id.
+	 *
+	 * @param glAccountId            the glAccountId to set
 	 */
 	public void setGlAccountId(Long glAccountId) {
 		this.glAccountId = glAccountId;
 	}
 
 	/**
+	 * Gets the project id.
+	 *
 	 * @return the projectId
 	 */
 	public Long getProjectId() {
@@ -575,14 +778,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param projectId
-	 *            the projectId to set
+	 * Sets the project id.
+	 *
+	 * @param projectId            the projectId to set
 	 */
 	public void setProjectId(Long projectId) {
 		this.projectId = projectId;
 	}
 
 	/**
+	 * Gets the setia id.
+	 *
 	 * @return the setiaId
 	 */
 	public Long getSetiaId() {
@@ -590,14 +796,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param setiaId
-	 *            the setiaId to set
+	 * Sets the setia id.
+	 *
+	 * @param setiaId            the setiaId to set
 	 */
 	public void setSetiaId(Long setiaId) {
 		this.setiaId = setiaId;
 	}
 
 	/**
+	 * Gets the sub setia id.
+	 *
 	 * @return the subSetiaId
 	 */
 	public Long getSubSetiaId() {
@@ -605,14 +814,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param subSetiaId
-	 *            the subSetiaId to set
+	 * Sets the sub setia id.
+	 *
+	 * @param subSetiaId            the subSetiaId to set
 	 */
 	public void setSubSetiaId(Long subSetiaId) {
 		this.subSetiaId = subSetiaId;
 	}
 
 	/**
+	 * Gets the prg activity id.
+	 *
 	 * @return the prgActivityId
 	 */
 	public Long getPrgActivityId() {
@@ -620,14 +832,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param prgActivityId
-	 *            the prgActivityId to set
+	 * Sets the prg activity id.
+	 *
+	 * @param prgActivityId            the prgActivityId to set
 	 */
 	public void setPrgActivityId(Long prgActivityId) {
 		this.prgActivityId = prgActivityId;
 	}
 
 	/**
+	 * Gets the financing type code.
+	 *
 	 * @return the financingTypeCode
 	 */
 	public String getFinancingTypeCode() {
@@ -635,30 +850,53 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param financingTypeCode
-	 *            the financingTypeCode to set
+	 * Sets the financing type code.
+	 *
+	 * @param financingTypeCode            the financingTypeCode to set
 	 */
 	public void setFinancingTypeCode(String financingTypeCode) {
 		this.financingTypeCode = financingTypeCode;
 	}
 
+	/**
+	 * Gets the adjustment doc no.
+	 *
+	 * @return the adjustment doc no
+	 */
 	public String getAdjustmentDocNo() {
 		return adjustmentDocNo;
 	}
 
+	/**
+	 * Sets the adjustment doc no.
+	 *
+	 * @param adjustmentDocNo the new adjustment doc no
+	 */
 	public void setAdjustmentDocNo(String adjustmentDocNo) {
 		this.adjustmentDocNo = adjustmentDocNo;
 	}
 
+	/**
+	 * Gets the stop instr no.
+	 *
+	 * @return the stop instr no
+	 */
 	public String getStopInstrNo() {
 		return stopInstrNo;
 	}
 
+	/**
+	 * Sets the stop instr no.
+	 *
+	 * @param stopInstrNo the new stop instr no
+	 */
 	public void setStopInstrNo(String stopInstrNo) {
 		this.stopInstrNo = stopInstrNo;
 	}
 
 	/**
+	 * Gets the selected deductions.
+	 *
 	 * @return the selectedDeductions
 	 */
 	public List<FlPaymentDeduction> getSelectedDeductions() {
@@ -666,8 +904,9 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedDeductions
-	 *            the selectedDeductions to set
+	 * Sets the selected deductions.
+	 *
+	 * @param selectedDeductions            the selectedDeductions to set
 	 */
 	public void setSelectedDeductions(
 			List<FlPaymentDeduction> selectedDeductions) {
@@ -675,6 +914,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the deduction id.
+	 *
 	 * @return the deductionId
 	 */
 	public Long getDeductionId() {
@@ -682,14 +923,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deductionId
-	 *            the deductionId to set
+	 * Sets the deduction id.
+	 *
+	 * @param deductionId            the deductionId to set
 	 */
 	public void setDeductionId(Long deductionId) {
 		this.deductionId = deductionId;
 	}
 
 	/**
+	 * Gets the ct deduction.
+	 *
 	 * @return the ctDeduction
 	 */
 	public CtDeduction getCtDeduction() {
@@ -697,14 +941,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ctDeduction
-	 *            the ctDeduction to set
+	 * Sets the ct deduction.
+	 *
+	 * @param ctDeduction            the ctDeduction to set
 	 */
 	public void setCtDeduction(CtDeduction ctDeduction) {
 		this.ctDeduction = ctDeduction;
 	}
 
 	/**
+	 * Gets the ct deduction clause list.
+	 *
 	 * @return the ctDeductionClauseList
 	 */
 	public List<CtDeductionClause> getCtDeductionClauseList() {
@@ -712,8 +959,9 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ctDeductionClauseList
-	 *            the ctDeductionClauseList to set
+	 * Sets the ct deduction clause list.
+	 *
+	 * @param ctDeductionClauseList            the ctDeductionClauseList to set
 	 */
 	public void setCtDeductionClauseList(
 			List<CtDeductionClause> ctDeductionClauseList) {
@@ -721,6 +969,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the gl account list.
+	 *
 	 * @return the glAccountList
 	 */
 	public List<PmGlAccount> getGlAccountList() {
@@ -728,14 +978,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param glAccountList
-	 *            the glAccountList to set
+	 * Sets the gl account list.
+	 *
+	 * @param glAccountList            the glAccountList to set
 	 */
 	public void setGlAccountList(List<PmGlAccount> glAccountList) {
 		this.glAccountList = glAccountList;
 	}
 
 	/**
+	 * Gets the vot fund list.
+	 *
 	 * @return the votFundList
 	 */
 	public List<PmVotFund> getVotFundList() {
@@ -743,14 +996,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param votFundList
-	 *            the votFundList to set
+	 * Sets the vot fund list.
+	 *
+	 * @param votFundList            the votFundList to set
 	 */
 	public void setVotFundList(List<PmVotFund> votFundList) {
 		this.votFundList = votFundList;
 	}
 
 	/**
+	 * Gets the adjustment dan doc no.
+	 *
 	 * @return the adjustmentDanDocNo
 	 */
 	public String getAdjustmentDanDocNo() {
@@ -758,6 +1014,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the adjustment can doc no.
+	 *
 	 * @return the adjustmentCanDocNo
 	 */
 	public String getAdjustmentCanDocNo() {
@@ -765,22 +1023,26 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param adjustmentDanDocNo
-	 *            the adjustmentDanDocNo to set
+	 * Sets the adjustment dan doc no.
+	 *
+	 * @param adjustmentDanDocNo            the adjustmentDanDocNo to set
 	 */
 	public void setAdjustmentDanDocNo(String adjustmentDanDocNo) {
 		this.adjustmentDanDocNo = adjustmentDanDocNo;
 	}
 
 	/**
-	 * @param adjustmentCanDocNo
-	 *            the adjustmentCanDocNo to set
+	 * Sets the adjustment can doc no.
+	 *
+	 * @param adjustmentCanDocNo            the adjustmentCanDocNo to set
 	 */
 	public void setAdjustmentCanDocNo(String adjustmentCanDocNo) {
 		this.adjustmentCanDocNo = adjustmentCanDocNo;
 	}
 
 	/**
+	 * Gets the fee vot fund.
+	 *
 	 * @return the feeVotFund
 	 */
 	public PmVotFund getFeeVotFund() {
@@ -788,46 +1050,89 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param feeVotFund
-	 *            the feeVotFund to set
+	 * Sets the fee vot fund.
+	 *
+	 * @param feeVotFund            the feeVotFund to set
 	 */
 	public void setFeeVotFund(PmVotFund feeVotFund) {
 		this.feeVotFund = feeVotFund;
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Checks if is auto update.
+	 *
+	 * @return true, if is auto update
+	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
 
+	/**
+	 * Sets the auto update.
+	 *
+	 * @param autoUpdate the new auto update
+	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
 
+	/**
+	 * Gets the button action.
+	 *
+	 * @return the button action
+	 */
 	public String getButtonAction() {
 		return buttonAction;
 	}
 
+	/**
+	 * Sets the button action.
+	 *
+	 * @param buttonAction the new button action
+	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 *
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
 
 	/**
+	 * Gets the ct deduction list.
+	 *
 	 * @return the ctDeductionList
 	 */
 	public List<CtDeduction> getCtDeductionList() {
@@ -835,6 +1140,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ct deduction list.
+	 *
 	 * @param ctDeductionList the ctDeductionList to set
 	 */
 	public void setCtDeductionList(List<CtDeduction> ctDeductionList) {
@@ -842,6 +1149,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the populate deduction list.
+	 *
 	 * @return the populateDeductionList
 	 */
 	public List<SelectItem> getPopulateDeductionList() {
@@ -852,21 +1161,35 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the populate deduction list.
+	 *
 	 * @param populateDeductionList the populateDeductionList to set
 	 */
 	public void setPopulateDeductionList(List<SelectItem> populateDeductionList) {
 		this.populateDeductionList = populateDeductionList;
 	}
 
+	/**
+	 * Checks if is validated.
+	 *
+	 * @return true, if is validated
+	 */
 	public boolean isValidated() {
 		return validated;
 	}
 
+	/**
+	 * Sets the validated.
+	 *
+	 * @param validated the new validated
+	 */
 	public void setValidated(boolean validated) {
 		this.validated = validated;
 	}
 
 	/**
+	 * Checks if is have advanced pymt.
+	 *
 	 * @return the haveAdvancedPymt
 	 */
 	public boolean isHaveAdvancedPymt() {
@@ -874,6 +1197,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the have advanced pymt.
+	 *
 	 * @param haveAdvancedPymt the haveAdvancedPymt to set
 	 */
 	public void setHaveAdvancedPymt(boolean haveAdvancedPymt) {
@@ -881,6 +1206,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the paid amt.
+	 *
 	 * @return the paidAmt
 	 */
 	public BigDecimal getPaidAmt() {
@@ -888,6 +1215,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the paid amt.
+	 *
 	 * @param paidAmt the paidAmt to set
 	 */
 	public void setPaidAmt(BigDecimal paidAmt) {
@@ -895,6 +1224,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the balance amt.
+	 *
 	 * @return the balanceAmt
 	 */
 	public BigDecimal getBalanceAmt() {
@@ -902,6 +1233,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the balance amt.
+	 *
 	 * @param balanceAmt the balanceAmt to set
 	 */
 	public void setBalanceAmt(BigDecimal balanceAmt) {
@@ -909,6 +1242,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the paid perc.
+	 *
 	 * @return the paidPerc
 	 */
 	public BigDecimal getPaidPerc() {
@@ -916,6 +1251,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the paid perc.
+	 *
 	 * @param paidPerc the paidPerc to set
 	 */
 	public void setPaidPerc(BigDecimal paidPerc) {
@@ -923,6 +1260,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the number of co.
+	 *
 	 * @return the numberOfCO
 	 */
 	public int getNumberOfCO() {
@@ -930,6 +1269,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the number of co.
+	 *
 	 * @param numberOfCO the numberOfCO to set
 	 */
 	public void setNumberOfCO(int numberOfCO) {
@@ -937,6 +1278,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is show deduction tab.
+	 *
 	 * @return the showDeductionTab
 	 */
 	public boolean isShowDeductionTab() {
@@ -944,6 +1287,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the show deduction tab.
+	 *
 	 * @param showDeductionTab the showDeductionTab to set
 	 */
 	public void setShowDeductionTab(boolean showDeductionTab) {
@@ -951,6 +1296,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the can amt grand total.
+	 *
 	 * @return the canAmtGrandTotal
 	 */
 	public BigDecimal getCanAmtGrandTotal() {
@@ -958,6 +1305,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the dan amt grand total.
+	 *
 	 * @return the danAmtGrandTotal
 	 */
 	public BigDecimal getDanAmtGrandTotal() {
@@ -965,6 +1314,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the can amt grand total.
+	 *
 	 * @param canAmtGrandTotal the canAmtGrandTotal to set
 	 */
 	public void setCanAmtGrandTotal(BigDecimal canAmtGrandTotal) {
@@ -972,6 +1323,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the dan amt grand total.
+	 *
 	 * @param danAmtGrandTotal the danAmtGrandTotal to set
 	 */
 	public void setDanAmtGrandTotal(BigDecimal danAmtGrandTotal) {
@@ -979,6 +1332,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the invoice date.
+	 *
 	 * @return the invoiceDate
 	 */
 	public String getInvoiceDate() {
@@ -986,6 +1341,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the invoice date.
+	 *
 	 * @param newDate the invoiceDate to set
 	 */
 	public void setInvoiceDate(String newDate) {
