@@ -12,7 +12,7 @@
 	</cc:interface>
 
 	<cc:implementation>
-	<p:panel header="Trackng Diary Details" toggleable="true">
+	<p:panel header="Trackng Diary Details" toggleable="true" >
 		<p:dataTable id="trackingDiaryTableID" lazy="true"  value="#{cc.attrs.dataTable}" 
 			var="trackingDiaryObj" width="100%" rows="10" styleClass="fixed-size" >
 
@@ -28,7 +28,7 @@
 					<f:facet name="header">
 					Actioned By
 					</f:facet>
-				#{trackingDiaryObj.actionedBy}
+				#{trackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}
 				</p:column>
 				<p:column width="10%">
 					<f:facet name="header">
