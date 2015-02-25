@@ -12,17 +12,17 @@
 		<table style="width: 100%;">
 			<tr>
 				<td width="9%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}" style="text-align : right;"></p:outputLabel></td>
-				<td width="15%"><h:outputText
+				<td width="15%" class="header-info-text"><h:outputText
 						style="white-space: normal!important; text-align : left;"
 						value="#{unspscCodeBackingBean.managedBean.requestCode.docNo}"/></td>
 
 				<td width="5%"><p:outputLabel value="#{lbl['lbl.cm.doc.status']}" style="text-align : right;"></p:outputLabel></td>
-				<td width="15%"><h:outputText 
+				<td width="15%" class="header-info-text"><h:outputText 
 						style="white-space: normal!important; text-align : left;"
 						value="#{unspscCodeBackingBean.managedBean.docStatus}"/></td>
 
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.cm.company.name']}" style="text-align : right;"></p:outputLabel></td>
-				<td width="15%"><c:choose>
+				<td width="15%" class="header-info-text"><c:choose>
 						<c:when
 							test="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier != null}">
 							<h:outputText
@@ -51,5 +51,6 @@
 			</tr>
 		</table>
 	</div>
+	<p:spacer height="10px"></p:spacer>
 
 </ui:composition>
