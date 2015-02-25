@@ -111,8 +111,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setDivision(new PmDivision());
 		getManagedBean().getState().setPmCountry(defaultCountry != null ? defaultCountry : new PmCountry());		
 		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(getManagedBean().getState().getPmCountry()
-				.getCountryId());
+		reqDTO.setCountryId(getManagedBean().getState().getPmCountry().getCountryId());
+		if(null!=getManagedBean().getSelectedType())
+			if(getManagedBean().getSelectedType().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION))
+				reqDTO.setIsAdoptDivision(true);
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
@@ -356,8 +358,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			this.getManagedBean().setState(state);
 
 		}
-		if (locationType
-				.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
+		if (locationType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
 
 			DivisionReqDTO divisionReqDTO = new DivisionReqDTO();
 			divisionReqDTO.setDivisionId(locationId);
@@ -388,8 +389,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 									.getCountryId());
 
 		}
-		if (locationType
-				.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
+		if (locationType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
 
 			DistrictReqDTO districtReqDTO = new DistrictReqDTO();
 			districtReqDTO.setDistrictId(locationId);
@@ -460,18 +460,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			DistrictResDTO districtResDTO = districtSO
 					.retriveDistrictListByStateID(districtReqDTO);
 			getManagedBean().setDistricts(districtResDTO.getDistrictList());
-			getManagedBean()
-					.getState()
-					.getPmCountry()
-					.setCountryId(
-							resDTO.getPmCity().getPmDistrict().getPmState()
-									.getPmCountry().getCountryId());
-			getManagedBean()
-					.getDistrict()
-					.getPmState()
-					.setStateId(
-							resDTO.getPmCity().getPmDistrict().getPmState()
-									.getStateId());
+			getManagedBean().getState().getPmCountry()
+					.setCountryId(resDTO.getPmCity().getPmDistrict().getPmState().getPmCountry().getCountryId());
+			getManagedBean().getDistrict().getPmState().setStateId(
+							resDTO.getPmCity().getPmDistrict().getPmState().getStateId());
 			getManagedBean().getDistrict().setDistrictId(
 					resDTO.getPmCity().getPmDistrict().getDistrictId());
 
