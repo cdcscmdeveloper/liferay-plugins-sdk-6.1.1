@@ -26,7 +26,7 @@
 						<c:choose>
 							<c:when
 								test="#{backingBean.managedBean.overLappedCategoryExists}">
-								<p:commandButton value="#{lbl['lbl.sm.submitAppl']}"
+								<p:commandButton value="#{lbl['lbl.sm.declare']}"
 									action="#{spkiBackingBean.getChallengeQuestions}"
 									update="spkiOutPanel" oncomplete="spki_dlg.show();" />
 								<p:outputPanel id="spkiOutPanel">
@@ -35,7 +35,7 @@
 								</p:outputPanel>
 							</c:when>
 							<c:otherwise>
-								<p:commandButton value="#{lbl['lbl.sm.submitAppl']}"
+								<p:commandButton value="#{lbl['lbl.sm.declare']}"
 									style="margin-bottom:5px;" onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()"
 									action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForApplcatcodes)}" />
