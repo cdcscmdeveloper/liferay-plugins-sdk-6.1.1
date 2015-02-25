@@ -286,6 +286,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1257442);
 		//this.getManagedBean().setAppId(1257676); //FT
 		//this.getManagedBean().setAppId(1257345);//FT
+		//this.getManagedBean().setAppId(1257944);//FT
 		
 		this.getManagedBean().setActiveIndex(0);
 		
@@ -1967,7 +1968,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return AddressUtils.getAddress(svAddress);
 	}
 
-	protected void refreshPage() {
+	private void refreshPage() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String refreshpage = fc.getViewRoot().getViewId();
 		ViewHandler ViewH =fc.getApplication().getViewHandler();
