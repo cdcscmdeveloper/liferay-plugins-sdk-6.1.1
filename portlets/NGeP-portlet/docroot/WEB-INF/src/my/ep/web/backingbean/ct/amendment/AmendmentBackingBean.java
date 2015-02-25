@@ -1859,12 +1859,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					sb.append(", <br/>");
 					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress3());
 					sb.append(", <br/>");
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress4());
-					sb.append(", <br/>");
-					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() !=null ?
-							getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
-					sb.append(" ");
 					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPostcode());
+					sb.append(" ");
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() !=null &&
+							getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() != "NOT DEFINED" ?
+							getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
 					sb.append(", <br/>");
 					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState() !=null 
 							? getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() : "");
