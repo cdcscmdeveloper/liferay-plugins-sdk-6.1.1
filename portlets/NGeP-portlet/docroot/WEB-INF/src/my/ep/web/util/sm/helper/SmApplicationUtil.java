@@ -4870,13 +4870,13 @@ public class SmApplicationUtil {
 			applStatusInfo.setCreatedByAndDate((userCreated == null ? "SYSTEM"
 					: userCreated.getUserName())
 					+ " ("
-					+ DateUtils.dateToString("dd-MMM-yyyy",
+					+ DateUtils.dateToString("dd-MMM-yyyy HH:mm a",
 							smAppl.getCreatedDate()) + ")");
 			applStatusInfo
 					.setModifiedByAndDate((userModified == null ? "SYSTEM"
 							: userModified.getUserName())
 							+ " ("
-							+ DateUtils.dateToString("dd-MMM-yyyy",
+							+ DateUtils.dateToString("dd-MMM-yyyy HH:mm a",
 									smAppl.getChangedDate()) + ")");
 		}
 		return applStatusInfo;
