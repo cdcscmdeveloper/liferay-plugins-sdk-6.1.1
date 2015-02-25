@@ -154,7 +154,7 @@ public class SmPersonnelBackingBean extends
 						IPersonnelSO.class);
 
 		PersonnelResDTO resDTO = smPersonnelSO
-				.retrievePersonnelsBySuppIdAndApplId(reqDTO);
+				.retrieveAuthorizedPersonnelsBySuppIdAndApplId(reqDTO);
 
 		getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
 
