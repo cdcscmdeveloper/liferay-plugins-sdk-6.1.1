@@ -51,7 +51,7 @@
 								maxlength="20" required="#{!empty param['disableValidation']}" /></td>
 						<td><p:message id="orgCodeMsg" for="orgCode" display="icon" /></td>					
 				<ui:fragment
-					rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
+					rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' and not organisationBackingBean.isGroupOrg()}">
 					<td><h:outputText
 							value="#{lbl['lbl.pm.org.jabatan']}" /></td>
 					<td><p:selectBooleanCheckbox
