@@ -24,6 +24,8 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
@@ -108,7 +110,7 @@ public class AuthorizedSignatoryBackingBean extends
 	 * Add authorize signatory to list
 	 * @param pmuser
 	 */
-	public void addAuthorizer(PmUser pmuser){
+	public void addAuthorizer(){
 		log.info("addAuthorizer");
 		if(this.getManagedBean().getCertSignatories()==null){
 			this.getManagedBean().setCertSignatories(new ArrayList<PmCertSignatory>());
@@ -117,12 +119,13 @@ public class AuthorizedSignatoryBackingBean extends
 		PmZone zone = new PmZone();
 		zone.setZoneId(this.getManagedBean().getZone().getZoneId());
 		PmCertSignatory pmCertSignatory = new PmCertSignatory();
-		pmCertSignatory.setPmUser(pmuser);
+		//pmCertSignatory.setPmUser(pmuser);
 		pmCertSignatory.setPmZone(zone);
 		pmCertSignatory.setEffDate(new Timestamp(System.currentTimeMillis()));
 		this.getManagedBean().getCertSignatories().add(pmCertSignatory);
 		this.getManagedBean().setSignatoryUser(null);
 	}
+	
 	
 	/**
 	 * retrieve cert signatory by zone id
