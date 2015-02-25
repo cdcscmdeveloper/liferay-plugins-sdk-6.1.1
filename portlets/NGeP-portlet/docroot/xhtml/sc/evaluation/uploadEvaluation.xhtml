@@ -15,7 +15,7 @@
 		header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
+			fileUploadListener="#{evaluationBackingBean.reportFileUpload}"
 			mode="advanced" id="dlgsuploadids"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
@@ -43,7 +43,7 @@
 
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{evaluationBackingBean.reportUpload}"
+			fileUploadListener="#{evaluationBackingBean.demoChecklistUpload}"
 			mode="advanced" id="demodlgsuploadids"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"

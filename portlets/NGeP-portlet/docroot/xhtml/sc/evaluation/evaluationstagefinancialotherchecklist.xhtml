@@ -70,11 +70,11 @@
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 							rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList,index,'F')}" />
+							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,index,'F')}" />
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
 							rendered="#{othersFinList.evaluationStatus.statusId eq '61601'}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.othersFinancialEvaluate(othersFinList,index,'F')}" />
+							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,index,'F')}" />
 					</p:column>
 				</p:dataTable>
 			</p:panel>

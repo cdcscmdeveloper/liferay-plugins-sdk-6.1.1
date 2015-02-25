@@ -74,12 +74,12 @@
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 							rendered="#{finSpec.evaluationStatus.statusId eq '61600'}"
 							process="@this"
-							action="#{evaluationBackingBean.othersFinancialEvaluate(finSpec,index,'F')}"
+							action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,index,'F')}"
 							partialSubmit="true" />
 						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
 							rendered="#{finSpec.evaluationStatus.statusId eq '61601'}"
 							process="@this"
-							action="#{evaluationBackingBean.othersFinancialEvaluate(finSpec,index,'F')}"
+							action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,index,'F')}"
 							partialSubmit="true" />
 					</p:column>
 				</p:dataTable>
