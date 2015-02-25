@@ -67,7 +67,7 @@
 				</p:outputPanel>
 				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
 		    </p:column>
-	        <p:column style="white-space:nowrap; width:20%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" >
+	        <p:column style="white-space:normal; width:20%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" >
 	        	#{ParameterConst.orgTypeFactoring eq orgUnit.pmOrgProfile.orgTypeCode.parameterCode ? orgUnit.pmOrgProfile.pmFinancialOrg.finOrgName : orgUnit.pmOrgProfile.pmOrgValidity.orgName}	
 	        </p:column>
 	        <p:column width="8%"> 
@@ -114,7 +114,7 @@
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<p:ajax event="change" listener="#{profileManagementBackingBean.orgUnitStatusChange(index)}" partialSubmit="true" process="@this" 
-			     		update=":form:tvRoleReceivingAddr"/>
+			     		update=":form:tvRoleReceivingAddr ,dtOrgUnit"/>
 			</p:selectOneMenu>
 		</p:column>
 	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
