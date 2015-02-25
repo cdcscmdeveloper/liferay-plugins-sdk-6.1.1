@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+ */
 package my.ep.web.backingbean.sc.evaluation;
 
 import java.io.BufferedInputStream;
@@ -147,48 +157,55 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 
 import com.liferay.portal.util.PortalUtil;
 
+/**
+ * The Class EvaluationBackingBean.
+ * 
+ * @author Garikapati Mangaiah.
+ */
 @ManagedBean(name = "evaluationBackingBean")
 @RequestScoped
 public class EvaluationBackingBean extends
 		SourcingBaseBackingBean<EvaluationManagedBean> {
+
+	/** The skip. */
 	private boolean skip;
+
+	/** The current tab. */
 	private int currentTab;
+
+	/** The output tab. */
 	private int outputTab;
+
+	/** The text before sign. */
 	private String textBeforeSign;
 
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
 
-	public String getTextBeforeSign() {
-		return textBeforeSign;
-	}
-
-	public void setTextBeforeSign(String textBeforeSign) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getManagedBean().getScQt().getQtNo());
-		sb.append(new FacesScopes().getUserSessionBean().getUserId());
-		this.textBeforeSign = sb.toString();
-	}
-
-	public PmDigiSign getPmDigiSign() {
-		return pmDigiSign;
-	}
-
-	public void setPmDigiSign(PmDigiSign pmDigiSign) {
-		this.pmDigiSign = pmDigiSign;
-	}
-
+	/** The Constant DOCUMENT_PAGE. */
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/evaluation/evaluationstage1view.xhtml?faces-redirect=true";
 
+	/**
+	 * Instantiates a new evaluation backing bean.
+	 * 
+	 * @throws ParseException
+	 *             the parse exception
+	 */
 	public EvaluationBackingBean() throws ParseException {
 
 	}
 
+	/**
+	 * Debug logger.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -196,6 +213,12 @@ public class EvaluationBackingBean extends
 		log.info(message);
 	}
 
+	/**
+	 * Inits the.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	@PostConstruct
 	public void init() throws IOException {
 		try {
@@ -205,6 +228,15 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Summary change. when you change summary in evaluation stage it will
+	 * display all the qualified and disqualified suppliers for package and
+	 * preference margin
+	 * 
+	 * @param event
+	 *            (is Mandatory)
+	 * 
+	 */
 	public void summaryChange(AjaxBehaviorEvent event) {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO evalResDTO = null;
@@ -279,7 +311,14 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	public EvaluationReqDTO setPrepareData() {
+	/**
+	 * Sets the prepare data.to get qualified and disqualified suppliers for
+	 * package and preference margin.
+	 * 
+	 * @return the EvaluationReqDTO (Long qtId(Mandatory),boolean zonal(
+	 *         Optional),String resultStage(Mandatory),String award(optional))
+	 */
+	private EvaluationReqDTO setPrepareData() {
 		EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 		String award = null;
 		List<String> resultStg = new ArrayList<String>();
@@ -341,6 +380,14 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Evaluation stage zone summary.to get all the qualified and disqualified
+	 * suppliers based on zonal
+	 * 
+	 * @param EvaluationReqDTO
+	 *            (Long qtId (Mandatory),boolean zonal( Mandatory),String
+	 *            resultStage( Mandatory),String award(optional))
+	 */
 	private void EvaluationStageZoneSummary(EvaluationReqDTO summaryReqDTO) {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO evalResDTO = null;
@@ -409,6 +456,14 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Evaluation zonessummary tab change.when you change zones in evaluation
+	 * stage summary based on zonal to get all qualified and disqualified
+	 * suppliers for package and preference margin
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 */
 	public void evaluationZonessummaryTabChange(TabChangeEvent event) {
 
 		try {
@@ -432,6 +487,14 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Summary item select.when you select item in evaluation stage summary
+	 * based on item you will get all qualified and disqualified suppliers for
+	 * that item.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 */
 	public void summaryItemSelect(SelectEvent event) {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO evalResDTO = null;
@@ -492,6 +555,17 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve meeting dtls.to retrieve all the meeting details information for
+	 * preparation tab
+	 * 
+	 * @param qtId
+	 *            (Mandatory)
+	 * @param commType
+	 *            (Mandatory)
+	 * @param index
+	 *            (Mandatory)
+	 */
 	public void retriveMeetingDtls(Long qtId, String commType, int index) {
 		IQTMeetingSO meetingSO;
 		IQTEvaluationSO evaluationSo = null;
@@ -582,6 +656,12 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Retrieve opening committee dtls for preparation tab
+	 * 
+	 * @param index
+	 *            (Mandatory)
+	 */
 	public void retriveOpeningCommitteeDtls(int index) {
 
 		try {
@@ -593,7 +673,14 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public String retriveTurutHadirDtls(int index) {
+	/**
+	 * Retrieve turut hadir dtls for preparation tab
+	 * 
+	 * @param index
+	 *            (Mandatory)
+	 * 
+	 */
+	public void retriveTurutHadirDtls(int index) {
 
 		try {
 			this.getManagedBean().setPrepareActiveIndex(index);
@@ -606,10 +693,22 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
-		return "evaluationstage1view.xhtml";
+
 	}
 
-	public String technicalComplianceAction(ScQtCheckList checklist, int index,
+	/**
+	 * Technical compliance action.when you click compliance button in
+	 * compliance stage to get all the proposal submitted suppliers.
+	 * 
+	 * @param checklist
+	 *            (optional)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checkListType
+	 *            (Mandatory)
+	 * @return the string(technicalComplianceStage.xhtml)
+	 */
+	public String complianceUploadCheckList(ScQtCheckList checklist, int index,
 			String checkListType) {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = null;
@@ -636,7 +735,15 @@ public class EvaluationBackingBean extends
 		return "technicalComplianceStage.xhtml";
 	}
 
-	public String sampleCompliance(ScQtSampleLable label) {
+	/**
+	 * Sample compliance.when you click compliance button in sample tab to get
+	 * all the sample items
+	 * 
+	 * @param label
+	 *            (Mandatory)
+	 * @return the string(sampleComplianceStage.xhtml)
+	 */
+	public String complianceSampleItems(ScQtSampleLable label) {
 		IQTEvaluationSO evaluationSo = null;
 
 		try {
@@ -662,6 +769,9 @@ public class EvaluationBackingBean extends
 		return "sampleComplianceStage.xhtml";
 	}
 
+	/**
+	 * Save compliance sample.
+	 */
 	public void saveComplianceSample() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -694,6 +804,14 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Compliance status.
+	 * 
+	 * @param index
+	 *            the index
+	 * @param proposalCheckList
+	 *            the proposal check list
+	 */
 	public void complianceStatus(int index,
 			List<ScQtProposalChecklist> proposalCheckList) {
 		ScQtProposalChecklist scqtProposalCheckList = proposalCheckList
@@ -702,7 +820,10 @@ public class EvaluationBackingBean extends
 				.set(index, scqtProposalCheckList);
 	}
 
-	public void saveTechnicalCompliance() {
+	/**
+	 * Save compliance upload checkList.
+	 */
+	public void saveComplianceUploadCheckList() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -800,6 +921,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Save presentation demo dtls.when you click save in presentation demo tab.
+	 */
 	public void savePresentationDemoDtls() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -824,11 +948,24 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Retrieve parameter desc by type.
+	 * 
+	 * @param String
+	 *            type (Mandatory)
+	 * @return List<PmParameterDesc>
+	 */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
 
+	/**
+	 * Evaluation backaction.when you click back button in compliance stage and
+	 * evaluation stage.
+	 * 
+	 * @return the string(evaluationstage1view.xhtml)
+	 */
 	public String evaluationBackaction() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -1052,6 +1189,16 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Sets the technical evaluation status.
+	 * 
+	 * @param checkList
+	 *            (Mandatory)
+	 * @param checkListType
+	 *            (Mandatory)
+	 * @param status
+	 *            (Mandatory)
+	 */
 	private void setTechnicalEvaluationStatus(ScQtCheckList checkList,
 			String checkListType, PmStatus status) {
 		IQTEvaluationSO evaluationSo = null;
@@ -1093,24 +1240,44 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Technical backaction.
+	 * 
+	 * @return the string(standardEvaluationTechList.xhtml)
+	 */
 	public String technicalBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		return "standardEvaluationTechList.xhtml";
 
 	}
 
+	/**
+	 * Financial backaction.
+	 * 
+	 * @return the string(standardEvaluationFinList.xhtml)
+	 */
 	public String financialBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		return "standardEvaluationFinList.xhtml";
 
 	}
 
+	/**
+	 * Technical spec backaction.
+	 * 
+	 * @return the string
+	 */
 	public String technicalSpecBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		return "technicalSpecEvaluation.xhtml";
 
 	}
 
+	/**
+	 * Financial spec backaction.
+	 * 
+	 * @return the string(evaluationFinancialSpec)
+	 */
 	public String financialSpecBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		if (this.getManagedBean().getScQt().isZonal()) {
@@ -1121,7 +1288,13 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public String retriveComplianceTechnical() {
+	/**
+	 * Retrieve compliance technical.display all the technical checklist in
+	 * compliance stage technical tab.
+	 * 
+	 * 
+	 */
+	public void retriveComplianceTechnical() {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
@@ -1142,10 +1315,16 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
-		return "evaluationstage1view.xhtml";
+
 	}
 
-	public String retriveComplianceSample() {
+	/**
+	 * Retrieve compliance sample.display all the samples in compliance stage
+	 * sample tab.
+	 * 
+	 * 
+	 */
+	public void retriveComplianceSample() {
 		IQTEvaluationSO evaluationSo = null;
 
 		this.getManagedBean().setComplianceActiveIndex(1);
@@ -1188,10 +1367,15 @@ public class EvaluationBackingBean extends
 
 		}
 
-		return "evaluationstage1view.xhtml";
 	}
 
-	public String retriveComplianceFinancial() {
+	/**
+	 * Retrieve compliance financial.display all the financial checklist in
+	 * compliance stage financial checklist tab
+	 * 
+	 * 
+	 */
+	public void retriveComplianceFinancial() {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 
@@ -1217,10 +1401,15 @@ public class EvaluationBackingBean extends
 			evaluationSO = null;
 		}
 
-		return "evaluationstage1view.xhtml";
 	}
 
-	public String retriveComplianceSummary() {
+	/**
+	 * Retrieve compliance summary.display all the qualified and disqualified
+	 * suppliers in compliance stage summary tab.
+	 * 
+	 * 
+	 */
+	public void retriveComplianceSummary() {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 
@@ -1283,13 +1472,16 @@ public class EvaluationBackingBean extends
 
 		}
 
-		return "evaluationstage1view.xhtml";
 	}
 
+	/**
+	 * Generate evaluation stage.display all the scores for supplies in
+	 * evaluation stage
+	 */
 	public void generateEvaluationStage() {
 
 		IQTEvaluationSO evaluationSO = null;
-		EvaluationResDTO resDTO = null;
+		EvaluationResDTO resDTO = new EvaluationResDTO();
 
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -1340,6 +1532,10 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve technical evaluation stage.display all the technical checklist
+	 * in evaluation stage technical tab.
+	 */
 	public void retriveTechnicalEvaluationStage() {
 
 		IQTEvaluationSO evaluationSO = null;
@@ -1396,6 +1592,10 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Retrieve financial evaluation stage.display all the financial checklist
+	 * in evaluation stage financialchecklist tab.
+	 */
 	public void retriveFinancialEvaluationStage() {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
@@ -1443,6 +1643,11 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve summary evaluation stage.generate summary for evaluation stage
+	 * summary to get all the qualified and disqualified suppliers for package
+	 * and preference margin and item.
+	 */
 	public void retriveSummaryEvaluationStage() {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = null;
@@ -1484,7 +1689,7 @@ public class EvaluationBackingBean extends
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
 						&& !this.getManagedBean().isReadOnly()) {
-					evaluationStageCheck();
+					evaluationStageStatusCheck();
 					evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
 				}
 
@@ -1555,7 +1760,7 @@ public class EvaluationBackingBean extends
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
 					 * );
 					 */
-					evaluationStageCheck();
+					evaluationStageStatusCheck();
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 				}
@@ -1582,7 +1787,7 @@ public class EvaluationBackingBean extends
 										QTConstants.EVALUATION_ONE_TIER)
 						&& !this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
-					evaluationStageCheck();
+					evaluationStageStatusCheck();
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 				} else if (this.getManagedBean().getCurrentStatusId()
@@ -1595,7 +1800,7 @@ public class EvaluationBackingBean extends
 										QTConstants.EVALUATION_ONE_TIER)
 						&& this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
-					evaluationStageCheck();
+					evaluationStageStatusCheck();
 					evaluationSo
 							.prepareRecommendationEvaluationSummary(summaryReqDTO);
 				}
@@ -1609,6 +1814,18 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * View technical evaluation.Event handle to display all the compliance
+	 * qualified suppliers in evaluation stage technical view button.
+	 * 
+	 * @param checklist
+	 *            (Mandatory)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checklistType
+	 *            (Mandatory)
+	 * @return the string(standardEvaluationTechList.xhtml)
+	 */
 	public String viewTechnicalEvaluation(ScQtCheckList checklist, int index,
 			String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
@@ -1680,6 +1897,18 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Evaluate technical evaluation.Event handle to display all the compliance
+	 * qualified suppliers in evaluation stage Technical evaluate button.
+	 * 
+	 * @param checklist
+	 *            (Mandatory)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checklistType
+	 *            (Mandatory)
+	 * @return the string(standardEvaluationTechList.xhtml)
+	 */
 	public String evaluateTechnicalEvaluation(ScQtCheckList checklist,
 			int index, String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
@@ -1752,6 +1981,19 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * View financial evaluation.Event handle to display all the compliance or
+	 * technical or presentation demo qualified suppliers in evaluation stage
+	 * financial view button.
+	 * 
+	 * @param checklist
+	 *            (Mandatory)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checklistType
+	 *            (Mandatory)
+	 * @return the string(standardEvaluationFinList.xhtml)
+	 */
 	public String viewfinacialEvaluation(ScQtCheckList checklist, int index,
 			String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
@@ -1858,6 +2100,12 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrive financial spec zones.
+	 * 
+	 * @param speczone
+	 *            the speczone
+	 */
 	private void retriveFinancialSpecZones(EvaluationResDTO speczone) {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -1955,6 +2203,15 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Calculate fin spec package varieance.calculate from and to varieance for
+	 * package based on estimated price.
+	 * 
+	 * @param scQt
+	 *            (Mandatory)
+	 * @param packageOfferPrice
+	 *            (Mandatory)
+	 */
 	private void calculateFinSpecPackageVarieance(ScQt scQt,
 			ScQtScoreOfferPrice packageOfferPrice) {
 		if (null != packageOfferPrice) {
@@ -1980,6 +2237,19 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Evaluate financial evaluation.Event handle to display all the compliance
+	 * or technical or presentation demo qualified suppliers in evaluation stage
+	 * Financial evaluate button.
+	 * 
+	 * @param checklist
+	 *            (Mandatory)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checklistType
+	 *            (Mandatory)
+	 * @return the string(standardEvaluationFinList.xhtml)
+	 */
 	public String evaluatefinancialEvaluation(ScQtCheckList checklist,
 			int index, String checklistType) {
 		IQTEvaluationSO evaluationSo = null;
@@ -2092,6 +2362,14 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Spec tab change.Event handle changed zones in financial spec to display
+	 * all the compliance or technical or presentation demo qualified suppliers
+	 * based on zonal.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 */
 	public void specTabChange(TabChangeEvent event) {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -2166,13 +2444,32 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Return check list scores.
+	 * 
+	 * @param checklistScores
+	 *            the checklist scores
+	 */
 	private void returnCheckListScores(List<ScQtCheckListScore> checklistScores) {
 
 		Collections.sort(checklistScores);
 
 	}
 
-	public String othersTechnicalEvaluate(
+	/**
+	 * Others technical evaluate.Event handle to display the supplier
+	 * information based on the compliance qualified supplier in evaluation
+	 * stage technical Tab.
+	 * 
+	 * @param proposalCheckList
+	 *            (Mandatory)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checkListType
+	 *            (Mandatory)
+	 * @return the string(technicalotherchecklists.xhtml)
+	 */
+	public String technicalSupplierEvaluate(
 			ScQtProposalChecklist proposalCheckList, int index,
 			String checkListType) {
 		IQTEvaluationSO evaluationSO = null;
@@ -2797,7 +3094,20 @@ public class EvaluationBackingBean extends
 		return "technicalotherchecklists.xhtml";
 	}
 
-	public String othersFinancialEvaluate(
+	/**
+	 * Others financial evaluate..Event handle to display the supplier
+	 * information based on the compliance or technical or presentation demo
+	 * qualified supplier in evaluation stage financial Tab.
+	 * 
+	 * @param proposalCheckList
+	 *            (Mandatory)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checkListType
+	 *            (Mandatory)
+	 * @return the string(financialotherchecklists.xhtml)
+	 */
+	public String financialSupplierEvaluate(
 			ScQtProposalChecklist proposalCheckList, int index,
 			String checkListType) {
 		IQTEvaluationSO evaluationSO = null;
@@ -3648,6 +3958,20 @@ public class EvaluationBackingBean extends
 		return "financialotherchecklists.xhtml";
 	}
 
+	/**
+	 * Calclate spec item variance.calulate from and to variance for item based
+	 * on tplspecEstimatedPrice
+	 * 
+	 * @param specEstimations
+	 *            (Mandatory)
+	 * @param specScorig
+	 *            (Mandatory)
+	 * @param scQt
+	 *            (Mandatory)
+	 * @param zoneDtl
+	 *            (Mandatory)
+	 * @return List<TplSpecScoring>
+	 */
 	private List<TplSpecScoring> calclateSpecItemVariance(
 			List<TplSpecEstimation> specEstimations,
 			List<TplSpecScoring> specScorig, ScQt scQt, TplSpecZoneDtl zoneDtl) {
@@ -3726,7 +4050,11 @@ public class EvaluationBackingBean extends
 		return specScorig;
 	}
 
-	public void retrivePresetationDemoCheckList() {
+	/**
+	 * Retrive presetation demo check list.Event handle presentation demo
+	 * checklist for presentationdemo stage.
+	 */
+	private void retrivePresetationDemoCheckList() {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		// this.getManagedBean().setQtProposalChecklist(checklist);
@@ -3757,6 +4085,10 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve presentation demo.display all the technical qualified suppliers
+	 * in presentation demo stage
+	 */
 	public void retrivePresentationDemo() {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO resDTO = null;
@@ -3785,6 +4117,10 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve presentation demo summary.display all qualified and disqualified
+	 * suppliers in presentation demo summary tab.
+	 */
 	public void retrivePresentationDemoSummary() {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = null;
@@ -3850,6 +4186,12 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Report down load zip file.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void reportDownLoadZipFile() throws IOException {
 		List<File> files = new ArrayList<File>();
 		files.add(new File("\\upload\\clone.jpg"));
@@ -3908,6 +4250,12 @@ public class EvaluationBackingBean extends
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
+	/**
+	 * Report down load.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void reportDownLoad() throws IOException {
 
 		File file = new File("\\upload\\console.txt");
@@ -3948,7 +4296,11 @@ public class EvaluationBackingBean extends
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
-	private void complianceStageCheck() {
+	/**
+	 * Compliance stage status check.check compliance stage checklist status
+	 * pending or complete
+	 */
+	private void complianceStageStatusCheck() {
 		List<ScQtCheckList> technicalcheckList = this.getManagedBean()
 				.getComplianceTechnicalCheckList();
 		if (null != technicalcheckList && !technicalcheckList.isEmpty()) {
@@ -4016,7 +4368,11 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	private void evaluationStageCheck() {
+	/**
+	 * Evaluation stage status check.check evaluation stage checklist status
+	 * pending or complete.
+	 */
+	private void evaluationStageStatusCheck() {
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
 				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -4101,6 +4457,14 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Sets the tab value.check current tab and next tab for chain.
+	 * 
+	 * @param currentTab
+	 *            (Mandatory)
+	 * @param outputTab
+	 *            (Mandatory)
+	 */
 	public void setTabValue(int currentTab, int outputTab) {
 		try {
 
@@ -4127,7 +4491,7 @@ public class EvaluationBackingBean extends
 								.getCurrentStatusId()
 								.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
 
-					complianceStageCheck();
+					complianceStageStatusCheck();
 					if (currentTab == 1) {
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
 							if (this.getManagedBean()
@@ -4204,7 +4568,7 @@ public class EvaluationBackingBean extends
 						&& this.getManagedBean()
 								.getCurrentStatusId()
 								.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
-					complianceStageCheck();
+					complianceStageStatusCheck();
 					if (currentTab == 1) {
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
 							if (this.getManagedBean()
@@ -4327,35 +4691,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	/*
-	 * private void retrieveReportTabDtl() {
-	 * debugLogger("retrieveReportTabDtl"); retrieveReportHeader();
-	 * IQTEvaluationSO evaluationSO; EvaluationResDTO resDTO = null; try {
-	 * evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-	 * EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-	 * reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-	 * reqDTO.setCommType(getManagedBean().getCommitteeType());
-	 * List<ScQtEvaluationReport> scQtEvaluationReports = new
-	 * ArrayList<ScQtEvaluationReport>(); if (null ==
-	 * this.getManagedBean().getScQtEvaluationReportList()) { resDTO =
-	 * evaluationSO.retriveReportDetails(reqDTO); if (resDTO.getReports() !=
-	 * null && !resDTO.getReports().isEmpty()) {
-	 * this.getManagedBean().setScQtEvaluationReportList( resDTO.getReports());
-	 * } else if (resDTO.getPmDocuments() != null &&
-	 * resDTO.getPmDocuments().size() > 0) { for (PmDocument pmDoc :
-	 * resDTO.getPmDocuments()) { ScQtEvaluationReport evaluationReport = new
-	 * ScQtEvaluationReport(); evaluationReport.setScQt(this.getManagedBean()
-	 * .getScQt()); evaluationReport.setDocCategory(pmDoc
-	 * .getDocCategoryCode().getParameterCode());
-	 * evaluationReport.setPmDocument(pmDoc);
-	 * evaluationReport.setTitle(pmDoc.getDocName());
-	 * evaluationReport.setDefinationType(pmDoc .getDocDefinitionTypeCode());
-	 * scQtEvaluationReports.add(evaluationReport); }
-	 * this.getManagedBean().setScQtEvaluationReportList(scQtEvaluationReports);
-	 * saveQtReportDtls(); } } } finally { evaluationSO = null; } }
+	/**
+	 * Retrieve report tab dtl.Event handle set attachment for Reports tab.
 	 */
-
 	private void retrieveReportTabDtl() {
 		debugLogger("retrieveReportTabDtl");
 		retrieveReportHeader();
@@ -4408,6 +4746,9 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Retrieve report header.set header for reports.
+	 */
 	private void retrieveReportHeader() {
 		debugLogger("retrieveReportHeader");
 		String reportHeader = "";
@@ -4427,6 +4768,10 @@ public class EvaluationBackingBean extends
 		getManagedBean().setReportHeader(reportHeader);
 	}
 
+	/**
+	 * Retrieve committee endorsment.Event handle display all the committee
+	 * members list in committee endorsment tab.
+	 */
 	public void retriveCommitteeEndorsment() {
 		ICommitteSO committeSO = null;
 		CommitteResDTO resDTO = null;
@@ -4684,6 +5029,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Committee remarks save.to save the remarks in committee endorsment tab.
+	 */
 	public void committeeRemarksSave() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -4699,14 +5047,12 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	public String navigateAction(String tabIndex) {
-
-		if (!StringUtils.isEmpty(tabIndex)) {
-			getManagedBean().setTabActiveIndex(new Integer(tabIndex));
-		}
-		return null;
-	}
-
+	/**
+	 * Update sm appl.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void updateSmAppl() throws Exception {
 		try {
 			// retrives2Details();
@@ -4718,15 +5064,10 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public String onFlowProcess(FlowEvent event) {
-		if (skip) {
-			skip = false; // reset in case user goes back
-			return "confirm";
-		} else {
-			return event.getNewStep();
-		}
-	}
-
+	/**
+	 * Adds the meeting action.Event handle add empty row for data table in
+	 * meeting details tab.
+	 */
 	public void addMeetingAction() {
 
 		try {
@@ -4751,6 +5092,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the turut details.add empty row for data table in turut hadir tab.
+	 */
 	public void addTurutDetails() {
 
 		try {
@@ -4774,6 +5118,12 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Save meeting dtls.Event handle click save button in evaluation screen
+	 * 
+	 * @param save
+	 *            (Mandatory)
+	 */
 	public void saveMeetingDtls(boolean save) {
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -4790,6 +5140,7 @@ public class EvaluationBackingBean extends
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			String taskName = this.getManagedBean().getTaskName();
 			boolean readoonly = this.getManagedBean().isReadOnly();
+			int tempIndx = getManagedBean().getTempTab();
 			List<ScQtProposalChecklist> demoList = this.getManagedBean()
 					.getPresentationDemoSupplierList();
 			if (!this.getManagedBean().isDemo()) {
@@ -4809,6 +5160,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setCurrentStatusId(currentStatusId);
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setReadOnly(readoonly);
+			this.getManagedBean().setTempTab(tempIndx);
 			retriveMeetingDtls(qtId, committeeType, index);
 			getStatusDropdownValues("SC", "MS");
 			if (save == true) {
@@ -4824,6 +5176,11 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Gets the meeting to be remove list.
+	 * 
+	 * @return List<ScQtMeeting>
+	 */
 	private List<ScQtMeeting> getMeetingToBeRemoveList() {
 		List<ScQtMeeting> toBeRemoveList = new ArrayList<ScQtMeeting>();
 
@@ -4836,6 +5193,11 @@ public class EvaluationBackingBean extends
 		return toBeRemoveList;
 	}
 
+	/**
+	 * Gets the attendance to be remove list.
+	 * 
+	 * @return the attendance to be remove list
+	 */
 	private List<ScQtMeetingAttendance> getAttendanceToBeRemoveList() {
 		List<ScQtMeetingAttendance> toBeRemoveList = new ArrayList<ScQtMeetingAttendance>();
 
@@ -4849,7 +5211,13 @@ public class EvaluationBackingBean extends
 		return toBeRemoveList;
 	}
 
-	public EvaluationReqDTO evaluationPreparation() {
+	/**
+	 * Evaluation preparation.to prepare all the evaluation tabs data for save
+	 * or submit or accept buttons .
+	 * 
+	 * @return the evaluation req dto
+	 */
+	private EvaluationReqDTO evaluationPreparation() {
 		EvaluationReqDTO reqDtO = new EvaluationReqDTO();
 		try {
 
@@ -4912,6 +5280,10 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Save proposal score dtls.Event handle save all the suppliers scores in
+	 * evaluation stage.
+	 */
 	public void saveProposalScoreDtls() {
 		try {
 
@@ -4971,63 +5343,17 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public void deleteMeetingDetails() {
-		try {
-			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
-			List<ScQtMeeting> selectMeeting = getManagedBean()
-					.getMeetingMultiSelect();
-			List<ScQtMeeting> removeMeetingList = this.getManagedBean()
-					.getMeetingRemoveList();
-			if (null == removeMeetingList) {
-				removeMeetingList = new ArrayList<ScQtMeeting>();
-			}
-			removeMeetingList.addAll(selectMeeting);
-			if (meetingList.size() == selectMeeting.size()) {
-				meetingList.clear();
-			} else {
-				for (ScQtMeeting meeting : selectMeeting) {
-					meeting.setDeleted(true);
-
-					meetingList.remove(meeting);
-				}
-
-			}
-			this.getManagedBean().setMeetingRemoveList(removeMeetingList);
-
-		} finally {
-
-		}
-	}
-
-	public void deleteTurutHadirDetails() {
-		try {
-			List<ScQtMeetingAttendance> meetingList = getManagedBean()
-					.getMeetingAttendanceList();
-			List<ScQtMeetingAttendance> selectMeeting = getManagedBean()
-					.getMeetingAttendanceSelectList();
-			List<ScQtMeetingAttendance> removeMeetingAttendanceList = this
-					.getManagedBean().getMeetingAttendanceRemoveList();
-			if (null == removeMeetingAttendanceList) {
-				removeMeetingAttendanceList = new ArrayList<ScQtMeetingAttendance>();
-			}
-			removeMeetingAttendanceList.addAll(selectMeeting);
-			if (meetingList.size() == selectMeeting.size()) {
-				meetingList.clear();
-			} else {
-				for (ScQtMeetingAttendance meeting : selectMeeting) {
-					meeting.setDeleted(true);
-					meetingList.remove(meeting);
-				}
-			}
-			this.getManagedBean().setMeetingAttendanceRemoveList(
-					removeMeetingAttendanceList);
-
-		} finally {
-
-		}
-	}
-
-	public void handleFileUpload(FileUploadEvent event)
+	/**
+	 * reports file upload.to upload files in reports tab
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void reportFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		debugLogger("handleFileUpload");
 		IQTEvaluationSO evaluationSO = null;
@@ -5153,6 +5479,17 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Pre sentation demo file upload.to upload files for all the technical
+	 * qualified suppliers in presentation demo tab
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public void preSentationDemoFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
@@ -5183,7 +5520,18 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public void reportUpload(FileUploadEvent event)
+	/**
+	 * demo checklist upload.upload file for presentation demo checklist in
+	 * presntation demo tab.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void demoChecklistUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		IQTEvaluationSO evaluationSO = null;
 		try {
@@ -5222,50 +5570,11 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * @return the skip
+	 * Download documents.Event handle click download on uploaded checklist.
+	 * 
+	 * @param proposalCheckList
+	 *            (Mandatory)
 	 */
-	public boolean isSkip() {
-		return skip;
-	}
-
-	/**
-	 * @param skip
-	 *            the skip to set
-	 */
-	public void setSkip(boolean skip) {
-		this.skip = skip;
-	}
-
-	/**
-	 * @return the currentTab
-	 */
-	public int getCurrentTab() {
-		return currentTab;
-	}
-
-	/**
-	 * @param currentTab
-	 *            the currentTab to set
-	 */
-	public void setCurrentTab(int currentTab) {
-		this.currentTab = currentTab;
-	}
-
-	/**
-	 * @return the outputTab
-	 */
-	public int getOutputTab() {
-		return outputTab;
-	}
-
-	/**
-	 * @param outputTab
-	 *            the outputTab to set
-	 */
-	public void setOutputTab(int outputTab) {
-		this.outputTab = outputTab;
-	}
-
 	public void downloadDocuments(ScQtProposalChecklist proposalCheckList) {
 		try {
 
@@ -5276,6 +5585,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Secretary submit task.
+	 */
 	public void secretarySubmitTask() {
 		ICommitteSO committeSO = null;
 
@@ -5294,6 +5606,12 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Save templeate spec dtls.Event handle technical and financial specs
+	 * suppliers save in evaluation stage.
+	 * 
+	 * @return List<TplSpecAnswer>
+	 */
 	public EvaluationResDTO saveTempleateSpecDtls() {
 
 		IQTEvaluationSO evaluationSO = null;
@@ -5321,8 +5639,8 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setQtProposalChecklist(
 					evalResDTO.getProposalChecklist());
 
-			if (getManagedBean().getCheckListType().equals("T")) {
-				othersTechnicalEvaluate(evalResDTO.getProposalChecklist(),
+			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
+				technicalSupplierEvaluate(evalResDTO.getProposalChecklist(),
 						index, getManagedBean().getCheckListType());
 				this.getManagedBean().getComplianceTechnicalProposalCheckList()
 						.remove(index);
@@ -5333,8 +5651,8 @@ public class EvaluationBackingBean extends
 								this.getManagedBean().getQtProposalChecklist());
 				// evaluateTechnicalEvaluation(checklist)
 			}
-			if (getManagedBean().getCheckListType().equals("F")) {
-				othersFinancialEvaluate(evalResDTO.getProposalChecklist(),
+			if ("F".equalsIgnoreCase(getManagedBean().getCheckListType())) {
+				financialSupplierEvaluate(evalResDTO.getProposalChecklist(),
 						index, getManagedBean().getCheckListType());
 				this.getManagedBean().getFinSpecSupplierList().remove(index);
 				this.getManagedBean()
@@ -5353,6 +5671,11 @@ public class EvaluationBackingBean extends
 		return evalResDTO;
 	}
 
+	/**
+	 * Revise proposal evaluation.Event handle when member revise in evaluation.
+	 * 
+	 * @return the string
+	 */
 	public String reviseProposalEvaluation() {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(this
 				.getManagedBean().getLocalOutCome(), null);
@@ -5383,6 +5706,13 @@ public class EvaluationBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Submit prepare evaluation details.Event handle to submit data for bpm.
+	 * 
+	 * @param outCome
+	 *            (Mandatory)
+	 * @return the string(ACKNOWLEDGE_PAGE)
+	 */
 	public String submitPrepareEvaluationDetails(String outCome) {
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -5454,6 +5784,15 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Update evaluation committe dtls.
+	 * 
+	 * @param action
+	 *            (Mandatory)
+	 * @param digiSign
+	 *            (optional)
+	 * @return EvaluationResDTO (boolean successful,ScQtCommittee committee)
+	 */
 	private EvaluationResDTO updateEvaluationCommitteDtls(String action,
 			PmDigiSign digiSign) {
 		IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
@@ -5483,6 +5822,13 @@ public class EvaluationBackingBean extends
 		return resDTO;
 	}
 
+	/**
+	 * Gpki sign action.Event handle when chairperson submit.
+	 * 
+	 * @param digiSign
+	 *            (Mandatory)
+	 * @return the string(ACKNOWLEDGE_PAGE)
+	 */
 	public String gpkiSignAction(PmDigiSign digiSign) {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(
 				BpmOutcomeConst.BPM_SUBMIT, digiSign);
@@ -5511,6 +5857,11 @@ public class EvaluationBackingBean extends
 		return null;
 	}
 
+	/*
+	 * 
+	 * preRenderView(). user click on task list it will render Evaluation
+	 * screens for(EC/OC/TEC/FEC).
+	 */
 	public void preRenderView() {
 
 		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
@@ -5639,6 +5990,14 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Download report.
+	 * 
+	 * @param scQtEvaluationReport
+	 *            (Mandatory)
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void downloadReport(ScQtEvaluationReport scQtEvaluationReport)
 			throws Exception {
 		debugLogger("downloadReport");
@@ -5653,8 +6012,13 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
+	 * Generate document attachment.generate all evaluation reports.
+	 * 
 	 * @param scQtEvaluationReport
-	 * @return
+	 *            the sc qt evaluation report
+	 * @return the sc qt evaluation report attachment
+	 * @throws Exception
+	 *             the exception
 	 */
 	private ScQtEvaluationReportAttachment generateDocumentAttachment(
 			ScQtEvaluationReport scQtEvaluationReport) throws Exception {
@@ -5760,6 +6124,16 @@ public class EvaluationBackingBean extends
 		return scQtEvaluationReportAttachment;
 	}
 
+	/**
+	 * Generate maklumat tender pdf from velocity.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scQtEvaluationReport
+	 *            the sc qt evaluation report
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generateMaklumatTenderPdfFromVelocity(ScAttachment attachment,
 			ScQtEvaluationReport scQtEvaluationReport) throws Exception {
 		debugLogger("generateMaklumatTenderPdfFromVelocity");
@@ -5773,6 +6147,17 @@ public class EvaluationBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)), html);
 	}
 
+	/**
+	 * Generate maklumat tender from velocity.
+	 * 
+	 * @param scQtEvaluationReport
+	 *            the sc qt evaluation report
+	 * @param scQt
+	 *            the sc qt
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
 	private String generateMaklumatTenderFromVelocity(
 			ScQtEvaluationReport scQtEvaluationReport, ScQt scQt)
 			throws Exception {
@@ -5844,6 +6229,16 @@ public class EvaluationBackingBean extends
 		return html;
 	}
 
+	/**
+	 * Generate analisis keputusan penilaian teknikal pdf.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generateAnalisisKeputusanPenilaianTeknikalPdf(
 			ScAttachment attachment, ScQt qt) throws Exception {
 		debugLogger("generateAnalisisKeputusanPenilaianTeknikalPdf");
@@ -5876,6 +6271,16 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
+	/**
+	 * Generate kaedah2 pdf.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generateKaedah2Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateKaedah2Pdf");
@@ -5908,6 +6313,16 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
+	/**
+	 * Generate pematuhan2 pdf.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generatePematuhan2Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generatePematuhan2Pdf");
@@ -5940,6 +6355,16 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
+	/**
+	 * Generate kaedah1 pdf.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generateKaedah1Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generateKaedah1Pdf");
@@ -5968,6 +6393,16 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
+	/**
+	 * Generate pematuhan1 pdf.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generatePematuhan1Pdf(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		debugLogger("generatePematuhan1Pdf");
@@ -5996,6 +6431,16 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
+	/**
+	 * Generate committee details pdf from velocity.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generateCommitteeDetailsPdfFromVelocity(
 			ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
@@ -6119,6 +6564,16 @@ public class EvaluationBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate meeting details pdf from velocity.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generateMeetingDetailsPdfFromVelocity(ScAttachment attachment,
 			ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
@@ -6174,6 +6629,16 @@ public class EvaluationBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate cover pdf from velocity.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param qt
+	 *            the qt
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void generateCoverPdfFromVelocity(ScAttachment attachment, ScQt qt)
 			throws Exception {
 		populateAttachmentDetails(attachment);
@@ -6210,6 +6675,12 @@ public class EvaluationBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Download all reports.download all evaluation reports.
+	 * 
+	 * @throws Exception
+	 *             the exception
+	 */
 	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
 		List<ScQtEvaluationReport> evaluationReports = getManagedBean()
@@ -6229,7 +6700,11 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * determineIcon for displaying image icon in pid
+	 * Determine icon.set icon for all uploaded files in evaluation.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @return the string
 	 */
 	public String determineIcon(ScQtEvaluationReportAttachment attachment) {
 		debugLogger("determineIcon");
@@ -6258,6 +6733,9 @@ public class EvaluationBackingBean extends
 		return imageFileName;
 	}
 
+	/**
+	 * Delete upload file.Event handle to delete upload files in reports tab.
+	 */
 	public void deleteUploadFile() {
 		debugLogger("deleteUploadFile");
 		this.getManagedBean().setScAttachment(null);
@@ -6296,12 +6774,31 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Delete demo upload file.Event handle to delete upload file in
+	 * presentation demo tab.
+	 */
 	public void deleteDemoUploadFile() {
 		debugLogger("deleteUploadFile");
 		getManagedBean().getScQtChecklist().setScQtCheckListAttachment(null);
 
 	}
 
+	/**
+	 * Show template action.
+	 * 
+	 * @param scQtEvaluationReport
+	 *            the sc qt evaluation report
+	 * @return the string
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
+	 * @throws InstantiationException
+	 *             the instantiation exception
+	 * @throws InvocationTargetException
+	 *             the invocation target exception
+	 * @throws NoSuchMethodException
+	 *             the no such method exception
+	 */
 	public String showTemplateAction(ScQtEvaluationReport scQtEvaluationReport)
 			throws IllegalAccessException, InstantiationException,
 			InvocationTargetException, NoSuchMethodException {
@@ -6335,6 +6832,13 @@ public class EvaluationBackingBean extends
 		return templateDocUrl;
 	}
 
+	/**
+	 * Save cloned tpl doc master.
+	 * 
+	 * @param scQtEvaluationReport
+	 *            the sc qt evaluation report
+	 * @return the tpl doc master
+	 */
 	private TplDocMaster saveClonedTplDocMaster(
 			ScQtEvaluationReport scQtEvaluationReport) {
 		IQTTemplateSO qtTemplateSO = null;
@@ -6357,6 +6861,21 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Clone tpl doc master dtls.
+	 * 
+	 * @param scQtEvaluationReport
+	 *            the sc qt evaluation report
+	 * @return the tpl doc master
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
+	 * @throws InstantiationException
+	 *             the instantiation exception
+	 * @throws InvocationTargetException
+	 *             the invocation target exception
+	 * @throws NoSuchMethodException
+	 *             the no such method exception
+	 */
 	private TplDocMaster cloneTplDocMasterDtls(
 			ScQtEvaluationReport scQtEvaluationReport)
 			throws IllegalAccessException, InstantiationException,
@@ -6465,6 +6984,13 @@ public class EvaluationBackingBean extends
 		return tplDocMaster;
 	}
 
+	/**
+	 * Retrieve tpl doc master by id.
+	 * 
+	 * @param masterId
+	 *            the master id
+	 * @return the tpl doc master
+	 */
 	private TplDocMaster retrieveTplDocMasterById(Long masterId) {
 		IQTTemplateSO qtTemplateSO = null;
 		try {
@@ -6484,6 +7010,13 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve standard tpl doc master.
+	 * 
+	 * @param scQt
+	 *            the sc qt
+	 * @return the tpl doc master
+	 */
 	private TplDocMaster retrieveStandardTplDocMaster(ScQt scQt) {
 		ITemplateDocSO templateDocSO = null;
 		try {
@@ -6538,6 +7071,13 @@ public class EvaluationBackingBean extends
 	}
 
 	// save to scQtEvaluationReport
+	/**
+	 * Save sc qt report list.
+	 * 
+	 * @param scQtEvaluationReport
+	 *            the sc qt evaluation report
+	 * @return the sc qt evaluation report
+	 */
 	private ScQtEvaluationReport saveScQtReportList(
 			ScQtEvaluationReport scQtEvaluationReport) {
 		debugLogger("ScQtEvaluationReport");
@@ -6551,6 +7091,9 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Save qt report dtls.
+	 */
 	public void saveQtReportDtls() {
 		IQTEvaluationReportSO evaluationReportSO = null;
 		try {
@@ -6589,6 +7132,13 @@ public class EvaluationBackingBean extends
 
 	// retrieve the scQtEvaluationReport for Maklumat Tender/Sebut Harga/
 	// Asas-Asas Penilaian / Perakuan
+	/**
+	 * Retrive rules and regulation report.
+	 * 
+	 * @param scQtEvaluationReport
+	 *            the sc qt evaluation report
+	 * @return the sc qt evaluation report
+	 */
 	private ScQtEvaluationReport retriveRulesAndRegulationReport(
 			ScQtEvaluationReport scQtEvaluationReport) {
 		debugLogger("retriveRulesAndRegulationReport");
@@ -6614,6 +7164,15 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the pm parameter.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param parameterCode
+	 *            the parameter code
+	 * @return the pm parameter
+	 */
 	private PmParameter getPmParameter(String parameterType,
 			String parameterCode) {
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -6625,11 +7184,27 @@ public class EvaluationBackingBean extends
 		return resDTO.getPmParameter();
 	}
 
+	/**
+	 * Gets the parameter so.
+	 * 
+	 * @return the parameter so
+	 */
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
+	/**
+	 * Download encrypted file.
+	 * 
+	 * @param <ATTACHMENT>
+	 *            the
+	 * @param scAttachment
+	 *            the sc attachment
+	 * @return the file
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public <ATTACHMENT extends ScAttachment> File downloadEncryptedFile(
 			ATTACHMENT scAttachment) throws IOException {
 		if (scAttachment != null
@@ -6642,6 +7217,17 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	/**
+	 * Download encrypted file.
+	 * 
+	 * @param filePath
+	 *            the file path
+	 * @param fileName
+	 *            the file name
+	 * @return the file
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public File downloadEncryptedFile(String filePath, String fileName)
 			throws IOException {
 
@@ -6726,11 +7312,29 @@ public class EvaluationBackingBean extends
 		return file;
 	}
 
+	/**
+	 * Retrive status.
+	 * 
+	 * @param moduleCode
+	 *            (Mandatory)
+	 * @param docType
+	 *            (Mandatory)
+	 * @return List<PmStatusDesc>
+	 */
 	private List<PmStatusDesc> retriveStatus(String moduleCode, String docType) {
 		return StatusHelper.getInstance()
 				.getStatusDescList(moduleCode, docType);
 	}
 
+	/**
+	 * Sets the status change.Event handle to change the
+	 * status(Pending/Compelete/Done) in meetingdetails tab.
+	 * 
+	 * @param index
+	 *            the index
+	 * @param meeting
+	 *            the meeting
+	 */
 	public void setStatusChange(int index, List<ScQtMeeting> meeting) {
 		ScQtMeeting list = meeting.get(index);
 
@@ -6754,6 +7358,10 @@ public class EvaluationBackingBean extends
 
 	}
 
+	/**
+	 * Save evalution stage upload dtls.Event handle to save the evaluation
+	 * stage technical and financial uploaded checklists.
+	 */
 	public void saveEvalutionStageUploadDtls() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
@@ -6786,4 +7394,98 @@ public class EvaluationBackingBean extends
 		}
 
 	}
+
+	/**
+	 * @return the skip
+	 */
+	public boolean isSkip() {
+		return skip;
+	}
+
+	/**
+	 * @param skip
+	 *            the skip to set
+	 */
+	public void setSkip(boolean skip) {
+		this.skip = skip;
+	}
+
+	/**
+	 * @return the currentTab
+	 */
+	public int getCurrentTab() {
+		return currentTab;
+	}
+
+	/**
+	 * @param currentTab
+	 *            the currentTab to set
+	 */
+	public void setCurrentTab(int currentTab) {
+		this.currentTab = currentTab;
+	}
+
+	/**
+	 * @return the outputTab
+	 */
+	public int getOutputTab() {
+		return outputTab;
+	}
+
+	/**
+	 * @param outputTab
+	 *            the outputTab to set
+	 */
+	public void setOutputTab(int outputTab) {
+		this.outputTab = outputTab;
+	}
+
+	/**
+	 * @return the documentPage
+	 */
+	public static String getDocumentPage() {
+		return DOCUMENT_PAGE;
+	}
+
+	/**
+	 * Gets the text before sign.
+	 * 
+	 * @return the text before sign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * Sets the text before sign.
+	 * 
+	 * @param textBeforeSign
+	 *            the new text before sign
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getScQt().getQtNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		this.textBeforeSign = sb.toString();
+	}
+
+	/**
+	 * Gets the pm digi sign.
+	 * 
+	 * @return the pm digi sign
+	 */
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	/**
+	 * Sets the pm digi sign.
+	 * 
+	 * @param pmDigiSign
+	 *            the new pm digi sign
+	 */
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
 }
