@@ -72,13 +72,10 @@
 
 			</p:dataTable>
 		</h:panelGroup>
-		<p:panelGrid styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.close']}"
-						partialSubmit="true" process="@this" onclick="pricingPopup.hide()" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+		<p:spacer height="3px"/>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+				process="@this" onclick="pricingPopup.hide()" />
+		</div>
 	</p:dialog>
 </ui:composition>

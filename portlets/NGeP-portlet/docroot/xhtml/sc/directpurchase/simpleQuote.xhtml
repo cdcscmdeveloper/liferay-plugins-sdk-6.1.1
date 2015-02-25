@@ -13,18 +13,17 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	</c:if>
     
     <p:messages showDetail="true" autoUpdate="#{simpleQuoteBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info"  showSummary="false"/>
-    
     <ui:param name="isPendingSubmissionStatus" value="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.sqPendingSubmission}" />
     
      <ui:include src="/xhtml/sc/directpurchase/simpleQuoteButtons.xhtml" />
      <ui:include src="/xhtml/sc/directpurchase/simpleQuoteHeader.xhtml" />
-    <p:panel id="sqMainId">
-	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+     
+	 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-		   <td width="20%;" class="sidemenutd" style="vertical-align: baseline;">
+		 	<td width="20%" valign="top" class="sidemenutd">
 		       <p:tabMenu id="mainTabMenu"
 					activeIndex="#{simpleQuoteBackingBean.managedBean.activeIndex}"
-					styleClass="sidemenu" style="display : table-caption;">
+					styleClass="sidemenu">
 							<p:menuitem id="sqGeninfo"
 								value="#{lbl['lbl.sc.sq.tab.title.gen.info']}" update="@form"
 								action="#{simpleQuoteBackingBean.tabMenuListener('0')}" />
@@ -62,7 +61,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				</c:if>
 			</td>
 		</tr>
-		</table>
-		</p:panel> 
+	</table>
 </ui:define>
 </ui:composition>
