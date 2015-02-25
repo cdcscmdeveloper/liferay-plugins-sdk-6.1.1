@@ -45,7 +45,7 @@
 								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
 								value="#{organisationBackingBean.profileDetails}" />
 						</p:menuitem>
-						<p:menuitem partialSubmit="true" process="@this"
+						<p:menuitem partialSubmit="true" 
 							value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}" rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
@@ -53,13 +53,13 @@
 								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
 								value="#{organisationBackingBean.governmentSeller}" />
 						</p:menuitem>
-						<p:menuitem partialSubmit="true" process="@this"
+						<p:menuitem partialSubmit="true"
 							value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}" rendered="#{organisationBackingBean.managedBean.orgProfile.groupOrg}"
 							update="@form">
 							<f:param name="disableValidation" value="" />
 							<f:setPropertyActionListener
 								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
-								value="#{organisationBackingBean.responsibleProfile}"  />
+								value="#{organisationBackingBean.managedBean.orgProfile.govtSeller ? 2 : 1 }"  />
 						</p:menuitem>
 
 					</p:tabMenu></td>
@@ -67,10 +67,10 @@
 						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.profileDetails}">
 						<ui:include src="orgProfileDetails.xhtml" />
 					</p:outputPanel> <p:outputPanel
-						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.governmentSeller}">
+						rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller and organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.governmentSeller }">
 						<ui:include src="orgGovernmentSeller.xhtml" />
 					</p:outputPanel> <p:outputPanel
-						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.responsibleProfile}">
+						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == (organisationBackingBean.managedBean.orgProfile.govtSeller ? 2: 1)}">
 						<ui:include src="orgResponsibleProfile.xhtml" />
 					</p:outputPanel></td>
 			</tr>
