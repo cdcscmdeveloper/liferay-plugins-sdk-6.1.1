@@ -25,90 +25,180 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+// TODO: Auto-generated Javadoc
 //import my.ep.persistence.entity.pm.common.PmMaksud;
 
 /**
- * Managed Bean for Create Purchase Order
- * 
+ * Managed Bean for Create Purchase Order.
+ *
  * @author Giribabu
  * @since 7/10/2013
  */
 @ManagedBean(name = "doMB")
 @SessionScoped
 public class DeliveryOrderManagedBean extends BaseManagedBean {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(DeliveryOrderManagedBean.class);
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The fl remark. */
 	private FlRemark flRemark = new FlRemark();
+	
+	/** The fl attachment. */
 	private FlAttachment flAttachment = new FlAttachment();
+	
+	/** The fl delivery order. */
 	private FlDeliveryOrder flDeliveryOrder;
+	
+	/** The delivery address. */
 	private FlDeliveryAddress deliveryAddress;
+	
+	/** The fulfilment order. */
 	private FlFulfilmentOrder fulfilmentOrder;
+    
+    /** The fulfilment request. */
     private FlFulfilmentRequest fulfilmentRequest;
+    
+    /** The del order item. */
     private FlDelOrderItem delOrderItem = new FlDelOrderItem();
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
 	
+	/** The selected addr row. */
 	private FlDeliveryAddress selectedAddrRow;
+	
+	/** The selected pm del addr list. */
 	private List<PmOrgAddress> selectedPmDelAddrList;
+	
+	/** The del addr list. */
 	private List<PmOrgAddress> delAddrList;
+	
+	/** The selected del addr. */
 	private FlDeliveryAddress selectedDelAddr;
 	//private List<PmMaksud> maksudCodeList;
+	/** The check ptj flg. */
 	private boolean checkPtjFlg = true;
 	
+	/** The fulfillment req id. */
 	private String fulfillmentReqId;
+	
+	/** The fulfilment order id. */
 	private String fulfilmentOrderId;
+	
+	/** The status id. */
 	private String statusId;
+	
+	/** The pending do list. */
 	private List<FlFulfilmentOrder> pendingDoList;
+	
+	/** The delivery address list. */
 	private List<FlDeliveryAddress>deliveryAddressList;
+	
+	/** The doc process. */
 	private String docProcess;
+	
+	/** The button val. */
 	private String buttonVal;
+	
+	/** The selected lov del addr. */
 	private String selectedLovDelAddr;
+	
+	/** The supplier address. */
 	private String supplierAddress;
 	
+	/** The doc type. */
 	private String docType;
+	
+	/** The status desc. */
 	private String statusDesc;
 	
+	/** The selected item row. */
 	private FlFulfilmentItemAddr selectedItemRow;
+	
+	/** The selected item row list. */
 	private List <FlFulfilmentItemAddr>selectedItemRowList;
+	
+	/** The selected item amount section. */
 	private FlFulfilmentItemAddr selectedItemAmountSection;
+	
+	/** The selected item row cal list. */
 	private List <FlFulfilmentItemAddr>selectedItemRowCalList;
+	
+	/** The rejection list. */
 	private List<FlFulfilmentNoteItem> rejectionList;
 	
+	/** The item selected for cal. */
 	private String itemSelectedForCal; 
+	
+	/** The del qty cal. */
 	private int delQtyCal;
+	
+	/** The del amt cal. */
 	private int delAmtCal;
 	
+	/** The remark list. */
 	private List<FlRemark> remarkList;
+	
+	/** The attachment list. */
 	private List<FlAttachment> attachmentList;
 	
+	/** The pm user. */
 	private PmUser pmUser;
+	
+	/** The supplier do ref. */
 	private String supplierDoRef;
 	
 	//tab menu
+	/** The selected tab index. */
 	private int selectedTabIndex;
 	
+	/** The modification cancel. */
 	private boolean modificationCancel;
+	
+	/** The doc maintain remarks. */
 	private boolean docMaintainRemarks = false;
 	
+	/** The from page url. */
 	private String fromPageUrl;
 	
 	//gpki signing
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The auto update. */
 	private boolean autoUpdate = true;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
+	
+	/** The button action. */
 	private String buttonAction;
 	
 	//uom
+	/** The measurement codes. */
 	private String measurementCodes;	
+	
+	/** The measurement names. */
 	private String measurementNames;
 	
+	/** The fl stop instr. */
 	private FlStopInstr flStopInstr;
+	
+	/** The rejected remark. */
 	private List<FlRemark> rejectedRemark;
+	
+	/** The display stop intr detls. */
 	private boolean displayStopIntrDetls;
+	
+	/** The reason desc. */
 	private String reasonDesc;
 
 	/**
+	 * Gets the item selected for cal.
+	 *
 	 * @return the itemSelectedForCal
 	 */
 	public String getItemSelectedForCal() {
@@ -116,6 +206,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the item selected for cal.
+	 *
 	 * @param itemSelectedForCal the itemSelectedForCal to set
 	 */
 	public void setItemSelectedForCal(String itemSelectedForCal) {
@@ -123,6 +215,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl remark.
+	 *
 	 * @return the flRemark
 	 */
 	public FlRemark getFlRemark() {
@@ -130,14 +224,17 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param flRemark
-	 *            the flRemark to set
+	 * Sets the fl remark.
+	 *
+	 * @param flRemark            the flRemark to set
 	 */
 	public void setFlRemark(FlRemark flRemark) {
 		this.flRemark = flRemark;
 	}
 
 	/**
+	 * Gets the fl attachment.
+	 *
 	 * @return the flAttachment
 	 */
 	public FlAttachment getFlAttachment() {
@@ -145,8 +242,9 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param flAttachment
-	 *            the flAttachment to set
+	 * Sets the fl attachment.
+	 *
+	 * @param flAttachment            the flAttachment to set
 	 */
 	public void setFlAttachment(FlAttachment flAttachment) {
 		this.flAttachment = flAttachment;
@@ -155,6 +253,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	//public CreateDOManagedBean() {}
 
 	/**
+	 * Gets the selected addr row.
+	 *
 	 * @return the selectedAddrRow
 	 */
 	public FlDeliveryAddress getSelectedAddrRow() {
@@ -162,6 +262,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected addr row.
+	 *
 	 * @param selectedAddrRow the selectedAddrRow to set
 	 */
 	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
@@ -169,6 +271,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected pm del addr list.
+	 *
 	 * @return the selectedPmDelAddrList
 	 */
 	public List<PmOrgAddress> getSelectedPmDelAddrList() {
@@ -176,6 +280,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected pm del addr list.
+	 *
 	 * @param selectedPmDelAddrList the selectedPmDelAddrList to set
 	 */
 	public void setSelectedPmDelAddrList(List<PmOrgAddress> selectedPmDelAddrList) {
@@ -183,6 +289,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the del addr list.
+	 *
 	 * @return the delAddrList
 	 */
 	public List<PmOrgAddress> getDelAddrList() {
@@ -190,6 +298,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the del addr list.
+	 *
 	 * @param delAddrList the delAddrList to set
 	 */
 	public void setDelAddrList(List<PmOrgAddress> delAddrList) {
@@ -197,6 +307,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fulfillment req id.
+	 *
 	 * @return the fulfillmentReqId
 	 */
 	public String getFulfillmentReqId() {
@@ -204,6 +316,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfillment req id.
+	 *
 	 * @param fulfillmentReqId the fulfillmentReqId to set
 	 */
 	public void setFulfillmentReqId(String fulfillmentReqId) {
@@ -211,6 +325,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is check ptj flg.
+	 *
 	 * @return the maksudCodeList
 	 *//*
 	public List<PmMaksud> getMaksudCodeList() {
@@ -232,6 +348,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the check ptj flg.
+	 *
 	 * @param checkPtjFlg the checkPtjFlg to set
 	 */
 	public void setCheckPtjFlg(boolean checkPtjFlg) {
@@ -239,6 +357,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl delivery order.
+	 *
 	 * @return the flDeliveryOrder
 	 */
 	public FlDeliveryOrder getFlDeliveryOrder() {
@@ -246,6 +366,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl delivery order.
+	 *
 	 * @param flDeliveryOrder the flDeliveryOrder to set
 	 */
 	public void setFlDeliveryOrder(FlDeliveryOrder flDeliveryOrder) {
@@ -253,6 +375,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fulfilment order id.
+	 *
 	 * @return the fulfilmentOrderId
 	 */
 	public String getFulfilmentOrderId() {
@@ -260,6 +384,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfilment order id.
+	 *
 	 * @param fulfilmentOrderId the fulfilmentOrderId to set
 	 */
 	public void setFulfilmentOrderId(String fulfilmentOrderId) {
@@ -267,6 +393,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the status id.
+	 *
 	 * @return the statusId
 	 */
 	public String getStatusId() {
@@ -274,6 +402,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the status id.
+	 *
 	 * @param statusId the statusId to set
 	 */
 	public void setStatusId(String statusId) {
@@ -281,6 +411,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pending do list.
+	 *
 	 * @return the pendingDoList
 	 */
 	public List<FlFulfilmentOrder> getPendingDoList() {
@@ -288,6 +420,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the delivery address list.
+	 *
 	 * @return the deliveryAddressList
 	 */
 	public List<FlDeliveryAddress> getDeliveryAddressList() {
@@ -295,6 +429,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the delivery address list.
+	 *
 	 * @param deliveryAddressList the deliveryAddressList to set
 	 */
 	public void setDeliveryAddressList(List<FlDeliveryAddress> deliveryAddressList) {
@@ -302,6 +438,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pending do list.
+	 *
 	 * @param pendingDoList the pendingDoList to set
 	 */
 	public void setPendingDoList(List<FlFulfilmentOrder> pendingDoList) {
@@ -309,6 +447,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the delivery address.
+	 *
 	 * @return the deliveryAddress
 	 */
 	public FlDeliveryAddress getDeliveryAddress() {
@@ -316,6 +456,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the delivery address.
+	 *
 	 * @param deliveryAddress the deliveryAddress to set
 	 */
 	public void setDeliveryAddress(FlDeliveryAddress deliveryAddress) {
@@ -323,6 +465,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fulfilment order.
+	 *
 	 * @return the fulfilmentOrder
 	 */
 	public FlFulfilmentOrder getFulfilmentOrder() {
@@ -330,6 +474,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfilment order.
+	 *
 	 * @param fulfilmentOrder the fulfilmentOrder to set
 	 */
 	public void setFulfilmentOrder(FlFulfilmentOrder fulfilmentOrder) {
@@ -337,6 +483,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fulfilment request.
+	 *
 	 * @return the fulfilmentRequest
 	 */
 	public FlFulfilmentRequest getFulfilmentRequest() {
@@ -344,6 +492,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfilment request.
+	 *
 	 * @param fulfilmentRequest the fulfilmentRequest to set
 	 */
 	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
@@ -351,6 +501,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the doc process.
+	 *
 	 * @return the docProcess
 	 */
 	public String getDocProcess() {
@@ -358,6 +510,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the doc process.
+	 *
 	 * @param docProcess the docProcess to set
 	 */
 	public void setDocProcess(String docProcess) {
@@ -365,6 +519,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the button val.
+	 *
 	 * @return the buttonVal
 	 */
 	public String getButtonVal() {
@@ -372,6 +528,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the button val.
+	 *
 	 * @param buttonVal the buttonVal to set
 	 */
 	public void setButtonVal(String buttonVal) {
@@ -379,6 +537,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected lov del addr.
+	 *
 	 * @return the selectedLovDelAddr
 	 */
 	public String getSelectedLovDelAddr() {
@@ -386,6 +546,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected lov del addr.
+	 *
 	 * @param selectedLovDelAddr the selectedLovDelAddr to set
 	 */
 	public void setSelectedLovDelAddr(String selectedLovDelAddr) {
@@ -393,6 +555,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the doc type.
+	 *
 	 * @return the docType
 	 */
 	public String getDocType() {
@@ -400,6 +564,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the doc type.
+	 *
 	 * @param docType the docType to set
 	 */
 	public void setDocType(String docType) {
@@ -407,6 +573,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected del addr.
+	 *
 	 * @return the selectedDelAddr
 	 */
 	public FlDeliveryAddress getSelectedDelAddr() {
@@ -414,6 +582,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected del addr.
+	 *
 	 * @param selectedDelAddr the selectedDelAddr to set
 	 */
 	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
@@ -421,6 +591,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the del order item.
+	 *
 	 * @return the delOrderItem
 	 */
 	public FlDelOrderItem getDelOrderItem() {
@@ -428,6 +600,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the del order item.
+	 *
 	 * @param delOrderItem the delOrderItem to set
 	 */
 	public void setDelOrderItem(FlDelOrderItem delOrderItem) {
@@ -435,6 +609,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the status desc.
+	 *
 	 * @return the statusDesc
 	 */
 	public String getStatusDesc() {
@@ -442,6 +618,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the status desc.
+	 *
 	 * @param statusDesc the statusDesc to set
 	 */
 	public void setStatusDesc(String statusDesc) {
@@ -449,6 +627,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the supplier address.
+	 *
 	 * @return the supplierAddress
 	 */
 	public String getSupplierAddress() {
@@ -456,6 +636,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the supplier address.
+	 *
 	 * @param supplierAddress the supplierAddress to set
 	 */
 	public void setSupplierAddress(String supplierAddress) {
@@ -463,6 +645,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected item row.
+	 *
 	 * @return the selectedItemRow
 	 */
 	public FlFulfilmentItemAddr getSelectedItemRow() {
@@ -470,6 +654,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected item row.
+	 *
 	 * @param selectedItemRow the selectedItemRow to set
 	 */
 	public void setSelectedItemRow(FlFulfilmentItemAddr selectedItemRow) {
@@ -477,6 +663,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected item amount section.
+	 *
 	 * @return the selectedItemAmountSection
 	 */
 	public FlFulfilmentItemAddr getSelectedItemAmountSection() {
@@ -484,6 +672,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected item amount section.
+	 *
 	 * @param selectedItemAmountSection the selectedItemAmountSection to set
 	 */
 	public void setSelectedItemAmountSection(
@@ -492,6 +682,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected item row list.
+	 *
 	 * @return the selectedItemRowList
 	 */
 	public List<FlFulfilmentItemAddr> getSelectedItemRowList() {
@@ -499,6 +691,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected item row list.
+	 *
 	 * @param selectedItemRowList the selectedItemRowList to set
 	 */
 	public void setSelectedItemRowList(
@@ -507,6 +701,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected item row cal list.
+	 *
 	 * @return the selectedItemRowCalList
 	 */
 	public List<FlFulfilmentItemAddr> getSelectedItemRowCalList() {
@@ -514,6 +710,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected item row cal list.
+	 *
 	 * @param selectedItemRowCalList the selectedItemRowCalList to set
 	 */
 	public void setSelectedItemRowCalList(
@@ -522,6 +720,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the del qty cal.
+	 *
 	 * @return the delQtyCal
 	 */
 	public int getDelQtyCal() {
@@ -529,6 +729,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the del qty cal.
+	 *
 	 * @param delQtyCal the delQtyCal to set
 	 */
 	public void setDelQtyCal(int delQtyCal) {
@@ -536,6 +738,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the del amt cal.
+	 *
 	 * @return the delAmtCal
 	 */
 	public int getDelAmtCal() {
@@ -543,6 +747,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the del amt cal.
+	 *
 	 * @param delAmtCal the delAmtCal to set
 	 */
 	public void setDelAmtCal(int delAmtCal) {
@@ -550,6 +756,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the remark list.
+	 *
 	 * @return the remarkList
 	 */
 	public List<FlRemark> getRemarkList() {
@@ -557,6 +765,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the remark list.
+	 *
 	 * @param remarkList the remarkList to set
 	 */
 	public void setRemarkList(List<FlRemark> remarkList) {
@@ -564,6 +774,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the attachment list.
+	 *
 	 * @return the attachmentList
 	 */
 	public List<FlAttachment> getAttachmentList() {
@@ -571,6 +783,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the attachment list.
+	 *
 	 * @param attachmentList the attachmentList to set
 	 */
 	public void setAttachmentList(List<FlAttachment> attachmentList) {
@@ -578,6 +792,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm user.
+	 *
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
@@ -585,6 +801,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm user.
+	 *
 	 * @param pmUser the pmUser to set
 	 */
 	public void setPmUser(PmUser pmUser) {
@@ -592,6 +810,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected tab index.
+	 *
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
@@ -599,6 +819,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected tab index.
+	 *
 	 * @param selectedTabIndex the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
@@ -606,6 +828,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the supplier do ref.
+	 *
 	 * @return the supplierDoRef
 	 */
 	public String getSupplierDoRef() {
@@ -613,12 +837,19 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the supplier do ref.
+	 *
 	 * @param supplierDoRef the supplierDoRef to set
 	 */
 	public void setSupplierDoRef(String supplierDoRef) {
 		this.supplierDoRef = supplierDoRef;
 	}
 
+	/**
+	 * Gets the rejection list.
+	 *
+	 * @return the rejection list
+	 */
 	public List<FlFulfilmentNoteItem> getRejectionList() {
 		if(rejectionList==null) {
 			rejectionList = new ArrayList<FlFulfilmentNoteItem>();
@@ -626,11 +857,18 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		return rejectionList;
 	}
 
+	/**
+	 * Sets the rejection list.
+	 *
+	 * @param rejectionList the new rejection list
+	 */
 	public void setRejectionList(List<FlFulfilmentNoteItem> rejectionList) {
 		this.rejectionList = rejectionList;
 	}
 
 	/**
+	 * Checks if is modification cancel.
+	 *
 	 * @return the modificationCancel
 	 */
 	public boolean isModificationCancel() {
@@ -638,6 +876,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the modification cancel.
+	 *
 	 * @param modificationCancel the modificationCancel to set
 	 */
 	public void setModificationCancel(boolean modificationCancel) {
@@ -645,6 +885,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is doc maintain remarks.
+	 *
 	 * @return the docMaintainRemarks
 	 */
 	public boolean isDocMaintainRemarks() {
@@ -652,69 +894,143 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the doc maintain remarks.
+	 *
 	 * @param docMaintainRemarks the docMaintainRemarks to set
 	 */
 	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
 		this.docMaintainRemarks = docMaintainRemarks;
 	}
 
+	/**
+	 * Gets the from page url.
+	 *
+	 * @return the from page url
+	 */
 	public String getFromPageUrl() {
 		return fromPageUrl;
 	}
 
+	/**
+	 * Sets the from page url.
+	 *
+	 * @param fromPageUrl the new from page url
+	 */
 	public void setFromPageUrl(String fromPageUrl) {
 		this.fromPageUrl = fromPageUrl;
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Checks if is auto update.
+	 *
+	 * @return true, if is auto update
+	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
 
+	/**
+	 * Sets the auto update.
+	 *
+	 * @param autoUpdate the new auto update
+	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 *
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
 
+	/**
+	 * Gets the button action.
+	 *
+	 * @return the button action
+	 */
 	public String getButtonAction() {
 		return buttonAction;
 	}
 
+	/**
+	 * Sets the button action.
+	 *
+	 * @param buttonAction the new button action
+	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
 
+	/**
+	 * Gets the measurement codes.
+	 *
+	 * @return the measurement codes
+	 */
 	public String getMeasurementCodes() {
 		return measurementCodes;
 	}
 
+	/**
+	 * Sets the measurement codes.
+	 *
+	 * @param measurementCodes the new measurement codes
+	 */
 	public void setMeasurementCodes(String measurementCodes) {
 		this.measurementCodes = measurementCodes;
 	}
 
+	/**
+	 * Gets the measurement names.
+	 *
+	 * @return the measurement names
+	 */
 	public String getMeasurementNames() {
 		return measurementNames;
 	}
 
+	/**
+	 * Sets the measurement names.
+	 *
+	 * @param measurementNames the new measurement names
+	 */
 	public void setMeasurementNames(String measurementNames) {
 		this.measurementNames = measurementNames;
 	}
 
 	/**
+	 * Gets the fl stop instr.
+	 *
 	 * @return the flStopInstr
 	 */
 	public FlStopInstr getFlStopInstr() {
@@ -722,6 +1038,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl stop instr.
+	 *
 	 * @param flStopInstr the flStopInstr to set
 	 */
 	public void setFlStopInstr(FlStopInstr flStopInstr) {
@@ -729,6 +1047,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rejected remark.
+	 *
 	 * @return the rejectedRemark
 	 */
 	public List<FlRemark> getRejectedRemark() {
@@ -736,6 +1056,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rejected remark.
+	 *
 	 * @param rejectedRemark the rejectedRemark to set
 	 */
 	public void setRejectedRemark(List<FlRemark> rejectedRemark) {
@@ -743,6 +1065,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is display stop intr detls.
+	 *
 	 * @return the displayStopIntrDetls
 	 */
 	public boolean isDisplayStopIntrDetls() {
@@ -750,6 +1074,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the display stop intr detls.
+	 *
 	 * @param displayStopIntrDetls the displayStopIntrDetls to set
 	 */
 	public void setDisplayStopIntrDetls(boolean displayStopIntrDetls) {
@@ -757,6 +1083,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the reason desc.
+	 *
 	 * @return the reasonDesc
 	 */
 	public String getReasonDesc() {
@@ -764,6 +1092,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the reason desc.
+	 *
 	 * @param reasonDesc the reasonDesc to set
 	 */
 	public void setReasonDesc(String reasonDesc) {
