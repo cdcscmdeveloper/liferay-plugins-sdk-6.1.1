@@ -83,7 +83,7 @@
 					<p:ajax event="rowSelectCheckbox" update="@this" />
 					<p:column selectionMode="multiple" style="width:2%"
 						disabledSelection="#{!receivAddrType.brandNew}" />
-					<p:column
+					<p:column style="white-space: normal!important;"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}"> 
 				    	#{profileManagementBackingBean.getFullAddress(receivAddrType.pmAddress)}
 			        </p:column>

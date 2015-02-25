@@ -117,6 +117,8 @@
 										validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
 										<f:validateRegex pattern="[0-9]+" />
 										<f:validateLength minimum="12" />
+										<p:ajax event="change" listener="#{profileManagementBackingBean.checkIdentificationNumber()}" partialSubmit="true" process="@this" 
+			     		                       update="itIdentityNo"/>
 									</p:inputText>
 								</c:when>
 
@@ -127,6 +129,8 @@
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
 										size="30" maxlength="12">
+										<p:ajax event="change" listener="#{profileManagementBackingBean.checkIdentificationNumber()}" partialSubmit="true" process="@this" 
+			     		                       update="itIdentityNo"/>
 									</p:inputText>
 								</c:otherwise>
 							</c:choose> <p:message id="itIdentityNoMsg" for="itIdentityNo"
