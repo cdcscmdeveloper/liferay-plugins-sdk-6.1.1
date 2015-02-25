@@ -1,5 +1,12 @@
-/**
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
+ ****************************************************
  */
 package my.ep.web.managedbean.sc.evaluation;
 
@@ -22,51 +29,116 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * @author ACER
+ * The Class EvaluationMeetingManagedBean.
  * 
+ * @author Garikapati Mangaiah.
  */
 @ManagedBean(name = "evaluationMeetingMB")
 @SessionScoped
 public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+
+	/** The sc qt meetings. */
 	private List<ScQtMeeting> scQtMeetings;
+
+	/** The meeting multi select. */
 	private List<ScQtMeeting> meetingMultiSelect;
+
+	/** The committe member. */
 	private ScCommitteeMember committeMember;
+
+	/** The selections. */
 	private List<SelectItem> selections;
+
+	/** The tab title. */
 	private String tabTitle;
+
+	/** The name. */
 	private String name = null;
+
+	/** The identification no. */
 	private String identificationNo = null;
+
+	/** The identification type. */
 	private String identificationType;
+
+	/** The external users. */
 	private List<PmUser> externalUsers;
+
+	/** The selected pm user. */
 	private List<PmUser> selectedPmUser;
+
+	/** The role types. */
 	private SelectItem[] roleTypes; // Role type drop down
+
+	/** The role name. */
 	private String roleName;
+
+	/** The committee members list. */
 	private List<ScCommitteeMember> committeeMembersList;
+
+	/** The committee meeting select list. */
 	private List<ScCommitteeMember> committeeMeetingSelectList;
+
+	/** The clone qtn tender search bean. */
 	private QtnTenderSearchBean cloneQtnTenderSearchBean;
+
+	/** The clone tender list. */
 	private List<ScQt> cloneTenderList;
+
+	/** The selected clone tender. */
 	private List<ScQt> selectedCloneTender;
+
+	/** The clone committe memebers. */
 	private List<ScCommitteeMember> cloneCommitteMemebers;
+
+	/** The clone committe memebers select. */
 	private List<ScCommitteeMember> cloneCommitteMemebersSelect;
+
+	/** The committee member activity. */
 	private List<ScQtCommitteeActivity> committeeMemberActivity;
+
+	/** The committee activity select. */
 	private List<ScQtCommitteeActivity> committeeActivitySelect;
+
+	/** The sc qt committee. */
 	private ScQtCommittee scQtCommittee;
+
+	/** The qt committee remarks. */
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
+
+	/** The sc committee member list. */
 	private List<ScCommitteeMember> scCommitteeMemberList;
+
+	/** The qt. */
 	private ScQt qt;
+
+	/** The pay load. */
 	private Object payLoad;
+
+	/** The committee type. */
 	private String committeeType;
+
+	/** The committee type desc. */
 	private String committeeTypeDesc;
+
+	/** The meeting remove list. */
 	private List<ScQtMeeting> meetingRemoveList;
+
+	/** The remove committee list. */
 	private List<ScQtCommitteeActivity> removeCommitteeList;
+
+	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-	private Date today=new Date();
+
+	/** The today. */
+	private Date today = new Date();
 
 	/**
+	 * Gets the today.
+	 * 
 	 * @return the today
 	 */
 	public Date getToday() {
@@ -74,89 +146,133 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param today the today to set
+	 * Sets the today.
+	 * 
+	 * @param today
+	 *            the new today
 	 */
 	public void setToday(Date today) {
 		this.today = today;
 	}
 
 	/**
-	 * @return the templateSpecBean
+	 * Gets the template spec bean.
+	 * 
+	 * @return the template spec bean
 	 */
 	public TemplateSpecBean getTemplateSpecBean() {
 		return templateSpecBean;
 	}
 
 	/**
-	 * @param templateSpecBean the templateSpecBean to set
+	 * Sets the template spec bean.
+	 * 
+	 * @param templateSpecBean
+	 *            the new template spec bean
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
 	}
 
+	/**
+	 * Gets the removes the committee list.
+	 * 
+	 * @return the removes the committee list
+	 */
 	public List<ScQtCommitteeActivity> getRemoveCommitteeList() {
 		return removeCommitteeList;
 	}
 
+	/**
+	 * Sets the removes the committee list.
+	 * 
+	 * @param removeCommitteeList
+	 *            the new removes the committee list
+	 */
 	public void setRemoveCommitteeList(
 			List<ScQtCommitteeActivity> removeCommitteeList) {
 		this.removeCommitteeList = removeCommitteeList;
 	}
 
+	/**
+	 * Gets the meeting remove list.
+	 * 
+	 * @return the meeting remove list
+	 */
 	public List<ScQtMeeting> getMeetingRemoveList() {
 		return meetingRemoveList;
 	}
 
+	/**
+	 * Sets the meeting remove list.
+	 * 
+	 * @param meetingRemoveList
+	 *            the new meeting remove list
+	 */
 	public void setMeetingRemoveList(List<ScQtMeeting> meetingRemoveList) {
 		this.meetingRemoveList = meetingRemoveList;
 	}
 
 	/**
-	 * @return the scQtMeetings
+	 * Gets the sc qt meetings.
+	 * 
+	 * @return the sc qt meetings
 	 */
 	public List<ScQtMeeting> getScQtMeetings() {
 		return scQtMeetings;
 	}
 
 	/**
+	 * Sets the sc qt meetings.
+	 * 
 	 * @param scQtMeetings
-	 *            the scQtMeetings to set
+	 *            the new sc qt meetings
 	 */
 	public void setScQtMeetings(List<ScQtMeeting> scQtMeetings) {
 		this.scQtMeetings = scQtMeetings;
 	}
 
 	/**
-	 * @return the meetingMultiSelect
+	 * Gets the meeting multi select.
+	 * 
+	 * @return the meeting multi select
 	 */
 	public List<ScQtMeeting> getMeetingMultiSelect() {
 		return meetingMultiSelect;
 	}
 
 	/**
+	 * Sets the meeting multi select.
+	 * 
 	 * @param meetingMultiSelect
-	 *            the meetingMultiSelect to set
+	 *            the new meeting multi select
 	 */
 	public void setMeetingMultiSelect(List<ScQtMeeting> meetingMultiSelect) {
 		this.meetingMultiSelect = meetingMultiSelect;
 	}
 
 	/**
-	 * @return the committeMember
+	 * Gets the committe member.
+	 * 
+	 * @return the committe member
 	 */
 	public ScCommitteeMember getCommitteMember() {
 		return committeMember;
 	}
 
 	/**
+	 * Sets the committe member.
+	 * 
 	 * @param committeMember
-	 *            the committeMember to set
+	 *            the new committe member
 	 */
 	public void setCommitteMember(ScCommitteeMember committeMember) {
 		this.committeMember = committeMember;
 	}
 
 	/**
+	 * Gets the selections.
+	 * 
 	 * @return the selections
 	 */
 	public List<SelectItem> getSelections() {
@@ -164,29 +280,37 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selections.
+	 * 
 	 * @param selections
-	 *            the selections to set
+	 *            the new selections
 	 */
 	public void setSelections(List<SelectItem> selections) {
 		this.selections = selections;
 	}
 
 	/**
-	 * @return the tabTitle
+	 * Gets the tab title.
+	 * 
+	 * @return the tab title
 	 */
 	public String getTabTitle() {
 		return tabTitle;
 	}
 
 	/**
+	 * Sets the tab title.
+	 * 
 	 * @param tabTitle
-	 *            the tabTitle to set
+	 *            the new tab title
 	 */
 	public void setTabTitle(String tabTitle) {
 		this.tabTitle = tabTitle;
 	}
 
 	/**
+	 * Gets the name.
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -194,113 +318,143 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the name.
+	 * 
 	 * @param name
-	 *            the name to set
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @return the identificationNo
+	 * Gets the identification no.
+	 * 
+	 * @return the identification no
 	 */
 	public String getIdentificationNo() {
 		return identificationNo;
 	}
 
 	/**
+	 * Sets the identification no.
+	 * 
 	 * @param identificationNo
-	 *            the identificationNo to set
+	 *            the new identification no
 	 */
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
 	}
 
 	/**
-	 * @return the identificationType
+	 * Gets the identification type.
+	 * 
+	 * @return the identification type
 	 */
 	public String getIdentificationType() {
 		return identificationType;
 	}
 
 	/**
+	 * Sets the identification type.
+	 * 
 	 * @param identificationType
-	 *            the identificationType to set
+	 *            the new identification type
 	 */
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
 	}
 
 	/**
-	 * @return the externalUsers
+	 * Gets the external users.
+	 * 
+	 * @return the external users
 	 */
 	public List<PmUser> getExternalUsers() {
 		return externalUsers;
 	}
 
 	/**
+	 * Sets the external users.
+	 * 
 	 * @param externalUsers
-	 *            the externalUsers to set
+	 *            the new external users
 	 */
 	public void setExternalUsers(List<PmUser> externalUsers) {
 		this.externalUsers = externalUsers;
 	}
 
 	/**
-	 * @return the selectedPmUser
+	 * Gets the selected pm user.
+	 * 
+	 * @return the selected pm user
 	 */
 	public List<PmUser> getSelectedPmUser() {
 		return selectedPmUser;
 	}
 
 	/**
+	 * Sets the selected pm user.
+	 * 
 	 * @param selectedPmUser
-	 *            the selectedPmUser to set
+	 *            the new selected pm user
 	 */
 	public void setSelectedPmUser(List<PmUser> selectedPmUser) {
 		this.selectedPmUser = selectedPmUser;
 	}
 
 	/**
-	 * @return the roleTypes
+	 * Gets the role types.
+	 * 
+	 * @return the role types
 	 */
 	public SelectItem[] getRoleTypes() {
 		return roleTypes;
 	}
 
 	/**
+	 * Sets the role types.
+	 * 
 	 * @param roleTypes
-	 *            the roleTypes to set
+	 *            the new role types
 	 */
 	public void setRoleTypes(SelectItem[] roleTypes) {
 		this.roleTypes = roleTypes;
 	}
 
 	/**
-	 * @return the roleName
+	 * Gets the role name.
+	 * 
+	 * @return the role name
 	 */
 	public String getRoleName() {
 		return roleName;
 	}
 
 	/**
+	 * Sets the role name.
+	 * 
 	 * @param roleName
-	 *            the roleName to set
+	 *            the new role name
 	 */
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
 
 	/**
-	 * @return the committeeMembersList
+	 * Gets the committee members list.
+	 * 
+	 * @return the committee members list
 	 */
 	public List<ScCommitteeMember> getCommitteeMembersList() {
 		return committeeMembersList;
 	}
 
 	/**
+	 * Sets the committee members list.
+	 * 
 	 * @param committeeMembersList
-	 *            the committeeMembersList to set
+	 *            the new committee members list
 	 */
 	public void setCommitteeMembersList(
 			List<ScCommitteeMember> committeeMembersList) {
@@ -308,15 +462,19 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the committeeMeetingSelectList
+	 * Gets the committee meeting select list.
+	 * 
+	 * @return the committee meeting select list
 	 */
 	public List<ScCommitteeMember> getCommitteeMeetingSelectList() {
 		return committeeMeetingSelectList;
 	}
 
 	/**
+	 * Sets the committee meeting select list.
+	 * 
 	 * @param committeeMeetingSelectList
-	 *            the committeeMeetingSelectList to set
+	 *            the new committee meeting select list
 	 */
 	public void setCommitteeMeetingSelectList(
 			List<ScCommitteeMember> committeeMeetingSelectList) {
@@ -324,15 +482,19 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the cloneQtnTenderSearchBean
+	 * Gets the clone qtn tender search bean.
+	 * 
+	 * @return the clone qtn tender search bean
 	 */
 	public QtnTenderSearchBean getCloneQtnTenderSearchBean() {
 		return cloneQtnTenderSearchBean;
 	}
 
 	/**
+	 * Sets the clone qtn tender search bean.
+	 * 
 	 * @param cloneQtnTenderSearchBean
-	 *            the cloneQtnTenderSearchBean to set
+	 *            the new clone qtn tender search bean
 	 */
 	public void setCloneQtnTenderSearchBean(
 			QtnTenderSearchBean cloneQtnTenderSearchBean) {
@@ -340,45 +502,57 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the cloneTenderList
+	 * Gets the clone tender list.
+	 * 
+	 * @return the clone tender list
 	 */
 	public List<ScQt> getCloneTenderList() {
 		return cloneTenderList;
 	}
 
 	/**
+	 * Sets the clone tender list.
+	 * 
 	 * @param cloneTenderList
-	 *            the cloneTenderList to set
+	 *            the new clone tender list
 	 */
 	public void setCloneTenderList(List<ScQt> cloneTenderList) {
 		this.cloneTenderList = cloneTenderList;
 	}
 
 	/**
-	 * @return the selectedCloneTender
+	 * Gets the selected clone tender.
+	 * 
+	 * @return the selected clone tender
 	 */
 	public List<ScQt> getSelectedCloneTender() {
 		return selectedCloneTender;
 	}
 
 	/**
+	 * Sets the selected clone tender.
+	 * 
 	 * @param selectedCloneTender
-	 *            the selectedCloneTender to set
+	 *            the new selected clone tender
 	 */
 	public void setSelectedCloneTender(List<ScQt> selectedCloneTender) {
 		this.selectedCloneTender = selectedCloneTender;
 	}
 
 	/**
-	 * @return the cloneCommitteMemebers
+	 * Gets the clone committe memebers.
+	 * 
+	 * @return the clone committe memebers
 	 */
 	public List<ScCommitteeMember> getCloneCommitteMemebers() {
 		return cloneCommitteMemebers;
 	}
 
 	/**
+	 * Sets the clone committe memebers.
+	 * 
 	 * @param cloneCommitteMemebers
-	 *            the cloneCommitteMemebers to set
+	 *            the new clone committe memebers
 	 */
 	public void setCloneCommitteMemebers(
 			List<ScCommitteeMember> cloneCommitteMemebers) {
@@ -386,15 +560,19 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the cloneCommitteMemebersSelect
+	 * Gets the clone committe memebers select.
+	 * 
+	 * @return the clone committe memebers select
 	 */
 	public List<ScCommitteeMember> getCloneCommitteMemebersSelect() {
 		return cloneCommitteMemebersSelect;
 	}
 
 	/**
+	 * Sets the clone committe memebers select.
+	 * 
 	 * @param cloneCommitteMemebersSelect
-	 *            the cloneCommitteMemebersSelect to set
+	 *            the new clone committe memebers select
 	 */
 	public void setCloneCommitteMemebersSelect(
 			List<ScCommitteeMember> cloneCommitteMemebersSelect) {
@@ -402,15 +580,19 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the committeeMemberActivity
+	 * Gets the committee member activity.
+	 * 
+	 * @return the committee member activity
 	 */
 	public List<ScQtCommitteeActivity> getCommitteeMemberActivity() {
 		return committeeMemberActivity;
 	}
 
 	/**
+	 * Sets the committee member activity.
+	 * 
 	 * @param committeeMemberActivity
-	 *            the committeeMemberActivity to set
+	 *            the new committee member activity
 	 */
 	public void setCommitteeMemberActivity(
 			List<ScQtCommitteeActivity> committeeMemberActivity) {
@@ -418,15 +600,19 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the committeeActivitySelect
+	 * Gets the committee activity select.
+	 * 
+	 * @return the committee activity select
 	 */
 	public List<ScQtCommitteeActivity> getCommitteeActivitySelect() {
 		return committeeActivitySelect;
 	}
 
 	/**
+	 * Sets the committee activity select.
+	 * 
 	 * @param committeeActivitySelect
-	 *            the committeeActivitySelect to set
+	 *            the new committee activity select
 	 */
 	public void setCommitteeActivitySelect(
 			List<ScQtCommitteeActivity> committeeActivitySelect) {
@@ -434,46 +620,67 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scQtCommittee
+	 * Gets the sc qt committee.
+	 * 
+	 * @return the sc qt committee
 	 */
 	public ScQtCommittee getScQtCommittee() {
 		return scQtCommittee;
 	}
 
 	/**
+	 * Sets the sc qt committee.
+	 * 
 	 * @param scQtCommittee
-	 *            the scQtCommittee to set
+	 *            the new sc qt committee
 	 */
 	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
 		this.scQtCommittee = scQtCommittee;
 	}
 
 	/**
-	 * @return the qtCommitteeRemarks
+	 * Gets the qt committee remarks.
+	 * 
+	 * @return the qt committee remarks
 	 */
 	public List<ScQtCommitteRemarks> getQtCommitteeRemarks() {
 		return qtCommitteeRemarks;
 	}
 
 	/**
+	 * Sets the qt committee remarks.
+	 * 
 	 * @param qtCommitteeRemarks
-	 *            the qtCommitteeRemarks to set
+	 *            the new qt committee remarks
 	 */
 	public void setQtCommitteeRemarks(
 			List<ScQtCommitteRemarks> qtCommitteeRemarks) {
 		this.qtCommitteeRemarks = qtCommitteeRemarks;
 	}
 
+	/**
+	 * Sets the sc committee member list.
+	 * 
+	 * @param scCommitteeMemberList
+	 *            the new sc committee member list
+	 */
 	public void setScCommitteeMemberList(
 			List<ScCommitteeMember> scCommitteeMemberList) {
 		this.scCommitteeMemberList = scCommitteeMemberList;
 	}
 
+	/**
+	 * Gets the sc committee member list.
+	 * 
+	 * @return the sc committee member list
+	 */
 	public List<ScCommitteeMember> getScCommitteeMemberList() {
 		return scCommitteeMemberList;
 	}
 
 	/**
+	 * Gets the qt.
+	 * 
 	 * @return the qt
 	 */
 	public ScQt getQt() {
@@ -481,46 +688,67 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the qt.
+	 * 
 	 * @param qt
-	 *            the qt to set
+	 *            the new qt
 	 */
 	public void setQt(ScQt qt) {
 		this.qt = qt;
 	}
 
+	/**
+	 * Gets the pay load.
+	 * 
+	 * @return the pay load
+	 */
 	public Object getPayLoad() {
 		return payLoad;
 	}
 
+	/**
+	 * Sets the pay load.
+	 * 
+	 * @param payLoad
+	 *            the new pay load
+	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
 	}
 
 	/**
-	 * @return the committeeType
+	 * Gets the committee type.
+	 * 
+	 * @return the committee type
 	 */
 	public String getCommitteeType() {
 		return committeeType;
 	}
 
 	/**
+	 * Sets the committee type.
+	 * 
 	 * @param committeeType
-	 *            the committeeType to set
+	 *            the new committee type
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
 	}
 
 	/**
-	 * @return the committeeTypeDesc
+	 * Gets the committee type desc.
+	 * 
+	 * @return the committee type desc
 	 */
 	public String getCommitteeTypeDesc() {
 		return committeeTypeDesc;
 	}
 
 	/**
+	 * Sets the committee type desc.
+	 * 
 	 * @param committeeTypeDesc
-	 *            the committeeTypeDesc to set
+	 *            the new committee type desc
 	 */
 	public void setCommitteeTypeDesc(String committeeTypeDesc) {
 		this.committeeTypeDesc = committeeTypeDesc;
