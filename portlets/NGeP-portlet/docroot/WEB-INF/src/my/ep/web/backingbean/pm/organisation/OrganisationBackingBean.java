@@ -326,6 +326,10 @@ public class OrganisationBackingBean extends
 		OrgProfileResDTO orgResDTO = orgProfileSO
 				.retrieveOrgDetailsByOrgId(reqDTO);
 		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
+		
+		if(orgProfile.getParentOrgProfile() == null){
+			orgProfile.setParentOrgProfile(new PmOrgProfile());
+		}
 		this.getManagedBean().setOrgProfile(orgProfile);
 
 		getManagedBean().setOrgType(
