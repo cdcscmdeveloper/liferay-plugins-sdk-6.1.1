@@ -689,7 +689,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				 
 				    reqDTO.setFinancialOrgId(getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 				    resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
-				    getManagedBean().setAccBankName(resDTO.getPmFinancialAcc().getAccountNo() +" " + resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
+				    getManagedBean().setAccBankName(resDTO.getPmFinancialAcc().getAccountNo() +" / " + resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
 				 	getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
 		    }
 		  }catch(Exception ex){
@@ -756,7 +756,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	    fileOuputStream.close();    	
 	    
 	    if(getManagedBean().getIndex() == 1) {
-	         getManagedBean().getFactoring().setFactoringPayFilePath(item.getFileName());
+	         getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
 	         getManagedBean().getFactoring().setFactoringPayFilePath(filePath);
 	  
 	    } else if(getManagedBean().getIndex() == 2) {
