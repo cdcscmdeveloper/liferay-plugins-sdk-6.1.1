@@ -55,7 +55,7 @@
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
 					rendered="#{complianceFinancial.definationType.parameterCode eq 'UP'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.technicalComplianceAction(complianceFinancial,index,'F')}" />
+					action="#{evaluationBackingBean.complianceUploadCheckList(complianceFinancial,index,'F')}" />
 
 
 			</p:column>
