@@ -36,8 +36,12 @@
 			<p:ajax event="rowSelectCheckbox" update="@this" />
 			<p:column selectionMode="multiple" disabledSelection="#{!certSignatory.brandNew}" style="width:2%" />
 			
-			<p:column headerText="#{lbl['lbl.pm.as.name']}">
-				#{certSignatory.pmUser.userName}
+			<p:column headerText="#{lbl['lbl.pm.as.name']}">				
+				<p:inputText id="asName" value="#{certSignatory.sinnatoryName}"
+					 label="#{lbl['lbl.pm.as.name']}" required="true"
+					size="15" styleClass="ppDisplayTextM" maxlength="50" 
+					disabled="#{!certSignatory.brandNew}"/>
+					<p:message for="asName" id="asNameMsg" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.effdate']}">
@@ -73,13 +77,11 @@
 				<table style="float:right;">
 					<tr>
 						<td>
-							<ac:lov id="lovSignatory" buttonIcon="ui-icon-add" uiMode="button"
+							<p:commandButton id="lovSignatory"  value="#{lbl['lbl.btn.add']}" 
 								disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
-					 			lovId="PM_USER" headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
-								selectionMode="single" 
-								postUpdateListener="authorizedsignatoryBackingBean.addAuthorizer(authorizedsignatoryBackingBean.managedBean.signatoryUser)"
-								saveObject="authorizedsignatoryBackingBean.managedBean.signatoryUser"
-								update="@form" />
+					 			 headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
+								action="#{authorizedsignatoryBackingBean.addAuthorizer}"
+								update="searchSignatoryResults" />
 						</td>
 						<td>
 							<p:commandButton id="delSignatory"
