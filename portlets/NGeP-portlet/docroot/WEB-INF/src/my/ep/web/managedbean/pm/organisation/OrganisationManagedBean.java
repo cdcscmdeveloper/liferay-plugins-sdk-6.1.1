@@ -80,6 +80,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 	private PmUser user;	
 	private boolean showParentMsg;
+	private boolean emptyMinistry;
 
 	public OrganisationManagedBean() {
 
@@ -665,6 +666,14 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setFinancialBanks(List<PmFinancialOrg> financialBanks) {
 		this.financialBanks = financialBanks;
+	}
+
+	public boolean isEmptyMinistry() {
+		return emptyMinistry;
+	}
+
+	public void setEmptyMinistry(boolean emptyMinistry) {
+		this.emptyMinistry = emptyMinistry;
 	}
 
 	

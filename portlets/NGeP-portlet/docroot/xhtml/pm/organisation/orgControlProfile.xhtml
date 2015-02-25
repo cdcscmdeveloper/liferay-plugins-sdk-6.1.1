@@ -20,17 +20,18 @@
 				value="#{organisationBackingBean.managedBean.orgProfile.pmAgOffice.officeName}"
 				styleClass="ppDisplayTextL" disabled="true" />
 			<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
-			<p:selectOneMenu disabled="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgProfileId ne null}"
+			<p:selectOneMenu disabled="#{!organisationBackingBean.managedBean.emptyMinistry}"
+				label="#{lbl['lbl.pm.org.ministryName']}" 
 				value="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgProfileId}"
 				styleClass="ppDropDownWidthL" style="margin-bottom: 5px;"
-				required="true">
+				required="true" id="ministryNameSelect">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 					itemValue="#{null}" />
 				<f:selectItems var="orgProfileLs"
 					value="#{organisationBackingBean.managedBean.orgProfileList}"
 					itemLabel="#{orgProfileLs.pmOrgValidity.orgName}"
 					itemValue="#{orgProfileLs.orgProfileId}" />
-
+				<p:ajax event="change" partialSubmit="true" process="@this" /> 
 			</p:selectOneMenu>
 
 
