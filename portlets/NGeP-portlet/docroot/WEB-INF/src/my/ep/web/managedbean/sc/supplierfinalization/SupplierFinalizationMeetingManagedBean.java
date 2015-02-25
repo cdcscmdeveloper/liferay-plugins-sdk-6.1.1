@@ -256,9 +256,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	public void setSelectedCloneTender(List<ScQt> selectedCloneTender) {
 		this.selectedCloneTender = selectedCloneTender;
 	}
-	/**
-	 * @return the committeeMemberActivity
-	 */
+
 	/**
 	 * @return the scQtCommittee
 	 */
