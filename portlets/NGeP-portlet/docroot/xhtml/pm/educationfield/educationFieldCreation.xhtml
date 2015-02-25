@@ -16,10 +16,12 @@
 	  <tr>	  	
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText style="text-transform:uppercase" value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" 
-			 disabled="#{!educationBackingBean.managedBean.pmEduField.brandNew}" size="30" maxlength="10" />
+		<td><p:inputText id="eduCode" style="text-transform:uppercase" value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" 
+			 disabled="#{!educationBackingBean.managedBean.pmEduField.brandNew}" size="30" maxlength="10" >
+			 <f:validateLength minimum="3" />
+			 </p:inputText>
 		</td>
-	  </tr>	
+	 </tr>	
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ef.fname']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -39,8 +41,7 @@
 	</table>
 	<p:spacer height="50"></p:spacer>	
    </p:panel>
-   
-	<p:panel header="Education Field Restriction" toggleable="true">
+   <!-- 	 <p:panel header="Education Field Restriction" toggleable="true">
 	<ac:lovPopup />
 	<p:dataTable id="educationfieldres" 
 		selection="#{educationBackingBean.managedBean.eduRestrDeleteList}" rowKey="#{eduFieldRes}"
@@ -90,5 +91,6 @@
 		 </tr>
 	  </table>
 			</div>    
-   </p:panel>   	
+   </p:panel> -->   
+   
 </ui:composition>
