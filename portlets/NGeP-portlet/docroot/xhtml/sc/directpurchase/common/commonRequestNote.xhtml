@@ -7,7 +7,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-	
 	  <p:blockUI block=":form"  widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
@@ -16,7 +15,7 @@
 			<ac:title value="#{lbl['lbl.sc.request.note']}"/>
 	  </c:if>
    <p:messages showDetail="true" autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" showSummary="false" />
-	<p:panel id="requestNoteId">
+	<p:outputPanel id="requestNoteId">
 			<ac:gpkiPopup textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
 			postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 			postCancelAction="#{requestNoteBackingBean.gpkiCancelAction}" />
@@ -50,7 +49,7 @@
 			<ui:include src="/xhtml/sc/directpurchase/common/pricingPopup.xhtml" />
 			<!-- Supplier Details PopUp -->
 				<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
-		</p:panel>
+	</p:outputPanel>
 	</ui:define>
 
 </ui:composition>
