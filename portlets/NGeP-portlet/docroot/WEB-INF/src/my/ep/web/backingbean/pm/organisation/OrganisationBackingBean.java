@@ -1441,7 +1441,7 @@ public class OrganisationBackingBean extends
 			}
 		}
 		
-		if(sb.length() > 0 ){
+		if(childIds.length() > 0 ){
 			sb.append("|orgProfileId^");
 			sb.append(childIds.toString());
 			sb.append("^10");
