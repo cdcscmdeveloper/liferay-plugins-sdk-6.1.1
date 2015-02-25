@@ -39,7 +39,8 @@ public class ReportsGenerateBean {
 	private boolean toDateView = false;
 	private long lngUserId;
 	private List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
-	private boolean madatoryIndicatorView = false;	
+	private boolean madatoryIndicatorView = false;
+	private boolean enableCriteriaMenuView = false;
 		//sc module
 		private boolean extraTwoColumnView = false;		
 		private boolean scQuotationNoView = false;
@@ -368,6 +369,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isEnableCriteriaMenuView() {
+			return enableCriteriaMenuView;
+		}
+		public void setEnableCriteriaMenuView(boolean enableCriteriaMenuView) {
+			this.enableCriteriaMenuView = enableCriteriaMenuView;
+		}
 		public boolean isFlSupplierTextView() {
 			return flSupplierTextView;
 		}
