@@ -1383,7 +1383,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * pagination for contract search list
+	 * Pagination for available contract search list
 	 */
 	private class ContractPagingDataModel extends PagingDataModel<VCtContract> {
 		private static final long serialVersionUID = 1L;
@@ -1469,22 +1469,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					reqDTO.setParameterId(getTerminationTypeId());
 					reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 					
-					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 					String parameterCode = resDTO.getPmParameter().getParameterCode();
 					
 					if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-					}
-					else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+					} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-					}
-					else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
+					} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					}
 				}
 				
-				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				if (getCtContractStatus() != null) {
 					reqDTO.setStatusId(getCtContractStatus());

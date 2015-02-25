@@ -983,8 +983,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 			if(taskName.equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
 					taskName.equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
 				scLoaWitness.setPartyType(ContractConst.WITNES_TYPE_AGENCY);
-			}
-			else if(taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+			} else if(taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 				scLoaWitness.setPartyType(ContractConst.WITNES_TYPE_SUPPLIER);
 			}
 		}

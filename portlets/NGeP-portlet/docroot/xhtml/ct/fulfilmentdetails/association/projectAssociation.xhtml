@@ -90,7 +90,7 @@
 		    </p:column>
 		    
 		    <p:column style="width:10%;" headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
-		         <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" process="@this" styleClass="column-align-center">
+		         <p:commandLink action="#{associationBackingBean.goToUpdateAssociatePage}" process="@this" styleClass="column-align-center">
 			         <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
 			         <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 		        </p:commandLink> 
@@ -104,7 +104,7 @@
 		<p:spacer height="10"/>
 		    <div class="ppRightBtn">
 		         <p:commandButton value="#{lbl['lbl.btn.create']}" process="@this"  
-		              action="#{associationBackingBean.gotoAssociatePage}"/>
+		              action="#{associationBackingBean.goToAssociatePage}"/>
 	             <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
 	                  partialSubmit="true" onsuccess="dlgAssociateDel.show()" />
 	         </div>
