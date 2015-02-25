@@ -5,30 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="prInqPanel">
-		<table style="width: 100%" class="header-info">
-			<tr>
-				<td style="width: 13%">
-					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{purchaseInquiryBackingBean.managedBean.scPrInquiry.prInquiryNo}
-				</td>
-				<td style="width: 13%">
-					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.header.ptj.name']}" />
-				</td>
-				<td style="width: 30%" class="header-info-text">
-				#{purchaseInquiryBackingBean.managedBean.pmOrgProfile.orgName}
-				</td>
-				<td style="width: 13%">
-					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />
-				</td>
-				<td style="width: 21%" class="header-info-text">
-				#{purchaseInquiryBackingBean.getStatusDescById(purchaseInquiryBackingBean.managedBean.priStatus.statusId)}
-				</td>
-			</tr>
-		</table>
-	<p:spacer height="5px"></p:spacer>
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}" toggleable="true" id="addToCartId">
 		<table>
 			<tr>
@@ -112,7 +88,7 @@
 								<h:commandLink immediate="true" action="#{requestNoteBackingBean.viewMarketResearch(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}"
 									rendered="#{purchaseInquiryBackingBean.managedBean.supplierFlag}">
 								     <p:graphicImage library="ep/images/design" name="evaluate.png"
-							                style="vertical-align:middle" />
+							                style="vertical-align:top" />
 									</h:commandLink></td>
 								<td style="margin-top: -3px"><p:message id="priceTypeMsg" for="priceType"
 										display="icon" /><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
@@ -225,7 +201,6 @@
 				 </td>
 			</tr>
 		</table>
-
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}" toggleable="true">
 		<table>
@@ -251,7 +226,8 @@
 				</td>
 			</tr>
 		</table>
-		<p:spacer height="15px" />
+        <br/>
+		<br/>	
 		<p:dataTable id="respDtl" var="supplierItemPrice"
 			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
@@ -293,8 +269,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-
-	<table style="width: 100%">
+	  <table style="width: 100%">
 		<tr>
 			<td class="TableFieldLeft" width="19%"></td>
 			
@@ -327,6 +302,5 @@
 			</td>
 		</tr>
 	</table>
-	</p:panel>
 	</p:panel>
 </ui:composition>

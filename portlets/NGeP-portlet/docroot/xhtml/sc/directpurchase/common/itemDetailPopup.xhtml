@@ -103,24 +103,21 @@
 				</tr>
 
 			</table>
-		
-	      <p:spacer height="15px"></p:spacer>
-	      <p:panelGrid styleClass="noBorders tr,noBorders td">
-				<p:row>
-				<p:column width="60%" style="text-align:right">
-					<p:commandButton id="okBtn" rendered="#{!requestNoteBackingBean.managedBean.viewOnly}"
-						value="#{lbl['lbl.sc.ok']}"
-						process="@this qtyId"
-						update="itemDetailsId" 
-						action="#{requestNoteBackingBean.editQuantity}"
-						partialSubmit="true"/>
+			
+		   <p:spacer height="3px"/>
+			<div class="ppRightBtn">
+				<p:commandButton id="okBtn"
+					rendered="#{!requestNoteBackingBean.managedBean.viewOnly}"
+					value="#{lbl['lbl.sc.ok']}" process="@this qtyId"
+					update="itemDetailsId"
+					action="#{requestNoteBackingBean.editQuantity}"
+					partialSubmit="true" />
 
-					<p:commandButton value="#{lbl['lbl.sc.close']}"
-						partialSubmit="true" process="@this" action="#{requestNoteBackingBean.cancelItemDetailPopup}"/>
-				</p:column>
-			</p:row>
-		 </p:panelGrid>
-    </p:panel>
+				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+					process="@this"
+					action="#{requestNoteBackingBean.cancelItemDetailPopup}" />
+			</div>
+		</p:panel>
     
     <p:defaultCommand target="okBtn"></p:defaultCommand>
 	</p:dialog>

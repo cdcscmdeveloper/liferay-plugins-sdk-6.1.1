@@ -5,50 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-		<table style="width: 100%" class="header-info">
-			<tr>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
-				</td>
-				<td style="width: 10%" class="header-info-text">
-					#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}
-				</td>
-
-				<td style="width: 10%"><h:outputLabel
-						value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" /></td>
-				<td style="width: 16%" class="header-info-text"><h:panelGroup
-						rendered="#{purchaseInDefaultBackingBean.managedBean.checkContractItem}">
-				      #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}
-				   </h:panelGroup> <h:panelGroup
-						rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
-				      #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.circularNo}
-				   </h:panelGroup></td>
-
-				<td style="width: 8%"><h:outputLabel
-						value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" /></td>
-				<td style="width: 10%" class="header-info-text">
-				 <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.checkContractItem}">
-				    #{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractType)}
-				</ui:fragment>
-					<ui:fragment rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
-				         Panel
-				</ui:fragment>
-				
-				</td>
-				
-				<td style="width: 8%">
-					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-				  #{purchaseInDefaultBackingBean.getStatusDescById(purchaseInDefaultBackingBean.managedBean.pidStatus.statusId)}
-				</td>
-			</tr>
-		</table>
-	
 	<!-- Contract Item  details -->
 	<p:panel header="#{lbl['lbl.sc.purchase.in.default.contract.detail']}" toggleable="true" 
 	 rendered="#{purchaseInDefaultBackingBean.managedBean.checkContractItem}">
-	<p:spacer height="4px" />
 	 <table>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
@@ -107,7 +66,6 @@
 			<h:outputText
 				value="#{lbl['lbl.sc.purchase.in.default.item.details']}" />
 		</f:facet>
-		<p:spacer height="5px" />
 		<p:dataTable id="respDtl" var="itemPrice"
 			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctItemPrices}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
@@ -250,7 +208,7 @@
 									   immediate="true" action="#{purchaseInDefaultBackingBean.viewMarketResearch(purchaseInDefaultBackingBean.managedBean.purchaseInDefault)}">
 								     <p:spacer width="3px"></p:spacer>
 								     <p:graphicImage library="ep/images/design" name="evaluate.png"
-							                style="vertical-align:middle" />
+							                style="vertical-align:top" />
 									</h:commandLink>
 									</td>
 								<td><p:message id="justIdMsg" for="justId" display="icon" /></td>
@@ -281,7 +239,7 @@
 	 <h:panelGroup id="rmkId">   
 		   <table style="width: 90%">
 			 <tr>
-			    <td  width="25.5%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
+			    <td  width="24.5%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			     <table>
@@ -316,7 +274,7 @@
 	 <h:panelGroup id="attachmentId">
 	   <table style="width: 90%">
 		<tr>
-			<td width="25%" style="vertical-align: center;padding-right: 0px;text-align: right;">
+			<td width="24%" style="vertical-align: center;padding-right: 0px;text-align: right;">
 			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"

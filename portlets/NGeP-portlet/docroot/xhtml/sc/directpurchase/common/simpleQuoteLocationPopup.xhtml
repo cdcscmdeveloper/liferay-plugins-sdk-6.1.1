@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog header="#{lbl['lbl.sc.sq.supp.criteria.locality.tab.name']}" widgetVar="locationPopup" modal="true" resizable="false" 
-		width="510" height="460">
+		width="470" height="410">
 		 <p:messages id="LocMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  severity="error, info"/>
 		<p:panel id="locPopupPanel">
 			<table styleClass="noBorders tr,noBorders td" >
@@ -38,9 +38,9 @@
 			</table>
 		</p:panel>
 		
-		<p:panelGrid styleClass="noBorders tr,noBorders td">
+		<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:100%">
 			<p:row>
-				<p:column width="60%" style="text-align:right">
+				<p:column  style="text-align:right">
 					<p:commandButton id="okBtn"
 						value="#{lbl['lbl.btn.ok']}"
 						process="@all"  update="@form"

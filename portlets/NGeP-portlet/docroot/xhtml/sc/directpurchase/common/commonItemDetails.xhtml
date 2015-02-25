@@ -118,8 +118,8 @@
 					
 				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;margin-right: -12px;">	
 					   <p:row>
-			             <p:column  styleClass="ppPanelGrid" style="border:none !important;width:10%;padding-left: 0px;">
-			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;">
+			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="10"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
@@ -128,7 +128,7 @@
 									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
-							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="11"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="10"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.afterSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
@@ -138,7 +138,7 @@
 			                         rendered="#{!requestNoteDtl.brandNew}">    
 								</ac:lov>
 			             </p:column>
-			                <p:column  styleClass="ppPanelGrid" style="vertical-align: top;padding-left: 4px;text-align: left; border:none !important;">
+			                <p:column  styleClass="ppPanelGrid" style="padding-right: inherit; padding-left: inherit;border:none !important;">
 			                 <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
 								    onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
@@ -265,7 +265,8 @@
 			</p:dataTable>
 		</h:panelGrid>
 		
-		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy"  rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
+		<p:panelGrid styleClass="noBorders tr,noBorders td" id="prepareBy" style="width:100%"
+		    rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
 			<p:row>
 				<p:column>
 					<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}"/>

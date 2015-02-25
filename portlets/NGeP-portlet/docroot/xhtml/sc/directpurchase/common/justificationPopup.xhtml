@@ -23,13 +23,10 @@
 						rows="2" cols="48" style="margin-bottom: 5px; width: 350px;" disabled="true" /></td>
 			</tr>
 		</table>
-	      <p:panelGrid styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="60%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.sc.close']}"  partialSubmit="true" process="@this"
-							onclick="justPopup.hide()" />
-					</p:column>
-				</p:row>
-		 </p:panelGrid>
+	    <p:spacer height="3px"/>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+				process="@this" onclick="justPopup.hide()" />
+		</div>
 	</p:dialog>
 </ui:composition>
