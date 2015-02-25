@@ -507,8 +507,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	/**
 	 * @param supplierBankAccountMap the supplierBankAccountMap to set
 	 */
-	public void setSupplierBankAccountMap(
-			Map<String, SmSupplierBank> supplierBankAccountMap) {
+	public void setSupplierBankAccountMap(Map<String, SmSupplierBank> supplierBankAccountMap) {
 		this.supplierBankAccountMap = supplierBankAccountMap;
 	}
 	
