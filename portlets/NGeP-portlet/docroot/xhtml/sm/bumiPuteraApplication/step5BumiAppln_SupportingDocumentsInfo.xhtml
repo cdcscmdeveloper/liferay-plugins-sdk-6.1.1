@@ -28,7 +28,7 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
-						<p:commandButton value="#{lbl['lbl.sm.submitAppl']}"
+						<p:commandButton value="#{lbl['lbl.sm.declare']}"
 							style="margin-bottom:5px;" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 							action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForBumi)}" />
 					</div>
