@@ -1754,8 +1754,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 								? getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() : "");
 
 					}
-
-					context.put("supplierAddress",sb.toString());
+					String supplierAddress = sb.toString();
+					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+					context.put("supplierAddress", supplierAddress);
 					context.put("supplierPhoneNo",getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() !=null 
 							? getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() : "");
 					context.put("supplierFaxNo",getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() !=null 
@@ -1765,31 +1766,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			}else if(ContractConst.DOC_DEF_KEY_FORMAT_BOND_EXECUTION.equals(docDefinitionKey)){
 				vmFile = ContractConst.DOCPATH_CT_LOA_BOND_LETTER;
 				context = new VelocityContext();
-				String contractNo = "Contract Number";
-				String supplierName = null;
-				String sourcingTitle = null;
-				String bondAmount = null;
-				String bondAmountWord = null; 
-				String expiryPeriod = null;
 				int type = 1;
-//				ScLoa scLoa = getManagedBean().getCtContract().getLoa();
-//				if(scLoa != null){
-//					type = 1;
-//					supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
-//					sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
-//					bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
-//					expiryPeriod = scLoa.getBondResDueDate() != null ? dateSDF.format(scLoa.getBondResDueDate()) : " ";
-//					bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt())) : " ";
-//					
-//				}else{
-//					type = 0;
-//					supplierName ="Supplier Name";
-//					sourcingTitle ="Sourcing Title";
-//					bondAmount ="Bond Amount";
-//					expiryPeriod = "Expiry Period";
-//					bondAmountWord = "Bond Amount Word"; 
-//				}
-				
 				context.put("type", type);
 				context.put("contractNo", "...........................");
 				context.put("supplierName", "...........................");
@@ -1874,12 +1851,27 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context.put("issueDate", issueDate);
 
 				context.put("supplierName", scLoiLoa.getSupplierName());
-				String supplierAddress = "";
-				if (getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() != null) {
-					supplierAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-					supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+				StringBuilder sb = new StringBuilder();
+				if(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress() !=null){
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress1());
+					sb.append(", <br/>");
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress2());
+					sb.append(", <br/>");
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress3());
+					sb.append(", <br/>");
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getAddress4());
+					sb.append(", <br/>");
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity() !=null ?
+							getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmCity().getCityName() : "");
+					sb.append(" ");
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPostcode());
+					sb.append(", <br/>");
+					sb.append(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState() !=null 
+							? getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().getPmState().getStateName() : "");
+
 				}
+				String supplierAddress = sb.toString();
+				supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 				context.put("supplierAddress", supplierAddress);
 				
 				context.put("contractTitle",getManagedBean().getCtContract().getContractName());
