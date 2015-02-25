@@ -87,6 +87,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -329,6 +330,9 @@ public class OrganisationBackingBean extends
 		
 		if(orgProfile.getParentOrgProfile() == null){
 			orgProfile.setParentOrgProfile(new PmOrgProfile());
+			getManagedBean().setEmptyMinistry(true);
+		}else{
+			getManagedBean().setEmptyMinistry(false);			
 		}
 		this.getManagedBean().setOrgProfile(orgProfile);
 
@@ -1452,6 +1456,29 @@ public class OrganisationBackingBean extends
 		}
 		
 		return sb.toString();
+	}
+	
+	public boolean isGroupOrg(){
+		IOrgProfileSO orgProfileSO = null;
+		boolean isGroupOrg = false;
+		try {
+			orgProfileSO = (IOrgProfileSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		   	orgProfileReqDTO.setOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());		   	
+		   	OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveProfileGroupByAuthorizedProfileId(orgProfileReqDTO);
+			if(CollectionUtils.isNotEmpty(orgProfileResDTO.getProfileGroups())){
+				isGroupOrg = true;
+			}
+		   	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			orgProfileSO = null;
+		}
+		return isGroupOrg;		
 	}
 
 }
