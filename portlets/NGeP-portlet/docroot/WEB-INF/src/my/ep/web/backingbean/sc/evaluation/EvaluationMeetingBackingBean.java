@@ -1,5 +1,12 @@
-/**
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
+ ****************************************************
  */
 package my.ep.web.backingbean.sc.evaluation;
 
@@ -40,8 +47,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -89,17 +94,25 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 /**
- * @author ACER
+ * The Class EvaluationMeetingBackingBean.
  * 
+ * @author Garikapati Mangaiah.
  */
 
 @ManagedBean(name = "evaluationMeetingBackingBean")
 @ViewScoped
 public class EvaluationMeetingBackingBean extends
 		SourcingBaseBackingBean<EvaluationMeetingManagedBean> {
+
+	/** The search quotation tender. */
 	private IPagingDataModel<ScQt> searchQuotatioTender = new clonePagingDataModel();
+
+	/** The search existing user. */
 	private IPagingDataModel<PmUser> searchExistingUser = new existingUserPagingDataModel();
 
+	/**
+	 * Instantiates a new evaluation meeting backing bean.
+	 */
 	public EvaluationMeetingBackingBean() {
 
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
@@ -112,15 +125,21 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	public void init() {
 		// retriveMeetingDetails();
 	}
 
 	/**
+	 * Gets the role type dropdown values.display committee
+	 * roles(Member/Secretary) in add committee member popup.
+	 * 
 	 * @param committeeRole
-	 * @param types
-	 * @return
+	 *            (Mandatory)
+	 * @return SelectItem[]
 	 */
 
 	public SelectItem[] getRoleTypeDropdownValues(String committeeRole) {
@@ -138,6 +157,12 @@ public class EvaluationMeetingBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Gets the procurement mode dropdown values.display procurement mode
+	 * values(Quotation/Tender) in committee member clone popup.
+	 * 
+	 * @return SelectItem[]
+	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -153,6 +178,15 @@ public class EvaluationMeetingBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Retrieve meeting details.Event handle to display all the meeting and
+	 * committee members details.
+	 * 
+	 * @param qtId
+	 *            (Mandatory)
+	 * @param commType
+	 *            (Mandatory)
+	 */
 	public void retriveMeetingDetails(Long qtId, String commType) {
 		IQTMeetingSO meetingSO;
 		IQTDetailSO qtDetailSo;
@@ -272,6 +306,9 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
+	/**
+	 * Adds the meeting action.add empty row for meeting details datatable.
+	 */
 	public void addMeetingAction() {
 
 		try {
@@ -299,6 +336,10 @@ public class EvaluationMeetingBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the committee details.Event handle to display header information for
+	 * committee details add popup.
+	 */
 	public void addCommitteeDetails() {
 		if (QTConstants.DOCTYPE_EVAL_COMMITTE.equalsIgnoreCase(this
 				.getManagedBean().getCommitteeType())) {
@@ -333,7 +374,10 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	/**
-	 * User selection types gov external new
+	 * Gets the selection types.Event handle to display the User selection
+	 * type(Existing/New) radio buttons in add popup.
+	 * 
+	 * @return the selection types
 	 */
 	public void getSelectionTypes() {
 		SelectionType[] type = SelectionType.values();
@@ -346,6 +390,13 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setSelections(selectionTypes);
 	}
 
+	/**
+	 * User selcetion action.Event handle to get the user selection
+	 * type(Existing/New) values.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 */
 	public void userSelcetionAction(AjaxBehaviorEvent event) {
 		String userSelection = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -376,20 +427,14 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setCommitteMember(committeeMember);
 	}
 
-	public void okCommitteeAction() {
+	/**
+	 * add committee action.Event handle to add Existing or New Committee member
+	 * to Committee Members List.
+	 */
+	public void addCommitteeAction() {
 		// debugLogger("okCommitteeAction");
 
 		UserReqDTO userReqDTO = new UserReqDTO();
-
-		// ScCommittee scCommittee = this.getManagedBean().getScCommittee();
-		// ScQt scQt = this.getManagedBean().getQt();
-		/*
-		 * StatusReqDTO statusReqDTO = new StatusReqDTO();
-		 * statusReqDTO.setStatusId(60730L); StatusResDTO statusResDTO =
-		 * getStatusSO().retrieveStatusByStatusId( statusReqDTO);
-		 */
-		// PmStatus status = statusResDTO.getPmStatus();
-		// scQt.setQtStatus(status);
 
 		List<ScQtCommitteeActivity> committeeActivity = getManagedBean()
 				.getCommitteeMemberActivity();
@@ -609,6 +654,13 @@ public class EvaluationMeetingBackingBean extends
 				"newspecificationcommittee.hide()");
 	}
 
+	/**
+	 * Check committee formation.Event handle to check committee members(1
+	 * Chairperosn,1 Secretary,at least 1 member) exist or not in the list
+	 * 
+	 * @param metReqDtO
+	 *            the met req dt o
+	 */
 	private void checkCommitteeFormation(MeetingReqDTO metReqDtO) {
 		IQTMeetingSO meetingso = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -617,6 +669,10 @@ public class EvaluationMeetingBackingBean extends
 		meetingso.validateCommitteDtls(metReqDtO);
 	}
 
+	/**
+	 * Save committee action.Event handle to save the meeting and committee
+	 * members information.
+	 */
 	public void saveCommitteeAction() {
 
 		try {
@@ -655,6 +711,11 @@ public class EvaluationMeetingBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the meeting to be remove list.
+	 * 
+	 * @return the meeting to be remove list
+	 */
 	private List<ScQtMeeting> getMeetingToBeRemoveList() {
 		List<ScQtMeeting> toBeRemoveList = new ArrayList<ScQtMeeting>();
 
@@ -667,6 +728,11 @@ public class EvaluationMeetingBackingBean extends
 		return toBeRemoveList;
 	}
 
+	/**
+	 * Gets the committee to be remove list.
+	 * 
+	 * @return the committee to be remove list
+	 */
 	private List<ScQtCommitteeActivity> getCommitteeToBeRemoveList() {
 		List<ScQtCommitteeActivity> toBeRemoveList = new ArrayList<ScQtCommitteeActivity>();
 
@@ -679,7 +745,12 @@ public class EvaluationMeetingBackingBean extends
 		return toBeRemoveList;
 	}
 
-	public MeetingReqDTO prepareMeetingDtls() {
+	/**
+	 * Prepare meeting dtls.prepare data for save or submit buttons
+	 * 
+	 * @return the meeting req dto
+	 */
+	private MeetingReqDTO prepareMeetingDtls() {
 		MeetingReqDTO metReqDtO = new MeetingReqDTO();
 		try {
 
@@ -710,8 +781,8 @@ public class EvaluationMeetingBackingBean extends
 
 			metReqDtO.setDeletedMeetingList(getMeetingToBeRemoveList());
 
-			 metReqDtO
-			 .setDeletedCommitteeActivityList(getCommitteeToBeRemoveList());
+			metReqDtO
+					.setDeletedCommitteeActivityList(getCommitteeToBeRemoveList());
 			qtCommittee.setMeetingAttendances(null);
 			metReqDtO.setScQtCommitte(qtCommittee);
 			metReqDtO.setCommitteType(this.getManagedBean().getCommitteeType());
@@ -722,11 +793,19 @@ public class EvaluationMeetingBackingBean extends
 		return metReqDtO;
 	}
 
+	/**
+	 * Existing committee search action.Event handle to search existing
+	 * committee members list.
+	 */
 	public void existingCommitteeSearchAction() {
 		searchExistingUser.reloadData();
 
 	}
 
+	/**
+	 * Adds the clone committee.Event handle to create search bean for clone
+	 * popup.
+	 */
 	public void addCloneCommittee() {
 		this.getManagedBean().setCloneQtnTenderSearchBean(
 				new QtnTenderSearchBean());
@@ -734,6 +813,10 @@ public class EvaluationMeetingBackingBean extends
 				new ArrayList<ScCommitteeMember>());
 	}
 
+	/**
+	 * Clone search committee action.Event handle to search clone committee
+	 * members.
+	 */
 	public void cloneSearchCommitteAction() {
 		try {
 			searchQuotatioTender.reloadData();
@@ -743,6 +826,13 @@ public class EvaluationMeetingBackingBean extends
 		}
 	}
 
+	/**
+	 * On row clone action.Event handle to select the scqt object based on scqt
+	 * and committee type to display existing committee members in clone popup.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 */
 	public void onRowCloneAction(SelectEvent event) {
 		// debugLogger("onRowCloneAction");
 		ScQt scQt = (ScQt) event.getObject();
@@ -775,6 +865,9 @@ public class EvaluationMeetingBackingBean extends
 		}
 	}
 
+	/**
+	 * Reset.Event handle to reset the values in add popup.
+	 */
 	public void reset() {
 
 		this.getManagedBean().setName(null);
@@ -782,6 +875,9 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setIdentificationNo(null);
 	}
 
+	/**
+	 * Reset clone.Event handle to reset the values in clone popup.
+	 */
 	public void resetClone() {
 		QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
 				.getCloneQtnTenderSearchBean();
@@ -793,6 +889,10 @@ public class EvaluationMeetingBackingBean extends
 		qtnTenderSearchBean.setQtStatus(null);
 	}
 
+	/**
+	 * Clone committee dtls.Event handle to add the committee member for
+	 * Committee members list.
+	 */
 	public void cloneCommitteeDtls() {
 		List<ScQtCommitteeActivity> committeeMemberList = this.getManagedBean()
 				.getCommitteeMemberActivity();
@@ -855,89 +955,71 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
-	public void deleteMeetingDetails() {
-		try {
-			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
-			List<ScQtMeeting> selectMeeting = getManagedBean()
-					.getMeetingMultiSelect();
-			List<ScQtMeeting> removeMeetingList = this.getManagedBean()
-					.getMeetingRemoveList();
-			if (null == removeMeetingList) {
-				removeMeetingList = new ArrayList<ScQtMeeting>();
-			}
-			removeMeetingList.addAll(selectMeeting);
-			if (meetingList.size() == selectMeeting.size()) {
-				meetingList.clear();
-			} else {
-				for (ScQtMeeting meeting : selectMeeting) {
-					meeting.setDeleted(true);
-					meetingList.remove(meeting);
-				}
-			}
-			this.getManagedBean().setMeetingRemoveList(removeMeetingList);
-
-		} finally {
-
-		}
-	}
-
-	public void deleteCommitteeMembers() {
-		try {
-			List<ScQtCommitteeActivity> committeeList = getManagedBean()
-					.getCommitteeMemberActivity();
-			List<ScQtCommitteeActivity> selectCommitteeList = getManagedBean()
-					.getCommitteeActivitySelect();
-			List<ScQtCommitteeActivity> removeCommitteeList = this
-					.getManagedBean().getRemoveCommitteeList();
-			if (null == removeCommitteeList) {
-				removeCommitteeList = new ArrayList<ScQtCommitteeActivity>();
-			}
-			removeCommitteeList.addAll(selectCommitteeList);
-
-			if (committeeList.size() == selectCommitteeList.size()) {
-				committeeList.clear();
-			} else {
-				for (ScQtCommitteeActivity committeeMember : selectCommitteeList) {
-					committeeMember.setDeleted(true);
-					committeeList.remove(committeeMember);
-				}
-			}
-			this.getManagedBean().setRemoveCommitteeList(removeCommitteeList);
-
-		} finally {
-
-		}
-	}
-
+	/**
+	 * Gets the user so.
+	 * 
+	 * @return the user so
+	 */
 	private IUserSO getUserSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 
+	/**
+	 * Gets the parameter so.
+	 * 
+	 * @return the parameter so
+	 */
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
+	/**
+	 * Gets the org profile so.
+	 * 
+	 * @return the org profile so
+	 */
 	private IOrgProfileSO getOrgProfileSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
 
+	/**
+	 * Gets the status so.
+	 * 
+	 * @return the status so
+	 */
 	private IStatusSO getStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
 
+	/**
+	 * The Class clonePagingDataModel.to retrieve all the existing
+	 * quotation/Tenders in clone popup.
+	 */
 	private class clonePagingDataModel extends PagingDataModel<ScQt> {
+
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new clone paging data model.
+		 */
 		public clonePagingDataModel() {
 
 			super("clonesearchCommitteid");
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
 		public ISearchResultBean<ScQt> pageChangeListener(
 				ISearchBean<ScQt> searchBean) {
 
@@ -1072,7 +1154,15 @@ public class EvaluationMeetingBackingBean extends
 		}
 	}
 
-	// Set member Role DropDown Values Set to List
+	/**
+	 * Chnage member role.Event handle to change member (Secretary/Member) in
+	 * committee members list.
+	 * 
+	 * @param index
+	 *            (Mandatory)
+	 * @param committeeActivity
+	 *            (Mandatory)
+	 */
 	public void chnageMemberRole(int index,
 			List<ScQtCommitteeActivity> committeeActivity) {
 		ScQtCommitteeActivity activity = committeeActivity.get(index);
@@ -1099,20 +1189,43 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
+	/**
+	 * Retrieve parameter desc by type.
+	 * 
+	 * @param type
+	 *            the type
+	 * @return the list
+	 */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
 
+	/**
+	 * The Class existingUserPagingDataModel.to retrieve all the existing
+	 * committee members information in add popup.
+	 */
 	private class existingUserPagingDataModel extends PagingDataModel<PmUser> {
+
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new existing user paging data model.
+		 */
 		public existingUserPagingDataModel() {
 
 			super("existingcommitteesearch");
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
 		public ISearchResultBean<PmUser> pageChangeListener(
 				ISearchBean<PmUser> searchBean) {
 
@@ -1185,37 +1298,13 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	/**
-	 * @return the searchQuotatioTender
+	 * Submit metting details.Event handle click on submit button in meeting
+	 * details.
+	 * 
+	 * @param outCome
+	 *            (Mandatory)
+	 * @return the string(ACKNOWLEDGE_PAGE)
 	 */
-	public IPagingDataModel<ScQt> getSearchQuotatioTender() {
-		return searchQuotatioTender;
-	}
-
-	/**
-	 * @param searchQuotatioTender
-	 *            the searchQuotatioTender to set
-	 */
-	public void setSearchQuotatioTender(
-			IPagingDataModel<ScQt> searchQuotatioTender) {
-		this.searchQuotatioTender = searchQuotatioTender;
-	}
-
-	/**
-	 * @return the searchExistingUser
-	 */
-	public IPagingDataModel<PmUser> getSearchExistingUser() {
-		return searchExistingUser;
-	}
-
-	/**
-	 * @param searchExistingUser
-	 *            the searchExistingUser to set
-	 */
-	public void setSearchExistingUser(
-			IPagingDataModel<PmUser> searchExistingUser) {
-		this.searchExistingUser = searchExistingUser;
-	}
-
 	public String submitMettingDetails(String outCome) {
 		try {
 
@@ -1247,6 +1336,10 @@ public class EvaluationMeetingBackingBean extends
 
 	}
 
+	/**
+	 * Prerender view.click on task list it will render meeting details screens
+	 * for(EC/OC/TEC/FEC)
+	 */
 	public void prerenderView() {
 
 		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(SCEvaluationDataType.class);
@@ -1275,6 +1368,46 @@ public class EvaluationMeetingBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sc/evaluation/xhtml/sc/evaluation/evaluationstage1view.xhtml");
 		}
+	}
+
+	/**
+	 * Gets the search quotatio tender.
+	 * 
+	 * @return the search quotatio tender
+	 */
+	public IPagingDataModel<ScQt> getSearchQuotatioTender() {
+		return searchQuotatioTender;
+	}
+
+	/**
+	 * Sets the search quotatio tender.
+	 * 
+	 * @param searchQuotatioTender
+	 *            the new search quotatio tender
+	 */
+	public void setSearchQuotatioTender(
+			IPagingDataModel<ScQt> searchQuotatioTender) {
+		this.searchQuotatioTender = searchQuotatioTender;
+	}
+
+	/**
+	 * Gets the search existing user.
+	 * 
+	 * @return the search existing user
+	 */
+	public IPagingDataModel<PmUser> getSearchExistingUser() {
+		return searchExistingUser;
+	}
+
+	/**
+	 * Sets the search existing user.
+	 * 
+	 * @param searchExistingUser
+	 *            the new search existing user
+	 */
+	public void setSearchExistingUser(
+			IPagingDataModel<PmUser> searchExistingUser) {
+		this.searchExistingUser = searchExistingUser;
 	}
 
 }
