@@ -18,8 +18,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
@@ -1938,6 +1940,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//if equipment is unchecked, set the qty to null
 		if(!svEquipment.isEquipmentAvailable()){
 			svEquipment.setEquipmentQty(null);
+			refreshPage();
 		}
 	}
 	
@@ -1964,4 +1967,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return AddressUtils.getAddress(svAddress);
 	}
 
+	protected void refreshPage() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String refreshpage = fc.getViewRoot().getViewId();
+		ViewHandler ViewH =fc.getApplication().getViewHandler();
+		UIViewRoot UIV = ViewH.createView(fc,refreshpage);
+		UIV.setViewId(refreshpage);
+		fc.setViewRoot(UIV);
+	}
 }
