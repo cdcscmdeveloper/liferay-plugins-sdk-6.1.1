@@ -25,12 +25,12 @@
 						<c:choose>
 							<c:when
 								test="#{backingBean.managedBean.smAppl.applType ne ParameterConst.newSmApplnForUpdate}">
-								<p:commandButton value="#{lbl['lbl.sm.submitAppl']}"
+								<p:commandButton value="#{lbl['lbl.sm.declare']}"
 									style="margin-bottom:5px;"
 									action="#{backingBean.submitSmApplToBpm(backingBean.managedBean.smAppl.applType)}" />
 							</c:when>
 							<c:otherwise>
-								<p:commandButton value="#{lbl['lbl.sm.submitAppl']}"
+								<p:commandButton value="#{lbl['lbl.sm.declare']}"
 									action="#{spkiBackingBean.getChallengeQuestions}"
 									update="spkiOutPanel" oncomplete="spki_dlg.show();" />
 								<p:outputPanel id="spkiOutPanel">
