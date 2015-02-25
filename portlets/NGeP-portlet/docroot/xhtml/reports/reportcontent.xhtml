@@ -17,20 +17,61 @@
 						  <tr>
 						    <td width="100%">
 						    <h:panelGrid id="rptModule" columns="4"  style="margin-bottom:5px;width:85%;">
-						    <p:outputLabel value="#{lbl['lbl.rpt.module']}" style="margin-bottom:5px;width:160px;"/>
-						    <p:selectOneMenu  value="#{reportBackingBean.moduleValue}" style="margin-bottom:5px;width:300px;" >
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-								<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
-								<p:ajax event="change" listener="#{reportBackingBean.retriveReportListBymoduleName}" process="@this"
-								 partialSubmit="true"  update="@all"/>
-							</p:selectOneMenu>
-							<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" style="margin-bottom:5px;width:160px;"/>
-							<p:selectOneMenu value="#{reportBackingBean.reportValue}" style="margin-bottom:5px;width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-								<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
-								<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}" process="@this"
-					 			partialSubmit="true" update="@all"/>
-							</p:selectOneMenu>
+						    <p:column>
+								<table style="width: 190px;">
+									<tr style="width: 100%;">
+										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.module']}" />
+												<p:outputLabel value="*" styleClass="mandatory"	/>
+												</td>
+										
+									</tr>
+								</table>
+							</p:column>
+						    <p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.module']}" id="moduleName"
+												value="#{reportBackingBean.moduleValue}" required="true"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+												<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
+												<p:ajax event="change" listener="#{reportBackingBean.retriveReportListBymoduleName}" process="@this"
+												 partialSubmit="true"  update="@all"/>
+											</p:selectOneMenu></td>
+										<td><p:message id="moduleNameMsg" for="moduleName"
+												display="icon" /></td>
+									</tr>
+								</table>
+							</p:column>
+						    
+							 <p:column>
+								<table style="width: 175px;">
+									<tr style="width: 100%;">
+										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" />
+												<p:outputLabel value="*" styleClass="mandatory"	/>
+												</td>
+										
+									</tr>
+								</table>
+							</p:column>
+							 <p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.rptName']}" id="reportName"
+												value="#{reportBackingBean.reportValue}" required="true"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+												<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
+												<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}" process="@this"
+									 			partialSubmit="true" update="@all"/>
+											</p:selectOneMenu></td>
+										<td><p:message id="reportNameMsg" for="reportName"
+												display="icon" /></td>
+									</tr>
+								</table>
+							</p:column>							
 							</h:panelGrid>
 						    </td>
 						    </tr>
