@@ -52,237 +52,496 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
+// TODO: Auto-generated Javadoc
 /**
- * Managed Bean for Create Purchase Order
- * 
+ * Managed Bean for Create Purchase Order.
+ *
  * @author Giribabu
  * @since 7/10/2013
  */
 @ManagedBean(name = "prMB")
 @SessionScoped
 public class PurchaseRequestManagedBean extends BaseManagedBean {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(PurchaseRequestManagedBean.class);
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
+	
+	/** The fl remark. */
 	private FlRemark flRemark = new FlRemark();
+	
+	/** The fl attachment. */
 	private FlAttachment flAttachment = new FlAttachment();
+	
+	/** The fulfilment request. */
 	private FlFulfilmentRequest fulfilmentRequest;
+	
+	/** The pm price type. */
 	private PmParameter pmPriceType;
 
 	//remove multiple selection from data table
+	/** The selected address rows. */
 	private List<FlDeliveryAddress> selectedAddressRows;
-	//private List<FlFulfilmentItem> selectedItemsRows;
+	
+	/** The selected address rows list. */
 	private List<FlDeliveryAddress> selectedAddressRowsList;
+	
+	/** The selected items rows. */
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
+	
+	/** The show all items rows. */
 	private List <FlFulfilmentItemAddr>  showAllItemsRows;
 	
+	/** The selected addr row. */
 	private FlDeliveryAddress selectedAddrRow;
+	
+	/** The selected del addr. */
 	private FlDeliveryAddress selectedDelAddr;
 	
+	/** The selected addr list. */
 	private List<FlDeliveryAddress> selectedAddrList;
 	
+	/** The selected pm del addr list. */
 	private List<PmAddressType> selectedPmDelAddrList;
+	
+	/** The del addr list. */
 	private List<PmOrgAddress> delAddrList;
 	
-	//private List<PmAddressType> addressTypesList; 
-	//private List<CtAgencyAddress> addressTypesList;
+	/** The address types list. */
 	private List<PmAddressType> addressTypesList;
 	
-	//private List<PmAddressType> selectedPmAddrTypeList;FFFF
+	/** The selected addr type list. */
 	private List<PmOrgAddress> selectedAddrTypeList;
+	
+	/** The request note list. */
 	private List<ScRequestNote> requestNoteList;
+	
+	/** The check ptj flg. */
 	private boolean checkPtjFlg = true;
+	
+	/** The selected request note. */
 	private ScRequestNote selectedRequestNote;
+	
+	/** The manual address list. */
 	private List<PmAddressType> manualAddressList;
+	
+	/** The request note item list. */
 	private List<FlFulfilmentItemAddr> requestNoteItemList;
 	
+	/** The fulfillment req id. */
 	private String fulfillmentReqId;
+	
+	/** The task name. */
 	private String taskName;
+	
+	/** The doc process. */
 	private String docProcess;
+	
+	/** The fl doc id. */
 	private String flDocId;
+	
+	/** The button val. */
 	private String buttonVal;
+	
+	/** The submit button status. */
 	private Boolean submitButtonStatus =true;
+	
+	/** The doc status id. */
 	private Long docStatusId;
 	
+	/** The ministry name. */
 	private String ministryName;
+	
+	/** The issued jabatan id. */
 	private Long issuedJabatanId;
+	
+	/** The received jabatan id. */
 	private Long receivedJabatanId;
+	
+	/** The issued ptj id. */
 	private Long issuedPtjId;
+	
+	/** The received ptj id. */
 	private Long receivedPtjId;
+	
+	/** The charged ptj id. */
 	private Long chargedPtjId;
+	
+	/** The current ptj group id. */
 	private Long currentPtjGroupId;
+	
+	/** The current prepared org id. */
 	private Long currentPreparedOrgId;
 	
+	/** The pm user org. */
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
+	/** The approver model. */
 	private DualListModel<String> approverModel;
+	
+	/** The approver map. */
 	private HashMap<String, PmUserGroupUser> approverMap;
+	
+	/** The sc request supplier item id map. */
 	private HashMap<Long, Long> scRequestSupplierItemIdMap;
+	
+	/** The zonal tier map. */
 	private HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap;
+	
+	/** The tier map. */
 	private HashMap<Long, List<FlFulfilmentItemAddr>> tierMap;
 	
 	//getcontract
+	/** The ct contract. */
 	private CtContract ctContract = new CtContract();
+	
+	/** The contract list. */
 	private List <CtContract> contractList;
+	
+	/** The selected row flg. */
 	private boolean selectedRowFlg;
 	
 	//getItems
+	/** The request note with dtls list. */
 	private List<ScRequestNoteDtl> requestNoteWithDtlsList;
+	
+	/** The selected purchased item list. */
 	private List<ScRequestNoteDtl> selectedPurchasedItemList;
+	
+	/** The selected item row. */
 	private FlFulfilmentItem  selectedItemRow;
+	
+	/** The zonal tier item list. */
 	private List<FlFulfilmentItemAddr> zonalTierItemList;
+	
+	/** The zonal tier item. */
 	private FlFulfilmentItemAddr zonalTierItem;
 	
+	/** The request note items. */
 	public List<ScRequestItem> requestNoteItems;
 	//ScRequestNoteDtl
 	
 	//get GOSODO
+	/** The go id. */
 	private Long goId;
+	
+	/** The so id. */
 	private Long soId;
+	
+	/** The do id. */
 	private Long doId;
+	
+	/** The sub total. */
 	private BigDecimal subTotal;
+	
+	/** The selected item addr. */
 	private FlFulfilmentItemAddr selectedItemAddr;
 	
+	/** The fl req note map. */
 	private HashMap<Long, ScRequestNoteDtl> flReqNoteMap;
+	
+	/** The manual address map. */
 	private Map<Long, List<PmAddressType>> manualAddressMap;
 	
 	// getUserGroup
+	/** The user group list. */
 	private List<PmUserGroup> userGroupList;
+	
+	/** The fulfilment requisitioner. */
 	private String fulfilmentRequisitioner;
 	
 	//getSuplier address details
+	/** The supplier address. */
 	private String supplierAddress;
+	
+	/** The pm address type. */
 	private PmAddressType pmAddressType;
+	
+	/** The pm address. */
 	private PmAddress pmAddress;
+	
+	/** The pm country. */
 	private PmCountry pmCountry ;
+	
+	/** The pm state. */
 	private PmState pmState;
+	
+	/** The pm district. */
 	private PmDistrict pmDistrict ;
+	
+	/** The pm city. */
 	private PmCity pmCity ;
+	
+	/** The fl manula address. */
 	private FlDeliveryAddress flManulaAddress;
 	
+	/** The charge check. */
 	private String chargeCheck ="false";
 	
 	// for Manual Address
+	/** The country list. */
 	private List<PmCountry> countryList;
+	
+	/** The state list. */
 	private List<PmState> stateList;
+	
+	/** The division list. */
 	private List<PmDivision> divisionList;
+	
+	/** The city list. */
 	private List<PmCity> cityList;
+	
+	/** The district list. */
 	private List<PmDistrict> districtList;
 	
 	//chargeline
+	/** The charge line item root. */
 	private TreeNode chargeLineItemRoot ;
+	
+	/** The charge line selected item address. */
 	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
-	//private  List<TreeNode> selectedNodes;
+	
+	/** The selected nodes. */
 	private TreeNode[] selectedNodes;
+	
+	/** The selected node. */
 	private TreeNode selectedNode;
+	
+	/** The selected item charge section. */
 	private FlFulfilmentItemAddr selectedItemChargeSection;
-	//private Long pmPrjSetia;
+	
+	/** The ordered amt grand total. */
 	private BigDecimal orderedAmtGrandTotal ;
 	
 	// charge Line dropdown lists
+	/** The vot fund list. */
 	private List<PmVotFund> votFundList;
+	
+	/** The gl account list. */
 	private List<PmGlAccount> glAccountList;
+	
+	/** The project list. */
 	private List<PmProject> projectList;
+	
+	/** The setia list. */
 	private List<PmSetia> setiaList;
+	
+	/** The sub setia list. */
 	private List<PmSubSetia> subSetiaList;
+	
+	/** The prg activity list. */
 	private List<PmPrgActivity> prgActivityList;
+	
+	/** The manual addr list. */
 	private List<SelectItem> manualAddrList;
+	
+	/** The supplier branches list. */
 	private List<SelectItem> supplierBranchesList;
 	
 	// set chargeline for selected items
+	/** The vot fund code. */
 	private String votFundCode;
+	
+	/** The asset ind code. */
 	private String assetIndCode;
+	
+	/** The gl account code. */
 	private String glAccountCode;
+	
+	/** The project code. */
 	private String projectCode;
+	
+	/** The setia code. */
 	private String setiaCode;
+	
+	/** The sub setia code. */
 	private String subSetiaCode;
+	
+	/** The prg activity code. */
 	private String prgActivityCode;
+	
+	/** The vot fund type. */
 	private String votFundType;
 	
+	/** The vot fund id. */
 	private Long votFundId;
+	
+	/** The asset ind id. */
 	private Long assetIndId;
+	
+	/** The gl account id. */
 	private Long glAccountId;
+	
+	/** The project id. */
 	private Long projectId;
+	
+	/** The setia id. */
 	private Long setiaId;
+	
+	/** The sub setia id. */
 	private Long subSetiaId;
+	
+	/** The prg activity id. */
 	private Long prgActivityId;
+	
+	/** The financing type code. */
 	private String financingTypeCode;
 	
 	//receving officer List
+	/** The receiving off list. */
 	private List<PmAddressType> receivingOffList;
 	
 	//get Ag Office details
+	/** The ag office id. */
 	private Long agOfficeId;
+	
+	/** The ag office name. */
 	private String agOfficeName;
 	
 	//temp
+	/** The term days. */
 	private String termDays;
 	
+	/** The delete button hide. */
 	private boolean deleteButtonHide;
 	
+	/** The selected tab index. */
 	private int selectedTabIndex;
 	
+	/** The required. */
 	private boolean required;
+	
+	/** The pm user. */
 	private PmUser pmUser;
+	
+	/** The max date. */
 	private Date maxDate;
 	
 	//RequestItemInfo List
+	/** The req item info list. */
 	private List<ScSupplierItemPrice> reqItemInfoList;
+	
+	/** The item name. */
 	private String itemName;
+	
+	/** The quantity. */
 	private Double quantity;
+	
+	/** The standard unit price. */
 	private Double standardUnitPrice;
+	
+	/** The price type. */
 	private PmParameter priceType;
+	
+	/** The standard price. */
 	private boolean standardPrice = false;
+	
+	/** The zonal price. */
 	private boolean zonalPrice = false;
+	
+	/** The zonal tier price. */
 	private boolean zonalTierPrice = false;
+	
+	/** The email validate. */
 	private boolean emailValidate = false;
 	
+	/** The charge line panel. */
 	private boolean chargeLinePanel=false;
+	
+	/** The program lov. */
 	private boolean programLov=false;
+	
+	/** The project lov. */
 	private boolean projectLov=false;
+	
+	/** The vot fund display. */
 	private boolean votFundDisplay=false;
 	
+	/** The pm vote fund. */
 	private PmVotFund pmVoteFund;
+	
+	/** The gosodo. */
 	private PmGlAccount gosodo;
+	
+	/** The pm prg activity. */
 	private PmPrgActivity pmPrgActivity;
+	
+	/** The pm project. */
 	private PmProject pmProject;
+	
+	/** The pm setia. */
 	private PmSetia pmSetia;
+	
+	/** The pm sub setia. */
 	private PmSubSetia pmSubSetia;
+	
+	/** The item addr vote fund disp. */
 	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
 	
+	/** The root zone tree. */
 	private	TreeNode	rootZoneTree;
+	
+	/** The selected tree node. */
 	private TreeNode selectedTreeNode;
+	
+	/** The supplier item price list. */
 	private List<FLSupplierItemVO>	supplierItemPriceList = new ArrayList<FLSupplierItemVO>();
 	
+	/** The selected zone tree. */
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
 	
+	/** The query display. */
 	private boolean queryDisplay=false;
 	
+	/** The fee vote fund. */
 	private PmVotFund feeVoteFund;
 	
 	//gpki signing
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The auto update. */
 	private boolean autoUpdate = true;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
+	
+	/** The button action. */
 	private String buttonAction;
+	
+	/** The validated. */
 	private boolean validated = false;
 	
 	//uom
+	/** The measurement codes. */
 	private String measurementCodes;	
+	
+	/** The measurement names. */
 	private String measurementNames;
 	
+	/** The fl doc maintain. */
 	private boolean flDocMaintain = false;
+	
+	/** The is purchase request link. */
 	private boolean isPurchaseRequestLink = false;
+	
+	/** The back to document. */
 	private String backToDocument;
 	
 /**
-	 * @return the chargeLineItemRoot
-	 */
+ * Gets the charge line item root.
+ *
+ * @return the chargeLineItemRoot
+ */
 	public TreeNode getChargeLineItemRoot() {
 		return chargeLineItemRoot;
 	}
 
 	/**
+	 * Sets the charge line item root.
+	 *
 	 * @param chargeLineItemRoot the chargeLineItemRoot to set
 	 */
 	public void setChargeLineItemRoot(TreeNode chargeLineItemRoot) {
@@ -290,6 +549,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl remark.
+	 *
 	 * @return the flRemark
 	 */
 	public FlRemark getFlRemark() {
@@ -297,14 +558,17 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param flRemark
-	 *            the flRemark to set
+	 * Sets the fl remark.
+	 *
+	 * @param flRemark            the flRemark to set
 	 */
 	public void setFlRemark(FlRemark flRemark) {
 		this.flRemark = flRemark;
 	}
 
 	/**
+	 * Gets the fl attachment.
+	 *
 	 * @return the flAttachment
 	 */
 	public FlAttachment getFlAttachment() {
@@ -312,13 +576,17 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param flAttachment
-	 *            the flAttachment to set
+	 * Sets the fl attachment.
+	 *
+	 * @param flAttachment            the flAttachment to set
 	 */
 	public void setFlAttachment(FlAttachment flAttachment) {
 		this.flAttachment = flAttachment;
 	}
+	
 	/**
+	 * Gets the fulfilment request.
+	 *
 	 * @return the fulfilmentRequest
 	 */
 	public FlFulfilmentRequest getFulfilmentRequest() {
@@ -326,6 +594,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfilment request.
+	 *
 	 * @param fulfilmentRequest the fulfilmentRequest to set
 	 */
 	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
@@ -334,6 +604,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 
 	/**
+	 * Gets the selected addr row.
+	 *
 	 * @return the selectedAddrRow
 	 */
 	public FlDeliveryAddress getSelectedAddrRow() {
@@ -341,6 +613,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected addr row.
+	 *
 	 * @param selectedAddrRow the selectedAddrRow to set
 	 */
 	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
@@ -348,6 +622,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected pm del addr list.
+	 *
 	 * @return the selectedPmDelAddrList
 	 */
 	public List<PmAddressType> getSelectedPmDelAddrList() {
@@ -355,6 +631,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected pm del addr list.
+	 *
 	 * @param selectedPmDelAddrList the selectedPmDelAddrList to set
 	 */
 	public void setSelectedPmDelAddrList(List<PmAddressType> selectedPmDelAddrList) {
@@ -362,6 +640,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the del addr list.
+	 *
 	 * @return the delAddrList
 	 */
 	public List<PmOrgAddress> getDelAddrList() {
@@ -369,6 +649,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the del addr list.
+	 *
 	 * @param delAddrList the delAddrList to set
 	 */
 	public void setDelAddrList(List<PmOrgAddress> delAddrList) {
@@ -376,6 +658,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected del addr.
+	 *
 	 * @return the selectedDelAddr
 	 */
 	public FlDeliveryAddress getSelectedDelAddr() {
@@ -383,6 +667,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected del addr.
+	 *
 	 * @param selectedDelAddr the selectedDelAddr to set
 	 */
 	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
@@ -390,6 +676,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fulfillment req id.
+	 *
 	 * @return the fulfillmentReqId
 	 */
 	public String getFulfillmentReqId() {
@@ -397,6 +685,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfillment req id.
+	 *
 	 * @param fulfillmentReqId the fulfillmentReqId to set
 	 */
 	public void setFulfillmentReqId(String fulfillmentReqId) {
@@ -404,6 +694,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is check ptj flg.
+	 *
 	 * @return the checkPtjFlg
 	 */
 	public boolean isCheckPtjFlg() {
@@ -411,6 +703,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the check ptj flg.
+	 *
 	 * @param checkPtjFlg the checkPtjFlg to set
 	 */
 	public void setCheckPtjFlg(boolean checkPtjFlg) {
@@ -418,6 +712,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the task name.
+	 *
 	 * @return the taskName
 	 */
 	public String getTaskName() {
@@ -425,6 +721,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the task name.
+	 *
 	 * @param taskName the taskName to set
 	 */
 	public void setTaskName(String taskName) {
@@ -432,6 +730,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the doc process.
+	 *
 	 * @return the docProcess
 	 */
 	public String getDocProcess() {
@@ -439,6 +739,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the doc process.
+	 *
 	 * @param docProcess the docProcess to set
 	 */
 	public void setDocProcess(String docProcess) {
@@ -446,6 +748,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl doc id.
+	 *
 	 * @return the flDocId
 	 */
 	public String getFlDocId() {
@@ -453,6 +757,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl doc id.
+	 *
 	 * @param flDocId the flDocId to set
 	 */
 	public void setFlDocId(String flDocId) {
@@ -460,6 +766,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the button val.
+	 *
 	 * @return the buttonVal
 	 */
 	public String getButtonVal() {
@@ -467,6 +775,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the button val.
+	 *
 	 * @param buttonVal the buttonVal to set
 	 */
 	public void setButtonVal(String buttonVal) {
@@ -474,6 +784,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	
 	/**
+	 * Sets the request note list.
+	 *
 	 * @param requestNoteList the requestNoteList to set
 	 */
 	public void setRequestNoteList(List<ScRequestNote> requestNoteList) {
@@ -481,6 +793,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the request note list.
+	 *
 	 * @return the requestNoteList
 	 */
 	public List<ScRequestNote> getRequestNoteList() {
@@ -488,6 +802,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected request note.
+	 *
 	 * @return the selectedRequestNote
 	 */
 	public ScRequestNote getSelectedRequestNote() {
@@ -495,6 +811,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected request note.
+	 *
 	 * @param selectedRequestNote the selectedRequestNote to set
 	 */
 	public void setSelectedRequestNote(ScRequestNote selectedRequestNote) {
@@ -503,6 +821,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Gets the submit button status.
+	 *
 	 * @return the submitButtonStatus
 	 */
 	public Boolean getSubmitButtonStatus() {
@@ -510,6 +830,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the submit button status.
+	 *
 	 * @param submitButtonStatus the submitButtonStatus to set
 	 */
 	public void setSubmitButtonStatus(Boolean submitButtonStatus) {
@@ -517,6 +839,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the ct contract.
+	 *
 	 * @return the addressTypesList
 	 *//*
 	public List<CtAgencyAddress> getAddressTypesList() {
@@ -555,6 +879,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the address types list.
+	 *
 	 * @return the addressTypesList
 	 */
 	public List<PmAddressType> getAddressTypesList() {
@@ -562,6 +888,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the address types list.
+	 *
 	 * @param addressTypesList the addressTypesList to set
 	 */
 	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
@@ -569,6 +897,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected addr type list.
+	 *
 	 * @return the selectedAddrTypeList
 	 */
 	public List<PmOrgAddress> getSelectedAddrTypeList() {
@@ -576,6 +906,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected addr type list.
+	 *
 	 * @param selectedAddrTypeList the selectedAddrTypeList to set
 	 */
 	public void setSelectedAddrTypeList(List<PmOrgAddress> selectedAddrTypeList) {
@@ -583,6 +915,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ct contract.
+	 *
 	 * @param ctContract the ctContract to set
 	 */
 	public void setCtContract(CtContract ctContract) {
@@ -590,6 +924,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the contract list.
+	 *
 	 * @return the contractList
 	 */
 	public List<CtContract> getContractList() {
@@ -597,6 +933,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the contract list.
+	 *
 	 * @param contractList the contractList to set
 	 */
 	public void setContractList(List<CtContract> contractList) {
@@ -604,6 +942,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is selected row flg.
+	 *
 	 * @return the selectedRowFlg
 	 */
 	public boolean isSelectedRowFlg() {
@@ -611,6 +951,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected row flg.
+	 *
 	 * @param selectedRowFlg the selectedRowFlg to set
 	 */
 	public void setSelectedRowFlg(boolean selectedRowFlg) {
@@ -620,6 +962,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 
 	/**
+	 * Gets the request note with dtls list.
+	 *
 	 * @return the requestNoteWithDtlsList
 	 */
 	public List<ScRequestNoteDtl> getRequestNoteWithDtlsList() {
@@ -627,6 +971,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the request note with dtls list.
+	 *
 	 * @param requestNoteWithDtlsList the requestNoteWithDtlsList to set
 	 */
 	public void setRequestNoteWithDtlsList(
@@ -635,6 +981,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected purchased item list.
+	 *
 	 * @return the selectedPurchasedItemList
 	 */
 	public List<ScRequestNoteDtl> getSelectedPurchasedItemList() {
@@ -642,6 +990,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected purchased item list.
+	 *
 	 * @param selectedPurchasedItemList the selectedPurchasedItemList to set
 	 */
 	public void setSelectedPurchasedItemList(
@@ -650,6 +1000,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected item row.
+	 *
 	 * @return the selectedItemRow
 	 */
 	public FlFulfilmentItem getSelectedItemRow() {
@@ -657,6 +1009,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected item row.
+	 *
 	 * @param selectedItemRow the selectedItemRow to set
 	 */
 	public void setSelectedItemRow(FlFulfilmentItem selectedItemRow) {
@@ -664,6 +1018,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the approver model.
+	 *
 	 * @return the approverModel
 	 */
 	public DualListModel<String> getApproverModel() {
@@ -671,6 +1027,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the approver model.
+	 *
 	 * @param approverModel the approverModel to set
 	 */
 	public void setApproverModel(DualListModel<String> approverModel) {
@@ -678,6 +1036,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the approver map.
+	 *
 	 * @return the approverMap
 	 */
 	public HashMap<String, PmUserGroupUser> getApproverMap() {
@@ -688,6 +1048,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the approver map.
+	 *
 	 * @param approverMap the approverMap to set
 	 */
 	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
@@ -695,6 +1057,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected addr list.
+	 *
 	 * @return the selectedAddrList
 	 */
 	public List<FlDeliveryAddress> getSelectedAddrList() {
@@ -702,6 +1066,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected addr list.
+	 *
 	 * @param selectedAddrList the selectedAddrList to set
 	 */
 	public void setSelectedAddrList(List<FlDeliveryAddress> selectedAddrList) {
@@ -709,6 +1075,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected address rows.
+	 *
 	 * @return the selectedAddressRows
 	 */
 	public List<FlDeliveryAddress> getSelectedAddressRows() {
@@ -716,6 +1084,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected address rows.
+	 *
 	 * @param selectedAddressRows the selectedAddressRows to set
 	 */
 	public void setSelectedAddressRows(List<FlDeliveryAddress> selectedAddressRows) {
@@ -725,6 +1095,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 
 	/**
+	 * Gets the selected items rows.
+	 *
 	 * @return the selectedItemsRows
 	 */
 	public List<FlFulfilmentItemAddr> getSelectedItemsRows() {
@@ -732,6 +1104,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected items rows.
+	 *
 	 * @param selectedItemsRows the selectedItemsRows to set
 	 */
 	public void setSelectedItemsRows(List<FlFulfilmentItemAddr> selectedItemsRows) {
@@ -739,6 +1113,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the go id.
+	 *
 	 * @return the goId
 	 */
 	public Long getGoId() {
@@ -746,6 +1122,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the go id.
+	 *
 	 * @param goId the goId to set
 	 */
 	public void setGoId(Long goId) {
@@ -753,6 +1131,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the so id.
+	 *
 	 * @return the soId
 	 */
 	public Long getSoId() {
@@ -760,6 +1140,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the so id.
+	 *
 	 * @param soId the soId to set
 	 */
 	public void setSoId(Long soId) {
@@ -767,6 +1149,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the do id.
+	 *
 	 * @return the doId
 	 */
 	public Long getDoId() {
@@ -774,6 +1158,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the do id.
+	 *
 	 * @param doId the doId to set
 	 */
 	public void setDoId(Long doId) {
@@ -781,6 +1167,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sub total.
+	 *
 	 * @return the subTotal
 	 */
 	public BigDecimal getSubTotal() {
@@ -788,6 +1176,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sub total.
+	 *
 	 * @param subTotal the subTotal to set
 	 */
 	public void setSubTotal(BigDecimal subTotal) {
@@ -795,6 +1185,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected item addr.
+	 *
 	 * @return the selectedItemAddr
 	 */
 	public FlFulfilmentItemAddr getSelectedItemAddr() {
@@ -802,6 +1194,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected item addr.
+	 *
 	 * @param selectedItemAddr the selectedItemAddr to set
 	 */
 	public void setSelectedItemAddr(FlFulfilmentItemAddr selectedItemAddr) {
@@ -809,6 +1203,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fulfilment requisitioner.
+	 *
 	 * @return the fulfilmentRequisitioner
 	 */
 	public String getFulfilmentRequisitioner() {
@@ -816,6 +1212,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfilment requisitioner.
+	 *
 	 * @param fulfilmentRequisitioner the fulfilmentRequisitioner to set
 	 */
 	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
@@ -823,6 +1221,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the supplier address.
+	 *
 	 * @return the supplierAddress
 	 */
 	public String getSupplierAddress() {
@@ -830,6 +1230,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the supplier address.
+	 *
 	 * @param supplierAddress the supplierAddress to set
 	 */
 	public void setSupplierAddress(String supplierAddress) {
@@ -837,6 +1239,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the ministry name.
+	 *
 	 * @return the ministryName
 	 */
 	public String getMinistryName() {
@@ -844,6 +1248,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ministry name.
+	 *
 	 * @param ministryName the ministryName to set
 	 */
 	public void setMinistryName(String ministryName) {
@@ -851,6 +1257,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the issued jabatan id.
+	 *
 	 * @return the issuedJabatanId
 	 */
 	public Long getIssuedJabatanId() {
@@ -858,6 +1266,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the issued jabatan id.
+	 *
 	 * @param issuedJabatanId the issuedJabatanId to set
 	 */
 	public void setIssuedJabatanId(Long issuedJabatanId) {
@@ -865,6 +1275,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the received jabatan id.
+	 *
 	 * @return the receivedJabatanId
 	 */
 	public Long getReceivedJabatanId() {
@@ -872,6 +1284,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the received jabatan id.
+	 *
 	 * @param receivedJabatanId the receivedJabatanId to set
 	 */
 	public void setReceivedJabatanId(Long receivedJabatanId) {
@@ -879,6 +1293,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the issued ptj id.
+	 *
 	 * @return the issuedPtjId
 	 */
 	public Long getIssuedPtjId() {
@@ -886,6 +1302,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the issued ptj id.
+	 *
 	 * @param issuedPtjId the issuedPtjId to set
 	 */
 	public void setIssuedPtjId(Long issuedPtjId) {
@@ -893,6 +1311,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the received ptj id.
+	 *
 	 * @return the receivedPtjId
 	 */
 	public Long getReceivedPtjId() {
@@ -900,6 +1320,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the received ptj id.
+	 *
 	 * @param receivedPtjId the receivedPtjId to set
 	 */
 	public void setReceivedPtjId(Long receivedPtjId) {
@@ -907,6 +1329,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm user org.
+	 *
 	 * @return the pmUserOrg
 	 */
 	public PmUserOrg getPmUserOrg() {
@@ -914,6 +1338,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm user org.
+	 *
 	 * @param pmUserOrg the pmUserOrg to set
 	 */
 	public void setPmUserOrg(PmUserOrg pmUserOrg) {
@@ -921,6 +1347,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the charged ptj id.
+	 *
 	 * @return the chargedPtjId
 	 */
 	public Long getChargedPtjId() {
@@ -928,6 +1356,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the charged ptj id.
+	 *
 	 * @param chargedPtjId the chargedPtjId to set
 	 */
 	public void setChargedPtjId(Long chargedPtjId) {
@@ -935,6 +1365,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the doc status id.
+	 *
 	 * @return the docStatusId
 	 */
 	public Long getDocStatusId() {
@@ -942,6 +1374,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the doc status id.
+	 *
 	 * @param docStatusId the docStatusId to set
 	 */
 	public void setDocStatusId(Long docStatusId) {
@@ -949,6 +1383,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the request note items.
+	 *
 	 * @return the requestNoteItems
 	 */
 	public List<ScRequestItem> getRequestNoteItems() {
@@ -956,6 +1392,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the request note items.
+	 *
 	 * @param requestNoteItems the requestNoteItems to set
 	 */
 	public void setRequestNoteItems(List<ScRequestItem> requestNoteItems) {
@@ -963,6 +1401,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl req note map.
+	 *
 	 * @return the flReqNoteMap
 	 */
 	public HashMap<Long, ScRequestNoteDtl> getFlReqNoteMap() {
@@ -973,6 +1413,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl req note map.
+	 *
 	 * @param flReqNoteMap the flReqNoteMap to set
 	 */
 	public void setFlReqNoteMap(HashMap<Long, ScRequestNoteDtl> flReqNoteMap) {
@@ -980,6 +1422,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm address.
+	 *
 	 * @return the pmAddress
 	 */
 	public PmAddress getPmAddress() {
@@ -987,6 +1431,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm address.
+	 *
 	 * @param pmAddress the pmAddress to set
 	 */
 	public void setPmAddress(PmAddress pmAddress) {
@@ -994,6 +1440,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm country.
+	 *
 	 * @return the pmCountry
 	 */
 	public PmCountry getPmCountry() {
@@ -1001,6 +1449,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm country.
+	 *
 	 * @param pmCountry the pmCountry to set
 	 */
 	public void setPmCountry(PmCountry pmCountry) {
@@ -1008,6 +1458,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm state.
+	 *
 	 * @return the pmState
 	 */
 	public PmState getPmState() {
@@ -1015,6 +1467,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm state.
+	 *
 	 * @param pmState the pmState to set
 	 */
 	public void setPmState(PmState pmState) {
@@ -1022,6 +1476,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm district.
+	 *
 	 * @return the pmDistrict
 	 */
 	public PmDistrict getPmDistrict() {
@@ -1029,6 +1485,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm district.
+	 *
 	 * @param pmDistrict the pmDistrict to set
 	 */
 	public void setPmDistrict(PmDistrict pmDistrict) {
@@ -1036,6 +1494,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm city.
+	 *
 	 * @return the pmCity
 	 */
 	public PmCity getPmCity() {
@@ -1043,6 +1503,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm city.
+	 *
 	 * @param pmCity the pmCity to set
 	 */
 	public void setPmCity(PmCity pmCity) {
@@ -1050,6 +1512,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm address type.
+	 *
 	 * @return the pmAddressType
 	 */
 	public PmAddressType getPmAddressType() {
@@ -1057,6 +1521,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm address type.
+	 *
 	 * @param pmAddressType the pmAddressType to set
 	 */
 	public void setPmAddressType(PmAddressType pmAddressType) {
@@ -1064,6 +1530,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl manula address.
+	 *
 	 * @return the flManulaAddress
 	 */
 	public FlDeliveryAddress getFlManulaAddress() {
@@ -1071,6 +1539,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl manula address.
+	 *
 	 * @param flManulaAddress the flManulaAddress to set
 	 */
 	public void setFlManulaAddress(FlDeliveryAddress flManulaAddress) {
@@ -1078,6 +1548,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the charge check.
+	 *
 	 * @return the chargeCheck
 	 */
 	public String getChargeCheck() {
@@ -1085,6 +1557,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the charge check.
+	 *
 	 * @param chargeCheck the chargeCheck to set
 	 */
 	public void setChargeCheck(String chargeCheck) {
@@ -1092,6 +1566,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the show all items rows.
+	 *
 	 * @return the showAllItemsRows
 	 */
 	public List<FlFulfilmentItemAddr> getShowAllItemsRows() {
@@ -1099,6 +1575,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the show all items rows.
+	 *
 	 * @param showAllItemsRows the showAllItemsRows to set
 	 */
 	public void setShowAllItemsRows(List<FlFulfilmentItemAddr> showAllItemsRows) {
@@ -1106,6 +1584,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the country list.
+	 *
 	 * @return the countryList
 	 */
 	public List<PmCountry> getCountryList() {
@@ -1113,6 +1593,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the country list.
+	 *
 	 * @param countryList the countryList to set
 	 */
 	public void setCountryList(List<PmCountry> countryList) {
@@ -1120,6 +1602,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the state list.
+	 *
 	 * @return the stateList
 	 */
 	public List<PmState> getStateList() {
@@ -1127,6 +1611,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the state list.
+	 *
 	 * @param stateList the stateList to set
 	 */
 	public void setStateList(List<PmState> stateList) {
@@ -1134,6 +1620,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the city list.
+	 *
 	 * @return the cityList
 	 */
 	public List<PmCity> getCityList() {
@@ -1141,6 +1629,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the city list.
+	 *
 	 * @param cityList the cityList to set
 	 */
 	public void setCityList(List<PmCity> cityList) {
@@ -1148,6 +1638,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the district list.
+	 *
 	 * @return the districtList
 	 */
 	public List<PmDistrict> getDistrictList() {
@@ -1155,6 +1647,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the district list.
+	 *
 	 * @param districtList the districtList to set
 	 */
 	public void setDistrictList(List<PmDistrict> districtList) {
@@ -1162,6 +1656,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the division list.
+	 *
 	 * @return the divisionList
 	 */
 	public List<PmDivision> getDivisionList() {
@@ -1169,6 +1665,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the division list.
+	 *
 	 * @param divisionList the divisionList to set
 	 */
 	public void setDivisionList(List<PmDivision> divisionList) {
@@ -1176,6 +1674,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the charge line selected item address.
+	 *
 	 * @return the chargeLineSelectedItemAddress
 	 */
 	public FlFulfilmentItemAddr getChargeLineSelectedItemAddress() {
@@ -1183,13 +1683,18 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the charge line selected item address.
+	 *
 	 * @param chargeLineSelectedItemAddress the chargeLineSelectedItemAddress to set
 	 */
 	public void setChargeLineSelectedItemAddress(
 			FlFulfilmentItemAddr chargeLineSelectedItemAddress) {
 		this.chargeLineSelectedItemAddress = chargeLineSelectedItemAddress;
 	}
+	
 	/**
+	 * Gets the selected item charge section.
+	 *
 	 * @return the selectedItemChargeSection
 	 */
 	public FlFulfilmentItemAddr getSelectedItemChargeSection() {
@@ -1197,6 +1702,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected item charge section.
+	 *
 	 * @param selectedItemChargeSection the selectedItemChargeSection to set
 	 */
 	public void setSelectedItemChargeSection(
@@ -1205,6 +1712,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected nodes.
+	 *
 	 * @return the selectedNodes
 	 */
 	public TreeNode[] getSelectedNodes() {
@@ -1212,6 +1721,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected nodes.
+	 *
 	 * @param selectedNodes the selectedNodes to set
 	 */
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
@@ -1219,6 +1730,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected node.
+	 *
 	 * @return the selectedNode
 	 */
 	public TreeNode getSelectedNode() {
@@ -1226,6 +1739,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected node.
+	 *
 	 * @param selectedNode the selectedNode to set
 	 */
 	public void setSelectedNode(TreeNode selectedNode) {
@@ -1233,6 +1748,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the ordered amt grand total.
+	 *
 	 * @return the orderedAmtGrandTotal
 	 */
 	public BigDecimal getOrderedAmtGrandTotal() {
@@ -1240,6 +1757,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ordered amt grand total.
+	 *
 	 * @param orderedAmtGrandTotal the orderedAmtGrandTotal to set
 	 */
 	public void setOrderedAmtGrandTotal(BigDecimal orderedAmtGrandTotal) {
@@ -1247,6 +1766,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the vot fund list.
+	 *
 	 * @return the votFundList
 	 */
 	public List<PmVotFund> getVotFundList() {
@@ -1254,6 +1775,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the vot fund list.
+	 *
 	 * @param votFundList the votFundList to set
 	 */
 	public void setVotFundList(List<PmVotFund> votFundList) {
@@ -1261,6 +1784,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the project list.
+	 *
 	 * @return the projectList
 	 */
 	public List<PmProject> getProjectList() {
@@ -1268,6 +1793,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the project list.
+	 *
 	 * @param projectList the projectList to set
 	 */
 	public void setProjectList(List<PmProject> projectList) {
@@ -1275,6 +1802,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the setia list.
+	 *
 	 * @return the setiaList
 	 */
 	public List<PmSetia> getSetiaList() {
@@ -1282,6 +1811,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the setia list.
+	 *
 	 * @param setiaList the setiaList to set
 	 */
 	public void setSetiaList(List<PmSetia> setiaList) {
@@ -1289,6 +1820,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sub setia list.
+	 *
 	 * @return the subSetiaList
 	 */
 	public List<PmSubSetia> getSubSetiaList() {
@@ -1296,6 +1829,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sub setia list.
+	 *
 	 * @param subSetiaList the subSetiaList to set
 	 */
 	public void setSubSetiaList(List<PmSubSetia> subSetiaList) {
@@ -1304,6 +1839,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Gets the prg activity list.
+	 *
 	 * @return the prgActivityList
 	 */
 	public List<PmPrgActivity> getPrgActivityList() {
@@ -1311,6 +1848,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the prg activity list.
+	 *
 	 * @param prgActivityList the prgActivityList to set
 	 */
 	public void setPrgActivityList(List<PmPrgActivity> prgActivityList) {
@@ -1318,6 +1857,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the receiving off list.
+	 *
 	 * @return the receivingOffList
 	 */
 	public List<PmAddressType> getReceivingOffList() {
@@ -1325,6 +1866,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the receiving off list.
+	 *
 	 * @param receivingOffList the receivingOffList to set
 	 */
 	public void setReceivingOffList(List<PmAddressType> receivingOffList) {
@@ -1332,6 +1875,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the ag office id.
+	 *
 	 * @return the agOfficeId
 	 */
 	public Long getAgOfficeId() {
@@ -1339,6 +1884,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ag office id.
+	 *
 	 * @param agOfficeId the agOfficeId to set
 	 */
 	public void setAgOfficeId(Long agOfficeId) {
@@ -1346,6 +1893,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the ag office name.
+	 *
 	 * @return the agOfficeName
 	 */
 	public String getAgOfficeName() {
@@ -1353,6 +1902,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ag office name.
+	 *
 	 * @param agOfficeName the agOfficeName to set
 	 */
 	public void setAgOfficeName(String agOfficeName) {
@@ -1360,6 +1911,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the manual address list.
+	 *
 	 * @param manualAddressList the manualAddressList to set
 	 */
 	public void setManualAddressList(List<PmAddressType> manualAddressList) {
@@ -1367,6 +1920,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the manual address list.
+	 *
 	 * @return the manualAddressList
 	 */
 	public List<PmAddressType> getManualAddressList() {
@@ -1374,6 +1929,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the manual address map.
+	 *
 	 * @return the manualAddressMap
 	 */
 	public Map<Long, List<PmAddressType>> getManualAddressMap() {
@@ -1381,6 +1938,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the manual address map.
+	 *
 	 * @param manualAddressMap the manualAddressMap to set
 	 */
 	public void setManualAddressMap(Map<Long, List<PmAddressType>> manualAddressMap) {
@@ -1388,6 +1947,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the term days.
+	 *
 	 * @return the termDays
 	 */
 	public String getTermDays() {
@@ -1395,6 +1956,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the term days.
+	 *
 	 * @param termDays the termDays to set
 	 */
 	public void setTermDays(String termDays) {
@@ -1402,6 +1965,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected address rows list.
+	 *
 	 * @return the selectedAddressRowsList
 	 */
 	public List<FlDeliveryAddress> getSelectedAddressRowsList() {
@@ -1409,6 +1974,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected address rows list.
+	 *
 	 * @param selectedAddressRowsList the selectedAddressRowsList to set
 	 */
 	public void setSelectedAddressRowsList(
@@ -1417,6 +1984,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is delete button hide.
+	 *
 	 * @return the deleteButtonHide
 	 */
 	public boolean isDeleteButtonHide() {
@@ -1424,6 +1993,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the delete button hide.
+	 *
 	 * @param deleteButtonHide the deleteButtonHide to set
 	 */
 	public void setDeleteButtonHide(boolean deleteButtonHide) {
@@ -1431,6 +2002,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the manual addr list.
+	 *
 	 * @return the manualAddrList
 	 */
 	public List<SelectItem> getManualAddrList() {
@@ -1438,6 +2011,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the manual addr list.
+	 *
 	 * @param manualAddrList the manualAddrList to set
 	 */
 	public void setManualAddrList(List<SelectItem> manualAddrList) {
@@ -1445,6 +2020,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the vot fund code.
+	 *
 	 * @return the votFundCode
 	 */
 	public String getVotFundCode() {
@@ -1452,6 +2029,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the vot fund code.
+	 *
 	 * @param votFundCode the votFundCode to set
 	 */
 	public void setVotFundCode(String votFundCode) {
@@ -1459,6 +2038,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the project code.
+	 *
 	 * @return the projectCode
 	 */
 	public String getProjectCode() {
@@ -1466,6 +2047,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the project code.
+	 *
 	 * @param projectCode the projectCode to set
 	 */
 	public void setProjectCode(String projectCode) {
@@ -1473,6 +2056,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the setia code.
+	 *
 	 * @return the setiaCode
 	 */
 	public String getSetiaCode() {
@@ -1480,6 +2065,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the setia code.
+	 *
 	 * @param setiaCode the setiaCode to set
 	 */
 	public void setSetiaCode(String setiaCode) {
@@ -1487,6 +2074,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sub setia code.
+	 *
 	 * @return the subSetiaCode
 	 */
 	public String getSubSetiaCode() {
@@ -1494,6 +2083,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sub setia code.
+	 *
 	 * @param subSetiaCode the subSetiaCode to set
 	 */
 	public void setSubSetiaCode(String subSetiaCode) {
@@ -1501,6 +2092,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the prg activity code.
+	 *
 	 * @return the prgActivityCode
 	 */
 	public String getPrgActivityCode() {
@@ -1508,6 +2101,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the prg activity code.
+	 *
 	 * @param prgActivityCode the prgActivityCode to set
 	 */
 	public void setPrgActivityCode(String prgActivityCode) {
@@ -1515,6 +2110,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the vot fund id.
+	 *
 	 * @return the votFundId
 	 */
 	public Long getVotFundId() {
@@ -1522,6 +2119,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the vot fund id.
+	 *
 	 * @param votFundId the votFundId to set
 	 */
 	public void setVotFundId(Long votFundId) {
@@ -1529,6 +2128,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the project id.
+	 *
 	 * @return the projectId
 	 */
 	public Long getProjectId() {
@@ -1536,6 +2137,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the project id.
+	 *
 	 * @param projectId the projectId to set
 	 */
 	public void setProjectId(Long projectId) {
@@ -1543,6 +2146,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the setia id.
+	 *
 	 * @return the setiaId
 	 */
 	public Long getSetiaId() {
@@ -1550,6 +2155,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the setia id.
+	 *
 	 * @param setiaId the setiaId to set
 	 */
 	public void setSetiaId(Long setiaId) {
@@ -1557,6 +2164,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sub setia id.
+	 *
 	 * @return the subSetiaId
 	 */
 	public Long getSubSetiaId() {
@@ -1564,6 +2173,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sub setia id.
+	 *
 	 * @param subSetiaId the subSetiaId to set
 	 */
 	public void setSubSetiaId(Long subSetiaId) {
@@ -1571,6 +2182,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the prg activity id.
+	 *
 	 * @return the prgActivityId
 	 */
 	public Long getPrgActivityId() {
@@ -1578,6 +2191,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the prg activity id.
+	 *
 	 * @param prgActivityId the prgActivityId to set
 	 */
 	public void setPrgActivityId(Long prgActivityId) {
@@ -1585,6 +2200,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the supplier branches list.
+	 *
 	 * @return the supplierBranchesList
 	 */
 	public List<SelectItem> getSupplierBranchesList() {
@@ -1592,28 +2209,55 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the supplier branches list.
+	 *
 	 * @param supplierBranchesList the supplierBranchesList to set
 	 */
 	public void setSupplierBranchesList(List<SelectItem> supplierBranchesList) {
 		this.supplierBranchesList = supplierBranchesList;
 	}
 
+	/**
+	 * Gets the selected tab index.
+	 *
+	 * @return the selected tab index
+	 */
 	public int getSelectedTabIndex() {
 		return selectedTabIndex;
 	}
 
+	/**
+	 * Sets the selected tab index.
+	 *
+	 * @param selectedTabIndex the new selected tab index
+	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
 
+	/**
+	 * Checks if is required.
+	 *
+	 * @return true, if is required
+	 */
 	public boolean isRequired() {
 		return required;
 	}
 
+	/**
+	 * Sets the required.
+	 *
+	 * @param required the new required
+	 */
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
 
+	/**
+	 * Gets the gl account list.
+	 *
+	 * @return the gl account list
+	 */
 	public List<PmGlAccount> getGlAccountList() {
 		if(glAccountList==null) {
 			glAccountList = new ArrayList<PmGlAccount>();
@@ -1621,35 +2265,72 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		return glAccountList;
 	}
 
+	/**
+	 * Sets the gl account list.
+	 *
+	 * @param glAccountList the new gl account list
+	 */
 	public void setGlAccountList(List<PmGlAccount> glAccountList) {
 		this.glAccountList = glAccountList;
 	}
 
+	/**
+	 * Gets the asset ind id.
+	 *
+	 * @return the asset ind id
+	 */
 	public Long getAssetIndId() {
 		return assetIndId;
 	}
 
+	/**
+	 * Sets the asset ind id.
+	 *
+	 * @param assetIndId the new asset ind id
+	 */
 	public void setAssetIndId(Long assetIndId) {
 		this.assetIndId = assetIndId;
 	}
 
+	/**
+	 * Gets the gl account id.
+	 *
+	 * @return the gl account id
+	 */
 	public Long getGlAccountId() {
 		return glAccountId;
 	}
 
+	/**
+	 * Sets the gl account id.
+	 *
+	 * @param glAccountId the new gl account id
+	 */
 	public void setGlAccountId(Long glAccountId) {
 		this.glAccountId = glAccountId;
 	}
 
+	/**
+	 * Gets the financing type code.
+	 *
+	 * @return the financing type code
+	 */
 	public String getFinancingTypeCode() {
 		return financingTypeCode;
 	}
 
+	/**
+	 * Sets the financing type code.
+	 *
+	 * @param financingTypeCode the new financing type code
+	 */
 	public void setFinancingTypeCode(String financingTypeCode) {
 		this.financingTypeCode = financingTypeCode;
 	}
 
 	/**
+	 * Gets the vot fund type.
+	 *
 	 * @return the votFundType
 	 */
 	public String getVotFundType() {
@@ -1657,28 +2338,55 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the vot fund type.
+	 *
 	 * @param votFundType the votFundType to set
 	 */
 	public void setVotFundType(String votFundType) {
 		this.votFundType = votFundType;
 	}
 
+	/**
+	 * Gets the asset ind code.
+	 *
+	 * @return the asset ind code
+	 */
 	public String getAssetIndCode() {
 		return assetIndCode;
 	}
 
+	/**
+	 * Sets the asset ind code.
+	 *
+	 * @param assetIndCode the new asset ind code
+	 */
 	public void setAssetIndCode(String assetIndCode) {
 		this.assetIndCode = assetIndCode;
 	}
 
+	/**
+	 * Gets the gl account code.
+	 *
+	 * @return the gl account code
+	 */
 	public String getGlAccountCode() {
 		return glAccountCode;
 	}
 
+	/**
+	 * Sets the gl account code.
+	 *
+	 * @param glAccountCode the new gl account code
+	 */
 	public void setGlAccountCode(String glAccountCode) {
 		this.glAccountCode = glAccountCode;
 	}
 
+	/**
+	 * Gets the user group list.
+	 *
+	 * @return the user group list
+	 */
 	public List<PmUserGroup> getUserGroupList() {
 		if(userGroupList==null) {
 			userGroupList = new ArrayList<PmUserGroup>();
@@ -1686,11 +2394,18 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		return userGroupList;
 	}
 
+	/**
+	 * Sets the user group list.
+	 *
+	 * @param userGroupList the new user group list
+	 */
 	public void setUserGroupList(List<PmUserGroup> userGroupList) {
 		this.userGroupList = userGroupList;
 	}
 
 	/**
+	 * Gets the pm user.
+	 *
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
@@ -1698,6 +2413,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm user.
+	 *
 	 * @param pmUser the pmUser to set
 	 */
 	public void setPmUser(PmUser pmUser) {
@@ -1705,6 +2422,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the max date.
+	 *
 	 * @return the maxDate
 	 */
 	public Date getMaxDate() {
@@ -1712,6 +2431,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the max date.
+	 *
 	 * @param maxDate the maxDate to set
 	 */
 	public void setMaxDate(Date maxDate) {
@@ -1719,6 +2440,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the current ptj group id.
+	 *
 	 * @return the currentPtjGroupId
 	 */
 	public Long getCurrentPtjGroupId() {
@@ -1726,6 +2449,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the current ptj group id.
+	 *
 	 * @param currentPtjGroupId the currentPtjGroupId to set
 	 */
 	public void setCurrentPtjGroupId(Long currentPtjGroupId) {
@@ -1733,6 +2458,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the current prepared org id.
+	 *
 	 * @return the currentPreparedOrgId
 	 */
 	public Long getCurrentPreparedOrgId() {
@@ -1740,6 +2467,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the current prepared org id.
+	 *
 	 * @param currentPreparedOrgId the currentPreparedOrgId to set
 	 */
 	public void setCurrentPreparedOrgId(Long currentPreparedOrgId) {
@@ -1748,6 +2477,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Gets the pm price type.
+	 *
 	 * @return the pmPriceType
 	 */
 	public PmParameter getPmPriceType() {
@@ -1755,6 +2486,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm price type.
+	 *
 	 * @param pmPriceType the pmPriceType to set
 	 */
 	public void setPmPriceType(PmParameter pmPriceType) {
@@ -1762,6 +2495,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc request supplier item id map.
+	 *
 	 * @return the scRequestSupplierItemIdMap
 	 */
 	public HashMap<Long, Long> getScRequestSupplierItemIdMap() {
@@ -1772,6 +2507,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc request supplier item id map.
+	 *
 	 * @param scRequestSupplierItemIdMap the scRequestSupplierItemIdMap to set
 	 */
 	public void setScRequestSupplierItemIdMap(
@@ -1780,6 +2517,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the zonal tier map.
+	 *
 	 * @return the zonalTierMap
 	 */
 	public HashMap<String, List<FlFulfilmentItemAddr>> getZonalTierMap() {
@@ -1790,6 +2529,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the zonal tier map.
+	 *
 	 * @param zonalTierMap the zonalTierMap to set
 	 */
 	public void setZonalTierMap(HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap) {
@@ -1797,6 +2538,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the zonal tier item list.
+	 *
 	 * @return the zonalTierItemList
 	 */
 	public List<FlFulfilmentItemAddr> getZonalTierItemList() {
@@ -1807,6 +2550,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the zonal tier item list.
+	 *
 	 * @param zonalTierItemList the zonalTierItemList to set
 	 */
 	public void setZonalTierItemList(List<FlFulfilmentItemAddr> zonalTierItemList) {
@@ -1814,6 +2559,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the zonal tier item.
+	 *
 	 * @return the zonalTierItem
 	 */
 	public FlFulfilmentItemAddr getZonalTierItem() {
@@ -1821,6 +2568,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the zonal tier item.
+	 *
 	 * @param zonalTierItem the zonalTierItem to set
 	 */
 	public void setZonalTierItem(FlFulfilmentItemAddr zonalTierItem) {
@@ -1828,6 +2577,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the tier map.
+	 *
 	 * @return the tierMap
 	 */
 	public HashMap<Long, List<FlFulfilmentItemAddr>> getTierMap() {
@@ -1838,6 +2589,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the tier map.
+	 *
 	 * @param tierMap the tierMap to set
 	 */
 	public void setTierMap(HashMap<Long, List<FlFulfilmentItemAddr>> tierMap) {
@@ -1845,6 +2598,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the req item info list.
+	 *
 	 * @return the reqItemInfoList
 	 */
 	public List<ScSupplierItemPrice> getReqItemInfoList() {
@@ -1852,6 +2607,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the req item info list.
+	 *
 	 * @param reqItemInfoList the reqItemInfoList to set
 	 */
 	public void setReqItemInfoList(List<ScSupplierItemPrice> reqItemInfoList) {
@@ -1859,6 +2616,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the item name.
+	 *
 	 * @return the itemName
 	 */
 	public String getItemName() {
@@ -1866,6 +2625,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the quantity.
+	 *
 	 * @return the quantity
 	 */
 	public Double getQuantity() {
@@ -1873,6 +2634,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the item name.
+	 *
 	 * @param itemName the itemName to set
 	 */
 	public void setItemName(String itemName) {
@@ -1880,6 +2643,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the quantity.
+	 *
 	 * @param quantity the quantity to set
 	 */
 	public void setQuantity(Double quantity) {
@@ -1887,6 +2652,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the price type.
+	 *
 	 * @return the priceType
 	 */
 	public PmParameter getPriceType() {
@@ -1894,6 +2661,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the price type.
+	 *
 	 * @param priceType the priceType to set
 	 */
 	public void setPriceType(PmParameter priceType) {
@@ -1901,6 +2670,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is standard price.
+	 *
 	 * @return the standardPrice
 	 */
 	public boolean isStandardPrice() {
@@ -1908,6 +2679,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is zonal price.
+	 *
 	 * @return the zonalPrice
 	 */
 	public boolean isZonalPrice() {
@@ -1915,6 +2688,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is zonal tier price.
+	 *
 	 * @return the zonalTierPrice
 	 */
 	public boolean isZonalTierPrice() {
@@ -1922,6 +2697,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the standard price.
+	 *
 	 * @param standardPrice the standardPrice to set
 	 */
 	public void setStandardPrice(boolean standardPrice) {
@@ -1929,6 +2706,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the zonal price.
+	 *
 	 * @param zonalPrice the zonalPrice to set
 	 */
 	public void setZonalPrice(boolean zonalPrice) {
@@ -1936,6 +2715,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the zonal tier price.
+	 *
 	 * @param zonalTierPrice the zonalTierPrice to set
 	 */
 	public void setZonalTierPrice(boolean zonalTierPrice) {
@@ -1943,6 +2724,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the standard unit price.
+	 *
 	 * @return the standardUnitPrice
 	 */
 	public Double getStandardUnitPrice() {
@@ -1950,6 +2733,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the standard unit price.
+	 *
 	 * @param standardUnitPrice the standardUnitPrice to set
 	 */
 	public void setStandardUnitPrice(Double standardUnitPrice) {
@@ -1957,6 +2742,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	
 	/**
+	 * Gets the request note item list.
+	 *
 	 * @return the requestNoteItemList
 	 */
 	public List<FlFulfilmentItemAddr> getRequestNoteItemList() {
@@ -1964,6 +2751,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the request note item list.
+	 *
 	 * @param requestNoteItemList the requestNoteItemList to set
 	 */
 	public void setRequestNoteItemList(
@@ -1974,6 +2763,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Checks if is email validate.
+	 *
 	 * @return the emailValidate
 	 */
 	public boolean isEmailValidate() {
@@ -1981,6 +2772,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the email validate.
+	 *
 	 * @param emailValidate the emailValidate to set
 	 */
 	public void setEmailValidate(boolean emailValidate) {
@@ -1988,6 +2781,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is charge line panel.
+	 *
 	 * @return the chargeLinePanel
 	 */
 	public boolean isChargeLinePanel() {
@@ -1995,6 +2790,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the charge line panel.
+	 *
 	 * @param chargeLinePanel the chargeLinePanel to set
 	 */
 	public void setChargeLinePanel(boolean chargeLinePanel) {
@@ -2002,6 +2799,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm vote fund.
+	 *
 	 * @return the pmVoteFund
 	 */
 	public PmVotFund getPmVoteFund() {
@@ -2009,6 +2808,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm vote fund.
+	 *
 	 * @param pmVoteFund the pmVoteFund to set
 	 */
 	public void setPmVoteFund(PmVotFund pmVoteFund) {
@@ -2016,6 +2817,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the gosodo.
+	 *
 	 * @return the gosodo
 	 */
 	public PmGlAccount getGosodo() {
@@ -2023,6 +2826,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the gosodo.
+	 *
 	 * @param gosodo the gosodo to set
 	 */
 	public void setGosodo(PmGlAccount gosodo) {
@@ -2030,6 +2835,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm prg activity.
+	 *
 	 * @return the pmPrgActivity
 	 */
 	public PmPrgActivity getPmPrgActivity() {
@@ -2037,6 +2844,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm prg activity.
+	 *
 	 * @param pmPrgActivity the pmPrgActivity to set
 	 */
 	public void setPmPrgActivity(PmPrgActivity pmPrgActivity) {
@@ -2044,6 +2853,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm project.
+	 *
 	 * @return the pmProject
 	 */
 	public PmProject getPmProject() {
@@ -2051,6 +2862,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm project.
+	 *
 	 * @param pmProject the pmProject to set
 	 */
 	public void setPmProject(PmProject pmProject) {
@@ -2058,6 +2871,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm setia.
+	 *
 	 * @return the pmSetia
 	 */
 	public PmSetia getPmSetia() {
@@ -2065,6 +2880,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm setia.
+	 *
 	 * @param pmSetia the pmSetia to set
 	 */
 	public void setPmSetia(PmSetia pmSetia) {
@@ -2072,6 +2889,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm sub setia.
+	 *
 	 * @return the pmSubSetia
 	 */
 	public PmSubSetia getPmSubSetia() {
@@ -2079,6 +2898,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm sub setia.
+	 *
 	 * @param pmSubSetia the pmSubSetia to set
 	 */
 	public void setPmSubSetia(PmSubSetia pmSubSetia) {
@@ -2086,6 +2907,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is program lov.
+	 *
 	 * @return the programLov
 	 */
 	public boolean isProgramLov() {
@@ -2093,6 +2916,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is project lov.
+	 *
 	 * @return the projectLov
 	 */
 	public boolean isProjectLov() {
@@ -2100,6 +2925,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the program lov.
+	 *
 	 * @param programLov the programLov to set
 	 */
 	public void setProgramLov(boolean programLov) {
@@ -2107,6 +2934,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the project lov.
+	 *
 	 * @param projectLov the projectLov to set
 	 */
 	public void setProjectLov(boolean projectLov) {
@@ -2114,6 +2943,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is vot fund display.
+	 *
 	 * @return the votFundDisplay
 	 */
 	public boolean isVotFundDisplay() {
@@ -2121,6 +2952,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the vot fund display.
+	 *
 	 * @param votFundDisplay the votFundDisplay to set
 	 */
 	public void setVotFundDisplay(boolean votFundDisplay) {
@@ -2128,6 +2961,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the item addr vote fund disp.
+	 *
 	 * @return the itemAddrVoteFundDisp
 	 */
 	public FlFulfilmentItemAddr getItemAddrVoteFundDisp() {
@@ -2135,6 +2970,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the item addr vote fund disp.
+	 *
 	 * @param itemAddrVoteFundDisp the itemAddrVoteFundDisp to set
 	 */
 	public void setItemAddrVoteFundDisp(FlFulfilmentItemAddr itemAddrVoteFundDisp) {
@@ -2142,6 +2979,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the root zone tree.
+	 *
 	 * @return the rootZoneTree
 	 */
 	public TreeNode getRootZoneTree() {
@@ -2149,6 +2988,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected tree node.
+	 *
 	 * @return the selectedTreeNode
 	 */
 	public TreeNode getSelectedTreeNode() {
@@ -2156,6 +2997,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected zone tree.
+	 *
 	 * @return the selectedZoneTree
 	 */
 	public List<TreeNode> getSelectedZoneTree() {
@@ -2163,6 +3006,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the root zone tree.
+	 *
 	 * @param rootZoneTree the rootZoneTree to set
 	 */
 	public void setRootZoneTree(TreeNode rootZoneTree) {
@@ -2170,6 +3015,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected tree node.
+	 *
 	 * @param selectedTreeNode the selectedTreeNode to set
 	 */
 	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
@@ -2178,6 +3025,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Sets the selected zone tree.
+	 *
 	 * @param selectedZoneTree the selectedZoneTree to set
 	 */
 	public void setSelectedZoneTree(List<TreeNode> selectedZoneTree) {
@@ -2185,6 +3034,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the supplier item price list.
+	 *
 	 * @return the supplierItemPriceList
 	 */
 	public List<FLSupplierItemVO> getSupplierItemPriceList() {
@@ -2192,6 +3043,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the supplier item price list.
+	 *
 	 * @param supplierItemPriceList the supplierItemPriceList to set
 	 */
 	public void setSupplierItemPriceList(
@@ -2200,6 +3053,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is query display.
+	 *
 	 * @return the queryDisplay
 	 */
 	public boolean isQueryDisplay() {
@@ -2207,61 +3062,125 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the query display.
+	 *
 	 * @param queryDisplay the queryDisplay to set
 	 */
 	public void setQueryDisplay(boolean queryDisplay) {
 		this.queryDisplay = queryDisplay;
 	}
 
+	/**
+	 * Gets the fee vote fund.
+	 *
+	 * @return the fee vote fund
+	 */
 	public PmVotFund getFeeVoteFund() {
 		return feeVoteFund;
 	}
 
+	/**
+	 * Sets the fee vote fund.
+	 *
+	 * @param feeVoteFund the new fee vote fund
+	 */
 	public void setFeeVoteFund(PmVotFund feeVoteFund) {
 		this.feeVoteFund = feeVoteFund;
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Checks if is auto update.
+	 *
+	 * @return true, if is auto update
+	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
 
+	/**
+	 * Sets the auto update.
+	 *
+	 * @param autoUpdate the new auto update
+	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 *
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
 
+	/**
+	 * Gets the button action.
+	 *
+	 * @return the button action
+	 */
 	public String getButtonAction() {
 		return buttonAction;
 	}
 
+	/**
+	 * Sets the button action.
+	 *
+	 * @param buttonAction the new button action
+	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
 
+	/**
+	 * Checks if is validated.
+	 *
+	 * @return true, if is validated
+	 */
 	public boolean isValidated() {
 		return validated;
 	}
 
+	/**
+	 * Sets the validated.
+	 *
+	 * @param validated the new validated
+	 */
 	public void setValidated(boolean validated) {
 		this.validated = validated;
 	}
 
 	/**
+	 * Gets the measurement codes.
+	 *
 	 * @return the measurementCodes
 	 */
 	public String getMeasurementCodes() {
@@ -2269,6 +3188,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the measurement codes.
+	 *
 	 * @param measurementCodes the measurementCodes to set
 	 */
 	public void setMeasurementCodes(String measurementCodes) {
@@ -2276,6 +3197,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the measurement names.
+	 *
 	 * @return the measurementNames
 	 */
 	public String getMeasurementNames() {
@@ -2283,6 +3206,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the measurement names.
+	 *
 	 * @param measurementNames the measurementNames to set
 	 */
 	public void setMeasurementNames(String measurementNames) {
@@ -2290,6 +3215,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is fl doc maintain.
+	 *
 	 * @return the flDocMaintain
 	 */
 	public boolean isFlDocMaintain() {
@@ -2297,6 +3224,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl doc maintain.
+	 *
 	 * @param flDocMaintain the flDocMaintain to set
 	 */
 	public void setFlDocMaintain(boolean flDocMaintain) {
@@ -2304,6 +3233,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is purchase request link.
+	 *
 	 * @return the isPurchaseRequestLink
 	 */
 	public boolean isPurchaseRequestLink() {
@@ -2311,6 +3242,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the purchase request link.
+	 *
 	 * @param isPurchaseRequestLink the isPurchaseRequestLink to set
 	 */
 	public void setPurchaseRequestLink(boolean isPurchaseRequestLink) {
@@ -2318,6 +3251,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the back to document.
+	 *
 	 * @return the backToDocument
 	 */
 	public String getBackToDocument() {
@@ -2325,6 +3260,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the back to document.
+	 *
 	 * @param backToDocument the backToDocument to set
 	 */
 	public void setBackToDocument(String backToDocument) {

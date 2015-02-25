@@ -24,117 +24,251 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FulfilmentOrderManagedBean.
+ */
 @ManagedBean(name = "flOrderManagedBean")
 @SessionScoped
 public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The task list. */
 	private List<WorklistItemVO> taskList;
+	
+	/** The process name. */
 	private String processName;
+	
+	/** The status. */
 	private String status;
+	
+	/** The task name. */
 	private String taskName;
+	
+	/** The fl order id. */
 	private Long flOrderId;
+	
+	/** The stop request id. */
 	private Long stopRequestId;
 	
+	/** The contract request. */
 	private boolean contractRequest;
+	
+	/** The button val. */
 	private String buttonVal;
+	
+	/** The back to previous. */
 	private String backToPrevious;
 	
+	/** The fl remark. */
 	private FlRemark flRemark = new FlRemark();
+	
+	/** The fl attachment. */
 	private FlAttachment flAttachment = new FlAttachment();
+	
+	/** The fl request. */
 	private FlFulfilmentRequest flRequest;
+	
+	/** The fl delivery order. */
 	private FlDeliveryOrder flDeliveryOrder;
+	
+	/** The delivery address. */
 	private FlDeliveryAddress deliveryAddress;
+	
+	/** The fulfilment order. */
 	private FlFulfilmentOrder fulfilmentOrder;
+	
+	/** The selected del addr. */
 	private FlDeliveryAddress selectedDelAddr;
+	
+	/** The selected addr row. */
 	private FlDeliveryAddress selectedAddrRow;
+	
+	/** The selected fl order. */
 	private FlFulfilmentOrder selectedFlOrder;
+	
+	/** The stop ins. */
 	private FlStopInstr stopIns;
 	
+	/** The selected del addr list. */
 	private List<FlDeliveryAddress> selectedDelAddrList;
+	
+	/** The pending do list. */
 	private List<FlFulfilmentOrder> pendingDoList;
+	
+	/** The delivery address list. */
 	private List<FlDeliveryAddress>deliveryAddressList;
+	
+	/** The pm financial orgs. */
 	private List<PmFinancialOrg> pmFinancialOrgs;
+	
+	/** The reason descs. */
 	private List<PmReasonDesc> reasonDescs;
 	
+	/** The fl item list. */
 	private List<FlFulfilmentItem> flItemList;
+	
+	/** The approver model. */
 	private DualListModel<String> approverModel;
+	
+	/** The selected lov del addr. */
 	private String selectedLovDelAddr;
 	
+	/** The factoring check. */
 	private String factoringCheck="false";
+	
+	/** The doc type. */
 	private String docType;
 	
 	//getSuplier address details
+	/** The supplier address. */
 	private String supplierAddress;
+	
+	/** The phone no. */
 	private String phoneNo;
+	
+	/** The fax no. */
 	private String faxNo;
+	
+	/** The contact email. */
 	private String contactEmail;
+	
+	/** The contact person. */
 	private String contactPerson;
+	
+	/** The contact phone no. */
 	private String contactPhoneNo;
 	
 	//for termdays
 	
+	/** The term days. */
 	private String termDays;
+	
+	/** The remove factoring. */
 	private boolean removeFactoring;
+	
+	/** The selected tab index. */
 	private int selectedTabIndex;
+	
+	/** The pm user. */
 	private PmUser pmUser;
+	
+	/** The fl approver. */
 	private String flApprover;
+	
+	/** The stop instr. */
 	private FlFulfilmentItemAddr stopInstr;
 	
+	/** The doc maintain remarks. */
 	private boolean docMaintainRemarks = false;
 	// rfc address 
+	/** The rfc address. */
 	private String rfcAddress;
+	
+	/** The rfc phone no. */
 	private String rfcPhoneNo;
+	
+	/** The rfc fax no. */
 	private String rfcFaxNo;
+	
+	/** The rfc contact email. */
 	private String rfcContactEmail;
+	
+	/** The rfc contact person. */
 	private String rfcContactPerson;
+	
+	/** The rfc contact phone no. */
 	private String rfcContactPhoneNo;
 	
 	
 	//gpki signing
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The auto update. */
 	private boolean autoUpdate = true;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
+	
+	/** The button action. */
 	private String buttonAction;
 	
+	/* (non-Javadoc)
+	 * @see my.ep.web.managedbean.BaseManagedBean#getTaskName()
+	 */
 	public String getTaskName() {
 		return taskName;
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.managedbean.BaseManagedBean#setTaskName(java.lang.String)
+	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
 
+	/**
+	 * Gets the process name.
+	 *
+	 * @return the process name
+	 */
 	public String getProcessName() {
 		return processName;
 	}
 
+	/**
+	 * Sets the process name.
+	 *
+	 * @param processName the new process name
+	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
 	}
 
+	/**
+	 * Gets the task list.
+	 *
+	 * @return the task list
+	 */
 	public List<WorklistItemVO> getTaskList() {
 		if(taskList==null)
 			taskList = new ArrayList<WorklistItemVO>();
 		return taskList;
 	}
 
+	/**
+	 * Sets the task list.
+	 *
+	 * @param taskList the new task list
+	 */
 	public void setTaskList(List<WorklistItemVO> taskList) {
 		this.taskList = taskList;
 	}
 
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
 	public String getStatus() {
 		return status;
 	}
 
+	/**
+	 * Sets the status.
+	 *
+	 * @param status the new status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
 	/**
+	 * Gets the fl remark.
+	 *
 	 * @return the flRemark
 	 */
 	public FlRemark getFlRemark() {
@@ -142,6 +276,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl remark.
+	 *
 	 * @param flRemark the flRemark to set
 	 */
 	public void setFlRemark(FlRemark flRemark) {
@@ -149,6 +285,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl attachment.
+	 *
 	 * @return the flAttachment
 	 */
 	public FlAttachment getFlAttachment() {
@@ -156,6 +294,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl attachment.
+	 *
 	 * @param flAttachment the flAttachment to set
 	 */
 	public void setFlAttachment(FlAttachment flAttachment) {
@@ -163,6 +303,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl delivery order.
+	 *
 	 * @return the flDeliveryOrder
 	 */
 	public FlDeliveryOrder getFlDeliveryOrder() {
@@ -170,6 +312,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl delivery order.
+	 *
 	 * @param flDeliveryOrder the flDeliveryOrder to set
 	 */
 	public void setFlDeliveryOrder(FlDeliveryOrder flDeliveryOrder) {
@@ -177,6 +321,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the delivery address.
+	 *
 	 * @return the deliveryAddress
 	 */
 	public FlDeliveryAddress getDeliveryAddress() {
@@ -184,6 +330,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the delivery address.
+	 *
 	 * @param deliveryAddress the deliveryAddress to set
 	 */
 	public void setDeliveryAddress(FlDeliveryAddress deliveryAddress) {
@@ -191,6 +339,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fulfilment order.
+	 *
 	 * @return the fulfilmentOrder
 	 */
 	public FlFulfilmentOrder getFulfilmentOrder() {
@@ -198,6 +348,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fulfilment order.
+	 *
 	 * @param fulfilmentOrder the fulfilmentOrder to set
 	 */
 	public void setFulfilmentOrder(FlFulfilmentOrder fulfilmentOrder) {
@@ -205,6 +357,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pending do list.
+	 *
 	 * @return the pendingDoList
 	 */
 	public List<FlFulfilmentOrder> getPendingDoList() {
@@ -212,6 +366,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pending do list.
+	 *
 	 * @param pendingDoList the pendingDoList to set
 	 */
 	public void setPendingDoList(List<FlFulfilmentOrder> pendingDoList) {
@@ -219,6 +375,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the delivery address list.
+	 *
 	 * @return the deliveryAddressList
 	 */
 	public List<FlDeliveryAddress> getDeliveryAddressList() {
@@ -226,6 +384,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the delivery address list.
+	 *
 	 * @param deliveryAddressList the deliveryAddressList to set
 	 */
 	public void setDeliveryAddressList(List<FlDeliveryAddress> deliveryAddressList) {
@@ -233,6 +393,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is contract request.
+	 *
 	 * @return the contractRequest
 	 */
 	public boolean isContractRequest() {
@@ -240,6 +402,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the contract request.
+	 *
 	 * @param contractRequest the contractRequest to set
 	 */
 	public void setContractRequest(boolean contractRequest) {
@@ -247,6 +411,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the button val.
+	 *
 	 * @return the buttonVal
 	 */
 	public String getButtonVal() {
@@ -254,6 +420,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the button val.
+	 *
 	 * @param buttonVal the buttonVal to set
 	 */
 	public void setButtonVal(String buttonVal) {
@@ -261,6 +429,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl item list.
+	 *
 	 * @return the flItemList
 	 */
 	public List<FlFulfilmentItem> getFlItemList() {
@@ -268,6 +438,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl item list.
+	 *
 	 * @param flItemList the flItemList to set
 	 */
 	public void setFlItemList(List<FlFulfilmentItem> flItemList) {
@@ -275,6 +447,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl request.
+	 *
 	 * @return the flRequest
 	 */
 	public FlFulfilmentRequest getFlRequest() {
@@ -282,6 +456,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl request.
+	 *
 	 * @param flRequest the flRequest to set
 	 */
 	public void setFlRequest(FlFulfilmentRequest flRequest) {
@@ -289,6 +465,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the approver model.
+	 *
 	 * @return the approverModel
 	 */
 	public DualListModel<String> getApproverModel() {
@@ -296,6 +474,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the approver model.
+	 *
 	 * @param approverModel the approverModel to set
 	 */
 	public void setApproverModel(DualListModel<String> approverModel) {
@@ -303,6 +483,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected del addr.
+	 *
 	 * @return the selectedDelAddr
 	 */
 	public FlDeliveryAddress getSelectedDelAddr() {
@@ -310,6 +492,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected del addr.
+	 *
 	 * @param selectedDelAddr the selectedDelAddr to set
 	 */
 	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
@@ -317,6 +501,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected addr row.
+	 *
 	 * @return the selectedAddrRow
 	 */
 	public FlDeliveryAddress getSelectedAddrRow() {
@@ -324,6 +510,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected addr row.
+	 *
 	 * @param selectedAddrRow the selectedAddrRow to set
 	 */
 	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
@@ -331,6 +519,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected lov del addr.
+	 *
 	 * @return the selectedLovDelAddr
 	 */
 	public String getSelectedLovDelAddr() {
@@ -338,6 +528,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected lov del addr.
+	 *
 	 * @param selectedLovDelAddr the selectedLovDelAddr to set
 	 */
 	public void setSelectedLovDelAddr(String selectedLovDelAddr) {
@@ -345,6 +537,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected fl order.
+	 *
 	 * @return the selectedFlOrder
 	 */
 	public FlFulfilmentOrder getSelectedFlOrder() {
@@ -352,6 +546,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected fl order.
+	 *
 	 * @param selectedFlOrder the selectedFlOrder to set
 	 */
 	public void setSelectedFlOrder(FlFulfilmentOrder selectedFlOrder) {
@@ -359,6 +555,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected del addr list.
+	 *
 	 * @return the selectedDelAddrList
 	 */
 	public List<FlDeliveryAddress> getSelectedDelAddrList() {
@@ -366,6 +564,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected del addr list.
+	 *
 	 * @param selectedDelAddrList the selectedDelAddrList to set
 	 */
 	public void setSelectedDelAddrList(List<FlDeliveryAddress> selectedDelAddrList) {
@@ -373,6 +573,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl order id.
+	 *
 	 * @return the flOrderId
 	 */
 	public Long getFlOrderId() {
@@ -380,6 +582,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl order id.
+	 *
 	 * @param flOrderId the flOrderId to set
 	 */
 	public void setFlOrderId(Long flOrderId) {
@@ -387,6 +591,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the stop request id.
+	 *
 	 * @return the stopRequestId
 	 */
 	public Long getStopRequestId() {
@@ -394,6 +600,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the stop request id.
+	 *
 	 * @param stopRequestId the stopRequestId to set
 	 */
 	public void setStopRequestId(Long stopRequestId) {
@@ -401,6 +609,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the factoring check.
+	 *
 	 * @return the factoringCheck
 	 */
 	public String getFactoringCheck() {
@@ -408,6 +618,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the factoring check.
+	 *
 	 * @param factoringCheck the factoringCheck to set
 	 */
 	public void setFactoringCheck(String factoringCheck) {
@@ -415,6 +627,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the doc type.
+	 *
 	 * @return the docType
 	 */
 	public String getDocType() {
@@ -422,6 +636,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the doc type.
+	 *
 	 * @param docType the docType to set
 	 */
 	public void setDocType(String docType) {
@@ -429,6 +645,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the supplier address.
+	 *
 	 * @return the supplierAddress
 	 */
 	public String getSupplierAddress() {
@@ -436,6 +654,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the supplier address.
+	 *
 	 * @param supplierAddress the supplierAddress to set
 	 */
 	public void setSupplierAddress(String supplierAddress) {
@@ -443,6 +663,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the term days.
+	 *
 	 * @return the termDays
 	 */
 	public String getTermDays() {
@@ -450,6 +672,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the term days.
+	 *
 	 * @param termDays the termDays to set
 	 */
 	public void setTermDays(String termDays) {
@@ -457,6 +681,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm financial orgs.
+	 *
 	 * @return the pmFinancialOrgs
 	 */
 	public List<PmFinancialOrg> getPmFinancialOrgs() {
@@ -464,6 +690,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm financial orgs.
+	 *
 	 * @param pmFinancialOrgs the pmFinancialOrgs to set
 	 */
 	public void setPmFinancialOrgs(List<PmFinancialOrg> pmFinancialOrgs) {
@@ -471,6 +699,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is removes the factoring.
+	 *
 	 * @return the removeFactoring
 	 */
 	public boolean isRemoveFactoring() {
@@ -478,6 +708,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the removes the factoring.
+	 *
 	 * @param removeFactoring the removeFactoring to set
 	 */
 	public void setRemoveFactoring(boolean removeFactoring) {
@@ -485,6 +717,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected tab index.
+	 *
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
@@ -492,6 +726,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected tab index.
+	 *
 	 * @param selectedTabIndex the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
@@ -499,6 +735,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm user.
+	 *
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
@@ -506,6 +744,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm user.
+	 *
 	 * @param pmUser the pmUser to set
 	 */
 	public void setPmUser(PmUser pmUser) {
@@ -513,6 +753,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 	
 	/**
+	 * Gets the phone no.
+	 *
 	 * @return the phoneNo
 	 */
 	public String getPhoneNo() {
@@ -520,6 +762,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the phone no.
+	 *
 	 * @param phoneNo the phoneNo to set
 	 */
 	public void setPhoneNo(String phoneNo) {
@@ -527,6 +771,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fax no.
+	 *
 	 * @return the faxNo
 	 */
 	public String getFaxNo() {
@@ -534,6 +780,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fax no.
+	 *
 	 * @param faxNo the faxNo to set
 	 */
 	public void setFaxNo(String faxNo) {
@@ -541,6 +789,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the contact email.
+	 *
 	 * @return the contactEmail
 	 */
 	public String getContactEmail() {
@@ -548,6 +798,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the contact email.
+	 *
 	 * @param contactEmail the contactEmail to set
 	 */
 	public void setContactEmail(String contactEmail) {
@@ -555,6 +807,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the contact person.
+	 *
 	 * @return the contactPerson
 	 */
 	public String getContactPerson() {
@@ -562,6 +816,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the contact person.
+	 *
 	 * @param contactPerson the contactPerson to set
 	 */
 	public void setContactPerson(String contactPerson) {
@@ -569,6 +825,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the contact phone no.
+	 *
 	 * @return the contactPhoneNo
 	 */
 	public String getContactPhoneNo() {
@@ -576,6 +834,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the contact phone no.
+	 *
 	 * @param contactPhoneNo the contactPhoneNo to set
 	 */
 	public void setContactPhoneNo(String contactPhoneNo) {
@@ -583,6 +843,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the stop ins.
+	 *
 	 * @return the stopIns
 	 */
 	public FlStopInstr getStopIns() {
@@ -590,6 +852,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the stop ins.
+	 *
 	 * @param stopIns the stopIns to set
 	 */
 	public void setStopIns(FlStopInstr stopIns) {
@@ -597,6 +861,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the reason descs.
+	 *
 	 * @return the reasonDescs
 	 */
 	public List<PmReasonDesc> getReasonDescs() {
@@ -604,6 +870,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the reason descs.
+	 *
 	 * @param reasonDescs the reasonDescs to set
 	 */
 	public void setReasonDescs(List<PmReasonDesc> reasonDescs) {
@@ -611,6 +879,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fl approver.
+	 *
 	 * @return the flApprover
 	 */
 	public String getFlApprover() {
@@ -618,6 +888,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fl approver.
+	 *
 	 * @param flApprover the flApprover to set
 	 */
 	public void setFlApprover(String flApprover) {
@@ -625,6 +897,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the stop instr.
+	 *
 	 * @return the stopInstr
 	 */
 	public FlFulfilmentItemAddr getStopInstr() {
@@ -634,6 +908,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Sets the stop instr.
+	 *
 	 * @param stopInstr the stopInstr to set
 	 */
 	public void setStopInstr(FlFulfilmentItemAddr stopInstr) {
@@ -641,6 +917,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Checks if is doc maintain remarks.
+	 *
 	 * @return the docMaintainRemarks
 	 */
 	public boolean isDocMaintainRemarks() {
@@ -648,6 +926,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the doc maintain remarks.
+	 *
 	 * @param docMaintainRemarks the docMaintainRemarks to set
 	 */
 	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
@@ -655,6 +935,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rfc address.
+	 *
 	 * @return the rfcAddress
 	 */
 	public String getRfcAddress() {
@@ -662,6 +944,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rfc address.
+	 *
 	 * @param rfcAddress the rfcAddress to set
 	 */
 	public void setRfcAddress(String rfcAddress) {
@@ -669,6 +953,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rfc phone no.
+	 *
 	 * @return the rfcPhoneNo
 	 */
 	public String getRfcPhoneNo() {
@@ -676,6 +962,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rfc fax no.
+	 *
 	 * @return the rfcFaxNo
 	 */
 	public String getRfcFaxNo() {
@@ -683,6 +971,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rfc contact email.
+	 *
 	 * @return the rfcContactEmail
 	 */
 	public String getRfcContactEmail() {
@@ -690,6 +980,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rfc contact person.
+	 *
 	 * @return the rfcContactPerson
 	 */
 	public String getRfcContactPerson() {
@@ -697,6 +989,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rfc contact phone no.
+	 *
 	 * @return the rfcContactPhoneNo
 	 */
 	public String getRfcContactPhoneNo() {
@@ -704,6 +998,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rfc phone no.
+	 *
 	 * @param rfcPhoneNo the rfcPhoneNo to set
 	 */
 	public void setRfcPhoneNo(String rfcPhoneNo) {
@@ -711,6 +1007,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rfc fax no.
+	 *
 	 * @param rfcFaxNo the rfcFaxNo to set
 	 */
 	public void setRfcFaxNo(String rfcFaxNo) {
@@ -718,6 +1016,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rfc contact email.
+	 *
 	 * @param rfcContactEmail the rfcContactEmail to set
 	 */
 	public void setRfcContactEmail(String rfcContactEmail) {
@@ -725,6 +1025,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rfc contact person.
+	 *
 	 * @param rfcContactPerson the rfcContactPerson to set
 	 */
 	public void setRfcContactPerson(String rfcContactPerson) {
@@ -732,45 +1034,89 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rfc contact phone no.
+	 *
 	 * @param rfcContactPhoneNo the rfcContactPhoneNo to set
 	 */
 	public void setRfcContactPhoneNo(String rfcContactPhoneNo) {
 		this.rfcContactPhoneNo = rfcContactPhoneNo;
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Checks if is auto update.
+	 *
+	 * @return true, if is auto update
+	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
 
+	/**
+	 * Sets the auto update.
+	 *
+	 * @param autoUpdate the new auto update
+	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 *
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
 
+	/**
+	 * Gets the button action.
+	 *
+	 * @return the button action
+	 */
 	public String getButtonAction() {
 		return buttonAction;
 	}
 
+	/**
+	 * Sets the button action.
+	 *
+	 * @param buttonAction the new button action
+	 */
 	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
 
 	/**
+	 * Gets the back to previous.
+	 *
 	 * @return the backToPrevious
 	 */
 	public String getBackToPrevious() {
@@ -778,6 +1124,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the back to previous.
+	 *
 	 * @param backToPrevious the backToPrevious to set
 	 */
 	public void setBackToPrevious(String backToPrevious) {
