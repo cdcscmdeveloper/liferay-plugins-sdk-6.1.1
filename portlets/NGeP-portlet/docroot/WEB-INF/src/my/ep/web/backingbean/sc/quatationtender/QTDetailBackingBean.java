@@ -934,13 +934,15 @@ public class QTDetailBackingBean extends
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						PmAddress pmAddress = scQtSampleSubmission.getAddress();
-						if (pmAddress.getPmDivision() != null
-								&& pmAddress.getPmDivision().getDivisionId() == null) {
-							scQtSampleSubmission.getAddress().setPmDivision(
-									null);
+						if (null != pmAddress) { 
+							if (pmAddress.getPmDivision() != null
+									&& pmAddress.getPmDivision().getDivisionId() == null) {
+								scQtSampleSubmission.getAddress().setPmDivision(
+										null);
+							}
+							scQtSampleSubmission.getAddress().setPmCountry(
+									retrieveCountry());
 						}
-						scQtSampleSubmission.getAddress().setPmCountry(
-								retrieveCountry());
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
 					}
 				}
