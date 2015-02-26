@@ -2,7 +2,9 @@ package my.ep.web.managedbean.sc.supplierproposal;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -38,6 +40,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.MenuModel;
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author Viswanath
@@ -59,10 +63,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<ScQtProposalChecklist> tecCheckDetailsList;
 	private List<ScQtProposalChecklist> financeCheckDetailsList;
 	private List<ScQtProposalChecklist> selectedCheckDetails;
-	
 
 	private ScQtCheckList scQtCheckList;
-	private String closingTime="";
+	private String closingTime = "";
 	private int activeIndex;
 	private int proposalIndex;
 
@@ -78,7 +81,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	// private ScAttachment scAttachment = new ScAttachment();
 	private List<ScAttachment> scAttachmentList;
-
+	//MenuModel
+	private MenuModel proposalZonalMenuModel;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
 	private List<ScQtProposalScore> scQtProposalScoreList;
@@ -106,8 +110,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private BigDecimal year;
 	private boolean selectedAll;
 	private boolean selected;
-	
-	// Business rule 
+
+	// Business rule
 	private Date nonFedEffMinDate;
 	private Date nonFedEffMaxDate;
 	private Date nonFedMinDate;
@@ -140,7 +144,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	// No of Employees
 	private ScQtPRPEmployee scQtPRPEmployee;
-	
+
 	// Technical Staff List
 	private int totalNoOfYearsExperience;
 
@@ -154,80 +158,71 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private SmAppl smAppl;
 	private List<TechnicalStaffBean> smPersonnelList;
 	private SmFacility smCompanyBasic;
-	private List<SmFacility> supplierFacilities; 
-	private  List<SmChequeSignatory> smChequeSignatories;
+	private List<SmFacility> supplierFacilities;
+	private List<SmChequeSignatory> smChequeSignatories;
 	private List<SmPersonnel> equityShareHolders;
 	private SmPersonnleCalcVO personCalc;
-	
+
 	private int technicalTableRow;
 	private int financialTableRow;
-	
+
 	private boolean agreeWithIntegrityPact;
 	private boolean agreeWithOthersTermsConditions;
 	private String integrityPact;
 	private String othersTermsConditions;
-	//Added by vidyasagarReddy
+	// Added by vidyasagarReddy
 	private String pageUrl;
 	private String docDefinitionKey;
 	private String checkListDefintionKey;
 	private List<ScQtProposal> selectMultipleProposalList;
 
+	private Map<Long, TemplateSpecBean> zoneTplSpecBeanMap;
+	private StreamedContent sampleLabelStreamContent;
+
 	public List<ScQtProposal> getSelectMultipleProposalList() {
 		return selectMultipleProposalList;
 	}
-
-
-
 
 	public void setSelectMultipleProposalList(
 			List<ScQtProposal> selectMultipleProposalList) {
 		this.selectMultipleProposalList = selectMultipleProposalList;
 	}
 
-
-
-
 	public SPDetailManagedBean() {
 		log.info("inside ");
 	}
-	
-	
-	
 
 	/**
 	 * @return the smCompanyBasic
 	 */
 	public SmFacility getSmCompanyBasic() {
 		List<SmFacility> facilities = null;
-		if(smAppl != null){
+		if (smAppl != null) {
 			facilities = smAppl.getSmFacilities();
 		}
-		 
-		if(facilities != null){
-			
-			for (SmFacility facility : facilities){
-				
-				if(facility.getFacilityType() == SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE || facility.getFacilityType() == SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE){
+
+		if (facilities != null) {
+
+			for (SmFacility facility : facilities) {
+
+				if (facility.getFacilityType() == SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE
+						|| facility.getFacilityType() == SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) {
 					smCompanyBasic = facility;
 					break;
 				}
 			}
-			
+
 		}
 		return smCompanyBasic;
 	}
 
-
-
 	/**
-	 * @param smCompanyBasic the smCompanyBasic to set
+	 * @param smCompanyBasic
+	 *            the smCompanyBasic to set
 	 */
 	public void setSmCompanyBasic(SmFacility smCompanyBasic) {
 		this.smCompanyBasic = smCompanyBasic;
 	}
-
-
-
 
 	/**
 	 * @return the smChequeSignatories
@@ -236,18 +231,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return smChequeSignatories;
 	}
 
-
-
-
 	/**
-	 * @param smChequeSignatories the smChequeSignatories to set
+	 * @param smChequeSignatories
+	 *            the smChequeSignatories to set
 	 */
-	public void setSmChequeSignatories(List<SmChequeSignatory> smChequeSignatories) {
+	public void setSmChequeSignatories(
+			List<SmChequeSignatory> smChequeSignatories) {
 		this.smChequeSignatories = smChequeSignatories;
 	}
-
-
-
 
 	/**
 	 * @return the equityShareHolders
@@ -256,18 +247,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return equityShareHolders;
 	}
 
-
-
-
 	/**
-	 * @param equityShareHolders the equityShareHolders to set
+	 * @param equityShareHolders
+	 *            the equityShareHolders to set
 	 */
 	public void setEquityShareHolders(List<SmPersonnel> equityShareHolders) {
 		this.equityShareHolders = equityShareHolders;
 	}
-
-
-
 
 	/**
 	 * @return the personCalc
@@ -276,18 +262,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return personCalc;
 	}
 
-
-
-
 	/**
-	 * @param personCalc the personCalc to set
+	 * @param personCalc
+	 *            the personCalc to set
 	 */
 	public void setPersonCalc(SmPersonnleCalcVO personCalc) {
 		this.personCalc = personCalc;
 	}
-
-
-
 
 	/**
 	 * @return the toBeDeletedCashOnHandList
@@ -296,17 +277,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return toBeDeletedCashOnHandList;
 	}
 
-
-
 	/**
-	 * @param toBeDeletedCashOnHandList the toBeDeletedCashOnHandList to set
+	 * @param toBeDeletedCashOnHandList
+	 *            the toBeDeletedCashOnHandList to set
 	 */
 	public void setToBeDeletedCashOnHandList(
 			List<ScQtPRPCashOnHand> toBeDeletedCashOnHandList) {
 		this.toBeDeletedCashOnHandList = toBeDeletedCashOnHandList;
 	}
-
-
 
 	/**
 	 * @return the toBeDeletedCreditFacilities
@@ -315,17 +293,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return toBeDeletedCreditFacilities;
 	}
 
-
-
 	/**
-	 * @param toBeDeletedCreditFacilities the toBeDeletedCreditFacilities to set
+	 * @param toBeDeletedCreditFacilities
+	 *            the toBeDeletedCreditFacilities to set
 	 */
 	public void setToBeDeletedCreditFacilities(
 			List<ScQtPRPCreditFacility> toBeDeletedCreditFacilities) {
 		this.toBeDeletedCreditFacilities = toBeDeletedCreditFacilities;
 	}
-
-
 
 	/**
 	 * @return the deletedPRPExperiences
@@ -334,17 +309,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return deletedPRPExperiences;
 	}
 
-
-
 	/**
-	 * @param deletedPRPExperiences the deletedPRPExperiences to set
+	 * @param deletedPRPExperiences
+	 *            the deletedPRPExperiences to set
 	 */
 	public void setDeletedPRPExperiences(
 			List<ScQtPRPExperience> deletedPRPExperiences) {
 		this.deletedPRPExperiences = deletedPRPExperiences;
 	}
-
-
 
 	/**
 	 * @return the nonFedEffMaxDate
@@ -353,24 +325,21 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return nonFedEffMaxDate;
 	}
 
-
-
 	/**
-	 * @param nonFedEffMaxDate the nonFedEffMaxDate to set
+	 * @param nonFedEffMaxDate
+	 *            the nonFedEffMaxDate to set
 	 */
 	public void setNonFedEffMaxDate(Date nonFedEffMaxDate) {
 		this.nonFedEffMaxDate = nonFedEffMaxDate;
 	}
 
-
-
 	/**
 	 * @return the nonFedMinDate
 	 */
 	public Date getNonFedMinDate() {
-		
-		if(nonFedMinDate == null){
-			nonFedMinDate = new Date(01/01/2008);
+
+		if (nonFedMinDate == null) {
+			nonFedMinDate = new Date(01 / 01 / 2008);
 		}
 		return nonFedMinDate;
 	}
@@ -474,7 +443,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierId the supplierId to set
+	 * @param supplierId
+	 *            the supplierId to set
 	 */
 	public void setSupplierId(Long supplierId) {
 		this.supplierId = supplierId;
@@ -529,7 +499,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtPRPExperienceNCheckLists the scQtPRPExperienceNCheckLists to set
+	 * @param scQtPRPExperienceNCheckLists
+	 *            the scQtPRPExperienceNCheckLists to set
 	 */
 	public void setScQtPRPExperienceNCheckLists(
 			List<ScQtPRPExperienceNCheckList> scQtPRPExperienceNCheckLists) {
@@ -738,7 +709,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtSampleLable the scQtSampleLable to set
+	 * @param scQtSampleLable
+	 *            the scQtSampleLable to set
 	 */
 	public void setScQtSampleLable(ScQtSampleLable scQtSampleLable) {
 		this.scQtSampleLable = scQtSampleLable;
@@ -776,7 +748,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.scQtDoc = scQtDoc;
 	}
 
-	
 	public List<TplSpecZoneDtl> getZones() {
 		return zones;
 	}
@@ -865,7 +836,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalTableRow the technicalTableRow to set
+	 * @param technicalTableRow
+	 *            the technicalTableRow to set
 	 */
 	public void setTechnicalTableRow(int technicalTableRow) {
 		this.technicalTableRow = technicalTableRow;
@@ -879,7 +851,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param financialTableRow the financialTableRow to set
+	 * @param financialTableRow
+	 *            the financialTableRow to set
 	 */
 	public void setFinancialTableRow(int financialTableRow) {
 		this.financialTableRow = financialTableRow;
@@ -893,7 +866,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param agreeWithIntegrityPact the agreeWithIntegrityPact to set
+	 * @param agreeWithIntegrityPact
+	 *            the agreeWithIntegrityPact to set
 	 */
 	public void setAgreeWithIntegrityPact(boolean agreeWithIntegrityPact) {
 		this.agreeWithIntegrityPact = agreeWithIntegrityPact;
@@ -907,7 +881,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param agreeWithOthersTermsConditions the agreeWithOthersTermsConditions to set
+	 * @param agreeWithOthersTermsConditions
+	 *            the agreeWithOthersTermsConditions to set
 	 */
 	public void setAgreeWithOthersTermsConditions(
 			boolean agreeWithOthersTermsConditions) {
@@ -922,7 +897,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param integrityPact the integrityPact to set
+	 * @param integrityPact
+	 *            the integrityPact to set
 	 */
 	public void setIntegrityPact(String integrityPact) {
 		this.integrityPact = integrityPact;
@@ -936,13 +912,12 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param othersTermsConditions the othersTermsConditions to set
+	 * @param othersTermsConditions
+	 *            the othersTermsConditions to set
 	 */
 	public void setOthersTermsConditions(String othersTermsConditions) {
 		this.othersTermsConditions = othersTermsConditions;
 	}
-
-
 
 	/**
 	 * @return the year
@@ -951,18 +926,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return year;
 	}
 
-
-
-
 	/**
-	 * @param year the year to set
+	 * @param year
+	 *            the year to set
 	 */
 	public void setYear(BigDecimal year) {
 		this.year = year;
 	}
-
-
-
 
 	/**
 	 * @return the nonFedEffMinDate
@@ -971,14 +941,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return nonFedEffMinDate;
 	}
 
-
 	/**
-	 * @param nonFedEffMinDate the nonFedEffMinDate to set
+	 * @param nonFedEffMinDate
+	 *            the nonFedEffMinDate to set
 	 */
 	public void setNonFedEffMinDate(Date nonFedEffMinDate) {
 		this.nonFedEffMinDate = nonFedEffMinDate;
 	}
-	
 
 	/**
 	 * @return the selectedAll
@@ -987,18 +956,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return selectedAll;
 	}
 
-
-
-
 	/**
-	 * @param selectedAll the selectedAll to set
+	 * @param selectedAll
+	 *            the selectedAll to set
 	 */
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
 	}
-
-
-
 
 	/**
 	 * @return the selected
@@ -1007,56 +971,37 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return selected;
 	}
 
-
-
-
 	/**
-	 * @param selected the selected to set
+	 * @param selected
+	 *            the selected to set
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
 
-
-
-
 	public String getPageUrl() {
 		return pageUrl;
 	}
-
-
-
 
 	public void setPageUrl(String pageUrl) {
 		this.pageUrl = pageUrl;
 	}
 
-
-
-
 	public String getDocDefinitionKey() {
 		return docDefinitionKey;
 	}
-
-
-
 
 	public void setDocDefinitionKey(String docDefinitionKey) {
 		this.docDefinitionKey = docDefinitionKey;
 	}
 
-
-
-
 	public String getCheckListDefintionKey() {
 		return checkListDefintionKey;
 	}
 
-
 	public void setCheckListDefintionKey(String checkListDefintionKey) {
 		this.checkListDefintionKey = checkListDefintionKey;
 	}
-
 
 	/**
 	 * @return the supplierFacilities
@@ -1065,14 +1010,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return supplierFacilities;
 	}
 
-
 	/**
-	 * @param supplierFacilities the supplierFacilities to set
+	 * @param supplierFacilities
+	 *            the supplierFacilities to set
 	 */
 	public void setSupplierFacilities(List<SmFacility> supplierFacilities) {
 		this.supplierFacilities = supplierFacilities;
 	}
-
 
 	/**
 	 * @return the closingTime
@@ -1081,14 +1025,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return closingTime;
 	}
 
-
 	/**
-	 * @param closingTime the closingTime to set
+	 * @param closingTime
+	 *            the closingTime to set
 	 */
 	public void setClosingTime(String closingTime) {
 		this.closingTime = closingTime;
 	}
-
 
 	/**
 	 * @return the closed
@@ -1097,14 +1040,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return closed;
 	}
 
-
 	/**
-	 * @param closed the closed to set
+	 * @param closed
+	 *            the closed to set
 	 */
 	public void setClosed(boolean closed) {
 		this.closed = closed;
 	}
-
 
 	/**
 	 * @return the message
@@ -1113,13 +1055,59 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return message;
 	}
 
-
 	/**
-	 * @param message the message to set
+	 * @param message
+	 *            the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
+
+	/**
+	 * @return the zoneTplSpecBeanMap
+	 */
+	public Map<Long, TemplateSpecBean> getZoneTplSpecBeanMap() {
+		if (this.zoneTplSpecBeanMap == null) {
+			this.zoneTplSpecBeanMap = new LinkedHashMap<Long, TemplateSpecBean>();
+		}
+		return zoneTplSpecBeanMap;
+	}
+
+	/**
+	 * @param zoneTplSpecBeanMap
+	 *            the zoneTplSpecBeanMap to set
+	 */
+	public void setZoneTplSpecBeanMap(
+			Map<Long, TemplateSpecBean> zoneTplSpecBeanMap) {
+		this.zoneTplSpecBeanMap = zoneTplSpecBeanMap;
+	}
+
+	/**
+	 * @return the sampleLabelStreamContent
+	 */
+	public StreamedContent getSampleLabelStreamContent() {
+		return sampleLabelStreamContent;
+	}
+
+	/**
+	 * @param sampleLabelStreamContent the sampleLabelStreamContent to set
+	 */
+	public void setSampleLabelStreamContent(StreamedContent sampleLabelStreamContent) {
+		this.sampleLabelStreamContent = sampleLabelStreamContent;
+	}
+
+	/**
+	 * @return the proposalZonalMenuModel
+	 */
+	public MenuModel getProposalZonalMenuModel() {
+		return proposalZonalMenuModel;
+	}
+
+	/**
+	 * @param proposalZonalMenuModel the proposalZonalMenuModel to set
+	 */
+	public void setProposalZonalMenuModel(MenuModel proposalZonalMenuModel) {
+		this.proposalZonalMenuModel = proposalZonalMenuModel;
+	}
+
 }
