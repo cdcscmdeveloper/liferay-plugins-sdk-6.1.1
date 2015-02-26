@@ -20,13 +20,13 @@
 			postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
 
 		<div class="ppRightBtn">
-
 			<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 				action="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 				update="spkiPopup" oncomplete="spki_dlg.show();"
 				rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}" />
 
 		</div>
+		<ui:include src="/xhtml/sc/directpurchase/supplierViewHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />
 	</ui:define>
 </ui:composition>
