@@ -1960,7 +1960,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			printMachine.setBrand(null);
 			printMachine.setGuarantor(null);
 			printMachine.setQty(null);
+			printMachine.setRequisiteYear(null);
 			printMachine.setRequisiteMethod(null);
+			refreshPage();
 		}
 	}
 	
