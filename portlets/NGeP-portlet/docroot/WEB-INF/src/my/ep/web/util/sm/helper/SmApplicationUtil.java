@@ -4860,8 +4860,9 @@ public class SmApplicationUtil {
 			} finally {
 				reqSO = null;
 			}
-			String[] dayLeftParam = { DateUtils.getDaysDifference(new Date(),
-					smAppl.getDraftExpiryDate()) + "" };
+			long dayBal = DateUtils.getDaysDifference(new Date(),
+					smAppl.getDraftExpiryDate())+1;
+			String[] dayLeftParam = { dayBal + "" };
 			applStatusInfo.setSubmissionDate(DateUtils.dateToString(
 					"dd-MMM-yyyy", smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
