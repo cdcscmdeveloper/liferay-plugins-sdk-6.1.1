@@ -1598,8 +1598,7 @@ public class SmPersonnelBackingBean extends
 									new FacesScopes().getUserLocale())));
 			fc.getApplication()
 					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/userProfileMaintenance/outputMsg");
+					.handleNavigation(fc, null,SmApplicationUtil.getApplicationErrorPage());
 		} else {
 			throw new EpException(MessageConst.ERROR_721112);
 		}
