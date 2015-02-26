@@ -160,9 +160,9 @@
 					style="font-weight:bold;text-align: left;" />
 
 			</h:panelGroup>
-			<p:dataTable id="sitevisitDtls" var="sitevisitDtls"
+			<p:dataTable id="svdetails" var="sitevisitDtls"
 				value="#{bsvDetails.sitevisitList}" style="width:100%">
-				<ac:paginator for="sitevisitDtls"></ac:paginator>
+				<ac:paginator for="svdetails"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.qt.nb.description']}"
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{sitevisitDtls.bsvDesc}" />
