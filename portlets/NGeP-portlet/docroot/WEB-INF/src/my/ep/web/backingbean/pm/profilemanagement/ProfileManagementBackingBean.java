@@ -1971,6 +1971,11 @@ public class ProfileManagementBackingBean extends
 				ISearchBean<PmUser> searchBean) {
 			try {
 				ISearchBean<PmUser> searchBeanData = getSearchBeanData(searchBean);
+			
+				searchBeanData.getDataFilterBeans().add(
+						new SearchFilterBean("orgTypeCode.parameterCode",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),ParameterConst.ORG_TYPE_SUPPLIER
+								));
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserSearchBean(searchBeanData);
 				IUserSO userSO = BusinessDelegate.getInstance()
@@ -3011,14 +3016,22 @@ public class ProfileManagementBackingBean extends
 		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 		if (getManagedBean().getSelectedUser().getIdentificationNo() != null
 				&& !"".equalsIgnoreCase(getManagedBean().getSelectedUser()
-						.getIdentificationNo())) {
+						.getIdentificationNo()) && getManagedBean().getSelectedUser()
+						.getIdentificationCode().getParameterCode() != null) {
 			SearchFilterBean idNoSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
 			idNoSearchBean.setSearchField("identificationNo");
 			idNoSearchBean.setSearchValue(getManagedBean().getSelectedUser()
 					.getIdentificationNo());
-			searchBean.getDataFilterBeans().add(idNoSearchBean);
 
+			searchBean.getDataFilterBeans().add(idNoSearchBean);
+		
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("identificationCode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getSelectedUser()
+						    .getIdentificationCode().getParameterCode()));
+			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
