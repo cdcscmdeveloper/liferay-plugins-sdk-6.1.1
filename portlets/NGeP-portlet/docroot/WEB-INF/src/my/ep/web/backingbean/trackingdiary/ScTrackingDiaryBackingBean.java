@@ -136,6 +136,12 @@ public class ScTrackingDiaryBackingBean extends
 
 	public void search() {
 		System.out.println("ScTrackingDiaryBackingBean search");
+		if ((null == getManagedBean().getSearchDocumentType()) 
+//				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
+//				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
+				) {
+			throw new EpException(MessageConst.ERROR_740023);
+		}
 		getManagedBean().getScRNDocumentDataModel().reloadData();
 	}
 
