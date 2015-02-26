@@ -2821,8 +2821,8 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveDescOfficer(){
 		scDescOfficerList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-        	lngUserId = (long) 240500;
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
@@ -2868,8 +2868,8 @@ public class ReportBackingBean extends
 			userId = new FacesScopes().getUserSessionBean().getUserId()
 					.toString();
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			//reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			reqDTO.setUserId((long) 240500);
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			//reqDTO.setUserId((long) 240500);
 			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 			UserResDTO userResDTO = userSO
 					.retrieveUserRoleDescListByUserId(reqDTO);
