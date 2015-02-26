@@ -2443,7 +2443,8 @@ public class SpecificationBackingBean extends
 								.getTechnicalCheckList()) {
 							if (null != checklist.getPmDocument()) {
 								if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
-										.contains(checklist.getPmDocument()
+										.equalsIgnoreCase(checklist
+												.getPmDocument()
 												.getDocDefinitionKey())) {
 									localcheckList.add(checklist);
 								}
@@ -7812,7 +7813,7 @@ public class SpecificationBackingBean extends
 		if (null != enddate) {
 			long days = DateUtils.getDaysDifference(enddate, d1);
 			int day = (int) days;
-			if (day >0) {
+			if (day > 0) {
 				isDate = true;
 			}
 		}
@@ -7827,7 +7828,7 @@ public class SpecificationBackingBean extends
 		if (null != enddate) {
 			long days = DateUtils.getDaysDifference(d1, enddate);
 			int day = (int) days;
-			if (day >0) {
+			if (day > 0) {
 				isDate = true;
 			}
 		}
@@ -12160,9 +12161,10 @@ public class SpecificationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE);
-		/*if (this.getManagedBean().getScQt().isPanel()) {
-			recommendList.add(ParameterConst.ITEM_TYPE_SERVICE);
-		}*/
+		/*
+		 * if (this.getManagedBean().getScQt().isPanel()) {
+		 * recommendList.add(ParameterConst.ITEM_TYPE_SERVICE); }
+		 */
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -12217,9 +12219,10 @@ public class SpecificationBackingBean extends
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCAL_GOODS);
 		types.add(ParameterConst.IMPORTED_GOODS);
-		/*if (!this.getManagedBean().getScQt().isPanel()) {
-			types.add(ParameterConst.IMPORTED_GOODS);
-		}*/
+		/*
+		 * if (!this.getManagedBean().getScQt().isPanel()) {
+		 * types.add(ParameterConst.IMPORTED_GOODS); }
+		 */
 
 		SelectItem[] items = null;
 		try {
