@@ -192,7 +192,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
@@ -209,7 +209,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size())>0||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size())>0||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
@@ -226,7 +226,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
 	        	if((approverNayakTarafList.size()>0)){
@@ -242,7 +242,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
 	        	if((approverNayakTarafList.size()>0)){
@@ -258,7 +258,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
 	        	if((approverNayakTarafList.size()>0)){
@@ -274,7 +274,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
 	        	if((approverNayakTarafList.size()>0)){
@@ -289,7 +289,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
@@ -303,7 +303,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);	        	
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
@@ -321,7 +321,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScStatusView(true);
 	        	rptGenBean.setScCreatedFromView(true);	
 	        	rptGenBean.setScPublishDateView(true);  
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
 	        	if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -337,7 +337,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScStatusView(true);
 	        	rptGenBean.setScCreatedFromView(true);	
 	        	rptGenBean.setScPublishDateView(true);  
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
 	        	if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -346,7 +346,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -360,7 +360,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -372,7 +372,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;  
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_SUPPLIER_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -384,7 +384,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_REQUISITIONER_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -396,7 +396,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_PINO_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -408,7 +408,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_LAPORAN_PURCHASE_DEFAULT_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -424,7 +424,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -438,7 +438,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_REQUEST_NOTE_PROCUREMENT_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -451,7 +451,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_REQUEST_NOTE_COMPLETE_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -464,7 +464,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_PURCHASE_INQ_DTL_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -476,7 +476,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;  
 	        case ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -489,7 +489,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break; 
 	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -501,7 +501,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
@@ -514,7 +514,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.APPROVER)))){
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
