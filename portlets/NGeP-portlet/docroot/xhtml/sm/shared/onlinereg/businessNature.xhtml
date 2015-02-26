@@ -11,7 +11,7 @@
 			value="#{registrationBackingBean.managedBean.smSupp.smSupplierBusinesses}"
 			selection="#{registrationBackingBean.managedBean.selectedBusinessNatureLs}"
 			id="suppBizNatureId" rowKey="#{suppBizNature}">
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!registrationBackingBean.managedBean.smSupp.brandNew and registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 1}" />
 			<p:ajax event="rowSelectCheckbox" />
 			
 			<p:column>
