@@ -60,12 +60,19 @@
 
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.cm.contract.no']}" /></td>
-									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText>
-										<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.active.contract.mof']}"/>
-									</td>
+								<td><p:inputText size="50"
+										value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText>
+									<!-- <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.active.contract.mof']}"/> -->
+									<p:graphicImage id="uidt"
+										value="/css/images/design/tooltips.png" /> <p:tooltip
+										id="uid" for="uidt">
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.fl.tooltip.active.contract.mof']}" />
+									</p:tooltip></td>
 
-									<td><p:outputLabel value="#{lbl['lbl.cm.circular.no']}" /></td>
+
+
+								<td><p:outputLabel value="#{lbl['lbl.cm.circular.no']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText></td>
 								</tr>
@@ -220,21 +227,28 @@
 							<p:column width="5%" headerText="#{lbl['lbl.cm.uom']}" style="white-space: normal">
 							#{supplierItem.uomName}
 							</p:column>
-							
-							<p:column width="8%" style="white-space: normal" >
-							
-								<f:facet name="header">
-							          <h:outputText value="#{lbl['lbl.cm.best.price']}" />
-							          <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/>
-							     </f:facet>
-							
-								<h:outputLabel value="#{supplierItem.bestPrice}" rendered="#{supplierItem.bestPrice>0}" >
-									<f:convertNumber pattern="#,###0.00" />
-								</h:outputLabel>
-								
-							</p:column>
-							
-							<p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
+
+								<p:column width="8%" style="white-space: normal">
+
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.cm.best.price']}" />
+										<p:graphicImage id="uidti"
+											value="/css/images/design/tooltips.png" />
+										<p:tooltip id="uidtt" for="uidti">
+											<p:outputLabel escape="false"
+												value="#{lbl['lbl.cm.tooltip.best.price']}" />
+										</p:tooltip>
+										<!--  <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/> -->
+									</f:facet>
+
+									<h:outputLabel value="#{supplierItem.bestPrice}"
+										rendered="#{supplierItem.bestPrice>0}">
+										<f:convertNumber pattern="#,###0.00" />
+									</h:outputLabel>
+
+								</p:column>
+
+								<p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
 								<h:outputLabel value="#{catalogueBackingBean.getPriceType(supplierItem.docId, supplierItem.contractNo)}" />
 							</p:column>
 
