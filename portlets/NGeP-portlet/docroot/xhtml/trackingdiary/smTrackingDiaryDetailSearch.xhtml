@@ -16,20 +16,8 @@
 	<ui:define name="contentSection">
 
 	<h:panelGroup id="cmUNSPSCsearchID" autoUpdate="true">
-		<p:panel id="Pnl" toggleable="true">
-		<script>
-		$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
-		</script>
-	
-			<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-			<div style="text-align: right; min-height: 40px;">	
-				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{smTrackingDiaryBackingBean.backToPrev}" />
-				</div>
-			</div>
-		</p:panel>
-		<ac:trackingDiaryDetail dataTable="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
+		<ac:trackingDiaryDetail action="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" dataTable="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
 	</h:panelGroup>		
 
-		</ui:define>
+	</ui:define>
 </ui:composition>
