@@ -2193,8 +2193,7 @@ public class SpecificationBackingBean extends
 
 			ParameterReqDTO itemTypeReqDTO = new ParameterReqDTO();
 			itemTypeReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
-			itemTypeReqDTO
-					.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE);
+			itemTypeReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
 			ParameterResDTO itemTypeResDTO = parameterSo
 					.retrieveParameterByTypeAndCode(itemTypeReqDTO);
 
@@ -2442,7 +2441,7 @@ public class SpecificationBackingBean extends
 						// Collections.sort(resDTO.getTechnicalCheckList());
 						for (ScQtCheckList checklist : resDTO
 								.getTechnicalCheckList()) {
-							if (checklist.getPmDocument() != null ) {
+							if (null != checklist.getPmDocument()) {
 								if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
 										.contains(checklist.getPmDocument()
 												.getDocDefinitionKey())) {
@@ -7813,7 +7812,7 @@ public class SpecificationBackingBean extends
 		if (null != enddate) {
 			long days = DateUtils.getDaysDifference(enddate, d1);
 			int day = (int) days;
-			if (day >= 0) {
+			if (day >0) {
 				isDate = true;
 			}
 		}
@@ -7828,7 +7827,7 @@ public class SpecificationBackingBean extends
 		if (null != enddate) {
 			long days = DateUtils.getDaysDifference(d1, enddate);
 			int day = (int) days;
-			if (day >= 0) {
+			if (day >0) {
 				isDate = true;
 			}
 		}
@@ -10017,6 +10016,21 @@ public class SpecificationBackingBean extends
 									SearchOperator.OPERATOR_LIKE.value(), 1));
 				}
 
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("docType",
+								SearchOperator.OPERATOR_EQUALS.value(), "PQ",
+								true));
+				Date todayDate = new Date();
+				Calendar c1 = Calendar.getInstance();
+				c1.setTime(todayDate);
+				Calendar fromDate = Calendar.getInstance();
+				fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+						c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+				fromDate.set(Calendar.MILLISECOND, 0);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("endDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								fromDate));
 				circularReqDTO.setCircularVerSearchBean(searchBean);
 
 				circularSO = EpEjbBusinessDelegate.getInstance()
@@ -12146,6 +12160,9 @@ public class SpecificationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE);
+		/*if (this.getManagedBean().getScQt().isPanel()) {
+			recommendList.add(ParameterConst.ITEM_TYPE_SERVICE);
+		}*/
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -12200,6 +12217,9 @@ public class SpecificationBackingBean extends
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCAL_GOODS);
 		types.add(ParameterConst.IMPORTED_GOODS);
+		/*if (!this.getManagedBean().getScQt().isPanel()) {
+			types.add(ParameterConst.IMPORTED_GOODS);
+		}*/
 
 		SelectItem[] items = null;
 		try {
