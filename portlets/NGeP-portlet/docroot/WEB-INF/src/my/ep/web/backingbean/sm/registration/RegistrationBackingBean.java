@@ -634,6 +634,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public void removeBusinessNature() {
 		log.info("---------------removeBusinessNature count------------" + this.getManagedBean().getSelectedBusinessNatureLs().length);
+		if(!this.getManagedBean().getSmSupp().isBrandNew()){
+			if(this.getManagedBean().getSelectedBusinessNatureLs().length ==  this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size()){
+				throw new EpException(MessageConst.ERROR_721014);
+			}
+		}
 		for (SmSupplierBusiness suppBusinessNature : this.getManagedBean().getSelectedBusinessNatureLs()) {
 			log.info("---------------removeBusinessNature.------------" + suppBusinessNature);
 			this.getManagedBean().getSmSupp().getSmSupplierBusinesses().remove(suppBusinessNature);
