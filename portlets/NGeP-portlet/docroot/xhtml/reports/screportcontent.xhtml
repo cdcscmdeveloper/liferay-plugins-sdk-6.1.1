@@ -251,7 +251,7 @@
 		            </div>
 		            <div>
 						<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSoneCrtdFromDateView}">
-						<TABLE style="margin-top:10px;width:43%;">
+						<TABLE style="margin-top:10px;width:50%;">
 							<TR>
 								<TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.createdDt']}" style="width:158px;"/>
@@ -261,6 +261,9 @@
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
 																				
 									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
 								</TD>				
 								<TD>
 									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.scSoneCrtdToDate}"
@@ -273,7 +276,7 @@
 		            </div>
 		             <div>
 						<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPublishDateView}">
-						<TABLE style="margin-top:10px;width:43%;">
+						<TABLE style="margin-top:10px;width:50%;">
 							<TR>
 								<TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.publishedDt']}" style="width:158px;"/>
@@ -283,6 +286,9 @@
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
 																				
 									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
 								</TD>				
 								<TD>
 									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.scPublishToDate}"
