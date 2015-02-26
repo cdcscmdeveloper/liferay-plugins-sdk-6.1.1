@@ -685,7 +685,9 @@ public class ReportConst {
 	public static final String RN_APPROVER = "RN_APPROVER";
 	public static final String DESK_OFFICER = "DESK_OFFICER";
 	public static final String SUB_MOD_S1 = "S1";
-	
+	public static final String BPK_APPROVER = "BPK_APPROVER";
+	public static final String COMMITTEE_APPROVER = "COMMITTEE_APPROVER";
+	public static final String PUBLICATION_APPROVER = "PUBLICATION_APPROVER";
 	//Supplier Management
 	public static final String DOTJSP = ".jsp";
 	public static final String CONTENT_DISPOSITION = "Content-Disposition";

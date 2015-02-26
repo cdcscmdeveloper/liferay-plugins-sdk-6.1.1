@@ -126,6 +126,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> approverNayakTarafList = new ArrayList<SelectItem>();
 	private List<SelectItem> scPtjList = new ArrayList<SelectItem>();
 	private List<SelectItem> scRequisitionerList = new ArrayList<SelectItem>();
+	private List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -187,6 +188,14 @@ public class ReportBackingBean extends
 	
 
 	
+
+	public List<SelectItem> getScDescOfficerList() {
+		return scDescOfficerList;
+	}
+
+	public void setScDescOfficerList(List<SelectItem> scDescOfficerList) {
+		this.scDescOfficerList = scDescOfficerList;
+	}
 
 	public List<SelectItem> getScPtjList() {
 		return scPtjList;
@@ -2776,7 +2785,7 @@ public class ReportBackingBean extends
 		scPtjList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			//lngUserId = (long) 185380;
+        	//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
@@ -2794,7 +2803,7 @@ public class ReportBackingBean extends
 		scRequisitionerList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-        	//lngUserId = (long) 185380;
+        	//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
@@ -2809,12 +2818,31 @@ public class ReportBackingBean extends
         }
 		return scRequisitionerList;
 	}
+	public List<SelectItem> retrieveDescOfficer(){
+		scDescOfficerList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	lngUserId = (long) 240500;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> reqLst = reportSO.retrieveDeskOfficer(lngUserId);
+			
+			for (Object[] object : reqLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				scDescOfficerList.add(selectItem);
+			}
+        }
+		return scDescOfficerList;
+	}
 	public List<SelectItem> retrieveApprovarNaikTaraf(){
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			//lngUserId = (long) 161978;
+			//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
@@ -2840,8 +2868,8 @@ public class ReportBackingBean extends
 			userId = new FacesScopes().getUserSessionBean().getUserId()
 					.toString();
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			//reqDTO.setUserId((long) 161978);
+			//reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setUserId((long) 240500);
 			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 			UserResDTO userResDTO = userSO
 					.retrieveUserRoleDescListByUserId(reqDTO);
@@ -2878,7 +2906,7 @@ public class ReportBackingBean extends
 				}
 			}
 			String roleCode = ReportConst.EMPTY_VAL;
-			if (authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF)) {
+			if (approverNayakTarafList.size()>0) {
 				roleCode = ReportConst.APPROVER_NAIK_TARAF;
 			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)) {
 				roleCode = ReportConst.RN_APPROVER;
@@ -3333,6 +3361,7 @@ public class ReportBackingBean extends
 			retrieveApprovarNaikTaraf();
 			retrievePTJ();
 			retrieveRequisitioner();
+			retrieveDescOfficer();
 		}
 	}
 
