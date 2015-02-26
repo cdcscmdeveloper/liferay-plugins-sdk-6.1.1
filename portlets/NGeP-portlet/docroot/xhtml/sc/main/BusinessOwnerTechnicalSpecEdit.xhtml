@@ -17,14 +17,13 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;" immediate="true"
-				action="#{specificationBackingBean.backAction}" />
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true" action="#{specificationBackingBean.backAction}" />
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;"
-				onclick="createTechnicalDialog.show();" immediate="true"
+				style="float:right;" onclick="createTechnicalDialog.show();"
+				immediate="true"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
@@ -58,25 +57,10 @@
 
 				<tr>
 					<td style="width: 10%"><p:outputLabel
-							value="#{lbl['lbl.sc.tpl.search.item']}" /> <p:outputLabel
-							value="*" styleClass="mandatory"></p:outputLabel></td>
-					<td><ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode.parameterCode eq '3'}">
-							<p:selectOneMenu id="itemTypeSelectId" required="true"
-								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-								label="#{lbl['lbl.sc.tpl.search.item']}"
-								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode.parameterId}">
-								<f:selectItems
-									value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}"></f:selectItems>
-							</p:selectOneMenu>
-							<p:message id="itemTypeMessagespec" for="itemTypeSelectId"
-								display="icon"></p:message>
-						</ui:fragment> <ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode.parameterCode ne '3'}">
-
-							<p:inputText disabled="true" size="30"
-								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" />
-						</ui:fragment></td>
+							value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
+					<td><p:inputText disabled="true" size="30"
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" />
+					</td>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
@@ -129,7 +113,7 @@
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
-					    oncomplete="createTechnicalDialog.hide();"
+						oncomplete="createTechnicalDialog.hide();"
 						action="#{specificationBackingBean.cancelSpecAction('BO')}" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="createTechnicalDialog.hide();" type="button" />
