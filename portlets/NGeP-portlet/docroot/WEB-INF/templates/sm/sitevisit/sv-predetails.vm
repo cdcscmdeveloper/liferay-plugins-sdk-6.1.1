@@ -67,7 +67,7 @@
     	
     	<tr>
 	        <td width="35%"><b>Contact Person Name</b></td>
-	        <td>$contactPersonName</td>
+	        <td>$!contactPersonName</td>
     	</tr>
     	
        <tr>
