@@ -206,7 +206,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			
 			if(resDTO.isSuccessful()) {
 				String languageCode = getFacesScopes().getUserLocale().getLanguage();
-				
 				String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
@@ -251,7 +250,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 	
 	/**
-	 * Validate fulfillment order before action.
+	 * Validate fulfillment order before submit or save action.
 	 *
 	 * @param action the action
 	 */
@@ -277,7 +276,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 
 	/**
-	 * Navigate to fl order.
+	 * Navigate to delivery order page.
 	 *
 	 * @param index the index
 	 * @return the string
@@ -542,8 +541,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		if(getManagedBean().getFulfilmentOrder().getPmFinancialOrg() == null){
 			getManagedBean().getFulfilmentOrder().setPmFinancialOrg(new PmFinancialOrg());
 		}
-		
-		
 		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setServiceType(ParameterConst.BANK_SERVICES_FACTORING_COMPANY);
@@ -813,7 +810,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 	
 	/**
-	 * Sort address.
+	 * Sort delivery address list.
 	 *
 	 * @param flDelAddressList the fl del address list
 	 */
@@ -941,7 +938,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 * @throws Exception the exception
 		 */
 		public String signingAction(String outcome) throws Exception{
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				// Temp setTextBeforeSign : DocNo+SAP
