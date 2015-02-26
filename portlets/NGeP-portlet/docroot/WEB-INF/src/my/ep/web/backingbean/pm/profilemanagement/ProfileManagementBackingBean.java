@@ -1087,7 +1087,6 @@ public class ProfileManagementBackingBean extends
 	 */
 	public void confirmRoles() {
 		logger.info("confirmRoles");
-
 		roleValidation();
 
 		// Add to user role list
@@ -1107,7 +1106,7 @@ public class ProfileManagementBackingBean extends
 	 */
 	private void roleValidation() {
 		logger.info("roleValidation");
-
+		
 		if (this.getManagedBean().getSelectedRole() == null) {
 			throw new EpException(MessageConst.ERROR_770022);
 		}
@@ -1143,7 +1142,12 @@ public class ProfileManagementBackingBean extends
 			if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null
 					&& !this.getManagedBean().getSelectedUserOrg()
 							.getPmUserRoles().isEmpty()) {
-				throw new EpException(MessageConst.ERROR_770134);
+				for (PmUserRole pmUserRole : this.getManagedBean()
+						.getSelectedUserOrg().getPmUserRoles()) {
+					if(pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+			         	throw new EpException(MessageConst.ERROR_770134);
+					}
+				}
 			}
 		} else {
 			if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null
@@ -1151,7 +1155,8 @@ public class ProfileManagementBackingBean extends
 							.getPmUserRoles().isEmpty()) {
 				for (PmUserRole pmUserRole : this.getManagedBean()
 						.getSelectedUserOrg().getPmUserRoles()) {
-					if (pmUserRole.getPmRole().isSingleRole()) {
+					
+					if (pmUserRole.getPmRole().isSingleRole() && (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE)) {
 						throw new EpException(MessageConst.ERROR_770134);
 					}
 				}
@@ -1278,8 +1283,10 @@ public class ProfileManagementBackingBean extends
 	 */
 	public void userRoleStatusChange(PmUserRole pmUserRole) {
 		logger.info("userRoleStatusChange");
+		
 		if (pmUserRole != null) {
 			if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			
 				if (!pmUserRole.isModified()) {
 					pmUserRole.setModified(true);
 				} else {
@@ -1292,6 +1299,7 @@ public class ProfileManagementBackingBean extends
 					pmUserRole.setModified(false);
 				}
 			}
+			
 		}
 	}
 
