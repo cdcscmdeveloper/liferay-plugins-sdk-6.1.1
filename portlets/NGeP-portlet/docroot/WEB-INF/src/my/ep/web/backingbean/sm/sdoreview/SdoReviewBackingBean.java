@@ -43,6 +43,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 
 	public static Logger log = Logger.getLogger(SdoReviewBackingBean.class);
 	private StreamedContent file;
+	private static final int inquiryTextLength = 2500;
 	
 	public SdoReviewBackingBean() {
 		
@@ -127,8 +128,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	
 	
 	public String submitSDOReviewAction(String resAction) {
-
-		if(resAction != null || resAction != ""){
+		if(resAction != null && !resAction.equalsIgnoreCase("")){
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
 				if(this.getManagedBean().getSmApplInquiry().getInquirySubject() == null 
 						|| this.getManagedBean().getSmApplInquiry().getInquirySubject().equals("")){ 
@@ -142,8 +142,14 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					throw new EpException(MessageConst.ERROR_721105);
 
 				}
-			} 
-			
+				
+				//check the string length of get Inquiry Text
+				if(this.getManagedBean().getSmApplInquiry().getInquiryText().length() > inquiryTextLength){
+					String label = SmCommonUtil.getMessage("lbl.sm.supportingdoc.inquiry",null);
+					throw new EpException(MessageConst.ERROR_721114, new String[] {label, String.valueOf(inquiryTextLength)});
+				}
+			}
+					
 			/*else if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 				if(this.getManagedBean().getSmAppl().getSdoReceivedDate() == null 
 						|| this.getManagedBean().getSmAppl().getSdoReceivedDate().equals("")){ 
