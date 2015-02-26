@@ -23,7 +23,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -34,7 +33,6 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -57,8 +55,6 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.reason.ReasonReqDTO;
-import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
@@ -69,10 +65,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -113,6 +107,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	private CtTerminationReason[] selectedTerminationReasonsList;
 	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
 	
+	 /**
+	 * This constructor method used to initialize the variable on start up
+	 * Setting button if user not call from BPM
+	 * Method used to initialize approver list
+	 */
 	public TerminationBackingBean() {
 		if(this.getManagedBean().getAction() == null)
 			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
@@ -122,11 +121,17 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	     }
 	}
 	
+	 /**
+     * This method used to retrieve user login  information
+	 */
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
     }
 	
+	/**
+	 * This  method used to initialize approver list
+	 */
 	private void initializeApproverList() {
 		if(getManagedBean().getApproverModel() == null) {
 		  	 List<String> source = new ArrayList<String>();
@@ -135,6 +140,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		}
 	}
 	
+	/**
+	 * This  method used to retrieve list of active approver start
+	 * Setting selected and non selected approver value 
+	 * Retrieve approver for ministry and central contract
+ */
 	 private List<String> getAvailableApproverList() {
 		 IUserSO userSO = null;
 		 List<String> sourceList = new ArrayList<String>();
@@ -150,7 +160,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			
 			    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
 				     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-			    else // Central Contract	
+			    else /* Approver if central contract	*/
 				    reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
 			    
                 resDTO = userSO.retrieveUserListByRole(reqDTO);
@@ -168,15 +178,20 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		  }
 		 return sourceList;
 	}
-	
+	 
+	 /**
+		 * This  method call once user navigate termination  page from task list
+		 * Method used to retrieve all information from BPM
+		 * Method used to retrieve contract information from BPM
+		 * Method return null if task id null
+	 */
 	public void preRenderView(){
 		
 		try{
-			System.out.println("**********preRenderView**************");
+		
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-			System.out.println("taskId:"+taskId);
 			if(taskId==null) {
 				return;
 			}
@@ -225,12 +240,18 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 
 	 }
 	
+	/**
+	 * This  method used for back button
+    */
 	public String backAction() {
 		String navigateUrl = (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 		getManagedBean().setExternalPageUrl(null);
 		return navigateUrl;
 	}
 	
+	   /**
+			 * This  method used to set retrieve value from BPM or contract maintenance
+		 */
 	public void setTerminationContractVer(ContractResDTO resDTO) {
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
 		getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
@@ -281,6 +302,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		}
 	}
 	
+	 /**
+	 * This method used to terminate contract
+	 * This method call validate function to validate termination details
+	 *  This method will navigate to acknowledgment page with
+	 *   a confirmation message once submit successfully
+	 */
 	public String saveContractTermination(String action) throws Exception{
 		
 		 IContractSO contractSO = null;
@@ -361,6 +388,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		  return null;
 	 }
 	
+	 /**
+	 * This method used to validate contract termination details
+ */
 	public void validateContractTermination(String outcome){
 		this.getManagedBean().setAutoUpdate(true);
 		
@@ -399,6 +429,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		}
 	}
 	 
+	/**
+	 * This method to retrieve parameter code on the basis of parameter id
+    */
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
 		
 		 IParameterSO parameterSO = null;
@@ -421,6 +454,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 return null;
 	 } 
 	 
+	 /**
+		 * This method is used to change the type of termination 
+		 * such as termination, mutual termination and termination remedy
+	    */
 	 public void changeField() {
 		try {
 			flush();
@@ -442,12 +479,19 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 }
 	 }
 	  
+	 /**
+		 * This method is used to disable type of termination
+	    */
 	 public void flush() {
 	     getManagedBean().setTermination(false);
 		 getManagedBean().setRemedy(false);
 		 getManagedBean().setMutualTermination(false);
 	 }
 	
+	 /**
+		 * This method is used to generate notice letter
+		 * Templates using to generate letter
+	    */
 	public void previewNoticeAction() {
 		IAddressSO addressSO =  null;
 		VelocityContext context = null;
@@ -557,6 +601,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		}
 	}
 	
+	/**
+	 * The method used to combine the whole address into string
+    */
 	private String formAddress(String address1, String address2, String address3, String address4) {
 		StringBuffer address = new StringBuffer();
 		if(address1!=null && address1.length()>0) {
@@ -574,10 +621,16 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		return address.toString();
 	}
 	 
+	/**
+	 * Method used to check login user as central or ministry admin
+    */
 	 public boolean isContractAdmin() {
 		 return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 		}
 	 
+	 /**
+		 * Method check  to upload document during termination update by admin
+	    */
 	 public boolean isPrintAndUpdateTask() {
 		 if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
 			 return true;
@@ -586,12 +639,19 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			 return false;
 	 }
 	 
+	 /**
+		 * Method describes reason for termination
+		 * Admin used to enter reason of termination
+	    */
 	 public void addTerminateReason() {
 		CtTerminationReason terminateReason = new CtTerminationReason();
 		    terminateReason.setCtTermination(getManagedBean().getContractVer().getCtTermination());
 		    getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().add(terminateReason);
 	 }
 
+	 /**
+		 * Method describes  termination reason for delete
+	    */
 	 public void deleteTerminateReason() {
 		 for (int i = 0; i < selectedTerminationReasonsList.length; i++) {
 				CtTerminationReason terminationReason = selectedTerminationReasonsList[i];
@@ -599,16 +659,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			}
 		 selectedTerminationReasonsList = null;	
 	 }
-
-	public CtTerminationReason[] getSelectedTerminationReasonsList() {
-		return selectedTerminationReasonsList;
-	}
-
-	public void setSelectedTerminationReasonsList(
-			CtTerminationReason[] selectedTerminationReasonsList) {
-		this.selectedTerminationReasonsList = selectedTerminationReasonsList;
-	}
 	 
+	 /**
+		 * Method to convert date format into string format
+	    */
 	public String convertTime(Date time){ 
         String str ="";
     	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
@@ -617,6 +671,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
         return format.format(time); 
     } 
 	
+	/**
+	 * Method to set user role as per user login
+	 * User role used in BPM to identify the task
+	 */
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
 			return RoleCode.MIN_CONTRACT_ADMIN.value();
@@ -630,44 +688,17 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			 return null;
 	}
 	
-    public SelectItem[] getTerminationReasonDesc() {
-		
-    	if(getManagedBean().getTerminationReasonDesc() == null) {
-    	     SelectItem[] items = null;   
-    	     ReasonReqDTO reqDTO = null;
-    	     ReasonResDTO resDTO = null;
-    	     IReasonSO reasonSO = null;
-		     try {
-		             int i = 1;
-		             reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
-		             reqDTO = new ReasonReqDTO();
-		             reqDTO.setReasonCategory(ReasonCategory.CONTRACT_TERMINATION.value());
-		             reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-		             resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
-		             List<PmReasonDesc> list = resDTO.getReasonDescList();
-		             items = new SelectItem[list.size()+1];
-		             items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		             for(PmReasonDesc reasonDesc : list) {
-			             items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
-			             reasonDescMap.put(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
-			         } getManagedBean().setTerminationReasonDesc(items);
-		     } catch (Exception e) {
-			      e.printStackTrace();
-			      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		     } finally {
-		    	 reqDTO = null;
-	    	     resDTO = null;
-	    	     reasonSO = null;
-		     }
-    	}
-	    return getManagedBean().getTerminationReasonDesc();
-	}
-    
+	/**
+	 * Method Call SM API to trigger a task for complaint.
+	 */
     public void lodgeComplaint() {
     	getManagedBean().getContractVer().getCtTermination().setComplaintLodged(true);
     	//TODO Call SM API to trigger a task for complaint.
     }
     
+    /**
+	 * Method used to navigate main page for contract termination
+	 */
     public String gotoTerminatePage() throws NamingException {
     	Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
     	ContractReqDTO ctReqDTO = new ContractReqDTO();
@@ -682,6 +713,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		return PROCESS_TERMINATE_PAGE;
 	}
     
+    /**
+	 * Method used to call during generation of letter
+	 * This method used to retrieve portal information 
+	 */
     private String getServerUrl() {
 		ExternalContext extcontext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -698,6 +733,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		return url;
 	}
     
+    /**
+	 * Method used to download file from database
+	 */
     public void downloadFile(String filePath, String fileName) throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -730,15 +768,24 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		FacesContext.getCurrentInstance().responseComplete();
 	}
     
+    /**
+	 * Method used to check login user as approver
+    */
     public boolean isApprover() {
 		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
     
+    /**
+	 * Method to retrieve portal name from property file
+    */
     public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.termination", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
     
+    /**
+	 * Method used to set value for security check
+    */
     public String preSubmitContractTermination(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);			
@@ -746,6 +793,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		return saveContractTermination(getManagedBean().getButtonAction());
 	}
 	
+    /**
+	 * Method used to check navigation of page for approver list
+	 * Return list of user for contract admin 
+    */
 	public boolean isApproverSetting() {
 		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
 				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FT_HT_NAME) ||
@@ -756,6 +807,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			return false;
 	}
 	
+	
+	/**
+	 * Method to authenticate user during submit of termination
+	 * Navigate confirmation dialog for authenticate of login user
+	 * Call save suspension method once authentication done
+    */
 	public String gpkiSignAction(String outcome) throws Exception{
 		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
 					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE))){
@@ -783,8 +840,26 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		}
 	}
 	
+	 /**
+		 * Method used to set update value false for disable purpose
+	    */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	/**
+	 * @return the selectedTerminationReasonsList
+	 */
+	public CtTerminationReason[] getSelectedTerminationReasonsList() {
+		return selectedTerminationReasonsList;
+	}
+
+	/**
+	 * @param selectedTerminationReasonsList the selectedTerminationReasonsList to set
+	 */
+	public void setSelectedTerminationReasonsList(
+			CtTerminationReason[] selectedTerminationReasonsList) {
+		this.selectedTerminationReasonsList = selectedTerminationReasonsList;
 	}
 }
