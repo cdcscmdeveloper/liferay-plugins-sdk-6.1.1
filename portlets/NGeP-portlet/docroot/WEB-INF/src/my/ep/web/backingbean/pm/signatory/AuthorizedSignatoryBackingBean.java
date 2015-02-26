@@ -94,7 +94,7 @@ public class AuthorizedSignatoryBackingBean extends
 	public List<PmZone> retrieveZones() {
 		IZoneSO iZoneSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
-		ZoneResDTO resDTO = iZoneSO.retrieveZoneList();
+		ZoneResDTO resDTO = iZoneSO.retrieveActiveZoneList();
 		return resDTO.getZoneList();
 	}
 	/**
