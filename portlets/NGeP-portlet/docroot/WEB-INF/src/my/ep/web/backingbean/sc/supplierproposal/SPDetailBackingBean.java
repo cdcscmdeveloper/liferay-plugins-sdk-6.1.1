@@ -20,6 +20,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
@@ -78,6 +80,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
+import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -95,6 +98,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.BouncyCastleProvider_AES_CBC;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -103,12 +107,17 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -379,8 +388,8 @@ public class SPDetailBackingBean extends
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			// to delete the deleted experiences from db
-			reqDTO.setTobeRemovedExperience(getManagedBean()
-					.getDeletedPRPExperiences());
+			// reqDTO.setTobeRemovedExperience(getManagedBean()
+			// .getDeletedPRPExperiences());
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
@@ -389,6 +398,11 @@ public class SPDetailBackingBean extends
 				getManagedBean().setDeletedPRPExperiences(null);
 				debugLogger("*****save successfull*****"
 						+ resDTO.isSuccessful());
+
+				int index = getManagedBean().getFinanceCheckDetailsList()
+						.indexOf(scQtProposalChecklist);
+				getManagedBean().getFinanceCheckDetailsList().set(index,
+						resDTO.getProposalChecklist());
 
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
@@ -449,8 +463,26 @@ public class SPDetailBackingBean extends
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
-			List<TplSpecAnswer> answers = getManagedBean()
-					.getTemplateSpecBean().getSpecAnswerList();
+			List<TplSpecAnswer> answers = null;
+
+			if (getManagedBean().getQt().isZonal()) {
+				getManagedBean().getZoneTplSpecBeanMap().put(
+						getManagedBean().getSelectedZone().getSpecZoneId(),
+						getManagedBean().getTemplateSpecBean());
+				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
+				templateSpecBeans.addAll(getManagedBean()
+						.getZoneTplSpecBeanMap().values());
+				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
+					answers = new ArrayList<TplSpecAnswer>();
+					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
+						answers.addAll(templateSpecBean.getSpecAnswerList());
+					}
+				}
+
+			} else {
+				answers = getManagedBean().getTemplateSpecBean()
+						.getSpecAnswerList();
+			}
 
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
@@ -695,6 +727,11 @@ public class SPDetailBackingBean extends
 
 				updateQtFinProposalCheckList(finProposalChecklist,
 						resDTO.getTobeUpdateProposalChecklist());
+
+				int index = getManagedBean().getTecCheckDetailsList().indexOf(
+						scQtProposalChecklist);
+				getManagedBean().getTecCheckDetailsList().set(index,
+						resDTO.getProposalChecklist());
 				return navigatePrepareTecProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -1554,11 +1591,20 @@ public class SPDetailBackingBean extends
 				List<TplSpecZoneDtl> zones = resDTO.getZones();
 				if (null != zones) {
 					this.getManagedBean().setZones(zones);
+					for (TplSpecZoneDtl specZone : zones) {
+						this.getManagedBean().setSelectedZone(specZone);
+						retrieveTemplateSpecBean();
+					}
 					this.getManagedBean().setSelectedZone(zones.get(0));
+					getManagedBean().setTemplateSpecBean(
+							getManagedBean().getZoneTplSpecBeanMap().remove(
+									getManagedBean().getSelectedZone()
+											.getSpecZoneId()));
 				}
+				populateShortListedSuppliersByZone();
 
 			}
-			if (scQt.getMaxProposal() == 1) {
+			if (!scQt.isZonal() && scQt.getMaxProposal() == 1) {
 				retrieveTemplateSpecBean();
 			}
 
@@ -1602,18 +1648,19 @@ public class SPDetailBackingBean extends
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
 				specMaster = resDTO.getSpecMaster();
-				/*
-				 * if (specMaster.getOrgProfile() == null) {
-				 * specMaster.setOrgProfile(new PmOrgProfile()); }
-				 */
-				TemplateSpecBean templateSpecBean = getManagedBean()
-						.getTemplateSpecBean();
+				TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setContentType(reqDTO.getContentType());
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
+				if (getManagedBean().getQt().isZonal()) {
+					getManagedBean().getZoneTplSpecBeanMap().put(
+							getManagedBean().getSelectedZone().getSpecZoneId(),
+							templateSpecBean);
+				} else {
+					getManagedBean().setTemplateSpecBean(templateSpecBean);
+				}
 
-				getManagedBean().setTemplateSpecBean(templateSpecBean);
 			}
 		} finally {
 
@@ -1748,8 +1795,10 @@ public class SPDetailBackingBean extends
 			ScQtProposalScore creditFacilitiesScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES);
 
 			if (creditFacilitiesScore != null) {
-				/*this.getManagedBean().setTotalAmountCredit(
-						creditFacilitiesScore.getCriteriaValue());*/
+				/*
+				 * this.getManagedBean().setTotalAmountCredit(
+				 * creditFacilitiesScore.getCriteriaValue());
+				 */
 			}
 
 			return NAV_TO_CREDIT_FACILITIES_PAGE;
@@ -2197,9 +2246,9 @@ public class SPDetailBackingBean extends
 			Calendar startCalendar = new GregorianCalendar();
 			startCalendar.setTime(prpExperience.getEffectiveDate());
 			Calendar endCalendar = new GregorianCalendar();
-			// to resolve one day difference 
-			Calendar c = Calendar.getInstance(); 
-			c.setTime(prpExperience.getExpiryDate()); 
+			// to resolve one day difference
+			Calendar c = Calendar.getInstance();
+			c.setTime(prpExperience.getExpiryDate());
 			c.add(Calendar.DATE, 1);
 			endCalendar.setTime(c.getTime());
 			int diffYear = endCalendar.get(Calendar.YEAR)
@@ -2498,18 +2547,31 @@ public class SPDetailBackingBean extends
 		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
 	}
 
-	public void zoneTabChange(TabChangeEvent evnt) {
-		debugLogger("zoneTabChange");
-		// ScQt scQt = getManagedBean().getQt();
-		TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) evnt.getData();
-		getManagedBean().setSelectedZone(specZoneDtl);
-		log.info("Selected Zone : "
-				+ this.getManagedBean().getSelectedZone().getZoneName());
-		if (getManagedBean().getQt().getMaxProposal() == 1) {
-			retrieveTemplateSpecBean();
-		}
+	public void zoneTabChange(int index) {
 
-		// Long zoneId = specZoneDtl.getSpecZoneId();
+		getManagedBean().setActiveIndex(index);
+		debugLogger("zoneTabChange");
+		TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
+				.getZones().get(index);
+		log.info("Selected Zone : " + specZoneDtl.getZoneName());
+
+		if (getManagedBean().getSelectedZone() != null) {
+			getManagedBean().getZoneTplSpecBeanMap().put(
+					getManagedBean().getSelectedZone().getSpecZoneId(),
+					getManagedBean().getTemplateSpecBean());
+			getManagedBean().setTemplateSpecBean(null);
+			getManagedBean().setSelectedZone(null);
+		}
+		getManagedBean().setSelectedZone(specZoneDtl);
+		getManagedBean().setTemplateSpecBean(
+				getManagedBean().getZoneTplSpecBeanMap().remove(
+						specZoneDtl.getSpecZoneId()));
+
+		/*
+		 * if (getManagedBean().getQt().getMaxProposal() == 1) {
+		 * retrieveTemplateSpecBean(); }
+		 */
+
 	}
 
 	public void displayProposalDtls() {
@@ -2645,8 +2707,9 @@ public class SPDetailBackingBean extends
 	}
 
 	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
-		
-		if(getManagedBean().getSmSupplier() == null || getManagedBean().getSmSupplier().getCompanyName() == null){
+
+		if (getManagedBean().getSmSupplier() == null
+				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
 		}
 
@@ -3054,6 +3117,68 @@ public class SPDetailBackingBean extends
 			}
 		}
 
+	}
+
+	public StreamedContent printLabelAction() throws Exception {
+
+		ScSlAttachment slAttachment = new ScSlAttachment();
+		generateSampleLabelsFromVelocityToPdf(slAttachment);
+		StreamedContent slStreamContent = getAttachmentStreamContent(
+				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
+
+		return slStreamContent;
+	}
+
+	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment)
+			throws Exception {
+		attachment.setFileName("sample Labels.pdf");
+		populateAttachmentDetails(attachment);
+		CommonUtils commonUtils = new CommonUtils();
+
+		DecimalFormat numberDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
+		VelocityContext context = new VelocityContext();
+		context.put("numberDF", numberDF);
+		context.put("sampleItems", getManagedBean().getScQtSampleLable()
+				.getSampleItems());
+		context.put("lableNo", getManagedBean().getScQtSampleLable()
+				.getLableNo());
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void populateShortListedSuppliersByZone() {
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean().getZones();
+
+			// Dynamically generating the tabs
+			MenuModel zoneMenuModel = new DefaultMenuModel();
+			if (CollectionUtils.isNotEmpty(zoneDtls)) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				int zoneTabIndex = 0;
+				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
+					specZoneDtl.setZoneTabIndex(zoneTabIndex);
+
+					MenuItem zoneItem = new MenuItem();
+					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
+					zoneItem.setAjax(true);
+					zoneItem.setPartialSubmit(true);
+					zoneItem.setProcess("@this");
+					zoneItem.setUpdate("@form");
+					zoneItem.setActionExpression(FacesScopes
+							.createMethodExpression(facesContext,
+									"#{supplierProposalDetailBackingBean.zoneTabChange("
+											+ zoneTabIndex + ")}", Void.class,
+									new Class[] { Integer.class }));
+					zoneMenuModel.addMenuItem(zoneItem);
+					++zoneTabIndex;
+				}
+			}
+			this.getManagedBean().setProposalZonalMenuModel(zoneMenuModel);
+		}
 	}
 
 }
