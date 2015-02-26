@@ -150,8 +150,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	
 	/**
 	 * save,submit delivery order.
-	 * </br>submit - save data into database and BPM process will route to the next respective user.
-	 * </br>save - save data into database.
+	 * <p>submit - save data into database and BPM process will route to the next respective user.
+	 * <p>save - save data into database.
 	 * @param action the action
 	 * navigate to acknowledge page.
 	 */
@@ -402,7 +402,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	/**
-	 * this method do validations for items with Delivery Address,Delivery order and Delivery Amount
+	 * validations for items with Delivery Address,Delivery order and Delivery Amount
 	 *
 	 * @param actionName the action name
 	 */
@@ -673,7 +673,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 
 	/**
-	 * Sort address.
+	 * Sort delivery address.
 	 *
 	 * @param flDelAddressList the fl del address list
 	 */
@@ -819,7 +819,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 
 	/**
-	 * Gets the delivery order amt.
+	 * Gets the total delivery order amount.
 	 *
 	 * @return the delivery order amt
 	 */
@@ -934,8 +934,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	/**
-	 * Gets the measurement search bean data.
-	 *
+	 * Gets the measurement search bean data 
+	 *<p> if Measurement Codes not null search criteria based on uomCode,Measurement Codes.
+	 *<p> if Measurement name not null search criteria based on uomName,Measurement names.
 	 * @param searchBean the search bean
 	 * @return the measurement search bean data
 	 */
