@@ -101,7 +101,7 @@ public class BusinessRegNoValidator implements Validator {
 		String[] splitLlp = llpNo.split("-");
 		String splitLlp1 = "";
 		String splitLlp2 = "";
-		if (splitLlp != null && splitLlp.length > 1) {
+		if (splitLlp != null && splitLlp.length == 2) {
 			splitLlp1 = splitLlp[0] != null ? splitLlp[0] : "";
 			splitLlp2 = splitLlp[1] != null ? splitLlp[1] : "";
 			if (llpNo.length() > 30) {
