@@ -31,19 +31,16 @@ public class SmTrackingDiaryBackingBean extends
 	public static final String NAV_TO_SMSUPPLIER_DETAIL_SEARCH = "smTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	public SmTrackingDiaryBackingBean() {
-//	    String smSupplierCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("smSupplierCode");
-//		SmSupplier smSupplier = new SmSupplier();
 	}
 	
 	public void search() {
-//		if ((getManagedBean().getSearchDocumentNoValue() != null && getManagedBean().getSearchDocumentNoValue().isEmpty()) 
-//				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
-//				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
-//				&& (getManagedBean().getSearchStatusId() != null)) {
-//			throw new EpException(MessageConst.ERROR_716006);
-//		}
+		if ((null != getManagedBean().getApplicationNo() && getManagedBean().getApplicationNo().isEmpty()) 
+				&& (null != getManagedBean().getMOFAccountNo() && getManagedBean().getMOFAccountNo().isEmpty()) 
+				&& (null != getManagedBean().getSupplierName() && getManagedBean().getSupplierName().isEmpty())
+				&& (null == getManagedBean().getApplicationType())) {
+			throw new EpException(MessageConst.ERROR_716006);
+		}
 		System.out.println("SmTrackingDiaryBackingBean search");
-		getManagedBean().getSpkiBackingBean().spkiSignTransaction("qqqqqqqqqqq");
 		getManagedBean().getSmDocumentDataModel().reloadData();
 	}
 
