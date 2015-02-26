@@ -123,7 +123,10 @@ public class ReportBackingBean extends
 	private List<SelectItem> extTypeList = new ArrayList<SelectItem>();
 	private List<SelectItem> measurmentList = new ArrayList<SelectItem>();
 	private List<SelectItem> colorList = new ArrayList<SelectItem>();
-
+	private List<SelectItem> approverNayakTarafList = new ArrayList<SelectItem>();
+	private List<SelectItem> scPtjList = new ArrayList<SelectItem>();
+	private List<SelectItem> scRequisitionerList = new ArrayList<SelectItem>();
+	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
 	FLReportBackingBean flReportBackingBean;
@@ -182,6 +185,32 @@ public class ReportBackingBean extends
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
 	
+
+	
+
+	public List<SelectItem> getScPtjList() {
+		return scPtjList;
+	}
+
+	public void setScPtjList(List<SelectItem> scPtjList) {
+		this.scPtjList = scPtjList;
+	}
+
+	public List<SelectItem> getScRequisitionerList() {
+		return scRequisitionerList;
+	}
+
+	public void setScRequisitionerList(List<SelectItem> scRequisitionerList) {
+		this.scRequisitionerList = scRequisitionerList;
+	}
+
+	public List<SelectItem> getApproverNayakTarafList() {
+		return approverNayakTarafList;
+	}
+
+	public void setApproverNayakTarafList(List<SelectItem> approverNayakTarafList) {
+		this.approverNayakTarafList = approverNayakTarafList;
+	}
 
 	public List<String> getRoleCodeList() {
 		return roleCodeList;
@@ -2684,7 +2713,7 @@ public class ReportBackingBean extends
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setRptGenBean(null);
-		retriveUserrloeByUserId(this.getModuleValue());
+		
 		if (this.getModuleValue() != null) {
 			retriveReportListByModule(this.getModuleValue());
 		}
@@ -2743,7 +2772,62 @@ public class ReportBackingBean extends
 		}
 		return reportList;
 	}
-
+	public List<SelectItem> retrievePTJ(){
+		scPtjList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = (long) 185380;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> ptLst = reportSO.retrievePTJ(lngUserId);			
+			for (Object[] object : ptLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				scPtjList.add(selectItem);
+			}
+        }
+		return scPtjList;
+	}
+	public List<SelectItem> retrieveRequisitioner(){
+		scRequisitionerList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 185380;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> reqLst = reportSO.retrieveRequisitioner(lngUserId);
+			
+			for (Object[] object : reqLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				scRequisitionerList.add(selectItem);
+			}
+        }
+		return scRequisitionerList;
+	}
+	public List<SelectItem> retrieveApprovarNaikTaraf(){
+		approverNayakTarafList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			
+			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = (long) 161978;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> aprnktrfLst = reportSO.retrieveApprovarNaikTaraf(lngUserId);
+			for (Object[] object : aprnktrfLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				approverNayakTarafList.add(selectItem);
+			}
+		}
+		return approverNayakTarafList;
+	}
 	/*
 	 * Retrieve Role code by User id
 	 */
@@ -2757,6 +2841,7 @@ public class ReportBackingBean extends
 					.toString();
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			//reqDTO.setUserId((long) 161978);
 			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 			UserResDTO userResDTO = userSO
 					.retrieveUserRoleDescListByUserId(reqDTO);
@@ -3223,7 +3308,7 @@ public class ReportBackingBean extends
 				generateMonthList();
 				generateYearList();
 				scReportBackingBean.enableCriteriaVariablesByReportBySC(
-						rptGenBean, authoriztionList);
+						rptGenBean, authoriztionList,approverNayakTarafList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))) {
 				flReportBackingBean.enableCriteriaVariablesByReportByFL(
@@ -3239,11 +3324,15 @@ public class ReportBackingBean extends
 						rptGenBean, authoriztionList);
 			}
 			resetReportForm();
+			retriveUserrloeByUserId(this.getModuleValue());
 			retrieveDates();
 			getManagedBean().setRptGenBean(rptGenBean);
 			madatoryIndicator();
 			retrieveSupplierCompName();
 			enableCriteriaMenu();
+			retrieveApprovarNaikTaraf();
+			retrievePTJ();
+			retrieveRequisitioner();
 		}
 	}
 
@@ -4443,13 +4532,16 @@ public class ReportBackingBean extends
 								+ this.getScPrcRptGroup());
 			}
 			String userRoleLogin = ReportConst.EMPTY_VAL;
-			if (authoriztionList.contains(ReportConst.APPROVER_NAIK_TARAF)) {
+			if (approverNayakTarafList.size()>0) {
 				userRoleLogin = ReportConst.APPROVERNT;
-			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)) {
+			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)&&(this.getModuleValue().equalsIgnoreCase(
+					ReportConst.DP_MOD_VAL))) {
 				userRoleLogin = ReportConst.APPROVER;
-			} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)) {
+			} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)&&((this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.SUPPLIER_SELECTION)))) {
 				userRoleLogin = ReportConst.DESKOFFR;
-			} else if (authoriztionList.contains(ReportConst.REQUISITIONER)) {
+			} else if (authoriztionList.contains(ReportConst.REQUISITIONER)&&(this.getModuleValue().equalsIgnoreCase(
+							ReportConst.DP_MOD_VAL))) {
 				userRoleLogin = ReportConst.REQUISITIONER;
 			}
 			if (!userRoleLogin.equals(ReportConst.REQUISITIONER)) {
