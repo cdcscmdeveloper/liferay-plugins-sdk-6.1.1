@@ -239,8 +239,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().setOrgProfileId(1L);
 			getManagedBean().getFulfilmentRequest().setChargeOrgProfile(new PmOrgProfile());
 			getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgProfileId(1L);
-			//getManagedBean().getFulfilmentRequest().setReceivedOrgProfile(new PmOrgProfile());
-			//getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().setOrgProfileId(1L);
 			getManagedBean().getFulfilmentRequest().setSmSupplier(new SmSupplier());
 			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(1L);
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
@@ -261,10 +259,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(null == getManagedBean().getFlManulaAddress()){
 			getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
-			//getManagedBean().getFlManulaAddress().setAddressType(new PmAddressType());
-			//getManagedBean().getFlManulaAddress().getAddressType().setAddressTypeId(1L);
 			getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
-			//getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setAddressId(1L);
 			getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
 			getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().setCountryId(1L);
 			getManagedBean().getFlManulaAddress().getPmAddress().setPmState(new PmState());
@@ -289,7 +284,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
-//		getManagedBean().setItemAddrVoteFundDisp(new FlFulfilmentItemAddr());
 		getManagedBean().setDeleteButtonHide(true);
 	}
 
@@ -572,11 +566,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * API for updating the user selected delivery addresses to delivery address list(intended address for goods delivery).
-	 * <br/>
-	 *  It does not allow the duplicate addresses selected. If any,it will give the "Address already Slected" Message.
-	 *  <br/>
-	 *  Sorts delivery addresses based on the address.
+	 * updating the user selected delivery addresses to delivery address list(intended address for goods delivery).
+	 * <p>
+	 * It does not allow the duplicate addresses selected. If any,it will give the "Address already Slected" Message.
+	 * <p>
+	 * Sorts delivery addresses based on the address.
 	 */
 	public void updateDeliveryAddrDt() {
 		if (null == getManagedBean().getSelectedPmDelAddrList()
@@ -622,7 +616,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Method Update manual delivery address  List.
+	 * add manual delivery address to delivery address list(intended address for goods delivery).
 	 */
 	public void updateManualDeliveryAddrDt() {
 		getManagedBean().setEmailValidate(true);
@@ -698,8 +692,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	
 	/**
-	 * if any checkbox selected from delivery address  List,show the deleted button for delete the particular delivery address from delivery address  List.
-	 * <br/>
+	 * if any checkbox selected from delivery address  List,show the deleted button for 
+	 * <p>
+	 * delete the particular delivery address from delivery address  List.
+	 * <p>
 	 * if all check boxes unselected,hide the delete button.
 	 *
 	 * @param e the e
@@ -720,14 +716,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		
 	}
-	/*public void onAddressUnSelect(){
-		getManagedBean().setDeleteSelectedAddress(true);
-		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-			if(null!=deliveryAddress){
-				deliveryAddress.setSelectedAddressRowDelete(true);
-			}
-		}	
-	}*/
 	
 	private boolean isAnyAddrSelected() {
 		boolean isAnyAddrSelected=false;
@@ -742,6 +730,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	/**
 	 * Removes the selected delivery addresses from delivery Address List.
+	 * <p>
+	 * clear the order quantity from item list which is assigned to selected delivery addresses
 	 */
 	public void removeAddRow(){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
@@ -1360,7 +1350,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
-	 * Calculate sub total.
+	 * Calculate sub total based on quantity
 	 *
 	 * @param quantity the quantity
 	 */
@@ -1487,7 +1477,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Gets the login user org.
+	 * Gets the login user org based on user id.
 	 *
 	 * @return the login user org
 	 */
@@ -1520,7 +1510,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Gets the received ptj list.
+	 * Gets the received ptj list based on org type.
 	 *
 	 * @return the received ptj list
 	 */
@@ -1971,7 +1961,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	/**
-	 * Charge line validation.
+	 * Charge line validation before update charge line .
 	 */
 	private void chargeLineValidation() {
 		if(getManagedBean().getVotFundId()==null) {
@@ -2046,7 +2036,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Update selected tree nodes.
+	 * Update selected charge line tree nodes.
 	 */
 	private void updateSelectedTreeNodes() {
 		List<TreeNode> selectedNodes=new ArrayList<TreeNode>();
@@ -2335,7 +2325,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Gets the ag account based on IssuedOrgProfile.
+	 * Gets the ag account based on Issued Org Profile id.
 	 *
 	 * @return the ag account
 	 */
@@ -2652,10 +2642,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			Collections.sort(flDelAddressList, comparator);
     }
 	
-	// get the Request Item Information based on ReqItemId and SuppId
-	
 	/**
-	 * item info list based on RequestNoteItemId,SupplierId and PriceType.
+	 * get the Request Item Information based on RequestNoteItemId,SupplierId and PriceType.
 	 *
 	 * @param flItemAddr the fl item addr
 	 */
