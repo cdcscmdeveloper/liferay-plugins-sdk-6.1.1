@@ -89,7 +89,7 @@
 									<p:selectOneMenu value="#{reportBackingBean.scDeskOfficer}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{0}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.userListbyprofileRole}"></f:selectItems>																																		
+										<f:selectItems value="#{reportBackingBean.scRequisitionerList}"></f:selectItems>																																		
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSupplierView}" >			
