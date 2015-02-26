@@ -55,7 +55,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.expdate']}">
-			  	<p:calendar id="expDateId" value="#{certSignatory.expDate}" 
+			  	<p:calendar id="expDateId" value="#{certSignatory.expDate}"  disabled="#{!certSignatory.brandNew}"
 			  		navigator="true"  maxdate="#{ProfileManagementConst.maxDate}"
 			  		label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true" yearRange="c-50:c+99"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -64,7 +64,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}">
-		       	<p:selectOneMenu value="#{certSignatory.recordStatusFlg}" disabled="#{certSignatory.brandNew}">  
+		       	<p:selectOneMenu value="#{certSignatory.recordStatusFlg}" disabled="#{certSignatory.brandNew || certSignatory.recordStatusFlg ==9}">  
 	            	<f:selectItems value="#{authorizedsignatoryBackingBean.getSignatoryStatusList()}" />
 	          	</p:selectOneMenu>  		
 			</p:column>
