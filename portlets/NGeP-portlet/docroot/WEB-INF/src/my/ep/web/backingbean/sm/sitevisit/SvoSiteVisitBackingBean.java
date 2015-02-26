@@ -1230,8 +1230,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("businessRegistrationNo",  svTask.getSmAppl().getSmSupplier().getRegNo());
 		context.put("visitingPurpose", templateDesc);
 		context.put("catApplicable", this.getManagedBean().getSvTaskCategories());
-		context.put("contactPersonName", this.getManagedBean().getContactPerson().getName());
-		context.put("contactPersonDesignation", this.getManagedBean().getContactPerson().getDesignation());
+		
+		if(this.getManagedBean().getContactPerson() != null){
+			context.put("contactPersonName", this.getManagedBean().getContactPerson().getName());
+			context.put("contactPersonDesignation", this.getManagedBean().getContactPerson().getDesignation());
+		}
+		
 		context.put("templateType",templateDesc);
 		context.put("svAddresses", this.getManagedBean().getSmSvAddressMap().get(templateType));
 		context.put("addressFormatter", new AddressUtils());
