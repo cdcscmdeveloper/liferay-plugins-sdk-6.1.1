@@ -285,6 +285,13 @@ public class AuthorizedSignatoryBackingBean extends
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ISignatorySO.class);
 		SignatoryReqDTO reqDTO = new SignatoryReqDTO();
+		for(PmCertSignatory pmcertSignatory:certSignatories){
+				
+			if(pmcertSignatory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+				pmcertSignatory.setExpDate(new Date());
+			}	
+		
+		}
 		reqDTO.setCertSignatorys(certSignatories);
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
