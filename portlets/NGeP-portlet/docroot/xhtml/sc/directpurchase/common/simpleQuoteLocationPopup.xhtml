@@ -37,23 +37,17 @@
 				</TR>
 			</table>
 		</p:panel>
-		
-		<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:100%">
-			<p:row>
-				<p:column  style="text-align:right">
-					<p:commandButton id="okBtn"
-						value="#{lbl['lbl.btn.ok']}"
-						process="@all"  update="@form"
-						partialSubmit="true"
-						actionListener="#{simpleQuoteBackingBean.updateLocation}" />
-						
-						<p:commandButton
-							value="#{lbl['lbl.sc.cancel']}"
-							onclick="locationPopup.hide();" />
-							
-					</p:column>
-			</p:row>
-		</p:panelGrid>
+
+		<p:spacer height="3px" />
+		<div class="ppRightBtn" style="width: 100%">
+			<p:commandButton id="okBtn" value="#{lbl['lbl.btn.ok']}"
+				process="@all" update="@form" partialSubmit="true"
+				actionListener="#{simpleQuoteBackingBean.updateLocation}" />
+
+			<p:commandButton value="#{lbl['lbl.sc.cancel']}"
+				onclick="locationPopup.hide();" />
+		</div>
+
 		<p:defaultCommand target="okBtn"></p:defaultCommand>
 	</p:dialog>
 </ui:composition>

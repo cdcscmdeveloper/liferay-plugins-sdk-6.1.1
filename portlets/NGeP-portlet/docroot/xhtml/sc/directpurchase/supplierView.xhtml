@@ -6,30 +6,6 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="suppViewId">
-		<table style="width: 100%" class="header-info">
-			<tr>
-				<td style="width: 13%">
-					<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.simple.quote.no']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}
-				</td>
-				<td style="width: 13%">
-					<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.ptj.name']}" />
-				</td>
-				<td style="width: 30%" class="header-info-text">
-				    #{simpleQuoteBackingBean.managedBean.scQuote.requestNotes[0].pmOrgProfile.orgName}
-				</td>
-				<td style="width: 13%">
-					<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.req.date']}" />
-				</td>
-				<td style="width: 21%" class="header-info-text">
-				  <p:calendar  pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.scQuote.createdDate}" disabled="true"/>
-				</td>
-			</tr>
-		</table>
-	
 	<p:panel id="suppViewDtl" header="#{lbl['lbl.sc.supplier.details']}"
 		toggleable="true">
 		<p:spacer height="10px" />
@@ -52,7 +28,6 @@
 	</p:panel>
 
 	<p:panel id="tplSpecId" header="#{lbl['lbl.ss.simple.quote.details']}" toggleable="true">
-	
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.submit.instruction']}"/>
 		
 		<p:spacer height="5px" />
@@ -188,6 +163,5 @@
 			</td>
 		</tr>
 	  </table>
-	</p:panel>
 	</p:panel>
 </ui:composition>
