@@ -97,6 +97,7 @@
 				<p:outputPanel id="quantityListTbl"  rendered="#{ (item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or
 										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and 
 										item.recommendByStr == ParameterConst.recommendByMultipleAward }">
+					<h:outputText value="#{lbl['lbl.sc.max.quantity']}" style="text-align: right;"/>[<h:outputText value="#{item.requestItem.quantity}" style="text-align: right;"/>]									
 					<div class="datalist-quantity">
 						<p:dataList var="rdetail" value="#{item.recommendDtls}" type="none">						
 							<p:column>
@@ -121,6 +122,8 @@
 										item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
 			</p:column>
 		</p:dataTable>
+		
+		<p:spacer height="5px"></p:spacer>
 		
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20">
