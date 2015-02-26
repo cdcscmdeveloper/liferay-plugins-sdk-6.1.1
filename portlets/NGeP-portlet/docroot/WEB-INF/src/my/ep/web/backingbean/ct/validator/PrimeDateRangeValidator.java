@@ -9,6 +9,8 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import my.ep.constants.CommonConstants;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 
@@ -24,19 +26,34 @@ public class PrimeDateRangeValidator implements Validator{
         Object startDateValue = component.getAttributes().get("startDate");
         if (startDateValue==null || startDateValue =="") {
             return;
-        }
-        
+        }        
         if (value == null || value == "") {
             return;
         }
-         
-        Date startDate = (Date)startDateValue;
-        Date endDate = (Date)value;
         
-        if (startDate.compareTo(endDate) == 1) { // end date less than start date
-        	throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,((Calendar)component).getLabel(), 
-          		  ResourceBundleUtils.getMessage("lbl.ct.validation.expiry.date",
-          				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-        }
+        String sdate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT, (Date) startDateValue);
+		String edate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT, (Date) value);
+		Date startDate;
+		Date endDate;
+		boolean dateValidation = true;
+		
+		try {
+			startDate = DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate);
+			endDate = DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate);
+			
+			if (endDate.before(startDate)) {
+				dateValidation = false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (!dateValidation) {
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,((Calendar)component).getLabel(), 
+        		  ResourceBundleUtils.getMessage("lbl.ct.validation.expiry.date",
+        				  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+		}
+        
     }
 }
