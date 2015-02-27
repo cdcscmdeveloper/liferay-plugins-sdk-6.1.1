@@ -31,15 +31,15 @@
 
 		<ui:include src="loiDetailsHeader.xhtml" />
 
-	<ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
+	  <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
 			postSignAction="#{lOIDetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="20%;" class="sidemenutd"
-					style="vertical-align: baseline;"><p:tabMenu
+				<td width="20%;" valign="top" class="sidemenutd">
+				  <p:tabMenu
 						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-						styleClass="sidemenu" style="display : table-caption;">
+						styleClass="sidemenu">
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
 							update="@form">
 							<f:setPropertyActionListener
