@@ -1598,7 +1598,8 @@ public class SmPersonnelBackingBean extends
 									new FacesScopes().getUserLocale())));
 			fc.getApplication()
 					.getNavigationHandler()
-					.handleNavigation(fc, null,SmApplicationUtil.getApplicationErrorPage());
+					.handleNavigation(fc, null,
+							SmApplicationUtil.getApplicationErrorPage());
 		} else {
 			throw new EpException(MessageConst.ERROR_721112);
 		}
@@ -1647,7 +1648,8 @@ public class SmPersonnelBackingBean extends
 				smPersonnel.setSoftcertFlg(0);
 				smPersonnel.setAuthorizedFlg(Integer
 						.parseInt(ParameterConst.FLAG_YES));
-			} else {
+			} else if (smPersonnel.getEpRole().equals(
+					RoleCode.BASIC_SUPPLIER_USER.value())) {
 				smPersonnel.setSoftcertFlg(2);
 				smPersonnel.setAuthorizedFlg(Integer
 						.parseInt(ParameterConst.FLAG_YES));
