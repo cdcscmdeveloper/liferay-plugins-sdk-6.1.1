@@ -4,8 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="loiHeader">
-		<div align="left" class="header-info">
+	<p:outputPanel id="loiHeader">
+		<div align="left" class="header-info" style="width: 100%">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td width="10%"><h:outputLabel
@@ -23,5 +23,5 @@
 				</tr>
 			</table>
 		</div>
-		</p:panel>
+	</p:outputPanel>
 </ui:composition>
