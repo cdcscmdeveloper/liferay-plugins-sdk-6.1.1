@@ -295,9 +295,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
 				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
-				deliveryAddress.setSuppDelOrdNoDisabled(false);
-				if(remainOrderQty.doubleValue()==0){
-					deliveryAddress.setSuppDelOrdNoDisabled(true);
+				deliveryAddress.setSuppDelOrdNoEnabled(false);
+				if(remainOrderQty.doubleValue()> 0){
+					deliveryAddress.setSuppDelOrdNoEnabled(true);
+					break;
 				}
 			}
 		}
