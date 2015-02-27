@@ -206,6 +206,7 @@ public class ReportsGenerateBean {
 		private boolean flGroupSixteenView = false;
 		private boolean flSupplierTextView = false;
 		private boolean flSupplierDropdownView = false;
+		private boolean flGroupSeventeenView = false;
 		//CT
 		private boolean ctContractNoView = false;
 		private boolean ctAgreementView = false;
@@ -366,9 +367,22 @@ public class ReportsGenerateBean {
 		private String flGroupFourteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupFifteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
+		private String flGroupSeventeenVar=ReportConst.EMPTY_VAL;
 		
 		
 		
+		public boolean isFlGroupSeventeenView() {
+			return flGroupSeventeenView;
+		}
+		public void setFlGroupSeventeenView(boolean flGroupSeventeenView) {
+			this.flGroupSeventeenView = flGroupSeventeenView;
+		}
+		public String getFlGroupSeventeenVar() {
+			return flGroupSeventeenVar;
+		}
+		public void setFlGroupSeventeenVar(String flGroupSeventeenVar) {
+			this.flGroupSeventeenVar = flGroupSeventeenVar;
+		}
 		public boolean isEnableCriteriaMenuView() {
 			return enableCriteriaMenuView;
 		}

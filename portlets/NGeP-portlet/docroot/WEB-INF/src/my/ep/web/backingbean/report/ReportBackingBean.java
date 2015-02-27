@@ -839,6 +839,7 @@ public class ReportBackingBean extends
 	private String flGroupFourteen;
 	private String flGroupFifteen;
 	private String flGroupSixteen;
+	private String flGroupSeventeen;
 	// sm
 	private String smCreatedFromYear;
 	private String smCreatedToYear;
@@ -907,6 +908,14 @@ public class ReportBackingBean extends
 	private String ctPtj;
 	private String ctProcurementMode;
 	
+
+	public String getFlGroupSeventeen() {
+		return flGroupSeventeen;
+	}
+
+	public void setFlGroupSeventeen(String flGroupSeventeen) {
+		this.flGroupSeventeen = flGroupSeventeen;
+	}
 
 	public String getCtProcurementMode() {
 		return ctProcurementMode;
@@ -5138,6 +5147,11 @@ public class ReportBackingBean extends
 				rptGenBean.setFlGroupSixteenVar(ReportConst.CT_AMP_GROUP_EQ
 						+ this.getFlGroupSixteen());
 			}
+			if ((this.getFlGroupSeventeen() != null)
+					&& (this.getFlGroupSeventeen() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setFlGroupSeventeenVar(ReportConst.CT_AMP_GROUP_EQ
+						+ this.getFlGroupSeventeen());
+			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
 					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
@@ -5201,6 +5215,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getFlGroupFourteenVar()
 						+ rptGenBean.getFlGroupFifteenVar()
 						+ rptGenBean.getFlGroupSixteenVar()
+						+ rptGenBean.getFlGroupSeventeenVar()
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
@@ -5426,6 +5441,7 @@ public class ReportBackingBean extends
 		this.setFlGroupFourteen(null);
 		this.setFlGroupFifteen(null);
 		this.setFlGroupSixteen(null);
+		this.setFlGroupSeventeen(null);
 	}
 
 	protected void fileGenerateReport(String reportFile,

@@ -492,7 +492,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlRequisitionerView(true);
 			rptGenBean.setFlStatusView(true);			
 			rptGenBean.setFromDateView(true);	
-			rptGenBean.setFlGroupTenView(true);
+			rptGenBean.setFlGroupSeventeenView(true);
 			//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_REQ_RPT_PO_NAME));	
 			break;
 		case ReportConst.PUR_ORD_RPT_PO_VAL:
