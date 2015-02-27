@@ -1131,6 +1131,26 @@ public class FinancialOrgBackingBean extends
 			return true;
 		}
 	}
+	public void getBankCode(Long financialOrgId){
+		
+		System.out.println("Org ProfileID-------->"+financialOrgId);
+		IFinancialOrgSO financialOrgSO = null;
+		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+		reqDTO.setFinancialOrgId(financialOrgId);
+		financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IFinancialOrgSO.class);
+		FinancialOrgResDTO resDTO  = financialOrgSO
+				.retrieveFinancialSvcByFinancialOrgId(reqDTO);
+
+		PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
+		if(resDTO.isSuccessful()){
+			System.out.println("BANK CODE"+pmFinancialSvc.getBankCode()
+					 + "|" + pmFinancialSvc.getFinancialSvcId());
+		}
+		this.getManagedBean().getFinancialOrg().getPmFinancialAccs().get(0).getPmPaymentBankOrg().getPmFinancialSvcs().get(0).setBankCode(pmFinancialSvc.getBankCode());
+		
+		
+	}
 	/* Factoring Bank - END */
 	
 	

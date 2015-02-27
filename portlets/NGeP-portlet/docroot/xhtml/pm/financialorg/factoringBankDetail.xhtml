@@ -29,9 +29,20 @@
 						value="#{financialOrgBackingBean.getPaymentBankList()}"
 						itemLabel="#{finorgLs.finOrgName}"
 						itemValue="#{finorgLs.financialOrgId}" />
+						<p:ajax event="change" update="bankCode"
+									listener="#{financialOrgBackingBean.getBankCode(financialacc.pmPaymentBankOrg.financialOrgId)}" />
 
 				</p:selectOneMenu>
 				<p:message id="finorgnMsg" for="finorgn" display="icon" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">					
+					<h:outputText value="#{lbl['lbl.pm.financialorg.bankcode']}" />
+				</f:facet>
+				<p:inputText id="bankCode" value="#{financialacc.pmPaymentBankOrg.pmFinancialSvcs[0].bankCode}"
+					  styleClass="ppDisplayTextS"  
+					/>
+				
 			</p:column>
 			<p:column>
 				<f:facet name="header">
