@@ -141,6 +141,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String companyName;
 	private String proposalURL;
 	private List<ScCommitteeMember> scCommitteeMembers;
+	private String committeeName;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -692,6 +693,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setScCommitteeMembers(List<ScCommitteeMember> scCommitteeMembers) {
 		this.scCommitteeMembers = scCommitteeMembers;
+	}
+
+	/**
+	 * @return the committeeName
+	 */
+	public String getCommitteeName() {
+		return committeeName;
+	}
+
+	/**
+	 * @param committeeName the committeeName to set
+	 */
+	public void setCommitteeName(String committeeName) {
+		this.committeeName = committeeName;
 	}
 
 
