@@ -26,57 +26,72 @@
 			</table>	
 		</p:panel>
 
-		<h:panelGrid id="search" style="width:100%;">
+		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultPanelId">
+			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
+				rowIndexVar="index" lazy="true"
+				value="#{softCertBackingBean.managedBean.softCertPagingDataModel}"
+				var="personnel"
+				selection="#{softCertBackingBean.managedBean.softCertSelectList}">
+				<ac:paginator for="softCertPageDataModelId" />
+				
+				<p:ajax event="rowSelect" listener="#{softCertBackingBean.unSelectPersonnel}"
+					update=":form:resultPanelId"></p:ajax>
+				<p:ajax event="rowUnselect"
+					listener="#{softCertBackingBean.unSelectPersonnel}"
+					update=":form:resultPanelId"></p:ajax>
+				<p:ajax event="rowSelectCheckbox"
+					listener="#{softCertBackingBean.unSelectPersonnel}"
+					update=":form:resultPanelId"></p:ajax>
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{softCertBackingBean.unSelectPersonnel}"
+					update=":form:resultPanelId"></p:ajax>
+				<p:ajax event="rowDblselect"
+					listener="#{softCertBackingBean.unSelectPersonnel}"
+					update=":form:resultPanelId"></p:ajax>
+					
+				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{personnel.disableRowSelection}"/>
 
-			<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true">
-				<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
-					rowIndexVar="index" lazy="true"
-					value="#{softCertBackingBean.managedBean.softCertPagingDataModel}"
-					var="personnel"
-					selection="#{softCertBackingBean.managedBean.softCertSelectList}">
-					<ac:paginator for="softCertPageDataModelId" />
-					<p:column selectionMode="multiple" style="width:2%" />
+				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}" disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{personnel.name}" />
+				</p:column>
 
-					<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
-						<h:outputText value="#{personnel.name}" />
-					</p:column>
+				<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{personnel.pmCountry.countryName}" />
+				</p:column>
 
-					<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}">
-						<h:outputText value="#{personnel.pmCountry.countryName}" />
-					</p:column>
+				<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
+						rendered="#{personnel.epRole eq 'MOF_SUPPLIER_ADMIN' or personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
+						rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER' or personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
+						rendered="#{personnel.epRole eq 'CM_USER'}" />
+					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
+						rendered="#{personnel.contractSigner}" />
+				</p:column>
 
-					<p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}"
-						rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}">
-						<h:outputText value="Y" rendered="#{personnel.authorized}" />
-						<h:outputText value="N" rendered="!#{personnel.authorized}" />
-					</p:column>
+				<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}" disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText
+						value="#{lbl['lbl.sm.person.composition.processing']}"
+						rendered="#{personnel.softcertFlg eq '3'}" />
+					<h:outputText
+						value="#{lbl['lbl.sm.person.composition.requested']}"
+						rendered="#{personnel.softcertFlg eq '2'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}"
+						rendered="#{personnel.softcertFlg eq '1'}" />
+					<h:outputText
+						value="#{lbl['lbl.sm.person.composition.notapplied']}"
+						rendered="#{personnel.softcertFlg eq '0'}" />
+				</p:column>
 
-					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
-						<h:outputText value="#{personnel.epRole}" />
-					</p:column>
+				<p:column disabledSelection="#{personnel.disableRowSelection}"
+					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
+					<h:outputText />
+				</p:column>
 
-					<p:column
-						headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}">
-						<h:outputText value="Y" rendered="#{personnel.softcert}" />
-						<h:outputText value="N"
-							rendered="#{!personnel.softcert || personnel.softcert eq null}" />
-					</p:column>
+			</p:dataTable>
+		</p:panel>
 
-					<p:column
-						headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
-						<h:outputText />
-					</p:column>
-
-					<p:column
-						headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}"
-						rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}">
-						<h:outputText value="Y" rendered="#{personnel.contractSigner}" />
-						<h:outputText value="N" rendered="!#{personnel.contractSigner}" />
-					</p:column>
-				</p:dataTable>
-			</p:panel>
-
-		</h:panelGrid>
 
 		<p:dialog id="confirmDialog" header="Confirmation"
 			widgetVar="confirmDialog" modal="true" width="500" height="100">

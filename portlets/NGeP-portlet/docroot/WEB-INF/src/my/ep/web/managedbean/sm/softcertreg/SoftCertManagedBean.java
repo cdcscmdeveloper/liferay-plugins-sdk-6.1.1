@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.liferay.portal.model.Role;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -83,6 +86,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 				PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelBySupplierIdForSoftCert(reqDTO);
 
 				if(resDTO.isSuccessful()) {
+					setPersonnelRowSelection(resDTO.getSearchPersonnelResultBean().getResultList());
 					return resDTO.getSearchPersonnelResultBean();
 				}
 			} catch (Exception e) {
@@ -168,6 +172,20 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+	
+	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
+		for (SmPersonnel personnel : personnels) {
+			if (personnel.getSoftcertFlg() != SupplierManagementConst.IS_SOFTCERT_REQ) {
+				personnel.setDisableRowSelection(true);
+			} else {
+				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
+					if (personnel.getPmUser() == null) {
+						personnel.setDisableRowSelection(true);
+					}
+				}
+			}
+		}
 	}
 
 }
