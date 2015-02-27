@@ -34,6 +34,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -57,6 +58,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.formula.functions.T;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
@@ -527,6 +529,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			String parameterCode) {
 		return ParameterHelper.getInstance().getParameterByTypeAndCode(
 				parameterType, parameterCode);
+	}
+	
+	/**
+	 * Check if the given procurement category is medical or not
+	 * 
+	 * @param pmProcCategory  the pmProcCategory type
+	 * @return  procurement category is medical or not
+	 */
+	public boolean isMedicalProcurementCategory(PmParameter pmProcCategory) {
+		if ( (pmProcCategory != null) && 
+				(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(
+						pmProcCategory.getParameterCode())) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
