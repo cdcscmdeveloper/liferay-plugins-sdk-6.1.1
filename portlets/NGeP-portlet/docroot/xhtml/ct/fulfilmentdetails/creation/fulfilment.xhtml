@@ -70,68 +70,153 @@
 	  <p:blockUI id="blockUiId" block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
-		<p:panel id="fulfilmentPanelMsgId">
+		<h:panelGroup id="fulfilmentPanelMsgId">
 			<f:event listener="#{contractDetailsBackingBean.preRenderView}"  type="preRenderView"  />	
 			<p:messages id="messages" showSummary="false" showDetail="true"  autoUpdate="#{contractDetailsBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
 			<p:tooltip id="headerTooltip" global="true" position="left center" targetPosition="right center" forSelector=".ui-state-error"/>
-	    	<ui:include src="fulfilmentButtons.xhtml" />
-		    <ui:include src="fulfilmentHeader.xhtml" />	
-		</p:panel>
+	   </h:panelGroup>
+	   	<ui:include src="fulfilmentButtons.xhtml" />
+		<ui:include src="fulfilmentHeader.xhtml" />	
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
-				<p:tabMenu id="sidemenuId" styleClass="sidemenu" 
-						activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}"
-						model="#{contractDetailsBackingBean.managedBean.fulfilmentMenuModel}" />
-			  </td>
-			 	<td width="80%">
-			 	<p:outputPanel id="ctMenuId1" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.fd'] }">
-				      <p:outputPanel id="ctMenuId2" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+			<p:outputPanel id="menuMinistry"  
+			       rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+		      <p:tabMenu id="sidemenuId" styleClass="sidemenu" 
+						activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}" >
+		<p:menuitem value="#{lbl['lbl.ct.menu.fd']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FD')}" update=":form" />
+	
+		<p:menuitem value="#{lbl['lbl.ct.menu.agency']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'AG')}" update=":form" />
+	
+		<p:menuitem value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()" 
+		    oncomplete="blockWidget.hide()" rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
+			 
+		<p:menuitem value="#{lbl['lbl.ct.menu.item']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
+		
+		<p:menuitem value="#{lbl['lbl.ct.menu.deduction']}" 
+		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
+		     rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.contractVer.ctDeductions.size() > 0}"
+			 actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'DE')}" update=":form" />
+			
+			<p:menuitem value="#{lbl['lbl.ct.menu.schedule']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{contractDetailsBackingBean.managedBean.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled}"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'SC')}" update=":form" />
+		
+		<p:menuitem value="#{lbl['lbl.ct.menu.factoring']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FT')}" update=":form" />
+		  	  
+		  <p:menuitem value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking}"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'PY')}" update=":form" />
+		  	 
+		 <p:menuitem value="#{lbl['lbl.ct.menu.setting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
+		</p:tabMenu>
+		</p:outputPanel>
+		
+		<p:outputPanel id="menuCentral"  
+			   rendered="#{ contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+	         <p:tabMenu id="sidemenuId1" styleClass="sidemenu" 
+						activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}" >
+		
+	           <p:menuitem value="#{lbl['lbl.ct.menu.fd']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FD')}" update=":form" />
+	
+	      	<p:menuitem value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()" 
+		    oncomplete="blockWidget.hide()" rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
+		
+		    <p:menuitem value="#{lbl['lbl.ct.menu.item']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
+		
+		   <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}"
+			    onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			    rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
+			    actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'FT')}" update=":form" />
+		
+	      <p:menuitem value="#{lbl['lbl.ct.menu.setting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			actionListener="#{contractDetailsBackingBean.setTabCentralValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
+		</p:tabMenu>
+		</p:outputPanel>
+		
+		 </td>
+		 <td width="80%">
+			 	<p:outputPanel id="ctMenuId1"  rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq 0}">
+			 	        <p:outputPanel id="ctMenuId2" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		 	               <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
 		 	        </p:outputPanel>
 		 	        <p:outputPanel id="ctMenuId3" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
 		 	             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralDetails.xhtml"/>
 		 	        </p:outputPanel>
-				    <ui:include id="ctMenuId4"	src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
-				    <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml" />
-				    <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
-				    <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+		 	             <ui:include id="ctMenuId4"	src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
+				          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml" />
+				         <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
+				        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 				</p:outputPanel>
-				<p:outputPanel id="ctMenuId5" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.agency'] }">
-					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml" />
-				</p:outputPanel>
-				<p:outputPanel id="ctMenuId6" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.zone'] }">
-					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
-			    </p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId7" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.item']
+				<p:outputPanel id="ctMenuId5" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry 
+				                and contractDetailsBackingBean.managedBean.selectedTabIndex eq 1}">
+				      <ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml" />
+				</p:outputPanel>
+				
+				<p:outputPanel id="ctMenuId6" 
+				     rendered="#{(contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+				     contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry and contractDetailsBackingBean.managedBean.selectedTabIndex eq 2) or 
+				     (contractDetailsBackingBean.managedBean.ctContract.zonalPricing and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral and contractDetailsBackingBean.managedBean.selectedTabIndex eq 1)}" >
+				     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
+			    </p:outputPanel>
+			    
+			    <p:outputPanel id="ctMenuId7" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex
 				   and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/productItem.xhtml" />
 				    <ui:include src="/xhtml/ct/fulfilmentdetails/shared/serviceItem.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId8" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.item'] and 
-				     contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+				<p:outputPanel id="ctMenuId8" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex
+				     and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralItem.xhtml" />
 				</p:outputPanel>
-				
-				<p:outputPanel id="ctMenuId9" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.deduction'] }">
+			   
+				<p:outputPanel id="ctMenuId9"
+				     rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.contractVer.ctDeductions.size() > 0
+				       and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId10" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.schedule'] }">
+				<p:outputPanel id="ctMenuId10" 
+				      rendered="#{contractDetailsBackingBean.managedBean.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled
+				       and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex}">
 					 <ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId11" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.factoring'] }">
+				<p:outputPanel id="ctMenuId11" 
+				     rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()
+				     and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>
 				</p:outputPanel>
 	
-				<p:outputPanel id="ctMenuId12" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.adv.payment.tracking'] }">
+				<p:outputPanel id="ctMenuId12" rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking
+				  and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.paymentTracking}">
 				             	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
 				   </p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId13" rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.setting'] }">
+				<p:outputPanel id="ctMenuId13" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex}">
 					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				   <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />
 				</p:outputPanel>
