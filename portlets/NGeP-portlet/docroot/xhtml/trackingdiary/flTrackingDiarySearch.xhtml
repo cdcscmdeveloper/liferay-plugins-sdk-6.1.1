@@ -60,23 +60,23 @@
 					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
-			<h:panelGroup id="docDoStatusSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel
-						value="Document Start/End Date" />
-					<p:calendar mode="popup" showOn="button"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderFromDuration}">
-					</p:calendar>
-					<p:spacer width="5" />
-					<p:calendar mode="popup" showOn="button"
-						readonlyInput="true"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderToDuration}">
-					</p:calendar>
-				</h:panelGrid>
-			</h:panelGroup>
+<!-- 			<h:panelGroup id="docDoStatusSearch"> -->
+<!-- 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"> -->
+<!-- 					<p:outputLabel -->
+<!-- 						value="Document Start/End Date" /> -->
+<!-- 					<p:calendar mode="popup" showOn="button" -->
+<!-- 						readonlyInput="true" -->
+<!-- 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
+<!-- 						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderFromDuration}"> -->
+<!-- 					</p:calendar> -->
+<!-- 					<p:spacer width="5" /> -->
+<!-- 					<p:calendar mode="popup" showOn="button" -->
+<!-- 						readonlyInput="true" -->
+<!-- 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" -->
+<!-- 						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderToDuration}"> -->
+<!-- 					</p:calendar> -->
+<!-- 				</h:panelGrid> -->
+<!-- 			</h:panelGroup> -->
 			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
 				<p:inputText size="45"
@@ -120,7 +120,7 @@
 					<f:facet name="header">
 					Document Type
 				</f:facet>
-				#{flDocument.docType}
+				#{scTrackingDiaryBackingBean.getParameterDesc("DT",flDocument.docType)}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
