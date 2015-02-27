@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel header="#{lbl['lbl.sm.sitevisit.additional.machine']}" id="pnlAdtMachine">
 		<p:dataTable id="addlMachineDtTbl" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvAdtMachines}" var="addMachineDtl"
-			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAdtMachines}" rowKey="#{addMachineDtl}">
+			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAdtMachines}" rowKey="#{addMachineDtl}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
 			<p:column>
 					<f:facet name="header">
