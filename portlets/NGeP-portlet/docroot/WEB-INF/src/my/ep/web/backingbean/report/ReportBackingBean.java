@@ -4566,7 +4566,7 @@ public class ReportBackingBean extends
 			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)&&(this.getModuleValue().equalsIgnoreCase(
 					ReportConst.DP_MOD_VAL))) {
 				userRoleLogin = ReportConst.APPROVER;
-			} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)&&((this.getModuleValue().equalsIgnoreCase(
+			} else if ((authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER))&&((this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)))) {
 				userRoleLogin = ReportConst.DESKOFFR;
 			} else if (authoriztionList.contains(ReportConst.REQUISITIONER)&&(this.getModuleValue().equalsIgnoreCase(
