@@ -14,25 +14,11 @@
 		<h:outputStylesheet library="ep/css" name="ep.css" />
 	</h:head>
 	<ui:define name="contentSection">
-		<p:panel id="Pnl" header="Trackng Diary" toggleable="true">
 
-	<h:panelGroup id="cmUNSPSCsearchID">
-	<script>
-	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
-	</script>
+		<h:panelGroup id="trackingDiarySearchID" autoUpdate="true">
+			<ac:trackingDiaryDetail action="#{dpTrackingDiaryBackingBean.backToPrev}" 
+									dataTable="#{dpTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
+		</h:panelGroup>		
 
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-		<div style="text-align: right; min-height: 40px;">	
-			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{dpTrackingDiaryBackingBean.backToPrev}" />
-			</div>
-		</div>
-		<ac:trackingDiaryDetail dataTable="#{dpTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
-	</h:panelGroup>		
-
-
-			<br />
-			<br />
-		</p:panel>
 	</ui:define>
 </ui:composition>
