@@ -153,12 +153,16 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -2114,6 +2118,7 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setSpecZoneDtls(speczone.getZones());
 				this.getManagedBean().setFinSpecZoneBean(
 						new ArrayList<SummaryZoneBaen>());
+				populateFinancialSpecDetailsByZone();
 				for (int i = 0; i < speczone.getZones().size(); i++) {
 
 					EvaluationReqDTO zoneReqDto = new EvaluationReqDTO();
@@ -2199,6 +2204,41 @@ public class EvaluationBackingBean extends
 			}
 		} finally {
 			evaluationSo = null;
+		}
+	}
+
+	private void populateFinancialSpecDetailsByZone() {
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSpecZoneDtls())) {
+			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean()
+					.getSpecZoneDtls();
+
+			// Dynamically generating the tabs
+			MenuModel zoneMenuModel = new DefaultMenuModel();
+			if (CollectionUtils.isNotEmpty(zoneDtls)) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				int zoneTabIndex = 0;
+				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
+					specZoneDtl.setZoneTabIndex(zoneTabIndex);
+
+					MenuItem zoneItem = new MenuItem();
+					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
+					zoneItem.setAjax(true);
+					zoneItem.setPartialSubmit(true);
+					zoneItem.setProcess("@this");
+					// zoneItem.setUpdate("@([id$=zonalMenu]),@([id$=financialSpecEvaluationStage])");
+					zoneItem.setUpdate("@form");
+					zoneItem.setActionExpression(FacesScopes
+							.createMethodExpression(facesContext,
+									"#{evaluationBackingBean.specTabChange("
+											+ zoneTabIndex + ")}", Void.class,
+									new Class[] { Integer.class }));
+					zoneMenuModel.addMenuItem(zoneItem);
+					++zoneTabIndex;
+				}
+			}
+			this.getManagedBean()
+					.setEvaluationSpecZonalMenuModel(zoneMenuModel);
 		}
 	}
 
@@ -2369,20 +2409,44 @@ public class EvaluationBackingBean extends
 	 * @param event
 	 *            (Mandatory)
 	 */
-	public void specTabChange(TabChangeEvent event) {
+	public void specTabChange(int index) {
 		IQTEvaluationSO evaluationSo = null;
 		try {
 
-			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
+			this.getManagedBean().setSpecZoneTabIndex(index);
+			debugLogger("zoneTabChange");
+			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
+					.getSpecZoneDtls().get(index);
+			log.info("Selected Zone : " + specZoneDtl.getZoneName());
 			getManagedBean().setSelectedZone(specZoneDtl);
+			/*
+			 * if (getManagedBean().getSelectedZone() != null) {
+			 * getManagedBean().getZoneTplSpecBeanMap().put(
+			 * getManagedBean().getSelectedZone().getSpecZoneId(),
+			 * getManagedBean().getTemplateSpecBean());
+			 * getManagedBean().setTemplateSpecBean(null);
+			 * getManagedBean().setSelectedZone(null); }
+			 * getManagedBean().setSelectedZone(specZoneDtl);
+			 */
+			/*
+			 * getManagedBean().setTemplateSpecBean(
+			 * getManagedBean().getZoneTplSpecBeanMap().remove(
+			 * specZoneDtl.getSpecZoneId())); evaluationSo =
+			 * BusinessDelegate.getInstance().getServiceObject(
+			 * ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			 * TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
+			 * getManagedBean().setSelectedZone(specZoneDtl);
+			 */
 
 			for (int i = 0; i < this.getManagedBean().getSpecZoneDtls().size(); i++) {
 				TplSpecZoneDtl zoneDtls = this.getManagedBean()
 						.getSpecZoneDtls().get(i);
 				if (zoneDtls.getZoneName().equalsIgnoreCase(
 						specZoneDtl.getZoneName())) {
+					evaluationSo = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTEvaluationSO.class);
 					EvaluationReqDTO zoneReqDto = new EvaluationReqDTO();
 					if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
@@ -2419,6 +2483,8 @@ public class EvaluationBackingBean extends
 					if (null != zoneResDTO.getComplianceResultBean()
 							&& zoneResDTO.getComplianceResultBean()
 									.getTotalRecord() > 0) {
+					
+						
 						this.getManagedBean().setFinSpecSupplierList(
 								zoneResDTO.getComplianceResultBean()
 										.getResultList());
@@ -2434,7 +2500,7 @@ public class EvaluationBackingBean extends
 					 * this.getManagedBean().getFinSpecZoneBean() .set(i,
 					 * specZoneDtl);
 					 */
-					this.getManagedBean().setSpecZoneTabIndex(i);
+					// this.getManagedBean().setSpecZoneTabIndex(i);
 					break;
 				}
 			}
@@ -3189,17 +3255,14 @@ public class EvaluationBackingBean extends
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
 				templateSpecBean.setSpecMaster(proposalCheckList
 						.getScQtCheckList().getScQtDoc().getTplSpecMaster());
-				/*
-				 * if (null != this.getManagedBean().getScQt() &&
-				 * this.getManagedBean().getScQt().isZonal()) { if (null !=
-				 * this.getManagedBean().getSelectedZone()) {
-				 * templateSpecBean.setTplSpecZoneDtl(this
-				 * .getManagedBean().getSelectedZone());
-				 * 
-				 * }
-				 * 
-				 * }
-				 */
+
+				if (null != this.getManagedBean().getScQt()
+						&& this.getManagedBean().getScQt().isZonal()) {
+					if (null != this.getManagedBean().getSelectedZone()) {
+						templateSpecBean.setTplSpecZoneDtl(this
+								.getManagedBean().getSelectedZone());
+					}
+				}
 
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				specReqDTO.setSpecMaster(proposalCheckList.getScQtCheckList()
