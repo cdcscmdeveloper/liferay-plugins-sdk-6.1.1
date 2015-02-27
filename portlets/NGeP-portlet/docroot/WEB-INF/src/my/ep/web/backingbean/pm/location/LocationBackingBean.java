@@ -115,9 +115,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		if(null!=getManagedBean().getSelectedType())
 			if(getManagedBean().getSelectedType().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION))
 				reqDTO.setIsAdoptDivision(true);
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
+				IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStates(resDTO.getStateList());
 		getManagedBean().getDivision().setPmState(new PmState());
@@ -198,7 +198,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	 */
 	public String saveLocation() {
 		log.info("Save Method");
-
+		
 		try {
 			if (getManagedBean().getSelectedType().equalsIgnoreCase(
 					ParameterConst.LOCATION_LEVEL_STATE)) {
@@ -328,13 +328,15 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			}
 
 		} catch (Exception e) {
+			throw new EpException("Save Location failed.");
+			/*
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							"Save Location failed."));
 			throw e;
-		}
+		*/}
 		this.getManagedBean().setSelectedType(null);
 		return NAV_TO_SEARCH;
 
