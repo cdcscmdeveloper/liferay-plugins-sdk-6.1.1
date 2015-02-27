@@ -2193,12 +2193,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			if (CollectionUtils.isNotEmpty(recommendList)) {
 				Long loggedInUserId = getFacesScopes().getUserSessionBean().getUserId();
 				for (ScQtRecommend scQtRecommend : recommendList) {
-					scQtRecommend.setDisabled(false);
 					if (scQtRecommend.isHigherAuthReq() && 
 								(loggedInUserId.equals(scQtFinalization.getHigherSecretary().getUserId()))) {  
-						scQtRecommend.setDisabled(true);
+						scQtRecommend.setDisabled(false);
 					} else if (loggedInUserId.equals(scQtRecommend.getCreatedBy())) {
 						scQtRecommend.setDisabled(false);
+					} else {
+						scQtRecommend.setDisabled(true);
 					}
 					if (isZonal) {
 						TplSpecZoneDtl selectedZone = this.getManagedBean().getTplSpecZoneDtl();
