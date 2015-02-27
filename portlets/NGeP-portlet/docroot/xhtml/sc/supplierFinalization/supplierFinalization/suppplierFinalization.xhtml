@@ -51,7 +51,8 @@
 		<p:outputPanel id="recommendSupplierPanel">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 				columnClasses="columnWidth20"
-				rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier}">
+				rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
+								suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
 				<h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.recomend.type']}" />
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
@@ -59,7 +60,8 @@
 				<h:column>
 					<p:selectOneRadio id="recommendType" required="true" label="#{lbl['lbl.sc.recomend.type']}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}" 
-						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser || 
+										suppFinalizationBackingBean.managedBean.procCategoryMedicine}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 						<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=onlineBiddingPanel])" 
 							listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" />
@@ -69,7 +71,8 @@
 				
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 				columnClasses="columnWidth20"
-				rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier}">
+				rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
+							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
 				<h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.loi.loa.prepared.by']}" />
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
@@ -82,25 +85,12 @@
 		   			</p:selectOneRadio>
 				</h:column>
 
-				<h:column>
-					<p:outputLabel value="#{lbl['lbl.sc.forward.to.higher.authority']}" />
-					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
-				</h:column>
-				<h:column>
-					<p:selectOneRadio id="fwdHigherAuthority" required="true" label="#{lbl['lbl.sc.forward.to.higher.authority']}"
-						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherAuthReq}" 
-						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-						<f:selectItems value="#{suppFinalizationBackingBean.getFwdHigherAuthorityRadioBtn()}" />
-						<p:ajax event="change" update="@([id$=fwdHigherAuthorityPanel])" 
-							listener="#{suppFinalizationBackingBean.fwdHigherAuthorityEvent}" process="@this" />
-		   			</p:selectOneRadio>
-				</h:column>
 			</h:panelGrid>
 
 			<p:outputPanel id="fwdHigherAuthorityPanel">
 				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 					columnClasses="columnWidth20"
-					rendered="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherAuthReq}">
+					rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
 					
 					<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
 						<p:outputLabel value="#{lbl['lbl.sc.finalization.committee']}" />
@@ -204,12 +194,13 @@
 		
 	</p:panel>
 	
-	<p:spacer height="20px" />
+	<p:spacer height="10px" />
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
 				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal() and
-				 			  suppFinalizationBackingBean.managedBean.recommendSupplier}">
+				 			  (suppFinalizationBackingBean.managedBean.recommendSupplier or 
+				 			  	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
 					<td width="16%" style="vertical-align: baseline;">
 						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
 							activeIndex="#{suppFinalizationBackingBean.managedBean.zoneActiveIndex}"
@@ -220,10 +211,13 @@
 				</c:if>
 				
 				<td class="tdWidth">
-					<h:panelGroup id="itemPanel" rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier and suppFinalizationBackingBean.managedBean.itemize}">
+					<h:panelGroup id="itemPanel" rendered="#{(suppFinalizationBackingBean.managedBean.recommendSupplier or 
+																suppFinalizationBackingBean.managedBean.forwardToHigherAuthority) and
+																	suppFinalizationBackingBean.managedBean.itemize}">
 						<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/itemList.xhtml" />
 					</h:panelGroup>
-					<h:panelGroup id="supplierPanel" rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier}">
+					<h:panelGroup id="supplierPanel" rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
+																	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
 						<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/shortlistedSupplierList.xhtml" />
 					</h:panelGroup>
 				</td>

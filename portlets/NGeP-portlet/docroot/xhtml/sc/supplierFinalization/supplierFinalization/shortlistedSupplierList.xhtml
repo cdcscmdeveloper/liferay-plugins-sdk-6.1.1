@@ -11,8 +11,9 @@
 	
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20"
-			rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier 
-						and !suppFinalizationBackingBean.managedBean.itemize}">
+			rendered="#{(suppFinalizationBackingBean.managedBean.recommendSupplier or
+						 	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority) and
+								!suppFinalizationBackingBean.managedBean.itemize}">
 			
 			<h:column>
 				<h:outputLabel value="#{lbl['lbl.sc.recommend.by']}" />
@@ -32,7 +33,8 @@
 		<p:outputPanel id="onlineBiddingPanel">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 					columnClasses="columnWidth20"
-					rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}">
+					rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding and 
+									!suppFinalizationBackingBean.managedBean.itemize}">
 					<h:column>
 						<p:outputLabel value="#{lbl['lbl.sc.online.bidding.endorsement']}" />
 						<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
@@ -42,6 +44,7 @@
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
 							disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 							<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
+							<p:ajax partialSubmit="true" process="@this" update="@this"/>
 			   			</p:selectOneRadio>
 					</h:column>
 			</h:panelGrid>
@@ -280,7 +283,7 @@
 									
 				<ac:paginator for="itemSupplierListTblMultiple" />
 				
-				<p:ajax event="rowSelect"
+				<p:ajax event="rowSelect" 
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
 					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this" partialSubmit="true"/>
 				
