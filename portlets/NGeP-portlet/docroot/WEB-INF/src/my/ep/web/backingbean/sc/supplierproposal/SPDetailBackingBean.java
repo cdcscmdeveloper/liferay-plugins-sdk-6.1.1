@@ -112,6 +112,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -1626,7 +1627,7 @@ public class SPDetailBackingBean extends
 									getManagedBean().getSelectedZone()
 											.getSpecZoneId()));
 				}
-				populateShortListedSuppliersByZone();
+				populateFinancialSpecDetailsByZone();
 
 			}
 			if (!scQt.isZonal() && scQt.getMaxProposal() == 1) {
@@ -3144,14 +3145,15 @@ public class SPDetailBackingBean extends
 
 	}
 
-	public StreamedContent printLabelAction() throws Exception {
+	public void printLabelAction() throws Exception {
 
 		ScSlAttachment slAttachment = new ScSlAttachment();
+		slAttachment.setDocNo(getManagedBean().getQt().getQtNo());
 		generateSampleLabelsFromVelocityToPdf(slAttachment);
 		StreamedContent slStreamContent = getAttachmentStreamContent(
 				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-
-		return slStreamContent;
+		getManagedBean().setSampleLabelStreamContent(slStreamContent);
+		RequestContext.getCurrentInstance().execute("supplierSampleLabelDlg.show();");
 	}
 
 	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment)
@@ -3164,7 +3166,7 @@ public class SPDetailBackingBean extends
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
 		VelocityContext context = new VelocityContext();
-		context.put("numberDF", numberDF);
+		
 		context.put("sampleItems", getManagedBean().getScQtSampleLable()
 				.getSampleItems());
 		context.put("lableNo", getManagedBean().getScQtSampleLable()
@@ -3174,7 +3176,7 @@ public class SPDetailBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	private void populateShortListedSuppliersByZone() {
+	private void populateFinancialSpecDetailsByZone() {
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
 			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean().getZones();
