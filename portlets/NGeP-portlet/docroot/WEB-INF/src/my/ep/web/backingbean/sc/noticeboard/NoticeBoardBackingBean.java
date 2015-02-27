@@ -56,8 +56,10 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -71,7 +73,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.sc.CommitteType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -688,15 +689,24 @@ public class NoticeBoardBackingBean extends
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())) {
 				evalCommitte = getQtCommiteDtlsByQtIdNType(
-						CommitteType.getValue("EvaluationCommittee"), qtId);
+						ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE, qtId);
 
 			} else {
 				evalCommitte = getQtCommiteDtlsByQtIdNType(
-						CommitteType.getValue("OpeningCommittee"), qtId);
+						ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE, qtId);
 			}
-			this.getManagedBean().setScCommitteeMembers(
-					evalCommitte != null ? evalCommitte.getScCommittee()
-							.getScCommitteeMembers() : null);
+			if (null != evalCommitte) {
+				 ScCommittee committee = evalCommitte.getScCommittee();
+				 PmParameter pmParameter = committee.getCommitteeType();
+				this.getManagedBean().setCommitteeName(
+						getParameterDesc(pmParameter.getParameterType(),pmParameter.getParameterCode()));
+				this.getManagedBean().setScCommitteeMembers(
+						evalCommitte.getScCommittee() != null ? evalCommitte
+								.getScCommittee().getScCommitteeMembers(): null);
+								
+			}
+			
+			
 		} finally {
 		}
 		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml?faces-redirect=true";
