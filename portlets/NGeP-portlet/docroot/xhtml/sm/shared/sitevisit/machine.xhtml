@@ -40,7 +40,9 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.machine.value']}
 					</f:facet>
-					<h:outputText value="#{machineDtl.value}" style="float: left;white-space: normal;"></h:outputText>			
+					<h:outputText value="#{machineDtl.value}" style="float: left;white-space: normal;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>			
 			</p:column>			
 			<p:column>
 					<f:facet name="header">
