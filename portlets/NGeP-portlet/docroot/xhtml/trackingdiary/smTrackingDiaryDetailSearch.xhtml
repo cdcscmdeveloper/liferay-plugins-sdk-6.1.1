@@ -15,9 +15,10 @@
 	</h:head>
 	<ui:define name="contentSection">
 
-	<h:panelGroup id="cmUNSPSCsearchID" autoUpdate="true">
-		<ac:trackingDiaryDetail action="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" dataTable="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
-	</h:panelGroup>		
+		<h:panelGroup id="trackingDiarySearchID" autoUpdate="true">
+			<ac:trackingDiaryDetail action="#{smTrackingDiaryBackingBean.backToPrev}" 
+									dataTable="#{smTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
+		</h:panelGroup>		
 
 	</ui:define>
 </ui:composition>
