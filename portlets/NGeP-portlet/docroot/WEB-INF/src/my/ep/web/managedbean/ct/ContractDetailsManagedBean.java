@@ -154,6 +154,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 		
+	public int deductionIndex =99;
+	public int scheduleIndex =99;
+	public int factoring = 99;
+	public int paymentTracking = 99;
+	public int itemIndex = 99;
+	public int settingIndex = 101;
+	
+	
 	/**
 	 * @return the action
 	 */
@@ -1324,6 +1332,84 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setCtZoneTrees(TreeNode ctZoneTrees) {
 		this.ctZoneTrees = ctZoneTrees;
+	}
+
+	/**
+	 * @return the deductionIndex
+	 */
+	public int getDeductionIndex() {
+		return deductionIndex;
+	}
+
+	/**
+	 * @param deductionIndex the deductionIndex to set
+	 */
+	public void setDeductionIndex(int deductionIndex) {
+		this.deductionIndex = deductionIndex;
+	}
+
+	/**
+	 * @return the scheduleIndex
+	 */
+	public int getScheduleIndex() {
+		return scheduleIndex;
+	}
+
+	/**
+	 * @param scheduleIndex the scheduleIndex to set
+	 */
+	public void setScheduleIndex(int scheduleIndex) {
+		this.scheduleIndex = scheduleIndex;
+	}
+
+	/**
+	 * @return the factoring
+	 */
+	public int getFactoring() {
+		return factoring;
+	}
+
+	/**
+	 * @param factoring the factoring to set
+	 */
+	public void setFactoring(int factoring) {
+		this.factoring = factoring;
+	}
+
+	/**
+	 * @return the paymentTracking
+	 */
+	public int getPaymentTracking() {
+		return paymentTracking;
+	}
+
+	/**
+	 * @param paymentTracking the paymentTracking to set
+	 */
+	public void setPaymentTracking(int paymentTracking) {
+		this.paymentTracking = paymentTracking;
+	}
+
+	public int getItemIndex() {
+		return itemIndex;
+	}
+
+	/**
+	 * @param itemIndex the itemIndex to set
+	 */
+	public void setItemIndex(int itemIndex) {
+		this.itemIndex = itemIndex;
+	}
+
+	public int getSettingIndex() {
+		return settingIndex;
+	}
+
+	/**
+	 * @param settingIndex the settingIndex to set
+	 */
+	public void setSettingIndex(int settingIndex) {
+		this.settingIndex = settingIndex;
 	}
 
 	/**
