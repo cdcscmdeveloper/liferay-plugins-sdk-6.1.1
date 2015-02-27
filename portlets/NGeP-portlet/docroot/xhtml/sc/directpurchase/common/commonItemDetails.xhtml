@@ -245,13 +245,13 @@
 					<p:inputText style="width:25px;text-align:right;margin-top: 8px;margin-right: 1px;" 
 					   label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
-					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteBackingBean.checkServiceOrProduct(requestNoteDtl)}"
+					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
 					<h:selectOneMenu  style="width:75px;margin-top: 8px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
 					    label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term.type']}"
-					    disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteBackingBean.checkServiceOrProduct(requestNoteDtl)}"
+					    disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
 						value="#{requestNoteDtl.deliverTermTypeId}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
 						
