@@ -15,6 +15,26 @@
 	</style>
 
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+		<p:outputPanel id="itemOnlineBiddingPanel">
+				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
+						columnClasses="columnWidth20"
+						rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding and suppFinalizationBackingBean.managedBean.itemize}">
+						<h:column>
+							<p:outputLabel value="#{lbl['lbl.sc.online.bidding.endorsement']}" />
+							<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
+						</h:column>
+						<h:column>
+							<p:selectOneRadio id="itemBiddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
+								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+								<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
+								<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
+				   			</p:selectOneRadio>
+						</h:column>
+				</h:panelGrid>
+				<p:spacer height="10px" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}"/>
+		</p:outputPanel>	
+		
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{suppFinalizationBackingBean.managedBean.itemList}"
 			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex" selectionMode="single">
@@ -65,10 +85,10 @@
 				<h:column>
 					<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
 						required="false" label="#{lbl['lbl.sc.recommend.by']}" 
-						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(
 														item.requestItem.tplSpecQuestion.clPriceTypeCode, item)}" />
-						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
+						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel],[id$=itemOnlineBiddingPanel])" 
 								listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
 								process="@this" partialSubmit="true"/>
 	   				</p:selectOneMenu>	
@@ -103,7 +123,7 @@
 							<p:column>
 								<h:inputText value="#{rdetail.awardQty}" maxlength="13" size="10" required="true" 
 											 style="text-align:right; width:120px;" label="#{lbl['lbl.sc.quantity']}" 
-											 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+											 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled}">
 									<p:ajax partialSubmit="true" process="@this" update="@this"/>
 									<p:ajax event="blur" partialSubmit="true" process="@this" update="@([id$=itemSupplierListTblMultiple])" 
 											listener="#{suppFinalizationBackingBean.updateOfferedPrice(rdetail)}"/>
@@ -121,6 +141,14 @@
 									item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and
 										item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
 			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.req.higher.authority']}" 
+					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
+				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{item.disabled}">
+					<p:ajax partialSubmit="true" process="@this" update="@this"/>
+				</p:selectBooleanCheckbox>				
+			</p:column>		
+						
 		</p:dataTable>
 		
 		<p:spacer height="5px"></p:spacer>

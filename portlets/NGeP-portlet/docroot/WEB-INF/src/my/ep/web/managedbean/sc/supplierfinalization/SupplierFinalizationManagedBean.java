@@ -104,6 +104,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isReEvaluate;
 	private boolean isRePublish;
 	private boolean isCancel;
+	private boolean isForwardToHigherAuthority;
 	private boolean isForward;
 	private boolean isForwardToBpk = false;
 	private boolean isSingleAward;
@@ -113,6 +114,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isItemRowSelect;
 	private boolean isSubmit;
 	private boolean isSecretaryUser;
+	private boolean isProcCategoryMedicine;
 	
 	private ScQtEvaluationResult shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -517,6 +519,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSecretaryUser(boolean isSecretaryUser) {
 		this.isSecretaryUser = isSecretaryUser;
+	}
+
+	/**
+	 * @return the isProcCategoryMedicine
+	 */
+	public boolean isProcCategoryMedicine() {
+		return isProcCategoryMedicine;
+	}
+
+	/**
+	 * @param isProcCategoryMedicine the isProcCategoryMedicine to set
+	 */
+	public void setProcCategoryMedicine(boolean isProcCategoryMedicine) {
+		this.isProcCategoryMedicine = isProcCategoryMedicine;
 	}
 
 	/**
@@ -1134,6 +1150,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the isForwardToHigherAuthority
+	 */
+	public boolean isForwardToHigherAuthority() {
+		return isForwardToHigherAuthority;
+	}
+
+	/**
+	 * @param isForwardToHigherAuthority the isForwardToHigherAuthority to set
+	 */
+	public void setForwardToHigherAuthority(boolean isForwardToHigherAuthority) {
+		this.isForwardToHigherAuthority = isForwardToHigherAuthority;
+	}
+
+	/**
 	 * @return the committeeType
 	 */
 	public String getCommitteeType() {
@@ -1183,12 +1213,18 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.selectAll = selectAll;
 	}
 
+	/**
+	 * @return the action
+	 */
 	public String getAction() {
 		return action;
 	}
 
+	/**
+	 * @param action the action to set
+	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
-	
+
 }

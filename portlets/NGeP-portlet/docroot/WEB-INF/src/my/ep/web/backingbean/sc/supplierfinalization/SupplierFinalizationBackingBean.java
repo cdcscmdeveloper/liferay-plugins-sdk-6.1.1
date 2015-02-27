@@ -151,7 +151,8 @@ import org.primefaces.model.MenuModel;
  * @author Faradiana
  * @author Praneeth
  * 
- * Supplier Finalization Backing Bean
+ * @version 1.1
+ * @since 29/01/2014
  */
 @ManagedBean(name = "suppFinalizationBackingBean")
 @RequestScoped
@@ -173,10 +174,17 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ENDORSEMENT = 1;
 	
+	/**
+	 * Default constructor
+	 */
 	public SupplierFinalizationBackingBean() {
 		
 	}
 	
+	/**
+	 * Initialize the data required when the page is initially rendered (based on the task-id of the selected quotation/tender)
+	 * and sets the data in managed bean associated with the current user session
+	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
 
@@ -204,7 +212,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	public void loadInitialData(Long qtId) {
+	private void loadInitialData(Long qtId) {
 		retrieveQTDetails(qtId);
 		loadPreparationTabDetails();
 		loadSupplierFinalizationTabDetails();
@@ -212,6 +220,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		retrieveCommitteeEndorsement();
 	}
 	
+	/**
+	 * Loads ScQt details corresponding to the selected quotation/tender and 
+	 * sets the data in the managed bean associated with the current user session
+	 * @param qtId The id of the quotation/tender to be loaded
+	 */
 	public void retrieveQTDetails(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		try {
@@ -225,6 +238,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
 			
+			boolean isMedicalProcCategory = isMedicalProcurementCategory(
+													scQt.getPmProcurementCategory());
+			getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
+			
 			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
 			getManagedBean().setZoneDetails(zoneDetails);
 		} finally {
@@ -232,21 +249,20 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	//Supplier Finalization Tab Menu
+	/**
+	 * To navigate to the selected tab
+	 * @param tabIndex  the index of the selected tab
+	 */
 	public void onTabMenuChangeAction(int tabIndex) {
-		//String tabTitle = event.getTab().getTitle();
-		//int previousIndex = this.getManagedBean().getActiveIndex();
-		//validateInfo(previousIndex, false);
-		
-		if (tabIndex == 0) {
-			navigateToPreparationTab();
-		} else if (tabIndex == 1) {
-			navigateToBriefingPaperTab();
-		} else if (tabIndex == 2) {
-			navigateToSupplierFinalizationTab();
-		} else if (tabIndex == 3) {
-			navigateToCommitteeEndorsementTab();
-		}		
+		switch (tabIndex) {
+			case 0 : navigateToPreparationTab(); 
+					 break;
+			case 1 : navigateToBriefingPaperTab(); 
+			 		 break;				 
+			case 2 : navigateToSupplierFinalizationTab(); 
+			 		 break;				 
+			case 3 : navigateToCommitteeEndorsementTab(); 
+		}
 	}
 	
 	private void navigateToPreparationTab() {
@@ -291,7 +307,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtCommittee.setQtCommitteRemarks(remarks);
 		
 		// Committee Remarks list 
-		this.getManagedBean().setCommitteeRemarkList(remarks);		
+		this.getManagedBean().setCommitteeRemarkList(remarks);	
 	}
 	
 	private void navigateToCommitteeEndorsementTab() {
@@ -323,7 +339,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}*/
 	
-	public void retrievePreparationDtls(Long qtId, String committeeType) {
+	private void retrievePreparationDtls(Long qtId, String committeeType) {
 		debugLogger("..In retrievePreparationDtls()..");
 		IQTMeetingSO meetingSO = null;
 		try {
@@ -414,6 +430,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Sets the meeting details corresponding to the selected quotation/tender 
+	 * in the managed bean associate with the current user session
+	 */
 	public void retrieveMeetingDtls() {
 		debugLogger("..In retrieveMeetingDtls()..");
 		try {
@@ -426,6 +446,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Event to handle addition of finalization committee meeting(s)
+	 */	
 	public void addMeetingDtls() {
 		debugLogger("..In addMeetingDtls()..");
 		try {
@@ -452,6 +475,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Event to handle deletion of selected list of finalization committee meetings
+	 * @param selectedMeetingList  the selected list of ScQtMeeting entities
+	 */
 	public void deleteMeetingDetails(List<ScQtMeeting> selectedMeetingList) {
 		try {
 			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
@@ -472,6 +499,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}		
 	}
 	
+	/**
+	 * Event to handle deletion of the selected list of committee meeting attendance
+	 * @param selectedMeetingAttendanceList  the selected list of ScQtMeetingAttendance entities
+	 */
 	public void deleteMeetingAttendanceDetails(List<ScQtMeetingAttendance> selectedMeetingAttendanceList) {
 		try {
 			List<ScQtMeetingAttendance> meetingAttendanceList = 
@@ -482,6 +513,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}		
 	}	
 	
+	/**
+	 * Event to update the status of the selected meeting
+	 * @param scQtMeeting  the selected ScQtMeeting entity
+	 */
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
 		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -491,6 +526,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
 	}
 	
+	/**
+	 * To retrieve committee details
+	 */	
 	public void retrieveCommitteeDtls() {
 		debugLogger("..In retrieveCommitteeDtls()..");
 		try {
@@ -503,6 +541,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * To retrieve meeting attendance details corresponding to the selected quotation/tender
+	 */
 	public void retrieveMeetingAttendanceDtls() {
 		debugLogger("..In retrieveMeetingAttendanceDtls()..");
 		try {
@@ -515,6 +556,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Event to handle addition of committee meeting attendance records
+	 */
 	public void addMeetingAttendance() {
 		debugLogger("..In addMeetingAttendance()..");
 		try {
@@ -534,6 +578,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Validate, save supplier finalization details and 
+	 * sets the updated data in managed bean associated with the current user session
+	 */
 	public void saveSupplierFinalization() {
 		debugLogger("..In saveSupplierFinalization()..");
 		
@@ -599,7 +647,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				//Supplier Finalization Tab
 				scQtFinalization = supplierFinalizationInfo(scQtFinalization);
 				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
-				if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(decisionTypeCode)) {
+				if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(decisionTypeCode) || 
+						ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
 					String recommendTypeCode = scQtFinalization.getRecommendedTypeId().getParameterCode();
 					if (recommendTypeCode.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
 						saveByPackage(scQtFinalization);
@@ -735,8 +784,15 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			resetReEvaluate(scQtFinalization);
 			resetRepublish(scQtFinalization);
 			resetCancel(scQtFinalization);
+			resetForwardToHigherAuthority(scQtFinalization);
 			
 		}else if(decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
+			resetReEvaluate(scQtFinalization);
+			resetRepublish(scQtFinalization);
+			resetCancel(scQtFinalization);
+			resetForwardToHigherAuthority(scQtFinalization);
+			
+		}else if(decision.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)){
 			resetReEvaluate(scQtFinalization);
 			resetRepublish(scQtFinalization);
 			resetCancel(scQtFinalization);
@@ -745,16 +801,19 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			resetRecommendSupplier(scQtFinalization);
 			resetRepublish(scQtFinalization);
 			resetCancel(scQtFinalization);
+			resetForwardToHigherAuthority(scQtFinalization);
 			
 		}else if(decision.equals(ParameterConst.DECISION_RE_PUBLISH)){
 			resetRecommendSupplier(scQtFinalization);
 			resetReEvaluate(scQtFinalization);
 			resetCancel(scQtFinalization);
+			resetForwardToHigherAuthority(scQtFinalization);
 			
 		}else if(decision.equals(ParameterConst.DECISION_CANCEL)){
 			resetRecommendSupplier(scQtFinalization);
 			resetReEvaluate(scQtFinalization);
 			resetRepublish(scQtFinalization);
+			resetForwardToHigherAuthority(scQtFinalization);
 		}
 		return scQtFinalization;
 	}
@@ -980,6 +1039,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtFinalization.setScQtRecommends(scQtRecommendList);		
 	}
 	
+	/**
+	 * Validate, save the selected quotation/tender supplier finalization details and update to BPM
+	 * @param outcome  the task to be performed by BPM
+	 */
 	public void submitSuppFinalization(String outcome) {
 		debugLogger("submitSuppFinalization");
 		this.getManagedBean().setAction(outcome);
@@ -1003,8 +1066,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		if (CollectionUtils.isNotEmpty(meetingList)) {
 			for (ScQtMeeting meeting : meetingList) {
 				if ( (meeting.getMeetingStatus() == null)
-						|| !(QTConstants.SC_MEETING_CANCELLED_STATUS_ID.equals(meeting.getMeetingStatus().getStatusId()) 
-								|| QTConstants.SC_MEETING_DONE_STATUS_ID.equals(meeting.getMeetingStatus().getStatusId())) ) {
+						|| !( QTConstants.SC_MEETING_CANCELLED_STATUS_ID.equals(meeting.getMeetingStatus().getStatusId()) 
+								|| QTConstants.SC_MEETING_DONE_STATUS_ID.equals(meeting.getMeetingStatus().getStatusId())
+									|| QTConstants.SC_MEETING_POSTPONE_STATUS_ID.equals(meeting.getMeetingStatus().getStatusId()) ) ) {
 					
 					// Check and navigate to Preparation tab
 					if (activeIndex == 2) {
@@ -1020,8 +1084,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			}
 		}
 		
-		if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(scQtFinalization.getDecision().getParameterCode()) 
-				&& !scQtFinalization.isHigherAuthReq()) {
+		String decision = scQtFinalization.getDecision().getParameterCode();
+		if (ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(decision) 
+				|| ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decision)) {
 			boolean supplierSelected = true;
 			boolean minSuppliersExist = true;
 			String recommendTypeCode = scQtFinalization.getRecommendedTypeId().getParameterCode();
@@ -1075,8 +1140,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					throw new EpException(MessageConst.ERROR_760206);
 				}
 			}	
-			
 			if (activeIndex != 2) {
+				
 				// By default validate SupplierFinalization Tab content
 				validateInfo(2);
 			}
@@ -1102,7 +1167,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}	
 	}
 	
-	public void updateBPMTask(String outcome, PmDigiSign digiSign){
+	private void updateBPMTask(String outcome, PmDigiSign digiSign) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		String taskId = this.getManagedBean().getTaskId();
@@ -1114,8 +1179,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 		
 		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-			
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, 
+																				   IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = validateInfo(activeIndex);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(token);
@@ -1128,7 +1193,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
 			
 			if (resDTO.isSuccessful()) {	
-				String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+				String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + 
+										" " + getManagedBean().getScQt().getQtNo();
 				String variable2 = getMessageCommon("lbl.sc.supplier.finalization");
 				
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
@@ -1226,9 +1292,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			reqDTO.setScQtFinalization(scQtFinalization);
 			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReports(reqDTO);
-			scQtFinalization = resDTO.getScQtFinalization();
+			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
 			
-			this.getManagedBean().setScQtFinalization(scQtFinalization);
+			scQtFinalization.setScQtFinalizationReports(_scQtFinalization.getScQtFinalizationReports());
 			if (scQtFinalization.getScQtFinalizationReports() != null) {
 				this.getManagedBean().setDocumentList(scQtFinalization.getScQtFinalizationReports());
 			}
@@ -1237,6 +1303,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * To handle file upload event in Briefing Paper/Kertas Taklimat tab
+	 * @param event  file upload event object
+	 * @throws FileNotFoundException  exception that would be thrown if the file being updated does not exist
+	 * @throws IOException  exception that would be thrown if an I/O error is encountered while uploading the file
+	 */
 	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
@@ -1256,6 +1328,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * To download a report under Briefing Paper/Kertas Taklimat tab
+	 * @param scQtFinalizationReport  selected report which would be downloaded
+	 * @throws Exception  the exception that would be thrown in case of any error while downloading the report
+	 */
 	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		debugLogger("downloadReport");
 		
@@ -1267,6 +1344,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		downloadFile(reportAttachment);	
 	}
 
+	/**
+	 * To download all reports under Briefing Paper/Kertas Taklimat tab
+	 * @throws Exception  the exception that would be thrown in case of any error while downloading the report(s)
+	 */
 	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
 
@@ -1321,7 +1402,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				generatePriceSchedulePdf(attachment, getManagedBean().getScQt());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
-				//FIXME - get from evaluation report
+				filename.append(".pdf");
+				reportAttachment.setFileName(filename.toString());
 
 			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
 				//FIXME - get from Opening report
@@ -1356,7 +1438,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
-	public void generateCoverPdf(ScAttachment attachment, ScQt scQt) throws Exception {
+	private void generateCoverPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateCoverPdf");
 		//attachment.setFileName("finalization-Cover.pdf");
 		populateAttachmentDetails(attachment);
@@ -1413,7 +1495,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
     	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_FZ_COVER, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
-	public void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScQt scQt) throws Exception {
+	private void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateOfferedAndQTDtlsPdf");
 
 		attachment.setFileName("Keterangan_Tawaran_dan_Maklumat_Tender_Sebut_Harga.pdf");
@@ -1654,7 +1736,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_FZ_OFFERED_QT_DTLS, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
-	public void generateNoticeBoardPdf(ScAttachment attachment, ScQt scQt) throws Exception {
+	private void generateNoticeBoardPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateNoticeBoardPdf");
 		
 		attachment.setFileName("Notice_Board.pdf");
@@ -1910,7 +1992,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_FZ_NOTICE_BOARD, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
-	public void generatePriceSchedulePdf(ScAttachment attachment, ScQt scQt) throws Exception {
+	private void generatePriceSchedulePdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generatePriceSchedulePdf");
 		
 		//attachment.setFileName("finalization-priceSchedule.pdf");
@@ -2007,7 +2089,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			if (resDTO.getScQtFinalization() != null) {
 				ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
-				if (decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
+				if (decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)
+						|| decisionTypeCode.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)) {
 					retrieveRecommendBySupplierDetails(scQtFinalization, isZonal);
 				} else if (decisionTypeCode.equals(ParameterConst.DECISION_RE_EVALUATION)) {
 					//nothing to set
@@ -2108,7 +2191,15 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			
 			List<ScQtRecommend> recommendList = scQtFinalization.getScQtRecommends();
 			if (CollectionUtils.isNotEmpty(recommendList)) {
-				for (ScQtRecommend scQtRecommend : scQtFinalization.getScQtRecommends()) {
+				Long loggedInUserId = getFacesScopes().getUserSessionBean().getUserId();
+				for (ScQtRecommend scQtRecommend : recommendList) {
+					scQtRecommend.setDisabled(false);
+					if (scQtRecommend.isHigherAuthReq() && 
+								(loggedInUserId.equals(scQtFinalization.getHigherSecretary().getUserId()))) {  
+						scQtRecommend.setDisabled(true);
+					} else if (loggedInUserId.equals(scQtRecommend.getCreatedBy())) {
+						scQtRecommend.setDisabled(false);
+					}
 					if (isZonal) {
 						TplSpecZoneDtl selectedZone = this.getManagedBean().getTplSpecZoneDtl();
 						if (!(scQtRecommend.getTplSpecZoneDtl().getSpecZoneId()).equals(
@@ -2195,9 +2286,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			qtSuppFinalizationSO = null;
 		}
 	}*/
-	
+
 	/**
-	 * Method to call Supplier Details pop up in supplier finalization
+	 * Set the selected supplier details in managed bean associated with the current user session
+	 * @param scQtRecommend  the scQtRecommend which holds the item
+	 * @param selectedRecommendDtl  the selectedRecommendDtl while holds the recommended supplier
 	 */
 	public void showSupplierDetails(ScQtRecommend scQtRecommend, ScQtRecommendDtl selectedRecommendDtl) {
 		debugLogger("showSuppDetails");
@@ -2339,9 +2432,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		getManagedBean().setBoardofDirectors(boardofDirectors);
 	}
 	
-	/**
-	 * Method to reset company details
-	 */
 	private void resetCompanyInfo() {
 		this.getManagedBean().setSmSupplier(null);
 		this.getManagedBean().setSmMofAccount(null);
@@ -2351,7 +2441,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		this.getManagedBean().setSupplierAddress(null);
 	}
 	
-	/**
+	/*
 	 * To retrieve the list of Committee for Endorsement
 	 */
 	private void retrieveCommitteeEndorsement() {
@@ -2377,7 +2467,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	/**
-	 * Method to call Supplier Details popup in supplier finalization
+	 * To show reminder to the committee members corresponding to the selected quotation/tender
 	 */
 	public void showReminder() {
 		debugLogger("showReminder");
@@ -2435,6 +2525,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * To send a notification by email to the committee members corresponding to the selected quotation/tender
+	 */
 	public void sendReminder(){
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -2459,7 +2552,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	//when committee members endorsed the Supplier Finalization or chairperson sign off the Supplier Finalization
+	/**
+	 * Action performed when committee members endorsed the Supplier Finalization or chairperson sign off the Supplier Finalization
+	 */
 	public void signOff(){
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -2500,7 +2595,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	public void retrieveS() {
+	private void retrieveS() {
 		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY);
 		//TODO
 		/*IQTMeetingSO meetingSO;
@@ -2583,49 +2678,69 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 	
+	/**
+	 * Populate meeting status values in a drop down under Preparation tab
+	 * @return  an array of meeting status values
+	 */
 	public SelectItem[] getMeetingStatusDropDown(){
 		SelectItem[] items = getStatusDropdownValues("SC", QTConstants.DOCTYPE_MEETING);
 		return items;
     }
 	
-	public SelectItem[] getRoleTypeDropdownValues(String committeeRole) {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-		
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
-		
-		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-		return items;
-	}
+//	public SelectItem[] getRoleTypeDropdownValues(String committeeRole) {
+//		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+//		List<String> recommendList = new ArrayList<String>();
+//		recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+//		
+//		searchBean.getDataFilterBeans().add(
+//				new SearchFilterBean("pmParameter.parameterCode",
+//						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+//		
+//		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+//		return items;
+//	}
 	
+	/**
+	 * Populate decision type(s) in Decision drop down under Supplier Finalization tab
+	 * @return  an array of decision values
+	 */
 	public SelectItem[] getDecisionDropDown(){
 		SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.FINALIZATION_DECISION_TYPE);
 		return items;
     }
 	
+	/**
+	 * Populate values for Recommend Type radio button(s) under Supplier Finalization tab
+	 * @return  an array of recommend type(s)
+	 */	
 	public SelectItem[] getRecommendTypeRadioBtn(){
 		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.SC_RECOMMEND_TYPE);
 		return items;
     }
 	
+	/**
+	 * Populate values for Online Bidding Endorsement radio button(s) under Supplier Finalization tab
+	 * @return  an array of bidding endorsement type(s)
+	 */
 	public SelectItem[] getBiddingEndorsementRadioBtn(){
 		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.FINALIZATION_BIDDING_ENDORSEMENT);
 		return items;
     }
 	
+	/**
+	 * Populate values for LOI/LOA Prepared By radio button(s) under Supplier Finalization tab
+	 * @return  an array of LOI/LOA prepared by user type(s)
+	 */
 	public SelectItem[] getLoiLoaPreparedByRadioBtn(){
 		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.FINALIZATION_LOILOA_PREPARED_BY);
 		return items;
     }
 	
-	public SelectItem[] getFwdHigherAuthorityRadioBtn(){
-		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.YES_NO_FLAG);
-		return items;
-    }
-	
+	/**
+	 * Populate values in Finalization Committee drop down, 
+	 * when the decision is set to Forward to Higher Authority under Supplier Finalization tab
+	 * @return  an array of finalization committee type(s)
+	 */
 	public SelectItem[] getFinalizationCommitteeDropDown(){
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		String committeeType = getManagedBean().getCommitteeType();
@@ -2708,6 +2823,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Populate values for Reason radio button(s), 
+	 * when the decision is set to Forward to Higher Authority under Supplier Finalization tab
+	 * @return  an array of reason type(s)
+	 */
 	public SelectItem[] getReasonRadioBtn() {
 		SelectItem[] items = null;
 		Map<Long, String> reasonDescMap = new HashMap<Long, String>();
@@ -2733,18 +2853,28 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return items;
 	}
 	
+	/**
+	 * Populate values for Re-Evaluation by radio button(s), 
+	 * when the decision is set to Re-Evaluation under Supplier Finalization tab
+	 * @return  an array of user type(s) for re-evaluation
+	 */
 	public SelectItem[] getReEvaluateByRadioBtn() {
 		SelectionType[] type = SelectionType.values();
 		SelectItem[] items = null;
 		
 		items = new SelectItem[type.length];
 	    int i = 0;
-	    for(SelectionType selectionType : type) {
+	    for (SelectionType selectionType : type) {
 	    	items[i++] = new SelectItem(selectionType.value(), selectionType.name());
 	    }
 	    return items;
 	}
 	
+	/**
+	 * Populate values for Recommend By drop down, 
+	 * when Recommend Type is set to Packaged Wise under Supplier Finalization tab
+	 * @return  an array of Recommend By values
+	 */
 	public SelectItem[] getPackageRecommendByDropDown(){
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -2759,6 +2889,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return items;
     }
 	
+	/**
+	 * Populate values for Recommend By drop down in each item row, 
+	 * when Recommend Type is set to Itemized under Supplier Finalization tab 
+	 * @param priceType  the priceType
+	 * @param scQtRecommend  the scQtRecommend
+	 * @return  an array of Recommend By values
+	 */
 	public SelectItem[] getItemRecommendByDropDown(PmParameter priceType, ScQtRecommend scQtRecommend) {
 		SelectItem[] items = null;
 		String priceTypeCode = priceType.getParameterCode();
@@ -2793,6 +2930,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return items;
 	}
 	
+	/**
+	 * Populate the list of supplier(s) in Award Supplier drop down under Supplier Finalization tab
+	 * @return  an array of suppliers shortlisted for the selected item
+	 */
 	public SelectItem[] getAwardSupplierListDropDown(){
 		if (this.getManagedBean().isItemRowSelect()) {
 			return null;
@@ -2880,7 +3021,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
     }
 	
 	/**
-	 * For Zonal
+	 * To navigate to the selected zone tab, under Supplier Finalization tab
+	 * @param zoneTabIndex  the selected zone tab index
 	 */
 	public void onZoneTabChangeAction(Integer zoneTabIndex) {
 		debugLogger("onZoneTabChangeAction");
@@ -2913,15 +3055,25 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		this.getManagedBean().setRecommendSupplier(false);
 		this.getManagedBean().setReEvaluate(false);
 		this.getManagedBean().setRePublish(false);
+		this.getManagedBean().setForwardToHigherAuthority(false);
 		this.getManagedBean().setRecommendedSupplier(null);
 		
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		scQtFinalization.setHigherAuthReq(false);
+		
 		String decision = scQtFinalization.getDecision().getParameterCode();
 		if (decision == null) {
 			resetFlag();
-		} else if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
-			this.getManagedBean().setRecommendSupplier(true);
+		} else if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)
+						|| decision.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)) {
+			if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
+				this.getManagedBean().setRecommendSupplier(true);
+			} else {
+				this.getManagedBean().setForwardToHigherAuthority(true);
+				scQtFinalization.setHigherAuthReq(true);
+				fwdHigherAuthorityEvent();
+			}
 			if (StringUtils.isBlank(scQtFinalization.getLoiLoaBy())) {
 				scQtFinalization.setLoiLoaBy(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 			}
@@ -2992,7 +3144,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 						}							
 						PmParameter recommendBy = scQtRecommend.getRecommendBy();
 						if (recommendBy == null) {
-							recommendBy = getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, scQtRecommend.getRecommendByStr());
+							if (StringUtils.isNotBlank(scQtRecommend.getRecommendByStr())) {
+								recommendBy = getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, 
+													scQtRecommend.getRecommendByStr());
+								scQtRecommend.setRecommendByStr(recommendBy.getParameterCode());
+							}
 						} else {
 							scQtRecommend.setRecommendByStr(recommendBy.getParameterCode());
 						}
@@ -3035,7 +3191,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	private void resetRecommendSupplier(ScQtFinalization scQtFinalization){
-		scQtFinalization.setHigherAuthReq(false);
 		scQtFinalization.setHigherCommitte(null);
 		scQtFinalization.setHigherSecretary(null);
 		scQtFinalization.setLoiLoaBy(null);
@@ -3048,6 +3203,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtFinalization.setReEvaluateCommitte(null);
 		scQtFinalization.setReEvaluateFinReq(false);
 		scQtFinalization.setReEvaluateTechReq(false);
+	}
+	
+	private void resetForwardToHigherAuthority(ScQtFinalization scQtFinalization){
+		scQtFinalization.setHigherAuthReq(false);
 	}
 	
 	private void resetRepublish(ScQtFinalization scQtFinalization){
@@ -3130,15 +3289,16 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	/**
-	 * Event for Recommendation Type By Item or By Package in Supplier Finalization
+	 * Event for Recommendation Type By Item or By Package under Supplier Finalization tab
 	 */
 	public void recommendTypeEvent() {
 		debugLogger("recommendTypeEvent");
 		
+		this.getManagedBean().setOnlineBidding(false);
 		populateRecommendTypeEventDetails(true);
 	}
 
-	public void populateRecommendTypeEventDetails(boolean triggeredFromEvent) {
+	private void populateRecommendTypeEventDetails(boolean triggeredFromEvent) {
 		boolean	itemize = false;
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
@@ -3146,17 +3306,26 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		String selectionMode = QTConstants.SF_SINGLE;
 		String recommendByCode = getManagedBean().getRecommendBy();
 		
+		// Disable award by package when procurement category is medicine
+		if (getManagedBean().isProcCategoryMedicine()) {
+			PmParameter itemRecommendType = getPmParameterByTypeAndCode(
+					ParameterTypeConst.SC_RECOMMEND_TYPE, ParameterConst.RECOMMEND_TYPE_ITEM);
+			scQtFinalization.setRecommendedTypeId(itemRecommendType);
+			recommendType = itemRecommendType.getParameterCode();
+			triggeredFromEvent = true;
+		}
+		
 		if (recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)) {
 			itemize = true;
 			selectionMode = QTConstants.SF_MULTIPLE;
-			this.getManagedBean().setOnlineBidding(false);
 			this.getManagedBean().setMultipleLoi(false);
+			isOnlineBiddingEndorsementRequired();
 			
 			// Reset the awarded supplier list (ScQtRecommendDtl) by item, 
 			// when recommend type is changed to item
 			if (triggeredFromEvent) {
 				List<ScQtRecommend> scQtRecommendList = scQtFinalization.getScQtRecommends();
-				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtRecommends())) {
+				if (CollectionUtils.isNotEmpty(scQtRecommendList)) {
 					for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 						List<ScQtRecommendDtl> recommendDtls = scQtRecommend.getRecommendDtls();
 						if (CollectionUtils.isNotEmpty(recommendDtls)) {
@@ -3174,11 +3343,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 						scQtRecommend.setRecommendDtls(null);
 					}
 				}
-			}
-			if (isZonal) {
-				populateScQtRecommendsByZone();
-			} else {
-				this.getManagedBean().setItemList(scQtFinalization.getScQtRecommends());
+				if (isZonal) {
+					populateScQtRecommendsByZone();
+				} else {
+					this.getManagedBean().setItemList(scQtFinalization.getScQtRecommends());					
+				}		
+				this.getManagedBean().setShortlistedItemSupplierList(null);
 			}
 		} else {
 			if (StringUtils.isBlank(recommendByCode)
@@ -3224,7 +3394,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	/**
-	 * Event for Recommend By Award,Online Bidding or Multiple LOI in Supplier Finalization
+	 * Event for Recommend By Award, Online Bidding or Multiple LOI 
+	 * where Recommend Type is Packaged wise under Supplier Finalization tab
 	 */
 	public void packageRecommendByEvent() {
 		debugLogger("packageRecommendByEvent ");
@@ -3262,13 +3433,20 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Event for item Recommend By - Award, Online Bidding, Multiple LOI or Multiple Award 
+	 * where Recommend Type is Itemized under Supplier Finalization tab
+	 */
 	public void itemRecommendByEvent(ScQtRecommend scQtRecommend) {
 		debugLogger("itemRecommendByEvent");
 		
+		this.getManagedBean().setOnlineBidding(false);
 		this.getManagedBean().setShortlistedItemSupplierList(null);
 		
 		String recommendBy = scQtRecommend.getRecommendByStr();
 		if (StringUtils.isBlank(recommendBy)) {
+			scQtRecommend.setRecommendBy(null);
+			isOnlineBiddingEndorsementRequired();
 			return;
 		}
 		if (recommendBy.equals(ParameterConst.RECOMMEND_BY_AWARD) 
@@ -3298,14 +3476,16 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				selectedItemList.add(scQtRecommend);
 			}
 		}
-			
+		
 		PmParameter pmParameter = getParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY, recommendBy);
 		scQtRecommend.setRecommendBy(pmParameter);
 		scQtRecommend.setRecommendByStr(recommendBy);
+
+		isOnlineBiddingEndorsementRequired();
 	}
 	
 	/**
-	 * Event for Forward to Higher Authority in Supplier Finalization
+	 * Event for Forward to Higher Authority under Supplier Finalization tab
 	 */
 	public void fwdHigherAuthorityEvent() {
 		debugLogger("fwdHigherAuthorityEvent");
@@ -3342,6 +3522,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		//this.getManagedBean().setForward(forward);
 	}
 	
+	/**
+	 * Event to auto populate selected finalization committee secretary's name 
+	 */
 	public void finalizationCommitteeEvent() {
 		debugLogger("finalizationCommitteeEvent");
 		
@@ -3353,6 +3536,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		retrieveCommitteeSecretary(parameter.getParameterCode());
 	}
 	
+	/**
+	 * Event to update offered price by the supplier when the value of quantity changes, 
+	 * where Recommend Type is Itemized, item Recommend By is Multiple Award under Supplier Finalization tab 
+	 * @param recommendDtl  the recommendDtl to set
+	 */
 	public void updateOfferedPrice(ScQtRecommendDtl recommendDtl) {
 		debugLogger("updateOfferedPrice...");
 		
@@ -3380,21 +3568,30 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Event to select an item where Recommend Type is Itemized under Supplier Finalization tab 
+	 * @param event  the event to set
+	 */	
 	public void selectItemEvent(SelectEvent event) {
 		debugLogger("selectItemEvent");
 		
+		ScQtRecommend scQtRecommend = (ScQtRecommend) event.getObject();
 		this.getManagedBean().setItemRowSelect(true);
 		
 		// Reset selection
 		this.getManagedBean().setSelectedRecommendList(null);
 		this.getManagedBean().setShortlistedItemSupplierList(null);
 		this.getManagedBean().setSelectAll(false);
-		ScQtRecommend scQtRecommend = (ScQtRecommend) event.getObject();
+		
 		scQtRecommend.setSelected(true);
 		addSelectedItem(scQtRecommend);
 		super.selectAll(false, this.getManagedBean().getItemList());
 	}
 
+	/**
+	 * Event to unselect an item where Recommend Type is Itemized under Supplier Finalization tab 
+	 * @param event  the event to set
+	 */
 	public void unselectItemEvent(UnselectEvent event) {
 		debugLogger("unselectItemEvent");
 
@@ -3403,12 +3600,17 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		selectItemEvent(scQtRecommend);		
 	}
 	
+	/**
+	 * Event to select an item where Recommend Type is Itemized under Supplier Finalization tab 
+	 * @param scQtRecommend  the scQtRecommend to set
+	 */
 	public void selectItemEvent(ScQtRecommend scQtRecommend) {
 		this.getManagedBean().setItemRowSelect(false);
 		addSelectedItem(scQtRecommend);
 	}
 	
-	public void addSelectedItem(ScQtRecommend scQtRecommend) {
+	
+	private void addSelectedItem(ScQtRecommend scQtRecommend) {
 		
 		if (getManagedBean().getSelectedRecommendList() == null) {
 			getManagedBean().setSelectedRecommendList(new ArrayList<ScQtRecommend>());
@@ -3466,6 +3668,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}		
 	}
 	
+	/**
+	 * Event to select or unselect all items where Recommend Type is Itemized under Supplier Finalization tab
+	 * @param selectAll  the selectAll to set
+	 */
 	public void selectAllItems(boolean selectAll) {
 		debugLogger("selectAllItemsEvent");
 		
@@ -3489,6 +3695,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		super.selectAll(selectAll,selectedItemsList);
 	}	
 	
+	/**
+	 * Event for supplier selection where Recommend Type is Itemized under Supplier Finalization tab
+	 */
 	public void selectSupplierEvent() {
 		debugLogger("selectSupplierEvent");
 		
@@ -3645,6 +3854,23 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	private void isOnlineBiddingEndorsementRequired() {
+		List<ScQtRecommend> itemList = this.getManagedBean().getItemList();
+		if (CollectionUtils.isNotEmpty(itemList)) {
+			for (ScQtRecommend _scQtRecommend : itemList) {
+				if (_scQtRecommend.getRecommendBy() != null &&
+						ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(
+								_scQtRecommend.getRecommendBy().getParameterCode())) {
+					this.getManagedBean().setOnlineBidding(true);
+					break;
+				}
+			}	
+		}
+		if (!getManagedBean().isOnlineBidding()) {
+			getManagedBean().getScQtFinalization().setOnlineBiddingEndorse(null);
+		}
+	}
+	
 	private SuppFinalizationResDTO getShortListedSuppliersByItem(ScQtRecommend scQtRecommend) {
 		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -3682,6 +3908,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return resDTO;
 	}
 	
+	/**
+	 * Event to handle unselection of the supplier 
+	 * where recommend type is Itemized under Supplier Finalization tab
+	 * @param scQtEvaluationResult  the scQtEvaluationResult 
+	 */
 	public void unSelectSupplierEvent(ScQtEvaluationResult scQtEvaluationResult) {
 		debugLogger("unSelectSupplierEvent");
 		
@@ -3698,24 +3929,16 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
+	/**
+	 * Event to handle unselection of the supplier 
+	 * where recommend type is Itemized under Supplier Finalization tab
+	 * @param scQtEvaluationResultDtl
+	 */
 	public void unSelectSupplierEvent(ScQtEvaluationResultDtl scQtEvaluationResultDtl) {
 		debugLogger("unSelectSupplierEvent for recommend type - Itemized");
 		
 		addSelectedSupplier();
 	}	
-	
-/*	private PmParameter getPmParameterById(Long parameterId) {
-		IParameterSO parameterSO = null;
-		try {
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			return resDTO.getPmParameter();
-		} finally {
-			parameterSO = null;
-		}
-	}*/
 	
 	private PmParameter getPmParameterByTypeAndCode(String parameterType, String parameterCode) {
 		IParameterSO parameterSO = null;
@@ -3732,8 +3955,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	/**
-	 * Event for Award Supplier in Supplier Finalization
-	 * It will add the supplier for the item selected
+	 * Event to award an item to one or more suppliers 
+	 * where Recommend Type is Itemized under Supplier Finalization tab
 	 */
 	public void awardSupplierEvent() {
 		debugLogger("awardSupplierEvent");
@@ -3864,6 +4087,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 	}
 	
+	/**
+	 * Get the status of the mofAccount
+	 * @param mofAccount  the mofAccount for which the status need to be known
+	 * @return  the status of the mofAccount
+	 */
 	public String getMofAccountStatus(SmMofAccount mofAccount) {
 		switch (mofAccount.getRecordStatusFlg()) {
 			case DbValueConst.RECORD_STATUS_ACTIVE : 
@@ -3883,6 +4111,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return StringUtils.EMPTY;
 	}
 	
+	/**
+	 * Event to set the awarded supplier in managed bean associated with the current user session 
+	 * (where recommend type is Itemized)
+	 */
 	public void selectSupplierDropDownEvent() {
 		debugLogger("selectSupplierDropDownEvent");
 		
@@ -3934,10 +4166,17 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		this.currentTab = currentTab;
 	}
 
+	/**
+	 * Update supplier finalization details, digital signature of the signed off user and send the task to BPM 
+	 * @param digiSign the digiSign to set
+	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
 
+	/**
+	 * @return the textBeforeSign
+	 */
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
 		if(getManagedBean().getScQt() != null){
@@ -3948,6 +4187,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return textBeforeSign;
 	}
 
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}

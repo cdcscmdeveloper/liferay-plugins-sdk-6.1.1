@@ -17,6 +17,7 @@ import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -27,6 +28,8 @@ import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -44,9 +47,17 @@ import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -321,6 +332,70 @@ public class SupplierFinalizationBiddingBackingBean extends
 		} finally {
 			biddingSO = null;
 		}
+	}
+	
+	/**
+	 * Set the selected supplier details in managed bean associated with the current user session
+	 * @param scQtRecommend  the scQtRecommend which holds the item
+	 * @param selectedRecommendDtl  the selectedRecommendDtl while holds the recommended supplier
+	 */
+	public void showSupplierDetails(ScQtRecommend scQtRecommend, ScQtRecommendDtl selectedRecommendDtl) {
+		debugLogger("showSuppDetails");
+		
+		resetCompanyInfo();
+		
+		if (getManagedBean().getShortlistedSupplier() != null) {
+			this.getManagedBean().setShortlistedSupplier(getManagedBean().getShortlistedSupplier());
+			SmSupplier smSupplier = getManagedBean().getShortlistedSupplier().getScQtProposal().getScQtSupplier().getSmSupplier();
+			if (smSupplier != null) {
+				QTSupplierResDTO resDTO = this.retrieveSupplierDetails(smSupplier);
+				smSupplier = resDTO.getSmSupplier();
+				getManagedBean().setSmSupplier(smSupplier);
+				getManagedBean().setSmMofAccount(smSupplier.getSmMofAccounts().get(0));
+				
+				SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
+				getManagedBean().setSmCompanyBasic(smCompanyBasic);
+				
+				List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
+				for (SmPersonnel smPersonnel : smPersonnelList) {
+					if (smPersonnel.isContactPerson()) {
+						getManagedBean().setSmPersonnel(smPersonnel);
+						break;
+					}
+				}
+				for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+					if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+						getManagedBean().setSupplierBranch(QTConstants.SUPPLIER_INFO_HQ);
+						getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
+						break;
+					}
+				}
+			}
+		}
+	}	
+	
+	private void resetCompanyInfo() {
+		this.getManagedBean().setSmSupplier(null);
+		this.getManagedBean().setSmMofAccount(null);
+		this.getManagedBean().setSmCompanyBasic(null);
+		this.getManagedBean().setSmPersonnel(null);
+		this.getManagedBean().setSupplierBranch(null);
+		this.getManagedBean().setSupplierAddress(null);
+	}	
+	
+	private QTSupplierResDTO retrieveSupplierDetails(SmSupplier smSupplier) {
+		QTSupplierResDTO resDTO = new QTSupplierResDTO();
+		IQTSupplierSO qtSupplierSO = null;
+		try {
+			qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, 
+					IQTSupplierSO.class);
+			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+			resDTO = qtSupplierSO.retrieveSupplierDetails(reqDTO);
+		} finally {
+			qtSupplierSO = null;
+		}	
+		return resDTO;
 	}
 	
 	/**
