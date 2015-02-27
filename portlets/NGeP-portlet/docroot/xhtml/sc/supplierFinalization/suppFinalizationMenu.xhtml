@@ -9,7 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error,info"/>
+		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" autoUpdate="true" closable="true"/>
 		
 		<ac:gpkiPopup textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 		   postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />

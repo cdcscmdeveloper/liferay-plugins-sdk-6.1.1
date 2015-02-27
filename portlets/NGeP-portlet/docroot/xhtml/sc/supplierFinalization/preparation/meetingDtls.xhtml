@@ -11,8 +11,8 @@
 			<td width="100%" align="left" valign="top"> 
 				<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 					<p:dataTable id="meetingDtlTbl" var="meetingDtl" 
-						value="#{suppFinalizationBackingBean.managedBean.meetingList}" rows="10"
-						rowKey="#{meetingDtl}" rowIndexVar="rowIndex"
+						value="#{suppFinalizationBackingBean.managedBean.meetingList}" 
+						rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex" editable="true"
 						selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingList}">
 						<ac:paginator for="meetingDtlTbl" />
 
@@ -27,9 +27,11 @@
 							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
 								mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
 								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-								<p:ajax partialSubmit="true" process="@this" update="@this"/>
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}" 
+								id="meetingDate">
+								<p:ajax partialSubmit="true" process="@this" update="@this,mtgDate"/>
 							</p:calendar>
+							<p:message id="mtgDate" for="meetingDate" display="icon" showDetail="false"></p:message>
 						</p:column>
 
 						<p:column style="width:30%">
@@ -38,10 +40,11 @@
 								<h:outputText value="#{lbl['lbl.sc.location']}" />
 							</f:facet>
 							<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true" rows="2" cols="50" maxlength="255"
-								value="#{meetingDtl.meetingLocation}" 
+								value="#{meetingDtl.meetingLocation}" id="meetingLocation" 
 								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-								<p:ajax partialSubmit="true" process="@this" update="@this"/>
+								<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc"/>
 							</p:inputTextarea>
+							<p:message id="mtgLoc" for="meetingLocation" display="icon" showDetail="false"></p:message>
 						</p:column>
 						
 						<p:column style="width:20%">

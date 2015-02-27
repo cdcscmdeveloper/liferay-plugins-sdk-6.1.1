@@ -13,8 +13,14 @@ import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -62,6 +68,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	
 	private BigDecimal lowestNonBumiOfferedPrice;
 	private BigDecimal bumiSuppLowestOfferedPrice;
+	
+	private ScQtEvaluationResult shortlistedSupplier;
+	private SmSupplier smSupplier;
+	private SmMofAccount smMofAccount;
+	private SmCompanyBasic smCompanyBasic;
+	private SmPersonnel smPersonnel;
+	private String supplierBranch;
+	private SmAddress supplierAddress;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -309,6 +323,104 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	public void setBumiSuppLowestOfferedPrice(BigDecimal bumiSuppLowestOfferedPrice) {
 		this.bumiSuppLowestOfferedPrice = bumiSuppLowestOfferedPrice;
+	}
+	
+	/**
+	 * @return the shortlistedSupplier
+	 */
+	public ScQtEvaluationResult getShortlistedSupplier() {
+		return shortlistedSupplier;
+	}
+	
+	/**
+	 * @param shortlistedSupplier the shortlistedSupplier to set
+	 */
+	public void setShortlistedSupplier(ScQtEvaluationResult shortlistedSupplier) {
+		this.shortlistedSupplier = shortlistedSupplier;
+	}
+	
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+	
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+	
+	/**
+	 * @return the smMofAccount
+	 */
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+	
+	/**
+	 * @param smMofAccount the smMofAccount to set
+	 */
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
+	}
+	
+	/**
+	 * @return the smCompanyBasic
+	 */
+	public SmCompanyBasic getSmCompanyBasic() {
+		return smCompanyBasic;
+	}
+	
+	/**
+	 * @param smCompanyBasic the smCompanyBasic to set
+	 */
+	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
+		this.smCompanyBasic = smCompanyBasic;
+	}
+	
+	/**
+	 * @return the smPersonnel
+	 */
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
+	}
+	
+	/**
+	 * @param smPersonnel the smPersonnel to set
+	 */
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+	
+	/**
+	 * @return the supplierBranch
+	 */
+	public String getSupplierBranch() {
+		return supplierBranch;
+	}
+	
+	/**
+	 * @param supplierBranch the supplierBranch to set
+	 */
+	public void setSupplierBranch(String supplierBranch) {
+		this.supplierBranch = supplierBranch;
+	}
+	
+	/**
+	 * @return the supplierAddress
+	 */
+	public SmAddress getSupplierAddress() {
+		return supplierAddress;
+	}
+	
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(SmAddress supplierAddress) {
+		this.supplierAddress = supplierAddress;
 	}
 	
 }
