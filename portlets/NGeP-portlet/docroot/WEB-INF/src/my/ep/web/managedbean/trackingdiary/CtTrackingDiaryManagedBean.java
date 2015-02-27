@@ -93,14 +93,14 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 					System.out.println("loaPhysicalNo");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
 				}	
-				if(getSearchContractFromDuration()!=null) {
-					System.out.println("searchContractFromDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractFromDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchContractFromDuration()));
-				}
-				if(getSearchContractFromDuration()!=null) {
-					System.out.println("searchContractToDuration");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractToDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchContractFromDuration()));
-				}	
+//				if(getSearchContractFromDuration()!=null) {
+//					System.out.println("searchContractFromDuration");
+//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractFromDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchContractFromDuration()));
+//				}
+//				if(getSearchContractFromDuration()!=null) {
+//					System.out.println("searchContractToDuration");
+//					searchBean.getDataFilterBeans().add(new SearchFilterBean("searchContractToDuration",SearchOperator.OPERATOR_LIKE.value(),getSearchContractFromDuration()));
+//				}	
 				if(getSearchStatusId()!=null) {
 					System.out.println("statusId");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("statusId",SearchOperator.OPERATOR_EQUALS.value(),getSearchStatusId()));

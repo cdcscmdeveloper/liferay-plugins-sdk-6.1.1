@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
@@ -59,13 +60,9 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private Date searchDocumentFromDuration;
 	private Date searchDocumentToDuration;
-	private Object[] object;
+	private Object[] scObj = new Object[6];
 	private IPagingDataModel<Object[]> scRNDocumentDataModel = new ScDocumentPagingDataModel();
-//	  Doctype    table
-//	   RN         ScRequestNote
-//	   PD         ScPurchaseInDefault
-//	   PI          ScPrInquiry
-//	   SQ         ScQuote	
+
 	private class ScDocumentPagingDataModel extends PagingDataModel<Object[]> {
 		private static final long serialVersionUID = 1L;
 
@@ -82,11 +79,13 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 					throw new EpException(MessageConst.ERROR_740023);
 				}
 				System.out.println("ISearchResultBean<ScRequestNote>");
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD",SearchOperator.OPERATOR_EQUALS.value(),"SC"));
 
 				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
 					System.out.println("transactionType");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentType()));
+					if(getSearchDocumentType()=="LA") {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD",SearchOperator.OPERATOR_EQUALS.value(),ModuleCodeConst.SUPPLIER_SELECTION));
+					}
 				}
 				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
 					System.out.println("getSearchDocumentNo"+ getSearchDocumentNo());
@@ -172,14 +171,6 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchDocumentToDuration = searchDocumentToDuration;
 	}
 
-	public Object[] getObject() {
-		return object;
-	}
-
-	public void setObject(Object[] object) {
-		this.object = object;
-	}
-
 	public IPagingDataModel<Object[]> getScRNDocumentDataModel() {
 		return scRNDocumentDataModel;
 	}
@@ -187,7 +178,7 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setScRNDocumentDataModel(IPagingDataModel<Object[]> scRNDocumentDataModel) {
 		this.scRNDocumentDataModel = scRNDocumentDataModel;
 	}
-	Object[] scObj = new Object[6];
+
 	public Object[] getScObj() {
 		return scObj;
 	}
