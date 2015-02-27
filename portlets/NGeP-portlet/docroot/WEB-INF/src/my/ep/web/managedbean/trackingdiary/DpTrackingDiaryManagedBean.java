@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpException;
@@ -43,13 +44,9 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private Date searchDocumentFromDuration;
 	private Date searchDocumentToDuration;
-	private Object[] object;
+	private Object[] dpObj = new Object[6];
 	private IPagingDataModel<Object[]> dpDocumentDataModel = new DocumentPagingDataModel();
-//	  Doctype    table
-//	   RN         ScRequestNote
-//	   PD         ScPurchaseInDefault
-//	   PI          ScPrInquiry
-//	   SQ         ScQuote	
+
 	private class DocumentPagingDataModel extends PagingDataModel<Object[]> {
 		private static final long serialVersionUID = 1L;
 
@@ -66,11 +63,13 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 					throw new EpException(MessageConst.ERROR_740023);
 				}
 				System.out.println("ISearchResultBean<ScRequestNote>");
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD",SearchOperator.OPERATOR_EQUALS.value(),"DP"));
 
 				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
 					System.out.println("transactionType");
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentType()));
+					if(getSearchDocumentType()=="LA") {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD",SearchOperator.OPERATOR_EQUALS.value(),ModuleCodeConst.DIRECT_PURCHASE));
+					}
 				}
 				if(getSearchDocumentNo()!=null && getSearchDocumentNo()!="") {
 					System.out.println("getSearchDocumentNo"+ getSearchDocumentNo());
@@ -94,7 +93,7 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 				System.out.println("Result : "+resDTO.getSourcingDocSearchResultBean().getResultList().size());
 				return resDTO.getSourcingDocSearchResultBean();
 			} catch (Exception e) {
-				e.printStackTrace();String hu = new String((String) dpObj[0]);
+				e.printStackTrace();
 			}
 			return null;
 		}
@@ -163,7 +162,7 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setDpDocumentDataModel(IPagingDataModel<Object[]> dpDocumentDataModel) {
 		this.dpDocumentDataModel = dpDocumentDataModel;
 	}
-	Object[] dpObj = new Object[6];
+
 	public Object[] getDpObj() {
 		return dpObj;
 	}
