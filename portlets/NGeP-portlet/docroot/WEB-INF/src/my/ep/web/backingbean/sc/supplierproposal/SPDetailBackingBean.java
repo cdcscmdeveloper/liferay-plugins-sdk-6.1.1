@@ -424,7 +424,7 @@ public class SPDetailBackingBean extends
 
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
-		ProposalResDTO proposalResDTO = saveTempleateSpecDtls();
+		ProposalResDTO proposalResDTO = saveTechTempleateSpecDtls();
 
 		if (proposalResDTO.isSuccessful()) {
 			return navigatePrepareTecProposalCheckList(scQtProposalChecklist,
@@ -466,9 +466,12 @@ public class SPDetailBackingBean extends
 			List<TplSpecAnswer> answers = null;
 
 			if (getManagedBean().getQt().isZonal()) {
-				getManagedBean().getZoneTplSpecBeanMap().put(
-						getManagedBean().getSelectedZone().getSpecZoneId(),
-						getManagedBean().getTemplateSpecBean());
+
+				if (getManagedBean().getSelectedZone() != null) {
+					getManagedBean().getZoneTplSpecBeanMap().put(
+							getManagedBean().getSelectedZone().getSpecZoneId(),
+							getManagedBean().getTemplateSpecBean());
+				}
 				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
@@ -484,6 +487,28 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
 
+			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			proposalReqDTO.setAnswersList(answers);
+			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
+		} finally {
+			proposalSO = null;
+		}
+		return proposalResDTO;
+	}
+
+	private ProposalResDTO saveTechTempleateSpecDtls() {
+		debugLogger("saveTempleateSpecDtls");
+		IQTProposalSO proposalSO = null;
+		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+		ProposalResDTO proposalResDTO = new ProposalResDTO();
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
+					.getQtProposalChecklist();
+			List<TplSpecAnswer> answers = getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList();
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalResDTO = proposalSO.saveSpecDetails(proposalReqDTO);
