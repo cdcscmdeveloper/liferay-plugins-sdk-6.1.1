@@ -328,12 +328,6 @@ public class OrganisationBackingBean extends
 				.retrieveOrgDetailsByOrgId(reqDTO);
 		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
 		
-		if(orgProfile.getParentOrgProfile() == null){
-			orgProfile.setParentOrgProfile(new PmOrgProfile());
-			getManagedBean().setEmptyMinistry(true);
-		}else{
-			getManagedBean().setEmptyMinistry(false);			
-		}
 		this.getManagedBean().setOrgProfile(orgProfile);
 
 		getManagedBean().setOrgType(
@@ -345,9 +339,11 @@ public class OrganisationBackingBean extends
 				+ orgProfile.getOrgTypeCode().getParameterCode());
 		// BPK Sabah sarawak
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
-				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
+				OrganizationType.BPK_PENDAFTARAN_HQ.value())
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
+						OrganizationType.BPK_PENDAFTARAN_SABAH.value())
+						|| getManagedBean().getOrgType().equalsIgnoreCase(
+								OrganizationType.BPK_PENDAFTARAN_SARAWAK.value())) {
 			retrievePmZoneList();			
 			getManagedBean().getOrgProfile().setPmZone(orgProfile.getPmZone()==null ? new PmZone() : orgProfile.getPmZone());
 
@@ -355,7 +351,14 @@ public class OrganisationBackingBean extends
 		// PTJ
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
-			retrieveMinistryList();			
+			retrieveMinistryList();		
+
+			if(orgProfile.getParentOrgProfile() == null){
+				orgProfile.setParentOrgProfile(new PmOrgProfile());
+				getManagedBean().setEmptyMinistry(true);
+			}else{
+				getManagedBean().setEmptyMinistry(false);			
+			}
 			if (getManagedBean().getOrgProfile().getPmAddressTypes() != null && !getManagedBean().getOrgProfile().getPmAddressTypes().isEmpty()) {
 				for (PmAddressType pmAddressType : getManagedBean().getOrgProfile().getPmAddressTypes()) {
 					
@@ -569,9 +572,11 @@ public class OrganisationBackingBean extends
 		}	
 		
 		if (parameterResDTO.getPmParameter().getParameterCode().equalsIgnoreCase(
-				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
+				OrganizationType.BPK_PENDAFTARAN_HQ.value())
 		|| getManagedBean().getOrgType().equalsIgnoreCase(
-				OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {				
+				OrganizationType.BPK_PENDAFTARAN_SABAH.value())
+				|| getManagedBean().getOrgType().equalsIgnoreCase(
+						OrganizationType.BPK_PENDAFTARAN_SARAWAK.value())) {				
 	    orgProfile.setPmZone(getManagedBean().getOrgProfile().getPmZone());
        }
 		// PTJ, GLC, LAT, STG and STB
