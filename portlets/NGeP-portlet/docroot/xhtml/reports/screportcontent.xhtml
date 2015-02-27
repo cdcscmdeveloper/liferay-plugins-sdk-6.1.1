@@ -80,7 +80,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:130px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPtj}" style="margin-top:5px;width:300px;">
 										 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{0}"></f:selectItem>
+										
 										<f:selectItems value="#{reportBackingBean.scPtjList}"></f:selectItems>										
 									</p:selectOneMenu>
 								  </c:if>
@@ -88,7 +88,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.deskOfficer']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scDeskOfficer}" style="margin-top:5px;width:300px;">
 									 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{0}"></f:selectItem>
+										
 										<f:selectItems value="#{reportBackingBean.scDescOfficerList}"></f:selectItems>																																		
 									</p:selectOneMenu>
 								  </c:if>
@@ -101,7 +101,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scRequisenerId}" style="margin-top:5px;width:300px;">
 									     <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{0}"></f:selectItem>
+										
 										<f:selectItems value="#{reportBackingBean.scRequisitionerList}"></f:selectItems>																																	
 									</p:selectOneMenu>
 								  </c:if>
