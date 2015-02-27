@@ -2,14 +2,17 @@ package my.ep.web.backingbean.sm.softcertreg;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -39,6 +42,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
@@ -76,7 +80,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 //		searchPersonnel();
-
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "softCertUserSearch.xhtml");
@@ -222,5 +225,26 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 			return null;
 		}
 	}
+	
+	public void unSelectPersonnel(AjaxBehaviorEvent e) {
+		if (getManagedBean().getSoftCertSelectList() != null) {
+			Iterator<SmPersonnel> iterator = getManagedBean()
+					.getSoftCertSelectList().iterator();
+			while (iterator.hasNext()) {
+				SmPersonnel personnel = iterator.next();
+				if (personnel.getSoftcertFlg() != SupplierManagementConst.IS_SOFTCERT_REQ) {
+					iterator.remove();
+				} else {
+					if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
+						if (personnel.getPmCountry() == null) {
+							iterator.remove();
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
 	
 }
