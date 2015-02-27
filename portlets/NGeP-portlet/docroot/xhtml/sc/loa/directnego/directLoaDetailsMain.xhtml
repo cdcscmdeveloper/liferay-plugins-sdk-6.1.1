@@ -7,8 +7,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-
 	<ui:define name="contentSection">
 		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
@@ -19,20 +17,17 @@
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
 		
-		
 		<ui:include src="/xhtml/sc/loa/directnego/directLoaButtons.xhtml" />
 		<ui:include src="/xhtml/sc/loa/loarequest/loaHeader.xhtml" />
 
 		<ac:gpkiPopup textBeforeSign="#{lOADetailBackingBean.textBeforeSign}"
 			postSignAction="#{lOADetailBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
-
-		<p:panel id="loaMainPanel">
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="20%" class="sidemenutd" style="vertical-align: baseline;">
+		  <tr>
+			<td width="20%" valign="top" class="sidemenutd">
 				<p:tabMenu id="menuTab" styleClass="sidemenu"
-					activeIndex="#{lOADetailBackingBean.managedBean.selectedTabIndex}"
-					style="display : table-caption;">
+					activeIndex="#{lOADetailBackingBean.managedBean.selectedTabIndex}">
 
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" disabled="#{isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
@@ -98,7 +93,6 @@
 			</td>
 		</tr>
 		</table>
-		</p:panel>
 		
 		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
 			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
