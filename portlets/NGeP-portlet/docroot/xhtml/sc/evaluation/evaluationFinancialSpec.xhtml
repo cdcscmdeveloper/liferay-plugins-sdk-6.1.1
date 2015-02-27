@@ -13,6 +13,7 @@
 
 
 	<ui:define name="contentSection">
+
 		<p:panel>
 			<h:panelGroup>
 				<div>
@@ -35,33 +36,33 @@
 				</table>
 			</h:panelGroup>
 
+
+
+
 			<h:panelGroup>
-
-				<p:tabView var="zones" orientation="left" id="tabview" cache="false"
-					activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
-					value="#{evaluationBackingBean.managedBean.specZoneDtls}">
-					<p:ajax event="tabChange" update="@(.finSpecsupplierList)"
-						listener="#{evaluationBackingBean.specTabChange}" />
-					<p:tab title="#{zones.zoneName}"
-						id="tab#{evaluationBackingBean.managedBean.specZoneTabIndex}">
-						<h:panelGroup styleClass="finSpecsupplierList">
-							<ui:param name="finSpecsupplierList"
-								value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
-							<ui:param name="finSpecofferPrice"
-								value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
-
-							<ui:param name="finSpecSupplierId"
-								value="withZone#{fn:replace(zones.zoneName,' ','_')}"></ui:param>
-
-							<ui:include
-								src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
-						</h:panelGroup>
-					</p:tab>
-
-				</p:tabView>
+				<table style="width: 100%">
+					<tr>
+						<td style="width: 16%" valign="top"><p:tabMenu
+								styleClass="sidemenu" id="zonalMenu"
+								activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
+								style="display : table-caption;"
+								model="#{evaluationBackingBean.managedBean.evaluationSpecZonalMenuModel}">
+							</p:tabMenu></td>
+						<td style="width: 84%"><p:outputPanel id="zoneSpecAnswers">
+								<ui:param name="finSpecsupplierList"
+									value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
+								<ui:param name="finSpecofferPrice"
+									value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
 
 
+
+								<ui:include
+									src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
+							</p:outputPanel></td>
+					</tr>
+				</table>
 			</h:panelGroup>
+
 		</p:panel>
 
 	</ui:define>
