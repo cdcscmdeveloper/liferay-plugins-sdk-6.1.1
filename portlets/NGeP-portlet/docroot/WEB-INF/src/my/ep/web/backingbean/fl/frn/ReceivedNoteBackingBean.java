@@ -118,8 +118,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	
 	/**
 	 * save,submit received note.
-	 * </br>submit - save data into database and BPM process will route to the next respective user.
-	 * </br>save - save data into database.
+	 * <p>submit - save data into database and BPM process will route to the next respective user.
+	 * <p>save - save data into database.
 	 * @param action the action
 	 * navigate to acknowledge page.
 	 */
@@ -386,7 +386,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	 
 	/**
-	 * Retrieve criteria list.
+	 * Retrieve criteria list based on language code.
 	 */
 	private void retrieveCriteriaList() {
 		ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
@@ -403,7 +403,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	/**
-	 * Gets the criteria description based on language and criteria id.
+	 * Gets the criteria description based on language code and criteria id.
 	 *
 	 * @param pmCriteria the pm criteria
 	 * @return the criteria desc
@@ -494,7 +494,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	
 	/**
 	 * Received amount validation.
-	 * </br>Received Amount must be less than or equal to Delivery Amount.
+	 * <p>Received Amount must be less than or equal to Delivery Amount.
 	 * @param item the item
 	 */
 	public void receivedAmtValidation(FlFulfilmentNoteItem item) {
@@ -613,7 +613,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	
 	/**
 	 * Navigate to do Hyper link page if doc type is DO.
-	 * Navigate to order No Hyper link page if doc type is PO.
+	 *<p> Navigate to order No Hyper link page if doc type is PO.
 	 * @param docType the doc type
 	 * @return the string
 	 */
