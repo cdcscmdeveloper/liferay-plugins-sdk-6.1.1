@@ -83,14 +83,14 @@
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>					
 			</tr>
 			<ui:fragment
-				rendered="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }">
+				rendered="#{organisationBackingBean.managedBean.orgType eq 'RHQ' or organisationBackingBean.managedBean.orgType eq 'RSH'or organisationBackingBean.managedBean.orgType eq 'RSQ' }">
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.pm.zone.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="zoneCode"
 							label="#{lbl['lbl.pm.zone.name']}" styleClass="ppDropDownWidthM"
 							value="#{organisationBackingBean.managedBean.orgProfile.pmZone.zoneId}"
-							required="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }"
+							required="#{organisationBackingBean.managedBean.orgType eq 'RHQ' or organisationBackingBean.managedBean.orgType eq 'RSH'or organisationBackingBean.managedBean.orgType eq 'RSQ'}"
 							style="width: 275px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
