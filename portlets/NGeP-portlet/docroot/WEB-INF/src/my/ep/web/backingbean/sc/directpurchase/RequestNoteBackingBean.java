@@ -642,6 +642,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestSupplierItem.setSmSupplier(smSupplier);
 					scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 				}
+				
+				// Weather item product or server
+				scRequestNoteDtl.setProdAndServiceFlag(checkServiceOrProduct(scRequestNoteDtl));
 
 				scRequestNoteDtl = getPidForRequestItem(scRequestNoteDtl);
 
@@ -1674,46 +1677,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void showReqNotePopUps(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("showReqNotePopUps");
-		
 		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
 			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
-			
-             ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
-             if(requestItem.getCmItem() != null){
-            	 String ItemCode = requestItem.getCmItem().getExtensionCode();
-            	 CharSequence charSeq = ItemCode.subSequence(0, 2); 
-            	 Integer itemCode = Integer.valueOf(charSeq.toString()); 
 
-            	 // TODO checking first two digits in itemCode whether service or product 
-            	 if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-            		 getManagedBean().setItemCheck(Boolean.TRUE); 
+			boolean prodOrService = checkServiceOrProduct(scRequestNoteDtl);
+			if(prodOrService){
+				getManagedBean().setItemCheck(Boolean.FALSE); 
+			} else{
+				getManagedBean().setItemCheck(Boolean.TRUE); 
+			}
 
-            	 } else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
-            		 getManagedBean().setItemCheck(Boolean.FALSE); 
-            	 }
-
-            	 /*if(scRequestSupplierItem.getRequestNoteItem() == null){
-            		 scRequestSupplierItem.setRequestNoteItem(scRequestNoteDtl.getRequestItem());
-            	 }*/
-
-            	 if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
-            		 for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-            			 if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
-            				 scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
-            			 }
-            		 }
-            	 }
-             }
-             getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
-             getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
-             getManagedBean().setAutoUpdate(Boolean.FALSE);
+			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
+				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+					if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
+						scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
+					}
+				}
+			}
+			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
+			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
 		}
 	}
-	
+
 	/**
 	 * check whether request note dtl is prod or service in Request Note
 	 */
-	public boolean checkServiceOrProduct(ScRequestNoteDtl scRequestNoteDtl){
+	private boolean checkServiceOrProduct(ScRequestNoteDtl scRequestNoteDtl){
 		log.debug("checkServiceOrProduct");
 		boolean prodOrService = false;
 		if(scRequestNoteDtl.getRequestItem() != null){
@@ -1731,14 +1721,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
 						prodOrService = true;
 					} 
-				} else{
-					if(requestItem.getTplSpecQuestion() != null){
-						TplSpecQuestion specQuestion =requestItem.getTplSpecQuestion();
-						if (ParameterConst.ITEM_TYPE_SERVICE.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode())) {	
-							prodOrService = false;
-						} else if (ParameterConst.ITEM_TYPE_PRODUCT.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode())) {	
-							prodOrService = true;
-						}
+				} 
+			} else{
+				if(requestItem.getTplSpecQuestion() != null){
+					TplSpecQuestion specQuestion =requestItem.getTplSpecQuestion();
+					if (ParameterConst.ITEM_TYPE_SERVICE.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode())) {	
+						prodOrService = false;
+					} else if (ParameterConst.ITEM_TYPE_PRODUCT.equals(specQuestion.getTplSpecMaster().getItemTypeCode().getParameterCode())) {	
+						prodOrService = true;
 					}
 				}
 			}
