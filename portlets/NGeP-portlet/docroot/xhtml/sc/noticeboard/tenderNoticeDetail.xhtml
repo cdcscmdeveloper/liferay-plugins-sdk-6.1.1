@@ -162,10 +162,10 @@
 						disabled="true" />
 				</p:column>
 			</p:dataTable>
-			<p:spacer height="30px"></p:spacer>
 			
 			<c:if
 				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and !noticeBoardBackingBean.managedBean.scQt.zonal}">
+				<br/>
 				<h:outputText value="#{lbl['lbl.so.locality']}"
 					style="font-weight:bold;text-align: left;font-size:14px;" />
 				<p:spacer height="10px"></p:spacer>
@@ -195,6 +195,7 @@
 
 			<c:if
 				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and noticeBoardBackingBean.managedBean.scQt.zonal}">
+				<br/>
 				<h:outputText value="#{lbl['lbl.sc.nb.zone.details']}"
 					style="font-weight:bold;text-align: left;font-size: 14px;" />
 				<p:spacer height="10px"></p:spacer>
