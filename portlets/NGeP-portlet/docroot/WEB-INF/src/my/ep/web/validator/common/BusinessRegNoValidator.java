@@ -24,8 +24,8 @@ public class BusinessRegNoValidator implements Validator {
 	private static List<String> robList = Arrays.asList("C", "F");
 	private static List<String> rocList = Arrays.asList("I", "J");
 	private static List<String> llpList = Arrays.asList("B");
-	private static List<String> llpLastThreeCombinations = Arrays.asList("LGN", "FGN",
-			"LCS", "FCS", "LLW", "FLW", "LCA", "FCA");
+	private static List<String> llpLastThreeCombinations = Arrays.asList("LGN",
+			"FGN", "LCS", "FCS", "LLW", "FLW", "LCA", "FCA");
 
 	@Override
 	public void validate(FacesContext context, UIComponent component,
@@ -35,7 +35,7 @@ public class BusinessRegNoValidator implements Validator {
 		String businessType = "";
 
 		if (value != null && StringUtils.isNotBlank(value.toString())) {
-			if (dropdown != null && dropdown.getValue()!=null) {
+			if (dropdown != null && dropdown.getValue() != null) {
 				businessType = dropdown.getValue().toString();
 
 				if (robList.contains(businessType)) {
@@ -44,14 +44,14 @@ public class BusinessRegNoValidator implements Validator {
 					validateRoc(value.toString());
 				} else if (llpList.contains(businessType)) {
 					validateLlp(value.toString());
-				} else{
+				} else {
 					validateRos(businessType, value);
 				}
 			}
 		}
 	}
-	
-	private void validateRos(String businessType,Object value){
+
+	private void validateRos(String businessType, Object value) {
 		if (businessType.equals("K")) {
 			validateRosPertubuhan(value.toString());
 		} else if (businessType.equals("L")) {
@@ -112,9 +112,10 @@ public class BusinessRegNoValidator implements Validator {
 					throwErrorMsg("lbl.sm.businessregno.notvalid.firstthree.llp");
 				} else {
 					if (StringUtils.isBlank(splitLlp2)
-							|| splitLlp2.length() != 3
-							|| !llpLastThreeCombinations.contains(splitLlp2)) {
+							|| splitLlp2.length() != 3) {
 						throwErrorMsg("lbl.sm.businessregno.afterdash.llp");
+					} else if (!llpLastThreeCombinations.contains(splitLlp2)) {
+						throwErrorMsg("lbl.sm.businessregno.notvalid.lastthreecombination.llp");
 					}
 				}
 			}
@@ -147,7 +148,7 @@ public class BusinessRegNoValidator implements Validator {
 			throwErrorMsg("lbl.sm.businessregno.notvalid.roskoperasiskm");
 		}
 	}
-	
+
 	private void validateRosPertubuhan(String rosNo) {
 		String[] splitRos = rosNo.split("-");
 		String splitRos1 = "";
@@ -160,7 +161,7 @@ public class BusinessRegNoValidator implements Validator {
 			splitRos2 = splitRos[1];
 			splitRos3 = splitRos[2];
 			splitRos4 = splitRos[3];
-			
+
 			if (splitRos1.length() != 3 || StringUtils.isNumeric(splitRos1)) {
 				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
 			} else if (splitRos2.length() != 3
@@ -169,7 +170,7 @@ public class BusinessRegNoValidator implements Validator {
 			} else if (splitRos3.length() != 2
 					|| !StringUtils.isNumeric(splitRos3)) {
 				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
-			}else if(!isValidDate(splitRos4)){
+			} else if (!isValidDate(splitRos4)) {
 				throwErrorMsg("lbl.sm.businessregno.invalid.format.rospertubuhanjppm");
 			}
 		} else {
@@ -182,20 +183,20 @@ public class BusinessRegNoValidator implements Validator {
 				FacesMessage.SEVERITY_ERROR, "Business Reg No Error",
 				SmCommonUtil.getMessage(key, null)));
 	}
-	
-	private boolean isValidDate(String argValue){
+
+	private boolean isValidDate(String argValue) {
 		boolean retVal = true;
-		if(argValue.length()!=8){
+		if (argValue.length() != 8) {
 			retVal = false;
-		}else{
+		} else {
 			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
 			sdf.setLenient(false);
-			try{
+			try {
 				Date tmpDate = sdf.parse(argValue);
-				if(tmpDate.getTime()>new Date().getTime()){
+				if (tmpDate.getTime() > new Date().getTime()) {
 					retVal = false;
 				}
-			}catch(Exception ex){
+			} catch (Exception ex) {
 				retVal = false;
 			}
 		}
