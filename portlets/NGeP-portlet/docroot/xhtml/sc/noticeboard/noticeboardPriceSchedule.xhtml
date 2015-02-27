@@ -68,8 +68,8 @@
 
 			</h:panelGrid>
 			<p:spacer height="5" />
-			<!-- Start Committee members table -->
-			<p:panel header="#{lbl['lbl.sc.eva.cmt.member.list']}" toggleable="true">
+			<!-- Committee Members table -->
+			<p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true">
 							
 				<p:dataTable id="committeeId"
 					value="#{noticeBoardBackingBean.managedBean.scCommitteeMembers}"
@@ -79,11 +79,6 @@
 					<p:column headerText="#{lbl['lbl.so.bo.name']}">
 						<h:outputText value="#{specificationcommittee.memberName}"
 							style="white-space: normal;" />
-					</p:column>
-					
-					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
-						style="white-space: normal;">
-						<h:outputText value="#{specificationcommittee.icPassport}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.so.bo.designation']}"
