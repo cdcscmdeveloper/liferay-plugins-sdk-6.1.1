@@ -4278,7 +4278,9 @@ public class ReportBackingBean extends
 				rptGenBean.setSmYearTextVar(ReportConst.AMP_SM_YEAR_EQ
 						+ this.getSmYearText());
 			}
-			StringBuffer strBuff = new StringBuffer();
+			StringBuffer maincategory = new StringBuffer();
+			StringBuffer subcategory = new StringBuffer();
+			StringBuffer subcategorydivision = new StringBuffer();
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL))
@@ -4291,11 +4293,13 @@ public class ReportBackingBean extends
 									|| (getManagedBean().getReportValue() != null)
 									&& (getManagedBean().getReportValue().trim()
 											.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))) {
-				
+				maincategory.append(ReportConst.AMP_SM_MAIN_CATEGORY_EQ);
+				subcategory.append(ReportConst.AMP_SM_SUB_CATEGORY_EQ);
+				subcategorydivision.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ);
 				for (SmSupplierCategory smSupplier : this.getSelectedCatList()){
-					strBuff.append(ReportConst.AMP_SM_MAIN_CATEGORY_EQ+smSupplier.getPmCategoryL1().getCategoryL1Id());
-					strBuff.append(ReportConst.AMP_SM_SUB_CATEGORY_EQ+smSupplier.getPmCategoryL2().getCategoryL2Id());
-					strBuff.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ+smSupplier.getPmCategoryL3().getCategoryL3Id());
+					maincategory.append(ReportConst.KAMA+smSupplier.getPmCategoryL1().getCategoryL1Id());
+					subcategory.append(ReportConst.KAMA+smSupplier.getPmCategoryL2().getCategoryL2Id());
+					subcategorydivision.append(ReportConst.KAMA+smSupplier.getPmCategoryL3().getCategoryL3Id());
 				}
 			}
 
@@ -4330,7 +4334,9 @@ public class ReportBackingBean extends
 						/*+ rptGenBean.getMainCategoryTotVar()
 						+ rptGenBean.getSubCategoryTotVar()
 						+ rptGenBean.getSubCategoryDivisionTotVar()*/
-						+strBuff
+						+maincategory
+						+subcategory
+						+subcategorydivision
 						+ rptGenBean.getApplicationStatusTotVar()
 						+ rptGenBean.getSmYearTextVar()
 						+ rptGenBean.getPaymentTypeTotVar()
