@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.approval;
 
 import java.io.FileNotFoundException;
@@ -38,6 +48,7 @@ import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -61,6 +72,7 @@ import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.pm.profilemanagement.ProfileManagementBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
@@ -71,6 +83,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -78,25 +91,40 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
 /**
+ * Backing Bean for Approvals.
+ *
  * @author Viswanath
- * 
  */
 @ManagedBean(name = "approvalBackingBean")
 @RequestScoped
 public class ApprovalBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/** The Constant logger. */
+	private static final Logger logger = EpLogger
+			.getLogger(ProfileManagementBackingBean.class);
+	
+	/** The faces context. */
 	private FacesContext facesContext = FacesContext.getCurrentInstance();
 
+	/** The text before sign. */
 	private String textBeforeSign;
+	
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
 
+	/**
+	 * Instantiates a new approval backing bean.
+	 */
 	public ApprovalBackingBean() {
 
 	}
 
 	// TODO Need to check why this code... vidya
 
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	public void init() {
 		if (this.getManagedBean().getScQtApproval() == null) {
@@ -110,6 +138,11 @@ public class ApprovalBackingBean extends
 
 	}
 
+	/**
+	 * Gets the approval categories list.
+	 *
+	 * @return List<String>
+	 */
 	public List<String> getAppCatList() {
 		List<String> appCatList = new ArrayList<String>();
 		if (null != this.getManagedBean().getTabList()) {
@@ -121,6 +154,11 @@ public class ApprovalBackingBean extends
 		return appCatList;
 	}
 
+	/**
+	 * Gets the approval categories.
+	 *
+	 * @return the approval categories
+	 */
 	public SelectItem[] getApprovalCategories() {
 		SelectItem[] selectItems = new SelectItem[5];
 		// selectItems[0] = new
@@ -141,8 +179,15 @@ public class ApprovalBackingBean extends
 		return selectItems;
 	}
 
-	public void handleFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
+	/**
+	 * Add attachment to list.
+	 *
+	 * @param event 		File upload event instance
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		logger.info("handleFileUpload - START");
 		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
@@ -164,10 +209,18 @@ public class ApprovalBackingBean extends
 			attachments.add(attachment);
 			getManagedBean().setAttachments(attachments);
 		}
+		logger.info("handleFileUpload - END");
 	}
 
-	public void handleOtherFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
+	/**
+	 * Add attachment to list.
+	 *
+	 * @param event the event
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void handleOtherFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		logger.info("handleOtherFileUpload - START");
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
 			ScQtApprovalRequest scQtApprovalRequest = null;
@@ -195,18 +248,28 @@ public class ApprovalBackingBean extends
 			scAttachment = approvalReqAttachement;
 			uploadAttachment(event.getFile(), scAttachment);
 		}
+		logger.info("handleOtherFileUpload - END");
 	}
 
+	/**
+	 * Delete Attachment.
+	 */
 	public void deleteUploadFile() {
 		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
 	}
 
+	/**
+	 * Delete Attachment.
+	 */
 	public void deleteFile() {
 		TabBean bean = this.getManagedBean().getSelectedApprovalTabBean();
 		this.getManagedBean().setScQtApproval(bean.getScQtApproval());
 		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
 	}
 
+	/**
+	 * Delete Attachment for other approvals.
+	 */
 	public void deleteOthersApprovalFile() {
 		List<ScQtApprovalRequest> list = this.getManagedBean()
 				.getSelectedApprovalTabBean().getScQtApproval()
@@ -217,7 +280,10 @@ public class ApprovalBackingBean extends
 	}
 
 	/**
-	 * determineIcon for displaying image icon in pid
+	 * Determine icon.set icon for all uploaded files in Approvals.
+	 *
+	 * @param attachment the attachment
+	 * @return the string
 	 */
 	public String determineIcon(ScQtApprovalAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
@@ -245,6 +311,11 @@ public class ApprovalBackingBean extends
 		return imageFileName;
 	}
 
+	/*
+	 * 
+	 * preRenderView(). user click on task list it will Render Approvals
+	 * screens for(Committee/BPK/Finalization/Publication).
+	 */
 	public void preRenderView() {
 		Object obj = getBpmTaskDetails(SCAwardSupplierDataType.class);
 		String taskName = getManagedBean().getTaskName();
@@ -354,7 +425,7 @@ public class ApprovalBackingBean extends
 		} else if (SCProcessNameConst.APPROVE_PUBLICATION
 				.equalsIgnoreCase(taskName)) {
 
-			this.getManagedBean().setApprovalType("Publication Approval");
+			this.getManagedBean().setApprovalType(QTConstants.PUBLICATION_APPROVAL);
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION);
@@ -407,6 +478,13 @@ public class ApprovalBackingBean extends
 						"/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
 	}
 
+	/**
+	 * Submit Approval Details. Event handle to submit data for bpm.
+	 * 
+	 * @param outCome
+	 *            (Mandatory)
+	 * @return the string(ACKNOWLEDGE_PAGE)
+	 */
 	public void approvalBpmTask(String action) {
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -429,7 +507,7 @@ public class ApprovalBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"reviceApprovalDlg.show()");
 		} else {
-			if ("Publication Approval".equalsIgnoreCase(this.getManagedBean()
+			if (QTConstants.PUBLICATION_APPROVAL.equalsIgnoreCase(this.getManagedBean()
 					.getApprovalType())) {
 
 				this.setDefaultDateTime(reqDTO.getQtdetail());
@@ -453,6 +531,11 @@ public class ApprovalBackingBean extends
 		}
 	}
 
+	/**
+	 * Sets the default date time.
+	 *
+	 * @param scQt the new default date time
+	 */
 	private void setDefaultDateTime(ScQt scQt) {
 		// Publish/Closing/sample Date
 		Date publishDate = scQt.getPublishDate();
@@ -472,6 +555,13 @@ public class ApprovalBackingBean extends
 		}
 	}
 
+	/**
+	 * Gpki sign action.Event handle when Approver submit.
+	 * 
+	 * @param digiSign
+	 *            (Mandatory)
+	 * @return the string(ACKNOWLEDGE_PAGE)
+	 */
 	public String gpkiSignAction(PmDigiSign digiSign) {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
 				.getAction(), digiSign);
@@ -503,9 +593,13 @@ public class ApprovalBackingBean extends
 	}
 
 	/**
+	 * Update ApprovalDetails.
+	 * 
 	 * @param action
-	 * @param object
-	 * @return
+	 *            (Mandatory)
+	 * @param digiSign
+	 *            (optional)
+	 * @return QuationTenderResDTO (boolean successful,ScQtCommittee committee)
 	 */
 	private QuationTenderResDTO updateBpmTask(String outcome,
 			PmDigiSign digiSign) {
@@ -659,6 +753,11 @@ public class ApprovalBackingBean extends
 		return tenderResDTO;
 	}
 
+	/**
+	 * Update Approval Revice from bpm.
+	 *
+	 * @return the string
+	 */
 	public String updateReviceBpmTask() {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean()
 				.getAction(), null);
@@ -689,6 +788,12 @@ public class ApprovalBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Construct committee tab bean.
+	 *
+	 * @param qtCommittees the qt committees
+	 * @return the List<TabBean>
+	 */
 	public List<TabBean> constructCommitteTabBean(
 			List<ScQtCommittee> qtCommittees) {
 		List<TabBean> committeTabs = new ArrayList<TabBean>();
@@ -707,6 +812,13 @@ public class ApprovalBackingBean extends
 		return committeTabs;
 	}
 
+	/**
+	 * Gets the ScQtCommittee Details.
+	 *
+	 * @param type the type
+	 * @param id the id
+	 * @return ScQtCommittee
+	 */
 	private ScQtCommittee getQtCommitteeTypeDtl(String type, Long id) {
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		ScQtCommittee qtCommitte = null;
@@ -744,6 +856,14 @@ public class ApprovalBackingBean extends
 	 * ex.printStackTrace(); } return committee; }
 	 */
 
+	/**
+	 * Gets the ScQtApproval Details.
+	 *
+	 * @param qtId the qt id
+	 * @param approvalType the approval type
+	 * @param docType the doc type
+	 * @return the ScQtApproval
+	 */
 	private ScQtApproval getApproval(Long qtId, String approvalType,
 			String docType) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -760,10 +880,20 @@ public class ApprovalBackingBean extends
 		return approval;
 	}
 
+	/**
+	 * View approval action.
+	 *
+	 * @return the string
+	 */
 	public String viewApprovalAction() {
 		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
 	}
 
+	/**
+	 * Role change listner.
+	 *
+	 * @param member the member
+	 */
 	public void roleChangeListner(ScCommitteeMember member) {
 		List<ScCommitteeMember> members = this.getManagedBean()
 				.getSelectedTabBean().getScQtCommittee().getScCommittee()
@@ -783,6 +913,13 @@ public class ApprovalBackingBean extends
 		}
 	}
 
+	/**
+	 * Constuct out come.
+	 *
+	 * @param approvalRequests the approval requests
+	 * @param scQt the sc qt
+	 * @return the string
+	 */
 	private String constuctOutCome(List<ScQtApprovalRequest> approvalRequests,
 			ScQt scQt) {
 		if (null != approvalRequests) {
@@ -838,10 +975,10 @@ public class ApprovalBackingBean extends
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
 						//scQt.setOpenFor(approvalRequest.getOriginalValue());
-						if ("Open".equalsIgnoreCase(approvalRequest.getOriginalValue())) {
-							scQt.setOpenFor("A");
+						if (QTConstants.QT_OPEN.equalsIgnoreCase(approvalRequest.getOriginalValue())) {
+							scQt.setOpenFor(QTConstants.QT_ALL);
 						} else {
-							scQt.setOpenFor("B");
+							scQt.setOpenFor(QTConstants.QT_BUMIPUTRA);
 						}
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
@@ -858,6 +995,11 @@ public class ApprovalBackingBean extends
 		return BpmOutcomeConst.BPM_APPROVE;
 	}
 
+	/**
+	 * Update pm parameter.
+	 *
+	 * @param requestdetails the requestdetails
+	 */
 	public void updatePmParameter(ScQtApprovalRequest requestdetails) {
 		if (null != requestdetails) {
 			IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance()
@@ -872,6 +1014,11 @@ public class ApprovalBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the Status Details.
+	 *
+	 * @return List<PmParameterDesc>
+	 */
 	public List<PmParameterDesc> getStatusDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -883,10 +1030,20 @@ public class ApprovalBackingBean extends
 				ParameterTypeConst.APPROVAL_DECISION_TYPE, searchBean);
 	}
 
+	/**
+	 * Gets the text before sign.
+	 *
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getManagedBean().getQt().getQtNo());
@@ -894,14 +1051,30 @@ public class ApprovalBackingBean extends
 		this.textBeforeSign = sb.toString();
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Update approval request.
+	 *
+	 * @param approvalRequests the approval requests
+	 * @param outCome the out come
+	 */
 	private void updateApprovalRequest(
 			List<ScQtApprovalRequest> approvalRequests, String outCome) {
 
