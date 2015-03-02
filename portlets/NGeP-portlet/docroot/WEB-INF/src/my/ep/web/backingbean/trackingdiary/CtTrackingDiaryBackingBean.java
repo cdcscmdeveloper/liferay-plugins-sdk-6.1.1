@@ -64,12 +64,14 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	}
 
 	public void search(){
-//		if ((getManagedBean().getSearchDocumentNoValue() != null && getManagedBean().getSearchDocumentNoValue().isEmpty()) 
-//				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
-//				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
-//				&& (getManagedBean().getSearchStatusId() != null)) {
-//			throw new EpException(MessageConst.ERROR_716006);
-//		}
+		if ((null == getManagedBean().getSearchTrasactionType()) 
+				&& (getManagedBean().getSearchContractNo() != null && getManagedBean().getSearchContractNo().isEmpty()) 
+				&& (getManagedBean().getSearchPhysContractNo() != null && getManagedBean().getSearchPhysContractNo().isEmpty())
+				&& (getManagedBean().getSearchLoaNo() != null && getManagedBean().getSearchLoaNo().isEmpty()) 
+				&& (getManagedBean().getSearchPhysLoaNo() != null && getManagedBean().getSearchPhysLoaNo().isEmpty())
+				&& (getManagedBean().getSearchStatusId() == null)) {
+			throw new EpException(MessageConst.ERROR_716006);
+		}
 
 		System.out.println("pageChangeListener");
 		getManagedBean().getCtDocumentDataModel().reloadData();
