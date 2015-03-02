@@ -65,10 +65,12 @@ public class CdTrackingDiaryBackingBean extends
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
 
+			Object[] cdObj = getManagedBean().getObject();
+
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getObject()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),cdObj[1]));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CD"));
-			System.out.println("getCdDocumentDataModel docNo " + getManagedBean().getSearchDocumentNoValue());
+			System.out.println("Cd TrackingDiary docNo  " +cdObj[3]+ cdObj[1]);
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();

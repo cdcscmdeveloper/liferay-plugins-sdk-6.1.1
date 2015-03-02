@@ -157,12 +157,12 @@ public class DpTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(
 				ISearchBean<PmTrackingDiary> searchBean) {
-			Object[] ss = getManagedBean().getDpObj();
+			Object[] dpObj = getManagedBean().getDpObj();
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchDocNo()));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),ss[3]));
-			System.out.println("Sc TrackingDiary docNo  " +ss[3]+ getManagedBean().getSearchDocNo());
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),dpObj[1]));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),dpObj[3]));
+			System.out.println("Dp TrackingDiary docNo  " +dpObj[3]+ dpObj[1]);
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
