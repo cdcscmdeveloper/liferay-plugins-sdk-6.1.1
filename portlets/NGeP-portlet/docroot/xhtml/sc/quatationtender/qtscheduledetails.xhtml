@@ -111,7 +111,6 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:spacer height="2" />
 	<c:if
 		test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
 		<p:panel id="samplezoneid" header="#{lbl['lbl.so.sample.submission']}"
@@ -291,7 +290,6 @@
 			</table>
 		</p:panel>
 	</c:if>
-	<p:spacer height="2" />
 	<p:panel header="#{lbl['lbl.so.contact.person']}" toggleable="true">
 		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
 			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
@@ -333,7 +331,6 @@
 				update="cpersondetailsid" />
 		</div>
 	</p:panel>
-	<p:spacer height="2" />
 	<p:panel header="#{lbl['lbl.so.desk.officer.admin']}" toggleable="true">
 		<p:dataTable id="doaaid" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
