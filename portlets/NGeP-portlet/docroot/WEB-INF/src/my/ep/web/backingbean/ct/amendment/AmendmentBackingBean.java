@@ -100,6 +100,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
@@ -471,6 +472,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 try {
 			    getManagedBean().setContractVer(resDTO.getCtContractVer());
 		  	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		  	    
+		  	  reqDTO = new ContractReqDTO();
+			  contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+	    	  reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+	    	  reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			  reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			  extResDTO = contractSO.retrieveExtensionHistory(reqDTO);
+			  getManagedBean().setAmendHistoryList(extResDTO.getExtensionHistoryList());
+			  getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
 			   
 		  	    if(getManagedBean().getContractVer().getCtAmendment()==null) {
 				
@@ -478,7 +488,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				     getManagedBean().getContractVer().getCtAmendment().setFileRefNo("");
 				     getManagedBean().getContractVer().getCtAmendment().setTitle(getManagedBean().getCtContract().getContractName());
 				     getManagedBean().getContractVer().getCtAmendment().setDescription(getManagedBean().getCtContract().getContractName());
-				     getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
+				     getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
 				     getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
 				     getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 				     getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
@@ -578,14 +588,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			  ctBackingBean.getManagedBean().setViewContract(false);
 			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			  
-			  reqDTO = new ContractReqDTO();
-			  contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-	    	  reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
-	    	  reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
-			  reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			  extResDTO = contractSO.retrieveExtensionHistory(reqDTO);
-			  getManagedBean().setAmendHistoryList(extResDTO.getExtensionHistoryList());
+			  			  
 		      getManagedBean().setCommitteeType(getCommitteeType());
 		      getManagedBean().setDisableAmendDetails(false);
 		      if(getManagedBean().getTaskName() != null && 
@@ -2825,7 +2828,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 			getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 			getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
-			getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getCurrentDate());
+			getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
 		}
 		changeAmendmentEffDate();
 	}
@@ -3947,6 +3950,25 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 	     }
 		return items;
+	}
+	
+	public Date retrieveNewEffDate() {
+		if (getManagedBean().getAmendHistoryList() != null && !getManagedBean().getAmendHistoryList().isEmpty()) {
+			if (getManagedBean().getContractVer().getCtContractValue().getExpDate().before(getCurrentDate())) {
+				return new Date();
+			}
+			else {				
+				int index = getManagedBean().getAmendHistoryList().size() - 1;
+				CtContractVer contractVer = getManagedBean().getAmendHistoryList().get(index);
+				Calendar effDate = Calendar.getInstance();
+				effDate.setTime(contractVer.getCtAmendment().getAmendmentEffDate());
+				effDate.add(Calendar.DATE, +1);
+				
+				return effDate.getTime();
+			}
+		} else {
+			return new Date();
+		}
 	}
 	
 	public void contractSignerChange(){
