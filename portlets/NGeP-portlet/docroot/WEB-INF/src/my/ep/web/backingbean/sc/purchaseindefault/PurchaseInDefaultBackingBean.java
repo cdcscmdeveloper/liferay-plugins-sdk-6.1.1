@@ -1,8 +1,8 @@
 /**
  * Copyright © 2013 Archisoft. All rights reserved.
  */
+// TODO: Auto-generated Javadoc
 package my.ep.web.backingbean.sc.purchaseindefault;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -94,18 +94,28 @@ import org.primefaces.model.DualListModel;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
+
 /**
- * 
+ * The Class PurchaseInDefaultBackingBean.
  * @author sri
  * since 01.15.2014
  */
 @ManagedBean(name = "purchaseInDefaultBackingBean")
 @RequestScoped
 public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<PurchaseInDefaultManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(PurchaseInDefaultBackingBean.class);
+	
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
 	
+	/**
+	 * Instantiates a new purchase in default backing bean.
+	 */
 	public PurchaseInDefaultBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -121,267 +131,324 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		}
 	}
 	
-	 /**
-	  * pricingDetails for getting pricing details in PID
-	  * @return 
-	  */
-		public String pidAction(VCmSupplierItem vCmSupplierItem){
-			debugLogger("pidAction");
-			ISearchBean<VCmSupplierItem> viewSearchBean = null;
-			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-			ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
-			//TODO check contract item or panel item
-			if(vCmSupplierItem.getContractNo() !=null){
-				// contract item
-				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
-				contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
-				contractItemReqDTO.setFetchSubEntity(Boolean.TRUE);
-				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
-				if(contractItemResDTO.getCtContractItem()!=null) {
-					scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
-					getManagedBean().setCheckContractItem(Boolean.TRUE);
-				}
-				 retrieveReasonDescListByCategory(true);
-			}else if(vCmSupplierItem.getCircularNo() != null){
-				// panel item 
-				PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-				FacesScopes facesScope = new FacesScopes();
-				Long userId = facesScope.getUserSessionBean().getUserId();
-				purchaseInDefaultReqDTO.setPanelItemId(vCmSupplierItem.getDocId());
-				purchaseInDefaultReqDTO.setFetchSubEntity(true);
-				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getPanelSupplierByPanelItem(purchaseInDefaultReqDTO);
-				CtPanelItem ctPanelItem = resDTO.getCtPanelItem();
-				if(ctPanelItem != null) {
-					scPurchaseInDefault.setPanelItem(ctPanelItem);
-					getManagedBean().setCheckContractItem(Boolean.FALSE);
-					purchaseInDefaultReqDTO.setPanelItem(ctPanelItem);
-					purchaseInDefaultReqDTO.setUserId(userId);
-					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getIsExceedMaxProcurementAmount(purchaseInDefaultReqDTO);
-				    retrieveReasonDescListByCategory(defaultResDTO.isExceedProcurementAmt());
-				}
-			}
-			scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
-			
-			// WorkFlow Status
-			ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-			workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-			workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
-			//scPurchaseInDefault.setCurrentStatus(workFlowStatus);
-			getCurrentStatus(workFlowStatus.getPmStatus());  
-
-			// initializing remarks
-			scPurchaseInDefault.setRemarks(initializeRemarks(
-					scPurchaseInDefault,
-					 null,
-					scPurchaseInDefault.getRemarks(),
-					ScPIDRemark.class));
-
-			// to get ptj
-			PmUser user = new FacesScopes().getUserSessionBean();
-			if (user != null) {
-				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserId(user.getUserId());
-				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-				if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
-					scPurchaseInDefault.setPmOrgProfile(resDTO.getUserOrgList() .get(0).getPmOrgProfile());
-				}
-			}
-			String extensionCode = vCmSupplierItem.getItemCode();
-			Long uomId = vCmSupplierItem.getUomId();
-			StringBuilder sb = new StringBuilder();
-			sb.append("itemCode^").append(extensionCode).append("|")//item Code
-			.append("catType^").append("XC").append("|")
-			.append("uomId^").append(uomId);
-			viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
-			List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
-
-			for (BaseSearchFilterBean baseFilterBean : filterBeans) {
-		    	if (baseFilterBean instanceof SearchFilterBean) {
-		    		SearchFilterBean filterBean = (SearchFilterBean) baseFilterBean;
-		    		sb.append("|")
-		    		.append(filterBean.getSearchField()).append("^");			    		
-		    		if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_IN.value()) {
-		    			sb.append(filterBean.getSearchValue().toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll("\\s","")).append("^");
-		    		} else {
-		    			sb.append(filterBean.getSearchValue()).append("^");
-		    		}
-		    		
-		    		sb.append(filterBean.getSearchOperator());
-		    	}
-		    }
-		    getManagedBean().setConditionField(sb.toString());
-			getManagedBean().setvCmSupplierItem(vCmSupplierItem);
-			
-			initialInformation(scPurchaseInDefault);
-			scPurchaseInDefault.setCreatedBy(user.getUserId());
-			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-			// by default value as cheaper price
-			PmReason reason = new PmReason();
-			reason.setReasonCode(ParameterConst.PID_CP);
-			getManagedBean().getPurchaseInDefault().setReasonType(reason);
-			
-			return "purchaseInDefaultMain";
-		}	
-		 
-    /**
-	 *  submitPurchaseInDefault  method to submit PID details 
-     *  in Purchase In Default
-	*/	
-		public String submitPurchaseInDefault() {
-			debugLogger("submitPurchaseInDefault");
-			IPurchaseInDefaultSO purchaseInDefaultSO = null;
-			try {
-				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-				PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-				 IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
-				  ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
-				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
-				scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
-				scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
-				// Target Approver
-		    	if(scPurchaseInDefault.getApprovalUsers() == null || scPurchaseInDefault.getApprovalUsers().isEmpty()){
-		    		scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
-		    	} else{
-		    		scPurchaseInDefault.getApprovalUsers().addAll(createTargetApprover(scPurchaseInDefault));
-		    	}
-				// WorkFlow Status 
-				scPurchaseInDefault.setWorkFlowStatuses(null);
-				
-				if(getManagedBean().getAttachments() != null){
-					scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
-				}
-				
-				// justification
-				if(scPurchaseInDefault.getReasonType().getReasonCode() != null){
-					reasonReqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
-					reasonReqDTO.setLanguage("BM");
-					ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reasonReqDTO);
-					for (PmReasonDesc reasonDesc : resDTO.getReasonDescList()) {
-						if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(reasonDesc.getPmReason().getReasonCode())){
-							scPurchaseInDefault.setReasonType(reasonDesc.getPmReason());
-						}
-					}
-				}
-				
-				FacesScopes facesScopes = new FacesScopes();
-				// validate  quantity
-		    	if(scPurchaseInDefault.getQuantity() != null && scPurchaseInDefault.getQuantity().intValue() < 0){
-					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), "0"});
-		    	}
-				
-				if(scPurchaseInDefault.getContractedItem() != null) {
-					if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType() != null){
-						if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().
-								getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-							reqDTO.setContractType(SourcingConstants.PID_TYPE_MINISTRY);
-						}
-						else if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().
-								getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-							reqDTO.setContractType(SourcingConstants.PID_TYPE_CENTRAL);
-						}
-					}
-					
-					/*if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
-						if(scPurchaseInDefault.getContractedItem().getMinimumOrderQty() > scPurchaseInDefault.getQuantity().doubleValue()){
-							throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
-						}
-					}*/
-				}
-				else if(scPurchaseInDefault.getPanelItem() != null) {
-					reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
-					int checkQty = 0;
-					
-					if(scPurchaseInDefault.getQuantity() != null){
-						checkQty = Double.compare(scPurchaseInDefault.getQuantity().doubleValue() , scPurchaseInDefault.getPanelItem().getMinimumOrderQty());
-					}
-                  /*
-					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ)){
-						if(checkQty < 0) {
-							throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
-						}
-					}*/
-					if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_RI)){
-						if(checkQty > 0) {
-							throw new EpException(MessageConst.ERROR_760203, new String[] {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
-						}
-					}
-				}
-				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
-				//Hoa: add token authenticate to support BPM
-				String token = facesScopes.getBPMAuthenticationCtxToken();
-				reqDTO.setPmUser(facesScopes.getUserSessionBean());
-				reqDTO.setRoleCode(getUserRoleCode());
-				reqDTO.setToken(token);
-				//reqDTO.setConditionField(getManagedBean().getConditionField());
-				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
-				if (resDTO.isSuccessful()) {
-					ScPurchaseInDefault purchaseInDefault = resDTO.getPurchaseInDefaultDtl();
-					 successMessage(MessageConst.INFO_700006, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, purchaseInDefault.getPurchaseInDefaultNo());
-					// clear pid data
-					super.renewSesionObject();
-					
-				} else {
-					throw new EpException(MessageConst.ERROR_700020);
-				}
-			} finally {
-				purchaseInDefaultSO = null;
-			}
-			return null;
-		}
-		
-		public void sendNotificationEmail(){
-			debugLogger("sendNotificationEmail");
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getPurchaseInDefault().getCreatedBy());
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-
-			INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
-			FacesScopes facesScopes = new FacesScopes();
-			NtfRequestDTO reqDTO = new NtfRequestDTO();
-			reqDTO.setTemplateId("400000");
-			reqDTO.setSenderId(userResDTO.getPmUser().getUserId().toString());
-
-			List<String> userIdLst = new ArrayList<String>();
-			userIdLst.add(getManagedBean().getPurchaseInDefault().getCreatedBy().toString());
-			//userIdLst.add("1");
-			reqDTO.setEmailToArr(userIdLst.toArray(new String[userIdLst.size()]));
-			List<String> subParaLst = new ArrayList<String>();
-			subParaLst.add(getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
-			reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
-			// Template variables
-			List<String> cntParaLst = new ArrayList<String>();
-			cntParaLst.add(userResDTO.getPmUser().getUserName());
-			cntParaLst.add(getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
-			cntParaLst.add(facesScopes.getUserSessionBean().getUserName());
-			reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
-			try {
-				NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
-				debugLogger(resDTO.getStatusCode());
-				debugLogger(resDTO.getSeverity());
-				debugLogger(resDTO.getStatusDesc());
-			} finally{
-			}
-			debugLogger("END");
-		}
-   
-   
 	/**
-	 * @param action
-	 * @param object
+	 * add  panel or contract item to purchase in default
+	 * @param vCmSupplierItem the v cm supplier item
+	 * @return the string
+	 */
+	public String pidAction(VCmSupplierItem vCmSupplierItem){
+		debugLogger("pidAction");
+		ISearchBean<VCmSupplierItem> viewSearchBean = null;
+		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+		IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+		ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
+		//TODO check contract item or panel item
+		if(vCmSupplierItem.getContractNo() !=null){
+			// contract item
+			ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+			contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
+			contractItemReqDTO.setFetchSubEntity(Boolean.TRUE);
+			ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
+			if(contractItemResDTO.getCtContractItem()!=null) {
+				scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
+				getManagedBean().setCheckContractItem(Boolean.TRUE);
+			}
+			retrieveReasonDescListByCategory(true);
+		}else if(vCmSupplierItem.getCircularNo() != null){
+			// panel item 
+			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			FacesScopes facesScope = new FacesScopes();
+			Long userId = facesScope.getUserSessionBean().getUserId();
+			purchaseInDefaultReqDTO.setPanelItemId(vCmSupplierItem.getDocId());
+			purchaseInDefaultReqDTO.setFetchSubEntity(true);
+			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getPanelSupplierByPanelItem(purchaseInDefaultReqDTO);
+			CtPanelItem ctPanelItem = resDTO.getCtPanelItem();
+			if(ctPanelItem != null) {
+				scPurchaseInDefault.setPanelItem(ctPanelItem);
+				getManagedBean().setCheckContractItem(Boolean.FALSE);
+				purchaseInDefaultReqDTO.setPanelItem(ctPanelItem);
+				purchaseInDefaultReqDTO.setUserId(userId);
+				PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getIsExceedMaxProcurementAmount(purchaseInDefaultReqDTO);
+				retrieveReasonDescListByCategory(defaultResDTO.isExceedProcurementAmt());
+			}
+		}
+		scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
+
+		// WorkFlow Status
+		ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
+		StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+		workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+		workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
+		//scPurchaseInDefault.setCurrentStatus(workFlowStatus);
+		getCurrentStatus(workFlowStatus.getPmStatus());  
+
+		// initializing remarks
+		scPurchaseInDefault.setRemarks(initializeRemarks(
+				scPurchaseInDefault,
+				null,
+				scPurchaseInDefault.getRemarks(),
+				ScPIDRemark.class));
+
+		// to get ptj
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(user.getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
+				scPurchaseInDefault.setPmOrgProfile(resDTO.getUserOrgList() .get(0).getPmOrgProfile());
+			}
+		}
+		String extensionCode = vCmSupplierItem.getItemCode();
+		Long uomId = vCmSupplierItem.getUomId();
+		StringBuilder sb = new StringBuilder();
+		sb.append("itemCode^").append(extensionCode).append("|")//item Code
+		.append("catType^").append("XC").append("|")
+		.append("uomId^").append(uomId);
+		viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+		List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
+
+		for (BaseSearchFilterBean baseFilterBean : filterBeans) {
+			if (baseFilterBean instanceof SearchFilterBean) {
+				SearchFilterBean filterBean = (SearchFilterBean) baseFilterBean;
+				sb.append("|")
+				.append(filterBean.getSearchField()).append("^");			    		
+				if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_IN.value()) {
+					sb.append(filterBean.getSearchValue().toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll("\\s","")).append("^");
+				} else {
+					sb.append(filterBean.getSearchValue()).append("^");
+				}
+
+				sb.append(filterBean.getSearchOperator());
+			}
+		}
+		getManagedBean().setConditionField(sb.toString());
+		getManagedBean().setvCmSupplierItem(vCmSupplierItem);
+
+		initialInformation(scPurchaseInDefault);
+		scPurchaseInDefault.setCreatedBy(user.getUserId());
+		getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
+		// by default value as cheaper price
+		PmReason reason = new PmReason();
+		reason.setReasonCode(ParameterConst.PID_CP);
+		getManagedBean().getPurchaseInDefault().setReasonType(reason);
+
+		return "purchaseInDefaultMain";
+	}	
+	
+	
+	/**
+	 * submit PurchaseInDefault.
+	 * submit - save data into database and BPM process will route to the next respective user.
+     * page navigate to acknowledge page.
+     */	
+	public String submitPurchaseInDefault() {
+		debugLogger("submitPurchaseInDefault");
+		IPurchaseInDefaultSO purchaseInDefaultSO = null;
+		try {
+			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IPurchaseInDefaultSO.class);
+			PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IReasonSO.class);
+			ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
+					.getPurchaseInDefault();
+			scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
+			scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
+			// Target Approver
+			if (scPurchaseInDefault.getApprovalUsers() == null
+					|| scPurchaseInDefault.getApprovalUsers().isEmpty()) {
+				scPurchaseInDefault
+						.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
+			} else {
+				scPurchaseInDefault.getApprovalUsers().addAll(
+						createTargetApprover(scPurchaseInDefault));
+			}
+			// WorkFlow Status
+			scPurchaseInDefault.setWorkFlowStatuses(null);
+
+			if (getManagedBean().getAttachments() != null) {
+				scPurchaseInDefault
+						.setScPurchaseInDefaultAttachment(getManagedBean()
+								.getAttachments().get(0));
+			}
+
+			// justification
+			if (scPurchaseInDefault.getReasonType().getReasonCode() != null) {
+				reasonReqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION
+						.value());
+				reasonReqDTO.setLanguage("BM");
+				ReasonResDTO resDTO = reasonSO
+						.retrieveReasonDescListByCategory(reasonReqDTO);
+				for (PmReasonDesc reasonDesc : resDTO.getReasonDescList()) {
+					if (scPurchaseInDefault
+							.getReasonType()
+							.getReasonCode()
+							.equalsIgnoreCase(
+									reasonDesc.getPmReason().getReasonCode())) {
+						scPurchaseInDefault.setReasonType(reasonDesc
+								.getPmReason());
+					}
+				}
+			}
+
+			FacesScopes facesScopes = new FacesScopes();
+			// validate quantity
+			if (scPurchaseInDefault.getQuantity() != null
+					&& scPurchaseInDefault.getQuantity().intValue() < 0) {
+				throw new EpException(MessageConst.ERROR_100033, new String[] {
+						ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()), "0" });
+			}
+
+			if (scPurchaseInDefault.getContractedItem() != null) {
+				if (scPurchaseInDefault.getContractedItem().getCtContractVer()
+						.getCtContract().getContractType() != null) {
+					if (scPurchaseInDefault.getContractedItem()
+							.getCtContractVer().getCtContract()
+							.getContractType().getParameterCode()
+							.equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						reqDTO.setContractType(SourcingConstants.PID_TYPE_MINISTRY);
+					} else if (scPurchaseInDefault.getContractedItem()
+							.getCtContractVer().getCtContract()
+							.getContractType().getParameterCode()
+							.equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+						reqDTO.setContractType(SourcingConstants.PID_TYPE_CENTRAL);
+					}
+				}
+
+				/*
+				 * if(scPurchaseInDefault.getReasonType().getReasonCode().
+				 * equalsIgnoreCase(ParameterConst.PID_EQ)){
+				 * if(scPurchaseInDefault
+				 * .getContractedItem().getMinimumOrderQty() >
+				 * scPurchaseInDefault.getQuantity().doubleValue()){ throw new
+				 * EpException(MessageConst.ERROR_100033, new String[]
+				 * {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+				 * ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				 * facesScopes.getUserLocale()), ResourceBundleUtils.getMessage(
+				 * "lbl.sc.purchase.in.default.min.qty",
+				 * ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				 * facesScopes.getUserLocale())}); } }
+				 */
+			} else if (scPurchaseInDefault.getPanelItem() != null) {
+				reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
+				int checkQty = 0;
+
+				if (scPurchaseInDefault.getQuantity() != null) {
+					checkQty = Double.compare(scPurchaseInDefault.getQuantity()
+							.doubleValue(), scPurchaseInDefault.getPanelItem()
+							.getMinimumOrderQty());
+				}
+				/*
+				 * if(scPurchaseInDefault.getReasonType().getReasonCode().
+				 * equalsIgnoreCase(ParameterConst.PID_EQ)){ if(checkQty < 0) {
+				 * throw new EpException(MessageConst.ERROR_100033, new String[]
+				 * {ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+				 * ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				 * facesScopes.getUserLocale()), ResourceBundleUtils.getMessage(
+				 * "lbl.sc.purchase.in.default.min.qty",
+				 * ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				 * facesScopes.getUserLocale())}); } }
+				 */
+				if (scPurchaseInDefault.getReasonType().getReasonCode()
+						.equalsIgnoreCase(ParameterConst.PID_RI)) {
+					if (checkQty > 0) {
+						throw new EpException(
+								MessageConst.ERROR_760203,
+								new String[] {
+										ResourceBundleUtils
+												.getMessage(
+														"lbl.sc.order.qty",
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														facesScopes
+																.getUserLocale()),
+										ResourceBundleUtils
+												.getMessage(
+														"lbl.sc.purchase.in.default.min.qty",
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														facesScopes
+																.getUserLocale()) });
+					}
+				}
+			}
+			reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
+			// Hoa: add token authenticate to support BPM
+			String token = facesScopes.getBPMAuthenticationCtxToken();
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setToken(token);
+			// reqDTO.setConditionField(getManagedBean().getConditionField());
+			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO
+					.submitPurchaseInDefault(reqDTO);
+			if (resDTO.isSuccessful()) {
+				ScPurchaseInDefault purchaseInDefault = resDTO
+						.getPurchaseInDefaultDtl();
+				successMessage(MessageConst.INFO_700006,
+						ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
+						purchaseInDefault.getPurchaseInDefaultNo());
+				// clear pid data
+				super.renewSesionObject();
+
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+		} finally {
+			purchaseInDefaultSO = null;
+		}
+		return null;
+	}
+		
+	/*
+	 * public void sendNotificationEmail(){
+	 * debugLogger("sendNotificationEmail"); IUserSO userSO = (IUserSO)
+	 * BusinessDelegate
+	 * .getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+	 * IUserSO.class); UserReqDTO userReqDTO = new UserReqDTO();
+	 * userReqDTO.setUserId
+	 * (getManagedBean().getPurchaseInDefault().getCreatedBy()); UserResDTO
+	 * userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+	 * 
+	 * INtfSO ntfSO = (INtfSO)
+	 * EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
+	 * FacesScopes facesScopes = new FacesScopes(); NtfRequestDTO reqDTO = new
+	 * NtfRequestDTO(); reqDTO.setTemplateId("400000");
+	 * reqDTO.setSenderId(userResDTO.getPmUser().getUserId().toString());
+	 * 
+	 * List<String> userIdLst = new ArrayList<String>();
+	 * userIdLst.add(getManagedBean
+	 * ().getPurchaseInDefault().getCreatedBy().toString());
+	 * //userIdLst.add("1"); reqDTO.setEmailToArr(userIdLst.toArray(new
+	 * String[userIdLst.size()])); List<String> subParaLst = new
+	 * ArrayList<String>();
+	 * subParaLst.add(getManagedBean().getPurchaseInDefault(
+	 * ).getPurchaseInDefaultNo()); reqDTO.setSubParaArr(subParaLst.toArray(new
+	 * String[subParaLst.size()])); // Template variables List<String>
+	 * cntParaLst = new ArrayList<String>();
+	 * cntParaLst.add(userResDTO.getPmUser().getUserName());
+	 * cntParaLst.add(getManagedBean
+	 * ().getPurchaseInDefault().getPurchaseInDefaultNo());
+	 * cntParaLst.add(facesScopes.getUserSessionBean().getUserName());
+	 * reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
+	 * try { NtfResponseDTO resDTO = ntfSO.processAndPublishViaEmail(reqDTO);
+	 * debugLogger(resDTO.getStatusCode()); debugLogger(resDTO.getSeverity());
+	 * debugLogger(resDTO.getStatusDesc()); } finally{ } debugLogger("END"); }
+	 */
+	/**
+	 * Update data into database and BPM process will route to the next respective user
+	 * @param outcome the outcome
+	 * @param digiSign the digi sign
+	 * navigate to acknowledge page.
 	 * @return PurchaseInDefaultResDTO
 	 */
 	private PurchaseInDefaultResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
@@ -439,18 +506,25 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			
 		return resDTO;
 	}
-
+	
+	/**
+	 * Approve purchase in default
+	 * Update data into database and BPM process will route to the next respective user
+	 * @param outcome the outcome
+	 * navigate to acknowledge page.
+	 * @return PurchaseInDefaultResDTO
+	 */
 	public void approverAction(String outcome) {
 		debugLogger("approverAction");
 		this.getManagedBean().setAction(outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-			 getManagedBean().setAutoUpdate(Boolean.FALSE);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 			} else if(isDigiSigningRequired(RoleCode.BPK_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-				
+
 			} else if(isDigiSigningRequired(RoleCode.CT_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
@@ -460,9 +534,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		}	
 	}
    
-   
    /**
-    * To get Approver Pick List  in Purchase In Default
+    * To get Approver Pick List  in Purchase In Default.
+    *
+    * @param purchaseInDefault the purchase in default
+    * @return the list
     */
    private	List<ScPIDApprovalUser> createTargetApprover(ScPurchaseInDefault purchaseInDefault){
 	   List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
@@ -494,14 +570,19 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   return results;
    }
 
+	/**
+	 * To get current status to display for Purchase In Default.
+	 * 
+	 * @param pmStatus
+	 *            the pm status
+	 */
+	public void getCurrentStatus(PmStatus pmStatus) {
+		getManagedBean().setPidStatus(pmStatus);
+	}
+
    /**
-    * To get status for pid in Purchase In Default
-    */
-   public void  getCurrentStatus(PmStatus pmStatus) {
-	   getManagedBean().setPidStatus(pmStatus);
-   }   
-   /**
-    * Event for justification type drop down in pid
+    * Event for justification type drop down list
+    * to show order quantity to key in.
     */
    public void justificationTypeEvent() {
 	   log.info("justificationTypeEvent : "+getManagedBean().getPurchaseInDefault().getReasonType().getReasonId()); 
@@ -521,7 +602,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    }
 
    /**
-    *  handleFileUpload event for file upload in pid
+    * handleFileUpload event for file upload in pid.
+    * @param event the event
+    * @throws FileNotFoundException the file not found exception
+    * @throws IOException Signals that an I/O exception has occurred.
     */
    public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 	   debugLogger("handleFileUpload");
@@ -547,7 +631,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    }
 
    /**
-    *  determineIcon for displaying image icon in  pid
+    * show the attached icon based on attached type file
+    * @param attachment the attachment
+    * @return the string
     */	
    public String determineIcon(ScPurchaseInDefaultAttachment attachment) {
 	   debugLogger("determineIcon");
@@ -580,7 +666,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   }
 	   return imageFileName;
    }
-
+   
+   /**
+    * justification type drop down list for to select justification
+    * @param isExceedProcAmt the is exceed procurement amt
+    */
    public void retrieveReasonDescListByCategory (boolean isExceedProcAmt) {
 	   ReasonReqDTO reqDTO = new ReasonReqDTO();
 	   reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
@@ -612,7 +702,14 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   getManagedBean().setPmReason(resDTO.getReasonDescList().get(0).getPmReason());
    }
 
-   public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
+  
+   /**
+    * Gets the dropdown code values.
+    *
+    * @param list the list
+    * @return the dropdown code values
+    */
+   private SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
 	   SelectItem[] items = null;
 	   FacesScopes face = new FacesScopes();
 	   try {
@@ -629,6 +726,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   return items;
    }
 
+   /**
+    * Initializing information for approver pick list 
+    * @param purchaseInDefault the purchase in default
+    */
    public void initialInformation(ScPurchaseInDefault purchaseInDefault){
 	   DualListModel<PmUser>	approvalUsers;
 	   IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -662,7 +763,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    }
 
    /**
-    * to get Ptj drop down Listing in purchase in default
+    * to get Ptj drop down Listing in purchase in default.
     */
    private void populatePtjDropDownList() {
 	   debugLogger("populatePtjDropDownList");
@@ -684,105 +785,123 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   }
    }
 
-   /**
-    * render the view base on the task id
-    */
-   public void preRenderView() {
-	   HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-	   HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-	   String taskId = originalServletRequest.getParameter("taskId");
-	   if (StringUtils.isNotBlank(taskId)) {
-		   this.getManagedBean().setTaskId(taskId);
-		   log.info("taskId : " + taskId);
-		   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		   FacesScopes facesScopes = new FacesScopes();
-		   String token = facesScopes.getBPMAuthenticationCtxToken();
-		   BpmRequestDTO reqDTO = new BpmRequestDTO();
-		   reqDTO.setCtxToken(token);
-		   reqDTO.setTaskId(taskId);
-		   BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		   this.getManagedBean().setOutComes(res.getAction());
-		   this.getManagedBean().setProcessName(res.getProcessName());
-		   Object obj = res.getPojo();
-		   SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
-		   // Purchase In Default	
-		   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-		   PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-		   Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
-		   purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
-		   purchaseInDefaultReqDTO.setFetchSubEntity(true);
-		   PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
-		   ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
-		   // contract item
-		   if(purchaseInDefault.getContractedItem() != null){
-			/*  CtContractItem contractItem = purchaseInDefault.getContractedItem();
-			   IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-			   ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
-			   contractItemReqDTO.setContractItemId(contractItem.getContractItemId());
-			   ContractItemResDTO ConIresDTO = contractItemSO.getContractItem(contractItemReqDTO);
-			   contractItem	=	ConIresDTO.getCtContractItem();
-			   purchaseInDefault.setContractedItem(contractItem);*/
-			   getManagedBean().setCheckContractItem(Boolean.TRUE);
-		   }
-		   // panel item
-		   if(purchaseInDefault.getPanelItem() !=null){
-			   getManagedBean().setCheckContractItem(Boolean.FALSE);
-		   }
-		   
-		   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-		   ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
-		   attachments.add(attachment);
-		   getManagedBean().setTaskId(taskId);
-		   getManagedBean().setProcessName(res.getProcessName());
-		   getManagedBean().setOutComes(res.getAction());
-		   getManagedBean().setPurchaseInDefault(purchaseInDefault);
-		   getManagedBean().setAttachments(attachments);
-		   
-		   IStatusSO statusSO = null;
+	/**
+	 * Prepender page navigation to purchase in default based on task id
+	 * @return void
+	 */
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		if (StringUtils.isNotBlank(taskId)) {
+			this.getManagedBean().setTaskId(taskId);
+			log.info("taskId : " + taskId);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			FacesScopes facesScopes = new FacesScopes();
+			String token = facesScopes.getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			this.getManagedBean().setOutComes(res.getAction());
+			this.getManagedBean().setProcessName(res.getProcessName());
+			Object obj = res.getPojo();
+			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
+			// Purchase In Default
+			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IPurchaseInDefaultSO.class);
+			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+			Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
+			purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
+			purchaseInDefaultReqDTO.setFetchSubEntity(true);
+			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO
+					.getPurchaseInDefault(purchaseInDefaultReqDTO);
+			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO
+					.getPurchaseInDefaultDtl();
+			// contract item
+			if (purchaseInDefault.getContractedItem() != null) {
+				/*
+				 * CtContractItem contractItem =
+				 * purchaseInDefault.getContractedItem(); IContractItemSO
+				 * contractItemSO =
+				 * (IContractItemSO)BusinessDelegate.getInstance
+				 * ().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				 * IContractItemSO.class); ContractItemReqDTO contractItemReqDTO
+				 * = new ContractItemReqDTO();
+				 * contractItemReqDTO.setContractItemId
+				 * (contractItem.getContractItemId()); ContractItemResDTO
+				 * ConIresDTO =
+				 * contractItemSO.getContractItem(contractItemReqDTO);
+				 * contractItem = ConIresDTO.getCtContractItem();
+				 * purchaseInDefault.setContractedItem(contractItem);
+				 */
+				getManagedBean().setCheckContractItem(Boolean.TRUE);
+			}
+			// panel item
+			if (purchaseInDefault.getPanelItem() != null) {
+				getManagedBean().setCheckContractItem(Boolean.FALSE);
+			}
+
+			List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
+			ScPurchaseInDefaultAttachment attachment = purchaseInDefault
+					.getScPurchaseInDefaultAttachment();
+			attachments.add(attachment);
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setProcessName(res.getProcessName());
+			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setPurchaseInDefault(purchaseInDefault);
+			getManagedBean().setAttachments(attachments);
+
+			IStatusSO statusSO = null;
 			try {
-				
+
 				statusSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-				
+
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 				statusReqDTO.setStatusId(res.getDocStatus().longValue());
-				
-				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-				
+
+				StatusResDTO statusResDTO = statusSO
+						.retrieveStatusByStatusId(statusReqDTO);
+
 				getCurrentStatus(statusResDTO.getPmStatus());
-				
+
 			} finally {
 				statusSO = null;
 			}
 
 			// remarks
-			purchaseInDefault.setRemarks(initializeRemarks(
-					   purchaseInDefault,
-					   purchaseInDefault.getCurrentStatus(),
-						purchaseInDefault.getRemarks(),
-						ScPIDRemark.class));
+			purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
+					purchaseInDefault.getCurrentStatus(),
+					purchaseInDefault.getRemarks(), ScPIDRemark.class));
 
-		   initialInformation(purchaseInDefault);
-		   retrieveReasonDescListByCategory(true);
-		   justificationTypeEvent();
-		   // title checker
-		   getManagedBean().setTitleChecker(Boolean.FALSE);
-		   FacesContext fc = FacesContext.getCurrentInstance();
-		   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
-	   }
-   }
+			initialInformation(purchaseInDefault);
+			retrieveReasonDescListByCategory(true);
+			justificationTypeEvent();
+			// title checker
+			getManagedBean().setTitleChecker(Boolean.FALSE);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, "purchaseInDefaultMain");
+		}
+	}
 
-   /**
-    *  deleteUploadFile method for deleting upload fine in pid
-    */
-   public void deleteUploadFile() {
-	   debugLogger("deleteUploadFile");
-	   getManagedBean().getAttachments().clear();
-   }
+	/**
+	 * delete uploaded file in purchase in default
+	 */
+	public void deleteUploadFile() {
+		debugLogger("deleteUploadFile");
+		getManagedBean().getAttachments().clear();
+	}
 
 	 /**
-	  * Page navigation to catalogue search page in Purchase in default
-	  */
+ 	 * Page navigation to catalogue search page in Purchase in default.
+ 	 */
 	 public void backToPrevious() {
 		 log.info("backToPrevious");
 		 FacesContext fc = FacesContext.getCurrentInstance();
@@ -794,26 +913,52 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
 		 }
 	 }		
-	 private void debugLogger(Object message) {
+	 
+ 	/**
+ 	 * Debug logger.
+ 	 *
+ 	 * @param message the message
+ 	 */
+ 	private void debugLogger(Object message) {
 		 if (log.isDebugEnabled()) {
 			 log.debug(message);
 		 }
 		 log.info(message);
 	 }
 		
-	 public void gpkiSignAction(PmDigiSign digiSign) {
+	 /**
+ 	 * Gpki sign action.
+ 	 *
+ 	 * @param digiSign the digi sign
+ 	 */
+ 	public void gpkiSignAction(PmDigiSign digiSign) {
 		 updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	 }
 
-	 public PmDigiSign getPmDigiSign() {
+	 /**
+ 	 * Gets the pm digi sign.
+ 	 *
+ 	 * @return the pm digi sign
+ 	 */
+ 	public PmDigiSign getPmDigiSign() {
 		 return pmDigiSign;
 	 }
 
-	 public void setPmDigiSign(PmDigiSign pmDigiSign) {
+	 /**
+ 	 * Sets the pm digi sign.
+ 	 *
+ 	 * @param pmDigiSign the new pm digi sign
+ 	 */
+ 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		 this.pmDigiSign = pmDigiSign;
 	 }
 
-	 public String getTextBeforeSign() {
+	 /**
+ 	 * Gets the text before sign.
+ 	 *
+ 	 * @return the text before sign
+ 	 */
+ 	public String getTextBeforeSign() {
 		 StringBuilder sb = new StringBuilder();
 		 sb.append(getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
 		 sb.append(new FacesScopes().getUserSessionBean().getUserId());
@@ -821,11 +966,22 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		 return textBeforeSign;
 	 }
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
 	
 	
+	/**
+	 * View market research.
+	 *
+	 * @param scPurchaseInDefault the sc purchase in default
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void viewMarketResearch(ScPurchaseInDefault scPurchaseInDefault) throws IOException {
 		debugLogger("viewMarketResearch");
 		ScRequestItem requestItem = null;
