@@ -1472,6 +1472,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		BigDecimal prevSumQty = BigDecimal.ZERO;
 		BigDecimal sumQty = BigDecimal.ZERO;
 		for(ScRequestItem requestNoteItem : requestItemQtyMap.keySet()) {
+			if(requestNoteItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+				continue;
+			}
 			ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
 			ctResDTO = contractItemSO.getItemMaxQuantity(ctReqDTO);
 			if(ctResDTO.getCtItemMaxQuantity()!=null) {
