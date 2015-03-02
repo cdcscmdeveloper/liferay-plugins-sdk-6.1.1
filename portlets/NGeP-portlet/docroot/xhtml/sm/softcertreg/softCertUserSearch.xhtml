@@ -19,7 +19,7 @@
 				<tr>
 					<td>
 						<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" oncomplete="confirmDialog.show();"
-						style="float:right;" icon="ui-icon-next">
+						style="float:right;" id="proceedBtnId" disabled="#{empty softCertBackingBean.managedBean.softCertSelectList}">
 					</p:commandButton>
 					</td>
 				</tr>
@@ -35,19 +35,19 @@
 				<ac:paginator for="softCertPageDataModelId" />
 				
 				<p:ajax event="rowSelect" listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId"></p:ajax>
+					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 				<p:ajax event="rowUnselect"
 					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId"></p:ajax>
+					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 				<p:ajax event="rowSelectCheckbox"
 					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId"></p:ajax>
+					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 				<p:ajax event="rowUnselectCheckbox"
 					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId"></p:ajax>
+					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 				<p:ajax event="rowDblselect"
 					listener="#{softCertBackingBean.unSelectPersonnel}"
-					update=":form:resultPanelId"></p:ajax>
+					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 					
 				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{personnel.disableRowSelection}"/>
 
