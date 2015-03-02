@@ -145,7 +145,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:selectOneMenu id="votCode1" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{purchaseRequestBackingBean.managedBean.votFundId}"
-						style="width: 110px; margin-bottom: 5px;">
+						style="width: 102px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="votCodeList"
 							value="#{purchaseRequestBackingBean.managedBean.votFundList}"
@@ -172,7 +172,7 @@
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 200px; margin-bottom:5px;" value="#{purchaseRequestBackingBean.managedBean.assetIndId}" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}">
+					<td><p:selectOneMenu style="width: 150px; margin-bottom:5px;" value="#{purchaseRequestBackingBean.managedBean.assetIndId}" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}">
 						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
 					
@@ -181,7 +181,7 @@
 						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.charge.asset.gosodo']}"
 						saveObject="purchaseRequestBackingBean.managedBean.gosodo"
 						readonly="true"
-						size="10"
+						size="8"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{purchaseRequestBackingBean.managedBean.gosodo.glAccCode}"	>
 					</ac:lov></h:panelGroup>
