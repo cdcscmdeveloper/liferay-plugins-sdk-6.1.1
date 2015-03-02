@@ -71,7 +71,7 @@
 					</p:inputText>
 					<p:spacer width="5"/>
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;" 
-					  rendered="#{!amendmentBackingBean.managedBean.prepareLOA or !amendmentBackingBean.managedBean.disablefinalAmendDetails}">
+					  rendered="#{!amendmentBackingBean.managedBean.prepareLOA or !amendmentBackingBean.managedBean.disableFinalAmendDetails}">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
 					</p:commandLink>

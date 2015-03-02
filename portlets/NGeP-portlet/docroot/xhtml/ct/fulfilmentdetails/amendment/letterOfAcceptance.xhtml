@@ -12,7 +12,7 @@
 		     <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
 			 <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:50%;">
 			    <p:outputLabel value="#{loaReportVar.title}" style="float:left;" rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
-				<p:inputText value="#{loaReportVar.title}" style="width:90%;"  disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"
+				<p:inputText value="#{loaReportVar.title}" style="width:90%;"  disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 				rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
 		     </p:column>
 			 <p:column style="width:15%;">
@@ -53,13 +53,13 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"  process="@form"  rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
 			    update=":form:loaContentDt" action="#{amendmentBackingBean.addLoaContents}" 
-			    disabled="#{amendmentBackingBean.managedBean.disablefinalAmendDetails}"/>
+			    disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>
 			<p:spacer width="1" />
 			<p:commandButton id="delLoaContentBtn" value="#{lbl['lbl.btn.delete']}" 
 			  process="@form" onclick="dlgDocumentDel.show();" rendered="#{amendmentBackingBean.managedBean.ackFA != 'Ack'}"
 			    disabled="#{amendmentBackingBean.managedBean.selectedScLoaReports == null or  (amendmentBackingBean.managedBean.selectedScLoaReports != null  and 
 			            amendmentBackingBean.managedBean.selectedScLoaReports.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined)
-			            or amendmentBackingBean.managedBean.disablefinalAmendDetails}"/>
+			            or amendmentBackingBean.managedBean.disableFinalAmendDetails}"/>
 			<p:spacer width="1" />
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"  icon="ui-icon-download" action="#{amendmentBackingBean.downloadAll()}" />
 		 </div>
