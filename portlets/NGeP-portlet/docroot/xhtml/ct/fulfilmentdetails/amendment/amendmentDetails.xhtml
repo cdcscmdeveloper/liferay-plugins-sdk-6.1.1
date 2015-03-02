@@ -214,7 +214,7 @@
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
-				    mindate="#{amendmentBackingBean.currentDate}"
+				    mindate="#{amendmentBackingBean.managedBean.newAmendmentEffDate}"
 				    disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 				        <p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
 				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
