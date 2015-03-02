@@ -68,7 +68,6 @@
 					rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scQtDocReport.scQtDocReportAttachment.fileName : true}" />
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2"/>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{qTDocumentsBackingBean.downloadAllReports}" />
 			<p:commandButton value="#{lbl['lbl.btn.clone']}" actionListener="#{qTDocumentsBackingBean.cloneDocumentPopupAction}" oncomplete="screen2.show();" process="@this" update="@(.clonedocument)"/>
