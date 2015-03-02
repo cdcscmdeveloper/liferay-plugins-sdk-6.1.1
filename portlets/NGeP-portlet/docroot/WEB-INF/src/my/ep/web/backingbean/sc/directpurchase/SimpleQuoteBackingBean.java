@@ -135,17 +135,24 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
+// TODO: Auto-generated Javadoc
+
 /**
- * 
+ * The Class SimpleQuoteBackingBean.
+ *
  * @author sri
  * @since 25.02.2014
- * 
  */
 @ManagedBean(name = "simpleQuoteBackingBean")
 @RequestScoped
 public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
 	
+	/**
+	 * Instantiates a new simple quote backing bean.
+	 */
 	public SimpleQuoteBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -163,8 +170,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * simpleQuoteAction for getting cmSupplierItem from search catalogue in
-	 * simpleQuote
+	 * add panel or contract and non contract to simple quote from search catalogue.
+	 * 
+	 * @param docId the doc id
+	 * @param panelItemFlag the panel item flag
+	 * @param compareSupplierItems the compare supplier items
+	 * @return the string
+	 * page navigate to simple quote page.
 	 */
 	public String simpleQuoteAction(Long docId, boolean panelItemFlag ,List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
@@ -397,6 +409,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	
+  /**
+   * Check item exists.
+   *
+   * @param cmSupplierItem the cm supplier item
+   * @return true, if successful
+   */
   private boolean checkItemExists(CmSupplierItem cmSupplierItem){
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
@@ -439,6 +457,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	
+	/**
+	 * Prepare panel zones.
+	 *
+	 * @param ctPanelItem the ct panel item
+	 * @param scQuote the sc quote
+	 */
 	public void preparePanelZones(CtPanelItem ctPanelItem , ScQuote scQuote) {
 		// location level
 		if(ctPanelItem.getLocationLevelId() !=null){
@@ -486,6 +510,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
+	/**
+	 * Creates the panel suppliers with zone.
+	 *
+	 * @param ctPanelSuppliers the ct panel suppliers
+	 * @param quote the quote
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 */
 	private void createPanelSuppliersWithZone(List<CtPanelSupplier> ctPanelSuppliers , ScQuote quote, TplSpecZoneDtl tplSpecZoneDtl){
 		debugLogger("createPanelSuppliersWithZone");
 		List<ScQuoteSupplier> panelSuppliers = getManagedBean().getPanelSuppliers();
@@ -506,6 +537,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}		
 	}
 
+	/**
+	 * Adds the selected suppliers.
+	 *
+	 * @param compareSupplierItems the compare supplier items
+	 * @param selectedSupplierItem the selected supplier item
+	 * @return the list
+	 */
 	private List<SmSupplier>  addSelectedSuppliers(List<CmSupplierItem> compareSupplierItems , CmSupplierItem selectedSupplierItem) {
 		List<SmSupplier> suppliers = getManagedBean().getCompareSuppliers();
 		for(CmSupplierItem supplierItem : compareSupplierItems){
@@ -516,6 +554,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return suppliers;
 	}
 	
+	/**
+	 * Prepare questions.
+	 * prepare question based on item product or service.
+	 * @param ctPanelItem the ct panel item
+	 * @param cmSupplierItem the cm supplier item
+	 * @param isSpecificOrGenOrNonCtItem the is specific or gen or non ct item
+	 */
 	private void prepareQuestions(CtPanelItem ctPanelItem, CmSupplierItem cmSupplierItem , boolean isSpecificOrGenOrNonCtItem) {
 		int itemCode = 0;
 		CmItem cmItem = null;
@@ -628,6 +673,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * if govt. seller , enable G2G radio button only.  
+	 * if not govt. seller  enable Normal, ad Hoc and Emergency. 
+	 * @param parameterType 			the parameter type
+	 * @param g2gSeller the g2g seller
+	 * @return array of SelectItem
+	 */
 	private ScQuote  checkGovtSeller(PmOrgProfile pmOrgProfile ,ScQuote scQuote) {
 		PmParameter pmParameter = new PmParameter();
 		// TODO check supplier is government seller or not 
@@ -645,9 +698,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		
 		return scQuote;
 	}
-
+	
 	/**
-	 * saveSimpleQuote method to save SQ
+	 * save Simple Quote
+	 * save - save data into database and initiate task for Simple Quote.
+	 * @param outcome the outcome
+	 * @return the string
 	 */
 	public String saveSimpleQuote(String outcome) {
 		debugLogger("saveSimpleQuote");
@@ -885,6 +941,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return null;
 	}
 
+	/**
+	 * Validate panel item.
+	 *
+	 * @param ctPanelItem the ct panel item
+	 */
 	private void validatePanelItem(CtPanelItem ctPanelItem) {
 		FacesScopes facesScopes = new FacesScopes();
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
@@ -902,9 +963,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				ScQuote quote = getManagedBean().getScQuote();
 				if(quote != null) {
 					if(quote.getPurchaseInDefault() == null && checkQty < 0) {
-						throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+						throw new EpException(MessageConst.ERROR_100057, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), String.valueOf(ctPanelItem.getMinimumOrderQty())});
 					}
 				}
 			}
@@ -920,14 +980,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 
 				if(checkQty < 0) {
-					throw new EpException(MessageConst.ERROR_100033, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ResourceBundleUtils.getMessage("lbl.sc.min.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale())});
+					throw new EpException(MessageConst.ERROR_100057, new String[] {ResourceBundleUtils.getMessage("lbl.sc.quantity",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), String.valueOf(ctPanelItem.getMinimumOrderQty())});
 				}
 			}
 		}
 	}
 
+	/**
+	 * Reload simple quote.
+	 *
+	 * @param scQuote the sc quote
+	 */
 	private void reloadSimpleQuote(ScQuote scQuote){
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
@@ -1102,8 +1166,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	/**
-	 * submitSimpleQuote method to submit SQ
-	 */
+	 * submit simple quote details.
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
+	 * @return the string
+	 * page navigate to acknowledge page.
+	 */	
 	public String submitSimpleQuote(String outcome) {
 		debugLogger("submitSimpleQuote");
 		try {
@@ -1328,7 +1396,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return null;
 	}
 	
-	   public void approverAction(String outcome) {
+	/**
+	 * Approver action.
+	 *
+	 * @param outcome the outcome
+	 */
+   	public void approverAction(String outcome) {
 		   try {
 			   QuoteReqDTO reqDTO = new QuoteReqDTO();
 			   reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
@@ -1361,7 +1434,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		   }
 	   } 
 
-	   public void byLocAndBusinessEvent() {
+   	/**
+   	 * By loc and business event.
+   	 * gets the supplier location tab if selects by location 
+   	 * gets the business nature tab if selects by business nature in supplier criteria
+   	 */
+   	public void byLocAndBusinessEvent() {
 		   debugLogger("byBusinessEvent");
 		   if (getManagedBean().isByLocality()) {
 			   getManagedBean().setTabActiveIndex(0);
@@ -1405,8 +1483,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		   }
 	   }
 
-	/**
-	 * Event for procurement type drop down in Add to Cart
+   	/**
+	 * Event for procurement type  drop down in SQ.
+	 * to show justification drop down and justification remark based on procurement type.
 	 */
 	public void procurementTypeEvent() {
 		debugLogger("procurementTypeEvent");
@@ -1454,7 +1533,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * Adding new row for BusinessNature in SQ
+	 * Add business nature for Business nature in supplier criteria
 	 */
 	public void addBusinessNature() {
 		debugLogger("addBusinessNature");
@@ -1472,9 +1551,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		} finally {
 		}
 	}
-	
+
 	/**
-	 * deleteBusinessNature method for deleting business nature
+	 * delete business nature from business nature in supplier criteria
 	 */	
 	public void deleteBusinessNature() {
 		debugLogger("deleteBusinessNature");
@@ -1491,7 +1570,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * deleteSupplier method for deleting supplier in supplier list
+	 * delete supplier from supplier list in supplier criteria
 	 */	
 	public void deleteSupplier() {
 		debugLogger("deleteSupplier");
@@ -1512,7 +1591,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * deleteGovtSeller method for deleting govt seller
+	 * delete govt seller from govt seller in supplier criteria
 	 */	
 	public void deleteGovtSeller() {
 		debugLogger("deleteGovtSeller");
@@ -1533,8 +1612,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	/**
-	 * deletePanelSupplier method for deleting panel item 
-	 */
+	 * delete panel supplier from panel supplier list in supplier criteria
+	 */	
 	public void deletePanelSupplier() {
 		debugLogger("deletePanelSupplier");
 
@@ -1555,7 +1634,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}	
 	
    /**
-    * showZonePopup method for zone popup in simple quote
+    * show zone popup to add the zone in Zone in simple quote.
     */
 	public void showZonePopup() {
 	  String locationLevel = this.getManagedBean().getLocationLevel();
@@ -1572,7 +1651,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * showLocationPopup method for location popup in simple quote
+	 * show location popup to add the location in supplier location in simple quote.
 	 */
 	public void showLocationPopup() {
 		String locationLevel = this.getManagedBean().getSupplierLocLevel();
@@ -1598,8 +1677,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * updateZone for zone selection  in simple quote
-    */
+	 * adding selected zone to the zone from the zone popup in simple quote.
+	 */
 	public void updateZone(){
 		List<ZonesBean> beans = getManagedBean().getBeans();
 		ZonesBean zonesBean = new ZonesBean();
@@ -1729,10 +1808,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
-	
-   /**
-	 * updateZone for location selection  in simple quote
-    */
+  
+	/**
+	 * adding selected location to the supplier location from the location popup in simple quote.
+	 */
 	public void updateLocation() {
 		getManagedBean().getLocationTrees().clear();
 		String locationLevel = this.getManagedBean().getSupplierLocLevel();
@@ -1779,6 +1858,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		RequestContext.getCurrentInstance().execute("locationPopup.hide();");
 	}
 	
+   /**
+    * Gets the locations.
+    *
+    * @param zoneLocation the zone location
+    * @return the locations
+    */
    private List<TplSpecZoneLoc> getLocations(TreeNode zoneLocation) {
 			List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
 			if (zoneLocation.isLeaf()) {
@@ -1807,8 +1892,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	
    /**
-	* editZone Method for zone in simple quote
-	*/
+	 * edit selected zone in zone 
+	 * @param rootZoneLocation the root zone location
+	 * @param zoneIndex the zone index
+	 */
 	public void editZone(TreeNode rootZoneLocation, int zoneIndex) {
 		String locationLevel = this.getManagedBean().getLocationLevel();
 		List<TplSpecZoneLoc> locationDTOs = getLocations(rootZoneLocation);
@@ -1837,8 +1924,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-     * editLocation Method for location in simple quote
-	*/
+	 * edit selected supplier location in supplier location 
+	 *
+	 * @param rootZoneLocation the root zone location
+	 * @param LocIndex the loc index
+	 */
 	public void editLocation(TreeNode rootZoneLocation, int LocIndex) {
 	    String locationLevel = this.getManagedBean().getSupplierLocLevel();
 	    
@@ -1859,6 +1949,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						states, districts, divisions, null, locationLevel,TplSpecZoneLoc.class));
 	}
 
+	/**
+	 * Gets the pm states.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @return the pm states
+	 */
 	private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		List<PmState> results = new ArrayList<PmState>();
 		for (TreeNode rootNode : treeNodes) {
@@ -1875,6 +1971,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 	
+	/**
+	 * Gets the pm divisions.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @return the pm divisions
+	 */
 	private List<PmDivision> getPmDivisions(List<TreeNode> treeNodes) {
 		List<PmDivision> results = new ArrayList<PmDivision>();
 		for (TreeNode rootNode : treeNodes) {
@@ -1892,6 +1994,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 	
+	/**
+	 * Gets the pm districts.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @return the pm districts
+	 */
 	private List<PmDistrict> getPmDistricts(List<TreeNode> treeNodes) {
 		List<PmDistrict> results = new ArrayList<PmDistrict>();
 		for (TreeNode treeNode : treeNodes) {
@@ -1909,6 +2017,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 
+	/**
+	 * Gets the location state criterias.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @param quote the quote
+	 * @return the location state criterias
+	 */
 	private	List<ScLocationStateCriteria>	getLocationStateCriterias(List<TreeNode> treeNodes ,ScQuote quote){
 		List<ScLocationStateCriteria>	results = new ArrayList<ScLocationStateCriteria>();
 		List<PmState>	states	=	getPmStates(treeNodes);
@@ -1934,6 +2049,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 		
+	/**
+	 * Gets the location division criterias.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @param quote the quote
+	 * @return the location division criterias
+	 */
 	private	List<ScLocationDivisionCriteria> getLocationDivisionCriterias(List<TreeNode> treeNodes ,ScQuote quote){
 			List<ScLocationDivisionCriteria>	results = new ArrayList<ScLocationDivisionCriteria>();
 			List<PmDivision>	divisions	=	getPmDivisions(treeNodes);
@@ -1959,6 +2081,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			return results;
 	  }	
 		
+	/**
+	 * Gets the location district criterias.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @param quote the quote
+	 * @return the location district criterias
+	 */
 	private List<ScLocationDistrictCriteria> getLocationDistrictCriterias(List<TreeNode> treeNodes ,ScQuote quote){
 		List<ScLocationDistrictCriteria>	results = new ArrayList<ScLocationDistrictCriteria>();
 		for (TreeNode treeNode : treeNodes) {
@@ -1986,12 +2115,22 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 	
+	/**
+	 * Select zone tree node.
+	 *
+	 * @param event the event
+	 */
 	public void selectZoneTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 		
 		selectedTreeNode.setSelected(true);
 	}
 	
+	/**
+	 * Un select zone tree node.
+	 *
+	 * @param event the event
+	 */
 	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 		
@@ -1999,41 +2138,57 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	/**
-	 * To delete the selected TreeNode from the zone
+	 * delete selected zone form zone 
 	 */
 	public void deleteZoneTreeNode() {
 		getManagedBean().setSelectedFlag(true);
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
-	    deleteTreeNodes(rootTrees);
-		
+		deleteTreeNodes(rootTrees);
+
 		// zone details
 		if(!getManagedBean().getZoneTrees().isEmpty()){
 			getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 		}
-		
+
 		if(getManagedBean().isSelectedFlag()){
 			Locale locale = new FacesScopes().getUserLocale();
 			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.ss.simple.quote.delivery.location",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
-		
+
 		this.getManagedBean().setZoneIndex(-1);
 	}
 	
 	
+	/**
+	 * Select location tree node.
+	 *
+	 * @param event the event
+	 */
 	public void selectLocationTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 		
 		selectedTreeNode.setSelected(true);
 	}
 	
+	/**
+	 * Un select location tree node.
+	 *
+	 * @param event the event
+	 */
 	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 		
 		selectedTreeNode.setSelected(false);
 	}
 	
-	public List<TreeNode> deleteTreeNodes(List<TreeNode> rootTrees) {
+	/**
+	 * Delete tree nodes.
+	 *
+	 * @param rootTrees the root trees
+	 * @return the list
+	 */
+	private List<TreeNode> deleteTreeNodes(List<TreeNode> rootTrees) {
 		TplSpecZoneDtl tplSpecZoneDtl = null;
 		List<TreeNode>  removedList = new ArrayList<TreeNode>();
 		if (rootTrees != null) {
@@ -2075,6 +2230,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return removedList;
 	}
 	
+	/**
+	 * Delete child tree nodes.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @return the list
+	 */
 	private List<TreeNode>  deleteChildTreeNodes(List<TreeNode> treeNodes) {
 		List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
 		if (treeNodes != null) {
@@ -2101,6 +2262,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return nodesToRemoved;
 	}
 	
+	/**
+	 * Delete panel item suppliers.
+	 *
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 */
 	private void deletePanelItemSuppliers(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<ScQuoteSupplier> panelSuppliers = new ArrayList<ScQuoteSupplier>();
 		// delete suppliers by selected zone to be delete
@@ -2128,6 +2294,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		
 	}
 
+	/**
+	 * Removes the panel item zones.
+	 *
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 */
 	private void removePanelItemZones(TplSpecZoneDtl tplSpecZoneDtl) {
 		ScQuote quote = 	getManagedBean().getScQuote();
 		if(tplSpecZoneDtl !=null){
@@ -2141,6 +2312,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setScQuote(quote);
 	}
 
+	/**
+	 * Update prod n service item list.
+	 *
+	 * @param quote the quote
+	 */
 	private void updateProdNServiceItemList(ScQuote quote) {
 
 		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
@@ -2153,18 +2329,28 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 	}
 	
+	/**
+	 * Select panel item zone.
+	 *
+	 * @param event the event
+	 */
 	public void selectPanelItemZone(NodeSelectEvent event) {
 		TreeNode selectedNode = (TreeNode) event.getTreeNode();
 		selectedNode.setSelected(true);
 	}
 	
+	/**
+	 * Un select panel item zone.
+	 *
+	 * @param event the event
+	 */
 	public void unSelectPanelItemZone(NodeUnselectEvent event) {
 		TreeNode selectedNode = (TreeNode) event.getTreeNode();
 		selectedNode.setSelected(false);
 	}
 
 	/**
-	 * To delete the selected TreeNode from the location
+	 * To delete the selected TreeNode from the location.
 	 */
 	public void deleteLocationTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getLocationTrees();
@@ -2183,7 +2369,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
-	public void deleteLocTreeNodes(List<TreeNode> rootTrees) {
+	/**
+	 * Delete loc tree nodes.
+	 *
+	 * @param rootTrees the root trees
+	 */
+	private void deleteLocTreeNodes(List<TreeNode> rootTrees) {
 		if (rootTrees != null) {
 			for (int row = 0; row < rootTrees.size(); row++) {
 				TreeNode rootTree = rootTrees.get(row);
@@ -2203,6 +2394,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 
+	/**
+	 * Gets the price type drop down values.
+	 *
+	 * @param parameterType the parameter type
+	 * @param priceTypes the price types
+	 * @return the price type drop down values
+	 */
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
@@ -2226,7 +2424,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	/**
-	 * Event for justification type drop down in simpleQuote
+	 * Event for justification type drop down in simpleQuote.
 	 */
 	public void justificationTypeEvent() {
 		debugLogger("justificationTypeEvent");
@@ -2241,7 +2439,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	/**
-	 * Page navigation to catalogue search page in simpleQuote
+	 * Page navigation to catalogue search page from  simpleQuote.
 	 */
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
@@ -2271,11 +2469,22 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 
-	 public void  getCurrentStatus(PmStatus pmStatus) {
+	 /**
+ 	 * Gets the current status to show in SQ.
+ 	 *
+ 	 * @param pmStatus the pm status
+ 	 * @return the current status
+ 	 */
+ 	public void  getCurrentStatus(PmStatus pmStatus) {
 		 getManagedBean().setSimpleQuoteStatus(pmStatus);
 	 }
 
-	 public SelectItem[] getLocationLevelDropdown() {
+	 /**
+ 	 * Gets the location level drop down.
+ 	 *
+ 	 * @return the location level drop down
+ 	 */
+ 	public SelectItem[] getLocationLevelDropdown() {
 		 List<String> parameterCodes = new ArrayList<String>();
 		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_STATE);
 		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_DIVISION);
@@ -2307,7 +2516,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		 }
 		 return items;
 	 }
-	 public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+	 
+ 	/**
+ 	 * Retrieve parameter desc by type.
+ 	 *
+ 	 * @param type the type
+ 	 * @return the list
+ 	 */
+ 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		 return ParameterHelper.getInstance().getParameterDescList(type);
 
 	 }
@@ -2341,7 +2557,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	 
 	 
-	 public void dateListener() {
+	 /**
+	 * Date listener.
+	 * validate start date and end date in simple quote general information
+	 */
+	public void dateListener() {
 		 ScQuote quote = getManagedBean().getScQuote();
 		 if (quote.getStartDate() != null &&  quote.getEndDate() != null){
 
@@ -2353,7 +2573,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		 }
 	 }
 		
-	 public static double getTimeDiff(Date dateOne, Date dateTwo) {
+	 /**
+ 	 * Gets the time diff by passing start date and end date
+ 	 * @param dateOne the date one
+ 	 * @param dateTwo the date two
+ 	 * @return the time diff
+ 	 */
+ 	public static double getTimeDiff(Date dateOne, Date dateTwo) {
 		 long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
 		 String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
 		 String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
@@ -2362,7 +2588,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		 return time;
 	 }
 
-	 public void submitPromptAction() {
+	 /**
+ 	 * Submit prompt action.
+ 	 * before submit simple quote, it shows 
+ 	 * the prompt(dialogue) that Total time Supplier responds for this Simple Quote
+ 	 */
+ 	public void submitPromptAction() {
 		 ScQuote quote = getManagedBean().getScQuote();
 		 if (quote.getEndDate() != null){
 			 Date dateOne = new Date();
@@ -2411,6 +2642,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * }
 	 */
 		
+	/**
+	 * Tab menu listener.
+	 *  to view selected tab
+	 * @param activeIndex the active index
+	 */
 	public void tabMenuListener(Integer activeIndex) {
 		debugLogger("tabMenuListener");
 		if(activeIndex.equals(0)){
@@ -2425,59 +2661,68 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		procurementTypeEvent();
 	}
 	
+	/**
+	 * Ptj locality.
+	 * show the ptj locality in supplier location in supplier criteria.
+	 * @param locationLevel the location level
+	 */
 	public void ptjLocality(String locationLevel) {
 		debugLogger("ptjLocality");
 		List<TplSpecZoneLoc> tplSpecZoneLocs = new ArrayList<TplSpecZoneLoc>();
-			// ptj locality address
-			if(getManagedBean().getLocationTrees() == null || getManagedBean().getLocationTrees().isEmpty()){
-				IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IAddressSO.class);
-				AddressReqDTO reqDTO = new AddressReqDTO();
-				if(getManagedBean().getRequestNote().getPmOrgProfile() != null){
-					reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-					reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-					AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-					List<PmAddressType> list = resDTO.getAddressTypeList();
-					if(list != null && list.size() >0){
-						PmAddressType addressType = list.get(0);
-						List<PmState> states = new ArrayList<PmState>();
-						List<PmDivision> divisions = new ArrayList<PmDivision>();
-						List<PmDistrict> districts = new ArrayList<PmDistrict>();
+		// ptj locality address
+		if(getManagedBean().getLocationTrees() == null || getManagedBean().getLocationTrees().isEmpty()){
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			if(getManagedBean().getRequestNote().getPmOrgProfile() != null){
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+				List<PmAddressType> list = resDTO.getAddressTypeList();
+				if(list != null && list.size() >0){
+					PmAddressType addressType = list.get(0);
+					List<PmState> states = new ArrayList<PmState>();
+					List<PmDivision> divisions = new ArrayList<PmDivision>();
+					List<PmDistrict> districts = new ArrayList<PmDistrict>();
 
-						if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
-							TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-							if(addressType.getPmAddress().getPmDivision() != null){
-								divisions.add(addressType.getPmAddress().getPmDivision());
-								specZoneLoc.setPmDivision(addressType.getPmAddress().getPmDivision());
-								tplSpecZoneLocs.add(specZoneLoc);
-							}
-						}
-
-						if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)){
-							TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-							if(addressType.getPmAddress().getPmDistrict() != null){
-								districts.add(addressType.getPmAddress().getPmDistrict());
-								specZoneLoc.setPmDistrict(addressType.getPmAddress().getPmDistrict());
-								tplSpecZoneLocs.add(specZoneLoc);
-							}
-						}
-
-						if(addressType.getPmAddress().getPmState() != null && districts.isEmpty() && divisions.isEmpty()){
-							states.add(addressType.getPmAddress().getPmState());
-							TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-							specZoneLoc.setPmState(addressType.getPmAddress().getPmState());
+					if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
+						TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+						if(addressType.getPmAddress().getPmDivision() != null){
+							divisions.add(addressType.getPmAddress().getPmDivision());
+							specZoneLoc.setPmDivision(addressType.getPmAddress().getPmDivision());
 							tplSpecZoneLocs.add(specZoneLoc);
 						}
-
-						getManagedBean().getLocationTrees().add(
-								LocationSingleton.getInstance().buildLocationTree(null, states,
-										districts, divisions, null,TplSpecZoneLoc.class));
 					}
+
+					if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)){
+						TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+						if(addressType.getPmAddress().getPmDistrict() != null){
+							districts.add(addressType.getPmAddress().getPmDistrict());
+							specZoneLoc.setPmDistrict(addressType.getPmAddress().getPmDistrict());
+							tplSpecZoneLocs.add(specZoneLoc);
+						}
+					}
+
+					if(addressType.getPmAddress().getPmState() != null && districts.isEmpty() && divisions.isEmpty()){
+						states.add(addressType.getPmAddress().getPmState());
+						TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+						specZoneLoc.setPmState(addressType.getPmAddress().getPmState());
+						tplSpecZoneLocs.add(specZoneLoc);
+					}
+
+					getManagedBean().getLocationTrees().add(
+							LocationSingleton.getInstance().buildLocationTree(null, states,
+									districts, divisions, null,TplSpecZoneLoc.class));
 				}
 			}
+		}
 	}
 
+	/**
+	 * Reset
+	 * clear the search criteria in simple quote
+	 */
 	public void reset() {
 		this.getManagedBean().setSearchQuoteNo(null);
 		this.getManagedBean().setSearchTitle(null);
@@ -2486,6 +2731,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		this.getManagedBean().setSearchToCreatedDate(null);
 	}
 	
+	/**
+	 * Adds the clone item spec.
+	 * add clone item to simple quote to item list
+	 * @param productOrService the product or service
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws InstantiationException the instantiation exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws NoSuchMethodException the no such method exception
+	 */
 	public void addCloneItemSpec(String productOrService) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
 		log.info("addCloneItemSpec");
 		TplSpecMaster cloneSpecMaster = null;
@@ -2620,6 +2874,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	
 	
+	/**
+	 * Clone action.
+	 * show the clone item popup to clone item to item list.
+	 * @param productOrService the product or service
+	 */
 	public void cloneAction(String productOrService){
 		if(productOrService != null){
 			if(productOrService.equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)){
@@ -2634,6 +2893,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		RequestContext.getCurrentInstance().execute("cloneItemSpec.show()");
 	}
 	
+	/**
+	 * Supplier list listener.
+	 * populate supplers from selected item from catalogue or comapare page in supplier criteria.
+	 * @param suppliers the suppliers
+	 * @param quote the quote
+	 */
 	public void supplierListListener(List<SmSupplier> suppliers, ScQuote quote){
 		debugLogger("supplierListListener");
 		List<ScQuoteSupplier> supplierList = quote.getScQuoteSuppliers();
@@ -2670,7 +2935,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
-	
+	/**
+	 * Business nature listener.
+	 * adding bussiness natures from lov popup in supplier criteria.
+	 *
+	 * @param businessNatures the business natures
+	 */
 	public void businessNatureListener(List<PmBusinessNature> businessNatures){
 		debugLogger("supplierListListener");
 		List<ScBusinessNatureQuoteCriteria> natureQuoteCriterias = getManagedBean().getScQuote().getBusinessNatureCriterias();
@@ -2705,6 +2975,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
+	/**
+	 * Govt seller listener.
+	 * adding govt sellers from lov popup in supplier criteria.
+	 * @param orgProfiles the org profiles
+	 */
 	public void govtSellerListener(List<PmOrgProfile> orgProfiles){
 		debugLogger("govtSellerListener");
 		List<ScQuoteSupplier> govtSuppliers = getManagedBean().getGovtSellers();
@@ -2729,6 +3004,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 
+	/**
+	 * Panel item listener.
+	 * populate panel supplers from selected panel item from search catalogue in supplier criteria.
+	 * @param ctPanelSuppliers the ct panel suppliers
+	 * @param quote the quote
+	 */
 	public void panelItemListener(List<CtPanelSupplier>	ctPanelSuppliers , ScQuote quote){
 		debugLogger("panelItemListener");
 		List<ScQuoteSupplier> panelSuppliers = quote.getScQuoteSuppliers();
@@ -2764,6 +3045,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -2771,6 +3057,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		log.info(message);
 	}
 
+	/**
+	 * Gets the supplier list criteria.
+	 * filter supplier list based on supplier location and businesss nature.
+	 * @return the supplier list criteria
+	 */
 	public String getSupplierListCriteria(){
 		StringBuilder  criteria = new StringBuilder();
 		StringBuilder  busiNatureCriteria = new StringBuilder();
@@ -2880,8 +3171,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	
 	/**
 	 * render the view based on the task id
-	 * page nav. to simple quote and request note
-	 * @throws Exception 
+	 * page navigation to simple quote
 	 */
 	public void preRenderView() {
 		renewSesionObject();
@@ -2933,11 +3223,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 						// service Tpl Spe
 					} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
-						
-						if(specMaster.getTplSpecQuestions() == null){
-							specMaster.setTplSpecQuestions(tplSpecQuestions);
+						TplSpecMaster serviceMaster = scQuoteDoc.getSpecMaster();
+						if(serviceMaster.getTplSpecQuestions() == null){
+							serviceMaster.setTplSpecQuestions(tplSpecQuestions);
 						}
-						serviceTplSpecBean.setSpecMaster(specMaster);
+						serviceTplSpecBean.setSpecMaster(serviceMaster);
 						getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 					}
 				}
@@ -3138,7 +3428,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * render the supplier view based on the task id
+	 * render the supplier view based on the task id from notification.
 	 */
 	public void supplierView() {
 		TplSpecMaster  serviceMaster = null;
@@ -3249,6 +3539,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 
+	/**
+	 * Gets the quote zones.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @return the quote zones
+	 */
 	private ScQuoteZone getQuoteZones(List<TreeNode> treeNodes) {
 		TplSpecZoneDtl tplSpecZoneDtl = null;
 		ScQuoteZone scQuoteZone = getManagedBean().getScQuote().getQuoteZone();
@@ -3302,8 +3598,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * supplierSubmit method to submit suppler info in SQ
-	 */
+	 * submit supplier response details.
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * and also authenticating spki before submit price details
+	 * @param pmDigiSign the pm digi sign
+	 * if quote is single, page navigate to acknowledge page otherwise remains.
+	 */	
 	public String supplierSubmit(PmDigiSign  pmDigiSign) {
 		debugLogger("supplierSubmit");
 		try {
@@ -3374,6 +3674,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return null;
 	}
 
+	/**
+	 * Prepare original text to pass spki authentication
+	 *
+	 * @return the string
+	 */
 	private String prepareOriginalText() {
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
@@ -3409,7 +3714,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 	
 	/**
-	 * retrieve Supplier details in the supplier View
+	 * retrieve Supplier details in the supplier View.
+	 * gets simple quote details to view quote details after supplier submits.
+	 * @param scQuote the sc quote
 	 */
 	public void retrieveSupplierView(ScQuote scQuote) {
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
@@ -3454,7 +3761,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	/**
-	 * Event for Zone in SQ
+	 * show the zone if zone is selected 'yes' in simple quote general info.
+	 * 
+	 * if not hide zone.
 	 */
 	public void zoneEvent() {
 		ScQuoteZone quoteZone = null;
@@ -3498,7 +3807,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	/**
-	 * Event for No.Of quote in SQ
+	 * For the multiple quote, estimated price is show to key in in item list.
+	 * 
+	 * For the single quote, hide the estimated price in item list.
 	 */
 	public void noOfQuoteEvent() {
 		ScQuote quote = getManagedBean().getScQuote();
@@ -3534,6 +3845,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 
+	/**
+	 * Locality loc level event.
+	 * when the location level changes, clear previously added locations and supplier locality remains.
+	 * @param locationLevel the location level
+	 */
 	public void localityLocLevelEvent(String locationLevel){
 		if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
 			getManagedBean().getLocationTrees().clear();
@@ -3544,12 +3860,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		ptjLocality(locationLevel);
 	}
 
+	/**
+	 * Zone loc level event.
+	 * when the delivery coverage changes, clear previously added zones.
+	 */
 	public void zoneLocLevelEvent(){
 		getManagedBean().getZoneTrees().clear();
 		getManagedBean().getBeans().clear();
 		getManagedBean().setZoneIndex(-1);
 	}
 
+	/**
+	 * cancel the simple quote and page navigation to search catalogue.
+	 * 
+	 * @return the string
+	 */
 	public String cancel() {
 		log.info("cancel");
 		// clear sq
@@ -3560,6 +3885,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	
+	/**
+	 * Cancel zone pop up.
+	 */
 	public void cancelZonePopUp() {
 		log.info("cancelZonePopUp");
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
@@ -3569,15 +3897,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 	/**
 	 * Get parameter code select items by parameter type for radio buttons.
-	 * 
-	 * @param parameterType
-	 * 			the parameter type
+	 *
+	 * @param parameterType  the parameter type
+	 * @param g2gSeller the g2g seller
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getRadioButtonCodeValues(String parameterType , boolean g2gSeller) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null , g2gSeller);
 	}
 	
+	/**
+	 * Gets the radio button code values by search bean.
+	 *
+	 * @param parameterType the parameter type
+	 * @param searchBean the search bean
+	 * @param g2gSeller the g2g seller
+	 * @return the radio button code values by search bean
+	 */
 	public SelectItem[] getRadioButtonCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean , boolean g2gSeller) {
 		SelectItem[] items = null;
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
@@ -3606,6 +3942,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return items;
 	}
 
+	/**
+	 * Show created by in clone item specification in simple quote
+	 *
+	 * @param createdBy the created by
+	 * @return the string
+	 */
 	public String  showCreatedBy(Long createdBy) {
 		String userName ="";
 		IUserSO userSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -3633,6 +3975,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * if(mofAccountResDTO.getMofAccount() != null){ mofNo =
 	 * mofAccountResDTO.getMofAccount().getMofNo(); } return mofNo; }
 	 */
+	/**
+	 * On tab change.
+	 *
+	 * @param event the event
+	 */
 	public void onTabChange(TabChangeEvent event) {
 		if(event.getTab().getTitle().equalsIgnoreCase("Supplier List")){
 			//call supplier criteria 
@@ -3640,6 +3987,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
+	/**
+	 * Gets the pm state ids.
+	 *
+	 * @param tplSpecZoneLocs the tpl spec zone locs
+	 * @return the pm state ids
+	 */
 	private List<Long> getPmStateIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> results = new ArrayList<Long>();
 
@@ -3654,6 +4007,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 
+	/**
+	 * Gets the pm division ids.
+	 *
+	 * @param tplSpecZoneLocs the tpl spec zone locs
+	 * @return the pm division ids
+	 */
 	private List<Long> getPmDivisionIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> results = new ArrayList<Long>();
 
@@ -3668,6 +4027,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 
+	/**
+	 * Gets the pm districts ids.
+	 *
+	 * @param tplSpecZoneLocs the tpl spec zone locs
+	 * @return the pm districts ids
+	 */
 	private List<Long> getPmDistrictsIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> results = new ArrayList<Long>();
 
@@ -3682,6 +4047,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 	
+	/**
+	 * Delete state or div or dist.
+	 *
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 * @param tplSpecZoneLocs the tpl spec zone locs
+	 */
 	private void deleteStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl , List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> stateIds = null;
 		List<Long> divIds = null;
@@ -3749,6 +4120,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 	
 	
+	/**
+	 * Check zone exists or not.
+	 *
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 * @return the list
+	 */
 	private List<Long> checkZoneExistsOrNot(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<Long> results = new ArrayList<Long>();
 		//if (index < 0 || isEditZone) {
@@ -3771,6 +4148,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return results;
 	}
 
+	/**
+	 * Check duplicate state or div or dist.
+	 *
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 * @param tplSpecZoneLocs the tpl spec zone locs
+	 */
 	private void  checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl , List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> stateIds = null;
 		List<Long> divIds = null;
@@ -3834,7 +4217,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
-	public TreeNode constuctTreeNodeWithDisableChilds(TplSpecZoneDtl tplSpecZoneDtl,
+	/**
+	 * Constuct tree node with disable childs.
+	 *
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 * @param specLocs the spec locs
+	 * @return the tree node
+	 */
+	private TreeNode constuctTreeNodeWithDisableChilds(TplSpecZoneDtl tplSpecZoneDtl,
 			List<TplSpecZoneLoc> specLocs) {
 		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
 		if (tplSpecZoneDtl != null) {
@@ -3885,6 +4275,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return root;
 	}
 
+	/**
+	 * Gets the quote so.
+	 *
+	 * @return the quote so
+	 */
 	private IQuoteSO getQuoteSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 	}
