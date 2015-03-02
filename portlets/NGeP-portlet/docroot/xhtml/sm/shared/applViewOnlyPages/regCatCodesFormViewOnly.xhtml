@@ -64,7 +64,7 @@
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0}" />
 				</p:column> 
 				
-				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 20%;" rendered="#{viewSmApplBackingBean.managedBean.previousApproved}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="word-break:break-all;" rendered="#{viewSmApplBackingBean.managedBean.previousApproved}">
 					<h:outputText value="#{catBean.poRemarks}" style="float: left;white-space: normal;"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}" rendered="#{viewSmApplBackingBean.managedBean.previousApproved}">
@@ -79,7 +79,7 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 20%;" rendered="#{viewSmApplBackingBean.managedBean.previousApproved}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="word-break:break-all;" rendered="#{viewSmApplBackingBean.managedBean.previousApproved}">
 					<h:outputText value="#{catBean.approverRemarks}" style="float: left;white-space: normal;"/>
 				</p:column>
 			</p:dataTable>
@@ -143,7 +143,7 @@
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBeanR.poDecFlg eq 0}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 20%;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="word-break:break-all;" rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 					<h:outputText value="#{catBeanR.poRemarks}" style="float: left;white-space: normal;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
@@ -158,7 +158,7 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width : 20%;" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="word-break:break-all;" rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
 					<h:outputText value="#{catBeanR.approverRemarks}" style="float: left;white-space: normal;" />
 				</p:column>
 			</p:dataTable>
