@@ -92,7 +92,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean bpmActionFlag = true;
 	private boolean autoUpdate = true;	
 	private boolean disableAmendDetails;
-	private boolean disablefinalAmendDetails;
+	private boolean disableEndorseAmendDetails;
+	private boolean disableFinalAmendDetails;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractVer> amendHistoryList;
@@ -193,6 +194,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getCommitteeName() {
 		return committeeName;
 	}
+	
 	/**
 	 * @param committeeName the committeeName to set
 	 */
@@ -265,12 +267,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getFileDirectory() {
 		return fileDirectory;
 	}
+	
 	/**
 	 * @param fileDirectory the fileDirectory to set
 	 */
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
+	
 	/**
 	 * @return the pbQcApproved
 	 */
@@ -283,12 +287,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setPbQcApproved(String pbQcApproved) {
 		this.pbQcApproved = pbQcApproved;
 	}
+	
 	/**
 	 * @return the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
+	
 	/**
 	 * @param textBeforeSign the textBeforeSign to set
 	 */
@@ -301,6 +307,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getButtonAction() {
 		return buttonAction;
 	}
+	
 	/**
 	 * @param buttonAction the buttonAction to set
 	 */
@@ -313,12 +320,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public String getCommitteeType() {
 		return committeeType;
 	}
+	
 	/**
 	 * @param committeeType the committeeType to set
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
 	}
+	
 	/**
 	 * @return the meetingStatusId
 	 */
@@ -331,390 +340,469 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setMeetingStatusId(Long meetingStatusId) {
 		this.meetingStatusId = meetingStatusId;
 	}
+	
 	/**
 	 * @return the secretaryId
 	 */
 	public Long getSecretaryId() {
 		return secretaryId;
 	}
+	
 	/**
 	 * @param secretaryId the secretaryId to set
 	 */
 	public void setSecretaryId(Long secretaryId) {
 		this.secretaryId = secretaryId;
 	}
+	
 	/**
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
 		return selectedTabIndex;
 	}
+	
 	/**
 	 * @param selectedTabIndex the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
+	
 	/**
 	 * @return the attachFileIndex
 	 */
 	public int getAttachFileIndex() {
 		return attachFileIndex;
 	}
+	
 	/**
 	 * @param attachFileIndex the attachFileIndex to set
 	 */
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
 	}
+	
 	/**
 	 * @return the performanceBondRuleAmt
 	 */
 	public double getPerformanceBondRuleAmt() {
 		return performanceBondRuleAmt;
 	}
+	
 	/**
 	 * @param performanceBondRuleAmt the performanceBondRuleAmt to set
 	 */
 	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
 		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
+	
 	/**
 	 * @return the itemProductExist
 	 */
 	public boolean isItemProductExist() {
 		return itemProductExist;
 	}
+	
 	/**
 	 * @param itemProductExist the itemProductExist to set
 	 */
 	public void setItemProductExist(boolean itemProductExist) {
 		this.itemProductExist = itemProductExist;
 	}
+	
 	/**
 	 * @return the itemServiceExist
 	 */
 	public boolean isItemServiceExist() {
 		return itemServiceExist;
 	}
+	
 	/**
 	 * @param itemServiceExist the itemServiceExist to set
 	 */
 	public void setItemServiceExist(boolean itemServiceExist) {
 		this.itemServiceExist = itemServiceExist;
 	}
+	
 	/**
 	 * @return the termAndConditionFlg
 	 */
 	public boolean isTermAndConditionFlg() {
 		return termAndConditionFlg;
 	}
+	
 	/**
 	 * @param termAndConditionFlg the termAndConditionFlg to set
 	 */
 	public void setTermAndConditionFlg(boolean termAndConditionFlg) {
 		this.termAndConditionFlg = termAndConditionFlg;
 	}
+	
 	/**
 	 * @return the existingUsers
 	 */
 	public boolean isExistingUsers() {
 		return existingUsers;
 	}
+	
 	/**
 	 * @param existingUsers the existingUsers to set
 	 */
 	public void setExistingUsers(boolean existingUsers) {
 		this.existingUsers = existingUsers;
 	}
+	
 	/**
 	 * @return the newUsers
 	 */
 	public boolean isNewUsers() {
 		return newUsers;
 	}
+	
 	/**
 	 * @param newUsers the newUsers to set
 	 */
 	public void setNewUsers(boolean newUsers) {
 		this.newUsers = newUsers;
 	}
+	
 	/**
 	 * @return the chkClause
 	 */
 	public boolean isChkClause() {
 		return chkClause;
 	}
+	
 	/**
 	 * @param chkClause the chkClause to set
 	 */
 	public void setChkClause(boolean chkClause) {
 		this.chkClause = chkClause;
 	}
+	
 	/**
 	 * @return the chkConceValue
 	 */
 	public boolean isChkConceValue() {
 		return chkConceValue;
 	}
+	
 	/**
 	 * @param chkConceValue the chkConceValue to set
 	 */
 	public void setChkConceValue(boolean chkConceValue) {
 		this.chkConceValue = chkConceValue;
 	}
+	
 	/**
 	 * @return the chkAmendOtherValue
 	 */
 	public boolean isChkAmendOtherValue() {
 		return chkAmendOtherValue;
 	}
+	
 	/**
 	 * @param chkAmendOtherValue the chkAmendOtherValue to set
 	 */
 	public void setChkAmendOtherValue(boolean chkAmendOtherValue) {
 		this.chkAmendOtherValue = chkAmendOtherValue;
 	}
+	
 	/**
 	 * @return the chkAmendExtendValue
 	 */
 	public boolean isChkAmendExtendValue() {
 		return chkAmendExtendValue;
 	}
+	
 	/**
 	 * @param chkAmendExtendValue the chkAmendExtendValue to set
 	 */
 	public void setChkAmendExtendValue(boolean chkAmendExtendValue) {
 		this.chkAmendExtendValue = chkAmendExtendValue;
 	}
+	
 	/**
 	 * @return the chkAmendAllValue
 	 */
 	public boolean isChkAmendAllValue() {
 		return chkAmendAllValue;
 	}
+	
 	/**
 	 * @param chkAmendAllValue the chkAmendAllValue to set
 	 */
 	public void setChkAmendAllValue(boolean chkAmendAllValue) {
 		this.chkAmendAllValue = chkAmendAllValue;
 	}
+	
 	/**
 	 * @return the pbConfirmMeeting
 	 */
 	public boolean isPbConfirmMeeting() {
 		return pbConfirmMeeting;
 	}
+	
 	/**
 	 * @param pbConfirmMeeting the pbConfirmMeeting to set
 	 */
 	public void setPbConfirmMeeting(boolean pbConfirmMeeting) {
 		this.pbConfirmMeeting = pbConfirmMeeting;
 	}
+	
 	/**
 	 * @return the memberSignOff
 	 */
 	public boolean isMemberSignOff() {
 		return memberSignOff;
 	}
+	
 	/**
 	 * @param memberSignOff the memberSignOff to set
 	 */
 	public void setMemberSignOff(boolean memberSignOff) {
 		this.memberSignOff = memberSignOff;
 	}
+	
 	/**
 	 * @return the letterOfAcceptance
 	 */
 	public boolean isLetterOfAcceptance() {
 		return letterOfAcceptance;
 	}
+	
 	/**
 	 * @param letterOfAcceptance the letterOfAcceptance to set
 	 */
 	public void setLetterOfAcceptance(boolean letterOfAcceptance) {
 		this.letterOfAcceptance = letterOfAcceptance;
 	}
+	
 	/**
 	 * @return the bpkSaSkApprover
 	 */
 	public boolean isBpkSaSkApprover() {
 		return bpkSaSkApprover;
 	}
+	
 	/**
 	 * @param bpkSaSkApprover the bpkSaSkApprover to set
 	 */
 	public void setBpkSaSkApprover(boolean bpkSaSkApprover) {
 		this.bpkSaSkApprover = bpkSaSkApprover;
 	}
+	
 	/**
 	 * @return the prepareLOA
 	 */
 	public boolean isPrepareLOA() {
 		return prepareLOA;
 	}
+	
 	/**
 	 * @param prepareLOA the prepareLOA to set
 	 */
 	public void setPrepareLOA(boolean prepareLOA) {
 		this.prepareLOA = prepareLOA;
 	}
+	
 	/**
 	 * @return the signOffDecision
 	 */
 	public boolean isSignOffDecision() {
 		return signOffDecision;
 	}
+	
 	/**
 	 * @param signOffDecision the signOffDecision to set
 	 */
 	public void setSignOffDecision(boolean signOffDecision) {
 		this.signOffDecision = signOffDecision;
 	}
+	
 	/**
 	 * @return the signUpdateDecision
 	 */
 	public boolean isSignUpdateDecision() {
 		return signUpdateDecision;
 	}
+	
 	/**
 	 * @param signUpdateDecision the signUpdateDecision to set
 	 */
 	public void setSignUpdateDecision(boolean signUpdateDecision) {
 		this.signUpdateDecision = signUpdateDecision;
 	}
+	
 	/**
 	 * @return the decisionPbQcLOA
 	 */
 	public boolean isDecisionPbQcLOA() {
 		return decisionPbQcLOA;
 	}
+	
 	/**
 	 * @param decisionPbQcLOA the decisionPbQcLOA to set
 	 */
 	public void setDecisionPbQcLOA(boolean decisionPbQcLOA) {
 		this.decisionPbQcLOA = decisionPbQcLOA;
 	}
+	
 	/**
 	 * @return the productItem
 	 */
 	public boolean isProductItem() {
 		return productItem;
 	}
+	
 	/**
 	 * @param productItem the productItem to set
 	 */
 	public void setProductItem(boolean productItem) {
 		this.productItem = productItem;
 	}
+	
 	/**
 	 * @return the itemPricing
 	 */
 	public boolean isItemPricing() {
 		return itemPricing;
 	}
+	
 	/**
 	 * @param itemPricing the itemPricing to set
 	 */
 	public void setItemPricing(boolean itemPricing) {
 		this.itemPricing = itemPricing;
 	}
+	
 	/**
 	 * @return the itemCeilingQuantity
 	 */
 	public boolean isItemCeilingQuantity() {
 		return itemCeilingQuantity;
 	}
+	
 	/**
 	 * @param itemCeilingQuantity the itemCeilingQuantity to set
 	 */
 	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
 		this.itemCeilingQuantity = itemCeilingQuantity;
 	}
+	
 	/**
 	 * @return the confirmMeeting
 	 */
 	public boolean isConfirmMeeting() {
 		return confirmMeeting;
 	}
+	
 	/**
 	 * @param confirmMeeting the confirmMeeting to set
 	 */
 	public void setConfirmMeeting(boolean confirmMeeting) {
 		this.confirmMeeting = confirmMeeting;
 	}
+	
 	/**
 	 * @return the selectAll
 	 */
 	public boolean isSelectAll() {
 		return selectAll;
 	}
+	
 	/**
 	 * @param selectAll the selectAll to set
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
+	
 	/**
 	 * @return the showPrintButton
 	 */
 	public boolean isShowPrintButton() {
 		return showPrintButton;
 	}
+	
 	/**
 	 * @param showPrintButton the showPrintButton to set
 	 */
 	public void setShowPrintButton(boolean showPrintButton) {
 		this.showPrintButton = showPrintButton;
 	}
+	
 	/**
 	 * @return the bpmActionFlag
 	 */
 	public boolean isBpmActionFlag() {
 		return bpmActionFlag;
 	}
+	
 	/**
 	 * @param bpmActionFlag the bpmActionFlag to set
 	 */
 	public void setBpmActionFlag(boolean bpmActionFlag) {
 		this.bpmActionFlag = bpmActionFlag;
 	}
+	
 	/**
 	 * @return the autoUpdate
 	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
+	
 	/**
 	 * @param autoUpdate the autoUpdate to set
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
+	
 	/**
 	 * @return the disableAmendDetails
 	 */
 	public boolean isDisableAmendDetails() {
 		return disableAmendDetails;
 	}
+	
 	/**
 	 * @param disableAmendDetails the disableAmendDetails to set
 	 */
 	public void setDisableAmendDetails(boolean disableAmendDetails) {
 		this.disableAmendDetails = disableAmendDetails;
-	}
+	}	
+	
 	/**
-	 * @return the disablefinalAmendDetails
+	 * @return the disableEndorseAmendDetails
 	 */
-	public boolean isDisablefinalAmendDetails() {
-		return disablefinalAmendDetails;
+	public boolean isDisableEndorseAmendDetails() {
+		return disableEndorseAmendDetails;
 	}
+
 	/**
-	 * @param disablefinalAmendDetails the disablefinalAmendDetails to set
+	 * @param disableEndorseAmendDetails the disableEndorseAmendDetails to set
 	 */
-	public void setDisablefinalAmendDetails(boolean disablefinalAmendDetails) {
-		this.disablefinalAmendDetails = disablefinalAmendDetails;
+	public void setDisableEndorseAmendDetails(boolean disableEndorseAmendDetails) {
+		this.disableEndorseAmendDetails = disableEndorseAmendDetails;
 	}
+
+	/**
+	 * @return the disableFinalAmendDetails
+	 */
+	public boolean isDisableFinalAmendDetails() {
+		return disableFinalAmendDetails;
+	}
+	
+	/**
+	 * @param disableFinalAmendDetails the disableFinalAmendDetails to set
+	 */
+	public void setDisableFinalAmendDetails(boolean disableFinalAmendDetails) {
+		this.disableFinalAmendDetails = disableFinalAmendDetails;
+	}
+	
 	/**
 	 * @return the remarkList
 	 */
@@ -724,12 +812,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return remarkList;
 	}
+	
 	/**
 	 * @param remarkList the remarkList to set
 	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
+	
 	/**
 	 * @return the attachmentList
 	 */
@@ -739,12 +829,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return attachmentList;
 	}
+	
 	/**
 	 * @param attachmentList the attachmentList to set
 	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
+	
 	/**
 	 * @return the amendHistoryList
 	 */
@@ -754,12 +846,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return amendHistoryList;
 	}
+	
 	/**
 	 * @param amendHistoryList the amendHistoryList to set
 	 */
 	public void setAmendHistoryList(List<CtContractVer> amendHistoryList) {
 		this.amendHistoryList = amendHistoryList;
 	}
+	
 	/**
 	 * @return the ctItemList
 	 */
@@ -769,12 +863,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return ctItemList;
 	}
+	
 	/**
 	 * @param ctItemList the ctItemList to set
 	 */
 	public void setCtItemList(List<CtContractItem> ctItemList) {
 		this.ctItemList = ctItemList;
 	}
+	
 	/**
 	 * @return the ctServiceItemList
 	 */
@@ -784,36 +880,42 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return ctServiceItemList;
 	}
+	
 	/**
 	 * @param ctServiceItemList the ctServiceItemList to set
 	 */
 	public void setCtServiceItemList(List<CtContractItem> ctServiceItemList) {
 		this.ctServiceItemList = ctServiceItemList;
 	}
+	
 	/**
 	 * @return the finalListOfSideMenu
 	 */
 	public List<String> getFinalListOfSideMenu() {
 		return finalListOfSideMenu;
 	}
+	
 	/**
 	 * @param finalListOfSideMenu the finalListOfSideMenu to set
 	 */
 	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
 		this.finalListOfSideMenu = finalListOfSideMenu;
 	}
+	
 	/**
 	 * @return the approverModel
 	 */
 	public DualListModel<String> getApproverModel() {
 		return approverModel;
 	}
+	
 	/**
 	 * @param approverModel the approverModel to set
 	 */
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
 	}
+	
 	/**
 	 * @return the userMap
 	 */
@@ -823,156 +925,182 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return userMap;
 	}
+	
 	/**
 	 * @param userMap the userMap to set
 	 */
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
 	}
+	
 	/**
 	 * @return the selectedServiceItem
 	 */
 	public CtContractItem getSelectedServiceItem() {
 		return selectedServiceItem;
 	}
+	
 	/**
 	 * @param selectedServiceItem the selectedServiceItem to set
 	 */
 	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
 		this.selectedServiceItem = selectedServiceItem;
 	}
+	
 	/**
 	 * @return the ctContract
 	 */
 	public CtContract getCtContract() {
 		return ctContract;
 	}
+	
 	/**
 	 * @param ctContract the ctContract to set
 	 */
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
+	
 	/**
 	 * @return the contractVer
 	 */
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
+	
 	/**
 	 * @param contractVer the contractVer to set
 	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
 	}
+	
 	/**
 	 * @return the ctPerformanceBond
 	 */
 	public CtPerformanceBond getCtPerformanceBond() {
 		return ctPerformanceBond;
 	}
+	
 	/**
 	 * @param ctPerformanceBond the ctPerformanceBond to set
 	 */
 	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
 		this.ctPerformanceBond = ctPerformanceBond;
 	}
+	
 	/**
 	 * @return the ctItemMaxQty
 	 */
 	public CtItemMaxQty getCtItemMaxQty() {
 		return ctItemMaxQty;
 	}
+	
 	/**
 	 * @param ctItemMaxQty the ctItemMaxQty to set
 	 */
 	public void setCtItemMaxQty(CtItemMaxQty ctItemMaxQty) {
 		this.ctItemMaxQty = ctItemMaxQty;
 	}
+	
 	/**
 	 * @return the ctItemPrices
 	 */
 	public CtItemPrice getCtItemPrices() {
 		return ctItemPrices;
 	}
+	
 	/**
 	 * @param ctItemPrices the ctItemPrices to set
 	 */
 	public void setCtItemPrices(CtItemPrice ctItemPrices) {
 		this.ctItemPrices = ctItemPrices;
 	}
+	
 	/**
 	 * @return the ctItemCeilingQtys
 	 */
 	public CtItemCeilingQty getCtItemCeilingQtys() {
 		return ctItemCeilingQtys;
 	}
+	
 	/**
 	 * @param ctItemCeilingQtys the ctItemCeilingQtys to set
 	 */
 	public void setCtItemCeilingQtys(CtItemCeilingQty ctItemCeilingQtys) {
 		this.ctItemCeilingQtys = ctItemCeilingQtys;
 	}
+	
 	/**
 	 * @return the selectedItem
 	 */
 	public CtContractItem getSelectedItem() {
 		return selectedItem;
 	}
+	
 	/**
 	 * @param selectedItem the selectedItem to set
 	 */
 	public void setSelectedItem(CtContractItem selectedItem) {
 		this.selectedItem = selectedItem;
 	}
+	
 	/**
 	 * @return the ctServiceItemPrices
 	 */
 	public CtItemPrice getCtServiceItemPrices() {
 		return ctServiceItemPrices;
 	}
+	
 	/**
 	 * @param ctServiceItemPrices the ctServiceItemPrices to set
 	 */
 	public void setCtServiceItemPrices(CtItemPrice ctServiceItemPrices) {
 		this.ctServiceItemPrices = ctServiceItemPrices;
 	}
+	
 	/**
 	 * @return the newCommitteMembers
 	 */
 	public CtCommitteeMember getNewCommitteMembers() {
 		return newCommitteMembers;
 	}
+	
 	/**
 	 * @param newCommitteMembers the newCommitteMembers to set
 	 */
 	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
 		this.newCommitteMembers = newCommitteMembers;
 	}
+	
 	/**
 	 * @return the ctZoneTrees
 	 */
 	public TreeNode getCtZoneTrees() {
 		return ctZoneTrees;
 	}
+	
 	/**
 	 * @param ctZoneTrees the ctZoneTrees to set
 	 */
 	public void setCtZoneTrees(TreeNode ctZoneTrees) {
 		this.ctZoneTrees = ctZoneTrees;
 	}
+	
 	/**
 	 * @return the amendMenuModel
 	 */
 	public MenuModel getAmendMenuModel() {
 		return amendMenuModel;
 	}
+	
 	/**
 	 * @param amendMenuModel the amendMenuModel to set
 	 */
 	public void setAmendMenuModel(MenuModel amendMenuModel) {
 		this.amendMenuModel = amendMenuModel;
 	}
+	
 	/**
 	 * @return the scLoaWitness
 	 */
@@ -989,30 +1117,35 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		}
 		return scLoaWitness;
 	}
+	
 	/**
 	 * @param scLoaWitness the scLoaWitness to set
 	 */
 	public void setScLoaWitness(ScLoaWitness scLoaWitness) {
 		this.scLoaWitness = scLoaWitness;
 	}
+	
 	/**
 	 * @return the selectedScLoaReports
 	 */
 	public ScLoaReport getSelectedScLoaReports() {
 		return selectedScLoaReports;
 	}
+	
 	/**
 	 * @param selectedScLoaReports the selectedScLoaReports to set
 	 */
 	public void setSelectedScLoaReports(ScLoaReport selectedScLoaReports) {
 		this.selectedScLoaReports = selectedScLoaReports;
 	}
+	
 	/**
 	 * @return the pmDigiSign
 	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
+	
 	/**
 	 * @param pmDigiSign the pmDigiSign to set
 	 */
