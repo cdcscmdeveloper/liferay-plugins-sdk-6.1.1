@@ -178,7 +178,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * 
 	 * @param  event      the upload event for file upload from screen
 	 * @throws Exception  if an exception occurred
-	 * @see Exception
+	 * @see    Exception
 	 */
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		
@@ -210,7 +210,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * 
 	 * @param  attachment   an object of attached file
 	 * @throws IOException  if an input or output exception occurred
-	 * @see IOException
+	 * @see    IOException
 	 */
 	public void downloadFile(CtAttachment attachment) throws IOException {
 		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  

@@ -302,7 +302,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	 * with empty search criteria.
 	 * 
 	 * @throws Exception  if an exception occurred
-	 * @see Exception
+	 * @see    Exception
 	 */
 	public void searchAssociation() throws Exception {
 		try {
@@ -342,7 +342,9 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	/**
 	 * The method used to create the association.
 	 * This method will navigate to acknowledgment page with a 
-	 * confirmation message after association is created successfully. 
+	 * confirmation message once submit successfully.  
+	 * 
+	 * @return the navigate URL 
 	 */
 	public String createAssociation() {
 		IContractAssociationSO contractAssociationSO = null;
@@ -387,8 +389,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	
 	/**
 	 * The method used to delete the selected association list.
-	 * This method will refresh the pagination after all selected
-	 * association(s) are deleted successfully.
+	 * This method will refresh the pagination once delete successfully.
 	 */
 	public void deleteAssociation() {
 		IContractAssociationSO contractAssociationSO = null;
@@ -456,7 +457,9 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 
  	/**
 	 * The method used to navigate to association details screen
-	 * for creation or view purpose
+	 * for creation or view purpose.
+	 * 
+	 * @return the navigate URL 
 	 */
 	public String goToAssociatePage() {
 		if (this.getManagedBean().getCtAssociation() != null) {
@@ -471,7 +474,9 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
    
 	/**
 	 * The method used to navigate to association details screen
-	 * for cancellation purpose
+	 * for cancellation purpose.
+	 * 
+	 * @return the navigate URL 
 	 */
     public String goToCancelPage() {
 		return PROCESS_ASSOCIATE_CANCEL_PAGE;
@@ -479,7 +484,9 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
     
     /**
 	 * The method used to navigate to association details screen
-	 * for update purpose
+	 * for update purpose.
+	 * 
+	 * @return the navigate URL 
 	 */
     public String goToUpdateAssociatePage() {    	
     	IContractAssociationSO contractAssociationSO = null;
