@@ -114,7 +114,7 @@ public class ReportBackingBean extends
 
 	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
 	private List<SelectItem> statusList = new ArrayList<SelectItem>();
-	private List<SelectItem> ministryList = new ArrayList<SelectItem>();
+	private List<String> ministryList = new ArrayList<String>();
 	private List<SelectItem> ptjList = new ArrayList<SelectItem>();
 	// private List<PmOrgProfile> ptjList;
 	private List<String> loanList = new ArrayList<String>();
@@ -709,13 +709,13 @@ public class ReportBackingBean extends
 
 	public void setStatusList(List<SelectItem> statusList) {
 		this.statusList = statusList;
-	}
+	}	
 
-	public List<SelectItem> getMinistryList() {
+	public List<String> getMinistryList() {
 		return ministryList;
 	}
 
-	public void setMinistryList(List<SelectItem> ministryList) {
+	public void setMinistryList(List<String> ministryList) {
 		this.ministryList = ministryList;
 	}
 
@@ -2872,7 +2872,7 @@ public class ReportBackingBean extends
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		retrieveMinistryByOrgtype();
+		//retrieveMinistryByOrgtype();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			userId = new FacesScopes().getUserSessionBean().getUserId()
 					.toString();
@@ -2942,7 +2942,7 @@ public class ReportBackingBean extends
 		return authoriztionList;
 	}
 
-	public void retrieveMinistryByOrgtype() {
+	/*public void retrieveMinistryByOrgtype() {
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			userId = new FacesScopes().getUserSessionBean().getUserId()
 					.toString();
@@ -3001,8 +3001,44 @@ public class ReportBackingBean extends
 		} finally {
 			orgProfileSO = null;
 		}
+	}*/
+	public List<SelectItem>  retrievePTJByUserId() {
+		ptjList = new ArrayList<SelectItem>();
+		ministryList = new ArrayList<String>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			
+			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = (long) 240500;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> ptjLst = reportSO.retrieveFlPTJList(lngUserId);
+			for (Object[] object : ptjLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				ptjList.add(selectItem);
+			}
+		}
+		return ptjList;
 	}
-
+	
+    public List<String>  retrieveMinstryByPTJ() {
+    	ministryList = new ArrayList<String>();
+		if (null !=this.getFlPtj()) {			
+			Long lngorgprflid = Long.parseLong(this.getFlPtj());
+			//lngUserId = (long) 240500;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> minstryLst = reportSO.retrieveFlMinistryList(lngorgprflid);
+			for (int i = 0; i < minstryLst.size(); i++) {
+				ministryList.add(minstryLst.get(i));
+			}
+		}
+		return ministryList;	
+	}
+    
 	public void retrieveCMUnspc() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3264,7 +3300,7 @@ public class ReportBackingBean extends
 						IPMReportSO.class);
 		List<String> supplCompNameLst = reportSO.retrieveSupplierCompName(lngUserId);
 		for (int i = 0; i < supplCompNameLst.size(); i++) {
-			this.getSupplCompanyList().add(supplCompNameLst.get(i));
+			supplCompanyList.add(supplCompNameLst.get(i));
 		}
 		if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
 			getManagedBean().getRptGenBean().setFlSupplierDropdownView(true);
@@ -3348,6 +3384,7 @@ public class ReportBackingBean extends
 						rptGenBean, authoriztionList,approverNayakTarafList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))) {
+				 retrievePTJByUserId();
 				flReportBackingBean.enableCriteriaVariablesByReportByFL(
 						rptGenBean, authoriztionList);
 			} else if ((this.getModuleValue()
@@ -5329,6 +5366,7 @@ public class ReportBackingBean extends
 		extTypeList = new ArrayList<SelectItem>();
 		measurmentList = new ArrayList<SelectItem>();
 		colorList = new ArrayList<SelectItem>();
+		
 		this.setFlItmType(null);
 		this.setFlPtj(null);
 		this.setFlContractNo(null);

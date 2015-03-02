@@ -28,22 +28,25 @@
 					 				</p:inputText>
 									</c:if>
 									
-									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMinistryView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
-									<p:selectOneMenu value="#{reportBackingBean.flMinistry}" style="margin-top:5px;width:300px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>
-										<p:ajax event="change" listener="#{reportBackingBean.retrievePTJByOrgProfileId}" process="@this" partialSubmit="true" update="flPtj" />																																																						
-									</p:selectOneMenu>
-								  </c:if>											
+																				
 									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPtjView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu id="flPtj" value="#{reportBackingBean.flPtj}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>																																	
+										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
+										<p:ajax event="change" listener="#{reportBackingBean.retrieveMinstryByPTJ}" process="@this" partialSubmit="true" update="@all" />																																																																						
 									</p:selectOneMenu>
 								  </c:if>
+								  
+								  <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMinistryView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu id="flMinistry" value="#{reportBackingBean.flMinistry}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>																											
+									</p:selectOneMenu>
+								  </c:if>
+								  
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="20" value="#{reportBackingBean.flContractNo}"  style="margin-top:5px;width:290px;" >									
