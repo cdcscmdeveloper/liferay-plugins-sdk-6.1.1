@@ -96,16 +96,15 @@ public class SpkiBackingBean {
 	private KMCClient getClient() throws KMCAPIException {
 		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
-		
 		System.out.println("path value with (.) :"+path);
 		
 		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
-		
 		String filePath = substring+PATH;
 		System.out.println("filePath :"+filePath);
-		File f = new File(filePath);
+		
 		// Create property file
-//		File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet/docroot/WEB-INF/config/soft-certificate/kmc.properties");
+		File f = new File(filePath);
+//		File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
 		// Create KMCClient with the property file
 		KMCClient client = KMCClientFactory.getInstance(f);
 		return client;
