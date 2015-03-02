@@ -74,7 +74,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	}
 
 	public void preRenderSoftCert(){
-		System.out.println("********************SoftCertBackingBean PreRender***************");
+		log.info("***********************************inside prerenderSoftCert*************************");
 
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
@@ -86,6 +86,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	}
 	
 	public void preRenderSoftCertPay() {
+		log.info("***********************************inside prerenderSoftCert*************************");
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
@@ -152,6 +153,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 		
 		
 		
+		
 		List<SmPersonnel> smPersonnelList = resDTO.getSmPersonnelList();
 		this.getManagedBean().setPersonnelList(smPersonnelList);
 		
@@ -174,6 +176,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	}
 	
 	public String navigateToPaymentPage(){
+		if(this.getManagedBean().getSoftCertSelectList()==null || this.getManagedBean().getSoftCertSelectList().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721302);
+		}
 		this.getManagedBean().setSoftCertPayList(this.getManagedBean().getSoftCertSelectList());
 		updateAmount();
 		return "softCertPaymentPage.xhtml";
