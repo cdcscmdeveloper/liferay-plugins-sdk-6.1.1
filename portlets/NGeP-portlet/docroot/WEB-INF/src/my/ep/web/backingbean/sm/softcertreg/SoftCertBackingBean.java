@@ -176,9 +176,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	}
 	
 	public String navigateToPaymentPage(){
-		if(this.getManagedBean().getSoftCertSelectList()==null || this.getManagedBean().getSoftCertSelectList().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721302);
-		}
 		this.getManagedBean().setSoftCertPayList(this.getManagedBean().getSoftCertSelectList());
 		updateAmount();
 		return "softCertPaymentPage.xhtml";
