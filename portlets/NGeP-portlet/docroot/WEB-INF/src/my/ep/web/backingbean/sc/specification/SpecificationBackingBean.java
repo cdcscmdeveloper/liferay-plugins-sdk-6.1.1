@@ -3284,6 +3284,16 @@ public class SpecificationBackingBean extends
 		try {
 
 			retriveStateList();
+			if (null != this.getManagedBean().getScQt().getPmOrgProfile()) {
+				if (null != this.getManagedBean().getScQt().getPmOrgProfile()
+						.getParentOrgProfile()) {
+					this.getManagedBean().setMinistryId(
+							this.getManagedBean().getScQt().getPmOrgProfile()
+									.getParentOrgProfile().getOrgProfileId());
+					this.getManagedBean().setPtjId(this.getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId());
+					ptjByDepartMent(this.getManagedBean().getMinistryId());
+				}
+			}
 			retriveMinistryList();
 
 			if (this.getManagedBean().getDeliveryNonZoneList() == null
@@ -3514,20 +3524,30 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void ptjByDepartMent(AjaxBehaviorEvent event) {
+	public void ptjByDepartMent(Long departmentd) {
 		IOrgProfileSO orgProfileSO = null;
 		try {
-			Long departmentd = (Long) event.getComponent().getAttributes()
-					.get("value");
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			reqDTO.setParentOrgProfileId(departmentd);
-			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
+			/*
+			 * Long departmentd = (Long) event.getComponent().getAttributes()
+			 * .get("value");
+			 */
+			if (null != departmentd) {
+				//this.getManagedBean().setPtjId(departmentd);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				reqDTO.setParentOrgProfileId(departmentd);
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
 
-			this.getManagedBean().setPtjtList(resDTO.getOrgProfileList());
+				this.getManagedBean().setPtjtList(resDTO.getOrgProfileList());
+			} else {
+				//this.getManagedBean().setPtjId(null);
+				this.getManagedBean()
+						.setPtjtList(new ArrayList<PmOrgProfile>());
+			}
 
 		} finally {
 			orgProfileSO = null;
@@ -10008,14 +10028,10 @@ public class SpecificationBackingBean extends
 									getManagedBean().getCtSearchBean()
 											.getItemName(), true));
 				}
-				if (null != getManagedBean().getCtSearchBean().getItemName()
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getCtSearchBean().getItemName())) {
 
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("ctPanelItems.qt",
-									SearchOperator.OPERATOR_LIKE.value(), 1));
-				}
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("ctPanelItems.qt",
+								SearchOperator.OPERATOR_LIKE.value(), 1));
 
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docType",
@@ -11018,21 +11034,9 @@ public class SpecificationBackingBean extends
 			}
 		}
 		if (null != localChecklist && localChecklist.size() > 0) {
-			for (ScQtCheckList checkList : scQt.getScQtChecklists()) {
-				if (null != checkList.getQtScoreWeightage()
-						&& null != checkList.getQtScoreWeightage()
-								.getQtScoreWeightageId()) {
-					log.info("QtId"
-							+ checkList.getScQt().getQtId()
-							+ "CheckListTitle"
-							+ checkList.getTitle()
-							+ "weightageId"
-							+ checkList.getQtScoreWeightage()
-									.getQtScoreWeightageId()
-							+ "qtScoreweightage"
-							+ checkList.getQtScoreWeightage());
-				}
-			}
+
+		} else {
+			scQt.setScQtChecklists(null);
 		}
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
@@ -12161,10 +12165,10 @@ public class SpecificationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE);
-		/*
-		 * if (this.getManagedBean().getScQt().isPanel()) {
-		 * recommendList.add(ParameterConst.ITEM_TYPE_SERVICE); }
-		 */
+
+		if (this.getManagedBean().getScQt().isPanel()) {
+			recommendList.add(ParameterConst.ITEM_TYPE_SERVICE);
+		}
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -12218,11 +12222,10 @@ public class SpecificationBackingBean extends
 
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCAL_GOODS);
-		types.add(ParameterConst.IMPORTED_GOODS);
-		/*
-		 * if (!this.getManagedBean().getScQt().isPanel()) {
-		 * types.add(ParameterConst.IMPORTED_GOODS); }
-		 */
+
+		if (!this.getManagedBean().getScQt().isPanel()) {
+			types.add(ParameterConst.IMPORTED_GOODS);
+		}
 
 		SelectItem[] items = null;
 		try {
