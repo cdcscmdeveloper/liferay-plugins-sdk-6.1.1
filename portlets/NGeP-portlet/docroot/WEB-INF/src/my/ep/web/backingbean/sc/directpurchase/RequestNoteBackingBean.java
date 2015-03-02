@@ -149,23 +149,36 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
+// TODO: Auto-generated Javadoc
+
 /**
- * 
+ * The Class RequestNoteBackingBean.
+ *
  * @author sri
  * @since 11.02.2014
- * 
  */
 @ManagedBean(name = "requestNoteBackingBean")
 @RequestScoped
 public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(RequestNoteBackingBean.class);
+	
+	/** The flag. */
 	private boolean flag;
+	
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
 	
+	/** The Constant ZONE_SEPARATOR. */
 	public static final String ZONE_SEPARATOR = "_";
 	
-	
+	/**
+	 * Instantiates a new request note backing bean.
+	 */
 	public RequestNoteBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -181,10 +194,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	/**
+	 * Search action.
+	 * 
+	 *  to search request note and for the page nation.
+	 */
 	public void searchAction(){
 		getManagedBean().getReqNoteDataModel().reloadData();
 	}
 	
+	/**
+	 * Reset action.
+	 * 
+	 * clear the key in data in request note search.
+	 */
 	public void resetAction() {
 		getManagedBean().setSearchReqNoteNo(null);
 		getManagedBean().setSearchSrcMethod(null);
@@ -194,6 +217,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().getReqNoteDataModel().resetData();
 	}
 	
+	/**
+	 * Edits the request note.
+	 *
+	 * @param scRequestNote the sc request note
+	 * @return the string
+	 */
 	public String editRequestNote(ScRequestNote scRequestNote) {
 		retrieveRequestNoteDetails(scRequestNote , null , Boolean.FALSE);
 		
@@ -205,10 +234,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		return "commonRequestNote";
 	}
-	
+
 	/**
-	 * saveAction method to save request note details
-	 * return String
+	 * save request note details
+	 * save - save data into database and initiate task for request note.
+	 * @param outcome the outcome
+	 * @return the string
 	 */
 	public String saveAction(String outcome) {
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -327,6 +358,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     return null;
 	}
 	
+	/**
+	 * Gets the pid for request item.
+	 *
+	 * @param rnDtl the rn dtl
+	 * @return the pid for request item
+	 */
 	private ScRequestNoteDtl getPidForRequestItem(ScRequestNoteDtl rnDtl) {
 		if(rnDtl.getRequestItem() != null && rnDtl.getRequestItem().getPurchaseInDefault() == null
 				&& getManagedBean().getPurchaseInDefaultId() != null) {
@@ -354,6 +391,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return rnDtl;
 	}
 	
+	/**
+	 * Reload request note.
+	 *
+	 * @param requestNote the request note
+	 */
 	private void reloadRequestNote(ScRequestNote requestNote){
 		getManagedBean().setPiRNChecker(false);
 		getManagedBean().setAutoUpdate(true);
@@ -396,9 +438,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * submitAction method to submit request note details
-	 * return String
-	 */
+	 * submit request note details.
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
+	 * @return the string
+	 * page navigate to acknowledge page.
+	 */	
 	public String submitAction(String outcome) {
 		debugLogger("submitAction");
 		RequestNoteResDTO requestNoteResDTO = null;
@@ -422,7 +467,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 				}	
 			}
-			
+
 			// adding request note delete list
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
 				if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
@@ -430,21 +475,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			requestNote.setRequestNoteDtls(requestNoteDtls);
-			
+
 			// Target Approver
 			// Target Approver
-	    	if(requestNote.getApprovalUsers() == null || requestNote.getApprovalUsers().isEmpty()){
-	    		  requestNote.setApprovalUsers(createTargetApprover(requestNote));
-	    	} else{
-	    		requestNote.getApprovalUsers().addAll(createTargetApprover(requestNote));
-	    	}
+			if(requestNote.getApprovalUsers() == null || requestNote.getApprovalUsers().isEmpty()){
+				requestNote.setApprovalUsers(createTargetApprover(requestNote));
+			} else{
+				requestNote.getApprovalUsers().addAll(createTargetApprover(requestNote));
+			}
 
 			requestNote.setWorkFlowStatuses(null);
-		
+
 			if(!(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
 				finalizeRemarks(requestNote.getRemarks());
 			}
-			
+
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
@@ -465,7 +510,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setOutcome(outcome);
 				requestNoteResDTO = getDirectPurchaseSO().updateRequestNote(requestNoteReqDTO);
 			}
-			
+
 			if (requestNoteResDTO.isSuccessful()) {
 				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
@@ -488,7 +533,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * render the view base on the task id
+	 * Prepender page navigation to request note page based on task id
+	 * @return void
 	 */
 	public void preRenderView() {
 		renewSesionObject();
@@ -549,6 +595,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * Request note view.
+	 *
+	 * @param requestNoteId the request note id
+	 */
 	public void requestNoteView(Long requestNoteId) {
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote	requestNote = null;
@@ -580,6 +631,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	
 
+	/**
+	 * Retrieve request note details.
+	 *
+	 * @param requestNote the request note
+	 * @param docStatusId the doc status id
+	 * @param zoneFlag the zone flag
+	 */
 	private void retrieveRequestNoteDetails(ScRequestNote requestNote , Long docStatusId , boolean zoneFlag) {
 		//RequestNote Details
 		List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
@@ -703,8 +761,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		initialInformation(requestNote);
 	}
 
-
-	//Group all the request note dtls by request item 
+	/**
+	 * Group request note dtls.
+	 *
+	 * @param requestNoteDtls the request note dtls
+	 * @return the list
+	 */
 	public	List<ScRequestNoteDtl>	groupRequestNoteDtls(List<ScRequestNoteDtl>	requestNoteDtls){
 		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
 		
@@ -728,6 +790,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return results;
 	}
 
+	/**
+	 * Sort item list.
+	 *
+	 * @param requestNoteDtls the request note dtls
+	 * @param sortItemList the sort item list
+	 * @return the list
+	 */
 	private	List<ScRequestNoteDtl>	sortItemList(List<ScRequestNoteDtl>	requestNoteDtls , List<String>	sortItemList){
 		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
 		for(String itemName:sortItemList){
@@ -742,6 +811,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return results;
 	}
 
+	/**
+	 * Sort supplier recs.
+	 *
+	 * @param requestNoteDtls the request note dtls
+	 * @param sortSupplierRecs the sort supplier recs
+	 * @return the list
+	 */
 	private	List<ScRequestNoteDtl>	sortSupplierRecs(List<ScRequestNoteDtl>	requestNoteDtls, Map<String, Long>	sortSupplierRecs){
 		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
 		for(String zoneName:sortSupplierRecs.keySet()){
@@ -757,9 +833,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * @param action
-	 * @param object
-	 * @return
+	 * Update bpm task.
+	 *
+	 * @param outcome the outcome
+	 * @param digiSign the digi sign
+	 * @return the request note res dto
 	 */
 	private RequestNoteResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
@@ -831,6 +909,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return requestNoteResDTO;
 	}
 
+	/**
+	 * approve, reject and revise request note details.
+	 * save data into database and BPM process will route to the next respective user.
+	 * and also authenticating gpki before approve request note details
+	 * page navigate to acknowledge page.
+	 * @param outcome the outcome
+	 */	
 	public void approverAction(String outcome) {
 		debugLogger("approverAction");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -838,7 +923,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		getDirectPurchaseSO().validateRNBeforeSubmitting(requestNoteReqDTO);
-		
+
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
@@ -849,7 +934,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			updateBPMTask(outcome, null);
 		}	
 	}
-	 
+
+	/**
+	 * Gets the suppliers by selected request note details items.
+	 * 
+	 * @return the suppliers by selected items
+	 */
 	public List<SmSupplier> getSuppliersBySelectedItems() {
 		List<SmSupplier> suppliers = new ArrayList<SmSupplier>();
 		List<ScRequestNoteDtl>	requestNoteDtls	= getManagedBean().getRequestNoteDtls();
@@ -886,6 +976,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return suppliers;
 	}
 	
+	/**
+	 * Apply PR/LOA Prepared By and Delivery/Service Period  for selected request note details 
+	 * in Item Details in RN
+	 */
 	public void applyForRequestNote() {
 		log.info("applyForRequestNote");
 		int counter = 0;
@@ -962,7 +1056,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * page navigation to  Request Note screen
+	 * page navigation from search catalogue to  Request Note page.
 	 */
 	public void requestNoteAction() {
 		debugLogger("requestNoteAction");
@@ -972,13 +1066,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * get AddtoCart details in Add To Cart PopUp
+	 * add non contract item to request note to prepare request note
+	 * @param cmSupplierItemId the cm supplier item id
+	 * @param cart the cart
+	 * @param compareSupplierItems the compare supplier items
 	 */
 	public void addToCart(Long cmSupplierItemId , boolean cart , List<CmSupplierItem> compareSupplierItems) {
 		log.info("addToCart");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
-		System.out.println("cmSupplierItemId:" + cmSupplierItemId);
 		catReqDTO.setSupplierItemId(cmSupplierItemId);
 		CatalogueResDTO catResDTO = catalogueSO.findActivePricing(catReqDTO);
 		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
@@ -1061,6 +1157,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestContext.getCurrentInstance().execute("addToCartPopup.show();");
 	}
 	
+	/**
+	 * Creates the request item.
+	 *
+	 * @param cmSupplierItem the cm supplier item
+	 * @return the sc request item
+	 */
 	private ScRequestItem createRequestItem(CmSupplierItem cmSupplierItem){
 		ScRequestItem scRequestItem	= new ScRequestItem();
 		CmItem cmItem = cmSupplierItem.getCmItem();
@@ -1091,6 +1193,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return scRequestItem;
 	}
 	
+	/**
+	 * Creates the sc request supplier item.
+	 *
+	 * @param cmSupplierItem the cm supplier item
+	 * @param requestItem the request item
+	 * @param smSupplier the sm supplier
+	 * @param cmPricings the cm pricings
+	 * @return the sc request supplier item
+	 */
 	private ScRequestSupplierItem createScRequestSupplierItem(CmSupplierItem cmSupplierItem, ScRequestItem requestItem, SmSupplier smSupplier, List<CmPricing> cmPricings) {
 		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 		requestSupplierItem.setSupplierId(smSupplier.getSupplierId());
@@ -1103,6 +1214,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return requestSupplierItem;
 	}
 
+	/**
+	 * Creates the sc supplier item prices.
+	 *
+	 * @param scRequestSupplierItem the sc request supplier item
+	 * @param pricings the pricings
+	 * @return the list
+	 */
 	private	List<ScSupplierItemPrice>	createScSupplierItemPrices(ScRequestSupplierItem scRequestSupplierItem, List<CmPricing> pricings){
 		List<ScSupplierItemPrice> results	=	new ArrayList<ScSupplierItemPrice>();
 		for(CmPricing pricing: pricings){
@@ -1111,6 +1229,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return results;
 	}
 	
+	/**
+	 * Creates the supplier item price.
+	 *
+	 * @param scRequestSupplierItem the sc request supplier item
+	 * @param pricing the pricing
+	 * @return the sc supplier item price
+	 */
 	private ScSupplierItemPrice		createSupplierItemPrice(ScRequestSupplierItem	scRequestSupplierItem, CmPricing pricing){
 		ScSupplierItemPrice	result	=	new ScSupplierItemPrice();
 		result.setScRequestSupplierItem(scRequestSupplierItem);
@@ -1236,6 +1361,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * }
 	 */
 
+	/**
+	 * Gets the price type drop list values.
+	 *
+	 * @param parameterType the parameter type
+	 * @param priceTypes the price types
+	 * @return the price type drop down values
+	 */
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
@@ -1254,7 +1386,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return items;
 	}
 	
-	
+	/**
+	 * Gets the price drop down values .
+	 *
+	 * @param parameterType the parameter type
+	 * @param priceTypes the price types
+	 * @return the price types
+	 */
 	public SelectItem[] getPriceTypes(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
@@ -1274,6 +1412,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return items;
 	}
 	
+	/**
+	 * Gets the pm parameter by id.
+	 *
+	 * @param parameterType the parameter type
+	 * @param parameterCode the parameter code
+	 * @return the pm parameter by id
+	 */
 	public Long getPmParameterById(String parameterType, String parameterCode) {		
 		Long parameterId = null;
 		
@@ -1294,7 +1439,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Page navigation to catalogue search page in Request Note
+	 * Page navigation to catalogue search page in Request Note.
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
@@ -1316,6 +1461,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	/**
+	 * add non contract item to request note to prepare request note
+	 * page navigate to request note page.
+	 * @param cartFlag the cart flag
+	 */
 	public void addToRequestNote(boolean cartFlag) {
 		log.info("addToRequestNote");
 		List<ScRequestNoteDtl>	requestNoteDtls = getManagedBean().getRequestNoteDtls();
@@ -1615,6 +1765,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
+	/**
+	 * Gets the price types by price.
+	 *
+	 * @param supplierItemPrices the supplier item prices
+	 * @return the price type by price
+	 */
 	public List<PmParameter>  getPriceTypeByPrice(List<ScSupplierItemPrice> supplierItemPrices) {
 		List<Long> checkIds = new ArrayList<Long>();
 		List<PmParameter> params = new ArrayList<PmParameter>();
@@ -1635,7 +1791,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * Event for procurement type  drop down in Add to Cart
+	 * Event for procurement type  drop down in Add to Cart.
+	 *  to show justification drop down and justification remark based on procurement type.
 	 */
 	public void procurementTypeEvent() {
 		log.info("procurementTypeEvent"); 
@@ -1660,7 +1817,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Event for justification type drop down in Add to Cart
+	 * Event for justification type drop down in Add to Cart.
 	 */
 	public void justificationTypeEvent() {
 		log.info("justificationTypeEvent");
@@ -1673,7 +1830,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * show Item Details, Justification, Pricing details in Request Note
+	 * show Item Details, Justification and Pricing details Popup in Request Note.
+	 *
+	 * @param scRequestNoteDtl the sc request note dtl
 	 */
 	public void showReqNotePopUps(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("showReqNotePopUps");
@@ -1701,7 +1860,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * check whether request note dtl is prod or service in Request Note
+	 * check whether request note details is product or service in Request Note.
+	 *
+	 * @param scRequestNoteDtl the sc request note dtl
+	 * @return true, if successful
 	 */
 	private boolean checkServiceOrProduct(ScRequestNoteDtl scRequestNoteDtl){
 		log.debug("checkServiceOrProduct");
@@ -1737,16 +1899,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * show Item Details, Justification, Pricing details in Request Note
+	 * once add non contract item to request note
+	 * can edit order quantity after added item to request note in item details Popup
 	 */
 	public void editQuantity(){
 		log.info("editQuantity");
-		
+
 		if(getManagedBean().getRequestNoteDtl() != null){
 			List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
 			BigDecimal quantity  = getManagedBean().getRequestNoteDtl().getRequestItem().getQuantity();
 			ScRequestNoteDtl selectedRequestNoteDtl = getManagedBean().getRequestNoteDtl();
-			
+
 			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
 					if(requestNoteDtl.equals(selectedRequestNoteDtl)){
@@ -1760,12 +1923,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			}
 		}
-	    RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
+		RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
 	/**
-	 * show pricing details in Request Note
+	 * show pricing details in Request Note.
+	 * after added item to request note
+	 * @param scRequestNoteDtl the sc request note dtl
 	 */
 	public void showPricing(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("showPricing");
@@ -1788,6 +1953,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * Pricing hide and show.
+	 *
+	 * @param requestNoteDtl the request note dtl
+	 */
 	private void pricingHideAndShow(ScRequestNoteDtl requestNoteDtl) {
 		log.info("pricingHideAndShow");
 		if(requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice() != null){
@@ -1815,6 +1985,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	
+	/**
+	 * if item is purchase inquiry then that item shows icon for purchase inquiry to view in  request note. 
+	 * @param requestNoteDtl the request note dtl
+	 * @return true, if successful
+	 */
 	public boolean showPurchaseInqIcon(ScRequestNoteDtl requestNoteDtl) {
 		log.info("showPurchaseInqIcon");
 		Boolean isPurchaseInq= Boolean.FALSE;
@@ -1836,7 +2011,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Event for fulfilment type drop down in request note
+	 * Event for fulfillment type drop down in request note.
+	 * to get PR/LOA Prepared By users based on Fulfillment type
+	 * @param requestNoteDtl the request note dtl
 	 */
 	public void fulfilmentTypeEvent(ScRequestNoteDtl requestNoteDtl) {
 		log.info("fulfilmentTypeEvent"); 
@@ -1863,7 +2040,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// sorting prepared by users
-    class usersComparator implements Comparator<PmUser> {
+    /**
+	 * The Class usersComparator.
+	 */
+	class usersComparator implements Comparator<PmUser> {
+		
+		/* (non-Javadoc)
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
 		public int compare(PmUser pmUser1, PmUser pmUser2) {
 			int sort;
 			// Sort on Name first 
@@ -1872,6 +2056,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * User list by role.
+	 *
+	 * @param roleCode the role code
+	 * @return the list
+	 */
 	public List<PmUser> userListByRole(String roleCode){
 		log.info("userListByRole - Start");
 		List<PmUser> options = new ArrayList<PmUser>();
@@ -1891,6 +2081,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return options;
 	}
 	
+	/**
+	 * Delete request note dtl.
+	 * delete - delete selected items in item details in request note.
+	 * @return void
+	 */
 	public void deleteRequestNoteDtl() {
 		log.info("deleteRequestNoteDtl");
 		int counter = 0;
@@ -1926,7 +2121,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * To get Approver Pick List  in Request Note
+	 * To get Approver Pick List  in Request Note.
+	 *
+	 * @param requestNote the request note
+	 * @return the list
 	 */
 	private	List<ScRequestNoteApprovalUser> createTargetApprover(ScRequestNote requestNote){
 		List<ScRequestNoteApprovalUser> results = new ArrayList<ScRequestNoteApprovalUser>();
@@ -1972,10 +2170,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return results;
 	}
 
+	/**
+	 * Gets the current status to show in request note.
+	 *
+	 * @param pmStatus the pm status
+	 * @return the current status
+	 */
 	public void  getCurrentStatus(PmStatus pmStatus) {
 		getManagedBean().setRequestNoteStatus(pmStatus);
 	}
 	
+	/**
+	 * Gets the user by user id.
+	 *
+	 * @param userId the user id
+	 * @return the user by id
+	 */
 	public PmUser  getUserById(Long userId) {
 		PmUser user = null;
 		UserReqDTO reqDTO = new UserReqDTO();
@@ -1990,7 +2200,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return user;
 	}
 	
-	 public void initialInformation(ScRequestNote requestNote){
+	 /**
+ 	  * gets approver pick list in request note
+ 	  * 
+ 	  * @param requestNote the request note
+ 	  */
+ 	public void initialInformation(ScRequestNote requestNote){
 		    DualListModel<PmUser>	approvalUsers;
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
@@ -2022,18 +2237,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	   }		
 	
 	
+	/**
+	 * Checks if is supplier user.
+	 *
+	 * @return true, if is supplier user
+	 */
 	public boolean isSupplierUser(){
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("SUPPLIER_USER");
 	}
 
 
+	/**
+	 * Checks if is requisitioner.
+	 *
+	 * @return true, if is requisitioner
+	 */
 	public boolean isRequisitioner(){
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("REQUISITIONER");
 	}
 
 	
+	/**
+	 * gets purchase in default based on ptj.
+	 * if item has purchase in default it shows icon to view pid in request note
+	 * @return void
+	 */
 	public void ptjNameEvent() {
 		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
 		try {
@@ -2083,7 +2313,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * showPurchaseInDefault method to show purchase in default  in Request Note
+	 * if item has purchase in default it shows icon to view pid in request note.
+	 *
+	 * @param requestNoteDtl the request note dtl
+	 *  page navigate to purchase in default.
 	 */
 	public void showPurchaseInDefault(ScRequestNoteDtl requestNoteDtl){
 		debugLogger("showPurchaseInDefault");
@@ -2148,9 +2381,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 }
 	}
 
-
 	/**
-	 * showPurchaseInquiry method to  show Purchase Inquiry  in Request Note
+	 * when purchase inquiry to request note, request note shows icon for purchase inquiry to view.
+	 * if item has purchase inquiry it shows icon to view purchase inquiry in request note.
+	 * @param requestNoteDtl the request note dtl
+	 *  page navigate to purchase inquiry.
 	 */
 	public void showPurchaseInquiry(ScRequestNoteDtl scRequestNoteDtl){
 		debugLogger("showPurchaseInquiry");
@@ -2224,7 +2459,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * showSimpleQuote method to  show Simple Quote  in Request Note Header Icon
+	 * showSimpleQuote method to  show Simple Quote  in Request Note Header Icon.
+	 */
+	
+	/**
+	 * when Simple Quote  to request note, request note shows icon for Simple Quote to view.
+	 * @param requestNoteDtl the request note dtl
+	 *  page navigate to Simple Quote.
 	 */
 	public void showSimpleQuote(){
 		debugLogger("showSimpleQuote");
@@ -2395,6 +2636,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * Close listener for add to cart.
+	 * to close add to cart popup window.
+	 */
 	public void closeListener() {
 		log.info("closeListener");
 		// add to cart validation
@@ -2403,6 +2648,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setJustRequired(Boolean.FALSE);
 	}
 	
+	/**
+	 * Supplier listener.
+	 * to get price type and offered price based on supplier id
+	 *
+	 * @param supplierId the supplier id
+	 * @param priceTypeId the price type id
+	 * @param requestNoteDtl the request note dtl
+	 * @param assignedUserId the assigned user id
+	 * @param deliveryTermId the delivery term id
+	 */
 	public void supplierListener(Long supplierId, Long priceTypeId, ScRequestNoteDtl requestNoteDtl, Long assignedUserId, Long deliveryTermId) {
 		debugLogger("supplierListener");
 		// lov changes 
@@ -2452,6 +2707,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 	}
 
+	/**
+	 * Before save post listener.
+	 * gets active pricing to get price type and offered price in request note.
+	 * before save request note.
+	 *
+	 * @param requestNoteDtl the request note dtl
+	 */
 	public void beforeSavePostListener(ScRequestNoteDtl requestNoteDtl) {
 		log.info("beforeSavePostLister");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
@@ -2478,7 +2740,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 	}
-
+	/**
+	 * After save post listener.
+	 * gets active pricing to get price type and offered price in request note.
+	 * After save request note.
+	 *
+	 * @param requestNoteDtl the request note dtl
+	 */
 	public void afterSavePostListener(ScRequestNoteDtl requestNoteDtl) {
 		log.info("afterSavePostLister");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -2500,7 +2768,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
  /**
-  * selected assigned user to apply supplier recommendation list for the simple quote zone
+  * selected assigned user to apply supplier recommendation list for the simple quote zone.
+  *
+  * @param selectedReqDtl the selected req dtl
+  * @param assignedUserId the assigned user id
   */
 	public void applyPrepareByForSupplierRecs(ScRequestNoteDtl selectedReqDtl  , Long assignedUserId){ 
 		log.info("applyPrepareByForSupplierRecs");
@@ -2518,7 +2789,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * selected recommended to apply supplier recomendation list for the simple quote zone
+	 * selected recommended to apply supplier recommendation list for the simple quote zone.
+	 *
+	 * @param supplierId the supplier id
 	 */
 	public void applyRecSupplierForSupplierRecList(Long supplierId){ 
 		log.info("applyRecSupplierForSupplierRecList");
@@ -2573,15 +2846,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	/**
 	 * Get parameter code select items by parameter type for radio buttons.
-	 * 
-	 * @param parameterType
-	 * 			the parameter type
+	 * if govt. seller , enable G2G radio button only.  
+	 * if not govt. seller  enable normal, ad Hoc and Emergency. 
+	 * @param parameterType 			the parameter type
+	 * @param g2gSeller the g2g seller
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getRadioButtonCodeValues(String parameterType , boolean g2gSeller) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null , g2gSeller);
 	}
 	
+	/**
+	 * Gets the radio button code values by search bean.
+	 *
+	 * @param parameterType the parameter type
+	 * @param searchBean the search bean
+	 * @param g2gSeller the g2g seller
+	 * @return the radio button code values by search bean
+	 */
 	public SelectItem[] getRadioButtonCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean , boolean g2gSeller) {
 		SelectItem[] items = null;
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
@@ -2610,6 +2892,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return items;
 	}
 	
+	/**
+	 * Check price offered.
+	 * show offered price based on selected price type.
+	 * @param priceTypeCode the price type code
+	 * @return true, if successful
+	 */
 	public boolean  checkPriceOffered(String priceTypeCode) {
 		log.debug("checkPriceOffered");
 		if(priceTypeCode != null){
@@ -2628,6 +2916,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return Boolean.FALSE;
 	}
 
+	/**
+	 * Select all.
+	 * boolean check box to select all items in request note .
+	 *
+	 * @param event the event
+	 */
 	public void selectAll(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScRequestNoteDtl> scRequestNoteDtls = getManagedBean()
@@ -2645,6 +2939,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
 	
+	/**
+	 * Cancel.
+	 * cancel  - cancel the request note.
+	 * @return the string
+	 */
 	public String cancel() {
 		log.info("cancel");
 		// clear request note data
@@ -2652,12 +2951,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return "catalogueSearch";
 	}
 	
+	/**
+	 * Cancel item detail popup.
+	 */
 	public void cancelItemDetailPopup() {
 		log.info("cancelItemDetailPopup");
 		RequestContext.getCurrentInstance().execute("itemDtlPopup.hide()");
 		getManagedBean().setAutoUpdate(true);
 	}
 	
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -2665,11 +2972,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		log.info(message);
 	}
 	
+	/**
+	 * Supplier view action.
+	 * Recommended Supplier icon in request note to view supplier details.
+	 */
 	public void supplierViewAction() {
 		log.info("supplierViewAction");
 		RequestContext.getCurrentInstance().execute("suppDetailsPopup.show();");
 	}
 	
+	/**
+	 * Gets the status desc list.
+	 *
+	 * @return the status desc list
+	 */
 	public List<PmStatusDesc> getStatusDescList() {
 		List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
 		
@@ -2696,6 +3012,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return statusDescs;
 	}
 	
+	/**
+	 * Download market research summary.
+	 *
+	 * @param scRequestNoteDtl the sc request note dtl
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void downloadMarketResearchSummary(ScRequestNoteDtl scRequestNoteDtl) throws IOException {
 		debugLogger("downloadMarketResearchSummary");
 		
@@ -2722,6 +3044,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		downloadFile(requestItemAttachment);	
 	}
 	
+	/**
+	 * Download purchase inq report.
+	 *
+	 * @param scRequestNoteDtl the sc request note dtl
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void downloadPurchaseInqReport(ScRequestNoteDtl scRequestNoteDtl) throws IOException {
 		debugLogger("downloadPurchaseInqReport");
 		
@@ -2762,6 +3090,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		downloadFile(scPIReportAttachment);
 	}
 	
+	/**
+	 * Gets the item code.
+	 *
+	 * @param scRequestItem the sc request item
+	 * @return the item code
+	 */
 	private String getItemCode(ScRequestItem scRequestItem) {
 		CmItem cmItem = scRequestItem.getCmItem();
 		
@@ -2772,6 +3106,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * Generate market summary pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scRequestNoteDtl the sc request note dtl
+	 * @throws Exception the exception
+	 */
 	private void generateMarketSummaryPdfFromVelocity(ScAttachment attachment, ScRequestNoteDtl scRequestNoteDtl) throws Exception {
 		ScRequestItem scRequestItem = scRequestNoteDtl.getRequestItem();
 		attachment.setFileName("market_summary.pdf");
@@ -2894,6 +3235,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
+	/**
+	 * Generate purchase inq pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scSupplierItemPrices the sc supplier item prices
+	 * @throws Exception the exception
+	 */
 	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScSupplierItemPrice> scSupplierItemPrices) throws Exception {
 		attachment.setFileName("pi_report.pdf");
 		populateAttachmentDetails(attachment);
@@ -2941,14 +3289,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
+	/**
+	 * The Class SupplierPK.
+	 */
 	private class SupplierPK {
+		
+		/** The sm supplier. */
 		private SmSupplier smSupplier;
 		
+		/**
+		 * Instantiates a new supplier pk.
+		 *
+		 * @param smSupplier the sm supplier
+		 */
 		public SupplierPK(SmSupplier smSupplier) {
 			this.smSupplier = smSupplier;
 		}
 		
 		/**
+		 * Gets the sm supplier.
+		 *
 		 * @return the smSupplier
 		 */
 		public SmSupplier getSmSupplier() {
@@ -2956,6 +3316,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		/**
+		 * Sets the sm supplier.
+		 *
 		 * @param smSupplier the smSupplier to set
 		 */
 		public void setSmSupplier(SmSupplier smSupplier) {
@@ -2963,7 +3325,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		/**
+		 * Equals.
+		 *
 		 * @param other the another SmSupplier instance
+		 * @return true, if successful
 		 */
 		public boolean equals(Object other) {
 			if (other == null) {
@@ -2982,6 +3347,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		/**
+		 * Hash code.
+		 *
 		 * @return the hashcode
 		 */
 		public int hashCode() {
@@ -2995,6 +3362,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * Sort market summary list.
+	 *
+	 * @param marketSummaryList the market summary list
+	 */
 	public void sortMarketSummaryList(List<MarketSummaryAndPIBean> marketSummaryList) {
         Comparator<MarketSummaryAndPIBean> comparator = new Comparator<MarketSummaryAndPIBean>() {
             @Override
@@ -3011,6 +3383,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
         Collections.sort(marketSummaryList, comparator);
     }
 
+	/**
+	 * Show recent price.
+	 *
+	 * @param cmSupplierItem the cm supplier item
+	 */
 	public void showRecentPrice(CmSupplierItem cmSupplierItem) {
 		debugLogger("showRecentPrice");
 		getManagedBean().setCmSupplierItem(cmSupplierItem);
@@ -3018,6 +3395,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	
+	/**
+	 * View recent price.
+	 * to view recent price report in search catalogue  - comapare screen page
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void viewRecentPrice() throws IOException {
 		debugLogger("viewRecentPrice");
 		
@@ -3041,6 +3423,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * View market research.
+	 * to view market report in request note page.
+	 * @param requestNoteDtl the request note dtl
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void viewMarketResearch(ScRequestNoteDtl requestNoteDtl) throws IOException {
 		debugLogger("viewMarketResearch");
 		
@@ -3106,23 +3494,48 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	/**
+	 * Gets the parameter so.
+	 *
+	 * @return the parameter so
+	 */
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	
+	/**
+	 * Gets the user so.
+	 *
+	 * @return the user so
+	 */
 	private IUserSO getUserSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 	
+	/**
+	 * Gets the status so.
+	 *
+	 * @return the status so
+	 */
 	private IStatusSO getStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
 	
+	/**
+	 * Gets the direct purchase so.
+	 *
+	 * @return the direct purchase so
+	 */
 	private IDirectPurchaseSO getDirectPurchaseSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 	}
 	
+	/**
+	 * Gets the server url.
+	 *
+	 * @return the server url
+	 */
 	private String getServerUrl() {
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
@@ -3134,6 +3547,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
+	 * Checks if is flag.
+	 *
 	 * @return the flag
 	 */
 	public boolean isFlag() {
@@ -3141,29 +3556,54 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
+	 * Sets the flag.
+	 *
 	 * @param flag the flag to set
 	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
 	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param digiSign the digi sign
+	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
 	
+	/**
+	 * Gpki cancel action.
+	 */
 	public void gpkiCancelAction() {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 * prepare sign in data for gpki authentication.
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getManagedBean().getRequestNote().getRequestNoteNo());
@@ -3172,6 +3612,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}	
