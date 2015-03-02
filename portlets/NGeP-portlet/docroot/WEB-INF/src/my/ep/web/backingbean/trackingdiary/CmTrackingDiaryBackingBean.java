@@ -13,11 +13,12 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -50,6 +51,12 @@ public class CmTrackingDiaryBackingBean extends
 	
 	public void search() {
 		System.out.println("pageChangeListener");
+		if ((getManagedBean().getSearchItemCodeValue() != null && getManagedBean().getSearchItemCodeValue().isEmpty()) 
+				&& (getManagedBean().getSearchItemNameValue() != null && getManagedBean().getSearchItemNameValue().isEmpty()) 
+				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
+				) {
+			throw new EpException(MessageConst.ERROR_716006);
+		}
 		getManagedBean().getCmDocumentDataModel().reloadData();
 	}
 

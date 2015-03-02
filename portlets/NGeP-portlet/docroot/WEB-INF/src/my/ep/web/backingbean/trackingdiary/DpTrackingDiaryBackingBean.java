@@ -140,7 +140,7 @@ public class DpTrackingDiaryBackingBean extends
 //				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
 //				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
 				) {
-			throw new EpException(MessageConst.ERROR_740023);
+			throw new EpException(MessageConst.ERROR_776101);
 		}
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
