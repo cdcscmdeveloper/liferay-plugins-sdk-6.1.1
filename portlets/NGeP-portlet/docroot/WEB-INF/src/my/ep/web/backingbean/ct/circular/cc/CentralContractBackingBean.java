@@ -129,19 +129,26 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	ContractBackingBean ctBB = null;
 	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
+	 /**
+		 * This constructor method used to initialize the variable on start up
+		 * Setting button if user not call from BPM
+		 * Method used to initialize approver list
+		 */
 	public CentralContractBackingBean(){
 	
 			if(getManagedBean().getOutComes()==null) {
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			    /*Initialization of circular object*/
 				getManagedBean().setCircularVer(new CtCircularVer());
 				PmStatus status = new PmStatus();
 				status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 				getManagedBean().getCircularVer().setStatus(status);
-				 ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+				 /*Initialization of contract details backing bean*/
+				ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			     ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			     initializeRemarks();
 			}
-			
+			/*Setting login user id*/
 			if(isCentralContractAdmin()) 
 				getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
 			
@@ -151,10 +158,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		    }
 	}
 	
+	/**
+     * This method used to retrieve user login  information
+	 */
 	private FacesScopes getFacesScopes() {
 	    	 return new FacesScopes();
 	}
 	
+	/**
+	 * This  method used to initialize approver list
+	 */
 	public void preRenderCircular() {			
 			renewSesionObject();
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -167,6 +180,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
 	}
 
+	/**
+	 * This  method call once user navigate central circular  page from task list
+	 * Method used to retrieve all information from BPM
+	 * Method used to retrieve circular information from BPM
+	 * Method return null if task id null
+ */
 	public void preRenderView() {
 		ICircularSO circularSO = null;
 		try {
@@ -214,6 +233,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	 /**
+	 * This  method used to set retrieve value from BPM or contract maintenance
+ */
 	public void setContractCircularVar(CircularResDTO resDTO){
 		
 		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
@@ -261,6 +283,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			initializeRemarks();
 	}
 	
+	/**
+	 * This  method used to initialize approver list
+	 */
 	private void initializeApproverList() {
 		if (getManagedBean().getApproverModel() == null) {
 			List<String> source = new ArrayList<String>();
@@ -269,6 +294,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * This  method used to fetch status of circular
+	 */
 	public SelectItem[] getStatusDropdown() {
 		IStatusSO statusSO = null;
 		SelectItem[] items = null;
@@ -300,6 +328,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	    return items;
 	}
 	
+	/**
+	 * The method used for searching the contract to associate from circular.
+	 * A warning message will display on screen when searching
+	 * with empty search criteria.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see Exception
+	 */
 	public void searchContract(){
 		IContractSO contractSO = null;
 		try { 
@@ -348,8 +384,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * The method used for to retrieve  associate circular with current circular for cancel
+	 */
 	public void addCancelCircularListener() {
-		log.info("CentralContractBackingBean.addCancelCircularListener()");
 		try {
 			if(getManagedBean().getCancelledCircularList()==null) {
 				CircularReqDTO reqDTO = new CircularReqDTO();
@@ -372,6 +410,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * The method used  to add  associate circular with current circular for cancel
+	 */
 	public void addCancelledCircular() {
 		log.info("CentralContractBackingBean.addCancelledCircular()");
         try {	
@@ -387,6 +428,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * The method used to delete  associate circular with current circular 
+	 */
 	public void deleteCancelCircular(){
 		log.info("CentralContractBackingBean.deleteCancelCircular()");
 		try {
@@ -398,6 +442,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * The method used to delete  associate circular with current circular 
+	 */
 	public void addSelectedContract() {
 		IContractSO contractSO = null;
         
@@ -434,14 +481,23 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * The method used to set role of central contract admin
+	 */
 	public boolean isCentralContractAdmin() {
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
 	}
 	
+	/**
+	 * The method used to set role of central contract approver
+	 */
 	public boolean isBPKApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
 	}
 	
+	/**
+	 * The method used to retrieve of login user role
+	 */
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) 
 			return RoleCode.BPK_CCA.value();
@@ -451,6 +507,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return null;
 	}
 	
+	 /**
+	 * This method used to save central circular 
+	 * This method call validate function to validate circular details
+	 *  This method will navigate to acknowledgment page with
+	 *   a confirmation message once submit successfully
+	 */
 	public String saveCircular(String action){
 		log.debug("CentralContractBackingBean.saveCircular("+action+")");
 
@@ -543,6 +605,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return null;
 	}
 	
+	 /**
+	 * This method used to validate central circular details
+	 */
 	public void validateCircular(String outcome) {
 		IQTAwardSO qtAwardSO = null;
 		IContractSO contractSO = null;
@@ -601,6 +666,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		  }
 	}
 
+	 /**
+	 * This method used to upload circular letter into database
+	 */
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
@@ -617,6 +685,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 	
+	/**
+	 * This method used to download circular letter once approver login
+	 */
 	public void downloadFile(int type) throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -655,6 +726,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
 	
+	/**
+	 * This method used to navigate circular details for view 
+	 * and update during maintenance
+	 */
 	public String gotoPage() {
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
@@ -697,6 +772,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return null;
 	}
 
+	  /**
+	 * This  method used to retrieve list of active approver start
+	 * Setting selected and non selected approver value 
+	 * Retrieve approver for central circular
+     */
 	private List<String> getAvailableApproverList() {
 		IUserSO userSO = null;
 		List<String> sourceList = new ArrayList<String>();
@@ -729,6 +809,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return sourceList;
 	}	
 	
+	 /**
+		 * This  method used to set drop down status 
+		 *  value for delete of central circular details
+	     */
 	public SelectItem[] getStateDropdownValues() {
 		SelectItem[] items = null;
 		try {
@@ -755,10 +839,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		this.getManagedBean().getSelectedCircularContract();
 	}
 
+	/**
+	 * The method to initialize remark
+	 * */
 	private void initializeRemarks() {
 		initiateRemark(getManagedBean().getCircularVer().getContractRemarks());
 	}
 	
+	/**
+	 * The method to initialize remark
+	 * */
 	private void initiateRemark(List<CtRemark> remarks) {
 		
 		boolean ctWorkflowStatusMatch = false;
@@ -783,6 +873,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * The method for date conversion into string
+	 * */
 	public String convertTime(Date time){ 
         String str ="";
     	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
@@ -791,6 +884,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         return format.format(time); 
     }
 
+	/**
+	 * The method to retrieve list of item
+	 * return list object itemlist 
+	 * */
 	public List<CtItemPrice> getItemPrice() {
 		 List<CtItemPrice> itemPriceList = new ArrayList<CtItemPrice>();
 	 	 if(this.getManagedBean().getZonePriceMap().size() > 0 && this.getManagedBean().getSelectedZoneItems() != null) {

@@ -69,6 +69,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String searchPhysicalCircularNo;
 	private String searchContractNo;
 	private String searchContractName;
+	private String textBeforeSign;
+	private String taskName;
 	
 	private Date searchStartDate;
 	private Date searchEndDate;	
@@ -83,7 +85,10 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean chkItemPrice;
 	private boolean chkCancelPage;
 	private boolean fromCircularNotice;
+	private boolean autoUpdate = true;
 	
+	private TreeNode centralZoneTrees;
+	private PmDigiSign pmDigiSign;
 	private CtCircular circular;
 	private CtCircularVer circularVer;
 	private CtCircularContract selectedCircularContract;
@@ -104,214 +109,442 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Map<Long, PmUserGroup> userGroupMap;	
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<String, PmUser> userMap;
-	private TreeNode centralZoneTrees;
-	
-	private PmDigiSign pmDigiSign;
-	private boolean autoUpdate = true;
-	private String textBeforeSign;
-	private String taskName;
-
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
+	/**
+	 * @return the updateAction
+	 */
 	public boolean isUpdateAction() {
 		return updateAction;
 	}
+	
+	/**
+	 * @param updateAction the updateAction to set
+	 */
 	public void setUpdateAction(boolean updateAction) {
 		this.updateAction = updateAction;
 	}
+	
+	/**
+	 * @return the circularVer
+	 */
 	public CtCircularVer getCircularVer() {
 		return circularVer;
 	}
+	
+	/**
+	 * @param circularVer the circularVer to set
+	 */
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
 	}
+	
+	/**
+	 * @return the approverModel
+	 */
 	public DualListModel<String> getApproverModel() {
 		return approverModel;
 	}
+	
+	/**
+	 * @param approverModel the approverModel to set
+	 */
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
 	}
+	
+	/**
+	 * @return the searchCircularNo
+	 */
 	public String getSearchCircularNo() {
 		return searchCircularNo;
 	}
+	
+	/**
+	 * @param searchCircularNo the searchCircularNo to set
+	 */
 	public void setSearchCircularNo(String searchCircularNo) {
 		this.searchCircularNo = searchCircularNo;
 	}
+	
+	/**
+	 * @return the searchCircularName
+	 */
 	public String getSearchCircularName() {
 		return searchCircularName;
 	}
+	
+	/**
+	 * @param searchCircularName the searchCircularName to set
+	 */
 	public void setSearchCircularName(String searchCircularName) {
 		this.searchCircularName = searchCircularName;
 	}
+	
+	/**
+	 * @return the searchPhysicalCircularNo
+	 */
 	public String getSearchPhysicalCircularNo() {
 		return searchPhysicalCircularNo;
 	}
+	
+	/**
+	 * @param searchPhysicalCircularNo the searchPhysicalCircularNo to set
+	 */
 	public void setSearchPhysicalCircularNo(String searchPhysicalCircularNo) {
 		this.searchPhysicalCircularNo = searchPhysicalCircularNo;
 	}
+	
+	/**
+	 * @return the searchStartDate
+	 */
 	public Date getSearchStartDate() {
 		return searchStartDate;
 	}
+	
+	/**
+	 * @param searchStartDate the searchStartDate to set
+	 */
 	public void setSearchStartDate(Date searchStartDate) {
 		this.searchStartDate = searchStartDate;
 	}
+	
+	/**
+	 * @return the searchEndDate
+	 */
 	public Date getSearchEndDate() {
 		return searchEndDate;
 	}
+	
+	/**
+	 * @param searchEndDate the searchEndDate to set
+	 */
 	public void setSearchEndDate(Date searchEndDate) {
 		this.searchEndDate = searchEndDate;
 	}
+	
+	/**
+	 * @return the searchStatusId
+	 */
 	public Long getSearchStatusId() {
 		return searchStatusId;
 	}
+	
+	/**
+	 * @param searchStatusId the searchStatusId to set
+	 */
 	public void setSearchStatusId(Long searchStatusId) {
 		this.searchStatusId = searchStatusId;
 	}
+	
+	/**
+	 * @return the searchContractNo
+	 */
 	public String getSearchContractNo() {
 		return searchContractNo;
 	}
+	
+	/**
+	 * @param searchContractNo the searchContractNo to set
+	 */
 	public void setSearchContractNo(String searchContractNo) {
 		this.searchContractNo = searchContractNo;
 	}
+	
+	/**
+	 * @return the searchContractName
+	 */
 	public String getSearchContractName() {
 		return searchContractName;
 	}
+	
+	/**
+	 * @param searchContractName the searchContractName to set
+	 */
 	public void setSearchContractName(String searchContractName) {
 		this.searchContractName = searchContractName;
 	}
+	
+	/**
+	 * @return the circular
+	 */
 	public CtCircular getCircular() {
 		return circular;
 	}
+	
+	/**
+	 * @param circular the circular to set
+	 */
 	public void setCircular(CtCircular circular) {
 		this.circular = circular;
 	}
+	
+	/**
+	 * @return the contractList
+	 */
 	public List<CtContract> getContractList() {
 		if(contractList==null) {
 			contractList = new ArrayList<CtContract>();
 		}
 		return contractList;
 	}
+	
+	/**
+	 * @param contractList the contractList to set
+	 */
 	public void setContractList(List<CtContract> contractList) {
 		this.contractList = contractList;
 	}
 	
+	/**
+	 * @return the remarkList
+	 */
 	public List<CtRemark> getRemarkList() {
 		if(remarkList == null)
 			remarkList = new ArrayList<CtRemark>();
 		return remarkList;
 	}
 
+	/**
+	 * @param remarkList the remarkList to set
+	 */
 	public void setRemarkList(List<CtRemark> remarkList) {
 		this.remarkList = remarkList;
 	}
 
+	/**
+	 * @return the attachmentList
+	 */
 	public List<CtAttachment> getAttachmentList() {
 		if(attachmentList == null)
 		   attachmentList = new ArrayList<CtAttachment>();
 		return attachmentList;
 	}
 
+	/**
+	 * @param attachmentList the attachmentList to set
+	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
+	
+	/**
+	 * @return the userGroupMap
+	 */
 	public Map<Long, PmUserGroup> getUserGroupMap() {
 		return userGroupMap;
 	}
+	
+	/**
+	 * @param userGroupMap the userGroupMap to set
+	 */
 	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
 		this.userGroupMap = userGroupMap;
 	}
+	
+	/**
+	 * @return the circularAdmin
+	 */
 	public String getCircularAdmin() {
 		return circularAdmin;
 	}
+	
+	/**
+	 * @param circularAdmin the circularAdmin to set
+	 */
 	public void setCircularAdmin(String circularAdmin) {
 		this.circularAdmin = circularAdmin;
 	}
+	
+	/**
+	 * @return the selectedContactPersons
+	 */
 	public List<CtContactPerson> getSelectedContactPersons() {
 		return selectedContactPersons;
 	}
+	
+	/**
+	 * @param selectedContactPersons the selectedContactPersons to set
+	 */
 	public void setSelectedContactPersons(List<CtContactPerson> selectedContactPersons) {
 		this.selectedContactPersons = selectedContactPersons;
 	}
+	
+	/**
+	 * @return the selectedCancelCirculars
+	 */
 	public List<CtCancelCircular> getSelectedCancelCirculars() {
 		return selectedCancelCirculars;
 	}
+	
+	/**
+	 * @param selectedCancelCirculars the selectedCancelCirculars to set
+	 */
 	public void setSelectedCancelCirculars(List<CtCancelCircular> selectedCancelCirculars) {
 		this.selectedCancelCirculars = selectedCancelCirculars;
 	}
+	
+	/**
+	 * @return the selectedContractList
+	 */
 	public List<CtContract> getSelectedContractList() {
 		return selectedContractList;
 	}
+	
+	/**
+	 * @param selectedContractList the selectedContractList to set
+	 */
 	public void setSelectedContractList(List<CtContract> selectedContractList) {
 		this.selectedContractList = selectedContractList;
 	}
+	
+	/**
+	 * @return the selectedCancelledCircularList
+	 */
 	public List<CtCancelCircular> getSelectedCancelledCircularList() {
 		return selectedCancelledCircularList;
 	}
+	
+	/**
+	 * @param selectedCancelledCircularList the selectedCancelledCircularList to set
+	 */
 	public void setSelectedCancelledCircularList(
 			List<CtCancelCircular> selectedCancelledCircularList) {
 		this.selectedCancelledCircularList = selectedCancelledCircularList;
 	}
+	
+	/**
+	 * @return the cancelledCircularList
+	 */
 	public List<CtCancelCircular> getCancelledCircularList() {
 		return cancelledCircularList;
 	}
+	
+	/**
+	 * @param cancelledCircularList the cancelledCircularList to set
+	 */
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
 	}
+	
+	/**
+	 * @return the updateTypeDisable
+	 */
 	public boolean isUpdateTypeDisable() {
 		return updateTypeDisable;
 	}
+	
+	/**
+	 * @param updateTypeDisable the updateTypeDisable to set
+	 */
 	public void setUpdateTypeDisable(boolean updateTypeDisable) {
 		this.updateTypeDisable = updateTypeDisable;
 	}
 	
+	/**
+	 * @return the selectedExemptedOrgs
+	 */
 	public List<CtExemptedOrg> getSelectedExemptedOrgs() {
 		return selectedExemptedOrgs;
 	}
+	
+	/**
+	 * @param selectedExemptedOrgs the selectedExemptedOrgs to set
+	 */
 	public void setSelectedExemptedOrgs(List<CtExemptedOrg> selectedExemptedOrgs) {
 		this.selectedExemptedOrgs = selectedExemptedOrgs;
 	}
 	
+	/**
+	 * @return the selectedCircularContract
+	 */
 	public CtCircularContract getSelectedCircularContract() {
 		return selectedCircularContract;
 	}
+	
+	/**
+	 * @param selectedCircularContract the selectedCircularContract to set
+	 */
 	public void setSelectedCircularContract(CtCircularContract selectedCircularContract) {
 		this.selectedCircularContract = selectedCircularContract;
 	}
 	
+	/**
+	 * @return the selectedCircularItem
+	 */
 	public CtCircularItem getSelectedCircularItem() {
 		return selectedCircularItem;
 	}
+	
+	/**
+	 * @param selectedCircularItem the selectedCircularItem to set
+	 */
 	public void setSelectedCircularItem(CtCircularItem selectedCircularItem) {
 		this.selectedCircularItem = selectedCircularItem;
 	}
 	
+	/**
+	 * @return the selectedZoneItems
+	 */
 	public CtContractZone getSelectedZoneItems() {
 		return selectedZoneItems;
 	}
+	
+	/**
+	 * @param selectedZoneItems the selectedZoneItems to set
+	 */
 	public void setSelectedZoneItems(CtContractZone selectedZoneItems) {
 		this.selectedZoneItems = selectedZoneItems;
 	}
+	
+	/**
+	 * @return the zonePriceMap
+	 */
 	public Map<CtContractZone, List<CtItemPrice>> getZonePriceMap() {
 		if(zonePriceMap==null) {
 			zonePriceMap = new HashMap<CtContractZone, List<CtItemPrice>>();
 		}
 		return zonePriceMap;
 	}
+	
+	/**
+	 * @param zonePriceMap the zonePriceMap to set
+	 */
 	public void setZonePriceMap(Map<CtContractZone, List<CtItemPrice>> zonePriceMap) {
 		this.zonePriceMap = zonePriceMap;
 	}
+	
+	/**
+	 * @return the chkItemZone
+	 */
 	public boolean isChkItemZone() {
 		return chkItemZone;
 	}
+	
+	/**
+	 * @param chkItemZone the chkItemZone to set
+	 */
 	public void setChkItemZone(boolean chkItemZone) {
 		this.chkItemZone = chkItemZone;
 	}
+	
+	/**
+	 * @return the chkItemPrice
+	 */
 	public boolean isChkItemPrice() {
 		return chkItemPrice;
 	}
+	
+	/**
+	 * @param chkItemPrice the chkItemPrice to set
+	 */
 	public void setChkItemPrice(boolean chkItemPrice) {
 		this.chkItemPrice = chkItemPrice;
 	}
+	
+	/**
+	 * @return the userMap
+	 */
 	public Map<String, PmUser> getUserMap() {
 		if(userMap==null) {
 			userMap = new HashMap<String, PmUser>();
@@ -319,90 +552,198 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		return userMap;
 	}
 
+	/**
+	 * @param userMap the userMap to set
+	 */
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
 	}
+	
+	/**
+	 * @return the centralZoneTrees
+	 */
 	public TreeNode getCentralZoneTrees() {
 		return centralZoneTrees;
 	}
+	
+	/**
+	 * @param centralZoneTrees the centralZoneTrees to set
+	 */
 	public void setCentralZoneTrees(TreeNode centralZoneTrees) {
 		this.centralZoneTrees = centralZoneTrees;
 	}
 	
+	/**
+	 * @return the contractItemZones
+	 */
 	public List<CtContractZone> getContractItemZones() {
 		return contractItemZones;
 	}
+	
+	/**
+	 * @param contractItemZones the contractItemZones to set
+	 */
 	public void setContractItemZones(List<CtContractZone> contractItemZones) {
 		this.contractItemZones = contractItemZones;
 	}
+	
+	/**
+	 * @return the selectedTabIndex
+	 */
 	public int getSelectedTabIndex() {
 		return selectedTabIndex;
 	}
+	
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
+	
+	/**
+	 * @return the chkCancelPage
+	 */
 	public boolean isChkCancelPage() {
 		return chkCancelPage;
 	}
+	
+	/**
+	 * @param chkCancelPage the chkCancelPage to set
+	 */
 	public void setChkCancelPage(boolean chkCancelPage) {
 		this.chkCancelPage = chkCancelPage;
 	}
+	
+	/**
+	 * @return the action
+	 */
 	public String getAction() {
 		return action;
 	}
+	
+	/**
+	 * @param action the action to set
+	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
+	
+	/**
+	 * @return the orgProfiles
+	 */
 	public List<PmOrgProfile> getOrgProfiles() {
 		return orgProfiles;
 	}
+	
+	/**
+	 * @param orgProfiles the orgProfiles to set
+	 */
 	public void setOrgProfiles(List<PmOrgProfile> orgProfiles) {
 		this.orgProfiles = orgProfiles;
 	}
+	
+	/**
+	 * @return the viewContract
+	 */
 	public boolean isViewContract() {
 		return viewContract;
 	}
+	
+	/**
+	 * @param viewContract the viewContract to set
+	 */
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
 	}
+	
+	/**
+	 * @return the pmDigiSign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
+	
+	/**
+	 * @param pmDigiSign the pmDigiSign to set
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
+	
+	/**
+	 * @return the autoUpdate
+	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
+	
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
+	
+	/**
+	 * @return the textBeforeSign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
+	
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
+	
+	/**
+	 * @return the taskName
+	 */
 	public String getTaskName() {
 		return taskName;
 	}
+	
+	/**
+	 * @param updateAction the updateAction to set
+	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
+	
+	/**
+	 * @return the circularVerPagingDataModel
+	 */
 	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {
 		return circularVerPagingDataModel;
 	}
+	
+	/**
+	 * @param circularVerPagingDataModel the circularVerPagingDataModel to set
+	 */
 	public void setCircularVerPagingDataModel(IPagingDataModel<CtCircularVer> circularVerPagingDataModel) {
 		this.circularVerPagingDataModel = circularVerPagingDataModel;
 	}
 	
+	/**
+	 * @return the fromCircularNotice
+	 */
 	public boolean isFromCircularNotice() {
 		return fromCircularNotice;
 	}
+	
+	/**
+	 * @param updateAction the updateAction to set
+	 */
 	public void setFromCircularNotice(boolean fromCircularNotice) {
 		this.fromCircularNotice = fromCircularNotice;
 	}
 
+	/**
+	 * Pagination for central circular search list 
+	 */
 	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
@@ -410,6 +751,13 @@ public class CentralContractManagedBean extends BaseManagedBean {
 			super("circularVerDt");
 		}
 		
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<CtCircularVer> pageChangeListener(ISearchBean<CtCircularVer> searchBean) {
 			try {				
