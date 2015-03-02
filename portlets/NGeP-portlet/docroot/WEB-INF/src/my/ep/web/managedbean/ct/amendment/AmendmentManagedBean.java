@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.ct.amendment;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String buttonAction;
 	private String committeeType;
 	private Long meetingStatusId;
-	private Long secretaryId;	
+	private Long secretaryId;
+	private Date newAmendmentEffDate;
 	private int selectedTabIndex;
 	private int attachFileIndex;	
 	private double performanceBondRuleAmt;	
@@ -355,6 +357,20 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.secretaryId = secretaryId;
 	}
 	
+	/**
+	 * @return the newAmendmentEffDate
+	 */
+	public Date getNewAmendmentEffDate() {
+		return newAmendmentEffDate;
+	}
+
+	/**
+	 * @param newAmendmentEffDate the newAmendmentEffDate to set
+	 */
+	public void setNewAmendmentEffDate(Date newAmendmentEffDate) {
+		this.newAmendmentEffDate = newAmendmentEffDate;
+	}
+
 	/**
 	 * @return the selectedTabIndex
 	 */
