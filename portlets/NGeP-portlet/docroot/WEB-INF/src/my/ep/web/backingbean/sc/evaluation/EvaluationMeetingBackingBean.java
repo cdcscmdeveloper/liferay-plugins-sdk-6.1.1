@@ -1337,8 +1337,8 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	/**
-	 * Prerender view.click on task list it will render meeting details screens
-	 * for(EC/OC/TEC/FEC)
+	 * Prerender view.click on task list navigate to coordinate meeting details
+	 * Screens for(EC/OC/TEC/FEC).
 	 */
 	public void prerenderView() {
 
