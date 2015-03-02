@@ -710,7 +710,7 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param checkListType
 	 *            (Mandatory)
-	 * @return the string(technicalComplianceStage.xhtml)
+	 * @return navigate to proposal submitted supplier page.
 	 */
 	public String complianceUploadCheckList(ScQtCheckList checklist, int index,
 			String checkListType) {
@@ -745,7 +745,7 @@ public class EvaluationBackingBean extends
 	 * 
 	 * @param label
 	 *            (Mandatory)
-	 * @return the string(sampleComplianceStage.xhtml)
+	 * @return navigate to sampleItem page.
 	 */
 	public String complianceSampleItems(ScQtSampleLable label) {
 		IQTEvaluationSO evaluationSo = null;
@@ -968,7 +968,7 @@ public class EvaluationBackingBean extends
 	 * Evaluation backaction.when you click back button in compliance stage and
 	 * evaluation stage.
 	 * 
-	 * @return the string(evaluationstage1view.xhtml)
+	 * @return navigate to evaluation main page.
 	 */
 	public String evaluationBackaction() {
 		IQTEvaluationSO evaluationSo = null;
@@ -1247,7 +1247,8 @@ public class EvaluationBackingBean extends
 	/**
 	 * Technical backaction.
 	 * 
-	 * @return the string(standardEvaluationTechList.xhtml)
+	 * @return navigate to compliance qualified supplier technical checklist
+	 *         page.
 	 */
 	public String technicalBackaction() {
 		this.getManagedBean().setTechindex(-1);
@@ -1258,7 +1259,8 @@ public class EvaluationBackingBean extends
 	/**
 	 * Financial backaction.
 	 * 
-	 * @return the string(standardEvaluationFinList.xhtml)
+	 * @return navigate to compliance or technical or financial qualified
+	 *         supplier financial checklist page.
 	 */
 	public String financialBackaction() {
 		this.getManagedBean().setTechindex(-1);
@@ -1269,7 +1271,8 @@ public class EvaluationBackingBean extends
 	/**
 	 * Technical spec backaction.
 	 * 
-	 * @return the string
+	 * @return navigate to compliance qualified supplier technical checklist
+	 *         page.
 	 */
 	public String technicalSpecBackaction() {
 		this.getManagedBean().setTechindex(-1);
@@ -1280,7 +1283,8 @@ public class EvaluationBackingBean extends
 	/**
 	 * Financial spec backaction.
 	 * 
-	 * @return the string(evaluationFinancialSpec)
+	 * @return navigate to compliance or technical or financial qualified
+	 *         supplier financial Spec page.
 	 */
 	public String financialSpecBackaction() {
 		this.getManagedBean().setTechindex(-1);
@@ -1827,7 +1831,8 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param checklistType
 	 *            (Mandatory)
-	 * @return the string(standardEvaluationTechList.xhtml)
+	 * @return navigate to Upload checklist or Template spec or Other checklist
+	 *         pages.
 	 */
 	public String viewTechnicalEvaluation(ScQtCheckList checklist, int index,
 			String checklistType) {
@@ -1910,7 +1915,8 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param checklistType
 	 *            (Mandatory)
-	 * @return the string(standardEvaluationTechList.xhtml)
+	 * @return navigate to Upload checklist or Template spec or Other Checklist
+	 *         pages.
 	 */
 	public String evaluateTechnicalEvaluation(ScQtCheckList checklist,
 			int index, String checklistType) {
@@ -1995,7 +2001,8 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param checklistType
 	 *            (Mandatory)
-	 * @return the string(standardEvaluationFinList.xhtml)
+	 * @return navigate to Upload checklist or Template Spec or Other ChecList
+	 *         pages.
 	 */
 	public String viewfinacialEvaluation(ScQtCheckList checklist, int index,
 			String checklistType) {
@@ -2287,7 +2294,8 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param checklistType
 	 *            (Mandatory)
-	 * @return the string(standardEvaluationFinList.xhtml)
+	 * @return navigate to upload checklist or Template Spec or Other checkList
+	 *         pages.
 	 */
 	public String evaluatefinancialEvaluation(ScQtCheckList checklist,
 			int index, String checklistType) {
@@ -2483,8 +2491,7 @@ public class EvaluationBackingBean extends
 					if (null != zoneResDTO.getComplianceResultBean()
 							&& zoneResDTO.getComplianceResultBean()
 									.getTotalRecord() > 0) {
-					
-						
+
 						this.getManagedBean().setFinSpecSupplierList(
 								zoneResDTO.getComplianceResultBean()
 										.getResultList());
@@ -2532,7 +2539,7 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param checkListType
 	 *            (Mandatory)
-	 * @return the string(technicalotherchecklists.xhtml)
+	 * @return navigate to supplier information page.
 	 */
 	public String technicalSupplierEvaluate(
 			ScQtProposalChecklist proposalCheckList, int index,
@@ -3170,7 +3177,7 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 * @param checkListType
 	 *            (Mandatory)
-	 * @return the string(financialotherchecklists.xhtml)
+	 * @return navigate to supplier information page.
 	 */
 	public String financialSupplierEvaluate(
 			ScQtProposalChecklist proposalCheckList, int index,
@@ -5921,8 +5928,8 @@ public class EvaluationBackingBean extends
 
 	/*
 	 * 
-	 * preRenderView(). user click on task list it will render Evaluation
-	 * screens for(EC/OC/TEC/FEC).
+	 * preRenderView(). user click on task list navigate to evaluation screens
+	 * for(EC/OC/TEC/FEC).
 	 */
 	public void preRenderView() {
 
