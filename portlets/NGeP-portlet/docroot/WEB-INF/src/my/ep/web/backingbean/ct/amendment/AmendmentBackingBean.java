@@ -598,8 +598,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
     				   || getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))) {
 		    	  getManagedBean().setDisableAmendDetails(true);
 		      }
+		      if(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)){
+		    	  getManagedBean().setDisableEndorseAmendDetails(true);
+		      }
 		      if(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)){
-		    	  getManagedBean().setDisablefinalAmendDetails(true);
+		    	  getManagedBean().setDisableFinalAmendDetails(true);
 		      }
 		      //Default the secretary
 		      if ((getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) ||
