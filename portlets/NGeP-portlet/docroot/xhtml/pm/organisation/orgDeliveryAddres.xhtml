@@ -27,7 +27,7 @@
 				<h:outputText value="#{organisationBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
 				<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu styleClass="ppDropDownWidthS" 
+				<p:selectOneMenu styleClass="ppDropDownWidthS"  label="#{lbl['lbl.pm.financialorg.status']}"
 					disabled="#{address.brandNew}"
 					value="#{address.recordStatusFlg}" required="true"
 					style="width: 135px;margin-bottom: 5px;">
@@ -59,11 +59,12 @@
 		</div>
 
 	</p:panel>
-	<p:dialog header="Delivery Address" widgetVar="addressPopup" id="deliveryAddressDialog"
+	<p:dialog header="#{lbl['lbl.pm.header.general.org.delivery']}" widgetVar="addressPopup" id="deliveryAddressDialog"
 		modal="true" width="900" height="450">
 
 		<p:panel header="#{lbl['lbl.pm.header.general.org.delivery']}" toggleable="true" >
-
+			<p:messages id="deliveryAddressMessages" showDetail="true"
+				autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
 			<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
@@ -279,13 +280,13 @@
 
 		<div align="right">
 
-			<p:commandButton value="Ok" 
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+				process="@this deliveryAddressDialog"
 				action="#{organisationBackingBean.updateDeliveryAddrDt}"
-				update="deliveryAddressId" onclick="addressPopup.hide();"
-				oncomplete="deliveryAddres.paginator.endLink.click();">
+				update="deliveryAddressId">			
 			</p:commandButton>
 			&#160;&#160;
-			<p:commandButton value="Cancel" 
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 				onclick="addressPopup.hide();"></p:commandButton>
 		</div>
 
