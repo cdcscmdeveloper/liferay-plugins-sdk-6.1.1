@@ -12,19 +12,21 @@
 	<ui:define name="contentSection">
 
 
+
 		<p:messages id="cancelMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 
+			<p:row>
 
-			<p:column width="100%" style="text-align:right">
-				<p:commandButton value="#{lbl['lbl.so.submit']}"
-					action="#{qTDetailBB.submitQtCancelDetails}" process="@form"
-					update="@all" />
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.so.submit']}"
+						action="#{qTDetailBB.submitQtCancelDetails}" process="@form"
+						update="@all" />
 
-			</p:column>
-
+				</p:column>
+			</p:row>
 		</p:panelGrid>
 
 
