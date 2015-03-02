@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.integration.common.IntegrationConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -49,6 +51,7 @@ import com.augtech.kmc.client.IKMCAPIRequest;
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
 import com.augtech.kmc.client.IUploadBundle;
+import com.augtech.kmc.client.KMCAPIException;
 import com.augtech.kmc.client.KMCClient;
 import com.augtech.kmc.client.KMCClientFactory;
 import com.augtech.kmc.client.KMCRequestBuilder;
@@ -68,7 +71,8 @@ import com.sun.xml.internal.fastinfoset.util.StringArray;
 @ManagedBean(name = "spkiBackingBean")
 @SessionScoped
 public class SpkiBackingBean {
-	
+	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
+
 	private static List<String> challs = null;
 	private String challengeQues1;
 	private String challengeAns1;
@@ -89,13 +93,29 @@ public class SpkiBackingBean {
 		logger.info(message);
 	}
 	
+	private KMCClient getClient() throws KMCAPIException {
+		URL resource = getClass().getResource(".");
+		String path = resource.getPath();
+		
+		System.out.println("path value with (.) :"+path);
+		
+		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
+		
+		String filePath = substring+PATH;
+		System.out.println("filePath :"+filePath);
+		File f = new File(filePath);
+		// Create property file
+//		File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet/docroot/WEB-INF/config/soft-certificate/kmc.properties");
+		// Create KMCClient with the property file
+		KMCClient client = KMCClientFactory.getInstance(f);
+		return client;
+		
+	}
+	
 	public void getChallengeQuestions(){ 
 	try{
-			// Create property file
-			File f = new File("kmc.properties");
-			// Create KMCClient with the property file
-			KMCClient client = KMCClientFactory.getInstance(f);
-
+			KMCClient client = getClient();
+			
 			// Request service for user selected question for authentication
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
 //			List<String> challs = null;
@@ -202,7 +222,7 @@ public class SpkiBackingBean {
 			
 			System.out.println("SIGN" + getChallengeQues1() + getChallengeAns1() + getPassword());
 			// Request service to signData based on the answered challenges and data 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("700101089093","eP-1400F5007", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823108979","eP-1008N0001", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -214,7 +234,7 @@ public class SpkiBackingBean {
 //				fos.close();
 //				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
 				String s = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
-				System.out.println("Data signing successful. " +  s);
+				System.out.println("Data signing successful. SIGNEDTEXT " +  s);
 				break;
 
 			default:
