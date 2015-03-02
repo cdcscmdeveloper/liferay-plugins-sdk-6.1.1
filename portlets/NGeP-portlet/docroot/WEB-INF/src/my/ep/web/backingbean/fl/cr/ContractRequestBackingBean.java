@@ -40,7 +40,6 @@ import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
@@ -50,7 +49,6 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -82,8 +80,6 @@ import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -100,8 +96,6 @@ import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
-import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -446,7 +440,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * 
 	 * @param FulfilmentResDTO resDTO
 	 * 
-	 * 
 	 */
 	public void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
 		getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
@@ -515,6 +508,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
+	
 	public List<SelectItem> getSupplierBranchesList(List<SmSupplierBranch> branches){
 		
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
@@ -524,7 +518,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 		return supplierBranches;
 	}
-
+	
 	public void removeAddRow(){
 		if(null !=getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFlRequest().getFlDeliveryAddresses().iterator();
@@ -611,7 +605,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		return isContains;
 	}
-
+	
+	/**
+	 * sort address
+	 * 
+	 * @param ContractAmendmentReqDTO ctReqDTO
+	 * 
+	 */
 	public void flDeliveryAddrList() {
 		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
 		ctReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
@@ -657,6 +657,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			setManualAddressList();
 		}		
 	}
+	
+	/**
+	 * update UI delivery address datatable
+	 * 
+	 */
 	public void updateDeliveryAddrDt() {
 		if (null == getManagedBean().getSelectedAddrTypeList()
 				|| getManagedBean().getSelectedAddrTypeList().isEmpty()) {
@@ -723,7 +728,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 		selectAddrEvent();
 	}
-	
+	/**
+	 * update UI manual delivery address datatable.
+	 * 
+	 */
 	public void updateManualDeliveryAddrDt() {
 		getManagedBean().setEmailValidate(true);
 		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractZoneSO.class);
@@ -794,6 +802,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
 
+	/**
+	 * Navigate to CR UI
+	 * 
+	 */
 	public void procureContract() throws PortalException, SystemException {
 		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("contractId"));
@@ -802,14 +814,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		
-		log.info("themeDisplay"+themeDisplay);
 		if(themeDisplay!=null) {
-			log.info("themeDisplay.getURLCurrent()"+themeDisplay.getURLCurrent());
-			log.info("themeDisplay.getLayout()"+themeDisplay.getLayout());
 			if(themeDisplay.getLayout()!=null) {
-				log.info("themeDisplay.getLayout().getGroup()"+themeDisplay.getLayout().getGroup());
 				if(themeDisplay.getLayout().getGroup().getFriendlyURL()!=null) {
-					log.info("themeDisplay.getLayout().getGroup().getFriendlyURL()"+themeDisplay.getLayout().getGroup().getFriendlyURL());
 				}
 			}
 		}
@@ -827,9 +834,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void checkPtjFlg() {
 		getManagedBean().setCheckPtjFlg(false);
-
 	}
 
+	/**
+	 * retrieve Contract items pagination.
+	 * 
+	 */
 	public void addContractedItems() {
 		getManagedBean().setContractedItemList(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems());
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
@@ -839,6 +849,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getContractItemPagingDataModel().resetData();
 	}
 	
+	/**
+	 * update UI contract item datatable. 
+	 * <p>Auto populate items on the selected address.
+	 * 
+	 */
 	public void updateContractedItemDt() {
 		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
 		FlFulfilmentItemAddr flItemAddr = null;
@@ -940,6 +955,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		return availableApprovers;
 	}
 
+	/**
+	 * renew session. Retrieve fulfilment request object and set it into managedBean.
+	 * 
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -1283,17 +1302,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setShowItemAddrList(itemsList);
 	}
 	
+	/**
+	 * auto populate items for selected delivery address.
+	 */
 	public void selectAddrEvent() {
 		populateItemsForSelectedAddress();
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.reset("form:itemDetPanelGroup");
 	}
 	
-	public void calculateSubTotal(BigDecimal quantity) {
-		// getManagedBean().getSelectedItemAddr().setSubTotal(quantity);
-		getManagedBean().setSubTotal(quantity);
-	}
-
 	/**
 	 * @return the checkFlg
 	 */
@@ -1309,13 +1326,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		this.checkFlg = checkFlg;
 	}
 
+	/**
+	 * get user login org.
+	 */
 	public void getLoginUserOrg() {
 		PmUser user = getFacesScopes().getUserSessionBean();
 
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(user.getUserId());
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IUserSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
 		PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
@@ -1323,27 +1343,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	}
 
-	public void updateIssuedJabatan() {
-
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		if (getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId() != null) {
-
-			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
-			getManagedBean().getFlRequest().setIssuedOrgProfile(resDTO.getPmOrgProfile());
-			getManagedBean().getFlRequest().setChargeOrgProfile(resDTO.getPmOrgProfile());
-		} else {
-			getManagedBean().getFlRequest().setIssuedOrgProfile(null);
-			getManagedBean().getFlRequest().setChargeOrgProfile(null);
-		}
-	}
-
+	/**
+	 * check role user is requisitioner
+	 */
 	public boolean isRequisitioner() {
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 
 	}
-	
+	/**
+	 * check role user is fl_approver
+	 */
 	public boolean isApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
 
@@ -1365,7 +1374,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			throw new EpException(MessageConst.ERROR_740002, new String[]{flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().toString()});
 		}
 	}
-	
+	/**
+	 * check contract ceiling amount has exceed or not exceed.
+	 * 
+	 * @param ContractItemReqDTO ctReqDTO - contractId, orgProfileId
+	 */
 	public void checkCeilingAmount(FlFulfilmentRequest flRequest){
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
@@ -1395,7 +1408,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-	
+	/**
+	 * check contract ceiling quantity has exceed or not exceed.
+	 * 
+	 * @param FlItemSummaryReqDTO reqDTO - contractId, orgProfileId,itemId
+	 */
 	public void checkCeilingQty(FlFulfilmentRequest flRequest){//TODO db change qt item change
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
@@ -1471,7 +1488,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		
 	}
-	
+	/**
+	 * initialize approver group.
+	 */
 	public void initializeApproverGroup() {
 		IFulfilmentRequestSO requestSO = null;
 		try {
@@ -1525,7 +1544,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			requestSO = null;
 		}
 	}
-	
+	/**
+	 * Retrieve approver list and set into approverModel.
+	 */
 	public void userGroupChangeListener() {
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1558,23 +1579,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	    return items;
 	}
 	
-	
-	public void retrieveZonalPrice(FlFulfilmentItemAddr flItemAddr) {
-		int unitPrice = 0;
-		int orderedQty = 0;
-		int orderedAmt = 0;
-		if(null != flItemAddr.getUnitPrice()){
-			unitPrice= flItemAddr.getUnitPrice().intValue();
-			{
-				if(null != flItemAddr.getOrderedQty()){
-					orderedQty = flItemAddr.getOrderedQty().intValue();
-				}
-				orderedAmt =((unitPrice) * (orderedQty));
-				flItemAddr.setOrderedAmt(new BigDecimal(orderedAmt) );
-			}
-		}
-	}
-	
+	/**
+	 * Retrieve order amount base on different price type. 
+	 * <li> Tier price type base on total quantity to get the specific unit price to calculates the total amount.
+	 * <li> Zonal tier price type base on selected address are within the zone and total quantity to get the specific unit price.
+	 * <li> Zonal price type base on the selected address are within the zone to get the specific unit price to calculates the total amount.
+	 * <li> Standard price type base on the catalog unit price.
+	 * <li> Standard zonal price type base on the selected address are within the zone to get the specific unit price.
+	 * lip> Tariff price type base on the quantity range that defined in sourcing to get the specific unit price.
+	 * @param contractId, itemId, pmAddress, orderQty
+	 */
 	public void retrieveOrderAmount(FlFulfilmentItemAddr flItemAddr){
 		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
@@ -1659,7 +1673,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					itemAddr.setOrderedAmt(BigDecimal.ZERO);
 				}
 			}
-			
 			
 			if(oriItemAddr.getOrderedQty() == null){
 				oriItemAddr.setOrderedQty(BigDecimal.ZERO);
@@ -1972,7 +1985,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-	
+	/**
+	 * Edits the manual address
+	 * @param flDelAddress
+	 */
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
 		getManagedBean().setEmailValidate(false);
 		getManagedBean().setFlManulaAddress(flDelAddress);
@@ -2042,6 +2058,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setManualAddressMap(addressTypeMap);
 }
 	
+	/**
+	 * Retrieve the receiving officer list from contract 
+	 * 
+	 * @param flDelAddress
+	 */
 	public void receivingOfficerList(FlDeliveryAddress flDelAddress){
 		Long addressId = flDelAddress.getPmAddress().getAddressId();
 		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
@@ -2057,6 +2078,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		AddressResDTO resDTO=getReceivingOfficerList(addressId, AddressType.RECEIVING_OFFICER_ADDRESS.value());
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 	}
+	/**
+	 * To get the receiving officer list from profile management service object
+	 * @param addressId
+	 * @param addressType
+	 * @return AddressResDTO resDTO
+	 */
 	public AddressResDTO getReceivingOfficerList(Long addressId, String addressType){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 		AddressReqDTO reqDTO = new AddressReqDTO();
@@ -2067,13 +2094,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		//resDTO.get
 		return resDTO;
 	}
+	
+	/**
+	 * Retrieve the country list from profile management service object
+	 */
 	public void retrieveCountryList() {
 		
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryList();
 		getManagedBean().setCountryList(resDTO.getCountryList());
 	}
-	
+	/**
+	 * Retrieve the state list from profile management service object
+	 */
 	public void retrieveStateList(AjaxBehaviorEvent e) {
 		Long countryIdId = (Long) e.getComponent().getAttributes().get("value");
 		StateReqDTO reqDTO = new StateReqDTO();
@@ -2082,7 +2115,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStateList(resDTO.getStateList());
 	}
-	
+	/**
+	 * Retrieve the division list from profile management service object
+	 */
 	public void retrieveDivisionList(AjaxBehaviorEvent e){
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
 		DivisionReqDTO reqDTO= new DivisionReqDTO();
@@ -2100,6 +2135,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	
+	/**
+	 * Retrieve the district list from profile management service object
+	 */
 	public void retrieveDistrictList(AjaxBehaviorEvent e) {
 		Long divisionId = (Long) e.getComponent().getAttributes().get("value");
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
@@ -2109,7 +2147,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setDistrictList(resDTO.getDistrictList());
 		
 	}
-	
+	/**
+	 * Retrieve the city list from profile management service object
+	 */
 	public void retrieveCityList(AjaxBehaviorEvent e) {
 		Long districtId = (Long) e.getComponent().getAttributes().get("value");
 		CityReqDTO reqDTO = new CityReqDTO();
@@ -2118,6 +2158,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
 		this.getManagedBean().setCityList(resDTO.getCityList());
 	}
+	/**
+	 * Retrieve the delivery address list from 
+	 */
 	public void retrieveDeliveryAddressList(AjaxBehaviorEvent e) {
 		Long districtId = (Long) e.getComponent().getAttributes().get("value");
 		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(districtId));
@@ -2130,7 +2173,27 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		getManagedBean().setManualAddrList(manualAddrList);
 	}
-	
+	/**
+	 * Selected tab will have different validation.
+	 * <p>selected tab 1: 
+	 * <li>validate prepared org. and agencies.
+	 * <li> check contract validity
+	 * <li>sort addresses
+	 * <p>selected tab 2:
+	 * <li>validate prepared org. agencies
+	 * <li>validate order quantity
+	 * <li>sort order summary list
+	 * <p>selected tab 3:
+	 * <li>validate prepared org. agencies
+	 * <li>validate order quantity
+	 * <li>populate chargeline tree data
+	 * <li> get vot fund list from profile management by charge org profile id
+	 * <p>selected tab 4:
+	 * <li>validate charge line before approver list generate
+	 * <li>initialize approver group.
+	 * 
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			if(!getManagedBean().isFlRequestLink()){
@@ -2280,6 +2343,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 	}
+
+	/**
+	 * display the charge line details,if charge line applied for selected node,
+	 */
 	public void onNodeSelect() {
 		//reset the checkboxes already selected.
 		resetSelectedTreeNodes();
@@ -2320,45 +2387,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	
 	}
-	public void clearPopupLists(){
-		getManagedBean().setVotFundId(0L);
-		getManagedBean().setAssetIndId(null);
-		getManagedBean().setGlAccountId(null);
-		getManagedBean().setPrgActivityId(0L);
-		getManagedBean().setProjectId(0L);
-		getManagedBean().setSetiaId(0L);
-		getManagedBean().setSubSetiaId(0L);
-		getManagedBean().setFinancingTypeCode(null);
-		getManagedBean().setProjectList(new ArrayList<PmProject>());
-		getManagedBean().setPrgActivityList(new ArrayList<PmPrgActivity>());
-		getManagedBean().setSetiaList(new ArrayList<PmSetia>());
-		getManagedBean().setSubSetiaList(new ArrayList<PmSubSetia>());
-		
-		updateSelectedTreeNodes();
-		if(getManagedBean().getSelectedNodes().length==0) {
-			throw new EpException(MessageConst.ERROR_100049);
-		}
-		RequestContext.getCurrentInstance().execute("applyBulkCharge.show()");
-	}
-	public void checkNodeSelected(){
-		getManagedBean().setVotFundId(0L);
-		getManagedBean().setPrgActivityId(0L);
-		getManagedBean().setProjectId(0L);
-		getManagedBean().setSetiaId(0L);
-		getManagedBean().setSubSetiaId(0L);
-		getManagedBean().setVotFundList(new ArrayList<PmVotFund>());
-		getVotFundList(4L);
-		getManagedBean().setProjectList(new ArrayList<PmProject>());
-		getManagedBean().setPrgActivityList(new ArrayList<PmPrgActivity>());
-		getManagedBean().setSetiaList(new ArrayList<PmSetia>());
-		getManagedBean().setSubSetiaList(new ArrayList<PmSubSetia>());
-		/*if(null == getManagedBean().getSelectedNodes()){
-			throw new EpException("Please Select Item Node.");
-			
-		}*/
-		
-	}
-	
+	/**
+	 * clear the charge line details,if node is unselected,
+	 */
 	public void onNodeUnSelect() {
 
 		getManagedBean().setProgramLov(false);
@@ -2383,7 +2414,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setFinancingTypeCode("");		
 	
 	}
-	
+	/**
+	 * Charge line apply for selected nodes.
+	 */
 	public void chargeLineApply() {
 
 		IParameterSO parameterSO = null;
@@ -2573,7 +2606,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-	
+	/**
+	 * Gets the vot fund list based on profileId.
+	 *
+	 * @param profileId the profile id
+	 * @return the vot fund list
+	 */
 	public void getVotFundList(Long profileId){
 
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
@@ -2591,7 +2629,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	}
 
-	// display itemCode,itemName,QueryDesc in popup
+	/**
+	 * Show item query.
+	 *
+	 * @param flItemAddress the fl item address
+	 */
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
 		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
@@ -2727,7 +2769,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public static void setVotFundCodeMap(Map<Long, PmVotFund> votFundCodeMap) {
 		ContractRequestBackingBean.votFundCodeMap = votFundCodeMap;
 	}
-
+	/**
+	 * if any checkbox selected from delivery address  List,show the deleted button for 
+	 * <p>
+	 * delete the particular delivery address from delivery address  List.
+	 * <p>
+	 * if all check boxes unselected,hide the delete button.
+	 *
+	 */
 	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
 		boolean delAddrSelected=(boolean) e.getComponent().getAttributes().get("value");
@@ -2812,10 +2861,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-		
-		
-	
-	
+	/**
+	 * Update delivery date based on delivery Term and uomCode.
+	 */
 	public void updateDeliveryDate() {
 		Date startDate = getManagedBean().getFlRequest().getStartDate();
 		int deliveryTerm = 0;
@@ -2844,7 +2892,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
 		}
 	}
-	
+	/**
+	 * Update delivery date based on delivery Term and uomCode.
+	 */
 	public void updateDeliveryAddrDate() {
 		Date startDate = getManagedBean().getSelectedDelAddr().getStartDate();
 		int deliveryTerm = 0;
@@ -2864,18 +2914,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
 		}
 	}
-	
-	public void getFinancingType(AjaxBehaviorEvent e) {
-		Long subSetiaId = (Long) e.getComponent().getAttributes().get("value");
-		if(subSetiaId!=null) {
-			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IProjectSetiaSO.class);
-			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-			reqDTO.setSubSetiaId(subSetiaId);
-			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetia(reqDTO);
-			getManagedBean().setFinancingTypeCode(resDTO.getPmSubSetia().getFinancingType().getParameterCode());
-		}
-	}
-	
+
+	/**
+	 * Gets the ag account based on Issued Org Profile id.
+	 *
+	 * @return the ag account
+	 */
 	public AgOfficeResDTO getAgAccount(){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
@@ -2920,13 +2964,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-	
+	/**
+	 * Checks if user is  fl fulfillment requisitioner.
+	 *
+	 * @return true, if is fl fulfilment requisitioner
+	 */
 	public boolean isFlFulfilmentRequisitioner() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	
-	//update delivery address based on endDate change
+	/**
+	 * update delivery address based on endDate change
+	 */
 	public void updateDeliveryEndDate() {
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
@@ -2946,7 +2996,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 	}
-	
+	/**
+	 * Gets the selected supplier branch details based on supplier BranchId.
+	 *
+	 * @return the selected supplier branch dtl
+	 */
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
 		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
 		if(supplierBranchId!=null) {
@@ -2999,7 +3053,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	
-	// chargeLine Panel enable if  checkbox selected
+	/**
+	 * chargeLine Panel enable if  checkbox selected
+	 *
+	 */
 		public void selectCheckbox(AjaxBehaviorEvent e){
 			onNodeUnSelect();
 			getManagedBean().setProgramLov(false);
@@ -3053,7 +3110,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 			}	 
 		}
-		
+		/**
+		 * Select all checkboxes.
+		 * chargeLine Panel enable if  checkboxes selected
+		 */
 		public void selectAllCheckboxes(){
 			onNodeUnSelect();
 			getManagedBean().setProgramLov(false);
@@ -3070,7 +3130,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().setChargeLinePanel(false);
 			}
 		}
-		
+		/**
+		 * Check vot fund lov.
+		 */
 		public void checkVotFundLov(){
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -3089,7 +3151,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				votFundCodeMap.put(getManagedBean().getPmVoteFund().getVotFundId(), getManagedBean().getPmVoteFund());
 			}
 		}
-		
+		/**
+		 * Check vot fund dropdown.
+		 */
 		public void checkVotFundDropdown(){
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -3120,7 +3184,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		public String backToPervious() {
 			return "flDocSearch";
 		}
-	
+		/**
+		 * Retrieve mof no based on SupplierId.
+		 *
+		 * @param smSupplier the sm supplier
+		 * @return the string
+		 */
 		public String retrieveMofNo(SmSupplier smSupplier) {
 			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -3131,8 +3200,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			return null;
 		}
-		// get the Request Item Information based on ReqItemId and SuppId
-		
+		/**
+		 * get the Request Item Information based on RequestNoteItemId,SupplierId and PriceType.
+		 *
+		 * @param flItemAddr the fl item addr
+		 */
 		public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 			getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 			flItemAddr.setPriceType(getManagedBean().getPmPriceType());
@@ -3215,8 +3287,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			};
 			  Collections.sort(addressTypeList, comparator);
 		}
-		
-		public void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
+		private void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
 		//Creating Comparator
 			if(null==flDelAddressList || flDelAddressList.isEmpty()){
 				return;
@@ -3234,7 +3305,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			Collections.sort(flDelAddressList, comparator);
 	    }
 		// sorting Item for OrderSummary Tab
-		public void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
+		private void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
 			//Creating Comparator
 			if(null==deliveryAddressList || deliveryAddressList.isEmpty()){
 				return;
@@ -3244,7 +3315,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 	    }
 		// sorting all the items showing in DelAddress and Item Tab
-		public void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
+		private void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
 			//Creating Comparator
 			if(null==flItemAddressList || flItemAddressList.isEmpty()){
 				return;
@@ -3261,7 +3332,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		        };
 				Collections.sort(flItemAddressList, comparator);
 	    }
-		
+		/**
+		 * Reset the search.
+		 */
 		public void searchReset(){
 			this.getManagedBean().setSearchItemType(null);
 			this.getManagedBean().setSearchItemCode(null);
@@ -3309,7 +3382,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		public IPagingDataModel<CtContractItem> getContractItemPagingDataModel() {
 			return contractItemPagingDataModel;
 		}
-
+		/**
+		 * Search contract item list from paging item data model.
+		 */
 		public void searchContractItemList(){
 
 			if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
@@ -3322,7 +3397,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getContractItemPagingDataModel().reloadData();
 			}
 		}
-		
+		/**
+		 * Get item type values from pmParameter
+		 * @return list of dropdown item values.
+		 */
 		public SelectItem[] getItemTypeValues(){
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 			String recommend = ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE;
@@ -3385,7 +3463,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-	
+	/**
+	 * Not remove address row.
+	 */
 	public void notRemoveAddressRow(){
 		getManagedBean().setDeleteButtonHide(true);
 		if(null !=getManagedBean().getFlRequest().getFlDeliveryAddresses()){
@@ -3403,7 +3483,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			addr.setSelectedChargeItem(false);
 		}
 	}
-	
+	/**
+	 * Pre-render contract list
+	 */
 	public void preRenderContractList() {
 		
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -3457,7 +3539,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 		}
 	}
-	
+	/**
+	 * Get selected factoring company details from profile management service object
+	 * @param financialOrgId
+	 */
 	public void getSelectedFactoringCompDtl(Long financialOrgId){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		getManagedBean().setFacSupplierAddress(null);
@@ -3486,7 +3571,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param outcome the outcome
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
@@ -3507,7 +3598,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	
-	
+	/**
+	 * Pre submit fulfillment request.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitFulfillmentRequest(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
@@ -3516,12 +3613,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setValidated(Boolean.TRUE);
 		return submitAction(getManagedBean().getButtonAction());
 	}
-	
+	/**
+	 * Enable auto update.
+	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
-	
+	/**
+	 * Get preparef PTJ condition for construct the LOV listing
+	 * @return String
+	 */
 	public String getPreparedPTJCondition() {
 		String condition = "parentOrgProfile.orgProfileId^"+getManagedBean().getFlRequest().getPreparedOrgProfile().getParentOrgProfile().getOrgProfileId();
 		if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
@@ -3669,7 +3771,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			fulfilmentRequestSO = null;
 		}
 	}
-	public void chargeLineValidationBeforeApproverList(){
+	private void chargeLineValidationBeforeApproverList(){
 		if(getManagedBean().getChargeLineItemRoot()!=null) {
 			FlFulfilmentItemAddr itemAddress = null;
 			updateSelectedTreeNodes();
@@ -3750,11 +3852,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			IPagingDataModel<PmUom> unitOfMeasurementDataModel) {
 		this.unitOfMeasurementDataModel = unitOfMeasurementDataModel;
 	}	
-	
+	/**
+	 * Retrieve measurement.
+	 */
 	public void retrieveMeasurement(){		
 		unitOfMeasurementDataModel.reloadData();		
 	}
-	
+	/**
+	 * Reset measurement search.
+	 */
 	public void resetMeasurementSearch() {		
 		this.getManagedBean().setMeasurementCodes(null);
 		this.getManagedBean().setMeasurementNames(null);
@@ -3775,7 +3881,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public void setSelectAllCheckbox(boolean selectAllCheckbox) {
 		this.selectAllCheckbox = selectAllCheckbox;
 	}
-	
+	/**
+	 * Gets the item max quantity.
+	 *
+	 * @param uom the uom
+	 * @return the item max quantity
+	 */
 	public Double getItemMaxQuantity(PmUom uom){
 		Double maxQuantity =  Double.valueOf(9999999999L);
 		if(uom.getDecimalScale() == 1){
@@ -3787,14 +3898,21 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}	
 		return maxQuantity;
 	}
-	
+	/**
+	 * Navigate to contract view page.
+	 * @param docId
+	 * @return String gotoCommonViewPage
+	 */
 	public String navigateDocument(Long docId){
 		ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		ctDetBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
 		return ctDetBB.gotoCommonViewPage(docId);
 	}
-	
+	/**
+	 * back to document
+	 * @return String backToDocument
+	 */
 	public String backToDocument() {
 		return getManagedBean().getBackToDocument();
 	}
