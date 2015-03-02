@@ -5,29 +5,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:spacer height="5" />
-	<h:panelGroup>
-		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
-			<p:dataTable id="fcareqdtlsid"
-				value="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls}"
-				var="fcrequestdetails" rowIndexVar="index" editable="true"
-				rowKey="#{fcrequestdetails}">
-	
-				<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
-					<h:outputText
-						value="#{approvalBackingBean.getParameterDesc(fcrequestdetails.approvalType)}" />
-				</p:column>
-			</p:dataTable>
-		</p:panel>
-	</h:panelGroup>
-	<p:spacer height="2" />
 
-	<p:panel header="#{lbl['lbl.sc.qt.finalize.appoint']}"
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+		<p:dataTable id="fcareqdtlsid"
+			value="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls}"
+			var="fcrequestdetails" rowIndexVar="index" editable="true"
+			rowKey="#{fcrequestdetails}">
+
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+				<h:outputText
+					value="#{approvalBackingBean.getParameterDesc(fcrequestdetails.approvalType)}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+
+	<p:panel id="fcappoint" header="#{lbl['lbl.sc.qt.finalize.appoint']}"
 		toggleable="true">
 		<p:dataTable id="finalizationsecretaryid"
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
-			var="approverSettings" rowIndexVar="index" editable="true"
-			rowKey="#{approverSettings}">
+			var="approverSettings">
 			<p:column headerText="#{lbl['lbl.so.finalization.committee']}">
 				<p:selectOneMenu id="fcApprovalId"
 					value="#{approverSettings.committeType}"
@@ -57,7 +54,9 @@
 								value="#{qTDetailBB.retrievePmUserSecratryDtl(approverSettings.committeType)}"
 								itemLabel="#{usersSecretary.userName}"
 								itemValue="#{usersSecretary.userId}" />
-							<p:ajax event="change" listener="#{qTDetailBB.updateUserIdToSettings}" process="@this" partialSubmit="true" update="@this" />
+							<p:ajax event="change"
+								listener="#{qTDetailBB.updateUserIdToSettings}" process="@this"
+								partialSubmit="true" update="@this" />
 						</p:selectOneMenu>
 					</ui:fragment>
 					<ui:fragment
@@ -162,4 +161,6 @@
 			update="fcuploads" oncomplete="fcAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
+
+
 </ui:composition>
