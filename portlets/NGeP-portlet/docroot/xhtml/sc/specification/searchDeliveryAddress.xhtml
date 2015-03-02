@@ -29,7 +29,7 @@
 								itemValue="#{orgProfile.orgProfileId}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="ptj"
-								listener="#{specificationBackingBean.ptjByDepartMent}"></p:ajax>
+								listener="#{specificationBackingBean.ptjByDepartMent(specificationBackingBean.managedBean.ministryId)}"></p:ajax>
 						</p:selectOneMenu></td>
 				</tr>
 
@@ -43,7 +43,7 @@
 								value="#{specificationBackingBean.managedBean.ptjtList}"
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
 								itemValue="#{orgProfile.orgProfileId}"></f:selectItems>
-
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 						</p:selectOneMenu></td>
 				</tr>
 
@@ -63,7 +63,7 @@
 						</p:selectOneMenu></td>
 
 					<td style="width: 35px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.search.delivery.address.division']}"/></td>
+							value="#{lbl['lbl.sc.spec.search.delivery.address.division']}" /></td>
 					<td><p:selectOneMenu id="divisionId"
 							style="width:150px;margin-bottom:5px;"
 							disabled="#{specificationBackingBean.managedBean.stateCode ne '13'}"
@@ -77,7 +77,7 @@
 								update="districtId"
 								listener="#{specificationBackingBean.retriveDivisionDistrict}"></p:ajax>
 						</p:selectOneMenu></td>
-					<td style="width:35px;"><h:outputLabel
+					<td style="width: 35px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.search.delivery.address.district']}" /></td>
 					<td><p:selectOneMenu id="districtId" style="width:150px;"
 							value="#{specificationBackingBean.managedBean.districtId}">
@@ -95,10 +95,10 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchDeliveryAddress}"
-					update="deliveryAddress"/>
+					update="deliveryAddress" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
-					resetValues="true" partialSubmit="true"
-					process="@this" update="searDelivery"
+					resetValues="true" partialSubmit="true" process="@this"
+					update="searDelivery"
 					action="#{specificationBackingBean.deliveryAddressReset}" />
 			</div>
 		</p:panel>
