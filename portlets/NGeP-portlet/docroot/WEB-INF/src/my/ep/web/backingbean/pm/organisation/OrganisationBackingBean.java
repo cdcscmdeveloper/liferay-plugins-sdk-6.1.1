@@ -1493,5 +1493,9 @@ public class OrganisationBackingBean extends
 		}
 		return isGroupOrg;		
 	}
+	
+	public void resetProfileGroup(){
+		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());	
+	}
 
 }

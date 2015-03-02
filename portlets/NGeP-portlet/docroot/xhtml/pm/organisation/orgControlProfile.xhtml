@@ -31,7 +31,8 @@
 					value="#{organisationBackingBean.managedBean.orgProfileList}"
 					itemLabel="#{orgProfileLs.pmOrgValidity.orgName}"
 					itemValue="#{orgProfileLs.orgProfileId}" />
-				<p:ajax event="change" partialSubmit="true" process="@this" /> 
+				<p:ajax event="change" partialSubmit="true" process="@this" 
+					listener ="#{organisationBackingBean.resetProfileGroup()}"/> 
 			</p:selectOneMenu>
 
 
