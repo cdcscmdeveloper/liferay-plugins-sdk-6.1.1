@@ -1064,7 +1064,7 @@ public class OrganisationBackingBean extends
 			CityResDTO cityResDTO = citySO.retriveCityById(cityReqDTO);	
 			manualAddr.setPmCity(cityResDTO.getPmCity());
 		}
-			
+		validateDeliveryAddress(manualAddr);	
 		if(manualAddr.isBrandNew() && !manualAddr.isModified()){
 			getManagedBean().getAddressTypesList().add(deliveryAddr);
 			deliveryAddr.setPmAddress(manualAddr);
@@ -1083,7 +1083,7 @@ public class OrganisationBackingBean extends
 				}
 			}
 		}
-		validateDeliveryAddress(manualAddr);
+		
 		RequestContext.getCurrentInstance().execute("addressPopup.hide();");
 		RequestContext.getCurrentInstance().execute("deliveryAddres.paginator.endLink.click();addressPopup.hide();");
 				
