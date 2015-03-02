@@ -74,9 +74,9 @@ public class CmTrackingDiaryBackingBean extends
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCmSupplierItem().getItemDesc()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCmSupplierItem().getCmItem().getItemId()));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"CM"));
-//			System.out.println("TrackingDiaryReqDTO" + vCtDocument.getDocNo());
+			System.out.println("TrackingDiaryReqDTO" +getManagedBean().getCmSupplierItem().getCmItem().getItemId());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
