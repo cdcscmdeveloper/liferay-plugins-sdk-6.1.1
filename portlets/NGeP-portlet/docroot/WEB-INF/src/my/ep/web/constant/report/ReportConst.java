@@ -407,7 +407,7 @@ public class ReportConst {
 	public static final String AMP_SM_SVO_NAME_EQ = "&PSVOUSERID=";
 	public static final String AMP_SM_MOF_CERTIFICATE_SERIAL_NUMBER_EQ = "";
 	public static final String AMP_SM_PAYMENT_TYPE_EQ = "&PPAYTYPE=";
-
+	public static final String KAMA = ",";
 
 	
 	public static final String AMP_EP_NO_EQ = "&epno=";
