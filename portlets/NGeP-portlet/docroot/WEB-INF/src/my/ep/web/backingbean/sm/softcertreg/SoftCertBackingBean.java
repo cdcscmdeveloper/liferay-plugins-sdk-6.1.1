@@ -174,11 +174,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	}
 	
 	public String navigateToPaymentPage(){
-		
 		this.getManagedBean().setSoftCertPayList(this.getManagedBean().getSoftCertSelectList());
-		for(SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()){
-			personnel.setSoftcertFlg(2);
-		}
 		updateAmount();
 		return "softCertPaymentPage.xhtml";
 	}
@@ -196,10 +192,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	public String makePayment(){
 		
 		if(getManagedBean().getSoftCertPayList() != null && getManagedBean().getSoftCertPayList().size() > 0){
-			for(SmPersonnel personnel : getManagedBean().getSoftCertPayList()){
-				personnel.setSoftcertFlg(SupplierManagementConst.IS_SOFTCERT_REQ);
-			}
-			
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			List<String> userList = new ArrayList<String>();
 			userList.add(pmUser.getLoginId());
