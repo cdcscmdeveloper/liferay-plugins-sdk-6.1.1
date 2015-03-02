@@ -46,90 +46,216 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.DualListModel;
+// TODO: Auto-generated Javadoc
+
 /**
- * 
- * @author sri
+ * The Class RequestNoteManagedBean.
  *
+ * @author sri
+ * @since 18/02/2014
  */
 @ManagedBean(name="requestNoteMB")
 @SessionScoped
 public class RequestNoteManagedBean extends BaseManagedBean{
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The source method. */
 	private String sourceMethod = ParameterConst.METHOD_SC;
+	
+	/** The request note. */
 	private	ScRequestNote	requestNote = new ScRequestNote(); //contain request list information
+	
+	/** The request supplier items. */
 	private	List<ScRequestSupplierItem>	requestSupplierItems	=	new ArrayList<ScRequestSupplierItem>(); // list of request supplier item to be recommend
+	
+	/** The selected remarks. */
 	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<ScRequestNoteRemark>();
+	
+	/** The request note dtls. */
 	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();//list request Note Dtl.
+	
+	/** The selected request note dtls. */
 	private	List<ScRequestNoteDtl>	selectedRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+	
+	/** The request note items. */
 	private List<ScRequestItem>	requestNoteItems = new ArrayList<ScRequestItem>();
+	
+	/** The approval users. */
 	private	DualListModel<PmUser>	approvalUsers = new DualListModel<PmUser>();
+	
+	/** The fulfillment type. */
 	private	String	fulfillmentType;
+	
+	/** The supplier id. */
 	private Long supplierId;
+	
+	/** The sm supplier. */
 	private SmSupplier smSupplier;
+	
+	/** The assigned to user id. */
 	private	Long	assignedToUserId;
+	
+	/** The period type. */
 	private	String	periodType;
+	
+	/** The period value. */
 	private	int	periodValue;
 	
+	/** The user division list. */
 	private List<PmOrgProfile> userDivisionList;
+    
+    /** The request supplier item. */
     private ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
+    
+    /** The request note dtl. */
     private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
+    
+    /** The user list. */
     private List<PmUser> userList = new ArrayList<PmUser>();
     
+    /** The price type code. */
     private String priceTypeCode;
+    
+    /** The just type option. */
     private boolean justTypeOption;
+    
+    /** The proc type option. */
     private boolean procTypeOption;
+    
+    /** The item check. */
     private boolean itemCheck; // For checking item whether service or product
+    
+    /** The just dropdown. */
     private SelectItem[] justDropdown; // justification drop down
+    
+    /** The price types. */
     private SelectItem[] priceTypes; // price type drop down for add to cart
+    
+    /** The procurement types. */
     private SelectItem[] procurementTypes; // for procurement type dropdown
+    
+    /** The process name. */
     private String processName;
+    
+    /** The request note status. */
     private PmStatus requestNoteStatus;
+    
+    /** The required. */
     private boolean required = Boolean.FALSE;
+    
+    /** The just required. */
     private boolean justRequired = Boolean.FALSE;
+    
+    /** The add to cart flag. */
     private boolean addToCartFlag;
     
+    /** The justification. */
     private String justification;
+    
+    /** The justification type. */
     private String justificationType;
+    
+    /** The procurement type. */
     private String procurementType;
+    
+    /** The price type. */
     private String priceType;
     
+    /** The title checker. */
     private boolean titleChecker = Boolean.TRUE;
+    
+    /** The pr inquiry id. */
     private Long prInquiryId; // To get PI id to cancel in request note
+    
+    /** The sc rn zone. */
     private ScRNZone scRNZone = new ScRNZone(); 
     
     // BPM Task
+    /** The direct purchase data type. */
     private SCDirectPurchaseDataType directPurchaseDataType;
     
     // For Search Request Note
+    /** The search req note no. */
     private String searchReqNoteNo;
+    
+    /** The search src method. */
     private String searchSrcMethod;
+    
+    /** The search created date from. */
     private Date searchCreatedDateFrom;
+    
+    /** The search created date to. */
     private Date searchCreatedDateTo;
+    
+    /** The search statuses. */
     private List<Long> searchStatuses;
+    
+    /** The status descs. */
     private List<PmStatusDesc> statusDescs;
+    
+    /** The created by. */
     private String createdBy;
+	
+	/** The supplier rec list. */
 	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<ScRequestNoteDtl>();
+	
+	/** The pricing list. */
 	private	List<ScSupplierItemPrice>	pricingList	=	new ArrayList<ScSupplierItemPrice>(); // For pricing pop to show all pricing
     
+    /** The req note data model. */
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
+    
+    /** The compare supplier items. */
     private List<CmSupplierItem> compareSupplierItems = new ArrayList<CmSupplierItem>(); // copy supplier items from the compare screen
+    
+    /** The pi rn checker. */
     private boolean piRNChecker = Boolean.TRUE;
     
+    /** The delete request note dtls. */
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+    
+    /** The zone dtl map. */
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
+    
+    /** The cm supplier item. */
     private CmSupplierItem cmSupplierItem;
+    
+    /** The recent price duration. */
     private String recentPriceDuration = ParameterConst.RECENT_PRICE_DURATION;
+    
+    /** The tier and promo tier flag. */
     private boolean tierAndPromoTierFlag;;
+    
+    /** The zonal standard and promo flag. */
     private boolean zonalStandardAndPromoFlag;
+    
+    /** The report url. */
     private String reportURL;
+    
+    /** The v cm supplier item. */
     private VCmSupplierItem vCmSupplierItem;
+    
+    /** The auto update. */
     private boolean autoUpdate = Boolean.TRUE;
+    
+    /** The action. */
     private String action;
+    
+    /** The purchase in default id. */
     private Long purchaseInDefaultId;
+    
+    /** The view only. */
     private boolean viewOnly = false;
+    
+    /** The back to previous page. */
     private String backToPreviousPage;
     
     
+    /**
+     * Instantiates a new request note managed bean.
+     */
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
 		requestNoteDtl.setProcurementType(pmParameter);
@@ -141,56 +267,83 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     	requestSupplierItem.setRequestNoteItem(requestItem);
     	requestSupplierItem.setSupplierItemPrice(itemPrice);
 	}
+	
 	/**
+	 * Gets the request note.
+	 *
 	 * @return the requestNote
 	 */
 	public ScRequestNote getRequestNote() {
 		return requestNote;
 	}
+	
 	/**
+	 * Sets the request note.
+	 *
 	 * @param requestNote the requestNote to set
 	 */
 	public void setRequestNote(ScRequestNote requestNote) {
 		this.requestNote = requestNote;
 	}
+	
 	/**
+	 * Gets the request supplier items.
+	 *
 	 * @return the requestSupplierItems
 	 */
 	public List<ScRequestSupplierItem> getRequestSupplierItems() {
 		return requestSupplierItems;
 	}
+	
 	/**
+	 * Sets the request supplier items.
+	 *
 	 * @param requestSupplierItems the requestSupplierItems to set
 	 */
 	public void setRequestSupplierItems(
 			List<ScRequestSupplierItem> requestSupplierItems) {
 		this.requestSupplierItems = requestSupplierItems;
 	}
+	
 	/**
+	 * Gets the request note dtls.
+	 *
 	 * @return the requestNoteDtls
 	 */
 	public List<ScRequestNoteDtl> getRequestNoteDtls() {
 		return requestNoteDtls;
 	}
+	
 	/**
+	 * Sets the request note dtls.
+	 *
 	 * @param requestNoteDtls the requestNoteDtls to set
 	 */
 	public void setRequestNoteDtls(List<ScRequestNoteDtl> requestNoteDtls) {
 		this.requestNoteDtls = requestNoteDtls;
 	}
+	
 	/**
+	 * Gets the selected remarks.
+	 *
 	 * @return the selectedRemarks
 	 */
 	public List<ScRequestNoteRemark> getSelectedRemarks() {
 		return selectedRemarks;
 	}
+	
 	/**
+	 * Sets the selected remarks.
+	 *
 	 * @param selectedRemarks the selectedRemarks to set
 	 */
 	public void setSelectedRemarks(List<ScRequestNoteRemark> selectedRemarks) {
 		this.selectedRemarks = selectedRemarks;
 	}
+	
 	/**
+	 * Gets the approval users.
+	 *
 	 * @return the approvalUsers
 	 */
 	public DualListModel<PmUser> getApprovalUsers() {
@@ -198,12 +351,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the fulfillment type.
+	 *
 	 * @return the fulfillmentType
 	 */
 	public String getFulfillmentType() {
 		return fulfillmentType;
 	}
+	
 	/**
+	 * Sets the fulfillment type.
+	 *
 	 * @param fulfillmentType the fulfillmentType to set
 	 */
 	public void setFulfillmentType(String fulfillmentType) {
@@ -211,6 +369,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Gets the supplier id.
+	 *
 	 * @return the supplierId
 	 */
 	public Long getSupplierId() {
@@ -218,6 +378,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Sets the supplier id.
+	 *
 	 * @param supplierId the supplierId to set
 	 */
 	public void setSupplierId(Long supplierId) {
@@ -225,48 +387,71 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Gets the sm supplier.
+	 *
 	 * @return the smSupplier
 	 */
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
+	
 	/**
+	 * Sets the sm supplier.
+	 *
 	 * @param smSupplier the smSupplier to set
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
+	
 	/**
+	 * Gets the assigned to user id.
+	 *
 	 * @return the assignedToUserId
 	 */
 	public Long getAssignedToUserId() {
 		return assignedToUserId;
 	}
+	
 	/**
+	 * Sets the assigned to user id.
+	 *
 	 * @param assignedToUserId the assignedToUserId to set
 	 */
 	public void setAssignedToUserId(Long assignedToUserId) {
 		this.assignedToUserId = assignedToUserId;
 	}
+	
 	/**
+	 * Gets the period type.
+	 *
 	 * @return the periodType
 	 */
 	public String getPeriodType() {
 		return periodType;
 	}
+	
 	/**
+	 * Sets the period type.
+	 *
 	 * @param periodType the periodType to set
 	 */
 	public void setPeriodType(String periodType) {
 		this.periodType = periodType;
 	}
+	
 	/**
+	 * Gets the period value.
+	 *
 	 * @return the periodValue
 	 */
 	public int getPeriodValue() {
 		return periodValue;
 	}
+	
 	/**
+	 * Sets the period value.
+	 *
 	 * @param periodValue the periodValue to set
 	 */
 	public void setPeriodValue(int periodValue) {
@@ -274,12 +459,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the user division list.
+	 *
 	 * @return the userDivisionList
 	 */
 	public List<PmOrgProfile> getUserDivisionList() {
 		return userDivisionList;
 	}
+	
 	/**
+	 * Sets the user division list.
+	 *
 	 * @param userDivisionList the userDivisionList to set
 	 */
 	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
@@ -287,24 +477,35 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Gets the request supplier item.
+	 *
 	 * @return the requestSupplierItem
 	 */
 	public ScRequestSupplierItem getRequestSupplierItem() {
 		return requestSupplierItem;
 	}
+	
 	/**
+	 * Sets the request supplier item.
+	 *
 	 * @param requestSupplierItem the requestSupplierItem to set
 	 */
 	public void setRequestSupplierItem(ScRequestSupplierItem requestSupplierItem) {
 		this.requestSupplierItem = requestSupplierItem;
 	}
+	
 	/**
+	 * Gets the request note dtl.
+	 *
 	 * @return the requestNoteDtl
 	 */
 	public ScRequestNoteDtl getRequestNoteDtl() {
 		return requestNoteDtl;
 	}
+	
 	/**
+	 * Sets the request note dtl.
+	 *
 	 * @param requestNoteDtl the requestNoteDtl to set
 	 */
 	public void setRequestNoteDtl(ScRequestNoteDtl requestNoteDtl) {
@@ -312,73 +513,108 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Checks if is just type option.
+	 *
 	 * @return the justTypeOption
 	 */
 	public boolean isJustTypeOption() {
 		return justTypeOption;
 	}
+	
 	/**
+	 * Sets the just type option.
+	 *
 	 * @param justTypeOption the justTypeOption to set
 	 */
 	public void setJustTypeOption(boolean justTypeOption) {
 		this.justTypeOption = justTypeOption;
 	}
+	
 	/**
+	 * Checks if is proc type option.
+	 *
 	 * @return the procTypeOption
 	 */
 	public boolean isProcTypeOption() {
 		return procTypeOption;
 	}
+	
 	/**
+	 * Sets the proc type option.
+	 *
 	 * @param procTypeOption the procTypeOption to set
 	 */
 	public void setProcTypeOption(boolean procTypeOption) {
 		this.procTypeOption = procTypeOption;
 	}
+	
 	/**
+	 * Gets the just dropdown.
+	 *
 	 * @return the justDropdown
 	 */
 	public SelectItem[] getJustDropdown() {
 		return justDropdown;
 	}
+	
 	/**
+	 * Sets the just dropdown.
+	 *
 	 * @param justDropdown the justDropdown to set
 	 */
 	public void setJustDropdown(SelectItem[] justDropdown) {
 		this.justDropdown = justDropdown;
 	}
+	
 	/**
+	 * Gets the selected request note dtls.
+	 *
 	 * @return the selectedRequestNoteDtls
 	 */
 	public List<ScRequestNoteDtl> getSelectedRequestNoteDtls() {
 		return selectedRequestNoteDtls;
 	}
+	
 	/**
+	 * Sets the selected request note dtls.
+	 *
 	 * @param selectedRequestNoteDtls the selectedRequestNoteDtls to set
 	 */
 	public void setSelectedRequestNoteDtls(
 			List<ScRequestNoteDtl> selectedRequestNoteDtls) {
 		this.selectedRequestNoteDtls = selectedRequestNoteDtls;
 	}
+	
 	/**
+	 * Gets the user list.
+	 *
 	 * @return the userList
 	 */
 	public List<PmUser> getUserList() {
 		return userList;
 	}
+	
 	/**
+	 * Sets the user list.
+	 *
 	 * @param userList the userList to set
 	 */
 	public void setUserList(List<PmUser> userList) {
 		this.userList = userList;
 	}
+	
 	/**
+	 * Gets the price types.
+	 *
 	 * @return the priceTypes
 	 */
 	public SelectItem[] getPriceTypes() {
 		return priceTypes;
 	}
+	
 	/**
+	 * Sets the price types.
+	 *
 	 * @param priceTypes the priceTypes to set
 	 */
 	public void setPriceTypes(SelectItem[] priceTypes) {
@@ -386,6 +622,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the approval users.
+	 *
 	 * @param approvalUsers the approvalUsers to set
 	 */
 	public void setApprovalUsers(DualListModel<PmUser> approvalUsers) {
@@ -393,6 +631,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the source method.
+	 *
 	 * @return the sourceMethod
 	 */
 	public String getSourceMethod() {
@@ -400,6 +640,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the source method.
+	 *
 	 * @param sourceMethod the sourceMethod to set
 	 */
 	public void setSourceMethod(String sourceMethod) {
@@ -407,6 +649,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the price type code.
+	 *
 	 * @return the priceTypeCode
 	 */
 	public String getPriceTypeCode() {
@@ -414,6 +658,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the price type code.
+	 *
 	 * @param priceTypeCode the priceTypeCode to set
 	 */
 	public void setPriceTypeCode(String priceTypeCode) {
@@ -421,6 +667,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the process name.
+	 *
 	 * @return the processName
 	 */
 	public String getProcessName() {
@@ -428,6 +676,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the process name.
+	 *
 	 * @param processName the processName to set
 	 */
 	public void setProcessName(String processName) {
@@ -435,6 +685,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the direct purchase data type.
+	 *
 	 * @return the directPurchaseDataType
 	 */
 	public SCDirectPurchaseDataType getDirectPurchaseDataType() {
@@ -442,19 +694,27 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the direct purchase data type.
+	 *
 	 * @param directPurchaseDataType the directPurchaseDataType to set
 	 */
 	public void setDirectPurchaseDataType(
 			SCDirectPurchaseDataType directPurchaseDataType) {
 		this.directPurchaseDataType = directPurchaseDataType;
 	}
+	
 	/**
+	 * Checks if is item check.
+	 *
 	 * @return the itemCheck
 	 */
 	public boolean isItemCheck() {
 		return itemCheck;
 	}
+	
 	/**
+	 * Sets the item check.
+	 *
 	 * @param itemCheck the itemCheck to set
 	 */
 	public void setItemCheck(boolean itemCheck) {
@@ -462,17 +722,28 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Gets the request note status.
+	 *
 	 * @return the requestNoteStatus
 	 */
 	public PmStatus getRequestNoteStatus() {
 		return requestNoteStatus;
 	}
+	
 	/**
+	 * Sets the request note status.
+	 *
 	 * @param requestNoteStatus the requestNoteStatus to set
 	 */
 	public void setRequestNoteStatus(PmStatus requestNoteStatus) {
 		this.requestNoteStatus = requestNoteStatus;
 	}
+	
+	/**
+	 * Checks if is pr inquiry.
+	 *
+	 * @return true, if is pr inquiry
+	 */
 	public	boolean	isPrInquiry(){
 		boolean result	= false;
 		if(requestNote != null){
@@ -487,13 +758,19 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		}
 		return result;
 	}
+	
 	/**
+	 * Gets the request note items.
+	 *
 	 * @return the requestNoteItems
 	 */
 	public List<ScRequestItem> getRequestNoteItems() {
 		return requestNoteItems;
 	}
+	
 	/**
+	 * Sets the request note items.
+	 *
 	 * @param requestNoteItems the requestNoteItems to set
 	 */
 	public void setRequestNoteItems(List<ScRequestItem> requestNoteItems) {
@@ -501,60 +778,89 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Checks if is required.
+	 *
 	 * @return the required
 	 */
 	public boolean isRequired() {
 		return required;
 	}
+	
 	/**
+	 * Sets the required.
+	 *
 	 * @param required the required to set
 	 */
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
+	
 	/**
+	 * Gets the justification.
+	 *
 	 * @return the justification
 	 */
 	public String getJustification() {
 		return justification;
 	}
+	
 	/**
+	 * Sets the justification.
+	 *
 	 * @param justification the justification to set
 	 */
 	public void setJustification(String justification) {
 		this.justification = justification;
 	}
+	
 	/**
+	 * Gets the justification type.
+	 *
 	 * @return the justificationType
 	 */
 	public String getJustificationType() {
 		return justificationType;
 	}
+	
 	/**
+	 * Sets the justification type.
+	 *
 	 * @param justificationType the justificationType to set
 	 */
 	public void setJustificationType(String justificationType) {
 		this.justificationType = justificationType;
 	}
+	
 	/**
+	 * Gets the procurement type.
+	 *
 	 * @return the procurementType
 	 */
 	public String getProcurementType() {
 		return procurementType;
 	}
+	
 	/**
+	 * Sets the procurement type.
+	 *
 	 * @param procurementType the procurementType to set
 	 */
 	public void setProcurementType(String procurementType) {
 		this.procurementType = procurementType;
 	}
+	
 	/**
+	 * Gets the price type.
+	 *
 	 * @return the priceType
 	 */
 	public String getPriceType() {
 		return priceType;
 	}
+	
 	/**
+	 * Sets the price type.
+	 *
 	 * @param priceType the priceType to set
 	 */
 	public void setPriceType(String priceType) {
@@ -562,6 +868,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the search req note no.
+	 *
 	 * @return the searchReqNoteNo
 	 */
 	public String getSearchReqNoteNo() {
@@ -569,6 +877,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Sets the search req note no.
+	 *
 	 * @param searchReqNoteNo the searchReqNoteNo to set
 	 */
 	public void setSearchReqNoteNo(String searchReqNoteNo) {
@@ -576,6 +886,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Gets the search src method.
+	 *
 	 * @return the searchSrcMethod
 	 */
 	public String getSearchSrcMethod() {
@@ -583,6 +895,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Sets the search src method.
+	 *
 	 * @param searchSrcMethod the searchSrcMethod to set
 	 */
 	public void setSearchSrcMethod(String searchSrcMethod) {
@@ -590,54 +904,80 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Gets the search created date from.
+	 *
 	 * @return the searchCreatedDateFrom
 	 */
 	public Date getSearchCreatedDateFrom() {
 		return searchCreatedDateFrom;
 	}
+	
 	/**
+	 * Sets the search created date from.
+	 *
 	 * @param searchCreatedDateFrom the searchCreatedDateFrom to set
 	 */
 	public void setSearchCreatedDateFrom(Date searchCreatedDateFrom) {
 		this.searchCreatedDateFrom = searchCreatedDateFrom;
 	}
+	
 	/**
+	 * Gets the search created date to.
+	 *
 	 * @return the searchCreatedDateTo
 	 */
 	public Date getSearchCreatedDateTo() {
 		return searchCreatedDateTo;
 	}
+	
 	/**
+	 * Sets the search created date to.
+	 *
 	 * @param searchCreatedDateTo the searchCreatedDateTo to set
 	 */
 	public void setSearchCreatedDateTo(Date searchCreatedDateTo) {
 		this.searchCreatedDateTo = searchCreatedDateTo;
 	}
+	
 	/**
+	 * Gets the search statuses.
+	 *
 	 * @return the searchStatuses
 	 */
 	public List<Long> getSearchStatuses() {
 		return searchStatuses;
 	}
+	
 	/**
+	 * Sets the search statuses.
+	 *
 	 * @param searchStatuses the searchStatuses to set
 	 */
 	public void setSearchStatuses(List<Long> searchStatuses) {
 		this.searchStatuses = searchStatuses;
 	}
+	
 	/**
+	 * Gets the status descs.
+	 *
 	 * @return the statusDescs
 	 */
 	public List<PmStatusDesc> getStatusDescs() {
 		return statusDescs;
 	}
+	
 	/**
+	 * Sets the status descs.
+	 *
 	 * @param statusDescs the statusDescs to set
 	 */
 	public void setStatusDescs(List<PmStatusDesc> statusDescs) {
 		this.statusDescs = statusDescs;
 	}
+	
 	/**
+	 * Gets the req note data model.
+	 *
 	 * @return the reqNoteDataModel
 	 */
 	public IPagingDataModel<ScRequestNote> getReqNoteDataModel() {
@@ -645,19 +985,32 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Sets the req note data model.
+	 *
 	 * @param reqNoteDataModel the reqNoteDataModel to set
 	 */
 	public void setReqNoteDataModel(IPagingDataModel<ScRequestNote> reqNoteDataModel) {
 		this.reqNoteDataModel = reqNoteDataModel;
 	}
 
+	/**
+	 * The Class RequestNotePagingDataModel.
+	 */
 	private class RequestNotePagingDataModel extends PagingDataModel<ScRequestNote> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new request note paging data model.
+		 */
 		public RequestNotePagingDataModel() {
 			super("reqNoteTbl");
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<ScRequestNote> pageChangeListener(ISearchBean<ScRequestNote> searchBean) {
 			IDirectPurchaseSO directPurchaseSO;
@@ -718,24 +1071,35 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is just required.
+	 *
 	 * @return the justRequired
 	 */
 	public boolean isJustRequired() {
 		return justRequired;
 	}
+	
 	/**
+	 * Sets the just required.
+	 *
 	 * @param justRequired the justRequired to set
 	 */
 	public void setJustRequired(boolean justRequired) {
 		this.justRequired = justRequired;
 	}
+	
 	/**
+	 * Gets the procurement types.
+	 *
 	 * @return the procurementTypes
 	 */
 	public SelectItem[] getProcurementTypes() {
 		return procurementTypes;
 	}
+	
 	/**
+	 * Sets the procurement types.
+	 *
 	 * @param procurementTypes the procurementTypes to set
 	 */
 	public void setProcurementTypes(SelectItem[] procurementTypes) {
@@ -743,120 +1107,179 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Checks if is adds the to cart flag.
+	 *
 	 * @return the addToCartFlag
 	 */
 	public boolean isAddToCartFlag() {
 		return addToCartFlag;
 	}
+	
 	/**
+	 * Sets the adds the to cart flag.
+	 *
 	 * @param addToCartFlag the addToCartFlag to set
 	 */
 	public void setAddToCartFlag(boolean addToCartFlag) {
 		this.addToCartFlag = addToCartFlag;
 	}
+	
 	/**
+	 * Checks if is title checker.
+	 *
 	 * @return the titleChecker
 	 */
 	public boolean isTitleChecker() {
 		return titleChecker;
 	}
+	
 	/**
+	 * Sets the title checker.
+	 *
 	 * @param titleChecker the titleChecker to set
 	 */
 	public void setTitleChecker(boolean titleChecker) {
 		this.titleChecker = titleChecker;
 	}
+	
 	/**
+	 * Gets the created by.
+	 *
 	 * @return the createdBy
 	 */
 	public String getCreatedBy() {
 		return createdBy;
 	}
+	
 	/**
+	 * Sets the created by.
+	 *
 	 * @param createdBy the createdBy to set
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+	
 	/**
+	 * Gets the supplier rec list.
+	 *
 	 * @return the supplierRecList
 	 */
 	public List<ScRequestNoteDtl> getSupplierRecList() {
 		return supplierRecList;
 	}
+	
 	/**
+	 * Sets the supplier rec list.
+	 *
 	 * @param supplierRecList the supplierRecList to set
 	 */
 	public void setSupplierRecList(List<ScRequestNoteDtl> supplierRecList) {
 		this.supplierRecList = supplierRecList;
 	}
+	
 	/**
+	 * Gets the pr inquiry id.
+	 *
 	 * @return the prInquiryId
 	 */
 	public Long getPrInquiryId() {
 		return prInquiryId;
 	}
+	
 	/**
+	 * Sets the pr inquiry id.
+	 *
 	 * @param prInquiryId the prInquiryId to set
 	 */
 	public void setPrInquiryId(Long prInquiryId) {
 		this.prInquiryId = prInquiryId;
 	}
+	
 	/**
+	 * Gets the sc rn zone.
+	 *
 	 * @return the scRNZone
 	 */
 	public ScRNZone getScRNZone() {
 		return scRNZone;
 	}
+	
 	/**
+	 * Sets the sc rn zone.
+	 *
 	 * @param scRNZone the scRNZone to set
 	 */
 	public void setScRNZone(ScRNZone scRNZone) {
 		this.scRNZone = scRNZone;
 	}
+	
 	/**
+	 * Gets the pricing list.
+	 *
 	 * @return the pricingList
 	 */
 	public List<ScSupplierItemPrice> getPricingList() {
 		return pricingList;
 	}
+	
 	/**
+	 * Sets the pricing list.
+	 *
 	 * @param pricingList the pricingList to set
 	 */
 	public void setPricingList(List<ScSupplierItemPrice> pricingList) {
 		this.pricingList = pricingList;
 	}
+	
 	/**
+	 * Gets the compare supplier items.
+	 *
 	 * @return the compareSupplierItems
 	 */
 	public List<CmSupplierItem> getCompareSupplierItems() {
 		return compareSupplierItems;
 	}
+	
 	/**
+	 * Sets the compare supplier items.
+	 *
 	 * @param compareSupplierItems the compareSupplierItems to set
 	 */
 	public void setCompareSupplierItems(List<CmSupplierItem> compareSupplierItems) {
 		this.compareSupplierItems = compareSupplierItems;
 	}
+	
 	/**
+	 * Checks if is pi rn checker.
+	 *
 	 * @return the piRNChecker
 	 */
 	public boolean isPiRNChecker() {
 		return piRNChecker;
 	}
+	
 	/**
+	 * Sets the pi rn checker.
+	 *
 	 * @param piRNChecker the piRNChecker to set
 	 */
 	public void setPiRNChecker(boolean piRNChecker) {
 		this.piRNChecker = piRNChecker;
 	}
+	
 	/**
+	 * Gets the delete request note dtls.
+	 *
 	 * @return the deleteRequestNoteDtls
 	 */
 	public List<ScRequestNoteDtl> getDeleteRequestNoteDtls() {
 		return deleteRequestNoteDtls;
 	}
+	
 	/**
+	 * Sets the delete request note dtls.
+	 *
 	 * @param deleteRequestNoteDtls the deleteRequestNoteDtls to set
 	 */
 	public void setDeleteRequestNoteDtls(
@@ -865,6 +1288,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Gets the zone dtl map.
+	 *
 	 * @return the zoneDtlMap
 	 */
 	public Map<String, TplSpecZoneDtl> getZoneDtlMap() {
@@ -872,76 +1297,208 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Sets the zone dtl map.
+	 *
 	 * @param zoneDtlMap the zoneDtlMap to set
 	 */
 	public void setZoneDtlMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
 		this.zoneDtlMap = zoneDtlMap;
 	}
+	
+	/**
+	 * Gets the cm supplier item.
+	 *
+	 * @return the cm supplier item
+	 */
 	public CmSupplierItem getCmSupplierItem() {
 		return cmSupplierItem;
 	}
+	
+	/**
+	 * Sets the cm supplier item.
+	 *
+	 * @param cmSupplierItem the new cm supplier item
+	 */
 	public void setCmSupplierItem(CmSupplierItem cmSupplierItem) {
 		this.cmSupplierItem = cmSupplierItem;
 	}
+	
+	/**
+	 * Gets the recent price duration.
+	 *
+	 * @return the recent price duration
+	 */
 	public String getRecentPriceDuration() {
 		return recentPriceDuration;
 	}
+	
+	/**
+	 * Sets the recent price duration.
+	 *
+	 * @param recentPriceDuration the new recent price duration
+	 */
 	public void setRecentPriceDuration(String recentPriceDuration) {
 		this.recentPriceDuration = recentPriceDuration;
 	}
+	
+	/**
+	 * Gets the report url.
+	 *
+	 * @return the report url
+	 */
 	public String getReportURL() {
 		return reportURL;
 	}
+	
+	/**
+	 * Sets the report url.
+	 *
+	 * @param reportURL the new report url
+	 */
 	public void setReportURL(String reportURL) {
 		this.reportURL = reportURL;
 	}
+	
+	/**
+	 * Checks if is tier and promo tier flag.
+	 *
+	 * @return true, if is tier and promo tier flag
+	 */
 	public boolean isTierAndPromoTierFlag() {
 		return tierAndPromoTierFlag;
 	}
+	
+	/**
+	 * Sets the tier and promo tier flag.
+	 *
+	 * @param tierAndPromoTierFlag the new tier and promo tier flag
+	 */
 	public void setTierAndPromoTierFlag(boolean tierAndPromoTierFlag) {
 		this.tierAndPromoTierFlag = tierAndPromoTierFlag;
 	}
+	
+	/**
+	 * Checks if is zonal standard and promo flag.
+	 *
+	 * @return true, if is zonal standard and promo flag
+	 */
 	public boolean isZonalStandardAndPromoFlag() {
 		return zonalStandardAndPromoFlag;
 	}
+	
+	/**
+	 * Sets the zonal standard and promo flag.
+	 *
+	 * @param zonalStandardAndPromoFlag the new zonal standard and promo flag
+	 */
 	public void setZonalStandardAndPromoFlag(boolean zonalStandardAndPromoFlag) {
 		this.zonalStandardAndPromoFlag = zonalStandardAndPromoFlag;
 	}
+	
+	/**
+	 * Gets the v cm supplier item.
+	 *
+	 * @return the v cm supplier item
+	 */
 	public VCmSupplierItem getvCmSupplierItem() {
 		return vCmSupplierItem;
 	}
+	
+	/**
+	 * Sets the v cm supplier item.
+	 *
+	 * @param vCmSupplierItem the new v cm supplier item
+	 */
 	public void setvCmSupplierItem(VCmSupplierItem vCmSupplierItem) {
 		this.vCmSupplierItem = vCmSupplierItem;
 	}
+	
+	/**
+	 * Checks if is auto update.
+	 *
+	 * @return true, if is auto update
+	 */
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
+	
+	/**
+	 * Sets the auto update.
+	 *
+	 * @param autoUpdate the new auto update
+	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
 	
+	/**
+	 * Gets the action.
+	 *
+	 * @return the action
+	 */
 	public String getAction() {
 		return action;
 	}
 
+	/**
+	 * Sets the action.
+	 *
+	 * @param action the new action
+	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
+	
+	/**
+	 * Gets the purchase in default id.
+	 *
+	 * @return the purchase in default id
+	 */
 	public Long getPurchaseInDefaultId() {
 		return purchaseInDefaultId;
 	}
+	
+	/**
+	 * Sets the purchase in default id.
+	 *
+	 * @param purchaseInDefaultId the new purchase in default id
+	 */
 	public void setPurchaseInDefaultId(Long purchaseInDefaultId) {
 		this.purchaseInDefaultId = purchaseInDefaultId;
 	}
+	
+	/**
+	 * Checks if is view only.
+	 *
+	 * @return true, if is view only
+	 */
 	public boolean isViewOnly() {
 		return viewOnly;
 	}
+	
+	/**
+	 * Sets the view only.
+	 *
+	 * @param viewOnly the new view only
+	 */
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
+	
+	/**
+	 * Gets the back to previous page.
+	 *
+	 * @return the back to previous page
+	 */
 	public String getBackToPreviousPage() {
 		return backToPreviousPage;
 	}
+	
+	/**
+	 * Sets the back to previous page.
+	 *
+	 * @param backToPreviousPage the new back to previous page
+	 */
 	public void setBackToPreviousPage(String backToPreviousPage) {
 		this.backToPreviousPage = backToPreviousPage;
 	}

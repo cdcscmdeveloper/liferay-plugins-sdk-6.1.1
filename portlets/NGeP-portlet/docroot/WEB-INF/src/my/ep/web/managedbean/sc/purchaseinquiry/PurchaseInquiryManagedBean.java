@@ -28,74 +28,161 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
+// TODO: Auto-generated Javadoc
+
 /**
- * 
- * @author sri
+ * The Class PurchaseInquiryManagedBean.
  *
+ * @author sri
  */
 @ManagedBean(name="purchaseInquiryMB")
 @SessionScoped
 public class PurchaseInquiryManagedBean extends BaseManagedBean{
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The method. */
 	private String method = ParameterConst.METHOD_PRI;
+	
+	/** The stock availability. */
 	private String stockAvailability;
+	
+	/** The procurement type. */
 	private String procurementType;
+	
+	/** The justification type. */
 	private String justificationType;
+	
+	/** The price type. */
 	private String priceType;
+	
+	/** The pm org profile. */
 	private PmOrgProfile pmOrgProfile;
 	
+	/** The sc request supplier item. */
 	private ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
+	
+	/** The sc pr inquiry. */
 	private ScPrInquiry scPrInquiry = new ScPrInquiry();
+	
+	/** The supplier item. */
 	private CmSupplierItem supplierItem;
+	
+	/** The approval users. */
 	private	DualListModel<PmUser>	approvalUsers;
+	
+	/** The sc request supplier items. */
 	private List<ScRequestSupplierItem>	scRequestSupplierItems;
+	
+	/** The request note dtl. */
 	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
 	
+	/** The just type option. */
 	private boolean justTypeOption;
+	
+	/** The proc type option. */
 	private boolean procTypeOption;
+	
+	/** The just dropdown. */
 	private SelectItem[] justDropdown;
+	
+	/** The price types. */
 	private SelectItem[] priceTypes; // price type drop down 
+	
+	/** The process name. */
 	private String processName;
+	
+	/** The pri status. */
 	private PmStatus priStatus;
+	
+	/** The requisitioner flag. */
 	private boolean requisitionerFlag;
+	
+	/** The supplier flag. */
 	private boolean supplierFlag;
+	
+	/** The stock available. */
 	private Integer stockAvailable;
+	
+	/** The stock availability flag. */
 	private boolean stockAvailabilityFlag;
+	
+	/** The page nav to request note. */
 	private String pageNavToRequestNote;
+	
+	/** The procurement types. */
 	private SelectItem[] procurementTypes; // for procurement type dropdown
 	
+	/** The title checker. */
 	private boolean titleChecker = Boolean.TRUE;
+	
+	/** The rn to pi flag. */
 	private boolean rnToPIFlag;
+	
+	/** The sc pi zone. */
 	private ScPIZone scPIZone = new ScPIZone(); 
+	
+	/** The request note. */
 	private	ScRequestNote	requestNote;
+    
+    /** The zone dtl map. */
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
     
+    /** The action. */
     private String action;
     
+    /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
+    
+    /**
+     * Gets the spki backing bean.
+     *
+     * @return the spki backing bean
+     */
     public SpkiBackingBean getSpkiBackingBean() {
     	return spkiBackingBean;
     }
 
+    /**
+     * Sets the spki backing bean.
+     *
+     * @param spkiBackingBean the new spki backing bean
+     */
     public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
     	this.spkiBackingBean = spkiBackingBean;
     }
 
+	/**
+	 * Gets the zone dtl map.
+	 *
+	 * @return the zone dtl map
+	 */
 	public Map<String, TplSpecZoneDtl> getZoneDtlMap() {
 		return zoneDtlMap;
 	}
 
+	/**
+	 * Sets the zone dtl map.
+	 *
+	 * @param zoneDtlMap the zone dtl map
+	 */
 	public void setZoneDtlMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
 		this.zoneDtlMap = zoneDtlMap;
 	}
 
+	/**
+	 * Instantiates a new purchase inquiry managed bean.
+	 */
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
 		scPrInquiry.setRemarks(remarks);
 	}
 	
 	/**
+	 * Gets the sc request supplier item.
+	 *
 	 * @return the scRequestSupplierItem
 	 */
 	public ScRequestSupplierItem getScRequestSupplierItem() {
@@ -103,6 +190,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the sc request supplier item.
+	 *
 	 * @param scRequestSupplierItem the scRequestSupplierItem to set
 	 */
 	public void setScRequestSupplierItem(ScRequestSupplierItem scRequestSupplierItem) {
@@ -110,6 +199,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the stock availability.
+	 *
 	 * @return the stockAvailability
 	 */
 	public String getStockAvailability() {
@@ -117,6 +208,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the stock availability.
+	 *
 	 * @param stockAvailability the stockAvailability to set
 	 */
 	public void setStockAvailability(String stockAvailability) {
@@ -124,6 +217,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the price type.
+	 *
 	 * @return the priceType
 	 */
 	public String getPriceType() {
@@ -131,6 +226,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the price type.
+	 *
 	 * @param priceType the priceType to set
 	 */
 	public void setPriceType(String priceType) {
@@ -138,6 +235,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the sc pr inquiry.
+	 *
 	 * @return the scPrInquiry
 	 */
 	public ScPrInquiry getScPrInquiry() {
@@ -145,6 +244,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the sc pr inquiry.
+	 *
 	 * @param scPrInquiry the scPrInquiry to set
 	 */
 	public void setScPrInquiry(ScPrInquiry scPrInquiry) {
@@ -152,6 +253,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the approval users.
+	 *
 	 * @return the approvalUsers
 	 */
 	public DualListModel<PmUser> getApprovalUsers() {
@@ -159,6 +262,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * Sets the approval users.
+	 *
 	 * @param approvalUsers the approvalUsers to set
 	 */
 	public void setApprovalUsers(DualListModel<PmUser> approvalUsers) {
@@ -166,6 +271,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the supplier item.
+	 *
 	 * @return the supplierItem
 	 */
 	public CmSupplierItem getSupplierItem() {
@@ -173,18 +280,26 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the supplier item.
+	 *
 	 * @param supplierItem the supplierItem to set
 	 */
 	public void setSupplierItem(CmSupplierItem supplierItem) {
 		this.supplierItem = supplierItem;
 	}
+	
 	/**
+	 * Gets the sc request supplier items.
+	 *
 	 * @return the scRequestSupplierItems
 	 */
 	public List<ScRequestSupplierItem> getScRequestSupplierItems() {
 		return scRequestSupplierItems;
 	}
+	
 	/**
+	 * Sets the sc request supplier items.
+	 *
 	 * @param scRequestSupplierItems the scRequestSupplierItems to set
 	 */
 	public void setScRequestSupplierItems(
@@ -193,6 +308,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the procurement type.
+	 *
 	 * @return the procurementType
 	 */
 	public String getProcurementType() {
@@ -200,6 +317,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the procurement type.
+	 *
 	 * @param procurementType the procurementType to set
 	 */
 	public void setProcurementType(String procurementType) {
@@ -207,6 +326,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the justification type.
+	 *
 	 * @return the justificationType
 	 */
 	public String getJustificationType() {
@@ -214,6 +335,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the justification type.
+	 *
 	 * @param justificationType the justificationType to set
 	 */
 	public void setJustificationType(String justificationType) {
@@ -221,6 +344,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the request note dtl.
+	 *
 	 * @return the requestNoteDtl
 	 */
 	public ScRequestNoteDtl getRequestNoteDtl() {
@@ -228,6 +353,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the request note dtl.
+	 *
 	 * @param requestNoteDtl the requestNoteDtl to set
 	 */
 	public void setRequestNoteDtl(ScRequestNoteDtl requestNoteDtl) {
@@ -235,6 +362,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is just type option.
+	 *
 	 * @return the justTypeOption
 	 */
 	public boolean isJustTypeOption() {
@@ -242,6 +371,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the just type option.
+	 *
 	 * @param justTypeOption the justTypeOption to set
 	 */
 	public void setJustTypeOption(boolean justTypeOption) {
@@ -249,6 +380,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is proc type option.
+	 *
 	 * @return the procTypeOption
 	 */
 	public boolean isProcTypeOption() {
@@ -256,6 +389,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the proc type option.
+	 *
 	 * @param procTypeOption the procTypeOption to set
 	 */
 	public void setProcTypeOption(boolean procTypeOption) {
@@ -263,6 +398,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the just dropdown.
+	 *
 	 * @return the justDropdown
 	 */
 	public SelectItem[] getJustDropdown() {
@@ -270,6 +407,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the just dropdown.
+	 *
 	 * @param justDropdown the justDropdown to set
 	 */
 	public void setJustDropdown(SelectItem[] justDropdown) {
@@ -277,6 +416,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the price types.
+	 *
 	 * @return the priceTypes
 	 */
 	public SelectItem[] getPriceTypes() {
@@ -284,6 +425,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the price types.
+	 *
 	 * @param priceTypes the priceTypes to set
 	 */
 	public void setPriceTypes(SelectItem[] priceTypes) {
@@ -291,6 +434,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the method.
+	 *
 	 * @return the method
 	 */
 	public String getMethod() {
@@ -298,6 +443,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the method.
+	 *
 	 * @param method the method to set
 	 */
 	public void setMethod(String method) {
@@ -305,6 +452,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the process name.
+	 *
 	 * @return the processName
 	 */
 	public String getProcessName() {
@@ -312,6 +461,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the process name.
+	 *
 	 * @param processName the processName to set
 	 */
 	public void setProcessName(String processName) {
@@ -319,6 +470,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the pri status.
+	 *
 	 * @return the priStatus
 	 */
 	public PmStatus getPriStatus() {
@@ -326,6 +479,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the pri status.
+	 *
 	 * @param priStatus the priStatus to set
 	 */
 	public void setPriStatus(PmStatus priStatus) {
@@ -333,6 +488,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is requisitioner flag.
+	 *
 	 * @return the requisitionerFlag
 	 */
 	public boolean isRequisitionerFlag() {
@@ -340,6 +497,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the requisitioner flag.
+	 *
 	 * @param requisitionerFlag the requisitionerFlag to set
 	 */
 	public void setRequisitionerFlag(boolean requisitionerFlag) {
@@ -347,6 +506,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is supplier flag.
+	 *
 	 * @return the supplierFlag
 	 */
 	public boolean isSupplierFlag() {
@@ -354,6 +515,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the supplier flag.
+	 *
 	 * @param supplierFlag the supplierFlag to set
 	 */
 	public void setSupplierFlag(boolean supplierFlag) {
@@ -361,6 +524,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the stock available.
+	 *
 	 * @return the stockAvailable
 	 */
 	public Integer getStockAvailable() {
@@ -368,6 +533,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the stock available.
+	 *
 	 * @param stockAvailable the stockAvailable to set
 	 */
 	public void setStockAvailable(Integer stockAvailable) {
@@ -375,6 +542,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the pm org profile.
+	 *
 	 * @return the pmOrgProfile
 	 */
 	public PmOrgProfile getPmOrgProfile() {
@@ -382,6 +551,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the pm org profile.
+	 *
 	 * @param pmOrgProfile the pmOrgProfile to set
 	 */
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
@@ -389,6 +560,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is title checker.
+	 *
 	 * @return the titleChecker
 	 */
 	public boolean isTitleChecker() {
@@ -396,6 +569,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the title checker.
+	 *
 	 * @param titleChecker the titleChecker to set
 	 */
 	public void setTitleChecker(boolean titleChecker) {
@@ -403,6 +578,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is stock availability flag.
+	 *
 	 * @return the stockAvailabilityFlag
 	 */
 	public boolean isStockAvailabilityFlag() {
@@ -410,6 +587,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the stock availability flag.
+	 *
 	 * @param stockAvailabilityFlag the stockAvailabilityFlag to set
 	 */
 	public void setStockAvailabilityFlag(boolean stockAvailabilityFlag) {
@@ -417,6 +596,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the page nav to request note.
+	 *
 	 * @return the pageNavToRequestNote
 	 */
 	public String getPageNavToRequestNote() {
@@ -424,6 +605,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the page nav to request note.
+	 *
 	 * @param pageNavToRequestNote the pageNavToRequestNote to set
 	 */
 	public void setPageNavToRequestNote(String pageNavToRequestNote) {
@@ -431,6 +614,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the procurement types.
+	 *
 	 * @return the procurementTypes
 	 */
 	public SelectItem[] getProcurementTypes() {
@@ -438,6 +623,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the procurement types.
+	 *
 	 * @param procurementTypes the procurementTypes to set
 	 */
 	public void setProcurementTypes(SelectItem[] procurementTypes) {
@@ -445,6 +632,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Checks if is rn to pi flag.
+	 *
 	 * @return the rnToPIFlag
 	 */
 	public boolean isRnToPIFlag() {
@@ -452,6 +641,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the rn to pi flag.
+	 *
 	 * @param rnToPIFlag the rnToPIFlag to set
 	 */
 	public void setRnToPIFlag(boolean rnToPIFlag) {
@@ -459,6 +650,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the sc pi zone.
+	 *
 	 * @return the scPIZone
 	 */
 	public ScPIZone getScPIZone() {
@@ -466,6 +659,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the sc pi zone.
+	 *
 	 * @param scPIZone the scPIZone to set
 	 */
 	public void setScPIZone(ScPIZone scPIZone) {
@@ -473,6 +668,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Gets the request note.
+	 *
 	 * @return the requestNote
 	 */
 	public ScRequestNote getRequestNote() {
@@ -480,16 +677,28 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
+	 * Sets the request note.
+	 *
 	 * @param requestNote the requestNote to set
 	 */
 	public void setRequestNote(ScRequestNote requestNote) {
 		this.requestNote = requestNote;
 	}
 
+	/**
+	 * Gets the action.
+	 *
+	 * @return the action
+	 */
 	public String getAction() {
 		return action;
 	}
 
+	/**
+	 * Sets the action.
+	 *
+	 * @param action the new action
+	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
