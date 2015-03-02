@@ -32,9 +32,9 @@
                                    rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null}">
                                    <ac:lov id="listOfPtj" lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.ct.ptj']}" 
                                      saveObject="agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile"
-                                     postUpdateListener="agreementBackingBean.agySignerDuplicateUpdateRecord(#{index},agreementBackingBean.managedBean.ctAgencySigner,agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile)"
+                                     postUpdateListener="agreementBackingBean.validateDuplicateAgencyPtj(#{index},agreementBackingBean.managedBean.ctAgencySigner,agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile)"
 						             value="#{agSignerVar.orgProfile.orgName}" readonly="true" size="35" 
-						            conditionField="recordStatusFlg^1|parentOrgProfile.orgProfileId^#{agreementBackingBean.getPtjParentId()}"
+						            conditionField="recordStatusFlg^1|parentOrgProfile.orgProfileId^#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile}"
 						             update="@form" >
 					              </ac:lov>
 					         </h:panelGroup>
