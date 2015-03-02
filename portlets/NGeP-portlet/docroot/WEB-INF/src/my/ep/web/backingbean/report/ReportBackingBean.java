@@ -4483,12 +4483,17 @@ public class ReportBackingBean extends
 				rptGenBean.setScPIDNoVar(ReportConst.SC_AMP_PID_NO_EQ
 						+ this.getScPIDNo());
 			}
-			if ((this.getScREQUESTNOTESUMMARYGroup() != null)
-					&& (this.getScREQUESTNOTESUMMARYGroup() != ReportConst.EMPTY_VAL)) {
-				rptGenBean
-						.setScREQUESTNOTESUMMARYGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
-								+ this.getScREQUESTNOTESUMMARYGroup());
+			if((this.getReportValue() != null)
+					&& (this.getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL))){
+				if ((this.getScREQUESTNOTESUMMARYGroup() != null)
+						&& (this.getScREQUESTNOTESUMMARYGroup() != ReportConst.EMPTY_VAL)) {
+					rptGenBean
+							.setScREQUESTNOTESUMMARYGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
+									+ this.getScREQUESTNOTESUMMARYGroup());
+				}
 			}
+			
 			if ((this.getScLAPRNPURCHDEFAULTGroup() != null)
 					&& (this.getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL)) {
 				rptGenBean

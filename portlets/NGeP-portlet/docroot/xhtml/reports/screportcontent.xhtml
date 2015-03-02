@@ -53,7 +53,8 @@
 								   	<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scCommonStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scCommonStatus}" style="margin-top:5px;width:300px;">
-									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.expired']}" itemValue="#{lbl['lbl.rpt.expired']}"></f:selectItem>										
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.Completed']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>	
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingsubmission']}" itemValue="#{lbl['lbl.rpt.pendingsubmission']}"></f:selectItem>																	
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingRNCreation']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>	
@@ -79,7 +80,7 @@
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPtjView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:130px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPtj}" style="margin-top:5px;width:300px;">
-										 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										 <f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
 										
 										<f:selectItems value="#{reportBackingBean.scPtjList}"></f:selectItems>										
 									</p:selectOneMenu>
@@ -87,7 +88,7 @@
 								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scDeskOfficerView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.deskOfficer']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scDeskOfficer}" style="margin-top:5px;width:300px;">
-									 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+									 <f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>										
 										
 										<f:selectItems value="#{reportBackingBean.scDescOfficerList}"></f:selectItems>																																		
 									</p:selectOneMenu>
@@ -100,7 +101,7 @@
 									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequisenerIdView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scRequisenerId}" style="margin-top:5px;width:300px;">
-									     <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+									     <f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
 										
 										<f:selectItems value="#{reportBackingBean.scRequisitionerList}"></f:selectItems>																																	
 									</p:selectOneMenu>
@@ -175,7 +176,7 @@
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPIDtlsPrcRptGroupView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPIDtlsPrcRptGroup}" style="margin-top:5px;width:300px;">
-									 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+									 
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.PINumber']}" itemValue="#{lbl['lbl.rpt.PINumber']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplerNm']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>																																										
