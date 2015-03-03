@@ -90,7 +90,7 @@ public class SmTrackingDiaryBackingBean extends
 		this.getManagedBean().setMOFAccountNo(null);
 		this.getManagedBean().setSupplierName(null);
 		this.getManagedBean().setSmSupplier(null);
-//		this.getManagedBean().setSmDocumentDataModel(new SearchPagingDataModel());
+		this.getManagedBean().resetDocumentDataModel();
 	}
 
 	public String backToPrev() {
