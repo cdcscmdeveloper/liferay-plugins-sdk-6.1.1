@@ -45,7 +45,7 @@
 		</p:column>
 	</c:if>
 	
-	<p:column style="width:85px;" headerText="#{lbl['lbl.tpl.spec.content.price.type']}" rendered="#{!isItemTypeService}">
+	<p:column style="width:75px; white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.price.type']}" rendered="#{!isItemTypeService}">
 		<h:outputText value="#{templateSpecBackingBean.getParameterDesc(question.clPriceTypeCode)}" rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
 	
