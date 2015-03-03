@@ -17,7 +17,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
 				action="#{usergroupBackingBean.searchUserGroupAction}"
 				update="searchGroupProfile" process="userGroupSearch" />
-			<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				update="UserGroupPanel,searchGroupProfile" process="@this"
 				partialSubmit="true" action="#{usergroupBackingBean.reset}" />
 		</div>
@@ -28,7 +28,7 @@
 	<p:panel header="#{lbl['lbl.pm.sa.result']}" toggleable="true">
 		<p:dataTable id="searchGroupProfile"
 			value="#{usergroupBackingBean.userGroupList}" var="userGrp" rows="10"
-			lazy="true" >
+			lazy="true">
 			<ac:paginator for="searchGroupProfile" />
 
 			<p:column headerText="#{lbl['lbl.pm.ug.result.groupcode']}"
@@ -60,23 +60,18 @@
 				style="width:5%">
 				<p:commandLink
 					action="#{usergroupBackingBean.gotoMaintanance(userGrp)}"
-					process="@this" ajax="false" partialSubmit="true" >
+					process="@this" ajax="false" partialSubmit="true">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
 
 			</p:column>
 		</p:dataTable>
-	</p:panel>
-
-	<p:panel>
-		<h:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-
+		<br />
+		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.create']}"
-				action="#{usergroupBackingBean.createUserGroupProfiles()}"
-				style="float:right;" />
+				action="#{usergroupBackingBean.createUserGroupProfiles()}" />
+		</div>
 
-		</h:panelGrid>
 	</p:panel>
 </ui:composition>
