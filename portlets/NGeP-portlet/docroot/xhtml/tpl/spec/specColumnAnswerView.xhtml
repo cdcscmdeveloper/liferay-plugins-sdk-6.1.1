@@ -36,7 +36,7 @@
 		</ui:define>
 	</ui:decorate>
 	
-	<p:column style="width:97px;text-align:right;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+	<p:column style="width:70px; white-space:normal; text-align:right;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
@@ -67,7 +67,7 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
 	</p:column>
-	<p:column style="width:100px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
+	<p:column style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
 		<h:panelGroup>
 			<h:outputText value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" />
 			<h:outputText value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}">
