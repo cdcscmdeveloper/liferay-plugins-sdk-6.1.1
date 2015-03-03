@@ -272,16 +272,21 @@ public class FinancialOrgBackingBean extends
 			 
 			 }*/
 			 if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
-				 /*for(PmFinancialAcc finAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
-						finAcc.setBankCode(getManagedBean().getFinancialOrg().getPmFinancialAccs().get(0).getPmPaymentBankOrg().getPmFinancialSvcs().get(0).getBankCode());
-						
-					}*/
 				
 				 for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
-					 for (PmFinancialSvc financialSvc1 : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
-					     financialAcc.setBankCode(financialSvc1.getBankCode());
-					    
-					   }
+					 if(!getManagedBean().getFinancialOrg().getPmFinancialSvcs().isEmpty()&& getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null){						 
+					
+						 IFinancialOrgSO financialOrgSO = null;
+							FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+							reqDTO.setFinancialOrgId(financialAcc.getPmPaymentBankOrg().getFinancialOrgId());
+							financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IFinancialOrgSO.class);
+							FinancialOrgResDTO resDTO  = financialOrgSO
+									.retrieveFinancialSvcByFinancialOrgId(reqDTO);
+
+							PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
+							financialAcc.setBankCode(pmFinancialSvc.getBankCode());					 
+					 }
 				 }
 		}
 		}
@@ -1177,10 +1182,7 @@ public class FinancialOrgBackingBean extends
 					 + "|" + pmFinancialSvc.getFinancialSvcId());
 			for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
 			    if(financialAcc.isBrandNew()){
-			     financialAcc.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
-			     //PmFinancialSvc financialSvc = new PmFinancialSvc();
-			    // financialSvc.setBankCode(pmFinancialSvc.getBankCode());
-			    // financialAcc.getPmPaymentBankOrg().getPmFinancialSvcs().add(financialSvc);
+			     financialAcc.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());			   
 			     financialAcc.setBankCode(pmFinancialSvc.getBankCode());
 			    }
 			   }
