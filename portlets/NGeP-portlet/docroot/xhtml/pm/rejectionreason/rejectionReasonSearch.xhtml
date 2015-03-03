@@ -25,11 +25,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</p:selectOneMenu>
 				</td>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.application.type']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.application.type']}" rendered="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"/>
 				</th>
 				<td>
 					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM" 
-						disabled="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
+						rendered="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
 						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.applicationType}">
 						<f:selectItems  value="#{rejectionReasonBackingBean.applicationTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -44,11 +44,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCode}"/>
 				</td>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.company.type']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.company.type']}" rendered="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"/>
 				</th>
 				<td>
 					<p:selectOneMenu id="somComType" styleClass="ppDropDownWidthM"
-						disabled="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
+						rendered="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
 						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.companyType}">
 						<f:selectItems  value="#{rejectionReasonBackingBean.companyTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -63,11 +63,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				 		cols="50" rows="5" maxlength="255" autoResize="false"/>
 				</td>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.supplier.type']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" rendered="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"/>
 				</th>
 				<td>
 					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthM" 
-						disabled="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
+						rendered="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
 						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.supplierType}">
 						<f:selectItems  value="#{rejectionReasonBackingBean.supplierTypeOptions()}"/>
 					</p:selectOneMenu>
