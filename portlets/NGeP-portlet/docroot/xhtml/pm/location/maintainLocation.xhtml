@@ -243,7 +243,7 @@
 					<td><p:selectOneMenu
 							value="#{locationBackingBean.managedBean.district.pmDivision.divisionId}"
 							id="divisionval"
-							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
+							disabled="#{!locationBackingBean.managedBean.district.brandNew or locationBackingBean.managedBean.divisionBox}"
 							label=" #{lbl['lbl.pm.state']}"							
 							styleClass="ppDropDownWidthL" 
 							style="width: 276px;margin-bottom: 5px;">
