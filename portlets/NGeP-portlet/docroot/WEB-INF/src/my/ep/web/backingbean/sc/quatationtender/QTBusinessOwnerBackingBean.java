@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.lang.reflect.InvocationTargetException;
@@ -84,16 +94,24 @@ import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 
 /**
+ * The Class QTBusinessOwnerBackingBean.
+ *
  * @author Viswanath
- * 
  */
 @ManagedBean(name = "qTBusinessOwnerBackingBean")
 @RequestScoped
 public class QTBusinessOwnerBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
+	
+	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTBusinessOwnerBackingBean.class);
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -101,12 +119,19 @@ public class QTBusinessOwnerBackingBean extends
 		log.info(message);
 	}
 
+	/** The flag. */
 	private boolean flag;
 
+	/**
+	 * Instantiates a new QT business owner backing bean.
+	 */
 	public QTBusinessOwnerBackingBean() {
 
 	}
 
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	public void init() {
 		if (this.getManagedBean().getQt().getMinistrySpecSecrataryId() == null) {
@@ -134,17 +159,32 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * user Details paging Data Model.
+	 */
 	private class UserBOPagingDataModel extends PagingDataModel<PmUser> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/** The user business owner search bean. */
 		private UserCommitteeSearchBean userBusinessOwnerSearchBean;
 
+		/**
+		 * Instantiates a new user bo paging data model.
+		 *
+		 * @param componentId the component id
+		 * @param userBusinessOwnerSearchBean the user business owner search bean
+		 */
 		public UserBOPagingDataModel(String componentId,
 				UserCommitteeSearchBean userBusinessOwnerSearchBean) {
 			super(componentId);
 			this.userBusinessOwnerSearchBean = userBusinessOwnerSearchBean;
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		protected ISearchResultBean<PmUser> pageChangeListener(
 				ISearchBean<PmUser> searchBean) {
@@ -179,8 +219,10 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	/**
-	 * @param userBusinessOwnerSearchBean
-	 * @param searchBean
+	 * Populate user search criteria.
+	 *
+	 * @param userBusinessOwnerSearchBean the user business owner search bean
+	 * @param userSearchBean the user search bean
 	 */
 	private void populateUserSearchCriteria(
 			UserCommitteeSearchBean userBusinessOwnerSearchBean,
@@ -226,21 +268,39 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * Search user action.
+	 */
 	public void searchUserAction() {
 		getManagedBean().getUserSearchBusinessOwnerDataModel().reloadData();
 	}
 
+	/**
+	 * Qt Details paging Data Model.
+	 */
 	private class BOPagingDataModel extends PagingDataModel<ScQt> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/** The clone business owner search bean. */
 		private QtnTenderSearchBean cloneBusinessOwnerSearchBean;
 
+		/**
+		 * Instantiates a new BO paging data model.
+		 *
+		 * @param componentId the component id
+		 * @param cloneBusinessOwnerSearchBean the clone business owner search bean
+		 */
 		public BOPagingDataModel(String componentId,
 				QtnTenderSearchBean cloneBusinessOwnerSearchBean) {
 			super(componentId);
 			this.cloneBusinessOwnerSearchBean = cloneBusinessOwnerSearchBean;
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<ScQt> pageChangeListener(
 				ISearchBean<ScQt> searchBean) {
@@ -264,8 +324,10 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	/**
-	 * @param cloneBusinessOwnerSearchBean
-	 * @param searchBean
+	 * Populate clone qt search criteria.
+	 *
+	 * @param cloneBusinessOwnerSearchBean the clone business owner search bean
+	 * @param qtSearchBean the qt search bean
 	 */
 	private void populateCloneQTSearchCriteria(
 			QtnTenderSearchBean cloneBusinessOwnerSearchBean,
@@ -353,10 +415,18 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * Clone search bo action.
+	 */
 	public void cloneSearchBOAction() {
 		getManagedBean().getCloneBusinessOwnerDataModel().reloadData();
 	}
 
+	/**
+	 * Gets the ministry specification secretary list.
+	 *
+	 * @return the ministry specification secretary list
+	 */
 	private void getMinistrySpecificationSecretaryList() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -368,6 +438,9 @@ public class QTBusinessOwnerBackingBean extends
 		getManagedBean().setComitteeUserName(ministrySpecification);
 	}
 
+	/**
+	 * Adds the Business Owner.Event handle add empty row for data table in
+	 */
 	public void addBusinessOwner() {
 		debugLogger("addBusinessOwner");
 		getManagedBean().getUserSearchBusinessOwnerDataModel().reloadData();
@@ -386,7 +459,9 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	/**
-	 * User selection types gov external new
+	 * User will select the selection types like external or new.
+	 *
+	 * @return the selection types
 	 */
 	private void getSelectionTypes() {
 		SelectionType[] type = SelectionType.values();
@@ -398,6 +473,13 @@ public class QTBusinessOwnerBackingBean extends
 		this.getManagedBean().setSelections(selectionTypes);
 	}
 
+	/**
+	 * User Selection Action. when you change user selection it will display the existing user or new user details.
+	 * 
+	 * @param event
+	 *            (is Mandatory)
+	 * 
+	 */
 	public void userSelcetionAction(AjaxBehaviorEvent event) {
 		String userSelection = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -416,11 +498,19 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * Cancel committe action.
+	 */
 	public void cancelCommitteAction() {
 		this.getManagedBean().getScCommitteeMemberList()
 				.remove(this.getManagedBean().getCommitteMember());
 	}
 
+	/**
+	 * On row edit action.
+	 *
+	 * @param event the event
+	 */
 	public void onRowEditAction(RowEditEvent event) {
 		ScCommitteeMember committeeMember = (ScCommitteeMember) event
 				.getObject();
@@ -428,11 +518,21 @@ public class QTBusinessOwnerBackingBean extends
 
 	}
 
+	/**
+	 * On row cancel.
+	 *
+	 * @param event the event
+	 */
 	public void onRowCancel(RowEditEvent event) {
 		ScCommitteeMember member = (ScCommitteeMember) event.getObject();
 		this.getManagedBean().getScCommitteeMemberList().remove(member);
 	}
 
+	/**
+	 * On row clone action.
+	 *
+	 * @param event the event
+	 */
 	public void onRowCloneAction(SelectEvent event) {
 		ScQt scQt = (ScQt) event.getObject();
 		// ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
@@ -459,11 +559,19 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * Consolidate select.
+	 *
+	 * @param event the event
+	 */
 	public void consolidateSelect(SelectEvent event) {
 		ScCommitteeMember member = (ScCommitteeMember) event.getObject();
 		System.out.println("*******" + member.isConsolidate());
 	}
 
+	/**
+	 * Clone search committe action.
+	 */
 	public void cloneSearchCommitteAction() {
 		QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
 				.getCloneQtnTenderSearchBean();
@@ -473,8 +581,10 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	/**
-	 * @param qtnTenderSearchBean
-	 * @return
+	 * Retrive qt committes.
+	 *
+	 * @param qtnTenderSearchBean the qtn tender search bean
+	 * @return the list
 	 */
 	private List<ScQt> retriveQtCommittes(
 			QtnTenderSearchBean qtnTenderSearchBean) {
@@ -555,6 +665,9 @@ public class QTBusinessOwnerBackingBean extends
 				.getQtResultBean().getResultList() : new ArrayList<ScQt>();
 	}
 
+	/**
+	 * Adds the clone committee members action.
+	 */
 	public void addCloneCommitteeMembersAction() {
 		debugLogger("addCloneCommitteeMembersAction");
 		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
@@ -632,6 +745,9 @@ public class QTBusinessOwnerBackingBean extends
 				.execute("cloneBusinessOwner.hide()");
 	}
 
+	/**
+	 * Clone business owner popup action.
+	 */
 	public void cloneBusinessOwnerPopupAction() {
 		debugLogger("cloneBusinessOwnerPopupAction");
 		getManagedBean().getCloneBusinessOwnerDataModel().reloadData();
@@ -649,6 +765,9 @@ public class QTBusinessOwnerBackingBean extends
 		getManagedBean().setSelectedCommitteMemebers(null);
 	}
 
+	/**
+	 * After Adding the business owner details, need to check the duplicate.
+	 */
 	public void okBusinessOwnerAction() {
 		debugLogger("okBusinessOwnerAction");
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -806,6 +925,9 @@ public class QTBusinessOwnerBackingBean extends
 		RequestContext.getCurrentInstance().execute("newbusinessowner.hide()");
 	}
 
+	/**
+	 * Delete business owner.
+	 */
 	public void deleteBusinessOwner() {
 		debugLogger("deleteBusinessOwner");
 		int count = 0;
@@ -827,6 +949,11 @@ public class QTBusinessOwnerBackingBean extends
 		scCommittee.setScCommitteeMembers(committeeMemberList);
 	}
 
+	/**
+	 * Reset.
+	 * 
+	 * clear the key in data in Business owner search.
+	 */
 	public void reset() {
 		debugLogger("reset");
 		this.getManagedBean().getUserBusineeOwnerSearchBean().setName(null);
@@ -836,6 +963,11 @@ public class QTBusinessOwnerBackingBean extends
 				.setIdentificationNo(null);
 	}
 
+	/**
+	 * Reset clone.
+	 * 
+	 * clear the key in data in Clone QT search.
+	 */
 	public void resetClone() {
 		debugLogger("resetClone");
 		this.getManagedBean().getCloneBusinessOwnerSearchBean()
@@ -851,6 +983,11 @@ public class QTBusinessOwnerBackingBean extends
 				.setQtStatus(null);
 	}
 
+	/**
+	 * Process checked.
+	 *
+	 * @param event the event
+	 */
 	public void processChecked(AjaxBehaviorEvent event) {
 		Boolean id = (Boolean) event.getComponent().getAttributes()
 				.get("value");
@@ -858,9 +995,9 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	/**
-	 * Method to save the BO
-	 * 
-	 * @return
+	 * save Business Owner details
+	 * save - save data into database.
+	 * @return the string
 	 */
 	public String saveBusinessOwnerAction() {
 		IQTDetailSO detailSO;
@@ -916,9 +1053,9 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	/**
-	 * Method to construct bo details for save or submit
-	 * 
-	 * @return
+	 * Method to construct business owner details for save or submit.
+	 *
+	 * @return ScQt
 	 */
 	private ScQt prepareBOInfo() {
 		ScQt scQt = this.getManagedBean().getQt();
@@ -947,10 +1084,11 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	/**
-	 * Will called submit Bo details..
-	 * 
-	 * @return
-	 */
+	 * submit business owner details.
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * @return the string
+	 * page navigate to acknowledge page.
+	 */	
 	public String submitBusinessOwnerAction() {
 		IQTDetailSO detailSO;
 		QuationTenderResDTO quationTenderResDTO = null;
@@ -992,6 +1130,11 @@ public class QTBusinessOwnerBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Creates the business owner.
+	 *
+	 * @return the string
+	 */
 	public String createBusinessOwner() {
 		debugLogger("createBusinessOwner");
 		this.getManagedBean().setEditable(false);
@@ -1062,8 +1205,8 @@ public class QTBusinessOwnerBackingBean extends
 
 	/**
 	 * To cancle the QT. need to add logic for cancel update bpm
-	 * 
-	 * @return
+	 *
+	 * @return the string
 	 */
 	public String cancelQTDetails() {
 		ScQt qt = prepareBOInfo();
@@ -1124,6 +1267,11 @@ public class QTBusinessOwnerBackingBean extends
 		return detailBackingBean.editAction(resDTO.getQtDetail());
 	}
 
+	/**
+	 * Consolidate row select radio.
+	 *
+	 * @param event the event
+	 */
 	public void consolidateRowSelectRadio(SelectEvent event) {
 		ScCommitteeMember selCommitteeMember = (ScCommitteeMember) event
 				.getObject();
@@ -1137,6 +1285,11 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the consolidate select all.
+	 *
+	 * @return the consolidate select all
+	 */
 	public void getConsolidateSelectAll() {
 		int selectedCount = 0;
 		List<ScCommitteeMember> scCommitteeMemberList = this.getManagedBean()
@@ -1151,6 +1304,11 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * Select all.
+	 *
+	 * @param event the event
+	 */
 	public void selectAll(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScCommitteeMember> scCommitteeMemberList = this.getManagedBean()
@@ -1167,14 +1325,28 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
+	/**
+	 * Checks if is flag.
+	 *
+	 * @return true, if is flag
+	 */
 	public boolean isFlag() {
 		return flag;
 	}
 
+	/**
+	 * Sets the flag.
+	 *
+	 * @param flag the new flag
+	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
 
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * @return array of SelectItem
+	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -1188,26 +1360,52 @@ public class QTBusinessOwnerBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Gets the detail so.
+	 *
+	 * @return the detail so
+	 */
 	private IQTDetailSO getDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 
+	/**
+	 * Gets the user so.
+	 *
+	 * @return the user so
+	 */
 	private IUserSO getUserSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 
+	/**
+	 * Gets the parameter so.
+	 *
+	 * @return the parameter so
+	 */
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
+	/**
+	 * Gets the org profile so.
+	 *
+	 * @return the org profile so
+	 */
 	private IOrgProfileSO getOrgProfileSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
 
+	/**
+	 * Sets the pm status.
+	 *
+	 * @param statusId the status id
+	 * @return the pm status
+	 */
 	private PmStatus setPmStatus(Long statusId) {
 		PmStatus status = new PmStatus();
 		status.setStatusId(statusId);
