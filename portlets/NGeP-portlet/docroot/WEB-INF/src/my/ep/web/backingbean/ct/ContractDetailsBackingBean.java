@@ -911,7 +911,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				} else {
 					getManagedBean().getContractVer().setCtSchedules(null);  	
 				}
-
+				List<String> schedulePhaseNoList = new ArrayList<String>();
 				if(getManagedBean().getCtContract().isFrequencySchedule()) {
 			           	if(contractVer.getCtSchedules() == null || contractVer.getCtSchedules().size() < 2 
 			           		 && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))) {
@@ -920,19 +920,25 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			           	
 			           	for(CtSchedule schedules : contractVer.getCtSchedules()){
 			           		    if(schedules.getStartMonth() == null) {
-			           			     throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule start date"});
+			           			     throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())+" "+ResourceBundleUtils.getMessage("lbl.ct.start.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			    				  }
 			           	
 			           		    if(schedules.getEndMonth() == null) {
-			           			   throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule end date"});
+			           			   throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())+" "+ResourceBundleUtils.getMessage("lbl.ct.end.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			           		    }
 			           		    
 			           		 if(schedules.getScheduleNo() == null) {
-			           			 throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule no"});
+			           			 throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		           		    }
 			           		 
+			           		 if(schedulePhaseNoList.contains(schedules.getScheduleNo().toString())) {
+			           			throw new EpException(MessageConst.ERROR_100046, new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			           		 } else {
+			           			schedulePhaseNoList.add(schedules.getScheduleNo().toString());
+			           		 }
+			           		 
 			           		if(schedules.getScheduleType() == null || schedules.getScheduleType().getParameterId() == null) {
-		           			  throw new EpException(MessageConst.ERROR_100022, new String[] { "Schedule type"});
+		           			  throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.schedule.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		           		    }
 			             }     	
 				} else if (contractVer.getCtProgressivePayments() == null || contractVer.getCtProgressivePayments().size() < 2 && !getManagedBean().getCtContract().isFrequencySchedule()
@@ -945,19 +951,25 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()) {
 						percentage = percentage+progressivePayment.getPercentage();
 						if(progressivePayment.getPhaseNo()== null) {
-							throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase" });
+							throw new EpException(MessageConst.ERROR_100022,new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())+ " "+ResourceBundleUtils.getMessage("lbl.ct.phase", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
+						
+		           		 if(schedulePhaseNoList.contains(progressivePayment.getPhaseNo().toString())) {
+		           			throw new EpException(MessageConst.ERROR_100046, new String[] {ResourceBundleUtils.getMessage("lbl.ct.phase", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		           		 } else {
+		           			schedulePhaseNoList.add(progressivePayment.getPhaseNo().toString());
+		           		 }
 
 						if(progressivePayment.getPhaseDesc()== null ||progressivePayment.getPhaseDesc() =="" ) {
-							throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
+							throw new EpException(MessageConst.ERROR_100022,new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())+ " "+ResourceBundleUtils.getMessage("lbl.ct.description", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 						
 						    if(progressivePayment.getStartMonth() == null) {
-		           			      throw new EpException(MessageConst.ERROR_100022, new String[] { "Progressive payment start date"});
+		           			      throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())+ " "+ResourceBundleUtils.getMessage("lbl.ct.start.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		    				  }
 		           	
 		           		    if(progressivePayment.getEndMonth() == null) {
-		           			   throw new EpException(MessageConst.ERROR_100022, new String[] { "Progressive payment end date"});
+		           			   throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())+ " "+ResourceBundleUtils.getMessage("lbl.ct.end.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		           		    }     	
 					}
 					int value = Float.compare(percentage,100);
