@@ -92,8 +92,6 @@
 		</p:dataTable>
 
 		<br />
-		</p:panel>
-		<p:panel id="pmUserId">
 		<div >
 			<table style="width: 100%">
 				<tr>
@@ -103,7 +101,7 @@
 							<tr>
 								<td class="TableFieldLeft" style="padding-bottom: 5px"><ac:lov
 										id="usergrouping" lovId="PM_USER" headerText="User Selection"
-										buttonLabel="#{lbl['lbl.btn.add']}" buttonIcon="ui-icon-add"
+										buttonLabel="#{lbl['lbl.btn.add']}" 
 										selectionMode="multiple"
 										saveObject="usergroupBackingBean.managedBean.users"
 										postUpdateListener="usergroupBackingBean.userGroupListner(usergroupBackingBean.managedBean.users)"
