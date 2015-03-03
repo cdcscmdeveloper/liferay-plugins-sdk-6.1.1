@@ -4775,7 +4775,9 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			reqDTO.setCommType(EvaluationReport.getName(getManagedBean()
 					.getCommitteeType()));
-
+			//qtReqDTO.setQtId(qtId);
+			resDTO = evaluationSO.retriveQtDtlsByRemarksAttachments(reqDTO);
+			this.getManagedBean().setScQt(resDTO.getScQt());
 			if (null == this.getManagedBean().getScQtEvaluationReportList()) {
 				resDTO = evaluationSO.retriveReportDetails(reqDTO);
 				if (null != resDTO.getReports()
