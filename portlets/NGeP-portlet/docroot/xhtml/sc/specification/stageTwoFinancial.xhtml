@@ -13,7 +13,7 @@
 		height="500">
 		<p:messages id="technicalChecklistPopup" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" />
-		<p:panel id="financialChecklistPopup">
+		<h:panelGroup id="financialChecklistPopup">
 
 			<p:dataTable id="stageTwoFinPopup" var="compilance" rows="10"
 				value="#{specificationBackingBean.managedBean.stageTwoFinComplianceList}"
@@ -28,7 +28,7 @@
 				</p:column>
 			</p:dataTable>
 
-		</p:panel>
+		</h:panelGroup>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 			style="float:right;" onclick="stageTwoFinance.hide();"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"

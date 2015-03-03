@@ -17,8 +17,8 @@
 			autoUpdate="true" closable="true"></p:messages>
 
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -38,10 +38,10 @@
 		<br />
 		<br />
 
-		<p:panel>
+		<h:panelGroup>
 
 			<ui:include src="/xhtml/sc/specification/supplierInfoscore.xhtml" />
-		</p:panel>
+		</h:panelGroup>
 	</ui:define>
 
 

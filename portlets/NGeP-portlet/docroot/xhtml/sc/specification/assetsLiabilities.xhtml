@@ -37,16 +37,16 @@
 		<p:spacer height="25"></p:spacer>
 		<br />
 		<br />
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea style="width: 100%;"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-				</tr>
-			</table>
-		</p:panel>
+
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+				<td><p:inputTextarea style="width: 100%;"
+						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+			</tr>
+		</table>
+
 
 		<p:panel header="#{lbl['lbl.sc.sp.assest.liabilities']}"
 			toggleable="true">
@@ -102,7 +102,7 @@
 			</table>
 
 			<h:panelGroup id="assetLiabilitie">
-				<p:panel
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 					<h:panelGroup id="assetsGroupId">
@@ -135,8 +135,9 @@
 
 						</div>
 					</h:panelGroup>
-				</p:panel>
-				<p:panel
+				</h:panelGroup>
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
@@ -155,7 +156,7 @@
 									for="finAssetsLiaScore" display="icon"></p:message></td>
 						</tr>
 					</table>
-				</p:panel>
+				</h:panelGroup>
 			</h:panelGroup>
 		</p:panel>
 
