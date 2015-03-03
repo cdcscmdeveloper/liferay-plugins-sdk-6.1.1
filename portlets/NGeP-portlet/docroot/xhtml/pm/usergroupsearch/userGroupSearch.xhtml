@@ -15,10 +15,9 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				icon="ui-icon-search"
 				action="#{usergroupBackingBean.searchUserGroupAction}"
 				update="searchGroupProfile" process="userGroupSearch" />
-			<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+			<p:commandButton value="#{lbl['lbl.btn.reset']}" 
 				update="UserGroupPanel,searchGroupProfile" process="@this"
 				partialSubmit="true" action="#{usergroupBackingBean.reset}" />
 		</div>
@@ -76,7 +75,7 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.create']}"
 				action="#{usergroupBackingBean.createUserGroupProfiles()}"
-				style="float:right;" icon="ui-icon-add" />
+				style="float:right;" />
 
 		</h:panelGrid>
 	</p:panel>
