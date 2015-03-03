@@ -16,16 +16,16 @@
 
 
 
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea style="width: 100%;"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-				</tr>
-			</table>
-		</p:panel>
+
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
+				<td><p:inputTextarea style="width: 100%;"
+						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+			</tr>
+		</table>
+
 
 
 		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}"
@@ -43,8 +43,8 @@
 			</table>
 
 			<h:panelGroup id="supplierScore">
-
-				<p:panel
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
@@ -64,7 +64,7 @@
 									display="icon"></p:message></td>
 						</tr>
 					</table>
-				</p:panel>
+				</h:panelGroup>
 			</h:panelGroup>
 		</p:panel>
 

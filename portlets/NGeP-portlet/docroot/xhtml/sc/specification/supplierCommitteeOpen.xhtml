@@ -91,7 +91,7 @@
 	</p:panel>
 
 
-	<p:panel
+	<h:panelGroup
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneyesDataTable" rows="10"
@@ -126,7 +126,7 @@
 
 		</h:panelGrid>
 
-	</p:panel>
+	</h:panelGroup>
 
 
 
@@ -171,7 +171,7 @@
 		</table>
 	</p:panel>
 
-	<p:panel
+	<h:panelGroup
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<h:panelGrid width="100%">
 
@@ -199,7 +199,7 @@
 		</h:panelGrid>
 
 
-	</p:panel>
+	</h:panelGroup>
 	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
 		toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
