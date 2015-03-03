@@ -189,7 +189,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void preRenderView() {
 		ICircularSO circularSO = null;
 		try {
-			log.info("**********preRenderView**************");
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(getFacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
@@ -414,8 +413,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * The method used  to add  associate circular with current circular for cancel
 	 */
 	public void addCancelledCircular() {
-		log.info("CentralContractBackingBean.addCancelledCircular()");
-        try {	
+		  try {	
         	for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
         		cancelCircular.setCancelCircularId(null);
         		cancelCircular.setCtCancelCircularReq(null);
@@ -432,7 +430,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * The method used to delete  associate circular with current circular 
 	 */
 	public void deleteCancelCircular(){
-		log.info("CentralContractBackingBean.deleteCancelCircular()");
 		try {
 			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
 			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCirculars());
@@ -514,8 +511,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 *   a confirmation message once submit successfully
 	 */
 	public String saveCircular(String action){
-		log.debug("CentralContractBackingBean.saveCircular("+action+")");
-
+	
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
@@ -567,8 +563,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
-					log.info("Record saved successfully");
-					String messageId = MessageConst.INFO_700005;
+			    	String messageId = MessageConst.INFO_700005;
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700025;
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
@@ -580,7 +575,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 						messageId = MessageConst.INFO_700010;
 					} 
-				log.info("Record saved successfully");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getCircularVer().getDocType()), 
 								resDTO.getCircular().getCircularNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -733,7 +727,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public String gotoPage() {
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
-		log.info("Action :"+action+" Id :"+circularVerId);
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
@@ -899,6 +892,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return itemPriceList;
 	}
 	
+	/**
+	 * The method to retrieve list of  circular item 
+	 * */
 	public void setContractListner(){
 		
 		  if(getManagedBean().getSelectedCircularContract() != null && 
@@ -916,6 +912,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setChkItemPrice(false);
 	}
 	
+	/**
+	 * The method to retrieve list of active circular item 
+	 * */
 	public List<CtCircularItem> getActiveCircularItem() {
 		List<CtCircularItem> activeItemList = new ArrayList<CtCircularItem>();
 		Date currentDate = new Date();
@@ -935,6 +934,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return activeItemList;
 	}
 	
+	/**
+	 * The method used to set the zone for item and supplier
+	 * */
 	public void setZoneListener(){
 		
 		getManagedBean().setZonePriceMap(null);
@@ -955,11 +957,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				  } 
 	}
 	
+	/**
+	 * The method used to reset the list of zone
+	 * */
 	public void setPriceListener(){
 		this.getManagedBean().setChkItemPrice(true);
 		retriveItemZonesList();
 	}
 	
+	/**
+	 * The method used to retrieve list of zone
+	 * */
 	public void getContractZoneList(){
 		
 		this.getManagedBean().setContractItemZones(new ArrayList<CtContractZone>());
@@ -987,6 +995,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		  } 
 	}
 	
+	/**
+	 * The method used to construct the zone into tree map
+	 * */
    public void retriveItemZonesList() {
 		
 		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
@@ -1012,6 +1023,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		 this.getManagedBean().setCentralZoneTrees(rootLocationTree);
 	  }
    
+   /**
+	 * The method used to navigate back maintenance page
+	 * */
    public String backAction() {
 	   if(getManagedBean().isChkCancelPage()) {
 		   getManagedBean().setChkCancelPage(false);
@@ -1023,6 +1037,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	   }
 	}
    
+   /**
+	 * The method reset search value for maintenance
+	 * */
    public void searchReset(){
 		this.getManagedBean().setSearchCircularNo(null);
 		this.getManagedBean().setSearchCircularName(null);
@@ -1032,6 +1049,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		this.getManagedBean().setSearchStatusId(null);
 	}
    
+   /**
+	 * Method used to search central circular 
+	 * navigate to contract maintenance page
+	 * user can view and update central circular
+   */
    public void searchCircularVer() throws Exception {
 		try {
 			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) &&
@@ -1053,8 +1075,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}			
 	}
 	
+   /**
+	 * Method used to add contract person into contract person list
+   */
 	public void addContactPerson(){
-		log.info("CentralContractBackingBean.addContactPerson()");
 		try {
 			CtContactPerson contactPerson = new CtContactPerson();
 	        getManagedBean().getCircularVer().getCtContactPersons().add(contactPerson);
@@ -1064,8 +1088,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * Method used to delete contract person from contract person list
+    */
 	public void deleteContactPerson(){
-		log.info("CentralContractBackingBean.deleteContactPerson()");
 		try {
 			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
 		} catch (Exception e) {
@@ -1074,9 +1100,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}	
 	
+	/**
+	 * Method used to add exempted 
+    */
 	public void addExemptedOrg(List<PmOrgProfile> orgProfiles){
-		log.info("CentralContractBackingBean.addExemptedOrg()");
-		try {
+			try {
 			if (orgProfiles != null){
 				
 				List<CtExemptedOrg> exemptedOrgList = new ArrayList<CtExemptedOrg>();
@@ -1101,8 +1129,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * Method used to delete exempted 
+    */
 	public void deleteExemptedOrg(){
-		log.info("CentralContractBackingBean.deleteExemptedOrg()");
 		try {
 			getManagedBean().getCircularVer().getCtExemptedOrgs().removeAll(getManagedBean().getSelectedExemptedOrgs());
 		} catch (Exception e) {
@@ -1111,8 +1141,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}	
 	
+	/**
+	 * Method used to add circular contract into contract list
+    */
 	public void addCircularContractListener() {
-		log.info("CentralContractBackingBean.addCircularContractListener()");
 		try {
 			getManagedBean().setAutoUpdate(false);
 			getManagedBean().setSearchContractNo(null);
@@ -1126,8 +1158,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * Method used to delete circular contract from contract list
+    */
 	public void deleteCircularContract(){
-		log.info("CentralContractBackingBean.deleteCircularContract()");
 		try {
 			getManagedBean().getCircularVer().getCtCircularContracts().remove(getManagedBean().getSelectedCircularContract());
 			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
@@ -1141,6 +1175,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * Method used to set extension start date 
+	 * and extension end date for central circluar
+    */
 	public void extendStartEndDate(){
 		if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
 			Calendar c = Calendar.getInstance();
@@ -1157,6 +1195,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	/**
+	 * Method used to set value for security check
+    */
 	public String preSubmitCircular(PmDigiSign pmDigiSign) {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);			
@@ -1173,6 +1214,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
+	 /**
+		 * Method to popup window to upload circular letter
+	    */
 	public void setCentralDetailsValue() {
 		if(getManagedBean().getCircularVer().getCircularNo() == null || getManagedBean().getCircularVer().getName() == null
 		 ||getManagedBean().getCircularVer().getStartDate() == null || getManagedBean().getCircularVer().getEndDate() == null) {
@@ -1182,16 +1226,27 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	   }
 	}
 	
+	 /**
+		 * Method to retrieve portal name from property file
+	    */
 	public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
 	
+	 /**
+		 * Method to retrieve maintenance  portal name from property file
+	    */
 	public String getMaintenancePortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cc.circular.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}	
 	
+	/**
+	 * Method to authenticate user during submit of central circular
+	 * Navigate confirmation dialog for authenticate of login user
+	 * Call save central circular method once authentication done
+    */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
 				|| BpmOutcomeConst.BPM_REJECT.equals(outcome)
@@ -1219,7 +1274,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}
 	
-
+	/**
+	 * The method used to set auto update true
+	 * to show the message summary
+	 * */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
