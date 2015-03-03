@@ -20,10 +20,10 @@
 	 <ui:include src="/xhtml/pm/professionalCertifiedBody/professionalCertifiedSearch.xhtml" />
 			
       <div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
+			<p:commandButton value="#{lbl['lbl.btn.search']}"  
 				 update="searchProfCertResult" action="#{profcertifiedbodyBackingBean.searchProfessionalCertBody}" />
             <p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{profcertifiedbodyBackingBean.reset}"
-               process="@this" icon="ui-icon-reset" update="searchProfCertResult,:form:profPanel"/>
+               process="@this" update="searchProfCertResult,:form:profPanel"/>
 	  </div>
     <br/>
 	<br/>
@@ -58,7 +58,7 @@
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
       <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profcertifiedbodyBackingBean.createProfCert}" 
-      	ajax="false" style="float:right;" icon="ui-icon-add" />
+      	ajax="false" style="float:right;" />
 	
 	 </h:panelGrid>	
 	</p:panel>
