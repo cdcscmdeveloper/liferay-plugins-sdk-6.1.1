@@ -42,7 +42,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</th>
 				<td>
 					<p:inputText styleClass="ppDisplayTextM" maxlength="10" 
-						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCode}"/>
+						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCode}">
+						<p:ajax process="@this"/>
+					</p:inputText>
 				</td>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.company.type']}" id="comTypeLbl"
@@ -62,7 +64,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</th>
 				<td>
 				 	<p:inputTextarea value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonDesc}" 
-				 		cols="50" rows="5" maxlength="255" autoResize="false"/>
+				 		cols="50" rows="5" maxlength="255" autoResize="false">
+				 		<p:ajax process="@this"/>
+				 		</p:inputTextarea>
 				</td>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" id="suppTypeLbl"
