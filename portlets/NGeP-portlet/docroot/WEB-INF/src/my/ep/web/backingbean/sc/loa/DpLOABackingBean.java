@@ -30,25 +30,41 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class DpLOABackingBean.
+ *
  * @author kenny
  * @since 27.05.2014
- * 
  */
 @ManagedBean
 @RequestScoped
 public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> {
+	
+	/** The log. */
 	public static Logger log = EpLogger.getLogger(DpLOABackingBean.class);
 
+	/**
+	 * Instantiates a new dp loa backing bean.
+	 */
 	public DpLOABackingBean() {
 	}
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
 	}
 
+	/**
+	 * render the view based on the task id
+	 * page navigation to Loa List page
+	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
 
@@ -75,7 +91,9 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	}
 
 	/**
-	 * retrieving LOI LOA List
+	 * retrieving LOI LOA List from database.
+	 * 
+	 * @param requestNoteId the request note id
 	 */
 	public void retrieveLOAList(Long requestNoteId) {
 		debugLogger("retrieveLOAList");
@@ -142,7 +160,13 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			purchaseRequestSO = null;
 		}
 	}
-
+	
+	/**
+	 * update bpm - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
+	 * @return the string
+	 * page navigate to acknowledge page.
+	 */	
 	public String updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 
