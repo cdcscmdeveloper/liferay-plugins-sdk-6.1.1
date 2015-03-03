@@ -489,7 +489,30 @@
 				</td></tr></table>
 			</p:panel>
 		</p:dialog>
-		
-		
+
+		<p:panel header="#{lbl['lbl.pm.category.restriction']}" toggleable="true" id="catRestrictionId">
+			<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex" 
+				rowKey="#{pmCategoryRestr}"
+				value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryRestrs}"
+				selection="#{categoryBackingBean.managedBean.selectedPmCategoryRestr}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				width="100%" var="pmCategoryRestr">
+				
+				<ac:paginator for="dtlCategoryRestrId"></ac:paginator>
+				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column headerText="#{lbl['lbl.pm.company.type']}">
+					<p:selectOneMenu  value="#{pmCategoryRestr.companyTypeId.parameterId}" required="true" label="#{lbl['lbl.pm.company.type']}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+				           <f:selectItems value="#{categoryBackingBean.getPopulateCompanyTypeList()}" var="compType" itemValue="#{compType.pmParameter.parameterId}" itemLabel="#{compType.codeName}"/>
+				      </p:selectOneMenu>
+					</p:column>
+			</p:dataTable>
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}" action="#{categoryBackingBean.addCategoryRestr}" update="dtlCategoryRestrId" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"  action="#{categoryBackingBean.deleteCategoryRestr}" update="dtlCategoryRestrId" />
+			</div>
+		</p:panel>
+
 	</ui:define>
 </ui:composition>
