@@ -146,7 +146,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:selectOneMenu id="votCode1" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{contractRequestBackingBean.managedBean.votFundId}"
-						style="width: 110px; margin-bottom: 5px;">
+						style="width: 102px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="votCodeList"
 							value="#{contractRequestBackingBean.managedBean.votFundList}"
@@ -162,7 +162,7 @@
 						saveObject="contractRequestBackingBean.managedBean.pmVoteFund"
 						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
 						readonly="true"
-						size="10"
+						size="4"
 						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{contractRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
 						postUpdateListener="contractRequestBackingBean.checkVotFundLov()" 
@@ -170,7 +170,7 @@
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 200px; margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
+					<td><p:selectOneMenu style="width: 150px; margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
 						<f:selectItems value="#{contractRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
 					
@@ -179,7 +179,7 @@
 						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.charge.asset.gosodo']}"
 						saveObject="contractRequestBackingBean.managedBean.gosodo"
 						readonly="true"
-						size="10"
+						size="8"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{contractRequestBackingBean.managedBean.gosodo.glAccCode}"	>
 					</ac:lov></h:panelGroup><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
@@ -190,7 +190,7 @@
 						lovId="PM_PRG_ACTIVITY" headerText="#{lbl['lbl.fl.program.activiti']}"
 						saveObject="contractRequestBackingBean.managedBean.pmPrgActivity"
 						readonly="true"
-						size="10"
+						size="7"
 						disabled="#{!contractRequestBackingBean.managedBean.programLov}" 
 						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
 						value="#{contractRequestBackingBean.managedBean.pmPrgActivity.prgActivityCode}"	>
@@ -200,7 +200,7 @@
 						lovId="PM_PROJECT" headerText="#{lbl['lbl.fl.project']}"
 						saveObject="contractRequestBackingBean.managedBean.pmSubSetia"
 						readonly="true"
-						size="10"
+						size="4"
 						disabled="#{!contractRequestBackingBean.managedBean.projectLov}" 
 						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
 						conditionField="recordStatusFlg^1|pmSetia.pmProject.pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
@@ -208,9 +208,9 @@
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td> 
 					<td><h:panelGroup styleClass="setiaLov" id="setiaLov">
-						<p:inputText size="5" id="setiaCode"
+						<p:inputText size="2" id="setiaCode"
 						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.pmSubSetia.pmSetia.setiaCode}" /><p:inputText size="5" id="subSetiaCode"
+						value="#{contractRequestBackingBean.managedBean.pmSubSetia.pmSetia.setiaCode}" /><p:inputText size="2" id="subSetiaCode"
 						readonly="true"
 						value="#{contractRequestBackingBean.managedBean.pmSubSetia.subSetiaCode}" /></h:panelGroup>
 					</td>
