@@ -107,8 +107,9 @@ public class CmTrackingDiaryBackingBean extends
 		this.getManagedBean().setSearchSupplierValue(null);
 		this.getManagedBean().setSearchCreatedFromDuration(null);
 		this.getManagedBean().setSearchCreatedToDuration(null);
-//		this.getManagedBean().setSmDocumentDataModel(null);
+		this.getManagedBean().resetDocumentDataModel();
 	}
+
 	public SelectItem[] getStatus() {
 		SelectItem[] items = null;
 
@@ -129,6 +130,7 @@ public class CmTrackingDiaryBackingBean extends
 
 		return items;
 	}
+
 	/**
 	 * to return the all Supplier Item's status as a SelectItem list. 
 	 * @return

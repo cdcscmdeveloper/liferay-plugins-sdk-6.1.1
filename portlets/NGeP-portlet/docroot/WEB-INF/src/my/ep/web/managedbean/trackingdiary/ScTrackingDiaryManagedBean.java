@@ -5,39 +5,23 @@ package my.ep.web.managedbean.trackingdiary;
 
 import java.util.Date;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.ct.ContractIntegrationReqDTO;
-import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -185,6 +169,10 @@ public class ScTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setScObj(Object[] scObj) {
 		this.scObj = scObj;
+	}
+
+	public void resetDocumentDataModel() {
+		this.scRNDocumentDataModel = new ScDocumentPagingDataModel();
 	}
 
 

@@ -183,6 +183,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		this.getManagedBean().setSearchDocType(null);
 		this.getManagedBean().setSearchPhysContractNo(null);
 		this.getManagedBean().setSearchPhysLoaNo(null);
+		this.getManagedBean().resetDocumentDataModel();
 //		renewSesionObject();
 	}
 	

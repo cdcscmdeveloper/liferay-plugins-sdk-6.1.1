@@ -8,17 +8,11 @@ import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.cm.codification.CodificationReqDTO;
-import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.ct.VCtDocument;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -156,5 +150,8 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.cmSupplierItem = cmSupplierItem;
 	}
 
+	public void resetDocumentDataModel() {
+		this.cmDocumentDataModel = new SearchPagingDataModel();
+	}
 
 }

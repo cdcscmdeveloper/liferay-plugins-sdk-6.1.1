@@ -22,6 +22,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -169,6 +170,10 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setDpObj(Object[] dpObj) {
 		this.dpObj = dpObj;
+	}
+
+	public void resetDocumentDataModel() {
+		this.dpDocumentDataModel = new DocumentPagingDataModel();
 	}
 
 

@@ -98,7 +98,7 @@ public class CdTrackingDiaryBackingBean extends
 		this.getManagedBean().setSearchSupplierValue(null);
 		this.getManagedBean().setSearchUNSPSCExtensionCodeValue(null);
 		this.getManagedBean().setSearchStatusId(null);
-//		this.getManagedBean().setSmDocumentDataModel(null);
+		this.getManagedBean().resetDocumentDataModel();
 	}
 
 	public SelectItem[] getStatus() {

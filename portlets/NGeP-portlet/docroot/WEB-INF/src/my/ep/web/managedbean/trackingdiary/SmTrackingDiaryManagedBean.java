@@ -1,20 +1,15 @@
 package my.ep.web.managedbean.trackingdiary;
 
-import java.util.Date;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -133,6 +128,10 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 	}
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
+	}
+
+	public void resetDocumentDataModel() {
+		this.smDocumentDataModel = new SearchPagingDataModel();
 	}
 
 }

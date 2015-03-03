@@ -11,18 +11,14 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
-import my.ep.constant.MessageConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
 import org.apache.log4j.Logger;
 
 /**
@@ -226,6 +222,10 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setvCtDocument(VCtDocument vCtDocument) {
 		this.vCtDocument = vCtDocument;
+	}
+
+	public void resetDocumentDataModel() {
+		this.ctDocumentDataModel = new CtDocumentPagingDataModel();
 	}
 
 }

@@ -134,4 +134,8 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setCdDocumentDataModel(IPagingDataModel<Object[]> cdDocumentDataModel) {
 		this.cdDocumentDataModel = cdDocumentDataModel;
 	}
+
+	public void resetDocumentDataModel() {
+		this.cdDocumentDataModel = new SearchPagingDataModel();
+	}
 }
