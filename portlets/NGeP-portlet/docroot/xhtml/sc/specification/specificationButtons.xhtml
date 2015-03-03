@@ -7,25 +7,21 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel>
+	<h:panelGroup>
 		<ac:gpkiPopup
 			textBeforeSign="#{specificationBackingBean.textBeforeSign}"
 			postSignAction="#{specificationBackingBean.ministrySpecgpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-
-			<p:row>
-				<p:column width="100%">
-
-					<ui:fragment
+		<table width="100%">
+			<tr>
+				<td align="right"><ui:fragment
 						rendered="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval' and specificationBackingBean.managedBean.readOnly eq 'false'}">
-						<p:commandButton value="#{lbl['lbl.sc.spec.back.search.panel.Item']}"
+						<p:commandButton
+							value="#{lbl['lbl.sc.spec.back.search.panel.Item']}"
 							style="float:left;" immediate="true"
 							update="@([id$=panelItemGroupList])"
 							action="#{specificationBackingBean.businessOwnerBackAction}" />
 
-					</ui:fragment>
-					<ui:repeat var="bpmAction"
+					</ui:fragment> <ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 
@@ -35,19 +31,16 @@
 								styleClass="ui-button" style="float:right;"
 								action="#{specificationBackingBean.updateBpmTask(bpmAction)}" />
 						</ui:fragment>
-					</ui:repeat>
-					<c:if
+					</ui:repeat> <c:if
 						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
 							style="float:right;"
 							action="#{specificationBackingBean.saveSpecificationDtls}">
 
 						</p:commandButton>
-					</c:if>
-
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+					</c:if></td>
+			</tr>
+		</table>
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
 			header="Revice Confirmation" resizable="false" width="325"
@@ -61,11 +54,12 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="reviceApprovalDlgs.hide();" action="#{specificationBackingBean.reviseMinistrySpecApproval}" />
+					oncomplete="reviceApprovalDlgs.hide();"
+					action="#{specificationBackingBean.reviseMinistrySpecApproval}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-	</p:panel>
+	</h:panelGroup>
 
 </ui:composition>
