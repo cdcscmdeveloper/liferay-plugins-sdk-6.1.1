@@ -7,26 +7,14 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel>
+	<h:panelGroup>
 		<ac:gpkiPopup
 			textBeforeSign="#{specificationBackingBean.textBeforeSign}"
 			postSignAction="#{specificationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<ui:fragment
-						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION)) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION)))}">
-						<p:commandButton value="Save" update="@all"
-							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}">
-							<f:setPropertyActionListener
-								target="#{specificationBackingBean.managedBean.buttonOutCome}"
-								value="save" />
-						</p:commandButton>
-					</ui:fragment>
-
-					<ui:repeat var="bpmAction"
+		<table width="100%">
+			<tr>
+				<td align="right"><ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
@@ -36,11 +24,17 @@
 								styleClass="ui-button" style="float:right;"
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
 						</ui:fragment>
-					</ui:repeat>
-
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+					</ui:repeat> <ui:fragment
+						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION)) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION)))}">
+						<p:commandButton value="Save" update="@all" style="float:right;"
+							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}">
+							<f:setPropertyActionListener
+								target="#{specificationBackingBean.managedBean.buttonOutCome}"
+								value="save" />
+						</p:commandButton>
+					</ui:fragment></td>
+			</tr>
+		</table>
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
 			header="Revice Confirmation" resizable="false" width="325"
@@ -61,6 +55,6 @@
 			</div>
 		</p:dialog>
 
-	</p:panel>
+	</h:panelGroup>
 
 </ui:composition>
