@@ -39,7 +39,7 @@
 				</p:inputText>
 				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" size="1"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					headerText="Category Lov" 
+					headerText="Category Lov"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
 					postUpdateListener="specificationBackingBean.categoryCodesUpdate(#{index},specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
@@ -140,11 +140,11 @@
 
 	</p:panel>
 
-	<p:panel>
+	<h:panelGroup>
 		<h:panelGroup id="supplierallStae">
 
 
-			<p:panel
+			<h:panelGroup
 				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<table style="width: 100%">
 					<tr>
@@ -178,9 +178,9 @@
 						</td>
 					</tr>
 				</table>
-			</p:panel>
-
-			<p:panel
+			</h:panelGroup>
+			<p:spacer height="20"></p:spacer>
+			<h:panelGroup
 				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and !specificationBackingBean.managedBean.scQt.zonal) or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable" rows="10"
@@ -230,11 +230,11 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						actionListener="#{specificationBackingBean.showZoneLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-						update="zoneLocationDataTable" 
+						update="zoneLocationDataTable"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
-			</p:panel>
+			</h:panelGroup>
 
 
 			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
@@ -271,9 +271,9 @@
 					</tr>
 				</table>
 			</p:panel>
+			<p:spacer height="20"></p:spacer>
 
-
-			<p:panel
+			<h:panelGroup
 				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
 
 				<h:panelGrid width="100%">
@@ -327,18 +327,18 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupGeneral])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"/>
+						actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteTreeNode}"
 						update="zoneyesDataTable" />
 				</div>
-			</p:panel>
+			</h:panelGroup>
 
 			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
 				widgetVar="ZoneLocation" modal="true" width="490" position="top"
 				height="410">
-				<p:panel id="zonePopupPanel">
+				<h:panelGroup id="zonePopupPanel">
 					<table border="0">
 						<TR>
 							<TD width="80%">
@@ -366,7 +366,7 @@
 						</TR>
 
 					</table>
-				</p:panel>
+				</h:panelGroup>
 				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
 					style="float:right;" onclick="ZoneLocation.hide();" />
@@ -386,7 +386,7 @@
 				height="410">
 				<p:messages id="specSupplierCriteriaZonemessages" showDetail="true"
 					showSummary="false" autoUpdate="true" closable="true" />
-				<p:panel id="zonePopupGeneral">
+				<h:panelGroup id="zonePopupGeneral">
 					<table styleClass="noBorders tr,noBorders td" border="0">
 
 						<TR>
@@ -437,11 +437,11 @@
 						</TR>
 
 					</table>
-				</p:panel>
+				</h:panelGroup>
 
 				<p:commandButton
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-					style="float:right;" onclick="ZoneGeneral.hide();"/>
+					style="float:right;" onclick="ZoneGeneral.hide();" />
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 					style="float:right;" process="@all"
@@ -453,7 +453,7 @@
 			</p:dialog>
 
 		</h:panelGroup>
-	</p:panel>
+	</h:panelGroup>
 
 
 

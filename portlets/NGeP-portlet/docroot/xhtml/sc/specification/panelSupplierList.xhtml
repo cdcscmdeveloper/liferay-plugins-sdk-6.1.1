@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="totalSuppliersPanleyes">
+	<h:panelGroup id="totalSuppliersPanleyes">
 		<ui:fragment
 			rendered="#{specificationBackingBean.managedBean.ctzones eq 'true'}">
 
@@ -51,5 +51,5 @@
 		</ui:fragment>
 		<!-- <ui:include src="/xhtml/sc/specification/supplierZoneSelect.xhtml"  -->
 		<ui:include src="supplierlist.xhtml" />
-	</p:panel>
+	</h:panelGroup>
 </ui:composition>
