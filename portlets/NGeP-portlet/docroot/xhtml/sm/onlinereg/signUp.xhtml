@@ -27,6 +27,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
 							<p:ajax event="change" update="agreementId,btnProceed" />
 						</p:selectOneRadio></td>
+						<td>&#160;
+						<p:graphicImage id="regType" library="ep/images/design" name="tooltips.png" />
+						<p:tooltip id="regiType" for="regType">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.type']}"  />
+						</p:tooltip>&#160;						
+						</td>
 				</tr>
 			</table>
 		</p:panel>
