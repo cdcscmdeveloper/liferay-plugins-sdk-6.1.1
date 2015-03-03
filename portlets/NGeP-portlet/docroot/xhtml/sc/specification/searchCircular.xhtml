@@ -10,7 +10,8 @@
 
 	<ui:include
 		src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
-	<p:panel id="searchpanelBoUpdate">
+	
+	<h:panelGroup id="searchpanelBoUpdate">
 		<table>
 			<tr>
 				<td valign="top" style="width: 23%"><p:outputLabel
@@ -42,8 +43,8 @@
 			</tr>
 		</table>
 		<p:dialog id="revicepanelDlgs" widgetVar="panelApprovalDlgs"
-			header="Panel Confirmation" resizable="false" width="325" height="200"
-			closable="false">
+			header="Panel Confirmation" resizable="false" width="325"
+			height="200" closable="false">
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
@@ -52,22 +53,24 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-					oncomplete="panelApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="panelApprovalDlgs.hide();"
+					update="searchpanelBoUpdate,panelupdate"
 					action="#{specificationBackingBean.panelConformationDelete}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					actionListener="#{specificationBackingBean.panelNoConformation}"
-					oncomplete="panelApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate" />
+					oncomplete="panelApprovalDlgs.hide();"
+					update="searchpanelBoUpdate,panelupdate" />
 			</div>
 		</p:dialog>
-	</p:panel>
+	</h:panelGroup>
 	<h:panelGroup id="panelupdate">
-		<p:panel
+		<h:panelGroup
 			rendered="#{specificationBackingBean.managedBean.scQt.panel==true}">
 
 
 			<ui:include src="/xhtml/sc/specification/searchCircularPanel.xhtml"></ui:include>
-		</p:panel>
+		</h:panelGroup>
 	</h:panelGroup>
 
 	<div align="right" style="width: 100%;">

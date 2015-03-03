@@ -10,24 +10,22 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.head.present.qt.num']}" /></td>
-				<td  class="header-info-text">#{specificationBackingBean.managedBean.scQt.qtNo}</td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.head.present.qt.num']}" /></td>
+				<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.qtNo}</td>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
-					<td><h:outputLabel
-							value="#{lbl['lbl.so.planno']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.so.planno']}" /></td>
 					<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.ppPlan.planNo}</td>
 				</ui:fragment>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.head.present.ptj.name']}" /></td>
 				<td class="header-info-text">#{specificationBackingBean.managedBean.scQt.pmOrgProfile.orgName}</td>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.head.present.status']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.head.present.status']}" /></td>
 				<td class="header-info-text">
 					#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.currentStatusId)}
 				</td>
 			</tr>
 		</table>
 	</div>
+	<p:spacer height="10px" />
 </ui:composition>
