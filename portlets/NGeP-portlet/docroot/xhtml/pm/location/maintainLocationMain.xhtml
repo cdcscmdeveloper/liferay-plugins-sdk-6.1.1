@@ -9,11 +9,11 @@
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<div class="ppLeftBtn">
-			<p:commandButton value="#{lbl['lbl.pm.back.location']}"
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
 				 action="#{locationBackingBean.backToSearch}"
 				immediate="true" />
 		</div>
-		<div style="width: 100%; text-align: right">
+		<div class="ppRightBtn">
 			<p:commandButton value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"  update="@([id$=Msg])"
 				 action="#{locationBackingBean.saveLocation}" />
 		</div>

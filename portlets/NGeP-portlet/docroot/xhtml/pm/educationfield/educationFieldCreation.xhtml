@@ -8,7 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 		
-   <p:panel header="Education Field" toggleable="true" >
+   <p:panel header="Education Specialization Maintenance" toggleable="true" >
 	<p:spacer height="10"></p:spacer>
 		
 	<table style="width:100%;">
@@ -83,7 +83,7 @@
 	        			 saveObject="educationBackingBean.managedBean.eduRestrSelectList"
 	        			 postUpdateListener="educationBackingBean.addEducationList(educationBackingBean.managedBean.eduRestrSelectList)"
 	        			 update="@form" /></td>
-					<td><p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" 
+					<td><p:commandButton value="#{lbl['lbl.btn.delete']}"  
 						 action="#{educationBackingBean.deleteEducationList}"
 						 update="@form"/></td>
 					</tr>

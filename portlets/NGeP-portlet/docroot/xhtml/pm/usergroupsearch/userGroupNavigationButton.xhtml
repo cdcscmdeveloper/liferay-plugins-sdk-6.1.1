@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel>
-		<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{usergroupBackingBean.backToMainPages}" icon="ui-icon-back"
+		<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{usergroupBackingBean.backToMainPages}" 
 			style="float:left;" />
-		<p:commandButton value="#{usergroupBackingBean.managedBean.userGroup.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}" icon="ui-icon-save"
+		<p:commandButton value="#{usergroupBackingBean.managedBean.userGroup.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}" 
 			action="#{usergroupBackingBean.saveUserGroup}" style="float:right;" />
 		<br/>
 		<br/>
