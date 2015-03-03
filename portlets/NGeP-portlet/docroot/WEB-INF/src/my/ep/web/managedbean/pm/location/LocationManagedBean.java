@@ -22,7 +22,7 @@ public class LocationManagedBean extends BaseManagedBean {
 	private VPmLocation pmLocation = new VPmLocation();
 
 	private LocationSearchBean locationSearchBean;
-	
+
 	private String selectedType;
 
 	private PmState state;
@@ -34,7 +34,7 @@ public class LocationManagedBean extends BaseManagedBean {
 	private PmCity city;
 
 	private PmCountry country;
-	
+
 	private PmCountry pmCountry;
 
 	private List<PmCountry> countries;
@@ -48,23 +48,23 @@ public class LocationManagedBean extends BaseManagedBean {
 	private List<PmCity> cites;
 
 	private List<VPmLocation> vPmLocation;
-	
-	private boolean disabledVal= false;
 
-	
+	private boolean disabledVal = false;
 
 	private VPmLocation location;
-	private boolean divisionFlag= false;
+	private boolean divisionFlag = false;
+
+	private boolean divisionBox = false;
 
 	public LocationManagedBean() {
 		state = new PmState();
 		division = new PmDivision();
 		district = new PmDistrict();
 		city = new PmCity();
-		state.setPmCountry(new PmCountry());		
-		//division.setPmState(state);
+		state.setPmCountry(new PmCountry());
+		// division.setPmState(state);
 		district.setPmState(state);
-		//district.setPmDivision(division);
+		// district.setPmDivision(division);
 		city.setPmDistrict(district);
 
 	}
@@ -76,7 +76,6 @@ public class LocationManagedBean extends BaseManagedBean {
 	public void setCountries(List<PmCountry> countries) {
 		this.countries = countries;
 	}
-
 
 	public List<VPmLocation> getvPmLocation() {
 		return vPmLocation;
@@ -158,7 +157,6 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.city = city;
 	}
 
-	
 	public PmCountry getCountry() {
 		return country;
 	}
@@ -166,9 +164,6 @@ public class LocationManagedBean extends BaseManagedBean {
 	public void setCountry(PmCountry country) {
 		this.country = country;
 	}
-
-
-	
 
 	/**
 	 * @return the location
@@ -210,7 +205,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param locationSearchBean the locationSearchBean to set
+	 * @param locationSearchBean
+	 *            the locationSearchBean to set
 	 */
 	public void setLocationSearchBean(LocationSearchBean locationSearchBean) {
 		this.locationSearchBean = locationSearchBean;
@@ -224,7 +220,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedType the selectedType to set
+	 * @param selectedType
+	 *            the selectedType to set
 	 */
 	public void setSelectedType(String selectedType) {
 		this.selectedType = selectedType;
@@ -238,7 +235,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param disabledVal the disabledVal to set
+	 * @param disabledVal
+	 *            the disabledVal to set
 	 */
 	public void setDisabledVal(boolean disabledVal) {
 		this.disabledVal = disabledVal;
@@ -252,10 +250,19 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmCountry the pmCountry to set
+	 * @param pmCountry
+	 *            the pmCountry to set
 	 */
 	public void setPmCountry(PmCountry pmCountry) {
 		this.pmCountry = pmCountry;
+	}
+
+	public boolean getDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
 	}
 
 }
