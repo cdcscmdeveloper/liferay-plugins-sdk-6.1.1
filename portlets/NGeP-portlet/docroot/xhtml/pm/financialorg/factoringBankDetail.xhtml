@@ -31,7 +31,7 @@
 						itemValue="#{finorgLs.financialOrgId}" />
 						<p:ajax event="change" update="bankCode"
 									listener="#{financialOrgBackingBean.getBankCode(financialacc.pmPaymentBankOrg.financialOrgId)}" />
-
+						
 				</p:selectOneMenu>
 				<p:message id="finorgnMsg" for="finorgn" display="icon" />
 			</p:column>
@@ -39,11 +39,11 @@
 				<f:facet name="header">					
 					<h:outputText value="#{lbl['lbl.pm.financialorg.bankcode']}" />
 				</f:facet>
-				<p:inputText id="bankCode" value="#{financialacc.pmPaymentBankOrg.pmFinancialSvcs[0].bankCode}"
+				<p:inputText id="bankCode" value="#{financialacc.bankCode}"
 					  styleClass="ppDisplayTextS"  
 					/>
 				
-			</p:column>
+			</p:column> 
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
