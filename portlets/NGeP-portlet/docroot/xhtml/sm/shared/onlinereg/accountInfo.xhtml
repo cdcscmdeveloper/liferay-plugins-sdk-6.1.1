@@ -65,7 +65,14 @@
 						style="width:310px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
-					</p:selectOneMenu><p:message id="busTypeIdMsg" for="busTypeId" display="icon" />
+					</p:selectOneMenu>					
+					&#160; <p:graphicImage id="typeofbusiness"
+						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						id="businesscomtype" for="typeofbusiness">
+						<p:outputLabel style="text-align:left;" escape="false"
+							value="#{lbl['tt.sm.registration.business.company.type']}"></p:outputLabel>
+					</p:tooltip>&#160;								
+					<p:message id="busTypeIdMsg" for="busTypeId" display="icon" />
 					<p:outputLabel styleClass="outputLabel-view" 
 					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
 					rendered="#{!registrationBackingBean.managedBean.smAppl.brandNew and 
