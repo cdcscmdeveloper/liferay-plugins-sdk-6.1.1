@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -877,6 +878,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					 
 					 double bondAmendAmount = 0.0;
+					 DecimalFormat df = new DecimalFormat("#.00");
+						
 						if(getManagedBean().getCtAmendment() != null && getManagedBean().getCtAmendment().getAmendmentLoa() != null
 								&& getManagedBean().getCtAmendment().getAmendmentLoa().isBondReq()) {
 								bondAmendAmount = bondAmendAmount+ getManagedBean().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
@@ -889,7 +892,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					} else if(contractVer.getCtContract().getLoa().getBondAmt() != null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 						
-						int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
+						bondAmount = Double.valueOf(df.format(bondAmount));
+						double oriBondAmount = Double.valueOf(df.format(contractVer.getCtContract().getLoa().getBondAmt().doubleValue()));
+						bondAmendAmount = Double.valueOf(df.format(bondAmendAmount));
+						
+						int retval = Double.compare(bondAmount , oriBondAmount);
 						if(bondAmendAmount!=0) {
 							retval = Double.compare(bondAmount , bondAmendAmount);
 						}
@@ -2552,15 +2559,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.agencyDataModel = agencyDataModel;
 	}
 	
-	public String fileNames(String filePath){
-		String fileName = "";
-		if(filePath == null || filePath=="")
-		  return fileName;
-		
-		File file = new File(filePath);
-		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-	    return fileName;
-	}
 
 	private class AgencyPagingDataModel extends PagingDataModel<PmOrgProfile> {
 		private static final long serialVersionUID = 1L;
