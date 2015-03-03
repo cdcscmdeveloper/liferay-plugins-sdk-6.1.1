@@ -667,7 +667,9 @@ public class OrganisationBackingBean extends
 		                			if(tempSuppBank.getAccountNo().equals(suppBank.getAccountNo()) 
 		                					&& (tempSuppBank.getPmFinancialOrg().getFinancialOrgId().equals(suppBank.getPmFinancialOrg().getFinancialOrgId()))){
 		                				//supplier bank is existed.
+		                				Integer suppBankRecordStatus = suppBank.getRecordStatusFlg();
 		                				suppBank = tempSuppBank;
+		                				suppBank.setRecordStatusFlg(suppBankRecordStatus);
 		                				getManagedBean().getSmSupplierBanks().set(i, suppBank);
 		                			}
 		                		} 
