@@ -193,6 +193,7 @@ public class ScTrackingDiaryBackingBean extends
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
+		this.getManagedBean().resetDocumentDataModel();
 	}
 
 	public String backToPrev() {

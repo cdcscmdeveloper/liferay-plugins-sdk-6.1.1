@@ -249,6 +249,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		this.getManagedBean().setSearchPhysLoaNo(null);
 		this.getManagedBean().setSearchContractToDuration(null);
 		this.getManagedBean().setSearchContractFromDuration(null);
+		this.getManagedBean().resetDocumentDataModel();
 	}
 
 	private class SearchTrackingDiaryPagingDataModel extends PagingDataModel<PmTrackingDiary> {

@@ -5,7 +5,6 @@ package my.ep.web.managedbean.trackingdiary;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,36 +13,12 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
-import my.ep.biz.service.fl.frn.IReceivedNoteSO;
-import my.ep.biz.service.fl.invoice.IInvoiceSO;
-import my.ep.biz.service.fl.order.IDeliveryOrderSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
-import my.ep.dto.fl.FulfilmentReqDTO;
-import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.VFlDocument;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -53,7 +28,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
 
 /**
  * Managed Bean for Fulfillment document
@@ -742,6 +716,10 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 	public void setvFlDocument(VFlDocument vFlDocument) {
 		this.vFlDocument = vFlDocument;
+	}
+
+	public void resetDocumentDataModel() {
+		this.flDocumentDataModel = new FlDocumentPagingDataModel();
 	}
 
 }
