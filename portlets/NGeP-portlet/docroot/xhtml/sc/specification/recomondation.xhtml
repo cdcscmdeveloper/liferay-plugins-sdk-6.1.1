@@ -10,7 +10,7 @@
 
 	<h:panelGroup id="recommendationid">
 
-		<p:panel style="margin-left:5%"
+		<h:panelGroup style="margin-left:5%"
 			rendered="#{((specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false') or (specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true') or (specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
 			<p:panel id="package"
 				header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
@@ -76,7 +76,8 @@
 							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
-				<p:panelGrid style="margin-top:5px;width:100%;" styleClass="panelGridBorders tr, panelGridBorders td">
+				<p:panelGrid style="margin-top:5px;width:100%;"
+					styleClass="panelGridBorders tr, panelGridBorders td">
 					<f:facet name="header">
 						<p:row>
 							<p:column styleClass="panelGridHeaders" colspan="1"></p:column>
@@ -146,9 +147,9 @@
 
 
 			</p:panel>
-		</p:panel>
+		</h:panelGroup>
 
-		<p:panel
+		<h:panelGroup
 			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false'}">
 			<p:panel id="recommendTechnicalItem"
 				header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
@@ -175,7 +176,7 @@
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
 							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
@@ -225,7 +226,7 @@
 
 
 			</p:panel>
-		</p:panel>
+		</h:panelGroup>
 	</h:panelGroup>
 
 </ui:composition>
