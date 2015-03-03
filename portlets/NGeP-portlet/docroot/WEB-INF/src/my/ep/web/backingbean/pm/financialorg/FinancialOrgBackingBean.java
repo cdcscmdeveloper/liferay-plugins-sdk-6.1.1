@@ -265,7 +265,24 @@ public class FinancialOrgBackingBean extends
 				 }
 			 
 			 }
+			 /*if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+				 if(DbValueConst.RECORD_STATUS_DELETED == financialSvc.getRecordStatusFlg()){
+					 this.getManagedBean().setShowFactoringBank(false);
+				 }
+			 
+			 }*/
+			 if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+				 /*for(PmFinancialAcc finAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
+						finAcc.setBankCode(getManagedBean().getFinancialOrg().getPmFinancialAccs().get(0).getPmPaymentBankOrg().getPmFinancialSvcs().get(0).getBankCode());
+						
+					}*/
+				 for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
+					    
+					     financialAcc.setBankCode(getManagedBean().getFinancialOrg().getPmFinancialAccs().get(0).getPmPaymentBankOrg().getPmFinancialSvcs().get(0).getBankCode());
+				 }
+		    }
 		}
+		
 
 		
 		// financial org Address
@@ -878,8 +895,17 @@ public class FinancialOrgBackingBean extends
 		
 		// check if Factoring Org. is required
 		for (PmFinancialSvc financialSvc : financialOrg.getPmFinancialSvcs()) {
+			System.out.println("Record Status Fin SVC---====>>>"+financialSvc.getRecordStatusFlg());
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
 			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+				if(financialSvc.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+					for(PmFinancialAcc finAcc:financialOrg.getPmFinancialAccs()){
+						System.out.println("Record Status Fin ACC---====>>>"+finAcc.getRecordStatusFlg());
+						finAcc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						
+						
+					}
+				}
 				orgRequired = true;
 			}
 		}
@@ -1146,8 +1172,17 @@ public class FinancialOrgBackingBean extends
 		if(resDTO.isSuccessful()){
 			System.out.println("BANK CODE"+pmFinancialSvc.getBankCode()
 					 + "|" + pmFinancialSvc.getFinancialSvcId());
+			for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
+			    if(financialAcc.isBrandNew()){
+			     financialAcc.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
+			     //PmFinancialSvc financialSvc = new PmFinancialSvc();
+			    // financialSvc.setBankCode(pmFinancialSvc.getBankCode());
+			    // financialAcc.getPmPaymentBankOrg().getPmFinancialSvcs().add(financialSvc);
+			     financialAcc.setBankCode(pmFinancialSvc.getBankCode());
+			    }
+			   }
 		}
-		this.getManagedBean().getFinancialOrg().getPmFinancialAccs().get(0).getPmPaymentBankOrg().getPmFinancialSvcs().get(0).setBankCode(pmFinancialSvc.getBankCode());
+		
 		
 		
 	}
