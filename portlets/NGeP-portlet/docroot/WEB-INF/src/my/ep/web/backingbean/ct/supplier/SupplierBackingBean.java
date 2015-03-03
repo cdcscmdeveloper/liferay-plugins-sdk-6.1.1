@@ -597,21 +597,34 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
- 			if((remark == null || remark.length() == 0)) {
- 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+ 			if (remark == null || remark.length() == 0) {
+ 				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+ 				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
  			}
-			return;
 		}
 		
 		if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
 			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			throw new EpException(MessageConst.ERROR_100022,	new String[] { "Copy Of Factoring Agreement" });
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.agreement", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		
+		if(getManagedBean().getFactoring().getFactoringPayFileName() == null || getManagedBean().getFactoring().getFactoringPayFileName().isEmpty()) {
+			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.form.fee", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 	
 		if(getManagedBean().isRemoveFactoring()){
 		    if(getManagedBean().getFactoring().getRemoveFileName() == null || getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
 		    	RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			    throw new EpException(MessageConst.ERROR_100022,	new String[] { "Copy Of Remove Factoring" });
+		    	throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.removal", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		  }
 		}
 		
@@ -767,6 +780,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	    	  getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
 	  	    getManagedBean().getFactoring().setRemoveFilePath(filePath);
 	    }
+    }
+    
+    public void downloadApprovalForm() throws IOException {
+    	String filePath =  FacesContext.getCurrentInstance().getExternalContext().getRealPath(
+    			"/WEB-INF/templates" + ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM);
+    	String fileName =  ContractConst.TEMPLATE_FACTORING_APPROVAL_FORM + ".pdf";
+    	downloadFile(filePath, fileName);
     }
     
     public void downloadFile(String filePath, String fileName) throws IOException {
