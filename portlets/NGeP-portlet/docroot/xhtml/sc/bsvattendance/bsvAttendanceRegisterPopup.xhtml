@@ -48,12 +48,14 @@
 				<div align="left" class="header-info">
 					<table style="width: 100%">
 						<tr>
-							<td style="width: 20%"><h:outputLabel value="Briefing:" /></td>
-							<td style="width: 30%" class="header-info-text">
+							<td style="width: 10%"><h:outputLabel value="Briefing:" /></td>
+							<td style="width: 40%" class="header-info-text">
 								#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDesc}</td>
-							<td style="width: 20%"><h:outputLabel value="Date/Time:" /></td>
-							<td style="width: 30%" class="header-info-text">
-								#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDate}</td>
+							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.qt.nb.dateTime']}:" /></td>
+							<td style="width: 40%" class="header-info-text">
+								<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDate}">
+								<f:convertDateTime
+									pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" /></h:outputText></td>
 
 						</tr>
 					</table>
