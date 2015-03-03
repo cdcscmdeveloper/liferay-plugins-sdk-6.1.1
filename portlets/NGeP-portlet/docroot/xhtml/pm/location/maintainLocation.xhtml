@@ -59,8 +59,8 @@
 							style="text-transform: uppercase"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
-							size="40" required="true" maxlength="2">
-							<f:validateLength minimum="2" maximum="2"/>
+							size="40" required="true" >
+							<f:validateLength minimum="2" />
 							</p:inputText></td>
 					<td><p:message id="statecodeMsg" for="statecode"
 							display="icon" /></td>
@@ -78,7 +78,7 @@
 							display="icon" /></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.pm.adopt']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.pm.location.adopt']}" /></td>
 					<td><p:selectBooleanCheckbox id="adoptionStatus"
 							value="#{locationBackingBean.managedBean.state.adoptDivision}">
 						</p:selectBooleanCheckbox></td>
@@ -153,11 +153,11 @@
 
 					<td class="TableFieldRight"><p:inputText id="divisioncode"
 							styleClass="ppDisplayTextM" style="text-transform: uppercase"
-							label="#{lbl['lbl.pm.division.code']}" size="40" maxlength="2"
+							label="#{lbl['lbl.pm.division.code']}" size="40" 
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							value="#{locationBackingBean.managedBean.division.divisionCode}" 
 							required="true" >
-							<f:validateLength minimum="2" maximum="2"/>
+							<f:validateLength minimum="2" />
 							</p:inputText></td>
 					<td><p:message id="divisioncodeMsg" for="divisioncode"
 							display="icon" /></td>
@@ -268,8 +268,8 @@
 							label="#{lbl['lbl.pm.district.code']}" 
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.districtCode}"
-							size="40" required="true" maxlength="4" >
-							<f:validateLength minimum="4" maximum="4"/>							
+							size="40" required="true" >
+							<f:validateLength minimum="4" />							
 							</p:inputText></td>
 					<td><p:message id="districtcodeMsg" for="districtcode"
 							display="icon" /></td>
@@ -380,8 +380,8 @@
 							style="text-transform: uppercase"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							value="#{locationBackingBean.managedBean.city.cityCode}"
-							size="40" required="true" maxlength="6" >
-							<f:validateLength minimum="6" maximum="6"/>
+							size="40" required="true" >
+							<f:validateLength minimum="6" />
 							</p:inputText></td>
 					<td><p:message id="citycodeMsg" for="citycode" display="icon" /></td>
 				</tr>
