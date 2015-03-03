@@ -78,8 +78,8 @@ public class SpkiBackingBean {
 	private String challengeAns1;
 	private String password;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
-    FacesScopes facesScope = new FacesScopes();
-
+ 
+	FacesScopes facesScope = new FacesScopes();
 
 	public SpkiBackingBean() {}
 	
@@ -149,10 +149,9 @@ public class SpkiBackingBean {
 	}
 	
 	public String generateSecurityToken(){
-		File f = new File("kmc.properties");
 		String tok = null;
 		try{
-			KMCClient client = KMCClientFactory.getInstance(f);
+			KMCClient client = getClient();
 			
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(getDigiCertUserId(),getSupplierEpNo()));
 			switch(res.getStatusCode())
@@ -177,10 +176,7 @@ public class SpkiBackingBean {
 	
 	public String spkiSignTransaction(String originalText) {
 		try{
-			// Create property file
-			File f = new File("kmc.properties");
-			// Create KMCClient with the property file
-			KMCClient client = KMCClientFactory.getInstance(f);
+			KMCClient client = getClient();
 
 //			// Request service for user selected question for authentication
 //			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
