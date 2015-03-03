@@ -16,36 +16,65 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.loa.SuppLoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class QtLOAManagedBean.
+ *
  * @author Viswanath
- * 
  */
 @ManagedBean(name = "qtLOAManagedBean")
 @SessionScoped
 public class QtLOAManagedBean extends BaseManagedBean {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The qt. */
 	private ScQt qt;
 	
+	/** The sc qt proposal. */
 	private ScQtProposal scQtProposal;
+	
+	/** The sm supplier list. */
 	private List<SmSupplier> smSupplierList;
+	
+	/** The sm supplier. */
 	private SmSupplier smSupplier;
+	
+	/** The sm mof account. */
 	private SmMofAccount smMofAccount;
 
+	/** The pm user. */
 	private PmUser pmUser;
 
+	/** The sc qt proposal ranking. */
 	private ScQtProposalRanking scQtProposalRanking;
+	
+	/** The sc qt proposal ranking list. */
 	private List<ScQtProposalRanking> scQtProposalRankingList;
+	
+	/** The sc qt evaluation result. */
 	private ScQtEvaluationResult scQtEvaluationResult;
+	
+	/** The sc qt evaluation result list. */
 	private List<ScQtEvaluationResult> scQtEvaluationResultList;
 	
+	/** The selected loi loa. */
 	private ScLoiLoa selectedLoiLoa;
+	
+	/** The selected supp loi loa bean. */
 	private SuppLoiLoaBean selectedSuppLoiLoaBean;
+	
+	/** The sc loi loa list. */
 	private List<ScLoiLoa> scLoiLoaList;
+	
+	/** The supp loi loa list. */
 	private List<SuppLoiLoaBean> suppLoiLoaList;
 
 
 	/**
+	 * Gets the sc qt evaluation result.
+	 *
 	 * @return the scQtEvaluationResult
 	 */
 	public ScQtEvaluationResult getScQtEvaluationResult() {
@@ -53,6 +82,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt evaluation result.
+	 *
 	 * @param scQtEvaluationResult the scQtEvaluationResult to set
 	 */
 	public void setScQtEvaluationResult(ScQtEvaluationResult scQtEvaluationResult) {
@@ -60,6 +91,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc qt evaluation result list.
+	 *
 	 * @return the scQtEvaluationResultList
 	 */
 	public List<ScQtEvaluationResult> getScQtEvaluationResultList() {
@@ -67,6 +100,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt evaluation result list.
+	 *
 	 * @param scQtEvaluationResultList the scQtEvaluationResultList to set
 	 */
 	public void setScQtEvaluationResultList(
@@ -75,6 +110,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc qt proposal ranking list.
+	 *
 	 * @return the scQtProposalRankingList
 	 */
 	public List<ScQtProposalRanking> getScQtProposalRankingList() {
@@ -82,6 +119,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt proposal ranking list.
+	 *
 	 * @param scQtProposalRankingList the scQtProposalRankingList to set
 	 */
 	public void setScQtProposalRankingList(
@@ -90,6 +129,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc qt proposal ranking.
+	 *
 	 * @return the scQtProposalRanking
 	 */
 	public ScQtProposalRanking getScQtProposalRanking() {
@@ -97,14 +138,17 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtProposalRanking
-	 *            the scQtProposalRanking to set
+	 * Sets the sc qt proposal ranking.
+	 *
+	 * @param scQtProposalRanking            the scQtProposalRanking to set
 	 */
 	public void setScQtProposalRanking(ScQtProposalRanking scQtProposalRanking) {
 		this.scQtProposalRanking = scQtProposalRanking;
 	}
 
 	/**
+	 * Gets the pm user.
+	 *
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
@@ -112,8 +156,9 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmUser
-	 *            the pmUser to set
+	 * Sets the pm user.
+	 *
+	 * @param pmUser            the pmUser to set
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
@@ -124,6 +169,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	
 
 	/**
+	 * Gets the sm mof account.
+	 *
 	 * @return the smMofAccount
 	 */
 	public SmMofAccount getSmMofAccount() {
@@ -131,14 +178,17 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smMofAccount
-	 *            the smMofAccount to set
+	 * Sets the sm mof account.
+	 *
+	 * @param smMofAccount            the smMofAccount to set
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
 	}
 
 	/**
+	 * Gets the sm supplier.
+	 *
 	 * @return the smSupplier
 	 */
 	public SmSupplier getSmSupplier() {
@@ -146,14 +196,17 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smSupplier
-	 *            the smSupplier to set
+	 * Sets the sm supplier.
+	 *
+	 * @param smSupplier            the smSupplier to set
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
 
 	/**
+	 * Gets the sm supplier list.
+	 *
 	 * @return the smSupplierList
 	 */
 	public List<SmSupplier> getSmSupplierList() {
@@ -161,14 +214,17 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smSupplierList
-	 *            the smSupplierList to set
+	 * Sets the sm supplier list.
+	 *
+	 * @param smSupplierList            the smSupplierList to set
 	 */
 	public void setSmSupplierList(List<SmSupplier> smSupplierList) {
 		this.smSupplierList = smSupplierList;
 	}
 
 	/**
+	 * Gets the sc qt proposal.
+	 *
 	 * @return the scQtProposal
 	 */
 	public ScQtProposal getScQtProposal() {
@@ -176,8 +232,9 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtProposal
-	 *            the scQtProposal to set
+	 * Sets the sc qt proposal.
+	 *
+	 * @param scQtProposal            the scQtProposal to set
 	 */
 	public void setScQtProposal(ScQtProposal scQtProposal) {
 		this.scQtProposal = scQtProposal;
@@ -186,6 +243,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	
 
 	/**
+	 * Gets the qt.
+	 *
 	 * @return the qt
 	 */
 	public ScQt getQt() {
@@ -193,14 +252,17 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qt
-	 *            the qt to set
+	 * Sets the qt.
+	 *
+	 * @param qt            the qt to set
 	 */
 	public void setQt(ScQt qt) {
 		this.qt = qt;
 	}
 
 	/**
+	 * Gets the selected loi loa.
+	 *
 	 * @return the selectedLoiLoa
 	 */
 	public ScLoiLoa getSelectedLoiLoa() {
@@ -208,6 +270,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected loi loa.
+	 *
 	 * @param selectedLoiLoa the selectedLoiLoa to set
 	 */
 	public void setSelectedLoiLoa(ScLoiLoa selectedLoiLoa) {
@@ -215,6 +279,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected supp loi loa bean.
+	 *
 	 * @return the selectedSuppLoiLoaBean
 	 */
 	public SuppLoiLoaBean getSelectedSuppLoiLoaBean() {
@@ -222,6 +288,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected supp loi loa bean.
+	 *
 	 * @param selectedSuppLoiLoaBean the selectedSuppLoiLoaBean to set
 	 */
 	public void setSelectedSuppLoiLoaBean(SuppLoiLoaBean selectedSuppLoiLoaBean) {
@@ -229,6 +297,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc loi loa list.
+	 *
 	 * @return the scLoiLoaList
 	 */
 	public List<ScLoiLoa> getScLoiLoaList() {
@@ -236,6 +306,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc loi loa list.
+	 *
 	 * @param scLoiLoaList the scLoiLoaList to set
 	 */
 	public void setScLoiLoaList(List<ScLoiLoa> scLoiLoaList) {
@@ -243,6 +315,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the supp loi loa list.
+	 *
 	 * @return the suppLoiLoaList
 	 */
 	public List<SuppLoiLoaBean> getSuppLoiLoaList() {
@@ -250,6 +324,8 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the supp loi loa list.
+	 *
 	 * @param suppLoiLoaList the suppLoiLoaList to set
 	 */
 	public void setSuppLoiLoaList(List<SuppLoiLoaBean> suppLoiLoaList) {
