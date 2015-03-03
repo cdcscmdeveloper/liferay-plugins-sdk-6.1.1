@@ -161,7 +161,7 @@
 						  	<td><p:message for="faxNo" id="faxNoMsg" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Contact Person" />
+				<td><p:outputLabel value="#{lbl['lbl.pm.header.general.org.contactPerson']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:commandLink
 						action="#{organisationBackingBean.addContacePerson}"
@@ -238,13 +238,13 @@
 			<p:spacer height="15"></p:spacer>
 
 			<div align="right">
-				<p:commandButton value="OK" process="@this, contactPerson"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this, contactPerson"
 					action="#{organisationBackingBean.okContacePerson}" ajax="true"
 					update="@([id$=Msg])" >
 					<f:param name="dialogValidation" value="true" />   
 				</p:commandButton>
 				&#160;&#160;
-				<p:commandButton value="Cancel" process="@this"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 					action="#{organisationBackingBean.closeContacePerson}"
 					 />
 

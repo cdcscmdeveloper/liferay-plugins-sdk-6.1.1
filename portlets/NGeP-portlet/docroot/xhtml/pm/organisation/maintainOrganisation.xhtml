@@ -14,18 +14,16 @@
 			closable="true" severity="error,info"></p:messages>
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
-						 update=":form" process="@this"
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+						update=":form" process="@this"
 						action="#{organisationBackingBean.backToSearch}"
 						style="float:left;" /></td>
 				<td><p:commandButton value="#{organisationBackingBean.managedBean.orgProfile.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}" 
 						action="#{organisationBackingBean.saveOrganization}" 
 						update="@([id$=Msg])"  style="float:right;" />
 						<!-- <f:param name="disableValidation" value="true" > -->
-						 </td>
+				</td>
 			</tr>
-
-
 		</table>
 		<!-- <c:if
 			test="#{!organisationBackingBean.managedBean.orgProfile.brandNew}">
