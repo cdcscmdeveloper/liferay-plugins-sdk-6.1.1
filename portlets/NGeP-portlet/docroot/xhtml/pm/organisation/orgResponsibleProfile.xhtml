@@ -17,7 +17,7 @@
 			
 			<ac:paginator for="dtOrgUnit"/>
 		    
-	        <p:column width="10%">
+	        <p:column width="25%">
 			    <f:facet name="header">
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.code']}" />
@@ -36,10 +36,10 @@
 				</ac:lov> 
 				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
 		    </p:column>
-		    <p:column   style="white-space:nowrap; width:20%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
+		    <p:column style="white-space:nowrap; width:50%" headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
        			#{orgUnit.authorizedOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+	        <p:column headerText="#{lbl['lbl.pm.financialorg.status']}" style="width:20%">
 				<p:selectOneMenu value="#{orgUnit.recordStatusFlg}"
 					required="true" disabled="#{orgUnit.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems

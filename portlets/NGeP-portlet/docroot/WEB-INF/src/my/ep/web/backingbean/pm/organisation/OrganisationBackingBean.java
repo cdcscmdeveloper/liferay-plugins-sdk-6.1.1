@@ -2,7 +2,9 @@ package my.ep.web.backingbean.pm.organisation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -67,6 +69,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -599,7 +602,8 @@ public class OrganisationBackingBean extends
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							IRegistrationSO.class);		
 		
-		if (getManagedBean().getOrgProfile().isGovtSeller()) {		
+		if (getManagedBean().getOrgProfile().isGovtSeller()) {
+			validateSupplierBankList(getManagedBean().getSmSupplierBanks());
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
@@ -615,17 +619,16 @@ public class OrganisationBackingBean extends
 				regReqDTO.setPmUsers(getManagedBean().getSupplierUsers());             
 				regReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 				if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
-                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
-                	 FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
+	                for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
+	                	FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
 						finReqDTO.setFinancialOrgId(supplierBank.getPmFinancialOrg().getFinancialOrgId());
-
 						FinancialOrgResDTO finResDTO = financialOrgSO
-								.retrieveFinancialOrgById(finReqDTO);
+									.retrieveFinancialOrgById(finReqDTO);
 						PmFinancialOrg pmFinancialOrg = finResDTO
-								.getPmFinancialOrg();               
-                	 regReqDTO.setBankAccountNo(supplierBank.getAccountNo());
-                	 regReqDTO.setBank(pmFinancialOrg);
-                }
+									.getPmFinancialOrg();               
+	                	 regReqDTO.setBankAccountNo(supplierBank.getAccountNo());
+	                	 regReqDTO.setBank(pmFinancialOrg);
+	                }
 				}
 				RegistrationResDTO regResDTO = registrationSO
 						.createPTJSupplier(regReqDTO);
@@ -642,28 +645,38 @@ public class OrganisationBackingBean extends
 				feeReqDTO.setFeeExemption(feeEx);
 				FeeExemptionResDTO feeResDTO = exemptionSO.insertFeeExemption(feeReqDTO);
 				feeResDTO.setSuccessful(true);
-
 			}
 			
 			if (orgProfile.getSmSupplier() != null) {
-				log.info("Update Supplier");
-				
+				log.info("Update Supplier");				
 				reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveSupplierByProfileId(reqDTO);
-				
-				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
-				
+						.retrieveSupplierByProfileId(reqDTO);				
+				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();				
 				SmSupplier supplier = orgProfileSm.getSmSupplier();
 			if (supplier != null) {
 					RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
-					
-					
-					if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
+					List<SmSupplierBank> smSupplierBanks = getManagedBean().getSmSupplierBanks();
+					if (!smSupplierBanks.isEmpty()) {					
+		                 for(int i = 0 ; i < smSupplierBanks.size(); i++){
+		                	 SmSupplierBank suppBank = smSupplierBanks.get(i);
+		                	 if(supplier.getSmAppl() != null && 
+		                			 supplier.getSmAppl().getSmSupplierBanks() !=null &&
+		                			 !supplier.getSmAppl().getSmSupplierBanks().isEmpty()){
+		                		for(SmSupplierBank tempSuppBank: supplier.getSmAppl().getSmSupplierBanks()){
+		                			if(tempSuppBank.getAccountNo().equals(suppBank.getAccountNo()) 
+		                					&& (tempSuppBank.getPmFinancialOrg().getFinancialOrgId().equals(suppBank.getPmFinancialOrg().getFinancialOrgId()))){
+		                				//supplier bank is existed.
+		                				suppBank = tempSuppBank;
+		                				getManagedBean().getSmSupplierBanks().set(i, suppBank);
+		                			}
+		                		} 
+		                	 }		                	 
+		                 }
+		                 
 		                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
 		                	 FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
 								finReqDTO.setFinancialOrgId(supplierBank.getPmFinancialOrg().getFinancialOrgId());
-
 								FinancialOrgResDTO finResDTO = financialOrgSO
 										.retrieveFinancialOrgById(finReqDTO);
 								PmFinancialOrg pmFinancialOrg = finResDTO
@@ -678,13 +691,11 @@ public class OrganisationBackingBean extends
 								if(supplierBank.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 			                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); 
 			                		 log.info("Active Supplier Bank");
-			                	 }
-			                	 else{
+			                	}else{
 			                		 log.info("Inactive Supplier Bank");
 			                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED); 
 			                		 supplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());
-			                	 }
-								
+			                	}								
 								log.info("Supplier Bank Record Status------>"+supplierBank.getRecordStatusFlg()+"<-----");
 		                }
 		               
@@ -710,8 +721,7 @@ public class OrganisationBackingBean extends
 					RegistrationResDTO regResDTO = registrationSO
 							.updatePTJSupplier(regReqDTO);
 					regResDTO.setSuccessful(true);
-				}
-			
+				}			
 			}
 		}
 		else{
@@ -1357,6 +1367,12 @@ public class OrganisationBackingBean extends
 				.getSelectedSupplierUsers();
 		List<SmPersonnel> addedPersonnelList = new ArrayList<SmPersonnel>();
 		boolean redaundant;
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 		for (PmUser selectedUser : selectedUserList) {
 			redaundant = false;
 			for (SmPersonnel smPersonnel : this.getManagedBean()
@@ -1368,9 +1384,27 @@ public class OrganisationBackingBean extends
 				}
 			}
 			if (!redaundant) {
-				SmPersonnel newSmPersonnel = new SmPersonnel();
-				newSmPersonnel.setPmUser(selectedUser);
-				addedPersonnelList.add(newSmPersonnel);
+				boolean found = false;
+				reqDTO.setOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveSupplierByProfileId(reqDTO);
+				
+				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
+				
+				SmSupplier supplier = orgProfileSm.getSmSupplier();
+				for(SmPersonnel personnel :supplier.getSmAppl().getSmPersonnels()){
+					if(personnel.getPmUser().getUserId().equals(selectedUser.getUserId())){
+						personnel.setBrandNew(true);
+						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						addedPersonnelList.add(personnel);
+						found = true;
+					}
+				}
+				if(!found){
+					SmPersonnel newSmPersonnel = new SmPersonnel();
+					newSmPersonnel.setPmUser(selectedUser);
+					addedPersonnelList.add(newSmPersonnel);
+				}				
 			}
 		}
 		this.getManagedBean().getSmPersonnels().addAll(addedPersonnelList);
@@ -1496,6 +1530,28 @@ public class OrganisationBackingBean extends
 	
 	public void resetProfileGroup(){
 		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());	
+	}
+	
+	private void validateSupplierBankList(List<SmSupplierBank> smSupplierBanks){
+		boolean isUnique = true;
+		if(smSupplierBanks!=null && smSupplierBanks.size()>1){	
+			List <SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>(smSupplierBanks);
+			Set<String> tempSupplierBankSet = new HashSet<String>();
+			StringBuilder sb = null;
+			for(SmSupplierBank suppBank : smSupplierBanks){
+				sb = new StringBuilder();
+				sb.append(suppBank.getPmFinancialOrg().getFinancialOrgId());
+				sb.append(suppBank.getAccountNo());
+				tempSupplierBankSet.add(sb.toString());
+			}
+			if(tempSupplierBankList.size()!=tempSupplierBankSet.size()){
+				isUnique = false;
+			}	
+		}
+		
+		if(!isUnique){
+			throw new EpException(MessageConst.ERROR_775115);
+		}
 	}
 
 }
