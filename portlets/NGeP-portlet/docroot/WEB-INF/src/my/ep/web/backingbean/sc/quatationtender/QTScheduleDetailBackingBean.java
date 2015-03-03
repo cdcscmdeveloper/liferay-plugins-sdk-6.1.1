@@ -42,6 +42,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -51,6 +52,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
@@ -555,9 +557,15 @@ public class QTScheduleDetailBackingBean extends
 
 		IQTBriefingSO briefingSO;
 		try {
-
-			briefingReqDTO.setBriefingReqDtls(this.getManagedBean()
-					.getBriefingRegistrationList());
+			List<ScQtBsvRegistration> registrations = this.getManagedBean()
+					.getBriefingRegistrationList();
+			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+				for (ScQtBsvRegistration registration : registrations) {
+					registration
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
+			}
+			briefingReqDTO.setBriefingReqDtls(registrations);
 			briefingReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			briefingReqDTO.setToken(ctxToken);
 			briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());

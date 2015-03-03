@@ -21,6 +21,7 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
@@ -860,7 +861,7 @@ public class BSVAttendanceBackingBean extends
 				if (flag) {
 					registration.setAttended(true);
 					if (null == registration.getBsvRegistrationId()) {
-						registration.setRecordStatus(true);
+						registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 					}
 				} else {
 					throw new EpException(MessageConst.ERROR_760043,
