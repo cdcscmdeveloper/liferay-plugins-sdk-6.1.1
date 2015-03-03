@@ -31,53 +31,75 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class QtLOABackingBean.
+ * @author kenny
+ * @since 10/09/2014
+ */
 @ManagedBean
 @RequestScoped
 public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> {
+	
+	/** The log. */
 	public static Logger log = EpLogger.getLogger(QtLOABackingBean.class);
 
+	/**
+	 * Instantiates a new qt loa backing bean.
+	 */
 	public QtLOABackingBean() {
 	}
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
 	}
 
+	/**
+	 * render the view based on the task id
+	 * page navigation to QT Loa List
+	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-			
+
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
-			
+
 			//Long sourceId = 146L;//LOA record Existed
 			//Long sourceId = 3762L; // no LOA record
-			
+
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			LOIDetailBackingBean lOIDetailBackingBean = new LOIDetailBackingBean();
 			loaDetailBackingBean.renewSesionObject();
 			lOIDetailBackingBean.renewSesionObject();
-			
+
 			loaDetailBackingBean.getManagedBean().setSourceId(sourceId);
 			loaDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
-			
+
 			lOIDetailBackingBean.getManagedBean().setSourceId(sourceId);
 			lOIDetailBackingBean.getManagedBean().setPayLoadData(dpDataType);
-			
+
 			retrieveLOAList(sourceId);
-			
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
+			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
 		} catch (Exception e) {
 			handleException(e);
 		}
 	}
-	
+
 	/**
-	 * retrieving LOI LOA List
+	 * retrieving LOI LOA List from database.
+	 *
+	 * @param qtId the qt id
 	 */
 	public void retrieveLOAList(Long qtId) {
 		debugLogger("retrieveLOAList");
@@ -106,6 +128,9 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		}
 	}
 	
+	/**
+	 * Generate supplier loi loa list based on selected loi loa in in Recommended Supplier List.
+	 */
 	public void generateSuppLoiLoaList() {
 		IQTAwardSO qtAwardSO = null;
 		try {
@@ -148,6 +173,11 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		}
 	}
 	
+	/**
+	 * Show item details in item details pop up.
+	 *
+	 * @param suppLoiLoaBean the supp loi loa bean
+	 */
 	public void showItemDetailsPopUps(SuppLoiLoaBean suppLoiLoaBean) {
 		IQTAwardSO qtAwardSO = null;
 		try {
