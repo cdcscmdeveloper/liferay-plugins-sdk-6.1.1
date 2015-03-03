@@ -276,11 +276,14 @@ public class FinancialOrgBackingBean extends
 						finAcc.setBankCode(getManagedBean().getFinancialOrg().getPmFinancialAccs().get(0).getPmPaymentBankOrg().getPmFinancialSvcs().get(0).getBankCode());
 						
 					}*/
+				
 				 for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
+					 for (PmFinancialSvc financialSvc1 : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
+					     financialAcc.setBankCode(financialSvc1.getBankCode());
 					    
-					     financialAcc.setBankCode(getManagedBean().getFinancialOrg().getPmFinancialAccs().get(0).getPmPaymentBankOrg().getPmFinancialSvcs().get(0).getBankCode());
+					   }
 				 }
-		    }
+		}
 		}
 		
 
