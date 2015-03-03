@@ -40,16 +40,16 @@
 		<p:spacer height="25"></p:spacer>
 		<br />
 		<br />
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea style="width: 100%;"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
-				</tr>
-			</table>
-		</p:panel>
+
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+				<td><p:inputTextarea style="width: 100%;"
+						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+						rows="2" cols="150" disabled="true"></p:inputTextarea></td>
+			</tr>
+		</table>
+
 		<p:spacer height="75"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
 			toggleable="true">
@@ -64,7 +64,7 @@
 					<td><p:inputText id="techGovCompany"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
-							required="true"
+							required="true" style="text-align:right;"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
 							maxlength="4">
 							<p:ajax event="blur" process="@this" partialSubmit="true"
@@ -150,7 +150,7 @@
 			</table>
 
 			<h:panelGroup id="companyContract">
-				<p:panel
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 					<h:panelGroup id="contractorGroupId">
@@ -181,8 +181,9 @@
 							</p:commandButton>
 						</div>
 					</h:panelGroup>
-				</p:panel>
-				<p:panel
+				</h:panelGroup>
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
@@ -203,7 +204,7 @@
 									display="icon"></p:message></td>
 						</tr>
 					</table>
-				</p:panel>
+				</h:panelGroup>
 			</h:panelGroup>
 		</p:panel>
 
@@ -229,7 +230,7 @@
 			</table>
 
 			<h:panelGroup id="companyGovScore">
-				<p:panel
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '1'}">
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 					<h:panelGroup id="scoringofYearsGroupId">
@@ -261,9 +262,9 @@
 
 						</div>
 					</h:panelGroup>
-				</p:panel>
-
-				<p:panel
+				</h:panelGroup>
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '2'}">
 					<table>
 						<tr>
@@ -283,7 +284,7 @@
 							</td>
 						</tr>
 					</table>
-				</p:panel>
+				</h:panelGroup>
 			</h:panelGroup>
 		</p:panel>
 	</ui:define>

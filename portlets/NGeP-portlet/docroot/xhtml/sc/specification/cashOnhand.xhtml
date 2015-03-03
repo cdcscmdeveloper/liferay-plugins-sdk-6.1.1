@@ -38,17 +38,17 @@
 		<br />
 		<br />
 
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel>
-					</td>
-					<td><p:inputTextarea style="width: 100%;"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-				</tr>
-			</table>
-		</p:panel>
+
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel>
+				</td>
+				<td><p:inputTextarea style="width: 100%;"
+						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+			</tr>
+		</table>
+
 		<p:spacer height="75"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.cash.hand']}" toggleable="true">
 			<p:dataTable id="cashHand" rowIndexVar="index" var="cash"
@@ -104,7 +104,7 @@
 			</table>
 
 			<h:panelGroup id="totalcashOnhand">
-				<p:panel
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
@@ -137,8 +137,9 @@
 
 						</div>
 					</h:panelGroup>
-				</p:panel>
-				<p:panel
+				</h:panelGroup>
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
@@ -157,7 +158,7 @@
 									display="icon"></p:message></td>
 						</tr>
 					</table>
-				</p:panel>
+				</h:panelGroup>
 			</h:panelGroup>
 
 		</p:panel>

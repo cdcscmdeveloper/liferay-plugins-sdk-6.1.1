@@ -37,16 +37,16 @@
 		<p:spacer height="25"></p:spacer>
 		<br />
 		<br />
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea style="width: 100%;"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-				</tr>
-			</table>
-		</p:panel>
+
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
+				<td><p:inputTextarea style="width: 100%;"
+						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+			</tr>
+		</table>
+
 		<p:spacer height="75"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
 			toggleable="true">
@@ -61,7 +61,7 @@
 					<td><p:inputText maxlength="4"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
-							required="true" id="finPrivateYears"
+							required="true" id="finPrivateYears" style="text-align:right;"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}">
 							<p:ajax event="blur" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
@@ -143,7 +143,7 @@
 			</table>
 
 			<h:panelGroup id="finPrivateCompany">
-				<p:panel
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
 
@@ -177,8 +177,9 @@
 
 						</div>
 					</h:panelGroup>
-				</p:panel>
-				<p:panel
+				</h:panelGroup>
+				<p:spacer height="5"></p:spacer>
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
@@ -198,7 +199,7 @@
 									display="icon"></p:message></td>
 						</tr>
 					</table>
-				</p:panel>
+				</h:panelGroup>
 			</h:panelGroup>
 		</p:panel>
 	</ui:define>
