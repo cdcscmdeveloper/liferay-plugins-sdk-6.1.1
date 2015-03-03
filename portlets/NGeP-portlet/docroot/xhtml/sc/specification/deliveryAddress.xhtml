@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel>
+	<h:panelGroup>
 
 
 		<ui:fragment
@@ -37,14 +37,12 @@
 					<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-							process="@this" partialSubmit="true"
-							update=":form:searDelivery"
+							process="@this" partialSubmit="true" update=":form:searDelivery"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							actionListener="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
 							onclick="deliveryAddress.show();" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							process="@this,pjtDelivered"
-							partialSubmit="true" update="@form"
+							process="@this,pjtDelivered" partialSubmit="true" update="@form"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							actionListener="#{specificationBackingBean.deleteDeliveryZone(zoneName)}" />
 
@@ -62,13 +60,13 @@
 			<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-					process="@this" partialSubmit="true" 
+					process="@this" partialSubmit="true"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					update=":form:searDelivery" oncomplete="deliveryAddress.show();" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 					update="@form" process="@this,pjtDelivered"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					partialSubmit="true" 
+					partialSubmit="true"
 					actionListener="#{specificationBackingBean.deleteDeliveryDtls}" />
 			</div>
 		</ui:fragment>
@@ -77,6 +75,6 @@
 
 
 		<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
-	</p:panel>
+	</h:panelGroup>
 
 </ui:composition>
