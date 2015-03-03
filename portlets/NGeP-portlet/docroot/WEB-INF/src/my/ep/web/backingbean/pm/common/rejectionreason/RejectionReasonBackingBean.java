@@ -618,7 +618,15 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public SelectItem[] applicationTypeOptions() {
 		log.info("applicationTypeOptions");
-		return getDropdownValues(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		String recommend = ParameterConst.SUPPLIER_APPL_CODE_O;
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
+
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, searchBean);
+		return items;
 	}
 	
 	/**
