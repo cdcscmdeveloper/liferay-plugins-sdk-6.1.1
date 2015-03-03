@@ -1,26 +1,17 @@
 package my.ep.web.managedbean.pm.financialorg;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
-import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmFinancialSvc;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 /**
@@ -69,6 +60,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	private boolean enableUpdateStatus;
 	private int selectedTabIndex;
 	private Date currentDate = new Date();
+	private boolean showFactoringBank;
 
 
 	/**
@@ -263,6 +255,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	 */
 	public void setEnableUpdateStatus(boolean enableUpdateStatus) {
 		this.enableUpdateStatus = enableUpdateStatus;
+	}
+
+	/**
+	 * @return the showFactoringBank
+	 */
+	public boolean isShowFactoringBank() {
+		return showFactoringBank;
+	}
+
+	/**
+	 * @param showFactoringBank the showFactoringBank to set
+	 */
+	public void setShowFactoringBank(boolean showFactoringBank) {
+		this.showFactoringBank = showFactoringBank;
 	}
 
 //	/**
