@@ -12,6 +12,7 @@ import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCategoryRestr;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -53,6 +54,9 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private List<PmMachineCategory> pmMachineCategory;
 	private List<PmMachineCategory> selectedpmMachineCategory;
 	private List<PmMachineCategory> deletedpmMachineCategory = new ArrayList<PmMachineCategory>();
+	
+	private List<PmCategoryRestr> selectedPmCategoryRestr;
+	private List<PmParameterDesc> companyTypeList;
 	
 	public String getCatLevel() {
 		return catLevel;
@@ -307,6 +311,23 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	public void setDeletedpmMachineCategory(
 			List<PmMachineCategory> deletedpmMachineCategory) {
 		this.deletedpmMachineCategory = deletedpmMachineCategory;
+	}
+
+	public List<PmCategoryRestr> getSelectedPmCategoryRestr() {
+		return selectedPmCategoryRestr;
+	}
+
+	public void setSelectedPmCategoryRestr(
+			List<PmCategoryRestr> selectedPmCategoryRestr) {
+		this.selectedPmCategoryRestr = selectedPmCategoryRestr;
+	}
+
+	public List<PmParameterDesc> getCompanyTypeList() {
+		return companyTypeList;
+	}
+
+	public void setCompanyTypeList(List<PmParameterDesc> companyTypeList) {
+		this.companyTypeList = companyTypeList;
 	}
 
 
