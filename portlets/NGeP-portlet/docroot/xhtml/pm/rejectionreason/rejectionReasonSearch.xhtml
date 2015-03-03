@@ -21,7 +21,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<f:selectItems  value="#{rejectionReasonBackingBean.reasonCategoryOptions()}" />
 						<p:ajax event="change" listener="#{rejectionReasonBackingBean.reasonCategoryChange(true,
 							rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCategoryParam.parameterId)}"
-							update="somSuppType, somAppType, somComType,applTypeLbl,suppTypeLbl,comTypeLbl"/>
+							update="pRejectReasonSearch"/>
 					</p:selectOneMenu>
 				</td>
 				<th>
