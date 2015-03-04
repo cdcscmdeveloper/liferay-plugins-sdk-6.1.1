@@ -65,7 +65,8 @@ public class gpkiBackingBean {
 	}
 	
 	public String gpkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
-        String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
+		System.out.println("ContextualCompositeMethodExpression");
+		String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
 	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
 	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
 	    String subjectDN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("subjectDN");
@@ -84,6 +85,7 @@ public class gpkiBackingBean {
 		debugLogger("subjectDN====================================: "+subjectDN);
 		debugLogger("userId====================================: "+subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")));
 		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
+		System.out.println("ContextualCompositeMethodExpression  2");
 		debugLogger("reflectAction=====================================: "+obj);		
 		if(true){
 			pmDigiSign.setCreatedBy(userId);
