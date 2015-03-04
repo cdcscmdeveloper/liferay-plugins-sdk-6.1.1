@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel>
+
+		<p:commandButton value="#{lbl['lbl.btn.back']}"
+			action="#{locationBackingBean.backToSearch}" style="float:left;" />
+		<p:commandButton
+			value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
+			update="@([id$=Msg])" action="#{locationBackingBean.saveLocation}"
+			style="float:right;" />
+		<br />
+		<br />
+		<br />
+
+		<p:messages id="location" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true"></p:messages>
+	</p:panel>
+</ui:composition>
