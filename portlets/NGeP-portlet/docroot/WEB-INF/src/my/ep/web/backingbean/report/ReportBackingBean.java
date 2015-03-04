@@ -768,6 +768,7 @@ public class ReportBackingBean extends
 	private String scContractOrPKPNo;
 	private String scContractOrPKPName;
 	private String scRequestQuoteNo;
+	private String scRequestNoteStatus;
 	// cm
 	private String cmItemType;
 	private String cmItemStatus;
@@ -916,6 +917,14 @@ public class ReportBackingBean extends
 	private String ctSubType;
 
 	
+	public String getScRequestNoteStatus() {
+		return scRequestNoteStatus;
+	}
+
+	public void setScRequestNoteStatus(String scRequestNoteStatus) {
+		this.scRequestNoteStatus = scRequestNoteStatus;
+	}
+
 	public String getCtSubType() {
 		return ctSubType;
 	}
@@ -4459,6 +4468,7 @@ public class ReportBackingBean extends
 				|| ((getScProcurementType() != null) && (getScProcurementType() != ReportConst.EMPTY_VAL))
 				|| ((getScProcessRptQuotationNo() != null) && (getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getScCommonStatus() != null) && (getScCommonStatus() != ReportConst.EMPTY_VAL))
+				|| ((getScRequestNoteStatus() != null) && (getScRequestNoteStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScREQUESTNOTESUMMARYGroup() != null) && (getScREQUESTNOTESUMMARYGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScPIDNo() != null) && (getScPIDNo() != ReportConst.EMPTY_VAL))
@@ -4531,7 +4541,7 @@ public class ReportBackingBean extends
 			}
 			if((this.getReportValue() != null)
 					&& (this.getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL))){
+							.equalsIgnoreCase(ReportConst.SC_SUMMARY_REQUEST_NOTE_S1_RPT_VAL))){
 				if ((this.getScREQUESTNOTESUMMARYGroup() != null)
 						&& (this.getScREQUESTNOTESUMMARYGroup() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
@@ -4550,6 +4560,11 @@ public class ReportBackingBean extends
 					&& (this.getScCommonStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScCommonStatusVar(ReportConst.SC_AMP_STATUS_EQ
 						+ this.getScCommonStatus());
+			}
+			if ((this.getScRequestNoteStatus() != null)
+					&& (this.getScRequestNoteStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setScRequestNoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
+						+ this.getScRequestNoteStatus());
 			}
 			if ((this.getScQuotationNo() != null)
 					&& (this.getScQuotationNo() != ReportConst.EMPTY_VAL)) {
@@ -4651,11 +4666,15 @@ public class ReportBackingBean extends
 				rptGenBean.setScSoneStatusVar(ReportConst.SC_AMP_STATUS_EQ
 						+ this.getScSoneStatus());
 			}
-			if ((this.getScPIDtlsPrcRptGroup() != null)
-					&& (this.getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL)) {
-				rptGenBean
-						.setScPIDtlsPrcRptGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
-								+ this.getScPIDtlsPrcRptGroup());
+			if((this.getReportValue() != null)
+					&& (this.getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL))){
+				if ((this.getScPIDtlsPrcRptGroup() != null)
+						&& (this.getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL)) {
+					rptGenBean
+							.setScPIDtlsPrcRptGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
+									+ this.getScPIDtlsPrcRptGroup());
+				}
 			}
 			if ((this.getScPrcRptGroup() != null)
 					&& (this.getScPrcRptGroup() != ReportConst.EMPTY_VAL)) {
@@ -4715,6 +4734,7 @@ public class ReportBackingBean extends
 						+ rptGenBean.getScPublishFromDateVar()
 						+ rptGenBean.getScPublishToDateVar()
 						+ rptGenBean.getScCommonStatusVar()
+						+ rptGenBean.getScRequestNoteStatusVar()
 						+ rptGenBean.getScLAPRNPURCHDEFAULTGroupVar()
 						+ rptGenBean.getScREQUESTNOTESUMMARYGroupVar()
 						+ rptGenBean.getScPIDNoVar()
@@ -5498,6 +5518,7 @@ public class ReportBackingBean extends
 		this.setScProcurementType(null);
 		this.setScProcessRptQuotationNo(null);
 		this.setScCommonStatus(null);
+		this.setScRequestNoteStatus(null);
 		this.setScLAPRNPURCHDEFAULTGroup(null);
 		this.setScREQUESTNOTESUMMARYGroup(null);
 		this.setScPIDNo(null);

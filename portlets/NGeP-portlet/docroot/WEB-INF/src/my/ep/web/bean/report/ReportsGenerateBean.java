@@ -75,6 +75,7 @@ public class ReportsGenerateBean {
 		private boolean scContractOrPKPNoView = false;
 		private boolean scContractOrPKPNameView = false;
 		private boolean scRequestQuoteNoView = false;
+		private boolean scRequestNoteStatusView = false;
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -341,6 +342,7 @@ public class ReportsGenerateBean {
 		private String scContractOrPKPNoVar=ReportConst.EMPTY_VAL;
 		private String scContractOrPKPNameVar=ReportConst.EMPTY_VAL;
 		private String scRequestQuoteNoVar=ReportConst.EMPTY_VAL;
+		private String scRequestNoteStatusVar=ReportConst.EMPTY_VAL;
 		//CT
 		private String ctContractNoVar=ReportConst.EMPTY_VAL;
 		private String ctAgreementVar=ReportConst.EMPTY_VAL;
@@ -385,6 +387,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isScRequestNoteStatusView() {
+			return scRequestNoteStatusView;
+		}
+		public void setScRequestNoteStatusView(boolean scRequestNoteStatusView) {
+			this.scRequestNoteStatusView = scRequestNoteStatusView;
+		}
+		public String getScRequestNoteStatusVar() {
+			return scRequestNoteStatusVar;
+		}
+		public void setScRequestNoteStatusVar(String scRequestNoteStatusVar) {
+			this.scRequestNoteStatusVar = scRequestNoteStatusVar;
+		}
 		public boolean isApprovedDateView() {
 			return approvedDateView;
 		}
