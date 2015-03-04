@@ -114,11 +114,12 @@ import org.primefaces.model.TreeNode;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
+// TODO: Auto-generated Javadoc
 //import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 
 /**
- * Backing Bean for invoice
- * 
+ * Backing Bean for invoice.
+ *
  * @author KK LIM
  * @since 30/10/2013
  */
@@ -126,14 +127,25 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "invoiceBackingBean")
 @ViewScoped
 public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(InvoiceBackingBean.class);
+	
+	/** The class name. */
 	private String className="@(.myInvClassName)";
+	
+	/** The fl invoice data model. */
 	private IPagingDataModel<FlInvoice> flInvoiceDataModel = new FlInvoicePagingDataModel();
+	
+	/** The Constant NAV_ORDERNO. */
 	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	
+	/** The Constant NAV_INVOICE. */
 	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
 	
 	/**
-	 * get faces scopes
+	 * get faces scopes.
+	 *
 	 * @return FacesScopes
 	 */
 	private FacesScopes getFacesScopes(){
@@ -141,9 +153,20 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return facesScopes;
 	}
 
+	/**
+	 * Instantiates a new invoice backing bean.
+	 */
 	public InvoiceBackingBean(){
 	}
 
+	/**
+	 * save,submit the Invoice
+	 * 
+	 * * @param String action 
+	 *  <p>submit - save data into database and BPM process will route to the next respective user.
+	 * 	<p>save - save data into database.
+	 *  navigate to acknowledge page.
+	 */
 	public String submitAction(String action) {
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IInvoiceSO invoiceSO = null;
@@ -277,6 +300,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return null;
 	}
 	
+	/**
+	 * Gets the user role based on role code.
+	 *
+	 * @return the user role
+	 */
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) 
 			return RoleCode.MOF_SUPPLIER_ADMIN.value();
@@ -296,6 +324,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			return null;
 	}
 
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
@@ -440,6 +471,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		} 
 	}
 	
+	/**
+	 * View invoice.
+	 */
 	public void viewInvoice() {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
@@ -478,6 +512,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 	}	
 	
+	/**
+	 * Validate advanced payment based on deduction amount.
+	 */
 	private void validateAdvancedPayment() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		boolean haveAdvancedPmyt = false;
@@ -528,15 +565,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 	}
 
-	public void factoringChecked(AjaxBehaviorEvent e) {
-		System.out.println("====enter process checked====");
-		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
-		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println("=======get id value=====" + id);
-		getManagedBean().setFactoringCheck(id);
-
-	}
-	
+	/**
+	 * Gets the amount and quantity  details for invoice tab.
+	 *
+	 * @param resDTO the res dto
+	 * @return the invoice table
+	 */
 	private void getInvoiceTable(FulfilmentResDTO resDTO){
 		BigDecimal invoiceAmt = new BigDecimal(0);
 		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
@@ -575,6 +609,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceAmt);
 	}
 	
+	/**
+	 * Calculate invoice total amount.
+	 * <p>if invoice amount is greater than received amount,we raise the exception
+	 *
+	 * @param flInvoiceItem the fl invoice item
+	 */
 	public void retrieveInvTotalAmount(FlInvoiceItem flInvoiceItem){
 		if(flInvoiceItem.getInvAmt().doubleValue()>flInvoiceItem.getReceivedAmt().doubleValue()) {
 			flInvoiceItem.setInvAmt(flInvoiceItem.getReceivedAmt());
@@ -599,6 +639,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	   getManagedBean().setInvAmtGrandTotal(totalInvoiceAmt);
 	}
 	
+	/**
+	 * call this method  as user click on summary menu
+	 * <p>to calculate invoice summary.
+	 */
 	public void calInvSummary() {
 		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
@@ -677,6 +721,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
 	}
 	
+	/**
+	 * On tab change.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			if(null==getManagedBean().getChargeLineItemRoot()){
@@ -691,6 +740,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 
 
 	
+	/**
+	 * Gets the populate bank account list based on branch name and supplier id.
+	 *
+	 * @return the populate bank account list
+	 */
 	public List<SelectItem> getPopulateBankAccountList() {
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
 		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
@@ -735,6 +789,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return populateBankAccountList;
 	}
 	
+	/**
+	 * Bank info action listener.
+	 */
 	public void bankInfoActionListener() {
 		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getInvoice().getAccountNo());
 		if(supplierBank!=null) {
@@ -742,6 +799,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 	}
 	
+	/**
+	 * Gets the company factoring details based on financial org id.
+	 *
+	 * @return the factoring dtl
+	 */
 	public void getFactoringDtl(){
 		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 		FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
@@ -780,6 +842,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	/**
+	 * Gets the class name.
+	 *
 	 * @return the className
 	 */
 	public String getClassName() {
@@ -787,16 +851,24 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 
 	/**
+	 * Sets the class name.
+	 *
 	 * @param className the className to set
 	 */
 	public void setClassName(String className) {
 		this.className = className;
 	}
 	
+	/**
+	 * Search document.
+	 */
 	public void searchDocument(){
 		flInvoiceDataModel.reloadData();
 	}
 	
+	/**
+	 * Pre render doc search.
+	 */
 	public void preRenderDocSearch() {
 		FacesContext fc=FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -804,13 +876,24 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 	}
 	
+	/**
+	 * The Class FlInvoicePagingDataModel.
+	 */
 	private class FlInvoicePagingDataModel extends PagingDataModel<FlInvoice> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new fl invoice paging data model.
+		 */
 		public FlInvoicePagingDataModel() {
 			super("flInvoiceListDt");
 		}
 		
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 	public ISearchResultBean<FlInvoice> pageChangeListener(ISearchBean<FlInvoice> searchBean) {
 		if (log.isDebugEnabled()) {
@@ -845,6 +928,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 }
 
 	/**
+	 * Gets the fl invoice data model.
+	 *
 	 * @return the flInvoiceDataModel
 	 */
 	public IPagingDataModel<FlInvoice> getFlInvoiceDataModel() {
@@ -852,17 +937,28 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 
 	/**
+	 * Sets the fl invoice data model.
+	 *
 	 * @param flInvoiceDataModel the flInvoiceDataModel to set
 	 */
 	public void setFlInvoiceDataModel(IPagingDataModel<FlInvoice> flInvoiceDataModel) {
 		this.flInvoiceDataModel = flInvoiceDataModel;
 	}
 	
+	/**
+	 * Search reset.
+	 */
 	public void searchReset(){
 		this.getManagedBean().setTitle(null);
 		this.getManagedBean().setContractNo(null);
 		this.getManagedBean().setLoaNo(null);
 	}
+	
+	/**
+	 * Gets the portlet title.
+	 *
+	 * @return the portlet title
+	 */
 	public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.fl.invoice.supp.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		if(getManagedBean().isModificationCancel()) {
@@ -871,6 +967,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return portletTitle;
 	}
 	
+	/**
+	 * Navigate to ap59BasePage if doc type is A59.
+	 *
+	 * @return the string
+	 */
 	public String navigateToPage(){
 		renewSesionObject();
 		String navgPage="/xhtml/fl/ap59/ap59BasePage.xhtml?faces-redirect=true";
@@ -925,6 +1026,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return navgPage;
 	}
 	
+	/**
+	 * save,submit the ap59
+	 * 
+	 * @param String action 
+	 * <p>submit - save data into database and BPM process will route to the next respective user.
+	 * <p>save - save data into database.
+	 * navigate to acknowledge page.
+	 *
+	 * @return the string
+	 */
 	public String submitAp59(){
 		IInvoiceSO invoiceSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -975,6 +1086,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return null;
 	}
 	
+	/**
+	 * call this method  as user click on items menu
+	 * <p>Populate charge line data.
+	 */
 	private void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		
@@ -1026,6 +1141,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
 	}
 	
+	/**
+	 * Retrieve mof no based on supplier id.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -1038,10 +1159,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	/**
-	 * Page navigation to FLDoc search page in INV
-	 * @throws SystemException 
-	 * @throws PortalException 
-	 * @throws IOException 
+	 * Page navigation to FLDoc search page in INV.
+	 *
+	 * @return the string
+	 * @throws PortalException the portal exception
+	 * @throws SystemException the system exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public String backToPervious() throws PortalException, SystemException, IOException {
 		if(getManagedBean().getInvoiceId()==null) {
@@ -1055,12 +1178,21 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	/**
-	 * Page navigation to FLAP59 search page in INV
+	 * Page navigation to FLAP59 search page in INV.
+	 *
+	 * @return the string
 	 */
 	public String backToPerviousAp59() {
 		return "flAp59Search";
 	}
 	
+	/**
+	 * Signing action.
+	 *
+	 * @param outcome the outcome
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
@@ -1109,6 +1241,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	
+	/**
+	 * Pre submit action for digisign(spki).
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public String preSubmitAction(
 			PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
@@ -1131,6 +1270,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
+	/**
+	 * calculate the invoice total amount based on invoice amount.
+	 *
+	 * @return the invoice amt
+	 */
 	private String getInvoiceAmt() {
 		String invAmt = "";
 		BigDecimal totalAmt = new BigDecimal(0);
@@ -1143,11 +1287,19 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 
 
+	/**
+	 * Enable auto update.
+	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
 	
+	/**
+	 * Checks if is supplier role based on role code.
+	 *
+	 * @return true, if is supplier role
+	 */
 	private boolean isSupplierRole(){
 		if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
@@ -1163,6 +1315,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return Boolean.FALSE;
 	}
 	
+	/**
+	 * Gets the selected factoring company details based on  financial org id and address type.
+	 *
+	 * @param financialOrgId the financial org id
+	 * @return the selected factoring comp dtl
+	 */
 	public void getSelectedFactoringCompDtl(Long financialOrgId){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		getManagedBean().setSupplierAddress(null);
@@ -1193,8 +1351,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 	}
 	
-	// To update digisign data for spki
-		private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
+		/**
+	 * Update digisign data for spki.
+	 *
+	 * @param pmDigiSign the pm digi sign
+	 * @param docType the doc type
+	 * @param docId the doc id
+	 * @param docNumber the doc number
+	 * @param textBeforeSign the text before sign
+	 */
+	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 				Long docId, String docNumber , String textBeforeSign) {
 			FacesScopes facesScope = new FacesScopes();
 			Long userId = facesScope.getUserSessionBean().getUserId();
@@ -1211,10 +1377,21 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			pmDigiSign.setSignedData(signedData);
 		}
 		
+		/**
+		 * Back to document.
+		 *
+		 * @return the string
+		 */
 		public String backToDocument() {
 			return getManagedBean().getBackToDocument();
 		}
 
+		/**
+		 * Navigate document based on doc type.
+		 *
+		 * @param docType the doc type
+		 * @return the string
+		 */
 		public String navigateDocument(String docType){
 			if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);

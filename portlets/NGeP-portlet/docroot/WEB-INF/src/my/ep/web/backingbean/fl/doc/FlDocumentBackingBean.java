@@ -71,11 +71,12 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+// TODO: Auto-generated Javadoc
 //import my.ep.constant.BpmOutcomeConst;
 
 /**
- * Backingbean for Fulfillment document
- * 
+ * Backingbean for Fulfillment document.
+ *
  * @author Giribabu
  * @since 2/11/2013
  */
@@ -83,29 +84,67 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean>{
 
+	/** The log. */
 	private static Logger log = Logger.getLogger(FlDocumentBackingBean.class);
 	
+	/** The Constant NAV_TO_MAINTAIN_PR. */
 	public static final String NAV_TO_MAINTAIN_PR = "MaintainPR";
+	
+	/** The Constant NAV_TO_MAINTAIN_PO. */
 	public static final String NAV_TO_MAINTAIN_PO = "MaintainPO";
+	
+	/** The Constant NAV_TO_MAINTAIN_CO. */
 	public static final String NAV_TO_MAINTAIN_CO = "MaintainCO";
+	
+	/** The Constant NAV_TO_MAINTAIN_DO. */
 	public static final String NAV_TO_MAINTAIN_DO = "MaintainDO";
+	
+	/** The Constant NAV_TO_MAINTAIN_CR. */
 	public static final String NAV_TO_MAINTAIN_CR = "MaintainCR";
+	
+	/** The Constant NAV_TO_MAINTAIN_INV. */
 	public static final String NAV_TO_MAINTAIN_INV = "MaintainINV";
+	
+	/** The Constant NAV_TO_MAINTAIN_FRN. */
 	public static final String NAV_TO_MAINTAIN_FRN = "MaintainFRN";
+	
+	/** The Constant NAV_TO_COMPLAIN_CC_ITEM. */
 	public static final String NAV_TO_COMPLAIN_CC_ITEM = "/xhtml/fl/complaincontractitem/complainCentralContractItem.xhtml";
+	
+	/** The Constant NAV_TO_MAINTAIN_PA. */
 	public static final String NAV_TO_MAINTAIN_PA = "/xhtml/fl/paymentmatch/pmBasePage.xhtml";
+	
+	/** The Constant NAV_TO_REMOVE_FACTORING_COMPANY. */
 	public static final String NAV_TO_REMOVE_FACTORING_COMPANY = "/xhtml/fl/removefactoringcomp/rfcBasePage.xhtml";
+	
+	/** The Constant NAV_TO_STOP_INSTRUCTION. */
 	public static final String NAV_TO_STOP_INSTRUCTION = "/xhtml/fl/stopInstruction/siBasePage.xhtml";
+	
+	/** The Constant NAV_TO_ADJUSTMENT_NOTE. */
 	public static final String NAV_TO_ADJUSTMENT_NOTE = "/xhtml/fl/invoice/adjustment/danBasePage.xhtml";
 	
+	/**
+	 * Gets the faces scopes.
+	 *
+	 * @return the faces scopes
+	 */
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
 	
+	/**
+	 * Advance search.
+	 */
 	public void advanceSearch(){
 		log.debug("getSearchType:"+this.getManagedBean().getSearchType());
 	}
+	
+	/**
+	 * Pre render doc search.
+	 * <p>remove from session.
+	 * <p>reset doc search criteria.
+	 */
 	public void preRenderDocSearch() {
 		renewSesionObject();
 		resetSearchCriteria();
@@ -115,6 +154,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		
 	}
 
+	/**
+	 * Search document.
+	 */
 	public void searchDocument(){
 		if(null == getManagedBean().getSearchOrderType()){ 
 			throw new EpException(MessageConst.ERROR_740023);
@@ -140,6 +182,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 	}
 	
+	/**
+	 * Gets the document type drop down.
+	 *
+	 * @return the document type drop down
+	 */
 	public SelectItem[] getDocumentTypeDropDown() {
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
@@ -181,6 +228,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	    return selectedItemList.toArray(new SelectItem[selectedItemList.size()]);
 	}
 	
+	/**
+	 * Navigate to page based on doc type.
+	 *
+	 * @return the string
+	 */
 	public String navigateToPage(){
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		IDeliveryOrderSO deliveryOrderSO = null;
@@ -198,19 +250,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
-		String flDocNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
 		String flDocId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
-		String statusId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusId");
 		String buttonVal = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("buttonVal");
 		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusDesc");
-		
-		System.out.println("docType::: "+docType);
-		System.out.println("flDocNo::: "+flDocNo);
-		System.out.println("flDocId::: "+flDocId);
-		System.out.println("buttonVal::: "+buttonVal);
-		System.out.println("statusId::: "+statusId);
-		System.out.println("statusDesc>>::: "+statusDesc);
-		
 		if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
@@ -268,7 +310,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
-			//flRequest.ctContract.ctFactoring.financialOrg.finOrgName
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(null != resDTO.getFlFulfilmentRequest()){
@@ -288,7 +329,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				}
 				
 			}
-			
 			
 			for(CtAgency agency : crBB.getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
 				if(agency.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
@@ -480,7 +520,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			invBB.getManagedBean().setButtonVal(buttonVal);
 			invBB.getManagedBean().setDocProcess(docType);
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
-			//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -595,6 +634,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		return navgPage;
 	}
 	
+	/**
+	 * Selected user.
+	 *
+	 * @param e the e
+	 */
 	public void selectedUser(AjaxBehaviorEvent e) {
 		// doing some stuff here
 		//System.out.println("====enter process checked===="+ getManagedBean().getTempLoginId());
@@ -603,6 +647,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setTempLoginId(id);
 	}
 	
+	/**
+	 * Reset search criteria.
+	 */
 	private void resetSearchCriteria() {
 		getManagedBean().setSearchDocNo(null);
 		getManagedBean().setStatusDescId(null);
@@ -618,6 +665,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchPhysLoaNo(null);
 	}
 	
+	/**
+	 * Selected doctype.
+	 *
+	 * @param e the e
+	 */
 	public void selectedDoctype(AjaxBehaviorEvent e) {
 		String id = (String) e.getComponent().getAttributes().get("value");
 		
@@ -636,9 +688,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		resetSearchCriteria();
 		
 		if(id!=null) {
-			/*if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
-				this.getManagedBean().setCheckDocType(true);
-			}else */
 			if(getManagedBean().getSearchOrderType().equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
 			}
@@ -654,12 +703,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchDocType(id);
 	}
 	
+	/**
+	 * Selected order type.
+	 *
+	 * @param e the e
+	 */
 	public void selectedOrderType(AjaxBehaviorEvent e) {
 		String id = (String) e.getComponent().getAttributes().get("value");
 		getManagedBean().setSearchDocType(null);
 
 		// reset everything to false
-		//this.getManagedBean().setCheckDocNo(false);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
@@ -671,10 +724,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				this.getManagedBean().setCheckDocType(true);
 			}	
 		}
-		
-		
 	}
 	
+	/**
+	 * Search reset.
+	 */
 	public void searchReset(){
 		this.getManagedBean().setSearchTitle(null);
 		this.getManagedBean().setSearchSuppName(null);
@@ -691,7 +745,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setSearchPhysLoaNo(null);
 		
 		// reset everything to false
-		//this.getManagedBean().setCheckDocNo(false);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
@@ -700,6 +753,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		renewSesionObject();
 	}
 	
+	/**
+	 * Gets the procurement type list.
+	 *
+	 * @return the procurement type list
+	 */
 	public void getProcurementTypeList(){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -709,27 +767,63 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		resDTO.getParameterDescList();
 		getManagedBean().setProcurementTypeList(resDTO.getParameterDescList());
 	}
+	
+	/**
+	 * Checks if is fl fulfilment requisitioner.
+	 *
+	 * @return true, if is fl fulfilment requisitioner
+	 */
 	public boolean isFlFulfilmentRequisitioner() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
+	
+	/**
+	 * Checks if is fl fulfilment approver.
+	 *
+	 * @return true, if is fl fulfilment approver
+	 */
 	public boolean isFlFulfilmentApprover() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
+	
+	/**
+	 * Checks if is fl fulfilment supplier.
+	 *
+	 * @return true, if is fl fulfilment supplier
+	 */
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
+	
+	/**
+	 * Checks if is fl fulfilment receving officer.
+	 *
+	 * @return true, if is fl fulfilment receving officer
+	 */
 	public boolean isFlFulfilmentRecevingOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
 	}
+	
+	/**
+	 * Checks if is fl fulfilment payment officer.
+	 *
+	 * @return true, if is fl fulfilment payment officer
+	 */
 	public boolean isFlFulfilmentPaymentOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
 	}
 	
+	/**
+	 * Gets the sum ordered qty.
+	 *
+	 * @param flRequest the fl request
+	 * @return the sum ordered qty
+	 */
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlFulfilmentItems() != null && !flRequest.getFlFulfilmentItems().isEmpty()){
 			BigDecimal sumOrderedQty = new BigDecimal(0);
@@ -742,6 +836,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 	}
 	
+	/**
+	 * Gets the doc type list by role.
+	 *
+	 * @return the doc type list by role
+	 */
 	private List<String> getDocTypeListByRole() {
 		List<String> flDocTypes = new ArrayList<String>();
 		if(ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(getManagedBean().getSearchOrderType())) {
@@ -820,6 +919,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		return flDocTypes;
 	}
 	
+	/**
+	 * Generate report.
+	 *
+	 * @param docType the doc type
+	 * @param docNo the doc no
+	 */
 	public void generateReport(String docType, String docNo) {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
