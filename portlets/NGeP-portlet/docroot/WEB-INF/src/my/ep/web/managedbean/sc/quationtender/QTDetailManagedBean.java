@@ -994,6 +994,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The state codes. */
 	private String stateCodes;
 	
+	private List<ScQtLocCriteria> supplierLocationList;
+	
 	/**
 	 * Sets the panel suppliers.
 	 *
@@ -6285,6 +6287,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setStateCodes(String stateCodes) {
 		this.stateCodes = stateCodes;
+	}
+
+	/**
+	 * @return the supplierLocationList
+	 */
+	public List<ScQtLocCriteria> getSupplierLocationList() {
+		return supplierLocationList;
+	}
+
+	/**
+	 * @param supplierLocationList the supplierLocationList to set
+	 */
+	public void setSupplierLocationList(List<ScQtLocCriteria> supplierLocationList) {
+		this.supplierLocationList = supplierLocationList;
 	}
 
 }
