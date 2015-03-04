@@ -37,6 +37,7 @@ public class ReportsGenerateBean {
 	private Object[] statusLst;
 	private boolean fromDateView = false;
 	private boolean toDateView = false;
+	private boolean approvedDateView = false;
 	private long lngUserId;
 	private List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
 	private boolean madatoryIndicatorView = false;
@@ -207,6 +208,7 @@ public class ReportsGenerateBean {
 		private boolean flSupplierTextView = false;
 		private boolean flSupplierDropdownView = false;
 		private boolean flGroupSeventeenView = false;
+		
 		//CT
 		private boolean ctContractNoView = false;
 		private boolean ctAgreementView = false;
@@ -220,6 +222,12 @@ public class ReportsGenerateBean {
 		private boolean ctMinistryView = false;
 		private boolean ctPtjView = false;
 		private boolean ctProcurementModeView = false;
+		private boolean ctPhysicalContractNoView = false;
+		private boolean ctGroupThreeView = false;
+		private boolean ctStatusTwoView = false;
+		private boolean ctLOAPhysicalNoView = false;
+		private boolean ctUserTypeView = false;
+		private boolean ctSubTypeView = false;
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -347,6 +355,12 @@ public class ReportsGenerateBean {
 		private String ctMinistryVar=ReportConst.EMPTY_VAL;
 		private String ctPtjVar=ReportConst.EMPTY_VAL;
 		private String ctProcurementModeVar=ReportConst.EMPTY_VAL;
+		private String ctPhysicalContractNoVar=ReportConst.EMPTY_VAL;
+		private String ctGroupThreeVar=ReportConst.EMPTY_VAL;
+		private String ctStatusTwoVar=ReportConst.EMPTY_VAL;
+		private String ctLOAPhysicalNoVar=ReportConst.EMPTY_VAL;
+		private String ctUserTypeVar=ReportConst.EMPTY_VAL;
+		private String ctSubTypeVar=ReportConst.EMPTY_VAL;
 		//ct
 		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
 		private String flContractRequestVar=ReportConst.EMPTY_VAL;
@@ -371,6 +385,84 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isApprovedDateView() {
+			return approvedDateView;
+		}
+		public void setApprovedDateView(boolean approvedDateView) {
+			this.approvedDateView = approvedDateView;
+		}
+		public boolean isCtSubTypeView() {
+			return ctSubTypeView;
+		}
+		public void setCtSubTypeView(boolean ctSubTypeView) {
+			this.ctSubTypeView = ctSubTypeView;
+		}
+		public String getCtSubTypeVar() {
+			return ctSubTypeVar;
+		}
+		public void setCtSubTypeVar(String ctSubTypeVar) {
+			this.ctSubTypeVar = ctSubTypeVar;
+		}
+		public boolean isCtUserTypeView() {
+			return ctUserTypeView;
+		}
+		public void setCtUserTypeView(boolean ctUserTypeView) {
+			this.ctUserTypeView = ctUserTypeView;
+		}
+		public String getCtUserTypeVar() {
+			return ctUserTypeVar;
+		}
+		public void setCtUserTypeVar(String ctUserTypeVar) {
+			this.ctUserTypeVar = ctUserTypeVar;
+		}
+		public boolean isCtLOAPhysicalNoView() {
+			return ctLOAPhysicalNoView;
+		}
+		public void setCtLOAPhysicalNoView(boolean ctLOAPhysicalNoView) {
+			this.ctLOAPhysicalNoView = ctLOAPhysicalNoView;
+		}
+		public String getCtLOAPhysicalNoVar() {
+			return ctLOAPhysicalNoVar;
+		}
+		public void setCtLOAPhysicalNoVar(String ctLOAPhysicalNoVar) {
+			this.ctLOAPhysicalNoVar = ctLOAPhysicalNoVar;
+		}
+		public boolean isCtStatusTwoView() {
+			return ctStatusTwoView;
+		}
+		public void setCtStatusTwoView(boolean ctStatusTwoView) {
+			this.ctStatusTwoView = ctStatusTwoView;
+		}
+		public String getCtStatusTwoVar() {
+			return ctStatusTwoVar;
+		}
+		public void setCtStatusTwoVar(String ctStatusTwoVar) {
+			this.ctStatusTwoVar = ctStatusTwoVar;
+		}
+		public boolean isCtGroupThreeView() {
+			return ctGroupThreeView;
+		}
+		public void setCtGroupThreeView(boolean ctGroupThreeView) {
+			this.ctGroupThreeView = ctGroupThreeView;
+		}
+		public String getCtGroupThreeVar() {
+			return ctGroupThreeVar;
+		}
+		public void setCtGroupThreeVar(String ctGroupThreeVar) {
+			this.ctGroupThreeVar = ctGroupThreeVar;
+		}
+		public boolean isCtPhysicalContractNoView() {
+			return ctPhysicalContractNoView;
+		}
+		public void setCtPhysicalContractNoView(boolean ctPhysicalContractNoView) {
+			this.ctPhysicalContractNoView = ctPhysicalContractNoView;
+		}
+		public String getCtPhysicalContractNoVar() {
+			return ctPhysicalContractNoVar;
+		}
+		public void setCtPhysicalContractNoVar(String ctPhysicalContractNoVar) {
+			this.ctPhysicalContractNoVar = ctPhysicalContractNoVar;
+		}
 		public boolean isFlGroupSeventeenView() {
 			return flGroupSeventeenView;
 		}

@@ -27,12 +27,17 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		switch (getManagedBean().getReportValue()) {		
 	        case ReportConst.CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL:
 	        	rptGenBean.setCtContractNoView(true);
-	        	rptGenBean.setCtStatusView(true);
+	        	rptGenBean.setCtPhysicalContractNoView(true);
+	        	rptGenBean.setCtAgreementView(true);
+	        	rptGenBean.setCtStatusTwoView(true);
 	        	rptGenBean.setCtLoanNoView(true);
 	        	rptGenBean.setCtMinistryView(true);
 	        	rptGenBean.setCtPtjView(true);
-	        	rptGenBean.setCtGroupOneView(true);
+	        	rptGenBean.setCtGroupThreeView(true);
 	        	rptGenBean.setCtProcurementModeView(true);
+	        	rptGenBean.setCtLOAPhysicalNoView(true);
+	        	rptGenBean.setCtUserTypeView(true);
+	        	rptGenBean.setCtSubTypeView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 	            break;
