@@ -784,13 +784,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	    }
     }
     
-    public void downloadFactoringApprovalForm() throws IOException {
-    	
-    	String templatePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.TEMPLATE_DIR);
-    	log.info("templatePath: " + templatePath);
-    	String filePath =  FacesContext.getCurrentInstance().getExternalContext().getRealPath(
-    			templatePath + ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM);
-    	log.info("filePath: " + filePath);
+    public void downloadFactoringApprovalForm() throws IOException {    	
+    	String filePath =  EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.TEMPLATE_DIR) + 
+    			ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM;
     	String fileName =  ContractConst.TEMPLATE_FACTORING_APPROVAL_FORM + ".pdf";
     	downloadFile(filePath, fileName);
     }
