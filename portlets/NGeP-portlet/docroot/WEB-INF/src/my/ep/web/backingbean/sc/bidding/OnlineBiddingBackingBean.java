@@ -78,10 +78,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String remainingHours;
 	private String remainingMinutes;
 	private String remainingSeconds;
-	
-	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE) ;
 
-	private TemplateSpecHelper tplSpecHelper;
+	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
+
+	private TemplateSpecHelper tplSpecHelper = TemplateSpecHelper.getInstance();
 
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
@@ -214,8 +214,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.equals(BidStatusConst.BID_CANCELLED)
 				|| getScBidSchedule().getPmStatus().getStatusId()
 						.equals(BidStatusConst.BID_PAUSED)) {
-			
-			System.out.println("bid pause remarks are "+ this.getScBidAction().getRemark());
+
+			System.out.println("bid pause remarks are "
+					+ this.getScBidAction().getRemark());
 			RequestContext.getCurrentInstance().execute(
 					"onlineBiddingNotification.show()");
 		}
@@ -258,25 +259,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				}
 				setBidPrices(fetchedBidPrices);
 				setScBidSchedule(resDTO.getScBidSchedule());
-				/*if (scBidSchedule
-						.getPmStatus()
-						.getStatusId()
-						.equals(resDTO.getScBidSchedule().getPmStatus()
-								.getStatusId())) {
-					setScBidSchedule(resDTO.getScBidSchedule());
-				} else {
-					setScBidSchedule(resDTO.getScBidSchedule());
-					if (getScBidSchedule().getPmStatus().getStatusId()
-							.equals(BidStatusConst.BID_CANCELLED)
-							|| getScBidSchedule().getPmStatus().getStatusId()
-									.equals(BidStatusConst.BID_PAUSED)) {
-						RequestContext.getCurrentInstance().execute(
-								"onlineBiddingNotification.show()");
-					}
-					}*/
-				}
+				/*
+				 * if (scBidSchedule .getPmStatus() .getStatusId()
+				 * .equals(resDTO.getScBidSchedule().getPmStatus()
+				 * .getStatusId())) {
+				 * setScBidSchedule(resDTO.getScBidSchedule()); } else {
+				 * setScBidSchedule(resDTO.getScBidSchedule()); if
+				 * (getScBidSchedule().getPmStatus().getStatusId()
+				 * .equals(BidStatusConst.BID_CANCELLED) ||
+				 * getScBidSchedule().getPmStatus().getStatusId()
+				 * .equals(BidStatusConst.BID_PAUSED)) {
+				 * RequestContext.getCurrentInstance().execute(
+				 * "onlineBiddingNotification.show()"); } }
+				 */
 			}
-		 finally {
+		} finally {
 			biddingSO = null;
 		}
 	}
@@ -317,10 +314,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		return this.tplSpecHelper.calcTotalAmount(
 				scBidPrice.getScBidSupplierItem().getScBidItem()
-						.getScRequestItem().getTplSpecQuestion(),
-				itemPrice,
-				new BigDecimal(scBidPrice.getScBidSupplierItem().getScBidItem()
-						.getQty())).doubleValue();
+						.getScRequestItem().getTplSpecQuestion(), itemPrice,
+				scBidPrice.getScBidSupplierItem().getScBidItem().getQty())
+				.doubleValue();
 	}
 
 	public void confirmAndSubmitBIdPrice(ScBidPrice scBidPrice) {
@@ -368,6 +364,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		if (bidPriceItem.getNewBidPrice() != null
 				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
 			priceItemToPersist = bidPriceItem.getNewBidPrice();
+			priceItemToPersist.setBidTotalPrice(this.tplSpecHelper
+					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
+							.getScBidItem().getScRequestItem()
+							.getTplSpecQuestion(), bidPriceItem
+							.getNewBidPrice().getBidPrice(), bidPriceItem
+							.getScBidSupplierItem().getScBidItem().getQty()));
+			// TOTAL_BID_PRICE
+
 		} else {
 			priceItemToPersist = this.getScBidPrice().getNewBidPrice();
 		}
@@ -402,12 +406,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			biddingSO = null;
 		}
 	}
-	
-	public void biddStatusNotificationAction()throws PortalException,
-	SystemException, IOException {
+
+	public void biddStatusNotificationAction() throws PortalException,
+			SystemException, IOException {
 		log.info("biddStatusNotificationAction");
 		navigateUsingExternalContext(getScBidSchedule().getBidScheduleId());
-		
+
 	}
 
 	private Long durationCalculator(Date startDate, Date endDate) {
@@ -428,13 +432,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		if (getBidPrices() != null && getBidPrices().size() != 0) {
 			for (ScBidPrice bidPrice : bidPriceList) {
-				startPriceTotal += (tplSpecHelper.calcTotalAmount(bidPrice
-						.getScBidSupplierItem().getScBidItem()
-						.getScRequestItem().getTplSpecQuestion(),
-						new BigDecimal(bidPrice.getScBidSupplierItem()
-								.getItemStartPrice().doubleValue()),
-						new BigDecimal(bidPrice.getScBidSupplierItem()
-								.getScBidItem().getQty())).doubleValue());
+				startPriceTotal += (tplSpecHelper
+						.calcTotalAmount(bidPrice.getScBidSupplierItem()
+								.getScBidItem().getScRequestItem()
+								.getTplSpecQuestion(), new BigDecimal(bidPrice
+								.getScBidSupplierItem().getItemStartPrice()
+								.doubleValue()), bidPrice
+								.getScBidSupplierItem().getScBidItem().getQty())
+						.doubleValue());
 			}
 		}
 
@@ -456,18 +461,18 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					newBidPriceTotal += (tplSpecHelper.calcTotalAmount(bidPrice
 							.getScBidSupplierItem().getScBidItem()
 							.getScRequestItem().getTplSpecQuestion(), bidPrice
-							.getNewBidPrice().getBidPrice(), new BigDecimal(
-							bidPrice.getScBidSupplierItem().getScBidItem()
-									.getQty())).doubleValue());
+							.getNewBidPrice().getBidPrice(), bidPrice
+							.getScBidSupplierItem().getScBidItem().getQty())
+							.doubleValue());
 				} else if (bidPrice.getBidPrice() != null) {
 					newBidPriceTotal +=
 
 					(tplSpecHelper.calcTotalAmount(bidPrice
 							.getScBidSupplierItem().getScBidItem()
 							.getScRequestItem().getTplSpecQuestion(),
-							bidPrice.getBidPrice(), new BigDecimal(bidPrice
+							bidPrice.getBidPrice(), bidPrice
 									.getScBidSupplierItem().getScBidItem()
-									.getQty())).doubleValue());
+									.getQty()).doubleValue());
 
 				} else {
 					newBidPriceTotal += (tplSpecHelper.calcTotalAmount(bidPrice
@@ -475,8 +480,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 							.getScRequestItem().getTplSpecQuestion(),
 							new BigDecimal(bidPrice.getScBidSupplierItem()
 									.getItemStartPrice().doubleValue()),
-							new BigDecimal(bidPrice.getScBidSupplierItem()
-									.getScBidItem().getQty())).doubleValue());
+							bidPrice.getScBidSupplierItem().getScBidItem()
+									.getQty()).doubleValue());
 				}
 			}
 		}
@@ -528,15 +533,15 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 									.getScRequestItem().getTplSpecQuestion(),
 							new BigDecimal(bidPrice.getScBidSupplierItem()
 									.getItemStartPrice().doubleValue()),
-							new BigDecimal(bidPrice.getScBidSupplierItem()
-									.getScBidItem().getQty())).doubleValue());
+							bidPrice.getScBidSupplierItem().getScBidItem()
+									.getQty()).doubleValue());
 				} else {
 					lastBidPriceTotal += (tplSpecHelper.calcTotalAmount(
 							bidPrice.getScBidSupplierItem().getScBidItem()
 									.getScRequestItem().getTplSpecQuestion(),
-							bidPrice.getBidPrice(), new BigDecimal(bidPrice
+							bidPrice.getBidPrice(), bidPrice
 									.getScBidSupplierItem().getScBidItem()
-									.getQty())).doubleValue());
+									.getQty()).doubleValue());
 				}
 			}
 		}
@@ -956,7 +961,5 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public Long getServicetype() {
 		return servicetype;
 	}
-	
-	
 
 }

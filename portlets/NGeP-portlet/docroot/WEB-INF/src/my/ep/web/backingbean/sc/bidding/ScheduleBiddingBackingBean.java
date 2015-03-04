@@ -233,10 +233,6 @@ public class ScheduleBiddingBackingBean extends
 						.getParameterCode())) {
 					getManagedBean().setRowSelectedBid(new ScBidSchedule());
 					
-					for(ScBidItem bidItem : resDTO.getBidItemsList()){
-						
-						System.out.println(bidItem.getScBidSupplierItems().size());
-					}
 				}
 
 			}
