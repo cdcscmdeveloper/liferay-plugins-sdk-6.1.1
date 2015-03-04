@@ -69,8 +69,10 @@
 					&#160; <p:graphicImage id="typeofbusiness"
 						library="ep/images/design" name="tooltips.png" /> <p:tooltip
 						id="businesscomtype" for="typeofbusiness">
-						<p:outputLabel style="text-align:left;" escape="false"
-							value="#{lbl['tt.sm.registration.business.company.type']}"></p:outputLabel>
+						<p:outputLabel style="text-align:left;" escape="false" rendered="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC}"
+							value="#{lbl['tt.sm.registration.business.basic.company.type']}"></p:outputLabel>
+						<p:outputLabel style="text-align:left;" escape="false" rendered="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_MOF}"
+							value="#{lbl['tt.sm.registration.business.mof.company.type']}"></p:outputLabel>	
 					</p:tooltip>&#160;								
 					<p:message id="busTypeIdMsg" for="busTypeId" display="icon" />
 					<p:outputLabel styleClass="outputLabel-view" 
