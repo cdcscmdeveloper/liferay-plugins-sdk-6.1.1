@@ -350,7 +350,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			   return "cancelCircularBase.xhtml?faces-redirect=true";
 		   } else if(getManagedBean().isFromCircularNotice()) {
 			   return "../portal/circularListing.xhtml?faces-redirect=true";
-		   } else {
+		   }else if(getManagedBean().isDifferentModule()){
+			     return getManagedBean().getGotoPreviewPage();
+		   }
+		   else {
 			   return "search.xhtml?faces-redirect=true";
 		   }
 	   }
@@ -1654,5 +1657,30 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
-
+	
+	public String gotoCommonViewPage(Long circularVerId) {
+		
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerId(circularVerId);
+			getManagedBean().setSelectionOfZone(false);
+			getManagedBean().setSelectedPanelItems(null);
+			getManagedBean().setSelectedPanelZone(null);
+			getManagedBean().setSelectedTabIndex(0);
+	        getManagedBean().setUpdateAction(false);
+			getManagedBean().setViewContract(true);
+			setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+			extendStartEndDate();
+			return "/xhtml/ct/circular/portal/panelCircularTab.xhtml?faces-redirect=true";
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
+		return null;
+	}
 }
