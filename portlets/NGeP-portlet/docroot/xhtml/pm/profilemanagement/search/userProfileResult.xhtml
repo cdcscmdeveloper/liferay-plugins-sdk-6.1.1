@@ -23,18 +23,15 @@
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" width="15%">
 				#{userprofile.designation}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.cityname']}" width="15%">
-				#{userprofile.addressTypeC.pmAddress.pmCity!=null ? userprofile.addressTypeC.pmAddress.pmCity.cityName : ''}
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.statename']}" width="15%">
-				#{userprofile.addressTypeC.pmAddress.pmState!=null ? userprofile.addressTypeC.pmAddress.pmState.stateName : ''}
-			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.status']}" width="10%">
 				#{(userprofile.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 			</p:column>
-			
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.role']}" width="5%">
+				<p:commandLink  action="#{profileManagementBackingBean.getListOfAssignedActiveRoles(userprofile.userId)}" oncomplete="dlRoleList.show();" update=":form:opRoleList" >
+					<p:graphicImage value="/css/images/design/user.png"/>
+				</p:commandLink>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" width="5%">
 				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userprofile.userId)}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
@@ -48,4 +45,6 @@
 		<p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profileManagementBackingBean.redirectToMaintainUser(null)}" ajax="false"/>
 	</div>
 	<br/>
+    <!-- Role list Popup -->
+	<ui:include src="/xhtml/pm/profilemanagement/common/assignedRolesToPopUp.xhtml" />
 </ui:composition>
