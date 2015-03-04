@@ -1,110 +1,107 @@
-<ui:composition	
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-		
-	
+
+
 	<p:panel id="businessNatureSearch" header="SEARCH" toggleable="true">
-	
-	 <ui:include src="/xhtml/pm/businessnature/businessNatureSearch.xhtml" />
-			
-      <div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
-							 action="#{businessNatureBackingBean.retrieveBusinessNature}"
-							 onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						     update="businessNatureDataModel" />
-            <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" 
-            				 action="#{businessNatureBackingBean.resetBusinessNatureSearch}" 
-            				 process="@this" update="businessNatureSearch,businessNatureDataModel" />
-	  </div>
-    <br/>
-	<br/>
+
+		<ui:include src="/xhtml/pm/businessnature/businessNatureSearch.xhtml" />
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+				action="#{businessNatureBackingBean.retrieveBusinessNature}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				update="businessNatureDataModel" />
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				action="#{businessNatureBackingBean.resetBusinessNatureSearch}"
+				process="@this"
+				update="businessNatureSearch,businessNatureDataModel" />
+		</div>
+		<br />
+		<br />
 	</p:panel>
-	
+
 	<p:panel header="RESULT" toggleable="true">
-	<p:dataTable id="businessNatureDataModel" 
-		value="#{businessNatureBackingBean.businessNatureDataModel}"
-		var="businessNature" 
-		rows="10" 
-		rowIndexVar="index" 
-		lazy="true">	
-		
-	   <ac:paginator for="businessNatureDataModel" />
-		
-       <p:column headerText="#{lbl['lbl.pm.bn.level']}" style="width:10%">
- 		<h:outputText value="#{businessNature.businessLevel}" />           
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.pm.bn.code']}" style="width:10%"> 
-		<h:outputText value="#{businessNature.levelCode}" />        
-       </p:column>  
-       
-        <p:column headerText="#{lbl['lbl.pm.bn.name']}" style="width:65%"> 
- 		<h:outputText value="#{businessNature.levelName}" />        
-       </p:column>              
-     
-       <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:10%">  
-       	<h:outputText value="#{lbl['lbl.pm.active']}" rendered="#{businessNature.recordStatusFlg==1}"/>
-       	<h:outputText value="#{lbl['lbl.pm.inactive']}" rendered="#{businessNature.recordStatusFlg!=1}"/>                  
-       </p:column >
-        
-    	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%">
-    	
-		<p:commandLink rendered="#{businessNature.businessLevel=='10'}"
-			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
-			style="margin-right: 10px;"
-			update="@form">
-			<p:graphicImage library="ep/images/design" name="add.png"
-				title="#{lbl['lbl.pm.add.division.category']}"
-				value="/css/images/design/add.png" />
-		</p:commandLink>   
-		
-		<p:commandLink rendered="#{businessNature.businessLevel=='20'}"
-			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
-			style="margin-right: 10px;"
-			update="@form">
-			<p:graphicImage library="ep/images/design" name="add.png"
-				title="#{lbl['lbl.pm.add.group.category']}"
-				value="/css/images/design/add.png" />
-		</p:commandLink>  
-		
-		<p:commandLink rendered="#{businessNature.businessLevel=='30'}"
-			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
-			style="margin-right: 10px;"
-			update="@form">
-			<p:graphicImage library="ep/images/design" name="add.png"
-				title="#{lbl['lbl.pm.add.class.category']}"
-				value="/css/images/design/add.png" />
-		</p:commandLink>  
-		
-		<p:commandLink rendered="#{businessNature.businessLevel=='40'}"
-			action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
-			style="margin-right: 10px;"
-			update="@form">
-			<p:graphicImage library="ep/images/design" name="add.png"
-				title="#{lbl['lbl.pm.add.item.category']}"
-				value="/css/images/design/add.png" />
-		</p:commandLink>   	
-    	
-   		 <p:commandLink action="#{businessNatureBackingBean.goToBusinessMaintaincePage(businessNature)}" process="@this" partialSubmit="true">
-     		<p:graphicImage library="ep/images/design" name="edit.png"
-			title="#{lbl['lbl.pm.edit.category']}"
-			value="/css/images/design/edit.png" />
-    	 </p:commandLink>
-					   
-   	 	</p:column>    
-     </p:dataTable>
+		<p:dataTable id="businessNatureDataModel"
+			value="#{businessNatureBackingBean.businessNatureDataModel}"
+			var="businessNature" rows="10" rowIndexVar="index" lazy="true">
+
+			<ac:paginator for="businessNatureDataModel" />
+
+			<p:column headerText="#{lbl['lbl.pm.bn.level']}" style="width:10%">
+				<h:outputText value="#{businessNature.businessLevel}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.bn.code']}" style="width:10%">
+				<h:outputText value="#{businessNature.levelCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.bn.name']}" style="width:65%">
+				<h:outputText value="#{businessNature.levelName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.search.status']}"
+				style="width:10%">
+				<h:outputText value="#{lbl['lbl.pm.active']}"
+					rendered="#{businessNature.recordStatusFlg==1}" />
+				<h:outputText value="#{lbl['lbl.pm.inactive']}"
+					rendered="#{businessNature.recordStatusFlg!=1}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}"
+				style="width:5%">
+
+				<p:commandLink rendered="#{businessNature.businessLevel=='10'}"
+					action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+					style="margin-right: 10px;" update="@form">
+					<p:graphicImage library="ep/images/design" name="add.png"
+						title="#{lbl['lbl.pm.add.division.category']}"
+						value="/css/images/design/add.png" />
+				</p:commandLink>
+
+				<p:commandLink rendered="#{businessNature.businessLevel=='20'}"
+					action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+					style="margin-right: 10px;" update="@form">
+					<p:graphicImage library="ep/images/design" name="add.png"
+						title="#{lbl['lbl.pm.add.group.category']}"
+						value="/css/images/design/add.png" />
+				</p:commandLink>
+
+				<p:commandLink rendered="#{businessNature.businessLevel=='30'}"
+					action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+					style="margin-right: 10px;" update="@form">
+					<p:graphicImage library="ep/images/design" name="add.png"
+						title="#{lbl['lbl.pm.add.class.category']}"
+						value="/css/images/design/add.png" />
+				</p:commandLink>
+
+				<p:commandLink rendered="#{businessNature.businessLevel=='40'}"
+					action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
+					style="margin-right: 10px;" update="@form">
+					<p:graphicImage library="ep/images/design" name="add.png"
+						title="#{lbl['lbl.pm.add.item.category']}"
+						value="/css/images/design/add.png" />
+				</p:commandLink>
+
+				<p:commandLink
+					action="#{businessNatureBackingBean.goToBusinessMaintaincePage(businessNature)}"
+					process="@this" partialSubmit="true">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						title="#{lbl['lbl.pm.edit.category']}"
+						value="/css/images/design/edit.png" />
+				</p:commandLink>
+
+			</p:column>
+		</p:dataTable>
+		<br />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.create']}"
+				action="#{businessNatureBackingBean.createBusinessNature}" />
+		</div>
 	</p:panel>
-	
-	<p:panel>
-	<h:panelGrid columns="2" style="width:100%;">
-	     <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{businessNatureBackingBean.createBusinessNature}" 
-	    				  style="float:right;" icon="ui-icon-add" />
-	 </h:panelGrid>	
-	</p:panel>
-	
+
 </ui:composition>
