@@ -10,12 +10,12 @@
 	<p:panel id="pGeneralFinance" header="#{lbl['lbl.pm.header.general.finance']}" toggleable="true">
 		<table>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.regNo']}" />
+				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.buzregno']}" />
 				</td>
 				<td><p:inputText id="bizRegNo" styleClass="ppDisplayTextL"
 						required="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesPaymentBank) and 
 						!empty param['disableValidation']}"
-						label="#{lbl['lbl.pm.financialorg.regNo']}"
+						label="#{lbl['lbl.pm.financialorg.buzregno']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"						 
 						size="40" maxlength="20" >
 						
@@ -73,7 +73,9 @@
 					<p:tab id="tFinancialService" title="FINANCIAL SERVICES">
 						<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
 					</p:tab>
+					<!-- disabled="#{!financialOrgBackingBean.managedBean.showFactoringBank}" -->
 					<p:tab title="FACTORING BANK DETAIL" id="tFactoryBankDet"
+						
 						disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany)}">
 						<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
 					</p:tab>
