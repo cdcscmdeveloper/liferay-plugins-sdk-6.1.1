@@ -431,7 +431,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);	    		
-	    		rptGenBean.setScCommonStatusView(true);
+	    		rptGenBean.setScRequestNoteStatusView(true);
 	    		rptGenBean.setScREQUESTNOTESUMMARYGroupView(true);
 	    		rptGenBean.setScProcurementTypeView(true);
 	    		rptGenBean.setScRequestQuoteNoView(true);
@@ -458,7 +458,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);	    		
-	    		rptGenBean.setScCommonStatusView(true);
+	    		rptGenBean.setScRequestNoteStatusView(true);
 	    		rptGenBean.setScProcurementTypeView(true);
 	    		rptGenBean.setScRequestQuoteNoView(true);
 	            break;
