@@ -11,7 +11,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<br/>
 		<table class="ppTwoTable">
 			<tr>
-				<th>
+				<th width="20%">
 					<p:outputLabel value="#{lbl['lbl.pm.document.category']}"/>
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
@@ -22,7 +22,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:ajax event="change" update="pSupportDocSearch" listener="#{supportDocBackingBean.docCategorySearchChange()}"/>
 					</p:selectOneMenu>
 				</td>
-				<th>
+				<th width="20%">
 					
 				</th>
 				<td>
@@ -45,14 +45,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					
 				</td>
 			</tr>
+			<c:if test="#{ParameterConst.documentCategoryTechnicalChecklist eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode
+							or ParameterConst.documentCategoryFinancialChecklist eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.procurement.category']}"/>
 				</th>
 				<td>
 					<p:selectOneMenu id="somProcureCat" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.procurement.category']}"
-						disabled="#{!(ParameterConst.documentCategoryTechnicalChecklist eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode
-							or ParameterConst.documentCategoryFinancialChecklist eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode)}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.procureCatParam}">
 							<f:selectItems  value="#{supportDocBackingBean.procurementTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -64,13 +64,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					
 				</td>
 			</tr>
+			</c:if>
+			<c:if test="#{ParameterConst.documentCategorySupplierDocument eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.supplier.zone']}"/>
 				</th>
 				<td>
 					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
-						disabled="#{ParameterConst.documentCategorySupplierDocument ne supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
@@ -90,7 +91,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthM"
-						disabled="#{ParameterConst.documentCategorySupplierDocument ne supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}" 
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.suppTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -100,7 +100,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM" 
-						disabled="#{ParameterConst.documentCategorySupplierDocument ne supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.appTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -112,7 +111,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:selectOneMenu id="somComType" styleClass="ppDropDownWidthM"
-						disabled="#{ParameterConst.documentCategorySupplierDocument ne supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.comTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
 					</p:selectOneMenu>
@@ -122,10 +120,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:inputText styleClass="ppDisplayTextM" maxlength="10" label="#{lbl['lbl.pm.business.category']}"
-						disabled="#{ParameterConst.documentCategorySupplierDocument ne supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}" />
 				</td>
 			</tr>
+			</c:if>
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">

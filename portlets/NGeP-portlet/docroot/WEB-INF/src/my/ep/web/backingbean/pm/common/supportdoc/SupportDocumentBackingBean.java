@@ -662,7 +662,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	private List<PmParameterDesc>  getDocumentCategoryFilteredOptions(){
 		log.info("getDocumentCategoryFilteredOptions");
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "somDocCate");
 		SearchFilterBean bean = new SearchFilterBean();
 		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 		bean.setSearchField("pmParameter.parameterCode");
