@@ -84,7 +84,7 @@
 			<p:column style="width:10%"
 				headerText="#{lbl['lbl.pm.ug.result.status']}">
 				<p:selectOneMenu style="width:203px"
-					value="#{groupuser.pmUser.recordStatusFlg}" disabled="#{!groupuser.pmUser.brandNew}">
+					value="#{groupuser.pmUser.recordStatusFlg}" disabled="#{groupuser.pmUser.brandNew or usergroupBackingBean.managedBean.brandNew}">
 					<f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
 				</p:selectOneMenu>
 			</p:column>
