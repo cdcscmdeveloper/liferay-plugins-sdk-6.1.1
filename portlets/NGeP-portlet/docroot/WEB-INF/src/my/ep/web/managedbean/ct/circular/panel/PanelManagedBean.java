@@ -72,6 +72,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private String searchSupplierName;
 	private String searchItemName;
 	private String zoneName;
+	private String gotoPreviewPage;	
 		
 	private Date searchStartDate;
 	private Date searchEndDate;	
@@ -88,7 +89,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean selectionOfZone;
 	private boolean chkCancelPage;
 	private boolean fromCircularNotice;
+	private boolean differentModule;
 	private int index = -1;
+	
 	
 	private TreeNode[] selectedGeneralTreeNodes;
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
@@ -218,6 +221,14 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setSearchSupplierName(String searchSupplierName) {
 		this.searchSupplierName = searchSupplierName;
+	}
+
+	public boolean isDifferentModule() {
+		return differentModule;
+	}
+
+	public void setDifferentModule(boolean differentModule) {
+		this.differentModule = differentModule;
 	}
 
 	public String getSearchItemName() {
@@ -527,6 +538,14 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	public String getGotoPreviewPage() {
+		return gotoPreviewPage;
+	}
+
+	public void setGotoPreviewPage(String gotoPreviewPage) {
+		this.gotoPreviewPage = gotoPreviewPage;
 	}
 
 	public String getTextBeforeSign() {
