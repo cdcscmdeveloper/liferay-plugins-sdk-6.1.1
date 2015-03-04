@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.cc;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLEncoder;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -17,6 +18,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
+import com.augtech.kmc.client.KMCAPIException;
 import com.augtech.kmc.client.KMCClient;
 import com.augtech.kmc.client.KMCClientFactory;
 import com.augtech.kmc.client.KMCRequestBuilder;
@@ -30,19 +32,36 @@ import com.liferay.portal.kernel.exception.SystemException;
 @ManagedBean(name = "softCertMaintenanceBackingBean")
 @SessionScoped
 public class SoftCertMaintenanceBackingBean {
-	
+	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
+
     FacesScopes facesScope = new FacesScopes();
 
 	public SoftCertMaintenanceBackingBean() {}
 	
 	private static final Logger logger = EpLogger
 			.getLogger(SoftCertMaintenanceBackingBean.class);
-
+	
+	private KMCClient getClient() throws KMCAPIException {
+		URL resource = getClass().getResource(".");
+		String path = resource.getPath();
+		System.out.println("path value with (.) :"+path);
+		
+		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
+		String filePath = substring+PATH;
+		System.out.println("filePath :"+filePath);
+		
+		// Create property file
+		File f = new File(filePath);
+//		File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
+		// Create KMCClient with the property file
+		KMCClient client = KMCClientFactory.getInstance(f);
+		return client;
+		
+	}
 	public String generateSecurityToken(){
-		File f = new File("kmc.properties");
 		String tok = null;
 		try{
-			KMCClient client = KMCClientFactory.getInstance(f);
+			KMCClient client = getClient();
 			
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.generateToken(getDigiCertUserId(),getSupplierEpNo()));
 			switch(res.getStatusCode())
