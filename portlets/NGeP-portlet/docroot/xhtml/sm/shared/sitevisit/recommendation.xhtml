@@ -11,16 +11,20 @@
 			<tr>
 				<td valign="top" width="35%"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
 				<td>
-					<p:inputTextarea rows="8" id="commentId"  style="width:70%;" autoResize="false" 
-					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" />
+					<p:inputTextarea rows="8" id="commentId"  style="width:70%;" autoResize="false"  label="#{lbl['lbl.sm.comments']}"
+					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.officerComment}">
+						<f:validateLength maximum="1000" />
+					</p:inputTextarea>
 				</td>
 			</tr>
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
 				<td>
-					<p:inputTextarea rows="8" id="compInfoId"  style="width:70%;" autoResize="false" 
-					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" />
+					<p:inputTextarea rows="8" id="compInfoId"  style="width:70%;" autoResize="false" label="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}"
+					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}">
+						<f:validateLength maximum="1000" />
+					</p:inputTextarea>
 				</td>
 			</tr>
 
