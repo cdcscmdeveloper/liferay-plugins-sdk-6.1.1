@@ -625,7 +625,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
 
-		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, searchBean);
+		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, searchBean);
 		return items;
 	}
 	
