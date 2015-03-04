@@ -43,7 +43,14 @@
 								itemValue="#{SupplierManagementConst.STYPE_CONSULTANT}" />
 							<p:ajax event="change" update="busTypeId,outPnlRegForm" process="@form" />
 						</p:selectOneMenu>
-						<p:message id="suppTypeIdMsg" for="suppTypeId" display="icon" /></td>
+						 &#160; <p:graphicImage id="mofsupp"
+						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						id="mofsupplier" for="mofsupp">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.business.mof.supplier.type']}" />
+					</p:tooltip>&#160;
+						<p:message id="suppTypeIdMsg" for="suppTypeId" display="icon" />						
+						</td>						
 					<td class="tdTitle"></td>
 					<td class="tdContent"></td>
 				</tr>
