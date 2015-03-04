@@ -59,7 +59,8 @@
 							style="text-transform: uppercase"
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
-							size="40" required="true" >
+							size="40" required="true" 
+							validatorMessage="#{lbl['lbl.pm.location.len.validate']}">
 							<f:validateLength minimum="2" />
 							</p:inputText></td>
 					<td><p:message id="statecodeMsg" for="statecode"
