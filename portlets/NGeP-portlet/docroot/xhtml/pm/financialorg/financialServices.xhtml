@@ -19,12 +19,27 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.servicetype']}" />
 				</f:facet>
+				<ui:fragment
+					rendered="#{!financialsrv.brandNew}">
+					<h:outputText value="#{lbl['lbl.bankservice.paymentbank']}"
+					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'PB'}" />
+				<h:outputText value="#{lbl['lbl.bankservice.performancebond']}"
+					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'PD'}" />
+				<h:outputText value="#{lbl['lbl.bankservice.factoringcompany']}"
+					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'FC'}" />
+				<h:outputText value="#{lbl['lbl.bankservice.registration']}"
+					rendered="#{financialsrv.serviceTypeCode.parameterCode == 'RG'}" />
 
-				<p:selectOneMenu id="svcType"
+					
+				</ui:fragment>
+				
+                 <ui:fragment
+					rendered="#{financialsrv.brandNew}">
+				 <p:selectOneMenu id="svcType"
 					value="#{financialsrv.serviceTypeCode.parameterId}"
 					disabled="#{!financialsrv.brandNew || financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}"
 					label="#{lbl['lbl.pm.financialorg.servicetype']}" required="false"
-					styleClass="ppDropDownWidthL">
+					styleClass="ppDropDownWidthM">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="serviceType"
@@ -35,7 +50,8 @@
 						listener="#{financialOrgBackingBean.updateService}" update="@form"
 						process="@all" />
 				</p:selectOneMenu>
-				<p:message for="svcType" id="svcTypeMsg" display="icon" />
+				<p:message for="svcType" id="svcTypeMsg" display="icon" /> 
+				</ui:fragment>
 
 			</p:column>
 
