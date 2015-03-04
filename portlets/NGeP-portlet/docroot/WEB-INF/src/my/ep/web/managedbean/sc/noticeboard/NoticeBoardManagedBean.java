@@ -10,6 +10,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
@@ -21,6 +22,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -142,6 +144,10 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String proposalURL;
 	private List<ScCommitteeMember> scCommitteeMembers;
 	private String committeeName;
+	private List<ScLoiLoaItem> scLoiLoaItems;
+	private String supplierName;
+	private String awardType;
+	private List<AwardedItemsBean> awardedItems;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -709,5 +715,62 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.committeeName = committeeName;
 	}
 
+	/**
+	 * @return the scLoiLoaItem
+	 */
+	public List<ScLoiLoaItem> getScLoiLoaItems() {
+		return scLoiLoaItems;
+	}
+
+	/**
+	 * @param scLoiLoaItem the scLoiLoaItem to set
+	 */
+	public void setScLoiLoaItems(List<ScLoiLoaItem> scLoiLoaItems) {
+		this.scLoiLoaItems = scLoiLoaItems;
+	}
+
+	/**
+	 * @return the supplierName
+	 */
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	/**
+	 * @param supplierName the supplierName to set
+	 */
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+	/**
+	 * @return the awardType
+	 */
+	public String getAwardType() {
+		return awardType;
+	}
+
+	/**
+	 * @param awardType the awardType to set
+	 */
+	public void setAwardType(String awardType) {
+		this.awardType = awardType;
+	}
+
+	/**
+	 * @return the awardedItems
+	 */
+	public List<AwardedItemsBean> getAwardedItems() {
+		return awardedItems;
+	}
+
+	/**
+	 * @param awardedItems the awardedItems to set
+	 */
+	public void setAwardedItems(List<AwardedItemsBean> awardedItems) {
+		this.awardedItems = awardedItems;
+	}
+
+	
 
 }
