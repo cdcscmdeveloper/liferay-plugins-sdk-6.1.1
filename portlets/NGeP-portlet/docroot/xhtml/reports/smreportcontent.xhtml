@@ -945,7 +945,32 @@
 						</c:if>							
 		            </div>
 
-
+<div>
+						<c:if test="#{reportBackingBean.managedBean.rptGenBean.approvedDateView}">
+						<TABLE style="margin-top:10px;width:50%;">
+							<TR>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.smApprovedDateFrm']}" style="width:158px;"/>
+								</TD>
+								<TD>
+									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
+									
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
+									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
+																							
+									</p:calendar> 
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
 
 
 

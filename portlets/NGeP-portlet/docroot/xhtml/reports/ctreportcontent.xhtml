@@ -12,12 +12,33 @@
 						    <td width="100%">
 							    <h:panelGrid  id="ctReportCriteria" columns="4" style="width:85%;">
 							    	
-									 <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctContractNoView}" >			
+									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctPtjView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu id="flPtj" value="#{reportBackingBean.ctPtj}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
+										<p:ajax event="change" listener="#{reportBackingBean.retrieveMinstryByPTJ}" process="@this" partialSubmit="true" update="@all" />																																																																						
+									</p:selectOneMenu>		
+								  </c:if> 
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
+										
+									<p:selectOneMenu id="flMinistry" value="#{reportBackingBean.ctMinistry}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>																											
+									</p:selectOneMenu>	
+								  </c:if>
+									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctContractNoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.ctContractNo}" style="margin-top:5px;width:290px;">										
 									</p:inputText>																					
 									</c:if>
-																  
+									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctPhysicalContractNoView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.physicalcontractno']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText maxlength="30" value="#{reportBackingBean.ctPhysicalContractNo}" style="margin-top:5px;width:290px;">										
+									</p:inputText>																					
+									</c:if>
+															  
 								   <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
 								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
 									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
@@ -40,6 +61,17 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.inacve']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>										
 									</p:selectOneMenu>
 								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctStatusTwoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctStatusTwo}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{lbl['lbl.rpt.allall']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.acve']}" itemValue="#{lbl['lbl.rpt.acve']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inacve']}" itemValue="#{lbl['lbl.rpt.inacve']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsterminate']}" itemValue="#{lbl['lbl.rpt.capsterminate']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsremedy']}" itemValue="#{lbl['lbl.rpt.capsremedy']}"></f:selectItem>																			
+									</p:selectOneMenu>
+								  </c:if>
 								   <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctContrMontrStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctContrMontrStatus}" style="margin-top:5px;width:300px;">
@@ -57,12 +89,49 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.incomplete']}" itemValue="#{lbl['lbl.rpt.incomplete']}"></f:selectItem>										
 									</p:selectOneMenu>
 								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctProcurementModeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ProcurementMode']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctProcurementMode}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{lbl['lbl.rpt.allall']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.directpurchasecaps']}" itemValue="#{lbl['lbl.rpt.directpurchasecaps']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.quotationcaps']}" itemValue="#{lbl['lbl.rpt.quotationcaps']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.tendercaps']}" itemValue="#{lbl['lbl.rpt.tendercaps']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.directnego']}" itemValue="#{lbl['lbl.rpt.directnego']}"></f:selectItem>																				
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctUserTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.usertype']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctUserType}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.ctMinsitryContractAdmin']}" itemValue="#{lbl['lbl.rpt.ctMinsitryContractAdmin']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.ctApprover']}" itemValue="#{lbl['lbl.rpt.ctApprover']}"></f:selectItem>										
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.usertype']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctSubType}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										
+									</p:selectOneMenu>
+								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupOneView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.ctGroupOne}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{lbl['lbl.rpt.allall']}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.cntrctno']}" itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>																			
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupThreeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.ctGroupThree}" style="margin-top:5px;width:300px;">
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{lbl['lbl.rpt.allall']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.cntrctno']}" itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsprocurementmode']}" itemValue="#{lbl['lbl.rpt.procurementmode']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsuser']}" itemValue="#{lbl['lbl.rpt.capsuser']}"></f:selectItem>																		
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupTwoView}">
@@ -84,24 +153,17 @@
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctLoanNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.loanno']}" style="margin-top:5px;width:160px;" />									
-									<p:inputText value="#{reportBackingBean.ctLoanNo}" style="margin-top:5px;width:290px;">	
+									<p:inputText maxlength="40" value="#{reportBackingBean.ctLoanNo}" style="margin-top:5px;width:290px;">	
 									</p:inputText>	
 								  </c:if>
-								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctMinistryView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
-									<p:inputText value="#{reportBackingBean.ctMinistry}" style="margin-top:5px;width:290px;">
-									</p:inputText>		
+								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctLOAPhysicalNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.loaphysicalno']}" style="margin-top:5px;width:160px;" />									
+									<p:inputText value="#{reportBackingBean.ctLOAPhysicalNo}" style="margin-top:5px;width:290px;">	
+									</p:inputText>	
 								  </c:if>
-								   <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctPtjView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
-									<p:inputText value="#{reportBackingBean.ctPtj}" style="margin-top:5px;width:290px;">
-									</p:inputText>		
-								  </c:if>
-								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctProcurementModeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.procurementMode']}" style="margin-top:5px;width:160px;" />									
-									<p:inputText maxlength="100"  value="#{reportBackingBean.ctProcurementMode}" style="margin-top:5px;width:290px;">
-									</p:inputText>		
-								  </c:if> 			 			
+								  
+								   
+								  			 			
 							    </h:panelGrid>							    
 						    </td>
 						  </tr>							  
