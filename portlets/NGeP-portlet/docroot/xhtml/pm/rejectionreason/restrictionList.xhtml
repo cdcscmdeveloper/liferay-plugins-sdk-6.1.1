@@ -47,10 +47,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtAppType"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
-							immediate="true"/>
+							partialSubmit="true"/>
 						&#160;
 						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
-							immediate="true" 
+							partialSubmit="true"
 							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
 					</div>
 				</p:tab>
@@ -90,10 +90,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtComType"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.financialOrgRegType)}"
-							immediate="true"/>
+							partialSubmit="true"/>
 						&#160;
 						<p:commandButton id="cbComDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtComType"
-							immediate="true"
+							partialSubmit="true"
 							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.financialOrgRegType)}" /> 
 					</div>
 				</p:tab>
@@ -132,10 +132,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtSuppType"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierTypes)}"
-							immediate="true"/>
+							partialSubmit="true"/>
 						&#160;
 						<p:commandButton id="cbSuppDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"  update="dtSuppType"
-							immediate="true"
+							partialSubmit="true"
 							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierTypes)}" /> 
 					</div>
 				</p:tab>
