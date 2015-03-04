@@ -235,13 +235,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    getManagedBean().setCircularVer(resDTO.getCircularVer());
 		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 		
-		    if(getManagedBean().getCircularVer().getCtPanelItems() != null && getManagedBean().getCircularVer().getCtPanelItems().size() > 0){
+		   /* if(getManagedBean().getCircularVer().getCtPanelItems() != null && getManagedBean().getCircularVer().getCtPanelItems().size() > 0){
 			 
 		    	      Collections.sort(getManagedBean().getCircularVer().getCtPanelItems(), new CtPanelItem());
 			          for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()) {
 				
 			        	      if(panelItem.getCtPanelZones() != null && panelItem.getCtPanelZones().size() > 0) {
-					            	Collections.sort(panelItem.getCtPanelZones(), new CtPanelZone());
+					           	Collections.sort(panelItem.getCtPanelZones(), new CtPanelZone());
 				                    for(CtPanelZone panelZone : panelItem.getCtPanelZones())
 				        	               Collections.sort(panelZone.getCtPanelSuppliers(), new CtPanelSupplier()); 
 				               }
@@ -249,7 +249,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			        	      if(panelItem.getCtPanelSuppliers() != null && panelItem.getCtPanelSuppliers().size() > 0)
 			  		                 Collections.sort(panelItem.getCtPanelSuppliers(), new CtPanelSupplier());  
 		 	          }
-		     }
+		     }*/
 		
 		     getManagedBean().setRemarkList(resDTO.getRemarkList());
 		     getManagedBean().setAttachmentList(resDTO.getAttachmentList());
