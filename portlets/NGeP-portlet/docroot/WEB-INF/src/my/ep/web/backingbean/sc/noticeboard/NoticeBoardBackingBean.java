@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.noticeboard;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +23,9 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -41,8 +44,12 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sc.bidding.BiddingReqDTO;
+import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
@@ -59,6 +66,10 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.bidding.ScBidSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
@@ -68,6 +79,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -79,6 +91,7 @@ import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
@@ -90,6 +103,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1335,11 +1349,56 @@ public class NoticeBoardBackingBean extends
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveAwardDetails(reqDTO);
 			this.getManagedBean().setScQt(resDTO.getScQt());
+			
 			if (resDTO.getScQt().isZonal()) {
 				this.getManagedBean().setZones(resDTO.getZones());
 			} else {
 				this.getManagedBean().setProposalAmts(resDTO.getProposalAmts());
 			}
+			
+			// Setting Awarded list tab details
+			List<ScLoa> scLoalist = retrieveLOA(qtId);
+			PmParameter pmParameter = this.getManagedBean().getScQt()
+					.getFinalization().getRecommendedTypeId();
+			this.getManagedBean().setAwardType(
+					getParameterDesc(pmParameter.getParameterType(),
+											pmParameter.getParameterCode()));
+			List<AwardedItemsBean> awardedItemList = new ArrayList<>();
+			for (ScLoa scLoa : scLoalist) {
+				if (ParameterConst.RECOMMEND_TYPE_PACKAGE
+						.equalsIgnoreCase(pmParameter.getParameterCode())) {
+					this.getManagedBean().setSupplierName(
+							scLoa.getScLoiLoa().getSupplierName());
+					break;
+					
+				} else {
+					for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+						AwardedItemsBean awardedItem = new AwardedItemsBean();
+						ScRequestItem reqItem = scLoiLoaItem.getScRequestItem();
+						awardedItem.setItemName(reqItem.getItemName());
+						awardedItem.setSupplierName(scLoiLoaItem.getScLoa().getScLoiLoa().getSupplierName());
+						// By Loa
+						awardedItem.setPriceByLoa(TemplateSpecHelper.getInstance()
+								.calcTotalAmount(reqItem.getTplSpecQuestion(),
+										scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty()));
+						// By Proposal
+						ScQtRecommendDtl scQtRecommendDtl = scLoiLoaItem.getScQtRecommendDtl();
+						if(null != scQtRecommendDtl && null != scQtRecommendDtl.getScQtProposalItem()){
+							BigDecimal totalPrice = TemplateSpecHelper.getInstance()
+							.calcTotalAmount(reqItem.getTplSpecQuestion(),
+										new BigDecimal(scQtRecommendDtl.getScQtProposalItem().getOfferPrice()), 
+										scLoiLoaItem.getQty());
+							awardedItem.setPriceByProposal(totalPrice);
+						}
+						// By Bidding
+						awardedItem.setPriceByBidding(getPriceByBidding(qtId,pmParameter.getParameterCode()));
+						
+						awardedItemList.add(awardedItem);
+					}
+				}
+			}
+			this.getManagedBean().setAwardedItems(awardedItemList);
+			
 		} finally {
 		}
 
@@ -1757,6 +1816,62 @@ public class NoticeBoardBackingBean extends
 			committeSO = null;
 		}
 		return qtCommitte;
+	}
+	
+	/**
+	 * Get ScLoa object through retrieveLoaListByQtId method
+	 * 
+	 * @param qtId
+	 * @return ScLoa
+	 */
+	private List<ScLoa> retrieveLOA(Long qtId) {
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = getQTAwardSO();
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setQtId(qtId);
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLoaListByQtId(reqDTO);
+			return resDTO.getLoaResultBean().getResultList();
+
+		} finally {
+			qtAwardSO = null;
+		}
+
+	}
+
+	private IQTAwardSO getQTAwardSO() {
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+		return qtAwardSO;
+	}
+	
+	/**
+	 * 
+	 * Get final price from retriveBidSupplierItems method.
+	 * 
+	 * @param qtId
+	 * @param recommendType
+	 * @return finalPrice
+	 */
+	private BigDecimal getPriceByBidding(Long qtId, String recommendType) {
+		
+		BigDecimal finalPrice = null;
+		IBiddingSO biddinSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+		BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
+		biddingReqDTO.setDocId(qtId);
+		biddingReqDTO.setRecommendType(recommendType);
+		BiddingResDTO biddingResDTO = biddinSO
+				.retriveBidSupplierItems(biddingReqDTO);
+		List<ScBidSupplierItem> scBidSupplierItemList = biddingResDTO
+				.getBidSupplierItems();
+		for (ScBidSupplierItem scBidSupplierItem : scBidSupplierItemList) {
+			finalPrice = scBidSupplierItem.getFinalPrice();
+
+		}// TODO need to have logic to identify items against to customer.
+		return finalPrice;
+
 	}
 	
 }
