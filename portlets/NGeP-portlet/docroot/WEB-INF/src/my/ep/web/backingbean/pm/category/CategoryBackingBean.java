@@ -722,7 +722,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				//categoryCodeSO.saveCategory(reqDTO);
 				
 				result = resDTO.isSuccessful();
-				resetCategory();
+				//resetCategory();
 				FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
