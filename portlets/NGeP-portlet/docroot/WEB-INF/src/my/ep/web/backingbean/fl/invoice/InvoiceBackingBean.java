@@ -818,6 +818,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		try {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("ap59Status.statusId",SearchOperator.OPERATOR_EQUALS.value(),FulfilmentStatusConst.AP59_PENDING_AP59_DECISION));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",SearchOperator.OPERATOR_EQUALS.value(),DbValueConst.RECORD_STATUS_ACTIVE));
 			
 			if(getManagedBean().getLoaNo()!=null && getManagedBean().getLoaNo().length() > 0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loa.loaNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getLoaNo()));
