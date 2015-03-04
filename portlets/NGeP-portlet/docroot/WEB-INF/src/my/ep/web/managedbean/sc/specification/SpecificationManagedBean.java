@@ -64,6 +64,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class SpecificationManagedBean.
  * 
@@ -736,6 +737,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	/** The delete panel treenode. */
 	private TreeNode deletePanelTreenode;
 
+	/** The supplier location list. */
+	private List<ScQtLocCriteria> supplierLocationList;
+	
 	/**
 	 * Checks if is spec complete.
 	 * 
@@ -4904,6 +4908,24 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setDeletePanelTreenode(TreeNode deletePanelTreenode) {
 		this.deletePanelTreenode = deletePanelTreenode;
+	}
+
+	/**
+	 * Gets the supplier location list.
+	 *
+	 * @return the supplierLocationList
+	 */
+	public List<ScQtLocCriteria> getSupplierLocationList() {
+		return supplierLocationList;
+	}
+
+	/**
+	 * Sets the supplier location list.
+	 *
+	 * @param supplierLocationList the supplierLocationList to set
+	 */
+	public void setSupplierLocationList(List<ScQtLocCriteria> supplierLocationList) {
+		this.supplierLocationList = supplierLocationList;
 	}
 
 }
