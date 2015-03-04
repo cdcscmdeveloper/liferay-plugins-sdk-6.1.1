@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.pm.profilemanagement;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,11 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean addressEntered;
 	private PmOrgProfile currentActiveOrg;
 	private String additionalOrgFilter;
+	private PmRoleDesc selectedPmRoleDesc;
+	private PmOrgProfile selectedOrgProfile;
+	private PmUserOrg activeUserOrg;
+	private List<PmUserRole> activeUserRoleFor = new ArrayList<PmUserRole>();
+
 	
 	
 
@@ -341,6 +347,37 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedRole(PmRoleDesc selectedRole) {
 		this.selectedRole = selectedRole;
+	}
+	public PmRoleDesc getSelectedPmRoleDesc() {
+		if(selectedPmRoleDesc == null){
+			this.selectedPmRoleDesc = new PmRoleDesc();
+		}
+		return selectedPmRoleDesc;
+	}
+	public void setSelectedPmRoleDesc(PmRoleDesc selectedPmRoleDesc) {
+		this.selectedPmRoleDesc = selectedPmRoleDesc;
+	}
+	public PmOrgProfile getSelectedOrgProfile() {
+		if(selectedOrgProfile == null){
+			this.selectedOrgProfile = new PmOrgProfile();
+		}
+		return selectedOrgProfile;
+	}
+	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
+		this.selectedOrgProfile = selectedOrgProfile;
+	}
+	public PmUserOrg getActiveUserOrg() {
+		return activeUserOrg;
+	}
+	public void setActiveUserOrg(PmUserOrg activeUserOrg) {
+		this.activeUserOrg = activeUserOrg;
+	}
+	public List<PmUserRole> getActiveUserRoleFor() {
+		
+		return activeUserRoleFor;
+	}
+	public void setActiveUserRoleFor(List<PmUserRole> activeUserRoleFor) {
+		this.activeUserRoleFor = activeUserRoleFor;
 	}
 
 
