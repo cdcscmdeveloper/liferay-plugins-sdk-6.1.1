@@ -1124,6 +1124,24 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="PM_ROLE_DESC" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="roleDescId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.role.RoleDescDAO" />
+		<property name="searchMethod" value="retrieveRoleDescList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="roleName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.role" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 	
 	<bean id="PM_ORG_PROFILE_FFC" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
