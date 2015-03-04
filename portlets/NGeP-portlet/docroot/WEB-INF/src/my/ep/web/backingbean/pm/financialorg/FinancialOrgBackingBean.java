@@ -264,15 +264,13 @@ public class FinancialOrgBackingBean extends
 					 this.getManagedBean().setEnableUpdateStatus(false);
 				 }
 			 
-			 }
-			 /*if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
-				 if(DbValueConst.RECORD_STATUS_DELETED == financialSvc.getRecordStatusFlg()){
-					 this.getManagedBean().setShowFactoringBank(false);
-				 }
+			 }			
 			 
-			 }*/
 			 if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
 				
+				 if(DbValueConst.RECORD_STATUS_DELETED == financialSvc.getRecordStatusFlg()){
+					 this.getManagedBean().setShowFactoringBank(false);
+				 }				
 				 for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
 					 if(!getManagedBean().getFinancialOrg().getPmFinancialSvcs().isEmpty()&& getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null){						 
 					
@@ -467,15 +465,15 @@ public class FinancialOrgBackingBean extends
 	public List<PmParameterDesc> getServiceTypeList() {
 		log.info("getServiceTypeList");
 		List<PmParameterDesc> serviceTypeList = new ArrayList<PmParameterDesc>();
-		if(this.getManagedBean().getServiceTypes()!=null && this.getManagedBean().getServiceTypes().contains(ParameterConst.BANK_SERVICES_PAYMENT_BANK)){
+		/*if(this.getManagedBean().getServiceTypes()!=null && this.getManagedBean().getServiceTypes().contains(ParameterConst.BANK_SERVICES_PAYMENT_BANK)){
 				serviceTypeList = retrieveServiceTypeList();
-		}else{
+		}else{*/
 			List<String> recommendList = new ArrayList<String>();
 			recommendList.add(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
 			serviceTypeList = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.BANK_SERVICES
 					, recommendList
 					, null);
-		}
+		//}
 		return serviceTypeList;
 
 	}
@@ -910,7 +908,7 @@ public class FinancialOrgBackingBean extends
 					for(PmFinancialAcc finAcc:financialOrg.getPmFinancialAccs()){
 						System.out.println("Record Status Fin ACC---====>>>"+finAcc.getRecordStatusFlg());
 						finAcc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						
+						finAcc.setExpDate(new Date());
 						
 					}
 				}
