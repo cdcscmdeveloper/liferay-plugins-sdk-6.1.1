@@ -665,6 +665,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				return "/xhtml/pm/category/categoryl3.xhtml"; 
 			}
 			
+			//if not category restc, remove exisitng restr
+			if(!this.getManagedBean().getPmCategoryL3().isByCompType()){
+				log.info("*******NOT COMPANY RESTRICT*********");
+				if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size() > 0){
+					this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().clear();
+				}
+			}
+			
 			//check the duplicate restriction
 			if(!checkCategoryRestrDuplicateCompanyType()){
 				throw new EpException(MessageConst.ERROR_775006);
@@ -966,7 +974,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										new FacesScopes().getUserLocale())));
 				return false;
 			}
-			if(this.getManagedBean().getPmCategoryL3().getBumiPercentage()==null || this.getManagedBean().getPmCategoryL3().getBumiPercentage()==0){
+			
+			//disabled the bumipercentage: by andrew
+/*			if(this.getManagedBean().getPmCategoryL3().getBumiPercentage()==null || this.getManagedBean().getPmCategoryL3().getBumiPercentage()==0){
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
@@ -974,7 +984,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				return false;
-			}
+			}*/
 			if(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue() && (this.getManagedBean().getPmCategoryL3().getPmBasicCategory()==null || this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()==0)){
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
