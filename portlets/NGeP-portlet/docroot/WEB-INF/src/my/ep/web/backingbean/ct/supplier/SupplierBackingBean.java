@@ -45,6 +45,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -84,6 +85,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -783,8 +785,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     }
     
     public void downloadFactoringApprovalForm() throws IOException {
+    	
+    	String templatePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.TEMPLATE_DIR);
+    	log.info("templatePath: " + templatePath);
     	String filePath =  FacesContext.getCurrentInstance().getExternalContext().getRealPath(
-    			"/WEB-INF/templates" + ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM);
+    			templatePath + ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM);
+    	log.info("filePath: " + filePath);
     	String fileName =  ContractConst.TEMPLATE_FACTORING_APPROVAL_FORM + ".pdf";
     	downloadFile(filePath, fileName);
     }
