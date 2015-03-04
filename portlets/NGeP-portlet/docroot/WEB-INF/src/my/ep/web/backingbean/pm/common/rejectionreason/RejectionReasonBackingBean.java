@@ -73,6 +73,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	
 	//Default value
 	public static final boolean SEARCH_DEFAULT = false;
+	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 
 	public void preLoading(){
 		log.info("preLoading");
@@ -608,7 +609,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public SelectItem[] reasonCategoryOptions() {
 		log.info("reasonCategoryOptions");
-		return getDropdownValues(ParameterTypeConst.REASON_CATEGORY);
+		return getDropdownValuesBySearchBean(ParameterTypeConst.REASON_CATEGORY,getDocTypeSearchBean());
 	}
 	
 	/**
@@ -1053,6 +1054,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			return null;
 		}
 	}
+	
+	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
+		if (this.docTypeSearchBean == null) {
+			this.docTypeSearchBean = super.createSearchBean(
+					PmParameterDesc.class, "somReasonCat");
+		}
 
+		return this.docTypeSearchBean;
+	}
 	
 }
