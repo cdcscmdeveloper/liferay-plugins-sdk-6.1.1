@@ -905,9 +905,64 @@ public class ReportBackingBean extends
 	private String ctProductService;
 	private String ctLoanNo;
 	private String ctMinistry;
-	private String ctPtj;
+	private String ctPtj;	
 	private String ctProcurementMode;
 	
+	private String ctPhysicalContractNo;
+	private String ctGroupThree;
+	private String ctStatusTwo;
+	private String ctLOAPhysicalNo;	
+	private String ctUserType;
+	private String ctSubType;
+
+	
+	public String getCtSubType() {
+		return ctSubType;
+	}
+
+	public void setCtSubType(String ctSubType) {
+		this.ctSubType = ctSubType;
+	}
+
+	public String getCtUserType() {
+		return ctUserType;
+	}
+
+	public void setCtUserType(String ctUserType) {
+		this.ctUserType = ctUserType;
+	}
+
+	public String getCtLOAPhysicalNo() {
+		return ctLOAPhysicalNo;
+	}
+
+	public void setCtLOAPhysicalNo(String ctLOAPhysicalNo) {
+		this.ctLOAPhysicalNo = ctLOAPhysicalNo;
+	}
+
+	public String getCtStatusTwo() {
+		return ctStatusTwo;
+	}
+
+	public void setCtStatusTwo(String ctStatusTwo) {
+		this.ctStatusTwo = ctStatusTwo;
+	}
+
+	public String getCtGroupThree() {
+		return ctGroupThree;
+	}
+
+	public void setCtGroupThree(String ctGroupThree) {
+		this.ctGroupThree = ctGroupThree;
+	}
+
+	public String getCtPhysicalContractNo() {
+		return ctPhysicalContractNo;
+	}
+
+	public void setCtPhysicalContractNo(String ctPhysicalContractNo) {
+		this.ctPhysicalContractNo = ctPhysicalContractNo;
+	}
 
 	public String getFlGroupSeventeen() {
 		return flGroupSeventeen;
@@ -3370,6 +3425,7 @@ public class ReportBackingBean extends
 				reportFileNameJSP = pmReport.getReportFilename();
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 			}
+			retrievePTJByUserId();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
@@ -3384,7 +3440,7 @@ public class ReportBackingBean extends
 						rptGenBean, authoriztionList,approverNayakTarafList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))) {
-				 retrievePTJByUserId();
+				 
 				flReportBackingBean.enableCriteriaVariablesByReportByFL(
 						rptGenBean, authoriztionList);
 			} else if ((this.getModuleValue()
@@ -3910,7 +3966,8 @@ public class ReportBackingBean extends
 				.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtProductService() != null) && (this
 						.getCtProductService() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL)) 
+				|| ((this.getCtLOAPhysicalNo() != null) && (this.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtMinistry() != null) && (this.getCtMinistry() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtPtj() != null) && (this.getCtPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtContractNo() != null) && (this.getCtContractNo() != ReportConst.EMPTY_VAL))
@@ -3962,37 +4019,7 @@ public class ReportBackingBean extends
 					&& (this.getCtProcurementMode() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtProcurementModeVar(ReportConst.CT_AMP_PROCUREMENTMODE_EQ
 						+ this.getCtProcurementMode());
-			}
-			/*
-			 * if((getManagedBean().getReportValue()!=null)&&(getManagedBean().
-			 * getReportValue()!=ReportConst.EMPTY_VAL)){
-			 * if(getManagedBean().getReportValue
-			 * ().equalsIgnoreCase(ReportConst.
-			 * CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL)){
-			 * rptGenBean.setCtHiddenParamGroupVar
-			 * (ReportConst.CT_AMP_GROUP_EQ+ReportConst.CT_GROUP_VAL_ALL); }else
-			 * if
-			 * (getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.
-			 * CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL)){
-			 * rptGenBean.setCtHiddenParamGroupVar
-			 * (ReportConst.CT_AMP_GROUP_EQ+ReportConst.CT_GROUP_VAL_CNTRNO);
-			 * }else
-			 * if(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst
-			 * .CT_LST_OF_CONTRACT_ALL_RPT_VAL)){
-			 * rptGenBean.setCtHiddenParamGroupVar
-			 * (ReportConst.CT_AMP_GROUP_EQ+ReportConst.CT_GROUP_VAL_ALL); }else
-			 * if
-			 * (getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.
-			 * CT_LST_OF_CONTRACT_ACTIVE_RPT_VAL)){
-			 * rptGenBean.setCtHiddenParamGroupVar
-			 * (ReportConst.CT_AMP_GROUP_EQ+ReportConst.CT_GROUP_VAL_ACTIVE);
-			 * }else
-			 * if(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst
-			 * .CT_LST_OF_CONTRACT_INACTIVE_RPT_VAL)){
-			 * rptGenBean.setCtHiddenParamGroupVar
-			 * (ReportConst.CT_AMP_GROUP_EQ+ReportConst.CT_GROUP_VAL_INACTIVE);
-			 * } }
-			 */
+			}			
 			if ((this.getCtGroupOne() != null)
 					&& (this.getCtGroupOne() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtGroupOneVar(ReportConst.CT_AMP_GROUP_EQ
@@ -4014,6 +4041,11 @@ public class ReportBackingBean extends
 				rptGenBean.setCtLoanNoVar(ReportConst.CT_AMP_PLOANO_EQ
 						+ this.getCtLoanNo());
 			}
+			if ((this.getCtLOAPhysicalNo() != null)
+					&& (this.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtLOAPhysicalNoVar(ReportConst.CT_AMP_PLOAPHYSICALNO_EQ
+						+ this.getCtLOAPhysicalNo());
+			}
 			if ((this.getCtMinistry() != null)
 					&& (this.getCtMinistry() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
@@ -4024,6 +4056,17 @@ public class ReportBackingBean extends
 				rptGenBean.setCtPtjVar(ReportConst.CT_AMP_PPTJNAME_EQ
 						+ this.getCtPtj());
 			}
+			if ((this.getCtUserType() != null)
+					&& (this.getCtUserType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtUserTypeVar(ReportConst.CT_AMP_USERTYPE_EQ
+						+ this.getCtUserType());
+			}
+			if ((this.getCtSubType() != null)
+					&& (this.getCtSubType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtSubTypeVar(ReportConst.CT_AMP_SUBTYPE_EQ
+						+ this.getCtSubType());
+			}
+			
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
 					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
@@ -4040,6 +4083,9 @@ public class ReportBackingBean extends
 						+ rptGenBean.getCtMinistryVar()
 						+ rptGenBean.getCtPtjVar()
 						+ rptGenBean.getCtLoanNoVar()
+						+ rptGenBean.getCtLOAPhysicalNoVar()
+						+ rptGenBean.getCtUserTypeVar()
+						+ rptGenBean.getCtSubTypeVar()
 						+ rptGenBean.getCtProcurementModeVar()
 						+ rptGenBean.getFromDateVar()
 						+ rptGenBean.getToDateVar()
@@ -5471,6 +5517,9 @@ public class ReportBackingBean extends
 		this.setCtGroupTwo(null);
 		this.setCtProductService(null);
 		this.setCtLoanNo(null);
+		this.setCtLOAPhysicalNo(null);
+		this.setCtSubType(null);
+		this.setCtUserType(null);
 		this.setCtMinistry(null);
 		this.setCtPtj(null);
 		this.setCtProcurementMode(null);
