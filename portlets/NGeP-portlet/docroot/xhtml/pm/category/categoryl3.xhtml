@@ -124,18 +124,16 @@
 					</p:selectOneMenu>
 					
 					<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.special.group']}" />
 					</h:panelGroup>
-					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
+					<p:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
 						<p:ajax event="change" listener="#{categoryBackingBean.updateSpecialGroup}" update="groupdetails" />
-					</h:selectBooleanCheckbox>
+					</p:selectBooleanCheckbox>
 					
 					<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.operate.from.home']}" />
 					</h:panelGroup>
-					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" />
+					<p:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" />
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -148,7 +146,6 @@
 					</p:selectOneMenu>
 					
 					<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.category.restriction']}" />
 					</h:panelGroup>
 					<p:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
