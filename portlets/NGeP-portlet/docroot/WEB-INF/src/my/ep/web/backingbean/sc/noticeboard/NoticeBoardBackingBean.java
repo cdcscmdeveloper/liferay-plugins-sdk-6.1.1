@@ -1369,7 +1369,6 @@ public class NoticeBoardBackingBean extends
 						.equalsIgnoreCase(pmParameter.getParameterCode())) {
 					this.getManagedBean().setSupplierName(
 							scLoa.getScLoiLoa().getSupplierName());
-					break;
 					
 				} else {
 					for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
@@ -1391,7 +1390,10 @@ public class NoticeBoardBackingBean extends
 							awardedItem.setPriceByProposal(totalPrice);
 						}
 						// By Bidding
-						awardedItem.setPriceByBidding(getPriceByBidding(qtId,pmParameter.getParameterCode()));
+						awardedItem.setPriceByBidding(TemplateSpecHelper.getInstance()
+							.calcTotalAmount(reqItem.getTplSpecQuestion(),
+									getPriceByBidding(qtId,pmParameter.getParameterCode(), scLoiLoaItem), 
+										scLoiLoaItem.getQty()));
 						
 						awardedItemList.add(awardedItem);
 					}
@@ -1846,32 +1848,53 @@ public class NoticeBoardBackingBean extends
 		return qtAwardSO;
 	}
 	
+	
 	/**
-	 * 
 	 * Get final price from retriveBidSupplierItems method.
 	 * 
 	 * @param qtId
 	 * @param recommendType
+	 * @param scLoiLoaItem
 	 * @return finalPrice
 	 */
-	private BigDecimal getPriceByBidding(Long qtId, String recommendType) {
+	private BigDecimal getPriceByBidding(Long qtId, String recommendType, ScLoiLoaItem scLoiLoaItem) {
 		
 		BigDecimal finalPrice = null;
-		IBiddingSO biddinSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+		final long scLoiLoaItemRequestId = scLoiLoaItem.getScRequestItem()
+				.getRequestNoteItemId();
+		final long scLoiLoaItemSupplierId = scLoiLoaItem.getScLoa()
+				.getScLoiLoa().getSmSupplier().getSupplierId();	
+		IBiddingSO biddinSO = null;
+		try{
+			biddinSO = getBiddingSO();
 		BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 		biddingReqDTO.setDocId(qtId);
 		biddingReqDTO.setRecommendType(recommendType);
 		BiddingResDTO biddingResDTO = biddinSO
 				.retriveBidSupplierItems(biddingReqDTO);
-		List<ScBidSupplierItem> scBidSupplierItemList = biddingResDTO
-				.getBidSupplierItems();
+		List<ScBidSupplierItem> scBidSupplierItemList = biddingResDTO.getBidSupplierItems();
+		
 		for (ScBidSupplierItem scBidSupplierItem : scBidSupplierItemList) {
-			finalPrice = scBidSupplierItem.getFinalPrice();
+			// check requestId of scLoiLoaItem with requestId  of scBidItem&& 
+			// supplierId of scLoiLoaItem with supplierId of scBidSupplier
+			if ( scLoiLoaItemRequestId== scBidSupplierItem
+					.getScBidItem().getScRequestItem().getRequestNoteItemId() &&
+					scLoiLoaItemSupplierId == scBidSupplierItem
+						.getScBidSupplier().getSmSupplier().getSupplierId()) {
+					finalPrice = scBidSupplierItem.getFinalPrice();
+				}
+			}
+		} finally{
+			biddinSO = null;
+		}
 
-		}// TODO need to have logic to identify items against to customer.
 		return finalPrice;
-
+	}
+	
+	private IBiddingSO getBiddingSO() {
+		IBiddingSO biddinSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+		return biddinSO;
 	}
 	
 }
