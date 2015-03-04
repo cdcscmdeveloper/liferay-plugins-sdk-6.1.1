@@ -60,24 +60,43 @@ import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
 
+// TODO: Auto-generated Javadoc
 /**
- * Managed Bean for Debit Adjustment Note
- * 
+ * Managed Bean for Debit Adjustment Note.
+ *
  * @author KK LIM
  * @since 1/11/2013
- *
  */
 @ManagedBean(name = "danBackingBean")
 @RequestScoped
 public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustmentNoteManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(DebitAdjustmentNoteBackingBean.class);
+	
+	/** The Constant NAV_ORDERNO. */
 	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	
+	/** The Constant NAV_INVOICE. */
 	private static final String NAV_INVOICE = "/xhtml/fl/shared/hyperlinkView/invoicePage/invoiceHyperlink.xhtml";
 
+	/**
+	 * Gets the faces scopes.
+	 *
+	 * @return the faces scopes
+	 */
 	private FacesScopes getFacesScopes(){
 		return new FacesScopes();
 	}
 	
+	/**
+	 * save,submit the Debit Adjustment Note
+	 * 
+	 *  @param String action 
+	 *  <p>submit - save data into database and BPM process will route to the next respective user.
+	 * 	<p>save - save data into database.
+	 *  navigate to acknowledge page.
+	 */
 	public String submitAction(String action) throws ParseException {
 		log.debug("DebitAdjustmentNoteBackingBean.submitAction()");
 		IAdjustmentSO adjustmentSO = null;
@@ -135,6 +154,9 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		return null;
 	}
 	
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -168,6 +190,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 	}
 	
+	/**
+	 * set adjustment note attribute into managedbean
+	 *
+	 * @param resDTO the new adjustment note
+	 */
 	public void setAdjustmentNote(FulfilmentResDTO resDTO) {
 		FlAdjustment adjustment = resDTO.getAdjustment();
 		calInvSummary(adjustment);
@@ -196,6 +223,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 	}
 	
+	/**
+	 * Calculate total order amount,total invoice amount and total dan amount .
+	 *
+	 * @param adjustment the adjustment
+	 */
 	private void calInvSummary(FlAdjustment adjustment) {
 		BigDecimal sumOrderedAmt = new BigDecimal(0);
 		BigDecimal sumInvoiceAmt = new BigDecimal(0);
@@ -210,6 +242,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 	}
 	
+	/**
+	 * Gets the factoring branch details based on financial org id and address type.
+	 *
+	 * @return the factoring branch dtl
+	 */
 	public void getFactoringBranchDtl(){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		getManagedBean().setBranchName(null);
@@ -240,6 +277,10 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 
 	}
 	
+	/**
+	 * call this method as user select charge line row
+	 * 
+	 */
 	public void selectDanItem() {
 		if(getManagedBean().getSelectedDanItem()!=null) {
 			if(null !=getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund()){
@@ -269,6 +310,9 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 	}
 	
+	/**
+	 * On node un select.
+	 */
 	public void onNodeUnSelect() {
 		getManagedBean().setVotFundCode("");
 		getManagedBean().setAssetIndCode("");
@@ -280,6 +324,12 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		getManagedBean().setFinancingTypeCode("");		
 	}
 	
+	/**
+	 * Retrieve mof no based on supplier id.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -292,17 +342,30 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	}
 	
 	/**
-	 * Page navigation to FLDoc search page in DAN
+	 * Page navigation to FLDoc search page in DAN.
+	 *
+	 * @return the string
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
 	}
 	
+	/**
+	 * Back to document.
+	 *
+	 * @return the string
+	 */
 	public String backToDocument(){
 		return getManagedBean().getBackToDocument();
 		
 	}
 	
+	/**
+	 * Navigate the page based on doc type.
+	 *
+	 * @param docType the doc type
+	 * @return the string
+	 */
 	public String navigateDocument(String docType){
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
