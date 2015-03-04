@@ -221,18 +221,17 @@ public class SupplierUserActivationBackingBean extends
 						reqDTO.getSmPersonnel().setEpRole(RoleCode.CM_USER.value());
 					}
 					
-					if(reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())){
-						try{
-							resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
+					
+					try{
+						resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
 
-							this.getManagedBean().setValidActivation(false);
+						this.getManagedBean().setValidActivation(false);
 //							this.getManagedBean().setSmPersonnel(null);
 //							renewSesionObject();
-							return navigateToAck();
+						return navigateToAck();
 
-						}catch(Exception ex){
-							throw new EpException(ex.getMessage());
-						}
+					}catch(Exception ex){
+						throw new EpException(ex.getMessage());
 					}
 				} else {
 					if(password.equals(confirmPassword)) {
