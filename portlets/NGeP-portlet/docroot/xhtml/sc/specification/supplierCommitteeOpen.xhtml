@@ -31,22 +31,22 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:32%;white-space: normal;">
-				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}"></h:outputText>
+				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:26%;white-space: normal;">
-				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}"></h:outputText>
+				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
 				style="width:22%;white-space: normal;">
-				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}"></h:outputText>
+				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
 				style="width:5%;white-space: normal;">
 				<h:outputText
-					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
+					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:5%;text-align: center;">
@@ -78,13 +78,10 @@
 				<td style="width: 94px"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
 				<td><p:selectOneMenu id="locZoneLevels" disabled="true"
-						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
+						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
-
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-						<p:ajax event="change"
-							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
@@ -95,15 +92,10 @@
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneyesDataTable" rows="10"
-				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
+				value="#{specificationBackingBean.managedBean.zoneTrees}"
 				var="zoneTree" style="width:100%" rowIndexVar="index">
 				<p:column headerText="Location">
 					<p:tree value="#{zoneTree}" var="location">
-
-						<p:treeNode type="zone">
-							<h:outputText value="#{location.zoneName}" />
-						</p:treeNode>
-
 						<p:treeNode type="state">
 							<h:outputText value="#{location.pmState.stateName}" />
 						</p:treeNode>
@@ -113,17 +105,9 @@
 						<p:treeNode type="district">
 							<h:outputText value="#{location.pmDistrict.districtName}" />
 						</p:treeNode>
-
-
-
-
 					</p:tree>
 				</p:column>
-
-
-
 			</p:dataTable>
-
 		</h:panelGrid>
 
 	</h:panelGroup>
@@ -161,11 +145,8 @@
 				<td><p:selectOneMenu id="locLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width: 178px;">
-
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-						<p:ajax event="change"
-							listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
@@ -189,13 +170,9 @@
 						<p:treeNode type="district">
 							<h:outputText value="#{location.pmDistrict.districtName}" />
 						</p:treeNode>
-
 					</p:tree>
 				</p:column>
-
-
 			</p:dataTable>
-
 		</h:panelGrid>
 
 
