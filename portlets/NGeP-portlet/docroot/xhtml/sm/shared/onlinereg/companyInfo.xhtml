@@ -337,6 +337,12 @@
 						validatorMessage="#{lbl['lbl.sm.telno']} - #{lbl['lbl.sm.invalidNo']}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}" />
 					</p:inputText>
+					 &#160; <p:graphicImage id="teleno"
+						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						id="tfno" for="teleno">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.company.telephoneno']}" />
+					</p:tooltip>&#160;
 						<p:message id="telNoIdMsg" for="telNoId" display="icon" /></td>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.faxno']}" />
