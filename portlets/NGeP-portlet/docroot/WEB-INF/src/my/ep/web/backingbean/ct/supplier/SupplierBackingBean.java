@@ -782,9 +782,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	    }
     }
     
-    public void downloadApprovalForm() throws IOException {
+    public void downloadFactoringApprovalForm() throws IOException {
     	String filePath =  FacesContext.getCurrentInstance().getExternalContext().getRealPath(
-    			"/WEB-INF/templates" + ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM);
+    			"templates" + ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM);
+    	log.info("filePath: "+filePath);
     	String fileName =  ContractConst.TEMPLATE_FACTORING_APPROVAL_FORM + ".pdf";
     	downloadFile(filePath, fileName);
     }
