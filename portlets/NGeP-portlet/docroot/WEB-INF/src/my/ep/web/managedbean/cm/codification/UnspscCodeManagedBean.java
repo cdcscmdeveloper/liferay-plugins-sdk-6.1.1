@@ -18,44 +18,43 @@ import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name = "unspscCodeMB")
 @SessionScoped
 public class UnspscCodeManagedBean extends BaseManagedBean {
-	
-	
+
 	private CmRequestCode requestCode;
 	private String segmentTitle;
 	private String segmentDesc;
 	private Long segmentKey;
-	private String segmentCode;	
-	
+	private String segmentCode;
+
 	private String familyTitle;
 	private String familyDesc;
 	private Long familyKey;
 	private String familyCode;
-	
+
 	private String classTitle;
 	private String classDesc;
 	private Long classKey;
 	private String classCode;
-	
+
 	private String commodityTitle;
 	private String commodityDesc;
 	private Long commodityKey;
 	private String commodityCode;
-	
+
 	private CmBrand cmBrand;
 	private CmColor cmColor;
 	private CmMeasurement cmMeasurement;
 	private CmType cmType;
-	
+
 	private String unspscCode;
 	private String unspscTitle;
-	
+
 	private CmRequestCode requestExtCode;
 	private List<CmRequestCode> requestExtCodeList;
 	private List<CmBrand> brandList;
 	private List<CmColor> colorList;
 	private List<CmType> typeList;
 	private List<CmMeasurement> measurementList;
-	
+
 	private String typeName;
 	private String colorName;
 	private String measurementName;
@@ -64,60 +63,56 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private boolean barndRedundancy;
 	private boolean measurRedundancy;
 	private boolean colorRedundancy;
-	
+
 	private List<CmRequestCode> reviewExtCodeList;
-	
+
 	private String taskId;
-	
+
 	private String[] action;
-	
+
 	private String tempUser;
-	
+
 	private String taskName;
 	private String processName;
-	
-	
+
 	private Long typeId;
 	private Long colorId;
 	private Long measurementId;
 	private Long brandId;
-	
+
 	private CmUnspsc selectedLovUnspsc;
 	private CmUnspsc selectedLovUnspscSegment;
 	private CmUnspsc selectedLovUnspscfamily;
 	private CmUnspsc selectedLovUnspscClass;
-	
+
 	private CmRecommendCode selectedRecommendCode;
-	
+
 	private boolean newSegment = false;
 	private boolean newFamily = false;
 	private boolean newClass = false;
 	private boolean newCommodity = false;
-	
+
 	private CmUnspsc commodityObj;
 	private Long unspscId;
-	
+
 	private String docStatus;
-	
+
 	private CmType selectedType;
 	private CmBrand selectedBrand;
 	private CmMeasurement selectedMeasurement;
 	private CmColor selectedColor;
-	
+
 	private boolean brandDisable = true;
 	private boolean typeDisable = true;
 	private boolean colorDisable = true;
 	private boolean measurementDisable = true;
-	
-	
-	
-	
-	
+
 	public CmBrand getSelectedBrand() {
 		return selectedBrand;
 	}
 
 	public void setSelectedBrand(CmBrand selectedBrand) {
+
 		this.selectedBrand = selectedBrand;
 	}
 
@@ -134,6 +129,9 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public void setSelectedColor(CmColor selectedColor) {
+		if (selectedColor != null)
+			System.out.println("setter called for selectedColor..."
+					+ selectedColor.getColorId());
 		this.selectedColor = selectedColor;
 	}
 
@@ -162,7 +160,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getCommodityObj() {
-		if(commodityObj==null)
+		if (commodityObj == null)
 			commodityObj = new CmUnspsc();
 		return commodityObj;
 	}
@@ -172,7 +170,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmRecommendCode getSelectedRecommendCode() {
-		if(selectedRecommendCode==null)
+		if (selectedRecommendCode == null)
 			selectedRecommendCode = new CmRecommendCode();
 		return selectedRecommendCode;
 	}
@@ -182,7 +180,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getSelectedLovUnspscfamily() {
-		if(selectedLovUnspscfamily==null)
+		if (selectedLovUnspscfamily == null)
 			selectedLovUnspscfamily = new CmUnspsc();
 		return selectedLovUnspscfamily;
 	}
@@ -192,7 +190,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getSelectedLovUnspscClass() {
-		if(selectedLovUnspscClass==null)
+		if (selectedLovUnspscClass == null)
 			selectedLovUnspscClass = new CmUnspsc();
 		return selectedLovUnspscClass;
 	}
@@ -202,7 +200,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getSelectedLovUnspscSegment() {
-		if(selectedLovUnspscSegment==null)
+		if (selectedLovUnspscSegment == null)
 			selectedLovUnspscSegment = new CmUnspsc();
 		return selectedLovUnspscSegment;
 	}
@@ -212,7 +210,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmUnspsc getSelectedLovUnspsc() {
-		if(selectedLovUnspsc == null)
+		if (selectedLovUnspsc == null)
 			selectedLovUnspsc = new CmUnspsc();
 		return selectedLovUnspsc;
 	}
@@ -294,7 +292,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmRequestCode> getReviewExtCodeList() {
-		if(reviewExtCodeList==null)
+		if (reviewExtCodeList == null)
 			reviewExtCodeList = new ArrayList<CmRequestCode>();
 		return reviewExtCodeList;
 	}
@@ -336,7 +334,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmBrand> getBrandList() {
-		if(brandList==null)
+		if (brandList == null)
 			brandList = new ArrayList<CmBrand>();
 		return brandList;
 	}
@@ -346,7 +344,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmColor> getColorList() {
-		if(colorList==null)
+		if (colorList == null)
 			colorList = new ArrayList<CmColor>();
 		return colorList;
 	}
@@ -356,7 +354,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmType> getTypeList() {
-		if(typeList==null)
+		if (typeList == null)
 			typeList = new ArrayList<CmType>();
 		return typeList;
 	}
@@ -366,7 +364,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmMeasurement> getMeasurementList() {
-		if(measurementList==null)
+		if (measurementList == null)
 			measurementList = new ArrayList<CmMeasurement>();
 		return measurementList;
 	}
@@ -376,7 +374,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmRequestCode> getRequestExtCodeList() {
-		if(requestExtCodeList==null)
+		if (requestExtCodeList == null)
 			requestExtCodeList = new ArrayList<CmRequestCode>();
 		return requestExtCodeList;
 	}
@@ -386,7 +384,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmRequestCode getRequestExtCode() {
-		if(requestExtCode==null)
+		if (requestExtCode == null)
 			requestExtCode = new CmRequestCode();
 		return requestExtCode;
 	}
@@ -412,7 +410,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmBrand getCmBrand() {
-		if(cmBrand==null)
+		if (cmBrand == null)
 			cmBrand = new CmBrand();
 		return cmBrand;
 	}
@@ -422,7 +420,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmColor getCmColor() {
-		if(cmColor==null)
+		if (cmColor == null)
 			cmColor = new CmColor();
 		return cmColor;
 	}
@@ -432,7 +430,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmMeasurement getCmMeasurement() {
-		if(cmMeasurement==null)
+		if (cmMeasurement == null)
 			cmMeasurement = new CmMeasurement();
 		return cmMeasurement;
 	}
@@ -442,7 +440,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmType getCmType() {
-		if(cmType==null)
+		if (cmType == null)
 			cmType = new CmType();
 		return cmType;
 	}
@@ -452,7 +450,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	}
 
 	public CmRequestCode getRequestCode() {
-		if(requestCode==null)
+		if (requestCode == null)
 			requestCode = new CmRequestCode();
 		return requestCode;
 	}
@@ -477,8 +475,6 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.segmentDesc = segmentDesc;
 	}
 
-	
-
 	public String getFamilyTitle() {
 		return familyTitle;
 	}
@@ -495,9 +491,6 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.familyDesc = familyDesc;
 	}
 
-	
-
-	
 	public String getClassTitle() {
 		return classTitle;
 	}
@@ -514,9 +507,6 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.classDesc = classDesc;
 	}
 
-	
-
-
 	public String getCommodityTitle() {
 		return commodityTitle;
 	}
@@ -532,8 +522,6 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setCommodityDesc(String commodityDesc) {
 		this.commodityDesc = commodityDesc;
 	}
-
-	
 
 	public String getSegmentCode() {
 		return segmentCode;
@@ -694,10 +682,5 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setColorRedundancy(boolean colorRedundancy) {
 		this.colorRedundancy = colorRedundancy;
 	}
-
-	
-	
-	
-	
 
 }
