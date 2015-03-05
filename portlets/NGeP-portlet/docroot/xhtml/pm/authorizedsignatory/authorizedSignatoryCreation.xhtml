@@ -8,94 +8,99 @@
 
 
 	<p:panel header="AUTHORIZED SIGNATORY" toggleable="true">
-	<p:spacer height="10"></p:spacer>
-	
+		<p:spacer height="10"></p:spacer>
+
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.as.search']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu value="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId}"
-									 style="width:178px;margin-bottom:5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems value="#{authorizedsignatoryBackingBean.retrieveZones()}"
-							var="zone" itemLabel="#{zone.zoneName}" itemValue="#{zone.zoneId}" />
-						<p:ajax event="change" update="searchSignatoryResults, pSignatoryInfo"
-						listener="#{authorizedsignatoryBackingBean.changeZone(authorizedsignatoryBackingBean.managedBean.zone.zoneId)}" />
+				<td><p:selectOneMenu
+						value="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId}"
+						style="width:178px;margin-bottom:5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{authorizedsignatoryBackingBean.retrieveZones()}"
+							var="zone" itemLabel="#{zone.zoneName}"
+							itemValue="#{zone.zoneId}" />
+						<p:ajax event="change"
+							update="searchSignatoryResults, pSignatoryInfo"
+							listener="#{authorizedsignatoryBackingBean.changeZone(authorizedsignatoryBackingBean.managedBean.zone.zoneId)}" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
 		<br />
 		<ac:lovPopup />
-		<p:dataTable  id="searchSignatoryResults" rowIndexVar="index" rowKey="#{certSignatory}"
-			rows="10" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+		<p:dataTable id="searchSignatoryResults" rowIndexVar="index"
+			rowKey="#{certSignatory}" rows="10"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			selection="#{authorizedsignatoryBackingBean.managedBean.deletedCertSignatories}"
 			value="#{authorizedsignatoryBackingBean.managedBean.certSignatories}"
 			var="certSignatory">
 			<ac:paginator for="searchSignatoryResults" />
 			<p:ajax event="toggleSelect" update="@this" process="@this" />
 			<p:ajax event="rowSelectCheckbox" update="@this" />
-			<p:column selectionMode="multiple" disabledSelection="#{!certSignatory.brandNew}" style="width:2%" />
-			
-			<p:column headerText="#{lbl['lbl.pm.as.name']}">				
+			<p:column selectionMode="multiple"
+				disabledSelection="#{!certSignatory.brandNew}" style="width:2%" />
+
+			<p:column headerText="#{lbl['lbl.pm.as.name']}">
 				<p:inputText id="asName" value="#{certSignatory.sinnatoryName}"
-					 label="#{lbl['lbl.pm.as.name']}" required="true"
-					size="15" styleClass="ppDisplayTextM" maxlength="50" 
-					disabled="#{!certSignatory.brandNew}"/>
-					<p:message for="asName" id="asNameMsg" display="icon" />
+					label="#{lbl['lbl.pm.as.name']}" required="true" size="15"
+					styleClass="ppDisplayTextM" maxlength="50"
+					disabled="#{!certSignatory.brandNew}" />
+				<p:message for="asName" id="asNameMsg" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.effdate']}">
-			  	<p:calendar id="effDateId" value="#{certSignatory.effDate}" 
-			  		navigator="true"  maxdate="#{ProfileManagementConst.maxDate}"
-			  		disabled="#{!certSignatory.brandNew}"
-			  		label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true" yearRange="c-50:c+99"
-					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+				<p:calendar id="effDateId" value="#{certSignatory.effDate}"
+					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
+					disabled="#{!certSignatory.brandNew}"
+					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
+					yearRange="c-50:c+99" showOn="button"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
 				</p:calendar>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.expdate']}">
-			  	<p:calendar id="expDateId" value="#{certSignatory.expDate}"  disabled="#{!certSignatory.brandNew}"
-			  		navigator="true"  maxdate="#{ProfileManagementConst.maxDate}"
-			  		label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true" yearRange="c-50:c+99"
-					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+				<p:calendar id="expDateId" value="#{certSignatory.expDate}"
+					disabled="#{!certSignatory.brandNew}" navigator="true"
+					maxdate="#{ProfileManagementConst.maxDate}"
+					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
+					yearRange="c-50:c+99" showOn="button"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
 				</p:calendar>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}">
-		       	<p:selectOneMenu value="#{certSignatory.recordStatusFlg}" disabled="#{certSignatory.brandNew || certSignatory.recordStatusFlg ==9}">  
-	            	<f:selectItems value="#{authorizedsignatoryBackingBean.getSignatoryStatusList()}" />
-	          	</p:selectOneMenu>  		
+				<p:selectOneMenu value="#{certSignatory.recordStatusFlg}"
+					disabled="#{certSignatory.brandNew || certSignatory.recordStatusFlg ==9}">
+					<f:selectItems
+						value="#{authorizedsignatoryBackingBean.getSignatoryStatusList()}" />
+				</p:selectOneMenu>
 			</p:column>
 
 		</p:dataTable>
-		<br/>
-		<br/>
+		<br />
+		<br />
 		<p:panel id="pSignatoryInfo">
 			<div class="ppRightBtn">
-				<table style="float:right;">
-					<tr>
-						<td>
-							<p:commandButton id="lovSignatory"  value="#{lbl['lbl.btn.add']}" 
-								disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
-					 			 headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
-								action="#{authorizedsignatoryBackingBean.addAuthorizer}"
-								update="searchSignatoryResults" />
-						</td>
-						<td>
-							<p:commandButton id="delSignatory"
-								disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
-								value="#{lbl['lbl.btn.delete']}" 
-								update="searchSignatoryResults"
-			                          action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory}" />
-                         </td>
-                     </tr>
-                 </table>
+
+				<p:commandButton id="lovSignatory" value="#{lbl['lbl.btn.add']}"
+					disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
+					headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
+					action="#{authorizedsignatoryBackingBean.addAuthorizer}"
+					update="searchSignatoryResults" />
+				<p:commandButton id="delSignatory"
+					disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
+					value="#{lbl['lbl.btn.delete']}" update="searchSignatoryResults"
+					action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory}" />
+
 			</div>
 		</p:panel>
 
 
 	</p:panel>
-	<div class="clear"/>
+	<div class="clear" />
 </ui:composition>
