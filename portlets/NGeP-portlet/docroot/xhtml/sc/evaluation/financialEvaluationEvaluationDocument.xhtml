@@ -12,22 +12,23 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages id="financialEvaluationUploadDtlsId" autoUpdate="true"
-			closable="true" showDetail="true" showSummary="false"
-			severity="error,info"></p:messages>
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				action="#{evaluationBackingBean.evaluationBackaction}"
-				immediate="true" />
+		<h:panelGroup>
+			<p:messages id="financialEvaluationUploadDtlsId" autoUpdate="true"
+				closable="true" showDetail="true" showSummary="false"
+				severity="error,info"></p:messages>
+			<div>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{evaluationBackingBean.evaluationBackaction}"
+					immediate="true" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" update="@all"
-				action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
-		</div>
-		<p:spacer height="25" />
-		<br />
-		<br />
-		<p:panel>
+				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+					style="float:right;" update="@all"
+					action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
+			</div>
+			<p:spacer height="25" />
+			<br />
+			<br />
+
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
@@ -36,79 +37,80 @@
 							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
 				</tr>
 			</table>
-		</p:panel>
-
-
-		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
-
-			<p:dataTable var="evaFinSupplier" rows="10"
-				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
-				id="evaluateFinSupplier" editable="true" rowIndexVar="index"
-				style="width:100%" rowKey="#{complianceTechnicalSupplier}">
-				<ac:paginator for="evaluateFinSupplier" />
-
-
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
-					style="width:20%">
-
-					<h:outputText value="#{evaFinSupplier.scQtProposal.supplierNo}"></h:outputText>
-
-
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
-					style="width:10%">
-					<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-						<p:commandLink ajax="false"
-							actionListener="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}"
-							process="@this" partialSubmit="true">
-							<p:graphicImage library="ep/images/design"
-								value="/resources/ep/images/design/icon_txt.png" />
-						</p:commandLink>
-					</ui:fragment>
-
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
-					style="width:15%">
-					<h:outputText
-						value="#{evaFinSupplier.submitted ? 'Submitted' : 'Not Submitted'}"></h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
-					style="width:15%">
-					<h:outputText
-						value="#{evaFinSupplier.compliance ? 'Compliance' : 'Not Compliance'}"></h:outputText>
-				</p:column>
 
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}"
-					style="width:15%">
-					<p:inputText style="text-align:right;" size="20" maxlength="18"
-						value="#{evaFinSupplier.totalUserScore}"
-						disabled="#{evaluationBackingBean.managedBean.readOnly}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="14" integerOnly="true" />
-						<f:attribute name="min" value="0" />
-						<f:attribute name="max"
-							value="#{evaluationBackingBean.managedBean.userScores}" />
-					</p:inputText>
-					<p:spacer width="5"></p:spacer>
-					<h:outputText
-						value="/#{evaluationBackingBean.managedBean.userScores}" />
-				</p:column>
+			<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}"
+				toggleable="true">
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
-					style="width:25%">
-					<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-						<p:inputTextarea rows="2" cols="40" maxlength="200"
-							disabled="#{evaluationBackingBean.managedBean.readOnly}"
-							value="#{evaFinSupplier.remark}"></p:inputTextarea>
-					</ui:fragment>
-				</p:column>
-			</p:dataTable>
-		</p:panel>
+				<p:dataTable var="evaFinSupplier" rows="10"
+					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
+					id="evaluateFinSupplier" editable="true" rowIndexVar="index"
+					style="width:100%" rowKey="#{complianceTechnicalSupplier}">
+					<ac:paginator for="evaluateFinSupplier" />
 
+
+					<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
+						style="width:20%">
+
+						<h:outputText value="#{evaFinSupplier.scQtProposal.supplierNo}"></h:outputText>
+
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+						style="width:10%">
+						<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
+							<p:commandLink ajax="false"
+								actionListener="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}"
+								process="@this" partialSubmit="true">
+								<p:graphicImage library="ep/images/design"
+									value="/resources/ep/images/design/icon_txt.png" />
+							</p:commandLink>
+						</ui:fragment>
+
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
+						style="width:15%">
+						<h:outputText
+							value="#{evaFinSupplier.submitted ? 'Submitted' : 'Not Submitted'}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
+						style="width:15%">
+						<h:outputText
+							value="#{evaFinSupplier.compliance ? 'Compliance' : 'Not Compliance'}"></h:outputText>
+					</p:column>
+
+
+
+					<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}"
+						style="width:15%">
+						<p:inputText style="text-align:right;" size="20" maxlength="18"
+							value="#{evaFinSupplier.totalUserScore}"
+							disabled="#{evaluationBackingBean.managedBean.readOnly}">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="14" integerOnly="true" />
+							<f:attribute name="min" value="0" />
+							<f:attribute name="max"
+								value="#{evaluationBackingBean.managedBean.userScores}" />
+						</p:inputText>
+						<p:spacer width="5"></p:spacer>
+						<h:outputText
+							value="/#{evaluationBackingBean.managedBean.userScores}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+						style="width:25%">
+						<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
+							<p:inputTextarea rows="2" cols="40" maxlength="200"
+								disabled="#{evaluationBackingBean.managedBean.readOnly}"
+								value="#{evaFinSupplier.remark}"></p:inputTextarea>
+						</ui:fragment>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>

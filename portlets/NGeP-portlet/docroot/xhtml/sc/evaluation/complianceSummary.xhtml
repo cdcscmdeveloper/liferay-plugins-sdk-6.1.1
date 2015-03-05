@@ -10,7 +10,7 @@
 
 
 
-	<p:spacer height="40"></p:spacer>
+
 
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 		toggleable="true">
@@ -36,18 +36,18 @@
 
 	</p:panel>
 
-	<p:panel>
-		<table>
 
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						value="#{evaluationBackingBean.managedBean.complianceQualifiedSuppliers}"></p:inputText></td>
-			</tr>
+	<table>
 
-		</table>
-	</p:panel>
+		<tr>
+			<td><h:outputLabel
+					value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					value="#{evaluationBackingBean.managedBean.complianceQualifiedSuppliers}"></p:inputText></td>
+		</tr>
+
+	</table>
+
 
 
 
@@ -75,18 +75,18 @@
 
 	</p:panel>
 
-	<p:panel>
-		<table>
 
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						value="#{evaluationBackingBean.managedBean.complianceDisQualifiedSuppliers}"></p:inputText></td>
-			</tr>
+	<table>
 
-		</table>
-	</p:panel>
+		<tr>
+			<td><h:outputLabel
+					value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					value="#{evaluationBackingBean.managedBean.complianceDisQualifiedSuppliers}"></p:inputText></td>
+		</tr>
+
+	</table>
+
 
 
 </ui:composition>

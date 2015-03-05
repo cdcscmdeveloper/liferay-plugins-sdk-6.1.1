@@ -13,8 +13,8 @@
 
 
 	<ui:fragment
-		rendered="#{evaluationBackingBean.managedBean.countDays ge 0}">
-		<p:panel style="margin-top:20px;">
+		rendered="#{evaluationBackingBean.managedBean.countDays gt 0}">
+		<h:panelGroup>
 			<table style="width: 50%">
 
 				<tr>
@@ -35,12 +35,12 @@
 							readonly="true" disabled="true"></p:inputText></td>
 				</tr>
 			</table>
-		</p:panel>
+		</h:panelGroup>
 	</ui:fragment>
 
-	<p:spacer height="40"></p:spacer>
+
 	<ui:fragment
-		rendered="#{evaluationBackingBean.managedBean.countDays lt 0}">
+		rendered="#{evaluationBackingBean.managedBean.countDays le 0}">
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.smpl.sup.list']}"
 			toggleable="true">
 
