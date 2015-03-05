@@ -5308,7 +5308,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>pmOrganisation</portlet-name>
-		<display-name>Organisation Maintenance</display-name>
+		<display-name>Organization Profile Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -5320,8 +5320,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Organisation Maintenance</title>
-			<short-title>Organisation Maintenance</short-title>
+			<title>Organization Profile Maintenance</title>
+			<short-title>Organization Profile Maintenance</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>

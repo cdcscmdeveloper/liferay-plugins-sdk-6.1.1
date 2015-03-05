@@ -6,18 +6,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchResultBean;
-
-import my.ep.biz.service.pm.general.settings.kpi.IKPIStatusSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.dto.pm.general.settings.kpi.KPIReqDTO;
-import my.ep.dto.pm.general.settings.kpi.KPIResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -29,21 +17,21 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sm.SmSupplier;
 
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 
 @ManagedBean(name = "ruleCatalogueMB")
 @SessionScoped
 public class RuleCatalogueManageBean extends BaseManagedBean {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer tabActiveIndex = 0;
 	private Integer feeExemptionIndex = 0;
+	private Integer thresholdIndex = 0;
 	private PmConfigGeneral selectedConfigGeneral;
 	private PmConfigRuleValue selectedRuleValue;
 	private PmConfigRule selectedRuleType;
@@ -69,6 +57,11 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmThreshold> deletedThresholds;
 	private PmOrgProfile selectedOrgProfile;
 	private List<PmOrgProfile> orgProfileList;
+	private PmThreshold threshold;
+	private Number unplannedThreshold;
+	private Number budgetThreshold;
+	private List<PmThreshold> unplannedThresholdList;
+	private List<PmThreshold> budgetThresholdList;
 	
 	public RuleCatalogueManageBean() {
 		
@@ -338,6 +331,54 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
 		this.orgProfileList = orgProfileList;
 	}
-	
+
+	public Integer getThresholdIndex() {
+		return thresholdIndex;
+	}
+
+	public void setThresholdIndex(Integer thresholdIndex) {
+		this.thresholdIndex = thresholdIndex;
+	}
+
+	public PmThreshold getThreshold() {
+		return threshold;
+	}
+
+	public void setThreshold(PmThreshold threshold) {
+		this.threshold = threshold;
+	}
+
+	public Number getUnplannedThreshold() {
+		return unplannedThreshold;
+	}
+
+	public void setUnplannedThreshold(Number unplannedThreshold) {
+		this.unplannedThreshold = unplannedThreshold;
+	}
+
+	public Number getBudgetThreshold() {
+		return budgetThreshold;
+	}
+
+	public void setBudgetThreshold(Number budgetThreshold) {
+		this.budgetThreshold = budgetThreshold;
+	}
+
+	public List<PmThreshold> getUnplannedThresholdList() {
+		return unplannedThresholdList;
+	}
+
+	public void setUnplannedThresholdList(List<PmThreshold> unplannedThresholdList) {
+		this.unplannedThresholdList = unplannedThresholdList;
+	}
+
+	public List<PmThreshold> getBudgetThresholdList() {
+		return budgetThresholdList;
+	}
+
+	public void setBudgetThresholdList(List<PmThreshold> budgetThresholdList) {
+		this.budgetThresholdList = budgetThresholdList;
+	}
+
 
 }
