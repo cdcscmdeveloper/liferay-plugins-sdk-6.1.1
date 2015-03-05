@@ -10,7 +10,7 @@
 	<p:panel header="#{lbl['lbl.sc.integrity.pact']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td><p:editor controls="" id="integrityPactEditor"
+				<td><p:editor controls="" id="integrityPactEditor" style="overflow : auto"
 						value="#{supplierProposalDetailBackingBean.managedBean.integrityPact}"
 						disabled="true" width="955" height="430" /></td>
 			</tr>
@@ -20,7 +20,7 @@
 			<tr>
 				<td><p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithIntegrityPact}" />
-					<p:spacer width="2" /> <h:outputLabel
+					<p:spacer width="2" /> <p:outputLabel
 						value="#{lbl['lbl.sc.integrity.note']}"
 						style="vertical-align:top; float: none;" /></td>
 			</tr>
@@ -31,7 +31,7 @@
 			<tr>
 				<td><p:editor controls="" id="othersEditor"
 						value="#{supplierProposalDetailBackingBean.managedBean.othersTermsConditions}"
-						disabled="true" width="955" height="430" /></td>
+						disabled="true" height="430" /></td>
 			</tr>
 			<tr height="10">
 				<td></td>
@@ -39,7 +39,7 @@
 			<tr>
 				<td><p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}" />
-					<p:spacer width="2" /> <h:outputLabel
+					<p:spacer width="2" /> <p:outputLabel 
 						value="#{lbl['lbl.sc.others.note']}"
 						style="vertical-align:top; float: none;" /></td>
 			</tr>
