@@ -108,7 +108,6 @@
 	<h:panelGroup id="btnpg" rendered="#{cc.attrs.selectionMode eq 'multiple'}">
 		<p:commandButton
 			id="#{cc.attrs.id}lovBtn"
-			icon="#{cc.attrs.buttonIcon}"
 			action="#{lovBackingBean.initLov}"
 			oncomplete="updateSearchDialog(); lovPopup.show();"
 			disabled="#{cc.attrs.disabled}"
