@@ -3084,8 +3084,8 @@ public class ReportBackingBean extends
 		ministryList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			lngUserId = (long) 220152;
+			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = (long) 220152;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
@@ -3106,8 +3106,8 @@ public class ReportBackingBean extends
 		ptjList = new ArrayList<String>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			lngUserId = (long) 240500;
+			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
@@ -3140,8 +3140,8 @@ public class ReportBackingBean extends
     	ministryList = new ArrayList<SelectItem>();
 if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-	      //lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			lngUserId = (long) 240500;
+	      lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	      //lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
@@ -3159,9 +3159,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
     public List<SelectItem>  retrieveFMIMinistryList() {
 if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 		
-			lngUserId = (long) 220152;
+			//lngUserId = (long) 220152;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
