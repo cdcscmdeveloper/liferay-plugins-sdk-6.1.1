@@ -1600,6 +1600,12 @@ public class RuleCatalogueBackingBean extends
 				getManagedBean().setBudgetThresholdList(finalResDTO.getThresholdList());
 			}
 			if (resDTO.isSuccessful()) {
+				getManagedBean().setTabActiveIndex(2);
+				if(type == 1){
+					getManagedBean().setThresholdIndex(0);
+				}else if(type == 2){
+					getManagedBean().setThresholdIndex(1);
+				}
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 					null,
@@ -1608,6 +1614,7 @@ public class RuleCatalogueBackingBean extends
 						MessageConst.INFO_770093,
 						MessageUtils.BUNDLE_COMMON_MESSAGES,
 						new FacesScopes().getUserLocale())));
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
