@@ -514,6 +514,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				log.info("***editSubDivision - Category Name***" + resDTO.getCategoryL3().getCategoryName());
 				this.getManagedBean().setCatLevel("3");
 				resDTO.getCategoryL3().setBasicCategoryReqValue(resDTO.getCategoryL3().getBasicCategoryReq()==1?true:false);
 				resDTO.getCategoryL3().setHomeOperatedValue(resDTO.getCategoryL3().getHomeOperated()==1?true:false);
@@ -522,17 +523,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				reloadSelectionPmCategoryL3();
 				for(PmBasicCategory pmBasicCategory: this.getManagedBean().getPmCategoryL3().getPmBasicCategory()){
 					reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
-					resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-					pmBasicCategory.setBasicCategoryL1desc(resDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName());
-					pmBasicCategory.setBasicCategoryL2desc(resDTO.getCategoryL3().getPmCategoryL2().getCategoryName());
-					pmBasicCategory.setBasicCategoryL3desc(resDTO.getCategoryL3().getCategoryName());
+					CategoryCodeResDTO bresDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+					pmBasicCategory.setBasicCategoryL1desc(bresDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName());
+					pmBasicCategory.setBasicCategoryL2desc(bresDTO.getCategoryL3().getPmCategoryL2().getCategoryName());
+					pmBasicCategory.setBasicCategoryL3desc(bresDTO.getCategoryL3().getCategoryName());
 					pmBasicCategory.setCodeConcatenate(
-							resDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()+
-							resDTO.getCategoryL3().getPmCategoryL2().getCategoryL2Code()+
-							resDTO.getCategoryL3().getCategoryL3Code());
+							bresDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()+
+							bresDTO.getCategoryL3().getPmCategoryL2().getCategoryL2Code()+
+							bresDTO.getCategoryL3().getCategoryL3Code());
 				}
 				this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL3().getPmCategoryL2());
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
+				
+				log.info("***editSubDivision - managed bean L3 - Category Name***" +this.getManagedBean().getPmCategoryL3().getCategoryName());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
