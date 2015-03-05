@@ -161,8 +161,9 @@ public class ScTrackingDiaryBackingBean extends
 			Object[] scObj = getManagedBean().getScObj();
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),scObj[1]));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),scObj[3]));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),scObj[0]));
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),scObj[1]));
 			System.out.println("Sc TrackingDiary docNo  " +scObj[3]+ scObj[1]);
 
 			reqDTO.setSearchBean(searchBean);
