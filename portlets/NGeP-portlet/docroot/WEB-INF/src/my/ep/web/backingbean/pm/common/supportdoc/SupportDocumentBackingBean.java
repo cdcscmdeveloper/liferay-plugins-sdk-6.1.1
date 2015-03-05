@@ -1092,7 +1092,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				throw new EpException(MessageConst.ERROR_770084);
 			}
 
-			if(pmDocument.getPmZone().getZoneId()==0) {
+			if(pmDocument.getPmZone().getZoneId() != null && pmDocument.getPmZone().getZoneId()==0) {
 				throw new EpException(MessageConst.ERROR_770088);
 			}
 			
