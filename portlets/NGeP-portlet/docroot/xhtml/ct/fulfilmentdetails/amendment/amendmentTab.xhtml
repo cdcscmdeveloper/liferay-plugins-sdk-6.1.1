@@ -70,19 +70,90 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
-		<p:panel id="panelHeaderException">
+		<h:panelGroup id="panelHeaderException">
 		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
 			 <ui:include src="amendmentButtons.xhtml" />
 		     <ui:include src="amendmentHeader.xhtml" />
-		</p:panel>
+		</h:panelGroup>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		  <tr>
+		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
-				<p:tabMenu styleClass="sidemenu" 
-						activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}"
-						model="#{amendmentBackingBean.managedBean.amendMenuModel}" />
-			  </td>
-			 <td width="80%">
+		      <p:tabMenu id="sidemenuId" styleClass="sidemenu" 
+						activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}" >
+		<p:menuitem value="#{lbl['lbl.ct.menu.fd']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq null}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'FD')}" update=":form" />
+	
+		<p:menuitem value="#{lbl['lbl.ct.menu.amendment']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq null}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'AD')}" update=":form" />
+	
+		<p:menuitem value="#{lbl['lbl.ct.menu.zone']}"  onstart="blockWidget.show()"  oncomplete="blockWidget.hide()" 
+		    rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
+		   amendmentBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'ZO')}" update=":form" />
+			 
+		<p:menuitem value="#{lbl['lbl.ct.menu.item']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			 rendered="#{amendmentBackingBean.managedBean.ackFA eq null and (amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or 
+		     amendmentBackingBean.managedBean.contractVer.ctAmendment. itemPriceChange)}"
+			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'IT')}" update=":form" />
+		
+		<p:menuitem value="#{lbl['lbl.ct.menu.special.ap201']}" 
+		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
+		     rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.bpkSaSkApprover}"
+			 actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'BPK')}" update=":form" />
+				  	 
+		  	<p:menuitem value="#{lbl['lbl.ct.menu.loa.details']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'LOD')}" update=":form" />
+	 
+		  <p:menuitem value="#{lbl['lbl.ct.menu.loa.content']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'CNT')}" update=":form" />
+			
+			<p:menuitem value="#{lbl['lbl.ct.menu.performance.bond']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.ctContract.bondReq 
+			 and amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'PB')}" update=":form" />
+		 
+	
+		 <p:menuitem value="#{lbl['lbl.ct.menu.loa']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SLOA')}" update=":form" />
+	
+	       <p:menuitem value="#{lbl['lbl.ct.menu.declaration']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SDEC')}" update=":form" />
+	
+	       <p:menuitem value="#{lbl['lbl.ct.menu.meeting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'MET')}" update=":form" />
+	
+		 <p:menuitem value="#{lbl['lbl.ct.menu.decision']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
+			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'DCN')}" update=":form" />
+	
+	        <p:menuitem value="#{lbl['lbl.ct.menu.setting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SE')}" update=":form" />
+	
+		</p:tabMenu>
+
+		
+		 </td>
+		 <td width="80%">
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.fd'] }">
 					<ui:include src="fulfilmentDetails.xhtml" />
 				    <ui:include src="quotationTender.xhtml" />
@@ -107,6 +178,10 @@
 					<ui:include src="bpk/approvalOfAP201.xhtml"/>
 				</p:outputPanel>
 				
+				 <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.performance.bond'] }">
+					<ui:include src="loaBondDetails.xhtml" />
+			    </p:outputPanel>
+				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.details'] }">
 					<ui:include src="supplier/supplierforloa.xhtml" />
 				    <ui:include src="supplier/paymentdetails.xhtml" />
@@ -114,10 +189,6 @@
 					    <ui:include src="loaDetails.xhtml" />
 				    </p:outputPanel>
 				    <ui:include src="witnessDetails.xhtml" />
-			    </p:outputPanel>
-			    
-			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.performance.bond'] }">
-					<ui:include src="loaBondDetails.xhtml" />
 			    </p:outputPanel>
 			    
 			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.content']}">

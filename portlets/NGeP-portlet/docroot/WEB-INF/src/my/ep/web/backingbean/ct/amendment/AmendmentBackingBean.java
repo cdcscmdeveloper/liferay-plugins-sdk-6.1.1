@@ -172,13 +172,10 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
-import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
@@ -628,12 +625,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void ConstructTabSideMenu(){
 		
-		      int zoneTabIndex = 0;
-		      MenuModel amendMenuModel = new DefaultMenuModel();
-		      AmendTabSideMenus sideMenu = new AmendTabSideMenus();
-		      FacesContext facesContext = FacesContext.getCurrentInstance();
-		      getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
-		      getManagedBean().setConfirmMeeting(false);
+		         AmendTabSideMenus sideMenu = new AmendTabSideMenus();
+		         getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
+		         getManagedBean().setConfirmMeeting(false);
 		  
 		       if(getManagedBean().getAckFA() == null) {
 			         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
@@ -647,18 +641,21 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			       } if(getManagedBean().isBpkSaSkApprover()) { 
 			    	      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithSpAprlAP201);
 			  
-			       } if(getManagedBean().isPrepareLOA() && getManagedBean().isDecisionPbQcLOA()){
-			    	    getManagedBean().setConfirmMeeting(true);
-			    	    getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
-			    
-			       } if(getManagedBean().isPrepareLOA()){
-			    	   if((getManagedBean().getCtContract().isBondReq() &&
-			    	    		!getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
-			    	         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
-			    	   }
-			    	   getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);
-			    	   
-			       }if(getManagedBean().isPbConfirmMeeting()){
+			       } if(getManagedBean().isPrepareLOA() ){
+			    	     getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);
+					 
+			    	     if((getManagedBean().getCtContract().isBondReq() &&
+				    	    		!getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+				    	         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
+				    	   }
+			    	     
+			    	     if(getManagedBean().isDecisionPbQcLOA()){
+					    	    getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
+					     }
+					
+			       }
+			    		   
+			     if(getManagedBean().isPbConfirmMeeting()){
 			    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
 			       }
 			       if(getManagedBean().isSignUpdateDecision()){
@@ -677,18 +674,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		     } else if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
 			      getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
 		     }
-		
-		     for( String str : this.getManagedBean().getFinalListOfSideMenu()){
-	 	    	    MenuItem menuItem = new MenuItem();
-	 	    	    menuItem.setId("AmendMenuId"+zoneTabIndex);
-	 	    	    menuItem.setValue(str);
-	 	    	    menuItem.setUpdate("@all");
-	 	    	    menuItem.setActionExpression(FacesScopes
-						.createMethodExpression(facesContext,
-								"#{amendmentBackingBean.amendTabChangeAction("+ zoneTabIndex + ")}", null, new Class[] { Integer.class }));
-	 	    	    amendMenuModel.addMenuItem(menuItem);
-                    zoneTabIndex++;
-	 	     } getManagedBean().setAmendMenuModel(amendMenuModel);
        }
 	
 	   public void amendTabChangeAction(Integer selectedTabIndex) {
@@ -2851,7 +2836,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 		}else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
-		}ConstructTabSideMenu();
+		} ConstructTabSideMenu();
 	}
 
 	public void onQuantityChecked() {
@@ -2859,7 +2844,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 		}else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
-		}ConstructTabSideMenu();
+		} ConstructTabSideMenu();
 	}
 	
 	public SelectItem[] getItemDisplayTypeDropdownList() {
@@ -3987,5 +3972,95 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		} catch (Exception e) {
 		 	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
+	}
+	
+	public void setTabValue(int currentValue, String outputValue){
+		  getManagedBean().setConfirmMeeting(false);
+	  	 if(getManagedBean().getAckFA() == null) {
+	           int index =1;
+			   if(outputValue.equalsIgnoreCase("FD")) {
+		               getManagedBean().setSelectedTabIndex(0);
+                
+	        	}if(outputValue.equalsIgnoreCase("AD")) {
+		                    getManagedBean().setSelectedTabIndex(1);
+             
+	        	} if(getManagedBean().getContractVer() != null && getManagedBean().getContractVer().getCtAmendment() != null &&
+  	        		  (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+	 	        	     index =2;
+	        		if(getManagedBean().getCtContract().isZonalPricing()){
+	        			           index =3;
+	 	        	    		   if(outputValue.equalsIgnoreCase("ZO") ) 
+	 	        		                    getManagedBean().setSelectedTabIndex(2);
+		        	               if(outputValue.equalsIgnoreCase("IT"))
+	 	        	                      getManagedBean().setSelectedTabIndex(3);
+	 	        	     } else if(outputValue.equalsIgnoreCase("IT")){
+	 	        	    	 getManagedBean().setSelectedTabIndex(2);
+	 	        	     }
+ 	            } 
+         
+	        if(getManagedBean().isBpkSaSkApprover() && outputValue.equalsIgnoreCase("BPK")) { 
+	        	 getManagedBean().setSelectedTabIndex(index+1);
+	        }
+	        	
+	       if(getManagedBean().isPrepareLOA()){
+	    	 
+	    	   if(outputValue.equalsIgnoreCase("LOD")){
+	    		   getManagedBean().setSelectedTabIndex(index+1);
+	    	   }
+	    	   
+	    	   if(outputValue.equalsIgnoreCase("CNT")){
+	    		   getManagedBean().setSelectedTabIndex(index+2);
+	    	   }
+	    		 
+	      		  if((getManagedBean().getCtContract().isBondReq() && outputValue.equalsIgnoreCase("PB")  &&
+	    		    	     !getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))){
+	    	    			           getManagedBean().setSelectedTabIndex(index+3);
+	    	    }
+	    	    
+	    	   	  if(getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN") ){
+	    	    		  if((getManagedBean().getCtContract().isBondReq() && 
+	    		    	    		!getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))){
+	    	    			           getManagedBean().setSelectedTabIndex(index+4);
+	    	    		  }else{
+	    	    			  getManagedBean().setSelectedTabIndex(index+3);
+	    	    		  }
+	    	    }
+	       } 
+	    		   
+	      if(getManagedBean().isPbConfirmMeeting() && outputValue.equalsIgnoreCase("MET")){
+	    	   getManagedBean().setSelectedTabIndex(index+1);
+	       }
+	      
+	      if((getManagedBean().isSignUpdateDecision() || 
+	    		  getManagedBean().isSignOffDecision()) && outputValue.equalsIgnoreCase("DCN")){
+	    	  getManagedBean().setConfirmMeeting(true);
+	    	  if(getManagedBean().isPbConfirmMeeting()){
+	    		  getManagedBean().setSelectedTabIndex(index+2);
+	    	  }else {
+	    		  getManagedBean().setSelectedTabIndex(index+1);
+	    	  }
+	       } 
+	      
+	      if(isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE")) {
+	    	  getManagedBean().setSelectedTabIndex(index+1);
+	         }
+        } else if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){
+        	 if(outputValue.equalsIgnoreCase("LOD")){
+	    		   getManagedBean().setSelectedTabIndex(0);
+	    	   }
+	    	   
+	    	   if(outputValue.equalsIgnoreCase("CNT")){
+	    		   getManagedBean().setSelectedTabIndex(1);
+	    	   }
+	    	   
+	    	   if(outputValue.equalsIgnoreCase("SLOA")){
+	    		   getManagedBean().setSelectedTabIndex(2);
+	    	   }
+	    	   
+	    	   if(outputValue.equalsIgnoreCase("SDEC")){
+	    		   getManagedBean().setSelectedTabIndex(3);
+	    	   }
+	    		 
+        }
 	}
 }
