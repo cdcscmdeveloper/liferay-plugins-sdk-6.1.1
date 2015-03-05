@@ -70,7 +70,7 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{usergroupBackingBean.searchUserGroupAction}"
-							update=":form:searchGroupProfile" process="userGroupSearch" />
+							update=":form:searchGroupProfile" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							update=":form:UserGroupPanel,:form:searchGroupProfile" process="@this"
 							partialSubmit="true" action="#{usergroupBackingBean.reset}" />
