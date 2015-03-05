@@ -74,9 +74,10 @@
 						<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
 					</p:tab>
 					<!-- disabled="#{!financialOrgBackingBean.managedBean.showFactoringBank}" -->
+					<!-- disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany)}" -->
 					<p:tab title="FACTORING BANK DETAIL" id="tFactoryBankDet"
-						
-						disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany)}">
+						disabled="#{!financialOrgBackingBean.managedBean.serviceTypes.contains(ParameterConst.bankServicesFactoringCompany) or !financialOrgBackingBean.managedBean.showFactoringBank}"
+						>
 						<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
 					</p:tab>
 				</p:tabView>
