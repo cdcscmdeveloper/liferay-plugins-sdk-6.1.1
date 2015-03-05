@@ -84,23 +84,25 @@
 		</p:dataTable>
 		<br />
 		<br />
-		<p:panel id="pSignatoryInfo">
-			<div class="ppRightBtn">
-
-				<p:commandButton id="lovSignatory" value="#{lbl['lbl.btn.add']}"
-					disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
-					headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
-					action="#{authorizedsignatoryBackingBean.addAuthorizer}"
-					update="searchSignatoryResults" />
-				<p:commandButton id="delSignatory"
-					disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
-					value="#{lbl['lbl.btn.delete']}" update="searchSignatoryResults"
-					action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory}" />
-
-			</div>
-		</p:panel>
-
-
+	</p:panel>
+	<p:panel id="pSignatoryInfo">
+		<div class="ppRightBtn">
+			<table style="float: right;">
+				<tr>
+					<td><p:commandButton id="lovSignatory"
+							value="#{lbl['lbl.btn.add']}"
+							disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
+							headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
+							action="#{authorizedsignatoryBackingBean.addAuthorizer}"
+							update="searchSignatoryResults" /></td>
+					<td><p:commandButton id="delSignatory"
+							disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
+							value="#{lbl['lbl.btn.delete']}" update="searchSignatoryResults"
+							action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory}" />
+					</td>
+				</tr>
+			</table>
+		</div>
 	</p:panel>
 	<div class="clear" />
 </ui:composition>
