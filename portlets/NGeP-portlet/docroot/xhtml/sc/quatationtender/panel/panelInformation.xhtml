@@ -18,12 +18,10 @@
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"
 						disabled="true" size="50" />
 					<p:spacer width="5" />
-					<p:commandLink value="#{lbl['lbl.so.cirattach']}"
-						disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.readOnly}"
-						style="margin-right:20px;" ajax="false"
-						process="@all,yesmainpanel" partialSubmit="true"
-						update="circularItemDetails"
-						actionListener="#{qTSupplierQulCriteriaBackingBean.downloadCircularDtls}" />
+					<p:commandLink value="#{lbl['lbl.so.cirattach']}" ajax="false"
+						style="margin-right:20px;" process="@all,yesmainpanel"
+						partialSubmit="true" update="circularItemDetails"
+						actionListener="#{qTSupplierQulCriteriaBackingBean.viewCircularAttachments}" />
 				</h:column>
 
 				<h:column>
