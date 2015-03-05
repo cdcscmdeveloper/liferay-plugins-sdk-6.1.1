@@ -9,28 +9,74 @@
 
 	<p:panel id="UserGroupPanel">
 
-		<h:panelGrid columns="2">
+		<table class="ppTwoTable">
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.search.name']}"></h:outputLabel></th>
+				<td><p:inputText
+						value="#{usergroupBackingBean.managedBean.userName}" size="30" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.result.groupcode']}"></h:outputLabel></th>
+				<td><p:inputText
+						value="#{usergroupBackingBean.managedBean.groupCode}" size="30"
+						style="text-transform: uppercase" maxlength="10" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.result.groupname']}"></h:outputLabel></th>
+				<td><p:inputText
+						value="#{usergroupBackingBean.managedBean.groupName}" size="30"
+						maxlength="50" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.search.ptjcode']}"></h:outputLabel></th>
+				<td><p:inputText
+						value="#{usergroupBackingBean.managedBean.ptjCode}" size="30" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.ug.search.ptjname']}"></h:outputLabel></th>
+				<td><p:inputText
+						value="#{usergroupBackingBean.managedBean.ptjName}" size="30" /></td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.search.status']}"></h:outputLabel></th>
+				<td><p:selectOneMenu style="width:203px"
+						value="#{usergroupBackingBean.managedBean.status}">
+						<f:selectItems
+							value="#{usergroupBackingBean.getUserGroupStatus()}" />
+					</p:selectOneMenu></td>
 
-			<h:outputLabel value="#{lbl['lbl.pm.ug.search.name']}"></h:outputLabel>
-			<p:inputText value="#{usergroupBackingBean.managedBean.userName}" size="30" />
-			
-			<h:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}"></h:outputLabel>
-			<p:inputText value="#{usergroupBackingBean.managedBean.groupCode}" size="30" style="text-transform: uppercase" maxlength="10"/>
-			
-			<h:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}"></h:outputLabel>
-			<p:inputText value="#{usergroupBackingBean.managedBean.groupName}" size="30" maxlength="50"/>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
 
-			<h:outputLabel value="#{lbl['lbl.pm.ug.search.ptjcode']}"></h:outputLabel>
-			<p:inputText value="#{usergroupBackingBean.managedBean.ptjCode}" size="30" />
-
-			<h:outputLabel value="#{lbl['lbl.pm.ug.search.ptjname']}"></h:outputLabel>
-			<p:inputText value="#{usergroupBackingBean.managedBean.ptjName}" size="30" />
-
-			<h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel>
-			<p:selectOneMenu style="width:203px" value="#{usergroupBackingBean.managedBean.status}">
-			 	 <f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}" />
-			</p:selectOneMenu>
-
-		</h:panelGrid>
+			<tr>
+				<td colspan="4" width="100%">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
+							action="#{usergroupBackingBean.searchUserGroupAction}"
+							update=":form:searchGroupProfile" process="userGroupSearch" />
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+							update=":form:UserGroupPanel,:form:searchGroupProfile" process="@this"
+							partialSubmit="true" action="#{usergroupBackingBean.reset}" />
+					</div>
+				</td>
+			</tr>
+		</table>
 	</p:panel>
 </ui:composition>

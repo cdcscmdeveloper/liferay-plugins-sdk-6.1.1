@@ -13,16 +13,18 @@
 		<ui:include
 			src="/xhtml/pm/usergroupsearch/userGroupDefinedSearch.xhtml" />
 
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				action="#{usergroupBackingBean.searchUserGroupAction}"
-				update="searchGroupProfile" process="userGroupSearch" />
-			<p:commandButton value="#{lbl['lbl.btn.reset']}"
-				update="UserGroupPanel,searchGroupProfile" process="@this"
-				partialSubmit="true" action="#{usergroupBackingBean.reset}" />
-		</div>
-		<br />
-		<br />
+		<ui:remove>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{usergroupBackingBean.searchUserGroupAction}"
+					update="searchGroupProfile" process="userGroupSearch" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					update="UserGroupPanel,searchGroupProfile" process="@this"
+					partialSubmit="true" action="#{usergroupBackingBean.reset}" />
+			</div>
+			<br />
+			<br />
+		</ui:remove>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.pm.sa.result']}" toggleable="true">
@@ -67,11 +69,10 @@
 
 			</p:column>
 		</p:dataTable>
-		<br />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}"
-				action="#{usergroupBackingBean.createUserGroupProfiles()}" />
-		</div>
 
 	</p:panel>
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.create']}"
+			action="#{usergroupBackingBean.createUserGroupProfiles()}" />
+	</div>
 </ui:composition>
