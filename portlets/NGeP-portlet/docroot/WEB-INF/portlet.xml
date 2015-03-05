@@ -4844,7 +4844,7 @@
 		</portlet>
 		<portlet>
 			<portlet-name>pmRejectionReason</portlet-name>
-			<display-name>Rejection Reason</display-name>
+			<display-name>Reason Maintenance</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
 			</portlet-class>
