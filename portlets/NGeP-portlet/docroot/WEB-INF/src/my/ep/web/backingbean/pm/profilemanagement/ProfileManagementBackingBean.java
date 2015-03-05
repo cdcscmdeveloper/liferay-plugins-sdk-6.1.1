@@ -375,7 +375,8 @@ public class ProfileManagementBackingBean extends
 	public String redirectToMainPage() {
 		logger.info("redirectToMainPage");
 
-		return NAV_TO_SEARCH;
+//		return NAV_TO_SEARCH;
+		return NAV_TO_MAINTAIN;
 	}
 
 	/**
