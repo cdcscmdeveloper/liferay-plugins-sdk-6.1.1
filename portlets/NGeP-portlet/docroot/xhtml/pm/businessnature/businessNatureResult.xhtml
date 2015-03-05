@@ -21,8 +21,6 @@
 				process="@this"
 				update="businessNatureSearch,businessNatureDataModel" />
 		</div>
-		<br />
-		<br />
 	</p:panel>
 
 	<p:panel header="RESULT" toggleable="true">
@@ -33,7 +31,7 @@
 			<ac:paginator for="businessNatureDataModel" />
 
 			<p:column headerText="#{lbl['lbl.pm.bn.level']}" style="width:10%">
-				<h:outputText value="#{businessNature.businessLevel}" />
+				<h:outputText value="Section" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.bn.code']}" style="width:10%">
@@ -97,11 +95,11 @@
 
 			</p:column>
 		</p:dataTable>
-		<br />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}"
-				action="#{businessNatureBackingBean.createBusinessNature}" />
-		</div>
+
 	</p:panel>
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.create']}"
+			action="#{businessNatureBackingBean.createBusinessNature}" />
+	</div>
 
 </ui:composition>
