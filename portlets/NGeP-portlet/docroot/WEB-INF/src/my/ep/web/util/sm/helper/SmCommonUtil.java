@@ -24,6 +24,10 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -63,6 +67,8 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.sm.ApplType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -1518,5 +1524,40 @@ public class SmCommonUtil {
 			}
 			MDC.put(LogKey.USER_ID, userId);
 		}
+	}
+
+	/**
+	 * Get Bpm Task List by token
+	 * @param token
+	 * @return List<WorklistItemVO>
+	 */
+	public static List<WorklistItemVO> getBpmTaskListByAuthToken(String token) {
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		List<WorklistItemVO> taskList = new ArrayList<WorklistItemVO>();
+		try {
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			reqDTO = new BpmRequestDTO();
+			reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+			reqDTO.setOffset(1);
+			reqDTO.setState("ASSIGNED");
+			reqDTO.setDocType("");
+
+			reqDTO.setViewBy("");
+			reqDTO.setAssignment("");
+			reqDTO.setCtxToken(token);
+			responseDTO = bpmSO.getWorklistItems(reqDTO);
+			if (responseDTO.getWorklistVO() != null
+					&& responseDTO.getWorklistVO().getWorklistItem() != null) {
+				taskList = responseDTO.getWorklistVO().getWorklistItem();
+			}
+		} finally {
+			bpmSO = null;
+			reqDTO = null;
+			responseDTO = null;
+		}
+		return taskList;
 	}
 }
