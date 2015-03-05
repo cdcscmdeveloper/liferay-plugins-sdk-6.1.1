@@ -26,18 +26,18 @@
 
 
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
-				<p:commandLink action="#{zoneBackingBean.redirectToZone(zone.zoneId)}">
+				<p:commandLink
+					action="#{zoneBackingBean.redirectToZone(zone.zoneId)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						title="Edit Zone" value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
 
 			</p:column>
 		</p:dataTable>
-		<br />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}" 
-				action="#{zoneBackingBean.redirectToZone(null)}" />
-		</div>
 
 	</p:panel>
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.create']}"
+			action="#{zoneBackingBean.redirectToZone(null)}" />
+	</div>
 </ui:composition>
