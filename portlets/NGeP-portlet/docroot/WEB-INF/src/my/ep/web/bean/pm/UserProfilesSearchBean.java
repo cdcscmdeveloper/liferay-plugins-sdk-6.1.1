@@ -9,6 +9,7 @@ package my.ep.web.bean.pm;
  */
 public class UserProfilesSearchBean {
 	private String loginId;
+	private String identificationNo;
 	private String userName;
 	private String userRole;	
 	private String userOrganizationName;	
@@ -73,7 +74,17 @@ public class UserProfilesSearchBean {
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
 	}
-	
-
+	/**
+	 * @return the identificationNo
+	 */
+	public String getIdentificationNo() {
+		return identificationNo;
+	}
+	/**
+	 * @param identificationNo the identificationNo to set
+	 */
+	public void setIdentificationNo(String identificationNo) {
+		this.identificationNo = identificationNo;
+	}
 	
 }
