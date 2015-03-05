@@ -1883,7 +1883,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Populate charge line data.
+	 *    call this method  as user click on charge line summary menu or click on charge line update button.
+	 * 
+	 *<p> Populate charge line data.
 	 *
 	 * @param retainPreviousSelection the retain previous selection
 	 */
@@ -3006,7 +3008,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Charge line validation before click the approver list tab.
+	 * Charge line validation before click the approver list menu.
 	 */
 	public void chargeLineValidationBeforeApproverList(){
 		if(getManagedBean().getChargeLineItemRoot()!=null) {
