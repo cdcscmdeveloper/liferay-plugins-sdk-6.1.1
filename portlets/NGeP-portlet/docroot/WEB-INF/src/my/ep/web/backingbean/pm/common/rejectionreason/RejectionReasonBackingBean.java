@@ -905,38 +905,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			searchBean.getDataFilterBeans().add(cateBean);
 			isEmpty = false;
 			
-			//for supplier reason category
-			PmParameter paramObj = (PmParameter) reasonCategoryMapper.get(rSearchBean.getReasonCategoryParam().getParameterId());
-			
-			if(ParameterConst.REASON_CATEGORY_SUPPLIER.equals(paramObj.getParameterCode())){
-				rSearchBean.setRestrType(null);
-				log.info("+ reasonCategory "  +paramObj.getParameterCode());
-				List <Long> restrTypes = new ArrayList<Long>();
-				
-				if(rSearchBean.getApplicationType()!=null && rSearchBean.getApplicationType()>0L){
-					log.info("+ applicationType "  +rSearchBean.getApplicationType());
-					restrTypes.add(rSearchBean.getApplicationType());
-				}
-				if(rSearchBean.getCompanyType()!=null && rSearchBean.getCompanyType()>0L){
-					log.info("+ companyType "  +rSearchBean.getCompanyType());
-					restrTypes.add(rSearchBean.getCompanyType());
-				}
-				if(rSearchBean.getSupplierType()!=null && rSearchBean.getSupplierType()>0L){
-					log.info("+ supplierType "  +rSearchBean.getSupplierType());
-					restrTypes.add(rSearchBean.getSupplierType());
-				}
-				
-				if(restrTypes!=null && !restrTypes.isEmpty()){
-					log.info("+ getRestrType "  + rSearchBean.getRestrType());
-					SearchFilterBean bean = new SearchFilterBean();
-					bean.setSearchField("pmReason.pmSupplierReasons.restrType.parameterId");
-					bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
-					bean.setSearchValue(restrTypes);
-					searchBean.getDataFilterBeans().add(bean);
-					isEmpty = false;
-				}
-			}
-			
 			if(rSearchBean.getReasonCode()!=null && rSearchBean.getReasonCode().trim().length()>0){
 				log.info("+ reasonCode "  +rSearchBean.getReasonCode());
 				SearchFilterBean bean = new SearchFilterBean();
@@ -982,7 +950,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("getSearchBeanData - End");
 		return searchBean;
 	}
-	
 	/**
 	 * search reason
 	 */
@@ -1037,10 +1004,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			
 			try {	
 				ISearchBean<PmReasonDesc> searchBeanData = getSearchBeanData(searchBean);
+				ReasonSearchBean rSearchBean = getManagedBean().getReasonSearchBean();
 				ReasonReqDTO reqDTO = new ReasonReqDTO();
 				FacesScopes fs = new FacesScopes();
 				reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 				reqDTO.setReasonDescSearchBean(searchBeanData);
+				reqDTO.setAppTypeId(rSearchBean.getApplicationType());
+				reqDTO.setSuppTypeId(rSearchBean.getSupplierType());
+				reqDTO.setComTypeId(rSearchBean.getCompanyType());
 				IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
 				ReasonResDTO resDTO = reqSO.retrieveReasonDescBySearchBean(reqDTO);
 				if (resDTO.isSuccessful()) {
