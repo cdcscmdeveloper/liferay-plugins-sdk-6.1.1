@@ -202,6 +202,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				if(this.getManagedBean().getSelectedDocument().isBrandNew()){
 					this.getManagedBean().setCheckList(false);
 					this.getManagedBean().getSelectedDocument().setPmZone(new PmZone());
+					this.getManagedBean().getSelectedDocument().getPmZone().setZoneId(0L);	// if zone selected is All.
 					this.getManagedBean().getSelectedDocument().setDocDefinitionTypeCode(null);
 					this.getManagedBean().getSelectedDocument().setChecklistActionCode(null);
 				}
@@ -223,6 +224,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		PmDocument pmDocument = new PmDocument();
 		pmDocument.setDocCategoryCode(new PmParameter()); // checklist, supp doc
 		pmDocument.setPmZone(new PmZone()); //supp doc
+		pmDocument.getPmZone().setZoneId(0L);	// if zone selected is All.
 		pmDocument.setDocDefinitionTypeCode(null);  // checklist
 		pmDocument.setChecklistActionCode(null); // checklist
 		this.getManagedBean().setAppTypeRestrictions(null);
@@ -644,7 +646,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		List<PmZone> zoneList = new ArrayList<PmZone>();
 		try{
 			IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);	
-			ZoneResDTO resDTO = reqSO.retrieveZoneList();
+			ZoneResDTO resDTO = reqSO.retrieveActiveZoneList();
 			if(resDTO.isSuccessful()){
 				zoneList = resDTO.getZoneList();
 			}
@@ -1049,7 +1051,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 			
 			
-			if(pmDocument.getDisplaySeq()==null || pmDocument.getDisplaySeq()<=0){
+			/*if(pmDocument.getDisplaySeq()==null || pmDocument.getDisplaySeq()<=0){
 				throw new EpException(MessageConst.ERROR_770086);
 			}else{
 				//display seq unique
@@ -1083,14 +1085,14 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				if(searchDocument(searchBean)){
 					throw new EpException(MessageConst.ERROR_770087);
 				}
-			}
+			}*/
 			
 		}else{
 			if(StringUtils.isBlank(pmDocument.getDocName())){ 
 				throw new EpException(MessageConst.ERROR_770084);
 			}
 
-			if(pmDocument.getPmZone().getZoneId()==null){
+			if(pmDocument.getPmZone().getZoneId()==0) {
 				throw new EpException(MessageConst.ERROR_770088);
 			}
 			
@@ -1117,17 +1119,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 							SearchOperator.OPERATOR_EQUALS.value(),
 							DbValueConst.RECORD_STATUS_ACTIVE));
 			
-			//displaySeq
+			/*//displaySeq
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("displaySeq",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							pmDocument.getDisplaySeq()));
+							pmDocument.getDisplaySeq()));*/
 			
 			//zoneId
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmZone.zoneId",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							pmDocument.getPmZone().getZoneId()));
+			if (pmDocument.getPmZone() != null) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmZone.zoneId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								pmDocument.getPmZone().getZoneId()));	
+			}
 			
 			//documentId
 			if(!pmDocument.isBrandNew()){
@@ -1296,13 +1300,22 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 			
 			//Pm Zone
-			if(sdSearchBean.getPmZone()!=null && sdSearchBean.getPmZone()>0L){
+			if(sdSearchBean.getPmZone()!=null){
 				log.info("+ pmZone "  +sdSearchBean.getPmZone());
+				
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchField("pmZone.zoneId");
-				bean.setSearchValue(sdSearchBean.getPmZone());
 				searchBean.getDataFilterBeans().add(bean);
+				
+				if (sdSearchBean.getPmZone()>0L) {
+					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					bean.setSearchValue(sdSearchBean.getPmZone());
+					
+				} else {
+					// if zone selected is All.
+					bean.setSearchOperator(SearchOperator.OPERATOR_IS_NULL.value());
+				}
+				
 				isEmpty = false;
 			}
 			
