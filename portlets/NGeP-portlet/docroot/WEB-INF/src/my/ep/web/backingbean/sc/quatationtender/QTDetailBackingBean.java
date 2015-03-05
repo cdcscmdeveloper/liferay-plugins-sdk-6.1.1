@@ -2033,8 +2033,14 @@ public class QTDetailBackingBean extends
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
 
 			if (!this.getManagedBean().getQt().isPanel()) {
-				if ((null == this.getManagedBean().getQtCategoryList() || this.getManagedBean().getQtCategoryList().isEmpty()) ||
-						(null == this.getManagedBean().getSuppCriteriarestrictedList() || this.getManagedBean().getSuppCriteriarestrictedList().isEmpty())) {
+				if ((this.getManagedBean().getQt().getQtType().equals(QTConstants.OPEN_TYPE) && (null == this
+						.getManagedBean().getQtCategoryList() || this
+						.getManagedBean().getQtCategoryList().isEmpty()))
+						|| (this.getManagedBean().getQt().getQtType()
+								.equals(QTConstants.RESTRICTED_TYPE) && (null == this.getManagedBean()
+								.getSuppCriteriarestrictedList() || this
+								.getManagedBean()
+								.getSuppCriteriarestrictedList().isEmpty()))) {
 					tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
 					List<ScQtCategory> categoryResults = tenderResDTO.getCategoryResultBean().getResultList();
 					if (isNotNullOREmpty(categoryResults)) {
