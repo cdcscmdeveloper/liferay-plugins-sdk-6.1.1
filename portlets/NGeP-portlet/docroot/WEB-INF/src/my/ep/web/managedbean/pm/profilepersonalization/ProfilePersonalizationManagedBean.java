@@ -56,6 +56,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean addressEntered;
 	private PmOrgProfile currentProfile;
 	private PmUserOrg currentUserOrg;
+	private List<PmUserRole> userActiveRoles;
 	
 	
 /**
@@ -178,7 +179,13 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 		this.selectedTabIndex = selectedTabIndex;
 	}
 
+	public List<PmUserRole> getUserActiveRoles() {
+		return userActiveRoles;
+	}
 
+	public void setUserActiveRoles(List<PmUserRole> userActiveRoles) {
+		this.userActiveRoles = userActiveRoles;
+	}
 
 
 }	

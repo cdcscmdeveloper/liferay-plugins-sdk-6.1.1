@@ -99,10 +99,12 @@
 				<br />
 				<br />
 				<div class="ppRightBtn">
-					<table style="float: right;">
-						<tr>
-							<td>
-								<!-- Receiving Address Selection Popup --> <ac:lov
+					<div style="float: right">
+							<p:commandButton value="#{lbl['lbl.btn.delete']}" disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
+									action="#{profileManagementBackingBean.deleteReceivingAddr}"
+									update=":form:tvRoleReceivingAddr:dtReceiveAddr" />
+				     </div>
+							<div >	<!-- Receiving Address Selection Popup --> <ac:lov
 									id="lovAddrType" lovId="PM_ADDRESS_TYPE"
 									styleClass="ppDisplayCalS" readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
 									selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
@@ -111,12 +113,8 @@
 									saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes"
 									postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes)"
 									conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|pmOrgProfile.orgProfileId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgProfileId}|addressType^D|recordStatus^1" />
-							</td>
-							<td><p:commandButton value="#{lbl['lbl.btn.delete']}" disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
-									action="#{profileManagementBackingBean.deleteReceivingAddr}"
-									update=":form:tvRoleReceivingAddr:dtReceiveAddr" /></td>
-						</tr>
-					</table>
+							</div>
+							
 				</div>
 			</p:tab>
 		</p:tabView>
