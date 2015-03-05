@@ -917,8 +917,7 @@ public class ReportBackingBean extends
 	private String ctGroupTwo;
 	private String ctProductService;
 	private String ctLoanNo;
-	private String ctMinistry;
-	private String ctPtj;	
+		
 	private String ctProcurementMode;
 	
 	private String ctPhysicalContractNo;
@@ -1257,21 +1256,7 @@ public class ReportBackingBean extends
 		this.cmGroupOne = cmGroupOne;
 	}
 
-	public String getCtMinistry() {
-		return ctMinistry;
-	}
-
-	public void setCtMinistry(String ctMinistry) {
-		this.ctMinistry = ctMinistry;
-	}
-
-	public String getCtPtj() {
-		return ctPtj;
-	}
-
-	public void setCtPtj(String ctPtj) {
-		this.ctPtj = ctPtj;
-	}
+	
 
 	public String getCtLoanNo() {
 		return ctLoanNo;
@@ -4051,11 +4036,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						.getCtProductService() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL)) 
 				|| ((this.getCtLOAPhysicalNo() != null) && (this.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtMinistry() != null) && (this.getCtMinistry() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtPtj() != null) && (this.getCtPtj() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtContractNo() != null) && (this.getCtContractNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtPhysicalContractNo() != null) && (this.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL)) 
@@ -4065,11 +4052,22 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setCtStatusVar(ReportConst.CT_AMP_STATUS_EQ
 						+ this.getCtStatus());
 			}
+			if ((this.getCtStatusTwo() != null)
+					&& (this.getCtStatusTwo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtStatusTwoVar(ReportConst.CT_AMP_STATUS_EQ
+						+ this.getCtStatusTwo());
+			}
 			if ((this.getCtContractNo() != null)
 					&& (this.getCtContractNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtContractNoVar(ReportConst.CT_AMP_CONTRACT_NO_EQ
 						+ this.getCtContractNo());
 			}
+			if ((this.getCtPhysicalContractNo() != null)
+					&& (this.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtPhysicalContractNoVar(ReportConst.CT_AMP_PHYSICALCONTRACT_NO_EQ
+						+ this.getCtPhysicalContractNo());
+			}
+			
 			if ((this.getCtAgreement() != null)
 					&& (this.getCtAgreement() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtAgreementVar(ReportConst.CT_AMP_AGREEMENT_EQ
@@ -4113,6 +4111,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setCtGroupTwoVar(ReportConst.CT_AMP_GROUP_EQ
 						+ this.getCtGroupTwo());
 			}
+			if ((this.getCtGroupThree() != null)
+					&& (this.getCtGroupThree() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setCtGroupThreeVar(ReportConst.CT_AMP_GROUP_EQ
+						+ this.getCtGroupThree());
+			}
 			if ((this.getCtProductService() != null)
 					&& (this.getCtProductService() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -4129,15 +4132,15 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setCtLOAPhysicalNoVar(ReportConst.CT_AMP_PLOAPHYSICALNO_EQ
 						+ this.getCtLOAPhysicalNo());
 			}
-			if ((this.getCtMinistry() != null)
-					&& (this.getCtMinistry() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCommonMinistry() != null)
+					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
-						+ this.getCtMinistry());
+						+ this.getCommonMinistry());
 			}
-			if ((this.getCtPtj() != null)
-					&& (this.getCtPtj() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCommonPtj() != null)
+					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtPtjVar(ReportConst.CT_AMP_PPTJNAME_EQ
-						+ this.getCtPtj());
+						+ this.getCommonPtj());
 			}
 			if ((this.getCtUserType() != null)
 					&& (this.getCtUserType() != ReportConst.EMPTY_VAL)) {
@@ -4156,12 +4159,15 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME
 						+ rptGenBean.getUrlReportJSPName()
 						+ rptGenBean.getCtContractNoVar()
+						+ rptGenBean.getCtPhysicalContractNoVar()
+						+ rptGenBean.getCtStatusTwoVar()
 						+ rptGenBean.getCtAgreementVar()
 						+ rptGenBean.getCtStatusVar()
 						+ rptGenBean.getCtCompleteVar()
 						+ rptGenBean.getCtContrMontrStatusVar()
 						+ rptGenBean.getCtGroupOneVar()
 						+ rptGenBean.getCtGroupTwoVar()
+						+ rptGenBean.getCtGroupThreeVar()
 						+ rptGenBean.getCtProductServiceVar()
 						+ rptGenBean.getCtMinistryVar()
 						+ rptGenBean.getCtPtjVar()
@@ -5605,8 +5611,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		scTenderList = new ArrayList<SelectItem>();
 		scRstrctdTndrList = new ArrayList<SelectItem>();
 		this.setCtContractNo(null);
+		this.setCtPhysicalContractNo(null);
 		this.setCtAgreement(null);
 		this.setCtStatus(null);
+		this.setCtStatusTwo(null);
 		this.setCtComplete(null);
 		this.setCtGroupOne(null);
 		this.setCtGroupTwo(null);
@@ -5615,8 +5623,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCtLOAPhysicalNo(null);
 		this.setCtSubType(null);
 		this.setCtUserType(null);
-		this.setCtMinistry(null);
-		this.setCtPtj(null);
+		
 		this.setCtProcurementMode(null);
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
