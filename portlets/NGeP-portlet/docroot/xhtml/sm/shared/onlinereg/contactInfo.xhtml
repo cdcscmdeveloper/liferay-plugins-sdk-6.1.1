@@ -187,6 +187,13 @@
 						value="#{registrationBackingBean.managedBean.smPersonnel.phoneNo}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
 					</p:inputText>
+					 &#160; <p:graphicImage id="teleno"
+						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						id="tfno" for="teleno">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.user.telephoneno']}" />
+					</p:tooltip>&#160;
+					
 					<p:message id="txtPhoneNoIdMsg" for="txtPhoneNoId" display="icon" />
 				</td>
 
