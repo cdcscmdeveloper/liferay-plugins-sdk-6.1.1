@@ -301,6 +301,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				this.getManagedBean().getTaskAssignmentSearchBean().setUser(new PmUser());
 			}
 			this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().setOrgName("");
+			this.getManagedBean().getTaskAssignmentSearchBean().getUser().setUserName("");
+			this.getManagedBean().getTaskAssignmentSearchBean().getUser().setLoginId("");
 			
 			if(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId()!=null){
 				PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId());
@@ -322,6 +324,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				}
 			}
 		}
+		
 		
 	}
 	

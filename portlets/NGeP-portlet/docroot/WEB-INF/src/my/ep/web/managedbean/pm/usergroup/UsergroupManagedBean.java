@@ -42,6 +42,10 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	private boolean isLazy = false;
 
+	private String errorMessage;
+
+	private boolean brandNew = false;
+
 	public PmUserGroup getUserGroup() {
 		return userGroup;
 	}
@@ -184,6 +188,22 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	public void setPmUserGroupList(List<PmUserGroup> pmUserGroupList) {
 		this.pmUserGroupList = pmUserGroupList;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	public boolean isBrandNew() {
+		return brandNew;
+	}
+
+	public void setBrandNew(boolean brandNew) {
+		this.brandNew = brandNew;
 	}
 
 }
