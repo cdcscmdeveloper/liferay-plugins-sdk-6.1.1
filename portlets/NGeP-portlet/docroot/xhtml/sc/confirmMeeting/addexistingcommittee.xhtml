@@ -13,7 +13,7 @@
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember">
 
-		<p:panel id="addexistingNewId">
+		<h:panelGroup id="addexistingNewId">
 			<p:messages id="existingNewid" autoUpdate="true" showDetail="true"
 				showSummary="false" closable="true"></p:messages>
 			<table>
@@ -35,7 +35,8 @@
 				</tr>
 			</table>
 
-			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
+			<h:panelGroup id="newCommitteeProfile"
+				style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 					<p:panel header="Search" toggleable="true">
@@ -71,8 +72,8 @@
 					<p:commandButton value="#{lbl['lbl.so.reset']}"
 						style="float:right;"
 						action="#{evaluationMeetingBackingBean.reset}"
-						update="newCommitteeProfile"
-						resetValues="true" partialSubmit="true" process="@this" />
+						update="newCommitteeProfile" resetValues="true"
+						partialSubmit="true" process="@this" />
 
 					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
 						style="float:right;"
@@ -249,7 +250,7 @@
 						</table>
 					</p:panel>
 				</c:if>
-			</p:panel>
+			</h:panelGroup>
 			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 				styleClass="apply_button" style="float:right;" process="@this"
 				oncomplete="newspecificationcommittee.hide();" />
@@ -260,7 +261,7 @@
 				process="@this, newCommitteeProfile,addexistingNewId"
 				actionListener="#{evaluationMeetingBackingBean.addCommitteeAction}" />
 
-		</p:panel>
+		</h:panelGroup>
 
 	</p:dialog>
 </ui:composition>

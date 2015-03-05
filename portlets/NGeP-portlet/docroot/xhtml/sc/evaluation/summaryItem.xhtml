@@ -69,19 +69,19 @@
 
 		</p:panel>
 
-		<p:panel>
-			<table>
 
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"
-							style="text-align:right"
-							value="#{evaluationBackingBean.managedBean.itemTotQualSuppliers}"></p:inputText></td>
-				</tr>
+		<table>
 
-			</table>
-		</p:panel>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.itemTotQualSuppliers}"></p:inputText></td>
+			</tr>
+
+		</table>
+
 	</h:panelGroup>
 
 	<h:panelGroup id="summaryItemDisQualified">
@@ -114,18 +114,18 @@
 
 		</p:panel>
 
-		<p:panel>
-			<table>
 
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"
-							style="text-align:right"
-							value="#{evaluationBackingBean.managedBean.itemTotDisQualSuppliers}"></p:inputText></td>
-				</tr>
+		<table>
 
-			</table>
-		</p:panel>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						style="text-align:right"
+						value="#{evaluationBackingBean.managedBean.itemTotDisQualSuppliers}"></p:inputText></td>
+			</tr>
+
+		</table>
+
 	</h:panelGroup>
 </ui:composition>
