@@ -72,7 +72,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 // TODO: Auto-generated Javadoc
-//import my.ep.constant.BpmOutcomeConst;
 
 /**
  * Backingbean for Fulfillment document.
@@ -183,7 +182,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	/**
-	 * Gets the document type drop down.
+	 * Gets the document type for doc type drop down.
 	 *
 	 * @return the document type drop down
 	 */
@@ -640,10 +639,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	 * @param e the e
 	 */
 	public void selectedUser(AjaxBehaviorEvent e) {
-		// doing some stuff here
-		//System.out.println("====enter process checked===="+ getManagedBean().getTempLoginId());
 		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println("=======get id value=====" + id);
 		getManagedBean().setTempLoginId(id);
 	}
 	
@@ -674,7 +670,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		String id = (String) e.getComponent().getAttributes().get("value");
 		
 		// reset everything to false
-		//this.getManagedBean().setCheckDocNo(true);
 		if(id!=null && id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			this.getManagedBean().setCheckDocType(true);
 		}else{
@@ -754,7 +749,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	/**
-	 * Gets the procurement type list.
+	 * Gets the procurement type list based on procurement type and language code.
 	 *
 	 * @return the procurement type list
 	 */
@@ -819,7 +814,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	/**
-	 * Gets the sum ordered qty.
+	 * calculate order quantity sum based on ordered quantity
 	 *
 	 * @param flRequest the fl request
 	 * @return the sum ordered qty
@@ -920,7 +915,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	/**
-	 * Generate report.
+	 * Generate report based on doc type.
 	 *
 	 * @param docType the doc type
 	 * @param docNo the doc no
