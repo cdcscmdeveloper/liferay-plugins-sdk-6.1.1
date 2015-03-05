@@ -12,6 +12,7 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.type.aut.SearchOperator;
@@ -114,6 +115,13 @@ public class RuleConfigHelper {
 					"pm", IRuleSO.class);
 			RuleReqDTO reqRDTO = new RuleReqDTO();
 			reqRDTO.setLanguageCode(languageCode);
+			SearchBean<PmConfigRule> searchBean = new SearchBean<PmConfigRule>();
+			// Filter By - status
+			searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("recordStatus",
+				SearchOperator.OPERATOR_EQUALS.value(), 
+				DbValueConst.RECORD_STATUS_ACTIVE));
+			reqRDTO.setSearchBean(searchBean);
 			RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
 			list = resRDTO.getRuleTypeList();
 
