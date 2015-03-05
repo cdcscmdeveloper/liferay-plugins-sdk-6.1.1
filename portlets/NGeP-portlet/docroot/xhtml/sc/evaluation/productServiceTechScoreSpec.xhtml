@@ -12,23 +12,23 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel>
-			<p:messages id="technicalEvaluationmsgId" autoUpdate="true"
-				closable="true" showDetail="true" showSummary="false"
-				severity="error,info"></p:messages>
 
-			<ui:include src="technicalspecbuttons.xhtml"></ui:include>
+		<p:messages id="technicalEvaluationmsgId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
 
-			<ui:include src="technicalspeccompliancelist.xhtml"></ui:include>
+		<ui:include src="technicalspecbuttons.xhtml"></ui:include>
 
-
-
-			<ac:templateSpec
-				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
+		<ui:include src="technicalspeccompliancelist.xhtml"></ui:include>
 
 
 
-		</p:panel>
+		<ac:templateSpec
+			templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
+
+
+
+
 
 	</ui:define>
 </ui:composition>

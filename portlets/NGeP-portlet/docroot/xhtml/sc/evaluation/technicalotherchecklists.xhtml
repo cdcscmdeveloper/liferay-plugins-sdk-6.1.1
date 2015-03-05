@@ -12,13 +12,13 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel>
+		<h:panelGroup>
 			<p:messages id="technicalEvaluationmsgId" autoUpdate="true"
 				closable="true" showDetail="true" showSummary="false"></p:messages>
 			<h:panelGroup>
 				<div>
-					<p:commandButton value="#{lbl['lbl.btn.back']}"
-						style="float:left;" update="@form"
+					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+						update="@form"
 						action="#{evaluationBackingBean.technicalBackaction}" />
 					<ui:param name="checklistScoreType"
 						value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
@@ -99,6 +99,6 @@
 				<ui:include
 					src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
 			</h:panelGroup>
-		</p:panel>
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>

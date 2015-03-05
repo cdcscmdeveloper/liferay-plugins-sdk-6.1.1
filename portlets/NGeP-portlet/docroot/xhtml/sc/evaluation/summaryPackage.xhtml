@@ -45,19 +45,19 @@
 
 	</p:panel>
 
-	<p:panel>
-		<table>
 
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
-						value="#{(!empty qualifiedList) ? qualifiedList.size() :0}"></p:inputText></td>
-			</tr>
+	<table>
 
-		</table>
-	</p:panel>
+		<tr>
+			<td><h:outputLabel
+					value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					style="text-align:right"
+					value="#{(!empty qualifiedList) ? qualifiedList.size() :0}"></p:inputText></td>
+		</tr>
+
+	</table>
+
 
 
 
@@ -91,19 +91,19 @@
 
 	</p:panel>
 
-	<p:panel>
-		<table>
 
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
-						value="#{(!empty disQualifiedSupplier) ? disQualifiedList.size():0}"></p:inputText></td>
-			</tr>
+	<table>
 
-		</table>
-	</p:panel>
+		<tr>
+			<td><h:outputLabel
+					value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					style="text-align:right"
+					value="#{(!empty disQualifiedSupplier) ? disQualifiedList.size():0}"></p:inputText></td>
+		</tr>
+
+	</table>
+
 
 
 </ui:composition>
