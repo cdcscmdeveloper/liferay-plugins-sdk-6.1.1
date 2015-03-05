@@ -17,7 +17,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cc.attrs.action}" />
 			</div>
 		</div>
-	<p:panel header="Trackng Diary Details" toggleable="true" >
+	<p:panel header="#{lbl['lbl.td.doc..trackingDiaryDetails']}" toggleable="true" >
 		<p:dataTable id="trackingDiaryTableID" lazy="true"  value="#{cc.attrs.dataTable}" 
 			var="trackingDiaryObj" width="100%" rows="10" styleClass="fixed-size" >
 
@@ -25,31 +25,31 @@
 
 				<p:column width="10%">
 					<f:facet name="header">
-					Creation Timestamp
+					#{lbl['lbl.td.doc..createdDate']}
 					</f:facet>
 				#{trackingDiaryObj.actionedDate}
 				</p:column>
 				<p:column width="10%">
 					<f:facet name="header">
-					Actioned By
+					#{lbl['lbl.td.doc..actionedBy']}
 					</f:facet>
 				#{trackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}
 				</p:column>
 				<p:column width="10%">
 					<f:facet name="header">
-					Role
+					#{lbl['lbl.td.doc..role']}
 					</f:facet>
 				#{trackingDiaryObj.roleCode}
 				</p:column>
 				<p:column style="white-space: normal" >
 					<f:facet name="header">
-					Description
+					#{lbl['lbl.td.doc..description']}
 					</f:facet>
 				#{trackingDiaryObj.actionDesc}
 				</p:column>
 				<p:column width="10%" style="white-space: normal" >
 					<f:facet name="header">
-					Status
+					#{lbl['lbl.td.doc..status']}
 					</f:facet>
 				#{trackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
 				</p:column>
