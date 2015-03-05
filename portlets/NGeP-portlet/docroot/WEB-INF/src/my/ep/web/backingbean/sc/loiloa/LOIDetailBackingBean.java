@@ -140,26 +140,47 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class LOIDetailBackingBean.
+ *
  * @author Viswanath
- * 
  */
 @ManagedBean(name = "lOIDetailBackingBean")
 @RequestScoped
 public class LOIDetailBackingBean extends
 		SourcingBaseBackingBean<LOIDetailManagedBean> {
+	
+	/** The log. */
 	public static Logger log = EpLogger.getLogger(LOIDetailBackingBean.class);
 
+	/** The Constant LOI_DETAILS_MAIN_MENU. */
 	public static final String LOI_DETAILS_MAIN_MENU = "/xhtml/sc/loi/loiDetailsMain.xhtml.xhtml";
+	
+	/** The Constant LOI_DETAILS_MENU. */
 	public static final String LOI_DETAILS_MENU = "/xhtml/sc/loi/loiDetailsMenu.xhtml";
+	
+	/** The Constant LOI_AWARD_DETAIL_MENU. */
 	public static final String LOI_AWARD_DETAIL_MENU = "/xhtml/sc/loi/loiAwardDetailsMenu.xhtml";
+	
+	/** The Constant LOI_NEGO_DETAIL_MENU. */
 	public static final String LOI_NEGO_DETAIL_MENU = "/xhtml/sc/loi/loiNegotiationDetailsMenu.xhtml";
+	
+	/** The Constant LOI_APPROVAL_MENU. */
 	public static final String LOI_APPROVAL_MENU = "/xhtml/sc/loi/loiApprovalMenu.xhtml";
 
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
+	
+	/** The flag. */
 	private boolean flag;
 	
+	/**
+	 * Instantiates a new LOI detail backing bean.
+	 */
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
 //		populateUserMinistryList();
@@ -167,6 +188,9 @@ public class LOIDetailBackingBean extends
 //		getApproverNames();
 	}
 
+	/**
+	 * Pre render loi list view.
+	 */
 	public void preRenderLoiListView() {
 		debugLogger("preRenderLoiListView");
 
@@ -217,6 +241,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		IStatusSO statusSO;
@@ -268,6 +295,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Pre render supplier view.
+	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
 		try {
@@ -315,6 +345,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Pre render multiple loi view.
+	 */
 	public void preRenderMultipleLoiView() {
 		debugLogger("preRenderMultipleLoiView");
 		
@@ -333,6 +366,13 @@ public class LOIDetailBackingBean extends
 		} 
 	}
 	
+	/**
+	 * Retrieve multiple loi dtls.
+	 *
+	 * @param qtId the qt id
+	 * @param committeeType the committee type
+	 * @param recommendDtlIds the recommend dtl ids
+	 */
 	private void retrieveMultipleLoiDtls(Long qtId, String committeeType, List<String> recommendDtlIds) {
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -385,6 +425,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Retrieve qt details.
+	 *
+	 * @param qtId the qt id
+	 */
 	public void retrieveQTDetails(Long qtId) {
 		IQTDetailSO qtDetailSO;
 		try {
@@ -402,6 +447,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve loi list.
+	 *
+	 * @param qtId the qt id
+	 */
 	public void retrieveLOIList(Long qtId) {
 		debugLogger("retrieveLOIList");
 		try {
@@ -438,6 +488,12 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Prepare loi loa list.
+	 *
+	 * @param loiloas the loiloas
+	 * @return the list
+	 */
 	private List<LoiLoaBean> prepareLoiLoaList(List<ScLoiLoa> loiloas) {
 		List<LoiLoaBean> loiloaBeans = new ArrayList<LoiLoaBean>();
 		if (loiloas != null && loiloas.size() > 0) {
@@ -471,6 +527,11 @@ public class LOIDetailBackingBean extends
 		return loiloaBeans;
 	}
 
+	/**
+	 * On row rec supplier action.
+	 *
+	 * @param event the event
+	 */
 	public void onRowRecSupplierAction(SelectEvent event) {
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
 		try {
@@ -490,6 +551,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Tab menu listener.
+	 *
+	 * @param selectedTabIndex the selected tab index
+	 */
 	public void tabMenuListener(Integer selectedTabIndex) {
 		debugLogger("tabMenuListener");
 		if (selectedTabIndex.equals(0)) {
@@ -506,7 +572,9 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Initializing remarks in loi approval
+	 * Initializing remarks in loi approval.
+	 *
+	 * @param bean the bean
 	 */
 //	public List<ScLoiRemark> initializeRemarks(ScLoi scLoi) {
 //		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance()
@@ -566,35 +634,51 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * showMultiLOIItemDetails method to view item details in multiple loi
+	 * onSupplierSelectEvent method to view item details and nego terms in multiple LOI.
 	 */
-	public void showMultiLOIItemDetails() {
-		/*
-		 * AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		 * getManagedBean().setScLoi(null); reqDTO = new AwardSupplierReqDTO();
-		 * reqDTO.setScLoi(scLoi); AwardSupplierResDTO resDTO =
-		 * getQtAwardSO().retrieveLOIDtl(reqDTO);
-		 * 
-		 * if (resDTO.getScLoi().getScLoiLoaItems() != null &&
-		 * resDTO.getScLoi().getScLoiLoaItems().size()>0) {
-		 * getManagedBean().setScLoiLoaItems
-		 * (resDTO.getScLoi().getScLoiLoaItems());
-		 * getManagedBean().setScLoi(scLoi); }
-		 */
-		boolean termPriceFound = true;
-		getManagedBean().setItemDetailsFlag(true);
+	public void onSupplierSelectEvent() {
 		ScLoi scLoi = getManagedBean().getScLoi();
-		
-		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
-			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
-				if(term.getTermDesc().equals("Price")){
-					termPriceFound = false;
-				}
-			}
-		}
+		boolean termPriceFound = false;
+		getManagedBean().setItemDetailsFlag(true);
+		termPriceFound = checkNegoTermPrice(scLoi);
 		getManagedBean().setHideColumnFlag(termPriceFound);
+		
+		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
+			BigDecimal subTotal = null;
+			BigDecimal afterNegoSubTotal = null;
+			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+			BigDecimal  afterNegoTotal = BigDecimal.valueOf(0d);
+			BigDecimal  offerPrice = BigDecimal.valueOf(0d);
+			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
+			if(termPriceFound){
+				for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+
+					if(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null){
+						offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+					}
+					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+							offerPrice, scLoiLoaItem.getQty());
+
+					afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+							scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+
+					scLoiLoaItem.setSubTotal(subTotal);
+					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+					totalAmount = totalAmount.add(subTotal);
+					afterNegoTotal = afterNegoTotal.add(afterNegoSubTotal);
+				}
+				scLoi.setLoiAmt(totalAmount);
+				scLoi.setAfterNegoTotal(afterNegoTotal);
+			}
+			scLoi.setScLoiLoaItems(scLoiLoaItems);
+		}
 	}
 	
+	/**
+	 * Gets the qt award so.
+	 *
+	 * @return the qt award so
+	 */
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
@@ -602,7 +686,9 @@ public class LOIDetailBackingBean extends
 
 	
 	/**
-	 * getting Approver drop down listing
+	 * getting Approver drop down listing.
+	 *
+	 * @return the approver names
 	 */
 	public List<PmUser> getApproverNames() {
 		List<PmUser> approverUsers = this.getManagedBean().getApproverNames();
@@ -632,7 +718,10 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * To get status for loi
+	 * To get status for loi.
+	 *
+	 * @param statusId the status id
+	 * @return the current status
 	 */
 	public void getCurrentStatus(Long statusId) {
 		if (statusId != null) {
@@ -640,6 +729,13 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the loi loa status.
+	 *
+	 * @param loiStatus the loi status
+	 * @param loaStatus the loa status
+	 * @return the loi loa status
+	 */
 	private String getLoiLoaStatus(List<ScLoiWorkFlowStatus> loiStatus,
 			List<ScLoaWorkFlowStatus> loaStatus) {
 		String loiLoaStatus = "";
@@ -655,7 +751,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Page navigation to loi loa list
+	 * Page navigation to loi loa list.
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
@@ -685,6 +781,9 @@ public class LOIDetailBackingBean extends
 	 * e) { e.printStackTrace(); } return getManagedBean().getComitteeUsers(); }
 	 */
 
+	/**
+	 * Adds the negotiation location.
+	 */
 	public void addNegotiationLocation() {
 		debugLogger("addNegotiationLocation");
 		ScLoiNegoLocation negoLocation = new ScLoiNegoLocation();
@@ -700,6 +799,9 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().setNegoLocationList(negoLocationList);
 	}
 
+	/**
+	 * Adds the negotiation term.
+	 */
 	public void addNegotiationTerm() {
 		debugLogger("addNegotiationTerm");
 		ScLoiTerm negoTerm = new ScLoiTerm();
@@ -718,6 +820,9 @@ public class LOIDetailBackingBean extends
 		// this.getManagedBean().setNegoTermsList(scNegoTerms);
 	}
 
+	/**
+	 * Populate pre defined details.
+	 */
 	public void populatePreDefinedDetails() {
 		debugLogger("populatePreDefinedDetails");
 		try {
@@ -744,6 +849,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the predefined terms.
+	 */
 	public void addPredefinedTerms() {
 		debugLogger("addPredefinedTerms");
 
@@ -766,6 +874,9 @@ public class LOIDetailBackingBean extends
 
 	}
 
+	/**
+	 * Delete nego term.
+	 */
 	public void deleteNegoTerm() {
 		List<ScLoiTerm> negoTermsList = new ArrayList<ScLoiTerm>();
 		boolean flag = true;
@@ -786,6 +897,9 @@ public class LOIDetailBackingBean extends
 		getManagedBean().getScLoi().setScNegoTerms(negoTermsList);
 	}
 
+	/**
+	 * Delete nego locations.
+	 */
 	public void deleteNegoLocations() {
 		List<ScLoiNegoLocation> selectedNegoLocs = getManagedBean()
 				.getSelectedNegoLocationList();
@@ -881,6 +995,9 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#populateParentOrgProfile(my.ep.persistence.entity.sc.quationtender.ScQt)
+	 */
 	public void populateParentOrgProfile(ScQt scQt) {
 		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
 				.getParentOrgProfile();
@@ -901,6 +1018,13 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Creates the loi action.
+	 *
+	 * @param scQtEvaluationResult the sc qt evaluation result
+	 * @param docType the doc type
+	 * @return the string
+	 */
 	public String createLOIAction(ScQtEvaluationResult scQtEvaluationResult,
 			String docType) {
 		debugLogger("createLOIAction");
@@ -1058,6 +1182,11 @@ public class LOIDetailBackingBean extends
 		return QTConstants.LOI_PAGE;
 	}
 
+	/**
+	 * Creates the loi.
+	 *
+	 * @param scLoiLoa the sc loi loa
+	 */
 	public void createLOI(ScLoiLoa scLoiLoa) {
 		try {
 			renewSessionWithPreviousValues();
@@ -1081,6 +1210,11 @@ public class LOIDetailBackingBean extends
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
 
+	/**
+	 * Edits the loi.
+	 *
+	 * @param scLoi the sc loi
+	 */
 	public void editLOI(ScLoi scLoi) {
 		 //getManagedBean().setScLoi(scLoi);
 		try {
@@ -1105,6 +1239,12 @@ public class LOIDetailBackingBean extends
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
 
+	/**
+	 * Edits the loi action.
+	 *
+	 * @param scLoi the sc loi
+	 * @return the string
+	 */
 	public String editLOIAction(ScLoi scLoi) {
 		debugLogger("editLOIAction");
 		try {
@@ -1125,25 +1265,15 @@ public class LOIDetailBackingBean extends
 		return QTConstants.LOI_PAGE;
 	}
 
+	/**
+	 * Populate loi details.
+	 *
+	 * @param resDTO the res dto
+	 */
 	private void populateLOIDetails(AwardSupplierResDTO resDTO) {
 		ScLoi scLoi = resDTO.getScLoi();
-		
-		// calc total items in award details
-		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
-			
-			BigDecimal subTotal = null;
-			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
-			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
-			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-				subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
-				scLoiLoaItem.setSubTotal(subTotal);
-				totalAmount = totalAmount.add(subTotal);
-			}
-			scLoi.setLoiAmt(totalAmount);
-			scLoi.setScLoiLoaItems(scLoiLoaItems);
-		}
-
+		getManagedBean().setScLoi(scLoi);
+		boolean termPriceFound = false;
 		// nego terms
 		if(scLoi.getScNegoTerms() == null || scLoi.getScNegoTerms().isEmpty()){
 			if(getManagedBean().getNegoTermsList() != null){
@@ -1159,6 +1289,40 @@ public class LOIDetailBackingBean extends
 				scLoi.getScNegoTerms().addAll(getManagedBean().getNegoTermsList());
 			}
 		}
+		
+		// check nego term price
+		termPriceFound = checkNegoTermPrice(scLoi);
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
+		//
+		// calc total items in award details
+		if(termPriceFound){
+			if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
+				BigDecimal subTotal = null;
+				BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+				BigDecimal  offerPrice = BigDecimal.valueOf(0d);
+				List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
+				for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+					
+					if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)){
+						if(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null){
+							offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+						}
+						subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+								offerPrice, scLoiLoaItem.getQty());
+					} else{
+						subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+								scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+					}
+					
+					scLoiLoaItem.setSubTotal(subTotal);
+					totalAmount = totalAmount.add(subTotal);
+				}
+				scLoi.setLoiAmt(totalAmount);
+				scLoi.setScLoiLoaItems(scLoiLoaItems);
+			}
+			priceKeyInEvent();
+		}
+		
 		// loi details
 		getManagedBean().setScLoi(scLoi);
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -1485,7 +1649,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * 
+	 * Show officer details.
 	 */
 	private void showOfficerDetails() {
 		IAddressSO addressSO;
@@ -1532,6 +1696,9 @@ public class LOIDetailBackingBean extends
 
 	}
 
+	/**
+	 * Handle branch details changed.
+	 */
 	public void handleBranchDetailsChanged() {
 		log.info("handleBranchDetailsChanged");
 		debugLogger("handleBranchDetailsChanged");
@@ -1599,7 +1766,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Method to save the LOA details
+	 * Method to save the LOA details.
 	 */
 	public void saveAction() {
 		debugLogger("saveAction");
@@ -1713,6 +1880,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Submit loi list action.
+	 *
+	 * @return the string
+	 */
 	public String submitLoiListAction() {
 		debugLogger("submitLoiListAction");
 
@@ -1757,6 +1929,11 @@ public class LOIDetailBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Submit action.
+	 *
+	 * @return the string
+	 */
 	public String submitAction() {
 		debugLogger("submitAction");
 		try {
@@ -1817,6 +1994,11 @@ public class LOIDetailBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Update loi list bpm task action.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void updateLOIListBpmTaskAction(String outcome) {
 		debugLogger("updateLOIListBpmTaskAction");
 		try {
@@ -1845,8 +2027,10 @@ public class LOIDetailBackingBean extends
 	}
 	
 	/**
-	 * @param action
-	 * @param object
+	 * Update bpm task.
+	 *
+	 * @param outcome the outcome
+	 * @param digiSign the digi sign
 	 * @return AwardSupplierResDTO
 	 */
 	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
@@ -1922,6 +2106,11 @@ public class LOIDetailBackingBean extends
 		return awardSupplierResDTO;
 	}
 
+	/**
+	 * Update bpm task action.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
@@ -1937,6 +2126,9 @@ public class LOIDetailBackingBean extends
 		}	
 	}
 	
+	/**
+	 * Save multiple loi action.
+	 */
 	public void saveMultipleLoiAction() {
 		debugLogger("saveMultipleLoiAction");
 		try {
@@ -1979,6 +2171,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Update multi loi bpm task action.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
@@ -1990,9 +2187,10 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * @param outcome
-	 * @param PmDigiSign 
-	 * @return 
+	 * Update multi loi bpm task.
+	 *
+	 * @param outcome the outcome
+	 * @param digiSign the digi sign
 	 */
 	private void updateMultiLoiBpmTask(String outcome , PmDigiSign digiSign) {
 		debugLogger("updateMultiLoiBpmTask");
@@ -2032,6 +2230,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Parses the multiple loi dtls.
+	 *
+	 * @return the award supplier req dto
+	 */
 	private AwardSupplierReqDTO parseMultipleLoiDtls() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -2069,6 +2272,11 @@ public class LOIDetailBackingBean extends
 		return reqDTO;
 	}
 	
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -2076,6 +2284,12 @@ public class LOIDetailBackingBean extends
 		log.info(message);
 	}
 
+	/**
+	 * Gets the loi letter stream content.
+	 *
+	 * @return the loi letter stream content
+	 * @throws Exception the exception
+	 */
 	public StreamedContent getLoiLetterStreamContent() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
@@ -2087,6 +2301,11 @@ public class LOIDetailBackingBean extends
 		return pbStreamContent;
 	}
 
+	/**
+	 * Preview letter.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void previewLetter() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
@@ -2098,6 +2317,9 @@ public class LOIDetailBackingBean extends
 		RequestContext.getCurrentInstance().execute("loiLetterDlg.show();");
 	}
 
+	/**
+	 * Adds the meeting attendance.
+	 */
 	public void addMeetingAttendance() {
 		debugLogger("..In addMeetingAttendance()..");
 
@@ -2121,6 +2343,13 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Generate loi letter from velocity to pdf.
+	 *
+	 * @param scLoi the sc loi
+	 * @param attachment the attachment
+	 * @throws Exception the exception
+	 */
 	private void generateLoiLetterFromVelocityToPdf(ScLoi scLoi, ScAttachment attachment)
 			throws Exception {
 		attachment.setFileName("Loi Letter.pdf");
@@ -2266,6 +2495,12 @@ public class LOIDetailBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Parses the loi details.
+	 *
+	 * @param scLoi the sc loi
+	 * @param outcome the outcome
+	 */
 	private void parseLOIDetails(ScLoi scLoi, String outcome) {
 		if (scLoi.isBrandNew()) {
 			scLoi.setIssueDate(new Date());
@@ -2359,6 +2594,9 @@ public class LOIDetailBackingBean extends
 
 	}
 
+	/**
+	 * Renew session with previous values.
+	 */
 	private void renewSessionWithPreviousValues() {
 		Object payLoadData = getManagedBean().getPayLoadData();
 		Long sourceId = getManagedBean().getSourceId();
@@ -2392,6 +2630,11 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setNegoTermsList(negoTerms);
 	}
 
+	/**
+	 * Gets the deduction item type dropdown list.
+	 *
+	 * @return the deduction item type dropdown list
+	 */
 	public SelectItem[] getDeductionItemTypeDropdownList() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
@@ -2408,6 +2651,11 @@ public class LOIDetailBackingBean extends
 				ParameterTypeConst.DEDUCTION_TYPE, searchBean);
 	}
 
+	/**
+	 * Deduction type change.
+	 *
+	 * @param scQtDeduction the sc qt deduction
+	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
 
@@ -2460,6 +2708,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the deduction payment action.
+	 */
 	public void addDeductionPaymentAction() {
 		debugLogger("addDeductionPaymentAction");
 
@@ -2479,6 +2730,9 @@ public class LOIDetailBackingBean extends
 		scQtDeductions.add(scQtDeduction);
 	}
 
+	/**
+	 * Adds the deduction clause action.
+	 */
 	public void addDeductionClauseAction() {
 		debugLogger("addDeductionClauseAction");
 
@@ -2498,6 +2752,9 @@ public class LOIDetailBackingBean extends
 		scQtDeductionClauses.add(scQtDeductionClause);
 	}
 
+	/**
+	 * Adds the schedule details.
+	 */
 	public void addScheduleDetails() {
 
 		try {
@@ -2538,6 +2795,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the year details.
+	 *
+	 * @return the year details
+	 */
 	public List<SelectItem> getYearDetails() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		FacesScopes face = new FacesScopes();
@@ -2564,6 +2826,12 @@ public class LOIDetailBackingBean extends
 		return getManagedBean().getYearList();
 	}
 	
+	/**
+	 * Gets the month.
+	 *
+	 * @param monthId the month id
+	 * @return the month
+	 */
 	private String getMonth(int monthId){
 		Calendar fullMonth = Calendar.getInstance();
 		fullMonth.set(00, monthId, 0000);
@@ -2574,11 +2842,21 @@ public class LOIDetailBackingBean extends
 	}
 	
 
+	/**
+	 * Calculate start month.
+	 *
+	 * @param event the event
+	 */
 	public void calculateStartMonth(AjaxBehaviorEvent event) {
 		event.getComponent().getAttributes().get("value");
 
 	}
 
+	/**
+	 * Gets the years display dtls.
+	 *
+	 * @return the years display dtls
+	 */
 	public List<SelectItem> getYearsDisplayDtls() {
 
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
@@ -2600,6 +2878,12 @@ public class LOIDetailBackingBean extends
 		return getManagedBean().getYearsDisplayList();
 	}
 
+	/**
+	 * Calculate schedule months.
+	 *
+	 * @param schedule the schedule
+	 * @param startMonthAndYearFlag the start month and year flag
+	 */
 	public void calculateScheduleMonths(ScQtSchedule schedule , Boolean startMonthAndYearFlag) {
 
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoi()
@@ -2646,6 +2930,9 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().setScheduleList(freqSchedule);
 	}
 	
+	/**
+	 * Save schedule list.
+	 */
 	private void saveScheduleList() {
 		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoi()
 				.getScQtSchedules();
@@ -2744,6 +3031,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the progressive details.
+	 */
 	public void addProgressiveDetails() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		List<ScQtProgressivePayment> progressive = this.getManagedBean()
@@ -2780,6 +3070,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Save progressive paymnt list.
+	 */
 	private void saveProgressivePaymntList() {
 		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
 				.getProgressivePaymentList();
@@ -2874,6 +3167,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Sort frequent schedule list.
+	 *
+	 * @param scQtScheduleList the sc qt schedule list
+	 */
 	private void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
 		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
 			@Override
@@ -2885,6 +3183,11 @@ public class LOIDetailBackingBean extends
 		Collections.sort(scQtScheduleList, comparator);
 	}
 	
+	/**
+	 * Sort progressive payment list.
+	 *
+	 * @param progressivePaymentList the progressive payment list
+	 */
 	private void sortProgressivePaymentList(
 			List<ScQtProgressivePayment> progressivePaymentList) {
 		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
@@ -2899,6 +3202,13 @@ public class LOIDetailBackingBean extends
 	}
 
 
+	/**
+	 * Handle file upload.
+	 *
+	 * @param event the event
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleFileUpload");
 		if (event.getFile() != null) {
@@ -2918,6 +3228,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Adds the loi report action.
+	 */
 	public void addLoiReportAction() {
 		debugLogger("addLoiReportAction");
 		
@@ -2952,6 +3265,12 @@ public class LOIDetailBackingBean extends
 		scLoiReports.add(scLoiReport);
 	}
 	
+	/**
+	 * Download report.
+	 *
+	 * @param scLoiReport the sc loi report
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void downloadReport(ScLoiReport scLoiReport) throws IOException {
 		debugLogger("downloadReport");
 		ScLoiReportAttachment scLoiReportAttachment = scLoiReport.getScLoiReportAttachment();
@@ -2962,6 +3281,11 @@ public class LOIDetailBackingBean extends
 		downloadFile(scLoiReportAttachment);
 	}
 	
+	/**
+	 * Download all reports.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void downloadAllReports() throws IOException {
 		debugLogger("downloadAllReports");
 		List<ScLoiReport> scLoiReports = getManagedBean().getScLoi().getScLoiReports();
@@ -2977,6 +3301,9 @@ public class LOIDetailBackingBean extends
 		downloadAllFiles("NGeP-LOI-Report", scAttachments);
 	}
 	
+	/**
+	 * Adds the loi supp doc action.
+	 */
 	public void addLoiSuppDocAction() {
 		debugLogger("addLoiSuppDocAction");
 		
@@ -3013,6 +3340,13 @@ public class LOIDetailBackingBean extends
 		scLoiSuppDocs.add(scLoiSuppDoc);
 	}
 	
+	/**
+	 * Handle supp doc file upload.
+	 *
+	 * @param event the event
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void handleSuppDocFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleSuppDocFileUpload");
 		if (event.getFile() != null) {
@@ -3037,6 +3371,12 @@ public class LOIDetailBackingBean extends
 	
 	
 	
+	/**
+	 * Generate document attachment.
+	 *
+	 * @param scLoiReport the sc loi report
+	 * @return the sc loi report attachment
+	 */
 	private ScLoiReportAttachment generateDocumentAttachment(ScLoiReport scLoiReport) {
 		String definitionType = scLoiReport.getDefinationType().getParameterCode();
 		ScLoiReportAttachment scLoiReportAttachment = null;
@@ -3069,6 +3409,13 @@ public class LOIDetailBackingBean extends
 		return scLoiReportAttachment;
 	}
 
+	/**
+	 * Generate negotiation recommendation pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoi the sc loi
+	 * @throws Exception the exception
+	 */
 	private void generateNegotiationRecommendationPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
 		attachment.setFileName("Negotiation_Recommendation.pdf");
 		populateAttachmentDetails(attachment);
@@ -3094,6 +3441,13 @@ public class LOIDetailBackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationRecommendation.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate negotiation result pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoi the sc loi
+	 * @throws Exception the exception
+	 */
 	private void generateNegotiationResultPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
 		populateAttachmentDetails(attachment);
@@ -3119,6 +3473,13 @@ public class LOIDetailBackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationResult.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate negotiation committee pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoi the sc loi
+	 * @throws Exception the exception
+	 */
 	private void generateNegotiationCommitteePdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
 		attachment.setFileName("Negotiation_Committee.pdf");
 		populateAttachmentDetails(attachment);
@@ -3191,6 +3552,13 @@ public class LOIDetailBackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationCommittee.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate negotiation location pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoi the sc loi
+	 * @throws Exception the exception
+	 */
 	private void generateNegotiationLocationPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
 		attachment.setFileName("Negotiation_Location.pdf");
 		populateAttachmentDetails(attachment);
@@ -3213,6 +3581,13 @@ public class LOIDetailBackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationLocation.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate offered and qt dtls pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoi the sc loi
+	 * @throws Exception the exception
+	 */
 	private void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
 		attachment.setFileName("OfferedAndQTDetails.pdf");
 		populateAttachmentDetails(attachment);
@@ -3247,6 +3622,13 @@ public class LOIDetailBackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-offeredAndQTDetails.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate cover pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoi the sc loi
+	 * @throws Exception the exception
+	 */
 	private void generateCoverPdfFromVelocity(ScAttachment attachment, ScLoi scLoi) throws Exception {
 		attachment.setFileName("Cover.pdf");
 		populateAttachmentDetails(attachment);
@@ -3261,6 +3643,11 @@ public class LOIDetailBackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-cover.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
+	/**
+	 * Select all.
+	 *
+	 * @param event the event
+	 */
 	public void selectAll(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScLoiTerm> scLoiTerms = getManagedBean().getScLoi().getScNegoTerms();
@@ -3274,7 +3661,61 @@ public class LOIDetailBackingBean extends
 			}
 		}
 	}
+
+	public void negoTermPriceEvent() {
+		boolean termPriceFound = false;
+		ScLoi scLoi = getManagedBean().getScLoi();
+
+		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
+			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
+				if(term.getTermDesc().equals(QTConstants.LOI_NEGO_TERM_PRICE)){
+					termPriceFound = true;
+				}
+			}
+		}
+		getManagedBean().setHideColumnFlag(termPriceFound);	
+	}
 	
+	public void priceKeyInEvent() {
+		ScLoi scLoi = getManagedBean().getScLoi();
+
+		// calc after nego total
+		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
+			BigDecimal  subTotal = BigDecimal.valueOf(0d);
+			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
+			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+
+				subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+				scLoiLoaItem.setAfterNegoSubTotal(subTotal);
+				totalAmount = totalAmount.add(subTotal);
+			}
+			scLoi.setScLoiLoaItems(scLoiLoaItems);
+			scLoi.setAfterNegoTotal(totalAmount);
+		}
+		getManagedBean().setScLoi(scLoi);
+	}
+
+
+	private boolean checkNegoTermPrice(ScLoi scLoi) {
+		boolean termPriceFound = false;
+		//ScLoi scLoi = getManagedBean().getScLoi();
+		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
+			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
+				if(term.getTermDesc().equals(QTConstants.LOI_NEGO_TERM_PRICE)){
+					termPriceFound = true;
+				}
+			}
+		}
+		return termPriceFound;
+	}
+	
+	/**
+	 * Gets the award supplier list drop down.
+	 *
+	 * @return the award supplier list drop down
+	 */
 	public List<SelectItem> getAwardSupplierListDropDown() {
 		List<ScQtRecommend> selectedRecommendList = getManagedBean().getSelectedRecommendList();
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
@@ -3299,6 +3740,11 @@ public class LOIDetailBackingBean extends
 		return selectItems;
 	}
 	
+	/**
+	 * Recommend supplier selected action.
+	 *
+	 * @param scQtRecommendDtl the sc qt recommend dtl
+	 */
 	public void recommendSupplierSelectedAction(ScQtRecommendDtl scQtRecommendDtl) {
 		ScQtRecommend scQtRecommend = scQtRecommendDtl.getScQtRecommend();
 		
@@ -3316,6 +3762,11 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Update recommend by.
+	 *
+	 * @param scQtRecommend the sc qt recommend
+	 */
 	private void updateRecommendBy(ScQtRecommend scQtRecommend) {
 		int activeCount = 0;
 		for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
@@ -3326,6 +3777,9 @@ public class LOIDetailBackingBean extends
 		scQtRecommend.setRecommendByStr(activeCount > 1 ? ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD : ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
 	}
 	
+	/**
+	 * Award supplier event.
+	 */
 	public void awardSupplierEvent() {
 		Long awardSupplierId = getManagedBean().getAwardSupplierId();
 		List<ScQtRecommend> selectedRecommendList = getManagedBean().getSelectedRecommendList();
@@ -3344,6 +3798,12 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Calc sub total price.
+	 *
+	 * @param scLoiLoaItem the sc loi loa item
+	 * @return the big decimal
+	 */
 	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
 		BigDecimal total = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
@@ -3380,22 +3840,47 @@ public class LOIDetailBackingBean extends
 	}
 	
 
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param digiSign the digi sign
+	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
 	
+	/**
+	 * Gpki sign multi loi action.
+	 *
+	 * @param digiSign the digi sign
+	 */
 	public void gpkiSignMultiLoiAction(PmDigiSign digiSign) {
 		updateMultiLoiBpmTask(this.getManagedBean().getAction(), digiSign);
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 *
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
 		if(getManagedBean().getScLoi() != null){
@@ -3406,14 +3891,29 @@ public class LOIDetailBackingBean extends
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
 
+	/**
+	 * Checks if is flag.
+	 *
+	 * @return true, if is flag
+	 */
 	public boolean isFlag() {
 		return flag;
 	}
 
+	/**
+	 * Sets the flag.
+	 *
+	 * @param flag the new flag
+	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}

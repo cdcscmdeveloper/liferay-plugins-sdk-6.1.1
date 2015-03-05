@@ -67,7 +67,7 @@
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{negoTerm.deleted}" disabled="#{!empty negoTerm.pmTerm}">
-						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						<p:ajax partialSubmit="true" process="@this" update="@form" listener="#{lOIDetailBackingBean.negoTermPriceEvent()}" />
 					</p:selectBooleanCheckbox>
 		     </p:column>
             
