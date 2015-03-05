@@ -142,9 +142,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * This method will initialize the button and approver list.
 	 */
 	public AgreementBackingBean() {
-		/*Initialization of button*/
+		/* Initialization of button */
 		if (getManagedBean().getAction() == null) {
-			getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT });
+			getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 		}
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
@@ -160,7 +160,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	/**
-	 * This  method used to initialize approver list
+	 * This  method used to initialize approver list.
 	 */
 	private void initializeApproverList() {
 		if (getManagedBean().getApproverModel() == null) {
@@ -204,7 +204,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			userSO = null;
 		}
@@ -326,7 +326,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
 			ctReqDTO.setDocId(new Long(dataType.getDocId()));
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 
 			resDTO = new ContractAgreementResDTO();
 			String agrrementType = (dataType.getAgreementType() == null) ? "" : dataType.getAgreementType();
@@ -342,7 +342,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    		conReqDTO.setContractVerId(new Long(dataType.getDocId()));
 					conReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
 					contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+							ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 					
 					ContractResDTO conResDTO = contractSO.retrieveContractVerDtls(conReqDTO);
 					ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
@@ -439,7 +439,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 		// Get performance bond rule amount
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
 		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
 		RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
@@ -453,8 +453,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		initializeRemarks();
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getCtAgreement().getCtWorkflowStatus(),
-				getManagedBean().getRemarkList(),
-				getManagedBean().getAttachmentList());
+				getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
 	
 	/**
@@ -462,7 +461,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * This method will navigate to acknowledgment page with a 
 	 * confirmation message once submit successfully. 
 	 *
-	 * @param  action  the response data transfer object for agreement
+	 * @param  action  the user action on this agreement
 	 * @return the navigate URL 
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
@@ -476,7 +475,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 	         
 			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
 				reqDTO.setAgreementType(ContractConst.SUP_AGREEMENT);
@@ -530,7 +529,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(messageId,
 										new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo()},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
@@ -673,8 +672,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				checkDuplicateSupplierWitness(supplierWitness.getOfficerIc());
 			}
 		}		
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && 
-				getManagedBean().getApproverModel().getTarget().size() == 0) {
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
+				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
 			//Approver is mandatory for document submission. Please select at least one approver.
 			throw new EpException(MessageConst.ERROR_750010);
 		}
@@ -858,7 +857,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			try {
 				int i = 1;
 				supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 	        	reqDTO = new SupplierSearchReqDTO();
 	        	reqDTO.setSupplierId(getManagedBean().getCtContract().getSmSupplier().getSupplierId());
 	         	resDTO = supplierSearchSO.retrieveContractSigners(reqDTO);
@@ -901,7 +900,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
     	ctReqDTO.setViewOnly(true);
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.setValidateContractField(resDTO);
@@ -1033,7 +1032,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	/**
 	 * The method used to download the attached file.
 	 * 
-	 * @param  attachment   an object of attached file
+	 * @param  filePath	    will be download file path
+	 * @param  fileName     will be download filename
 	 * @throws IOException  if an input or output exception occurred
 	 * @see    IOException
 	 */
@@ -1128,7 +1128,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 * //this.getManagedBean().setFilePath(agreementDetails.getFilePath());
 		 * contractTemplateSO =
 		 * (IContractTemplateSO)BusinessDelegate.getInstance
-		 * ().getServiceObject("ct",IContractTemplateSO.class); reqDTO = new
+		 * ().getServiceObject("ct", IContractTemplateSO.class); reqDTO = new
 		 * ContractTemplateReqDTO(); reqDTO.setTemplateId(agreementContent);
 		 * ResDTO = contractTemplateSO.retrieveTemplateById(reqDTO);
 		 * this.getManagedBean().setCtTemplates(ResDTO.getCtTemplate());
@@ -1273,7 +1273,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-party.vm";
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO addressReqDTO = new AddressReqDTO();
 			addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
 			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
@@ -1328,7 +1328,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	/**
-	 * The method used to retrieve the base URL
+	 * The method used to retrieve the base URL.
 	 * 
 	 * @return url  the base URL
 	 */
@@ -1389,7 +1389,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			log.error("Exception>>", e);
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -1542,7 +1542,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			  
 			} else if (party.equals(ctParty) && ctParty.getOfficer().getUserId() != null) {
 				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(ctParty.getOfficer().getUserId());
 				UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
