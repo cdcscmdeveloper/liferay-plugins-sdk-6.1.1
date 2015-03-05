@@ -60,7 +60,7 @@
 							value="#{locationBackingBean.managedBean.state.stateCode}"
 							disabled="#{!locationBackingBean.managedBean.state.brandNew}"
 							size="40" required="true" 
-							validatorMessage="#{lbl['lbl.pm.location.len.validate']}">
+							validatorMessage="#{lbl['lbl.pm.location.len.validate']}" maxlength="10">
 							<f:validateLength minimum="2" />
 							</p:inputText></td>
 					<td><p:message id="statecodeMsg" for="statecode"
@@ -157,7 +157,7 @@
 							label="#{lbl['lbl.pm.division.code']}" size="40" 
 							disabled="#{!locationBackingBean.managedBean.division.brandNew}"
 							value="#{locationBackingBean.managedBean.division.divisionCode}" 
-							required="true" >
+							required="true" maxlength="10">
 							<f:validateLength minimum="2" />
 							</p:inputText></td>
 					<td><p:message id="divisioncodeMsg" for="divisioncode"
@@ -269,7 +269,7 @@
 							label="#{lbl['lbl.pm.district.code']}" 
 							disabled="#{!locationBackingBean.managedBean.district.brandNew}"
 							value="#{locationBackingBean.managedBean.district.districtCode}"
-							size="40" required="true" >
+							size="40" required="true" maxlength="10">
 							<f:validateLength minimum="4" />							
 							</p:inputText></td>
 					<td><p:message id="districtcodeMsg" for="districtcode"
@@ -381,7 +381,7 @@
 							style="text-transform: uppercase"
 							disabled="#{!locationBackingBean.managedBean.city.brandNew}"
 							value="#{locationBackingBean.managedBean.city.cityCode}"
-							size="40" required="true" >
+							size="40" required="true" maxlength="10">
 							<f:validateLength minimum="6" />
 							</p:inputText></td>
 					<td><p:message id="citycodeMsg" for="citycode" display="icon" /></td>
