@@ -14,15 +14,14 @@
 				</th>
 				<td><p:selectOneMenu id="serviceTypeId"
 						styleClass="ppDropDownWidthM"
-						style="width: 135px;margin-bottom: 5px;"
+					    style="margin-bottom: 5px;"
 						label="#{lbl['lbl.pm.financialorg.services']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean.serviceType}">
 						<f:selectItems
 							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
 					</p:selectOneMenu></td>
 				<td>&#160;</td>
-				<th>&#160;</th>
-				<td>&#160;</td>
+				<th>&#160;</th>				
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
@@ -46,7 +45,7 @@
 
 			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.status']}" /></th>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
 						value="#{financialOrgBackingBean.managedBean.financialOrgSearchBean.orgStatus}">
 						<f:selectItems
 							value="#{financialOrgBackingBean.getStatusOptions()}" />
