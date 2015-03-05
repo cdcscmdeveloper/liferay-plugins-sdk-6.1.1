@@ -84,6 +84,7 @@ public class FinancialOrgBackingBean extends
 	// Tab values
 	public static final int GENERRAL = 0;
 	public static final int FACTRING_BRANCH = 1;
+	
 
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
@@ -187,6 +188,7 @@ public class FinancialOrgBackingBean extends
 		this.getManagedBean().setPmAddress(null);
 		this.getManagedBean().setSelectedTabIndex(GENERRAL);
 		this.getManagedBean().setEnableUpdateStatus(true);
+		this.getManagedBean().setShowFactoringBank(true);
 		this.getManagedBean().setServiceTypes(null);
 	}
 	
@@ -260,17 +262,20 @@ public class FinancialOrgBackingBean extends
 			 
 			 // disable/enable status update 
 			 if(ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(pmParameter.getParameterCode())){
-				 if(DbValueConst.RECORD_STATUS_ACTIVE == financialSvc.getRecordStatusFlg()){
+				 if(DbValueConst.RECORD_STATUS_ACTIVE == financialSvc.getRecordStatusFlg()){					
 					 this.getManagedBean().setEnableUpdateStatus(false);
 				 }
-			 
+				
 			 }			
 			 
 			 if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
+				 System.out.println("Record Status Flag--==>"+financialSvc.getRecordStatusFlg());
 				
 				 if(DbValueConst.RECORD_STATUS_DELETED == financialSvc.getRecordStatusFlg()){
+					 System.out.println("Before------"+getManagedBean().isShowFactoringBank());
 					 this.getManagedBean().setShowFactoringBank(false);
-				 }				
+				 }	
+				 System.out.println("After------"+getManagedBean().isShowFactoringBank());
 				 for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
 					 if(!getManagedBean().getFinancialOrg().getPmFinancialSvcs().isEmpty()&& getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null){						 
 					
@@ -1520,7 +1525,7 @@ public class FinancialOrgBackingBean extends
 
 	public void searchFinancialOrg() {
 		searchFinancialOrg.reloadData();
-	}
+	}	
 	
 	/* ------------------ SEARCH - END  ------------------  */
 }

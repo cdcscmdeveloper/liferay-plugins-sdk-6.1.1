@@ -60,7 +60,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	private boolean enableUpdateStatus;
 	private int selectedTabIndex;
 	private Date currentDate = new Date();
-	private boolean showFactoringBank;
+	private boolean showFactoringBank=true;
 
 
 	/**
