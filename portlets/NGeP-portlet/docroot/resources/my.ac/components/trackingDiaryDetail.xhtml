@@ -12,14 +12,11 @@
 	</cc:interface>
 
 	<cc:implementation>
-		<p:panel id="Pnl" toggleable="true">
-			<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-			<div style="text-align: right; min-height: 40px;">	
-				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cc.attrs.action}" />
-				</div>
+		<div style="text-align: right; min-height: 40px;">	
+			<div style="float: left; clear: both;">
+				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cc.attrs.action}" />
 			</div>
-		</p:panel>
+		</div>
 	<p:panel header="Trackng Diary Details" toggleable="true" >
 		<p:dataTable id="trackingDiaryTableID" lazy="true"  value="#{cc.attrs.dataTable}" 
 			var="trackingDiaryObj" width="100%" rows="10" styleClass="fixed-size" >
