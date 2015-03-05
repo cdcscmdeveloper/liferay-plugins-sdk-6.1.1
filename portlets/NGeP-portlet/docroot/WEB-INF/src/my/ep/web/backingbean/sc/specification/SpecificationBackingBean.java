@@ -480,8 +480,16 @@ public class SpecificationBackingBean extends
 			panelItem = this.getManagedBean().getCtPanelItem();
 
 			circularVer = this.getManagedBean().getCtCircularVer();
-
+			List<ScQtLocCriteria> qtLocCriteriaRemoveList = this
+					.getManagedBean().getSupplierLocationList();
+			if (null != qtLocCriteriaRemoveList
+					&& !qtLocCriteriaRemoveList.isEmpty()) {
+				for (ScQtLocCriteria criteria : qtLocCriteriaRemoveList) {
+					criteria.setDeleted(true);
+				}
+			}
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = prepareSpecReq().getScQt();
@@ -497,16 +505,7 @@ public class SpecificationBackingBean extends
 			case 1:
 				ScQt scQtSupplier = prepareSpecReq().getScQt();
 				specReqDTO.setScQt(scQtSupplier);
-				List<ScQtLocCriteria> qtLocCriteriaRemoveList = this
-						.getManagedBean().getSupplierLocationList();
-				if (null != qtLocCriteriaRemoveList
-						&& !qtLocCriteriaRemoveList.isEmpty()) {
-					for (ScQtLocCriteria criteria : qtLocCriteriaRemoveList) {
-						criteria.setDeleted(true);
-					}
-				}
-				specReqDTO
-						.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
+
 				specSO.validateSupplierQulificationInfo(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
@@ -578,6 +577,8 @@ public class SpecificationBackingBean extends
 			if (getManagedBean().getTempIndex() < activeIndex) {
 				getManagedBean().setTempIndex(activeIndex);
 			}
+			this.getManagedBean().setSupplierLocationList(
+					new ArrayList<ScQtLocCriteria>());
 			this.getManagedBean().setSelectPanelItem(selectPanelItem);
 			this.getManagedBean().setActiveIndex(activeIndex);
 			this.getManagedBean().setTaskId(taskId);
