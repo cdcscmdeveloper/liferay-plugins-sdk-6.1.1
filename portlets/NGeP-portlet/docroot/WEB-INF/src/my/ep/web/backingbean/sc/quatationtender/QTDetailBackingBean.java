@@ -819,7 +819,7 @@ public class QTDetailBackingBean extends
 					tabBean.getScQtApproval().setApproverSettings(
 							tabBean.getBudgetApprovalUsers().getTarget());
 				}
-				if (tabBean.getScQtApproval().getApprovalType().equals(QTConstants.OTHERS_APPROVAL)) {
+				/*if (tabBean.getScQtApproval().getApprovalType().equals(QTConstants.OTHERS_APPROVAL)) {
 					for (ScQtApprovalRequest approvalRequest : tabBean.getScQtApproval().getScQtApprovalDtls()) {
 						if (approvalRequest.getApproverAction() != null && approvalRequest.getApproverAction().getParameterId() == null) {
 							approvalRequest.setApproverAction(null);
@@ -831,7 +831,7 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
-				}
+				}*/
 				tabBean.getScQtApproval().setScQtApprovalRemarks(
 						finalizeRemarks(tabBean.getScQtApproval()
 								.getScQtApprovalRemarks()));
@@ -1619,7 +1619,6 @@ public class QTDetailBackingBean extends
 	}
 
 	public void preRenderView() {
-
 		Long qtId = null;
 		Object payLoad = getBpmTaskDetails(Object.class);
 		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this
