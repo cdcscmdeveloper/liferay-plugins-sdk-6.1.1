@@ -504,6 +504,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 	
 	public String editSubDivision(Long id) {
+		log.info("***editSubDivision id***" + id);
 		ICategoryCodeSO categoryCodeSO;
 		try{
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -666,10 +667,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			
 			//if not category restc, remove exisitng restr
-			if(!this.getManagedBean().getPmCategoryL3().isByCompType()){
+			if(!this.getManagedBean().getPmCategoryL3().isByCompType() && this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs() != null){
 				log.info("*******NOT COMPANY RESTRICT*********");
-				if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size() > 0){
-					this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().clear();
+				if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs() != null ){
+					if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size() > 0){
+						this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().clear();
+					}
 				}
 			}
 			
