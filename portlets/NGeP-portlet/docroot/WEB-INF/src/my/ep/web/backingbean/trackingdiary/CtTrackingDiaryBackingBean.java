@@ -266,8 +266,9 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocId()));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocType()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocId()));
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocNo()));
 			System.out.println("getCtDocumentDataModel docId "+ getManagedBean().getvCtDocument().getDocId());
 
 			reqDTO.setSearchBean(searchBean);
