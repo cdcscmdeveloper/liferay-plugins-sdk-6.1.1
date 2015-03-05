@@ -63,8 +63,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</th>
 					<td>
 						<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.pmZone.zoneId}" required="#{!empty param['disableValidation']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		
+							value="#{supportDocBackingBean.managedBean.selectedDocument.pmZone.zoneId}" required1="#{!empty param['disableValidation']}">
+							<c:if test="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}">
+								<f:selectItem  itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{0}"  />
+							</c:if> 		
+							<f:selectItem itemLabel="#{lbl['lbl.pm.supplier.zone.all']}" itemValue="#{null}" /> 
 							<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}" 
 								var="zone" itemLabel="#{zone.zoneName}" itemValue="#{zone.zoneId}"/>
 						</p:selectOneMenu>

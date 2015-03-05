@@ -74,6 +74,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
+						<f:selectItem itemLabel="#{lbl['lbl.pm.supplier.zone.all']}" itemValue="#{0}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
 							var="zone" itemValue="#{zone.zoneId}" itemLabel="#{zone.zoneName}" />
 					</p:selectOneMenu>
