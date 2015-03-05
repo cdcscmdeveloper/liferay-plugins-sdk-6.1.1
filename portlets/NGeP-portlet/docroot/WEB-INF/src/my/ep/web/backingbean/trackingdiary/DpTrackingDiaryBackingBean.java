@@ -160,9 +160,10 @@ public class DpTrackingDiaryBackingBean extends
 			Object[] dpObj = getManagedBean().getDpObj();
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),dpObj[1]));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),dpObj[3]));
-			System.out.println("Dp TrackingDiary docNo  " +dpObj[3]+ dpObj[1]);
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),dpObj[0]));
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),dpObj[1]));
+			System.out.println("Dp TrackingDiary docNo  " +dpObj[0]+dpObj[3]+ dpObj[1]);
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
