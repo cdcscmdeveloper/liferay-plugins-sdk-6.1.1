@@ -1369,6 +1369,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 	
 	public void addCategoryRestr(){
+		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs() == null){
+			this.getManagedBean().getPmCategoryL3().setPmCategoryRestrs(new ArrayList<PmCategoryRestr>());
+		}
+		
 		PmCategoryRestr restr = new PmCategoryRestr();
 		restr.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 		restr.setCompanyTypeId(new PmParameter());
