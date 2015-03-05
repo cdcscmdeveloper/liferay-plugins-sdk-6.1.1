@@ -744,6 +744,8 @@ public class ReportBackingBean extends
 	private Date fromDate;
 	private Date toDate;
 	private String subModule;
+	private String commonPtj;
+	private String commonMinistry;
 	// sc
 	private String scQuotationId;
 	private String scQuotationNo;
@@ -802,11 +804,12 @@ public class ReportBackingBean extends
 	private String cmGroupOne;
 	// fl
 	private String flItmType;
-	private String flPtj;
+	//private String flPtj;
+	//private String flMinistry;
 	private String flContractNo;
 	private String flSst;
 	private String flJabatan;
-	private String flMinistry;
+	
 	private String flSupplier;
 	private String flStatus;
 	private String flDuration;
@@ -1856,14 +1859,6 @@ public class ReportBackingBean extends
 		this.flItmType = flItmType;
 	}
 
-	public String getFlPtj() {
-		return flPtj;
-	}
-
-	public void setFlPtj(String flPtj) {
-		this.flPtj = flPtj;
-	}
-
 	public String getFlContractNo() {
 		return flContractNo;
 	}
@@ -1887,13 +1882,22 @@ public class ReportBackingBean extends
 	public void setFlJabatan(String flJabatan) {
 		this.flJabatan = flJabatan;
 	}
+	
 
-	public String getFlMinistry() {
-		return flMinistry;
+	public String getCommonPtj() {
+		return commonPtj;
 	}
 
-	public void setFlMinistry(String flMinistry) {
-		this.flMinistry = flMinistry;
+	public void setCommonPtj(String commonPtj) {
+		this.commonPtj = commonPtj;
+	}
+
+	public String getCommonMinistry() {
+		return commonMinistry;
+	}
+
+	public void setCommonMinistry(String commonMinistry) {
+		this.commonMinistry = commonMinistry;
 	}
 
 	public String getFlSupplier() {
@@ -3116,9 +3120,9 @@ public class ReportBackingBean extends
 	}
 	public List<String>  retrieveFMIPTJList() {
 		
-		if ((null !=this.getFlMinistry())&&((parameterCodeType!=null)&&(parameterCodeType.equals("FMI")))) {
+		if ((null !=this.getCommonMinistry())&&((parameterCodeType!=null)&&(parameterCodeType.equals("FMI")))) {
 			ptjList = new ArrayList<String>();
-			Long lngorgprflid = Long.parseLong(this.getFlMinistry());
+			Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
 			
 			//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -5032,11 +5036,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 * Generate FL module report
 	 */
 	public void generateFLReport() {
-		if (((this.getFlPtj() != null) && (this.getFlPtj() != ReportConst.EMPTY_VAL))
+		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlContractNo() != null) && (this.getFlContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSst() != null) && (this.getFlSst() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlJabatan() != null) && (this.getFlJabatan() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlMinistry() != null) && (this.getFlMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSupplier() != null) && (this.getFlSupplier() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlStatus() != null) && (this.getFlStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDuration() != null) && (this.getFlDuration() != ReportConst.EMPTY_VAL))
@@ -5079,10 +5083,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						.getFlContractRequest() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPurchaseOrderNo() != null) && (this
 						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
-			if ((this.getFlPtj() != null)
-					&& (this.getFlPtj() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCommonPtj() != null)
+					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ
-						+ this.getFlPtj());
+						+ this.getCommonPtj());
 			}
 			if ((this.getFlContractNo() != null)
 					&& (this.getFlContractNo() != ReportConst.EMPTY_VAL)) {
@@ -5095,10 +5099,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setSstTotVar(ReportConst.FL_AMP_SST_NO_EQ
 						+ this.getFlSst());
 			}
-			if ((this.getFlMinistry() != null)
-					&& (this.getFlMinistry() != ReportConst.EMPTY_VAL)) {
+			if ((this.getCommonMinistry() != null)
+					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ this.getFlMinistry());
+						+ this.getCommonMinistry());
 			}
 			if ((this.getFlSupplier() != null)
 					&& (this.getFlSupplier() != ReportConst.EMPTY_VAL)) {
@@ -5515,11 +5519,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		colorList = new ArrayList<SelectItem>();
 		
 		this.setFlItmType(null);
-		this.setFlPtj(null);
+		this.setCommonPtj(null);
 		this.setFlContractNo(null);
 		this.setFlSst(null);
 		this.setFlJabatan(null);
-		this.setFlMinistry(null);
+		this.setCommonMinistry(null);
 		this.setFlSupplier(null);
 		this.setFlStatus(null);
 		this.setFlDuration(null);
