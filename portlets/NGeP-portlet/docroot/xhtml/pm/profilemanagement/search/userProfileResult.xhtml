@@ -14,8 +14,8 @@
 			value="#{profileManagementBackingBean.userProfileDataModel}"
 			var="userprofile">
 			<ac:paginator for="dtUserResult" />
-			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.loginid']}" width="15%">
-				#{userprofile.loginId}
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" width="15%">
+				#{userprofile.identificationNo}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" width="15%">
 				#{userprofile.userName}
