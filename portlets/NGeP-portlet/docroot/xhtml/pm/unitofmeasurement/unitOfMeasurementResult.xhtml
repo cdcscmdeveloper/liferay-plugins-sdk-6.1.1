@@ -6,11 +6,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<style>
-.ui-state-hover {
-	text-decoration: none;
-}
-</style>
 	<ui:remove>
 		<p:panel id="measurementSearch" header="#{lbl['lbl.pm.uom.search']}"
 			toggleable="true">
@@ -64,12 +59,9 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-
-		<br />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.create']}"
-				action="#{unitOfMeasurementBackingBean.createMeasurement}" />
-		</div>
-
 	</p:panel>
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.create']}"
+			action="#{unitOfMeasurementBackingBean.createMeasurement}" />
+	</div>
 </ui:composition>
