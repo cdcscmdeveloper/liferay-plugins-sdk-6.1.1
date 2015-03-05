@@ -91,6 +91,7 @@ public class ReportBackingBean extends
 	private String reportName;
 	private String reportValue;
 	private ScQt scqt;
+	String parameterCodeType = new String();
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
 	private List<SelectItem> moduleList;
 	private List<SelectItem> regTypeList;
@@ -114,8 +115,8 @@ public class ReportBackingBean extends
 
 	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
 	private List<SelectItem> statusList = new ArrayList<SelectItem>();
-	private List<String> ministryList = new ArrayList<String>();
-	private List<SelectItem> ptjList = new ArrayList<SelectItem>();
+	private List<SelectItem> ministryList = new ArrayList<SelectItem>();
+	private List<String> ptjList = new ArrayList<String>();
 	// private List<PmOrgProfile> ptjList;
 	private List<String> loanList = new ArrayList<String>();
 	private List<SelectItem> unspcList = new ArrayList<SelectItem>();
@@ -709,21 +710,29 @@ public class ReportBackingBean extends
 
 	public void setStatusList(List<SelectItem> statusList) {
 		this.statusList = statusList;
-	}	
+	}
+	
+	public String getParameterCodeType() {
+		return parameterCodeType;
+	}
 
-	public List<String> getMinistryList() {
+	public void setParameterCodeType(String parameterCodeType) {
+		this.parameterCodeType = parameterCodeType;
+	}
+
+	public List<SelectItem> getMinistryList() {
 		return ministryList;
 	}
 
-	public void setMinistryList(List<String> ministryList) {
+	public void setMinistryList(List<SelectItem> ministryList) {
 		this.ministryList = ministryList;
 	}
 
-	public List<SelectItem> getPtjList() {
+	public List<String> getPtjList() {
 		return ptjList;
 	}
 
-	public void setPtjList(List<SelectItem> ptjList) {
+	public void setPtjList(List<String> ptjList) {
 		this.ptjList = ptjList;
 	}
 
@@ -3066,38 +3075,98 @@ public class ReportBackingBean extends
 			orgProfileSO = null;
 		}
 	}*/
-	public List<SelectItem>  retrievePTJByUserId() {
-		ptjList = new ArrayList<SelectItem>();
-		ministryList = new ArrayList<String>();
+	public void  retrieveParameterCodeType() {
+		ptjList = new ArrayList<String>();
+		ministryList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			//lngUserId = (long) 240500;
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			lngUserId = (long) 220152;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptjLst = reportSO.retrieveFlPTJList(lngUserId);
-			for (Object[] object : ptjLst) {
-				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(object[0].toString());
-				selectItem.setValue(object[1]);
-				ptjList.add(selectItem);
+			List<Object[]> paramcodeLst = reportSO.retrieveParameterCodeByUserid(lngUserId);
+			
+			for (Object[] object : paramcodeLst) {
+				parameterCodeType = object[0].toString();
 			}
+			if((parameterCodeType!=null)&&(parameterCodeType.equals("FPJ"))){
+				retrieveFPJPTJList();
+				retrieveFPJMinistryList();
+			}else if((parameterCodeType!=null)&&(parameterCodeType.equals("FMI"))){
+				retrieveFMIMinistryList();
+			}
+		}		
+	}
+	public List<String>  retrieveFPJPTJList() {
+		ptjList = new ArrayList<String>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			lngUserId = (long) 240500;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> ptjLst = reportSO.retrieveFPJPTJList(lngUserId);
+			for (int i = 0; i < ptjLst.size(); i++) {				
+				ptjList.add(ptjLst.get(i));
+			}			
 		}
 		return ptjList;
 	}
-	
-    public List<String>  retrieveMinstryByPTJ() {
-    	ministryList = new ArrayList<String>();
-		if (null !=this.getFlPtj()) {			
-			Long lngorgprflid = Long.parseLong(this.getFlPtj());
+	public List<String>  retrieveFMIPTJList() {
+		
+		if ((null !=this.getFlMinistry())&&((parameterCodeType!=null)&&(parameterCodeType.equals("FMI")))) {
+			ptjList = new ArrayList<String>();
+			Long lngorgprflid = Long.parseLong(this.getFlMinistry());
+			
 			//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<String> minstryLst = reportSO.retrieveFlMinistryList(lngorgprflid);
+			List<String> ptjLst = reportSO.retrieveFMIPTJList(lngorgprflid);
+			for (int i = 0; i < ptjLst.size(); i++) {				
+				ptjList.add(ptjLst.get(i));
+			}
+			
+		}
+		return ptjList;
+	}
+	public List<SelectItem>  retrieveFPJMinistryList() {
+    	ministryList = new ArrayList<SelectItem>();
+if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			
+	      //lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			lngUserId = (long) 240500;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<String> minstryLst = reportSO.retrieveFPJMinistryList(lngUserId);
 			for (int i = 0; i < minstryLst.size(); i++) {
-				ministryList.add(minstryLst.get(i));
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(minstryLst.get(i).toString());
+				selectItem.setValue(minstryLst.get(i));
+				ministryList.add(selectItem);
+			}
+			
+		}
+		return ministryList;	
+	}
+    public List<SelectItem>  retrieveFMIMinistryList() {
+if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+		
+			lngUserId = (long) 220152;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> minstryLst = reportSO.retrieveFMIMinistryList(lngUserId);
+			for (Object[] object : minstryLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1].toString());
+				ministryList.add(selectItem);
 			}
 		}
 		return ministryList;	
@@ -3396,6 +3465,7 @@ public class ReportBackingBean extends
 	 * Enable criteria variables by report name
 	 */
 	public void criteriaVariablesByReport() {
+		parameterCodeType = new String();
 		scReportBackingBean = new SCReportBackingBean();
 		cmReportBackingBean = new CMReportBackingBean();
 		flReportBackingBean = new FLReportBackingBean();
@@ -3434,7 +3504,7 @@ public class ReportBackingBean extends
 				reportFileNameJSP = pmReport.getReportFilename();
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 			}
-			retrievePTJByUserId();
+			retrieveParameterCodeType();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
