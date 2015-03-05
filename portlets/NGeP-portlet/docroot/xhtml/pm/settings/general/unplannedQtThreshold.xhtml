@@ -33,7 +33,8 @@
 		<td style="width:20%">
 			<p:inputText id="unplannedThresholdId" value="#{ruleCatalogueBackingBean.managedBean.threshold.s2Unplanned}" 
 				label="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}"
-				disabled="#{not ruleCatalogueBackingBean.checkIsEpAdmin()}">				
+				disabled="#{not ruleCatalogueBackingBean.checkIsEpAdmin()}"
+				required="true">				
 				<f:validateLongRange minimum="0" maximum="100" />
 				<p:ajax update="unplannedMinistryList,unplannedThresholdId"
 							process="@this" 
@@ -60,7 +61,8 @@
 			<p:inputText id="ministryUnplannedThresholdId"
 				label="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}" 
 				disabled="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isUnplannedThreshold == 1 ? 'true':'false' or ruleCatalogueBackingBean.checkIsEpAdmin()}" 
-				value="#{ministry.s2Unplanned}">				
+				value="#{ministry.s2Unplanned}"
+				required="true">				
 				<f:validateLongRange minimum="0" maximum="#{ruleCatalogueBackingBean.managedBean.unplannedThreshold}" />
 				<p:ajax update="@this" process="@this" partialSubmit="true" ></p:ajax>	
 			</p:inputText>
