@@ -72,9 +72,10 @@
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
 		<h:panelGroup id="panelHeaderException">
 		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
+		</h:panelGroup>
 			 <ui:include src="amendmentButtons.xhtml" />
 		     <ui:include src="amendmentHeader.xhtml" />
-		</h:panelGroup>
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
