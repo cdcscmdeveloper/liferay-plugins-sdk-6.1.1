@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.IOException;
@@ -17,9 +27,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -30,15 +38,12 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.ct.circular.CircularReqDTO;
-import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -60,6 +65,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -87,8 +93,8 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
@@ -109,35 +115,51 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 
 /**
+ * The Class QTSupplierQulCriteriaBackingBean.
+ *
  * @author VidyasagarReddy
- * 
  */
 @ManagedBean(name = "qTSupplierQulCriteriaBackingBean")
 @RequestScoped
 public class QTSupplierQulCriteriaBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
+	
+	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTSupplierQulCriteriaBackingBean.class);
 
+	/**
+	 * Instantiates a new QT supplier qul criteria backing bean.
+	 */
 	public QTSupplierQulCriteriaBackingBean() {
 		debugLogger("QTSupplierQulCriteriaBackingBean");
-
-		/*if (getManagedBean().getSupplierCriteria() == null) {
-			this.getManagedBean().setSupplierCriteria(
-					new ScQtSupplierCriteria());
-		}*/
 	}
 	
+	/**
+	 * The Class SupplierPagingDataModel.
+	 */
 	private class SupplierPagingDataModel extends PagingDataModel<SmSupplier> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/** The supplier search bean. */
 		private SupplierSearchBean supplierSearchBean;
 
+		/**
+		 * Instantiates a new supplier paging data model.
+		 *
+		 * @param componentId the component id
+		 * @param supplierSearchBean the supplier search bean
+		 */
 		public SupplierPagingDataModel(String componentId, SupplierSearchBean supplierSearchBean) {
 			super(componentId, false);
 			this.supplierSearchBean = supplierSearchBean;
 		}
 		
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		protected ISearchResultBean<SmSupplier> pageChangeListener(ISearchBean<SmSupplier> searchBean) {
 			if (log.isDebugEnabled()) {
@@ -165,6 +187,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Populate supplier search criteria.
+	 *
+	 * @param supplierSearchBean the supplier search bean
+	 * @param searchBean the search bean
+	 */
 	private void populateSupplierSearchCriteria(SupplierSearchBean supplierSearchBean, ISearchBean<SmSupplier> searchBean) {
 		if (supplierSearchBean != null) {
 			List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
@@ -192,6 +220,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -200,7 +233,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * To add empty row to category open code data table
+	 * To add empty row to category open code data table.
 	 */
 	public void addNewCategoryAction() {
 		debugLogger("addNewCategoryAction");
@@ -219,6 +252,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().setQtCategoryList(qtCategoryList);
 	}
 
+	/**
+	 * To add empty row to Restricted Tender Category Code data table.
+	 */
 	public void addNewRestrictedCategoryAction() {
 		debugLogger("addNewRestrictedCategoryAction");
 		List<ScQtCategory> scQtCategories = this.getManagedBean()
@@ -235,6 +271,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().setSuppCriteriarestrictedList(scQtCategories);
 	}
 
+	/**
+	 * To Remove Restricted Tender Category codes from data table.
+	 */
 	public void deleteRestrictedCategoryAction() {
 		debugLogger("deleteRestrictedCategoryAction");
 		List<ScQtCategory> restrictedList = this.getManagedBean()
@@ -255,7 +294,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
-	/*
+	/**
 	 * To remove categoryCode from data table
 	 */
 	public void deleteCategoryCodes() {
@@ -279,6 +318,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	/**
 	 * To retrive districts based on state value changes.
+	 *
+	 * @param changeEvent the change event
 	 */
 	public void handleStateChange(ValueChangeEvent changeEvent) {
 		PmState state = (PmState) changeEvent.getNewValue();
@@ -297,9 +338,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Method to search the supplier for panel.
+	 */
 	public void searchPanelSupplierPopupAction() {
 		debugLogger("searchPanelSupplierPopupAction");
-
 		getManagedBean().setCircularNo(null);
 		getManagedBean().setCircularName(null);
 		getManagedBean().setItemName(null);
@@ -310,6 +353,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	/**
 	 * Method to search th*e supplier for panel and restricted tender.
+	 *
+	 * @param event the event
 	 */
 	/*public void searchPanelSupplierAction() {
 		debugLogger("searchPanelSupplierAction");
@@ -326,13 +371,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 				searchPanelSuppliersNode);
 	}*/
 
-	/**
-	 * Method to search the supplier for normal tender
-	 */
-	/*public void searchNormalSupplierAction() {
-		debugLogger("searchNormalSupplierAction");
-	}*/
-	
 	public void onTabChangeAction(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
 		if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.qt.supplier.list"))) {
@@ -359,9 +397,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Method to search the supplier for Restricted Tender.
+	 */
 	public void searchRestrictedSupplierPopupAction() {
 		debugLogger("searchRestrictedSupplierPopupAction");
-		
 		List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
 		getManagedBean().getSupplierSearchBean().setScQtCategoryList(scQtCategoryList);
 		getManagedBean().getSupplierSearchBean().setSupplierName(null);
@@ -376,6 +416,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		getManagedBean().getSearchSupplierDataModel().resetData();
 	}
 	
+	/**
+	 * Method to search the supplier for Restricted Tender.
+	 */
 	public void searchRestrictedSupplierAction() {
 		boolean hasSearchValue = false;
 		log.info("hasSearchValue: " + hasSearchValue);
@@ -405,6 +448,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieving smMofAccount Details from SM.
+	 *
+	 * @param ScQtSupplier
+	 * @param SmSupplier
+	 * @return SmMofAccount
+	 */
 	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier, SmSupplier smSupplier) {
 		debugLogger("retrieveSmMofAccount");
 
@@ -448,6 +498,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return smMofAccount;
 	}
 
+	/**
+	 * Adds the restricted to supplier list action.
+	 */
 	public void addRestrictedToSupplierListAction() {
 		debugLogger("addRestrictedToSupplierListAction");
 		
@@ -484,7 +537,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 					}
 				}
 			}
-			//populateQtSupplierList(selectedSupplierList);
 		} else {
 			throw new EpException(MessageConst.ERROR_760121);
 		}
@@ -496,111 +548,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 		RequestContext.getCurrentInstance().execute("suppdlg.hide()");
 	}
 
-	private List<CtPanelSupplier> retriverSuppliersForPanelQT() {
-		ICircularSO circularSO = null;
-		List<CtPanelSupplier> ctPanelSuppliers = null;
-
-		try {
-			circularSO = BusinessDelegate.getInstance().getServiceObject("ct",
-					ICircularSO.class);
-			CircularReqDTO reqDTO = new CircularReqDTO();
-			SearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
-
-			// Filter By - circularNo
-			String circularNo = getManagedBean().getCircularNo();
-			if (StringUtils.isNotBlank(circularNo)) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"ctPanelItem.ctCircularVer.circularNo",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								circularNo));
-			}
-
-			// Filter By - circularName
-			String circularName = getManagedBean().getCircularName();
-			if (StringUtils.isNotBlank(circularName)) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("ctPanelItem.ctCircularVer.name",
-								SearchOperator.OPERATOR_LIKE.value(),
-								circularName));
-			}
-
-			// Filter By - itemName
-			String itemName = getManagedBean().getItemName();
-			if (StringUtils.isNotBlank(itemName)) {
-				searchBean
-						.getDataFilterBeans()
-						.add(new SearchFilterBean("ctPanelItem.itemName",
-								SearchOperator.OPERATOR_LIKE.value(), itemName));
-			}
-
-			// Filter By - circularCoverage
-			String circularCoverage = getManagedBean().getCircularCoverage();
-			if (StringUtils.isNotBlank(circularCoverage)) {
-				if (ParameterConst.COVERAGE_PENINSULAR.equals(circularCoverage)) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"ctPanelItem.ctCircularVer.peninsular",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									true));
-				} else if (ParameterConst.COVERAGE_SABAH
-						.equals(circularCoverage)) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"ctPanelItem.ctCircularVer.sabah",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									true));
-				} else if (ParameterConst.COVERAGE_SARAWAK
-						.equals(circularCoverage)) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"ctPanelItem.ctCircularVer.sarawak",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									true));
-				}
-			}
-
-			reqDTO.setSearchBean(searchBean);
-
-			CircularResDTO resDTO = circularSO.searchPanelSuppliers(reqDTO);
-
-			ctPanelSuppliers = resDTO.getPanelSupplierList();
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							ex.toString(), ex.getMessage()));
-		} finally {
-			circularSO = null;
-		}
-
-		return ctPanelSuppliers;
-	}
-
-	/*private void populateQtSupplierList(List<SmSupplier> suppliers) {
-		ScQtSupplier scQtSupplier;
-		ScQt scQt = getManagedBean().getQt();
-		List<ScQtCategory> qtCategoryList = getManagedBean()
-				.getQtCategoryList();
-		List<ScQtSupplier> qtSupplierList = new ArrayList<ScQtSupplier>();
-		for (SmSupplier smSupplier : suppliers) { // create Qt supplier.
-			scQtSupplier = new ScQtSupplier();
-			scQtSupplier.setSmSupplier(smSupplier);
-			scQtSupplier.setScQt(scQt);
-			scQtSupplier
-					.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
-			qtSupplierList.add(scQtSupplier);
-		}
-		// update qt supplier list.
-		getManagedBean().setTotalSupplier(qtSupplierList.size());
-		getManagedBean().getQtSupplierList().addAll(qtSupplierList);
-
-		// For save the criteria details when search button if clicked.
-		scQt.setScQtCategorys(qtCategoryList);
-	}*/
-
+	/**
+	 * Gets the seleted tree node.
+	 *
+	 * @param treeNode the tree node
+	 * @param selectedNode the selected node
+	 * @return the seleted tree node
+	 */
 	public TreeNode getSeletedTreeNode(TreeNode treeNode, Node selectedNode) {
 		TreeNode selecetedTreeNode = null;
 		for (TreeNode childNode : treeNode.getChildren()) {
@@ -620,13 +574,22 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return selecetedTreeNode;
 	}
 
+	/**
+	 * Multi location change.
+	 *
+	 * @param event the event
+	 */
 	public void multiLocationChange(AjaxBehaviorEvent event) {
 		Boolean multipleLoc = (Boolean) event.getComponent().getAttributes()
 				.get("value");
 		log.info("MultipleLoc Value : " + multipleLoc);
 	}
 
-	// Supplier Qualification Criteria All Stats Select Or DeSelect Methos
+	/**
+	 * Supplier Qualification Criteria All States Select Or DeSelect Methods.
+	 *
+	 * @param event
+	 */
 	public void stateChange(AjaxBehaviorEvent event) {
 		boolean state = (boolean) event.getComponent().getAttributes()
 				.get("value");
@@ -650,7 +613,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 	
-	// Method to set the location level drop down values
+	/**
+	 * Method to set the location level drop down values.
+	 *
+	 * @param event the event
+	 */
 	public void selectLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
@@ -664,53 +631,34 @@ public class QTSupplierQulCriteriaBackingBean extends
 						&& !this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
 					this.getManagedBean().setZoneGeneralTrees(null);
-					//this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 				}
-			/*} else {
-				this.getManagedBean().getQt().getScQtSupplierCriteria()
-						.getLocationLevel().setParameterId(location);*/
 			}
 		}
 	}
 
+	/**
+	 * Method to set the location level drop down values.
+	 *
+	 * @param event
+	 */
 	public void selectSupplierLocation(AjaxBehaviorEvent event) {
 		debugLogger("selectSupplierLocation");
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
-		if (null != location) {
-			if (null != this.getManagedBean().getQt()
-					.getScQtSupplierCriteria()
-					&& null != this.getManagedBean().getQt()
-							.getScQtSupplierCriteria().getLocationLevel()) {
-				this.getManagedBean().getQt().getScQtSupplierCriteria()
-						.getLocationLevel().setParameterId(location);
-			}
-			if (null != getManagedBean().getZoneTrees()
-					&& !getManagedBean().getZoneTrees().isEmpty()) {
-				//getManagedBean().setZoneTrees(null);
-				getManagedBean().setZoneTrees(
-						new ArrayList<TreeNode>());
-				if (null != this.getManagedBean()
-						.getExistingSupplierLocationList()
-						&& !this.getManagedBean()
-								.getExistingSupplierLocationList().isEmpty()) {
-					this.getManagedBean().setSupplierValidation(true);
-
-					this.getManagedBean().setExistingSupplierLocationList(null);
-
-					ScQtSupplierCriteria supplierCriteria = this
-							.getManagedBean().getQt()
-							.getScQtSupplierCriteria();
-					supplierCriteria.setScQtLocCriteria(null);
-					this.getManagedBean().getQt()
-							.setScQtSupplierCriteria(supplierCriteria);
-					QTDetailBackingBean backingBean = new QTDetailBackingBean();
-					backingBean.saveQtDetailsAction();
-				}
-			}
+		log.info("Location : " + location);
+		if (null != getManagedBean().getZoneTrees()
+				&& !getManagedBean().getZoneTrees().isEmpty()) {
+			this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
+			getManagedBean().setZoneTrees(null);
 		}
 	}
 
+	/**
+	 * Gets the locations.
+	 *
+	 * @param TreeNode
+	 * @return List<ScQtLocCriteria>
+	 */
 	private List<ScQtLocCriteria> getLocations(TreeNode zoneLocation) {
 		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
 		if (zoneLocation.isLeaf()) {
@@ -725,6 +673,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Gets the zone locations.
+	 *
+	 * @param zoneLocation the zone location
+	 * @return the zone locations
+	 */
 	private List<TplSpecZoneLoc> getZoneLocations(TreeNode zoneLocation) {
 		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
 		if (zoneLocation.isLeaf()) {
@@ -739,23 +693,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return results;
 	}
 
-	/*
-	 * private TplSpecZoneDtl getZone(TreeNode zoneLocation) { TplSpecZoneDtl
-	 * result = null; if (zoneLocation.getData() instanceof TplSpecZoneDtl) {
-	 * TplSpecZoneDtl locationDTO = (TplSpecZoneDtl) zoneLocation .getData(); if
-	 * (locationDTO != null) { result = locationDTO; } else { if
-	 * (zoneLocation.getChildren() != null && zoneLocation.getChildren().size()
-	 * > 0) { for (TreeNode childLocationNode : zoneLocation .getChildren()) {
-	 * result = getZone(childLocationNode); } } } } else { if
-	 * (zoneLocation.getChildren() != null && zoneLocation.getChildren().size()
-	 * > 0) { for (TreeNode childLocationNode : zoneLocation.getChildren()) {
-	 * result = getZone(childLocationNode); } } }
-	 * 
-	 * return result; }
-	 */
 	/**
-	 * @param rootZoneLocation
-	 * @param index
+	 * Edits the zone location.
+	 *
+	 * @param rootZoneLocation the root zone location
+	 * @param index the index
 	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
 		IParameterSO parameterSo = null;
@@ -816,11 +758,20 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve parameter desc by type.
+	 *
+	 * @param type the type
+	 * @return the list
+	 */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
 
+	/**
+	 * Show zone location popup.
+	 */
 	public void showZoneLocationPopup() {
 		debugLogger("showZoneLocationPopup");
 		ICountrySO countrySo = null;
@@ -900,11 +851,15 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Update zone location.
+	 */
 	public void updateZoneLocation() {
+		debugLogger("updateZoneLocation");
 		List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
+		this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
 		if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
-			this.getManagedBean().setTotalSuppliersSpecLoc(
-					new ArrayList<TplSpecLoc>());
+			this.getManagedBean().setTotalSuppliersSpecLoc(new ArrayList<TplSpecLoc>());
 		}
 		List<TplSpecLoc> specLoc = new ArrayList<TplSpecLoc>();
 		if (getManagedBean().getSelectedNodes() != null) {
@@ -915,310 +870,28 @@ public class QTSupplierQulCriteriaBackingBean extends
 						TplSpecLoc localSpecLoc = (TplSpecLoc) locCritera;
 						specLoc.add(localSpecLoc);
 					}
-					this.getManagedBean().getTotalSuppliersSpecLoc()
-							.addAll(specLoc);
+					this.getManagedBean().getTotalSuppliersSpecLoc().addAll(specLoc);
 					locationDTOs.addAll(locationDTO);
-				}
-
-				else {
-
+				} else {
 					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
-					// LocationDTO locationDTO = (LocationDTO)
-					// treeNode.getData();
 					for (ScQtLocCriteria locCritera : locationDTO) {
 						TplSpecLoc localSpecLoc = (TplSpecLoc) locCritera;
-
 						specLoc.add(localSpecLoc);
 					}
-					this.getManagedBean().getTotalSuppliersSpecLoc()
-							.addAll(specLoc);
+					this.getManagedBean().getTotalSuppliersSpecLoc().addAll(specLoc);
 					locationDTOs.addAll(locationDTO);
 				}
 			}
 		}
-
-		List<PmState> states = SourcingLocationHelper
-				.getStateFromLocationDTO(locationDTOs);
-
-		List<PmDivision> divisions = SourcingLocationHelper
-				.getDivisionFromLocationDTO(locationDTOs);
-		List<PmDistrict> districts = SourcingLocationHelper
-				.getDistrictFromLocationDTO(locationDTOs);
-		List<PmCity> cities = SourcingLocationHelper
-				.getCityFromLocationDTO(locationDTOs);
-		if (getManagedBean().getIndex() == -1) {
-			getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
-		}
-
-		List<TreeNode> localList = new ArrayList<TreeNode>();
-		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(this
-				.getManagedBean().getLocalLevelCode())) {
-			if (getManagedBean().getIndex() >= 0) {
-				getManagedBean().getZoneTrees().remove(
-						getManagedBean().getIndex());
-			}
-			if (null != states && !states.isEmpty()) {
-				for (PmState state : states) {
-					List<PmState> localStaeList = new ArrayList<PmState>();
-					localStaeList.add(state);
-					if (getManagedBean().getIndex() == -1) {
-
-						getManagedBean().getZoneTrees().add(
-								LocationSingleton.getInstance()
-										.buildLocationTree(null, localStaeList,
-												districts, divisions, cities,
-												ScQtLocCriteria.class));
-					}
-					if (getManagedBean().getIndex() >= 0) {
-
-						/*
-						 * getManagedBean().getZoneTrees().remove(
-						 * getManagedBean().getIndex());
-						 */
-						localList.add(LocationSingleton.getInstance()
-								.buildLocationTree(null, localStaeList,
-										districts, divisions, cities,
-										ScQtLocCriteria.class));
-
-					}
-
-				}
-				getManagedBean().getZoneTrees().addAll(localList);
-			}
-		}
-
-		else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(this
-				.getManagedBean().getLocalLevelCode())) {
-			if (getManagedBean().getIndex() >= 0) {
-
-				getManagedBean().getZoneTrees().remove(
-						getManagedBean().getIndex());
-			}
-			if (null != districts && !districts.isEmpty()) {
-
-				Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = LocationSingleton
-						.getInstance().getUniqueStatesDivisionsDistrictsCities(
-								districts, null);
-
-				Set<PmState> statesDivisionsDistrictsCitiesKeySet = mapStatesDivisionsDistrictsCities
-						.keySet();
-				Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = LocationSingleton
-						.getInstance().getUniqueStateDistrictsCities(districts,
-								null);
-				Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities
-						.keySet();
-				if (statesDivisionsDistrictsCitiesKeySet != null
-						&& !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
-					for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
-
-						// TreeNode stateNode = new
-						// DefaultTreeNode(QTConstants.NODE_STATE,stateLocation,
-						// zoneNode);
-						Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
-								.get(state);
-						Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
-								.keySet();
-						if (divisionsDistrictsCitiesKeySet != null
-								&& !divisionsDistrictsCitiesKeySet.isEmpty()) {
-							divisions.clear();
-							districts.clear();
-							for (PmDivision division : divisionsDistrictsCitiesKeySet) {
-								division.setPmState(state);
-								// divisions.add(division);
-								Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities
-										.get(division);
-								Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
-										.keySet();
-								if (districtsCitiesKeySet != null
-										&& !districtsCitiesKeySet.isEmpty()) {
-
-									for (PmDistrict district : districtsCitiesKeySet) {
-										districts.add(district);
-									}
-
-								}
-							}
-							if (getManagedBean().getIndex() == -1) {
-
-								getManagedBean().getZoneTrees().add(
-										LocationSingleton.getInstance()
-												.buildLocationTree(null,
-														states, districts,
-														divisions, cities,
-														ScQtLocCriteria.class));
-							}
-							if (getManagedBean().getIndex() >= 0) {
-
-								/*
-								 * getManagedBean().getZoneTrees().remove(
-								 * getManagedBean().getIndex());
-								 */
-								localList.add(LocationSingleton.getInstance()
-										.buildLocationTree(null, states,
-												districts, divisions, cities,
-												ScQtLocCriteria.class));
-								// getManagedBean().setZoneTrees(localList);
-							}
-						}
-					}
-					getManagedBean().getZoneTrees().addAll(localList);
-				}
-
-				if (statesDistrictsCitiesKeySet != null
-						&& !statesDistrictsCitiesKeySet.isEmpty()) {
-					for (PmState state : statesDistrictsCitiesKeySet) {
-						divisions.clear();
-						Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapStatesDistrictsCities
-								.get(state);
-						Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
-								.keySet();
-						if (districtsCitiesKeySet != null
-								&& !districtsCitiesKeySet.isEmpty()) {
-							districts.clear();
-							for (PmDistrict district : districtsCitiesKeySet) {
-								district.setPmState(state);
-								districts.add(district);
-
-							}
-
-						}
-						if (getManagedBean().getIndex() == -1) {
-
-							getManagedBean().getZoneTrees().add(
-									LocationSingleton.getInstance()
-											.buildLocationTree(null, states,
-													districts, divisions,
-													cities,
-													ScQtLocCriteria.class));
-						}
-						if (getManagedBean().getIndex() >= 0) {
-
-							/*
-							 * getManagedBean().getZoneTrees().remove(
-							 * getManagedBean().getIndex());
-							 */
-							localList.add(LocationSingleton.getInstance()
-									.buildLocationTree(null, states, districts,
-											divisions, cities,
-											ScQtLocCriteria.class));
-							// getManagedBean().setZoneTrees(localList);
-
-						}
-					}
-					getManagedBean().getZoneTrees().addAll(localList);
-				}
-
-			}
-		}
-
-		else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(this
-				.getManagedBean().getLocalLevelCode())) {
-			if (getManagedBean().getIndex() >= 0) {
-
-				getManagedBean().getZoneTrees().remove(
-						getManagedBean().getIndex());
-			}
-			if (null != divisions && !divisions.isEmpty()) {
-
-				Map<PmState, List<PmDivision>> mapStatesDivision = LocationSingleton
-						.getInstance().getUniqueStatesDivision(divisions);
-				Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
-				if (statesDivisionKeySet != null
-						&& !statesDivisionKeySet.isEmpty()) {
-					for (PmState state : statesDivisionKeySet) {
-						divisions.clear();
-
-						// new
-						// DefaultTreeNode(QTConstants.NODE_STATE,stateLocation,
-						// zoneNode);
-						List<PmDivision> divisions1 = mapStatesDivision
-								.get(state);
-						if (divisions1 != null && !divisions1.isEmpty()) {
-							for (PmDivision division : divisions1) {
-								division.setPmState(state);
-								divisions.add(division);
-
-							}
-							if (getManagedBean().getIndex() == -1) {
-
-								getManagedBean().getZoneTrees().add(
-										LocationSingleton.getInstance()
-												.buildLocationTree(null,
-														states, districts,
-														divisions, cities,
-														ScQtLocCriteria.class));
-							}
-							if (getManagedBean().getIndex() >= 0) {
-
-								/*
-								 * getManagedBean().getZoneTrees().remove(
-								 * getManagedBean().getIndex());
-								 */
-								localList.add(LocationSingleton.getInstance()
-										.buildLocationTree(null, states,
-												districts, divisions, cities,
-												ScQtLocCriteria.class));
-								// getManagedBean().setZoneTrees(localList);
-							}
-						}
-					}
-					getManagedBean().getZoneTrees().addAll(localList);
-				}
-
-			}
-		}
-
-		this.getManagedBean().setIndex(-1);
-
+		retrievLocationDtls(locationDTOs);
+		
 	}
 
-	public void updateZoneGeneralLocation() {
-		if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
-			this.getManagedBean().setTotalSuppliersSpecLoc(
-					new ArrayList<TplSpecLoc>());
-		}
-		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
-		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
-			for (TreeNode treeNode : getManagedBean()
-					.getSelectedGeneralTreeNodes()) {
-				if (!treeNode.getParent().isSelected()) {
-					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-					allNodes.addAll(locationDTO);
-				} else {
-					List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-					allNodes.addAll(locationDTO);
-				}
-			}
-		}
-		TplSpecZoneDtl zone = new TplSpecZoneDtl();
-		zone.setZoneName(getManagedBean().getZoneName());
-		getManagedBean().setZoneName(null);
-		List<PmState> states = SourcingLocationHelper
-				.getStateFromLocationDTO(allNodes);
-		List<PmDivision> divisions = SourcingLocationHelper
-				.getDivisionFromLocationDTO(allNodes);
-		List<PmDistrict> districts = SourcingLocationHelper
-				.getDistrictFromLocationDTO(allNodes);
-		List<PmCity> cities = SourcingLocationHelper
-				.getCityFromLocationDTO(allNodes);
-		if (getManagedBean().getIndex() == -1) {
-			getManagedBean().getZoneGeneralTrees().add(
-					LocationSingleton.getInstance().buildLocationTree(zone,
-							states, districts, divisions, cities,
-							TplSpecZoneLoc.class));
-		} else if (getManagedBean().getIndex() >= 0) {
-			getManagedBean().getZoneGeneralTrees().remove(
-					getManagedBean().getIndex());
-			getManagedBean().getZoneGeneralTrees().add(
-					getManagedBean().getIndex(),
-					LocationSingleton.getInstance().buildLocationTree(zone,
-							states, districts, divisions, cities,
-							TplSpecZoneLoc.class));
-		}
-		this.getManagedBean().setIndex(-1);
-	}
-
+	/**
+	 * To delete the selected Restricted Supplier from list..
+	 */
 	public void deleteRestrictedSupplierList() {
+		debugLogger("deleteRestrictedSupplierList");
 		List<ScQtSupplier> list = getManagedBean().getQtSupplierList();
 		List<ScQtSupplier> selectedList = getManagedBean()
 				.getSelectedQtSupplierList();
@@ -1237,7 +910,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrive zone by supplier.
+	 *
+	 * @param event the event
+	 */
 	public void retriveZoneBySupplier(NodeSelectEvent event) {
+		debugLogger("retriveZoneBySupplier");
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(true);
@@ -1274,6 +953,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	}
 
+	/**
+	 * Reset.
+	 * 
+	 * clear the key in data in Business owner search.
+	 */
 	public void reset() {
 		debugLogger("reset");
 		getManagedBean().getSupplierSearchBean().setSupplierName(null);
@@ -1303,9 +987,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * @param rootTrees
-	 * @param supplierCriteria
-	 * @return
+	 * Gets the quote zones.
+	 *
+	 * @param treeNodes the tree nodes
+	 * @param supplierCriteria the supplier criteria
+	 * @return the quote zones
 	 */
 	private List<ScQtLocCriteria> getQuoteZones(List<TreeNode> treeNodes,
 			ScQtSupplierCriteria supplierCriteria) {
@@ -1348,6 +1034,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Delete tree nodes.
+	 *
+	 * @param rootTrees the root trees
+	 */
 	public void deleteTreeNodes(List<TreeNode> rootTrees) {
 		debugLogger("deleteTreeNodes");
 		if (rootTrees != null) {
@@ -1367,6 +1058,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete child tree nodes.
+	 *
+	 * @param treeNodes the tree nodes
+	 */
 	private void deleteChildTreeNodes(List<TreeNode> treeNodes) {
 		debugLogger("deleteChildTreeNodes");
 		if (treeNodes != null) {
@@ -1390,27 +1086,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
-	/*private void deleteSupplierLocacriteria(ScQtLocCriteria locCriteria) {
-		debugLogger("deleteSupplierLocacriteria");
-		List<ScQtLocCriteria> existingLocation = this.getManagedBean()
-				.getExistingSupplierLocationList();
-		if (null != existingLocation && !existingLocation.isEmpty()) {
-			List<ScQtLocCriteria> exchangeLoccriteria = new ArrayList<ScQtLocCriteria>();
-			for (int i = 0; i < existingLocation.size(); i++) {
-				ScQtLocCriteria locallocCriteria = (ScQtLocCriteria) existingLocation
-						.get(i);
-				if (!locallocCriteria.getSpecLocId().equals(
-						locCriteria.getSpecLocId())) {
-					exchangeLoccriteria.add(locallocCriteria);
-				}
-			}
-			
-			 * this.getManagedBean().setExistingSupplierLocationList(
-			 * exchangeLoccriteria);
-			 
-		}
-	}*/
-	
+	/**
+	 * Gets the dropdown location values.
+	 *
+	 * @param locationLevel the location level
+	 * @return the dropdown location values
+	 */
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
 		debugLogger("getDropdownLocationValues");
 		IOrgProfileSO orgProfile = BusinessDelegate.getInstance()
@@ -1455,6 +1136,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		// return getDropdownCodeValues(committeeRole);
 	}
 
+	/**
+	 * Show supplier details.
+	 *
+	 * @param qtSupplier the qt supplier
+	 */
 	public void showSupplierDetails(ScQtSupplier qtSupplier) {
 		debugLogger("showSupplierDetails");
 		IQTSupplierSO qtSupplierSO = null;
@@ -1492,18 +1178,35 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Select location tree node.
+	 *
+	 * @param event the event
+	 */
 	public void selectLocationTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(true);
 	}
 
+	/**
+	 * Un select location tree node.
+	 *
+	 * @param event the event
+	 */
 	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(false);
 	}
 
+	/**
+	 * Category codes update.
+	 *
+	 * @param index the index
+	 * @param categoryList the category list
+	 * @param categoryL3 the category l3
+	 */
 	public void categoryCodesUpdate(int index, List<ScQtCategory> categoryList,
 			PmCategoryL3 categoryL3) {
 		ICategoryCodeSO categoryCodeSo;
@@ -1583,6 +1286,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Restricted category codes update.
+	 *
+	 * @param index the index
+	 * @param categoryList the category list
+	 * @param categoryL3 the category l3
+	 */
 	public void restrictedCategoryCodesUpdate(int index,
 			List<ScQtCategory> categoryList, PmCategoryL3 categoryL3) {
 		ICategoryCodeSO categoryCodeSo;
@@ -1665,6 +1375,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	/**
+	 * Search for supplier count.
+	 */
 	public void searchForSupplierCount() {
 		List<String> codes = new ArrayList<String>();
 		List<ScQtCategory> suppCriteriaopenList = getManagedBean()
@@ -1784,6 +1497,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().setTotalSuppliers(searchResDTO.getCount());
 	}
 
+	/**
+	 * Gets the states n district.
+	 *
+	 * @param locations the locations
+	 * @param codes the codes
+	 * @param locLevel the loc level
+	 * @return the states n district
+	 */
 	private void getStatesNDistrict(List<? extends TplSpecLoc> locations,
 			List<String> codes, String locLevel) {
 
@@ -1845,8 +1566,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * @param qtCategoryList
-	 * @return
+	 * Construct l3 ids.
+	 *
+	 * @param categories the categories
+	 * @return the list
 	 */
 	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
 		List<Long> categoryIds = null;
@@ -1861,7 +1584,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	// View Circular Attachmnets Download Method
-	public void downloadCircularDtls() throws IOException {
+	/**
+	 * Download circular dtls.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+/*	public void downloadCircularDtls() throws IOException {
 		debugLogger("downloadCircularDtls");
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
@@ -1880,8 +1608,34 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 		downloadFile(actualFilePath.toString(), fileName);
 		this.getManagedBean().setSelectpanelItem(itemList);
+	}*/
+	
+	public String viewCircularAttachments(String type) {
+		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
+		itemList = new ArrayList<CtPanelItem>();
+		itemList.add(this.getManagedBean().getCtPanelItem());
+		CtCircularVer ctCircularVer = this.getManagedBean().getCtCircularVer();
+		String pageView = "";
+		if (null != ctCircularVer) {
+			PanelBackingBean panelbackingbean = new PanelBackingBean();
+			panelbackingbean.getManagedBean().setDifferentModule(true);
+			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(type)) {
+				panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/specification/specificationCreation.xhtml");
+			}
+			if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE.equalsIgnoreCase(type)) {
+				panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/specification/specificationCommitteeView.xhtml");
+			}
+			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer.getCircularVerId());
+		}
+		this.getManagedBean().setSelectpanelItem(itemList);
+		return pageView;
 	}
 
+	/**
+	 * Retrive supplier dtls.
+	 *
+	 * @param panelSupplier the panel supplier
+	 */
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
 		this.getManagedBean().setCtpanelSupplier(panelSupplier);
 		if (null != panelSupplier.getSupplier()
@@ -1927,20 +1681,199 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 	
+	/**
+	 * Check all conditions.
+	 *
+	 * @param event the event
+	 */
 	public void checkAllConditions(AjaxBehaviorEvent event) {
 		debugLogger("checkAllCondition");
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<TreeNode> list = getManagedBean().getZoneTrees();
-		for (TreeNode node : list) {
-			for (TreeNode childNode : node.getChildren()) {
-				if (childNode.getChildCount() > 0) {
-					for (TreeNode node2 : childNode.getChildren()) {
-						node2.setSelected(flag);
+		if (null != list) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						for (TreeNode node2 : childNode.getChildren()) {
+							node2.setSelected(flag);
+						}
 					}
+					childNode.setSelected(flag);
 				}
-				childNode.setSelected(flag);
+			}
+			getManagedBean().setZoneTrees(list);
+		} else {
+			
+		}
+	}
+	
+	/**
+	 * Retriev location dtls.
+	 *
+	 * @param scQtLocCriteriaList the sc qt loc criteria list
+	 */
+	private void retrievLocationDtls(List<ScQtLocCriteria> scQtLocCriteriaList) {
+		log.info("retrievLocationDtls - START");
+		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(scQtLocCriteriaList);
+		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(scQtLocCriteriaList);
+		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(scQtLocCriteriaList);
+		List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTO(scQtLocCriteriaList);
+		/*if (getManagedBean().getIndex() == -1) {
+			getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		}*/
+		getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		//List<TreeNode> localList = new ArrayList<TreeNode>();
+		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(this.getManagedBean().getLocalLevelCode())) {
+			/*if (getManagedBean().getIndex() >= 0) {
+				getManagedBean().getZoneTrees().remove(
+						getManagedBean().getIndex());
+			}*/
+			if (null != states && !states.isEmpty()) {
+				for (PmState state : states) {
+					List<PmState> localStateList = new ArrayList<PmState>();
+					localStateList.add(state);
+					/*if (getManagedBean().getIndex() == -1) {*/
+
+						getManagedBean().getZoneTrees().add(
+								LocationSingleton.getInstance()
+										.buildLocationTree(null, localStateList,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+/*					}
+					if (getManagedBean().getIndex() >= 0) {
+
+						localList.add(LocationSingleton.getInstance()
+								.buildLocationTree(null, localStateList,
+										districts, divisions, cities,
+										ScQtLocCriteria.class));
+					}*/
+				}
+				//getManagedBean().getZoneTrees().addAll(localList);
+			}
+		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(this.getManagedBean().getLocalLevelCode())) {
+			/*if (getManagedBean().getIndex() >= 0) {
+
+				getManagedBean().getZoneTrees().remove(
+						getManagedBean().getIndex());
+			}*/
+			if (null != districts && !districts.isEmpty()) {
+				Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStatesDivisionsDistrictsCities(districts, null);
+
+				Set<PmState> statesDivisionsDistrictsCitiesKeySet = mapStatesDivisionsDistrictsCities.keySet();
+				Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStateDistrictsCities(districts, null);
+				Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities.keySet();
+				if (statesDivisionsDistrictsCitiesKeySet != null && !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
+						Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
+								.get(state);
+						Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
+								.keySet();
+						if (divisionsDistrictsCitiesKeySet != null && !divisionsDistrictsCitiesKeySet.isEmpty()) {
+							divisions.clear();
+							districts.clear();
+							for (PmDivision division : divisionsDistrictsCitiesKeySet) {
+								division.setPmState(state);
+								Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities.get(division);
+								Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities.keySet();
+								if (districtsCitiesKeySet != null && !districtsCitiesKeySet.isEmpty()) {
+									for (PmDistrict district : districtsCitiesKeySet) {
+										districts.add(district);
+									}
+								}
+							}
+							/*if (getManagedBean().getIndex() == -1) {*/
+								getManagedBean().getZoneTrees().add(
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														null, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							/*}
+							if (getManagedBean().getIndex() >= 0) {
+
+								localList.add(LocationSingleton.getInstance()
+										.buildLocationTree(null, states,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+							}*/
+						}
+					}
+					//getManagedBean().getZoneTrees().addAll(localList);
+				}
+				if (statesDistrictsCitiesKeySet != null && !statesDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDistrictsCitiesKeySet) {
+						divisions.clear();
+						Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapStatesDistrictsCities.get(state);
+						Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities.keySet();
+						if (districtsCitiesKeySet != null && !districtsCitiesKeySet.isEmpty()) {
+							districts.clear();
+							for (PmDistrict district : districtsCitiesKeySet) {
+								district.setPmState(state);
+								districts.add(district);
+							}
+						}
+						/*if (getManagedBean().getIndex() == -1) {*/
+							getManagedBean().getZoneTrees().add(
+									LocationSingleton.getInstance()
+											.buildLocationTree(null, null,
+													districts, divisions,
+													cities,
+													ScQtLocCriteria.class));
+						/*}
+						if (getManagedBean().getIndex() >= 0) {
+
+							localList.add(LocationSingleton.getInstance()
+									.buildLocationTree(null, states, districts,
+											divisions, cities,
+											ScQtLocCriteria.class));
+						}*/
+					}
+					//getManagedBean().getZoneTrees().addAll(localList);
+				}
+			}
+		} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(this.getManagedBean().getLocalLevelCode())) {
+			/*if (getManagedBean().getIndex() >= 0) {
+
+				getManagedBean().getZoneTrees().remove(
+						getManagedBean().getIndex());
+			}*/
+			if (null != divisions && !divisions.isEmpty()) {
+				Map<PmState, List<PmDivision>> mapStatesDivision = LocationSingleton.getInstance().getUniqueStatesDivision(divisions);
+				Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
+				if (statesDivisionKeySet != null && !statesDivisionKeySet.isEmpty()) {
+					for (PmState state : statesDivisionKeySet) {
+						divisions.clear();
+						List<PmDivision> divisions1 = mapStatesDivision.get(state);
+						if (divisions1 != null && !divisions1.isEmpty()) {
+							for (PmDivision division : divisions1) {
+								division.setPmState(state);
+								divisions.add(division);
+							}
+							/*if (getManagedBean().getIndex() == -1) {*/
+								getManagedBean().getZoneTrees().add(
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							/*}
+							if (getManagedBean().getIndex() >= 0) {
+
+								localList.add(LocationSingleton.getInstance()
+										.buildLocationTree(null, states,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+							}*/
+						}
+					}
+					//getManagedBean().getZoneTrees().addAll(localList);
+				}
 			}
 		}
-		getManagedBean().setZoneTrees(list);
+		/*this.getManagedBean().setIndex(-1);*/
+		log.info("retrievLocationDtls - END");
 	}
+
 }
