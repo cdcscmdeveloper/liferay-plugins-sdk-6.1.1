@@ -39,7 +39,7 @@
 					value="#{financialsrv.serviceTypeCode.parameterId}"
 					disabled="#{!financialsrv.brandNew || financialsrv.serviceTypeCode.parameterCode eq ParameterConst.bankServicesPaymentBank}"
 					label="#{lbl['lbl.pm.financialorg.servicetype']}" required="false"
-					styleClass="ppDropDownWidthM">
+					styleClass="ppDropDownWidthS">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="serviceType"
@@ -65,10 +65,10 @@
 				</ui:fragment>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu styleClass="ppDropDownWidthS"
+				<p:selectOneMenu 
 					disabled="#{financialsrv.serviceTypeCode.parameterCode eq  ParameterConst.bankServicesPaymentBank ? true : financialsrv.brandNew}"
 					value="#{financialsrv.recordStatusFlg}" required="true"
-					style="width: 135px;margin-bottom: 5px;">
+					>
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
