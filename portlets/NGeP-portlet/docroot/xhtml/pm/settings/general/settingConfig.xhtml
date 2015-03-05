@@ -26,9 +26,9 @@
 			<p:tabView id="settingTabId"
 				activeIndex="#{ruleCatalogueBackingBean.managedBean.tabActiveIndex}">
 
-				<p:tab id="generalSet" title="#{lbl['lbl.pm.settings.general.parameter']}">
+				<!--<p:tab id="generalSet" title="#{lbl['lbl.pm.settings.general.parameter']}">
 					<ui:include src="generalSettingTab.xhtml"></ui:include>
-				</p:tab>
+				</p:tab>-->
 				<p:tab title="#{lbl['lbl.pm.settings.rule.config']}">
 					<ui:include src="ruleConfig.xhtml"></ui:include>
 				</p:tab>
@@ -48,11 +48,19 @@
 
 					</p:tabView>
 				</p:tab>
-				<!--  
-                <p:tab id="thresholdId" title="#{lbl['lbl.pm.settings.operational.threshold']}">
-					<ui:include src="operationalThreshold.xhtml"></ui:include>
+				
+                <p:tab title="#{lbl['lbl.pm.settings.operational.threshold']}">
+                	<p:tabView id="thresholdId"
+                		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}">
+                		<p:tab title="#{lbl['lbl.pm.settings.fee.by.org.item']}">
+							<ui:include src="unplannedQtThreshold.xhtml"></ui:include>
+						</p:tab>
+						<p:tab title="#{lbl['lbl.pm.settings.fee.by.org.item']}">
+							<ui:include src="budgetVsSpentThreshold.xhtml"></ui:include>
+						</p:tab>
+                	</p:tabView>
 				</p:tab>
-				-->
+				
 			</p:tabView>
 
 

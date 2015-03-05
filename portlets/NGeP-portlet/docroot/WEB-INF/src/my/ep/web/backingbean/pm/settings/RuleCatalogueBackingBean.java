@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
@@ -20,6 +21,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.pm.general.settings.threshold.IOperationalThresholdSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -27,6 +29,8 @@ import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
@@ -52,6 +56,7 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
@@ -96,13 +101,15 @@ public class RuleCatalogueBackingBean extends
 
 	public String preRenderView() {
 		log.info("...........preRenderView............");
-		this.getManagedBean().setTabActiveIndex(0);
-		this.getManagedBean().setFeeExemptionIndex(0);
+		getManagedBean().setTabActiveIndex(0);
+		getManagedBean().setFeeExemptionIndex(0);
+		getManagedBean().setThresholdIndex(0);
 
 		IConfigGeneralSO cgeneralSO = null;
 		try {
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IConfigGeneralSO.class);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			ConfigGeneralReqDTO reqDTO = new ConfigGeneralReqDTO();
 			ConfigGeneralResDTO resDTO = cgeneralSO.getConfigGeneral(reqDTO);
 			this.getManagedBean().setSelectedConfigGeneral(
@@ -239,14 +246,33 @@ public class RuleCatalogueBackingBean extends
 			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
 			ThresholdResDTO resTDTO = null;
 			reqTDTO.setOrgProfileId(null);
-			this.getManagedBean().getThresholds().clear();
-			this.getManagedBean().getDeletedThresholds().clear();
 			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
-
-			for (PmThreshold threshold : resTDTO.getThresholdList()) {
-				this.getManagedBean().getThresholds().add(threshold);
+			getManagedBean().setThreshold(resTDTO.getThresholdList().get(0));
+			getManagedBean().setUnplannedThreshold(resTDTO.getThresholdList().get(0).getS2Unplanned());
+			getManagedBean().setBudgetThreshold(resTDTO.getThresholdList().get(0).getBudgetSpent());
+//			for (PmThreshold threshold : resTDTO.getThresholdList()) {
+//				this.getManagedBean().getThresholds().add(threshold);
+//			}
+			
+			thresholdSO.insertMinistryThresholds();
+			ThresholdResDTO finalResDTO = new ThresholdResDTO();
+			if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
+				finalResDTO = thresholdSO.getMinistryThresholds();				
+			}else{
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				ThresholdReqDTO thresholdreqDTO = new ThresholdReqDTO();
+				thresholdreqDTO.setOrgProfileId(userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+				finalResDTO = thresholdSO.getOperationalThresholds(thresholdreqDTO);
 			}
-
+			
+		
+			if(!finalResDTO.getThresholdList().isEmpty()){
+				getManagedBean().setUnplannedThresholdList(finalResDTO.getThresholdList());
+				getManagedBean().setBudgetThresholdList(finalResDTO.getThresholdList());
+			}
+			
 			System.out
 					.println("...................resTDTO.getThresholdList().size()="
 							+ resTDTO.getThresholdList().size());
@@ -1495,5 +1521,96 @@ public class RuleCatalogueBackingBean extends
 						+ resTDTO.getThresholdList().size());
 
 	}
-
+	
+	/**
+	 * get faces scopes
+	 * 
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+	public boolean checkIsEpAdmin(){
+		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public void onChangeMainUnplannedThreshold(){
+	//	getManagedBean().getThreshold().setS2Unplanned(getManagedBean().getUnplannedThreshold().intValue());
+		for(PmThreshold threshold : getManagedBean().getUnplannedThresholdList()){
+			threshold.setS2Unplanned(getManagedBean().getThreshold().getS2Unplanned());
+		}
+	}
+	
+	public void onChangeMainBudgetThreshold(){
+		for(PmThreshold threshold : getManagedBean().getBudgetThresholdList()){
+			threshold.setBudgetSpent(getManagedBean().getThreshold().getBudgetSpent());
+		}
+	}
+	
+	public void saveThresholds(int type){
+		// 1 - unplanned
+		// 2 - budget
+		
+		List<PmThreshold> saveThresholdList = new ArrayList<PmThreshold>();
+		saveThresholdList.add(getManagedBean().getThreshold());
+		if(type == 1){
+			saveThresholdList.addAll(getManagedBean().getUnplannedThresholdList());
+		}else if(type == 2){
+			saveThresholdList.addAll(getManagedBean().getBudgetThresholdList());			
+		}
+		
+		try{
+			IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
+					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOperationalThresholdSO.class);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			ThresholdReqDTO reqDTO = new ThresholdReqDTO();
+			reqDTO.setThresholdList(saveThresholdList);
+			reqDTO.setPmConfigGeneral(getManagedBean().getSelectedConfigGeneral());
+			ThresholdResDTO resDTO = thresholdSO.updateOperationalThresholdList(reqDTO);
+			
+			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
+			ThresholdResDTO resTDTO = null;
+			reqTDTO.setOrgProfileId(null);
+			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
+			getManagedBean().setThreshold(resTDTO.getThresholdList().get(0));
+			getManagedBean().setUnplannedThreshold(resTDTO.getThresholdList().get(0).getS2Unplanned());
+			getManagedBean().setBudgetThreshold(resTDTO.getThresholdList().get(0).getBudgetSpent());
+			
+			ThresholdResDTO finalResDTO = new ThresholdResDTO();
+			if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
+				finalResDTO = thresholdSO.getMinistryThresholds();				
+			}else{
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				ThresholdReqDTO thresholdreqDTO = new ThresholdReqDTO();
+				thresholdreqDTO.setOrgProfileId(userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+				finalResDTO = thresholdSO.getOperationalThresholds(thresholdreqDTO);
+			}			
+		
+			if(!finalResDTO.getThresholdList().isEmpty()){
+				getManagedBean().setUnplannedThresholdList(finalResDTO.getThresholdList());
+				getManagedBean().setBudgetThresholdList(finalResDTO.getThresholdList());
+			}
+			if (resDTO.isSuccessful()) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(
+						MessageConst.INFO_770093,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale())));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
