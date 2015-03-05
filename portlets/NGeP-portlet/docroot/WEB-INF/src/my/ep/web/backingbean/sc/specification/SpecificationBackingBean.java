@@ -1940,7 +1940,7 @@ public class SpecificationBackingBean extends
 					}
 					this.getManagedBean().setPanelItemCategory("");
 					// TODO Added for viswanath Bug#540
-					if (scQt.isZonal() && !scQt.getScQtSupplierCriteria().isAllState()) {
+					if (scQt.isZonal() || !scQt.getScQtSupplierCriteria().isAllState()) {
 						if (null == this.getManagedBean().getScQt().getScQtSupplierCriteria().getLocationLevel().getParameterId()) {
 							if (tenderResDTO.getQtDetail().isZonal()) {
 								retrieveNonZonalDtls();
