@@ -117,8 +117,7 @@
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.cm.search']}" 
 								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-								update="searchViewId,catSrchMsg" id="searchButtonId"
-								oncomplete="updateCatButtons();">
+								update="searchViewId,catSrchMsg,btnId" id="searchButtonId">
 								<f:param name="unspscCode" value="#{unspscCode}" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" 
@@ -133,7 +132,6 @@
 				<tr>
 					<td width="70%" style="vertical-align: top;"><p:panel
 							style="width: 100%;" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
-						 <p:remoteCommand name="updateCatButtons" partialSubmit="true" process="@this" update="btnId" />
 						 	
                          <h:panelGroup id="btnId">
 							<div style="text-align: right;">
