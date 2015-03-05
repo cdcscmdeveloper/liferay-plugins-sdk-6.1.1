@@ -14,19 +14,18 @@
 					<h:outputLabel value="#{lbl['lbl.so.circularno']}" />
 				</h:column>
 				<h:column>
-					<p:inputText size="50"
+					<p:inputText size="75"
 						value="#{specificationBackingBean.managedBean.cirCularNo}"
 						disabled="true" />
 					<p:spacer width="5" />
 
-					<p:commandLink value="#{lbl['lbl.so.cirattach']}"
+					<h:commandLink value="#{lbl['lbl.so.cirattach']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						style="margin-right:20px;" ajax="false"
-						process="@all,yesmainpanel" partialSubmit="true"
-						update="circularItemDetails"
-						actionListener="#{specificationBackingBean.downloadCircularDtls}">
+						style="margin-right:20px;" process="@all,yesmainpanel"
+						partialSubmit="true" update="circularItemDetails"
+						action="#{specificationBackingBean.viewCircularAttachments('BO')}">
 
-					</p:commandLink>
+					</h:commandLink>
 				</h:column>
 
 				<h:column>
@@ -34,7 +33,7 @@
 				</h:column>
 
 				<h:column>
-					<p:inputText size="100"
+					<p:inputTextarea rows="3" cols="75" style="margin-bottom:5px;"
 						value="#{specificationBackingBean.managedBean.circularName}"
 						disabled="true" />
 				</h:column>
@@ -69,12 +68,12 @@
 				<ac:paginator for="panelDataItemList"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-					style="width:20%">
+					style="width:20%;white-space: normal;">
 					<h:outputText value="#{panelItem.itemName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
-					style="width:15%">
+					style="width:15%;white-space: normal;">
 					<h:outputText value="#{panelItem.specification}" />
 
 				</p:column>
