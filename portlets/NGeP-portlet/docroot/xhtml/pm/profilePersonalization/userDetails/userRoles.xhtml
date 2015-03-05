@@ -10,7 +10,7 @@
 		<p:panel header="#{lbl['lbl.pm.profiles.authorisation.roles']}" toggleable="true">
 		  	<p:dataTable id="dtRoles" var="role" styleClass="dtRoles"
 		  		 emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
-			     value="#{profilePersonalizationBackingBean.managedBean.currentUserOrg.pmUserRoles}"
+			     value="#{profilePersonalizationBackingBean.managedBean.userActiveRoles}"
 			     rowIndexVar="index" rowKey="#{role}">   
 			    <ac:paginator for="dtRoles"/>
 			    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" >

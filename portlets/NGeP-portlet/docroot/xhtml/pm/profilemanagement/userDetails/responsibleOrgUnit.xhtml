@@ -125,10 +125,9 @@
 	        </p:column>  
 		</p:dataTable>
        	<br/>
-       	<br/>
 		<div class="ppRightBtn">
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" partialSubmit="true" immediate="true" 
-		 	disabled="profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0"
+		 	disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
 		   	 	update="dtOrgUnit, :form:tvRoleReceivingAddr" action="#{profileManagementBackingBean.addOrgUnit()}" />
 		</div>
     	<ac:lovPopup /> 		
