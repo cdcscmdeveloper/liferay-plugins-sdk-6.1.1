@@ -577,6 +577,7 @@ public class ReportConst {
 	public static final String FL_AMP_USER_ID_EQ = "&PUSER=";
 	//CT
 	public static final String CT_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
+	public static final String CT_AMP_PHYSICALCONTRACT_NO_EQ = "&PPHYSICALCONTRACTNO=";
 	public static final String CT_AMP_AGREEMENT_EQ = "&PAGREEMENT=";
 	public static final String CT_AMP_STATUS_EQ = "&PSTATUS=";
 	public static final String CT_AMP_GROUP_EQ = "&PGROUP=";
@@ -588,8 +589,8 @@ public class ReportConst {
 	public static final String CT_AMP_PPRODUCTSERVICE_EQ = "&PPRODUCTSERVICE=";
 	public static final String CT_AMP_PLOANO_EQ = "&PLOANO=";
 	public static final String CT_AMP_PLOAPHYSICALNO_EQ = "&PLOAPHYSICALNO=";
-	public static final String CT_AMP_PMINISTRY_EQ = "&PMINISTRY=";
-	public static final String CT_AMP_PPTJNAME_EQ = "&PPTJNAME=";
+	public static final String CT_AMP_PMINISTRY_EQ = "&PMINIS=";
+	public static final String CT_AMP_PPTJNAME_EQ = "&PPTJ=";
 	public static final String CT_AMP_PROCUREMENTMODE_EQ = "&PROCUREMENTMODE=";
 	public static final String CT_AMP_USERTYPE_EQ = "&USERTYPE=";
 	public static final String CT_AMP_SUBTYPE_EQ = "&SUBTYPE=";
