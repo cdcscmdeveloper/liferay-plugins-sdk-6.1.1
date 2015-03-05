@@ -1610,7 +1610,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().setSelectpanelItem(itemList);
 	}*/
 	
-	public String viewCircularAttachments(String type) {
+	public String viewCircularAttachments() {
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
 		itemList.add(this.getManagedBean().getCtPanelItem());
@@ -1619,12 +1619,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (null != ctCircularVer) {
 			PanelBackingBean panelbackingbean = new PanelBackingBean();
 			panelbackingbean.getManagedBean().setDifferentModule(true);
-			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(type)) {
-				panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/specification/specificationCreation.xhtml");
-			}
-			if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE.equalsIgnoreCase(type)) {
-				panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/specification/specificationCommitteeView.xhtml");
-			}
+			panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/quatationtender/qtntendermain.xhtml");
 			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer.getCircularVerId());
 		}
 		this.getManagedBean().setSelectpanelItem(itemList);
