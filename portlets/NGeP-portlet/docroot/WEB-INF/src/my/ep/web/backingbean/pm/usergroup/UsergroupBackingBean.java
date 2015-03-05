@@ -255,6 +255,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		List<PmUserGroupUser> groupUsers = this.getManagedBean()
 				.getUserGroups();
 		if (null != users) {
+			getManagedBean().setBrandNew(true);
 			PmUserGroupUser groupUser = null;
 			for (PmUser pmUser : users) {
 				groupUser = new PmUserGroupUser();
@@ -378,13 +379,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String gotoMaintanance(PmUserGroup userGroup) {
 		debugLogger("gotoMaintanance");
+		getManagedBean().setBrandNew(false);
 		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
 		List<PmUserGroupUser> groupUserList = new ArrayList<PmUserGroupUser>();
 		for (PmUserGroupUser userGroupUser : userGroup.getPmUserGroupUsers()) {
 			for (PmUserOrg userOrg : userGroupUser.getPmUser().getPmUserOrgs()) {
 					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
 						if (null != userRole.getApprovalLimit()) {
-							System.out.println("userRole.getApprovalLimit() :"+userRole.getApprovalLimit());
 							if(!groupUserList.contains(userGroupUser)){
 								userGroupUser.setPmUserRole(userRole);
 								groupUserList.add(userGroupUser);
