@@ -155,7 +155,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean (name = "contractDetailsBackingBean")
 @ViewScoped
 public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsManagedBean> {
-
+	
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
@@ -182,471 +182,384 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtDeductionClause[] selectedDeductionClauses;
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	
+	/**
+	 * The constructor used for initializing the variable.
+	 * This method will initialize the button and approver list.
+	 */
 	public ContractDetailsBackingBean() {
-	   
-		 if (this.getManagedBean().getAction() == null) {
-		       this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
-		       this.getManagedBean().setContractVer(new CtContractVer());
-	     } if(getManagedBean().getUserMap().size()==0) {
-			  initializeApproverList();
-	     }
-
+		/* Initialization of button */
+		if (this.getManagedBean().getAction() == null) {
+			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			this.getManagedBean().setContractVer(new CtContractVer());
+		}
+		if (getManagedBean().getUserMap().size() == 0) {
+			initializeApproverList();
+		}
 	 }
 	
-	private FacesScopes getFacesScopes(){
-	   FacesScopes facesScopes = new FacesScopes();
-	   return facesScopes;
+	/**
+     * This method used to retrieve login user information.
+	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 	
+	/**
+	 * This  method used to initialize approver list.
+	 */
 	private void initializeApproverList() {
-		if(getManagedBean().getApproverModel() == null) {
-		  	 List<String> source = new ArrayList<String>();
-			 List<String> target = new ArrayList<String>();
-			 getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		if (getManagedBean().getApproverModel() == null) {
+			List<String> source = new ArrayList<String>();
+			List<String> target = new ArrayList<String>();
+			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		}
+	}
+	
+	/**
+	 * The method used to retrieve available approver(s).
+	 *
+	 * @return sourceList  the approver list
+	 */
+	private List<String> getAvailableApproverList() {
+		IUserSO userSO = null;
+		List<String> sourceList = new ArrayList<String>();
+		
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			if (resDTO.getUserOrgList().size() > 0) {
+				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			}
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+			} else { // Central Contract	
+				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			}			
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			
+			List<PmUser> list = resDTO.getUserList();			
+			for (PmUser user : list) {
+				sourceList.add(user.getUserName());
+				getManagedBean().getUserMap().put(user.getUserName(), user);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+		return sourceList;
 	}
 	
 	public void setSelectedTabValue(int tabValue) {
-		 this.getManagedBean().setSelectedTabIndex(tabValue);
+		this.getManagedBean().setSelectedTabIndex(tabValue);
 	}
 	
-	 private List<String> getAvailableApproverList() {
-		 IUserSO userSO = null;
-		 List<String> sourceList = new ArrayList<String>();
+	/**
+	 * The method used to clear the previous viewed information before
+	 * rendering the contract search screen.
+	 */
+	public void preRenderSearch() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_MAINT_PAGE);
+	}
 	
-		 try {
-			    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			    UserReqDTO reqDTO = new UserReqDTO();
-			    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+	/**
+	 * The method used to clear the previous viewed information before
+	 * rendering the contract details screen.
+	 */
+	public void preRenderContract() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_PAGE);
+	}
+	
+	/**
+	 * The method used to retrieve the information and render it on screen.
+	 */
+	public void preRenderView() {
+		try {
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
 			
-			    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			    if (resDTO.getUserOrgList().size() > 0)
-			    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			if (taskId == null) {
+				if (getManagedBean().getWarningPercentage() != null) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
+									MessageUtils.getMessage(MessageConst.INFO_745008,
+											new String[] {getManagedBean().getCtContract().getContractNo(),
+												getManagedBean().getWarningPercentage()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					getManagedBean().setWarningPercentage(null);
+				}
+				return;
+			}			
+			FacesScopes face = new FacesScopes();
+			String token = face.getBPMAuthenticationCtxToken();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO); 
+			Object obj = res.getPojo();
+      
+			String[] outcome = new String[res.getAction().length + 1];
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			int i = 1;
+			for (String action : res.getAction()) {
+				outcome[i++] = action;
+			}
 			
-			    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
-				     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-			    else // Central Contract	
-				    reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			this.getManagedBean().setTaskName(res.getTaskName());
+			this.getManagedBean().setAction(outcome);
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setSelectedTabIndex(0);
+
+			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			if ((res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) 
+					|| res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)) 
+					&& res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+				CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
+				ctReqDTO.setContractId(new Long(dataType.getContractId()));
+				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+				ctReqDTO.setDocType(dataType.getDocType());
+			} else {
+				CTContractDataType dataType = (CTContractDataType) obj;
+				ctReqDTO.setContractId(new Long(dataType.getContractId()));
+				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+				ctReqDTO.setDocType(dataType.getDocType());
+			}
+		    
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+			setValidateContractField(resDTO);         
 			    
-                resDTO = userSO.retrieveUserListByRole(reqDTO);
-			    List<PmUser> list = resDTO.getUserList();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
+					ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
 			
-			    for (PmUser user : list) {
-				    sourceList.add(user.getUserName());
-				    getManagedBean().getUserMap().put(user.getUserName(), user);
-			    }
-	   	  } catch (Exception e) {
-		     	e.printStackTrace();
-		    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		  } finally {
-			  userSO = null;
-		  }
-		 return sourceList;
+		}
 	}
 	
-	 public void preRenderSearch() {
-	    	renewSesionObject();
-		    FacesContext fc = FacesContext.getCurrentInstance();
-		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_MAINT_PAGE);
-	  }
-	
-	  public void preRenderContract() {
-		    renewSesionObject();
-		    FacesContext fc = FacesContext.getCurrentInstance();
-		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_PAGE);
-	   }
-	
-	   public void preRenderView() {
-		
-		     try {
-			          
-		    	    HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		         	HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		        	String taskId = originalServletRequest.getParameter("taskId");
-		 	        if(taskId == null) {
-				  //       ConstructSideTabMenu();
-				 	    if(getManagedBean().getWarningPercentage()!=null) {
-					    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
-				    			MessageUtils.getMessage(MessageConst.INFO_745008, new String[]{getManagedBean().getCtContract().getContractNo(), getManagedBean().getWarningPercentage()}, 
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					    	getManagedBean().setWarningPercentage(null);
-					    }
-				      return;
-			       }
-
-		    	  FacesScopes face = new FacesScopes();
-			      String token = face.getBPMAuthenticationCtxToken();
-			      IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
-			      BpmRequestDTO reqDTO = new BpmRequestDTO();
-			      reqDTO.setCtxToken(token);
-			      reqDTO.setTaskId(taskId);
-
-			      BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO); 
-			      Object obj = res.getPojo();
-		      
-			      String[] outcome = new String[res.getAction().length + 1];
-			      outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			      int i = 1;
-			      for (String action : res.getAction()) {
-				     outcome[i++] = action;
-			      }
-				
-			     this.getManagedBean().setTaskName(res.getTaskName());
-			     this.getManagedBean().setAction(outcome);
-			     this.getManagedBean().setTaskId(taskId);
-			     this.getManagedBean().setSelectedTabIndex(0);
-
-			     ContractReqDTO ctReqDTO = new ContractReqDTO();
-			     if((res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) || res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)) && res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
-				        CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
-				        ctReqDTO.setContractId(new Long(dataType.getContractId()));
-				        ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-				        ctReqDTO.setDocType(dataType.getDocType());
-			
-			     } else { 
-				
-			    	   CTContractDataType dataType = (CTContractDataType) obj;
-				       ctReqDTO.setContractId(new Long(dataType.getContractId()));
-				       ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-				       ctReqDTO.setDocType(dataType.getDocType());
-			     }
-		    
-			     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		         ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
-		         setValidateContractField(resDTO);
-		      //   ConstructSideTabMenu();		         
-		    
-		         FacesContext fc = FacesContext.getCurrentInstance();
-			     fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
-		
-           } catch(Exception e){
-			     e.printStackTrace();
-	 	 
-           }finally{}
-	}
-	
+	/**
+	 * The method used to set the contract details information while
+	 * rendering the screen.
+	 * 
+	 * @param resDTO  the response data transfer object for contract
+	 */
 	public void setValidateContractField(ContractResDTO resDTO) {
+		getManagedBean().setContractVer(resDTO.getCtContractVer());
+	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	    
+	    setBondRecordStatus(this.getManagedBean().getContractVer());
+	         
+	    // Retrieve Agencies
+	    if (getManagedBean().getContractVer().getCtAgencies() != null 
+	    		&& this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
+	    	getManagedBean().setSelectedAgency(null);
+	    	Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());		           
+	    	for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
+	    		checkAgencyStatus(ctAgency);		        	   
+	    	}
+	    }
+		// Retrieve Items
+	    if (getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
+	    	getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
+	    	getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
+	    	getManagedBean().setSelectedItem(null);
+	    	getManagedBean().setSelectedServiceItem(null);	    	  
+ 		         
+	    	for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+	    		// If effective date is after current date, status is still display old status
+	    		if (item.getRecordStatusFlg() == 0) {				       		
+	    			if (item.getEffDate().after(getCurrentDate())) {
+	    				item.setChkStatus(true);
+	    			} else {
+	    				item.setChkStatus(false);
+	    			}
+	    		} else {
+	    			if (item.getEffDate().after(getCurrentDate())) {
+	    				item.setChkStatus(false);
+	    			} else {
+	    				item.setChkStatus(true);
+	    			}
+	    		}
+	        		 
+	    		if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+	    			Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+	    			getManagedBean().getCtItemServiceList().add(item);			           
+	    		} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+	    			Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+	    			if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
+	    				Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+	    				for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
+	    					checkAgencyStatus(ceilingQty.getCtAgency());		        	   
+	    				}
+	    			}
+	    			this.getManagedBean().getCtItemList().add(item);
+	    		}
+	    	}
+	    	
+	    	if (this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) {
+	    		Collections.sort(this.getManagedBean().getCtItemList(), new CtContractItem());
+	    	}
+	    	if (this.getManagedBean().getCtItemServiceList() != null && this.getManagedBean().getCtItemServiceList().size() > 0) {
+	    		Collections.sort(this.getManagedBean().getCtItemServiceList(), new CtContractItem());
+	    	}
+	    }
+		// Retrieve Deduction Clauses
+	    if (this.getManagedBean().getContractVer().getCtDeductions().size() > 0) {
+	    	for (CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()) {
+	    		if (deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)) {
+	    			getManagedBean().setFlgPaymentTracking(true);
+	    			getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
+	    			calAdvancePaymentTracking(this.getManagedBean().getCtContract().getContractId());
+	    		}
+	    	}
+	    }
+	    // Retrieve Schedules
+	    if (getManagedBean().getContractVer().getCtSchedules() != null 
+	    		&& !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
+	    	getManagedBean().setChkSchedule(true);
+	    	Collections.sort(getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
+	    	for (CtSchedule ctSchedule : getManagedBean().getContractVer().getCtSchedules()) {
+	    		if (ctSchedule.isUseInFulfilment()) {
+	    			getManagedBean().setDisableScheduleRadio(true);
+	    			break;
+	    		}
+	    	}
+	    	scheduleDate();
+	    }
+	    if (getManagedBean().getContractVer().getCtProgressivePayments() != null 
+	    		&& !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
+	    	Collections.sort(getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
+	    	for (CtProgressivePayment ctProgressivePayment : getManagedBean().getContractVer().getCtProgressivePayments()) {
+	    		if (ctProgressivePayment.isUseInFulfilment()) {
+	    			getManagedBean().setDisableScheduleRadio(true);
+	    			break;
+	    		}
+			}
+	    	progressiveDate();
+	    }
+	    // Retrieve Delivery Terms
+	    if (getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null) {
+	    	getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmParameter());
+	    	getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom().setParameterId(
+	    			getParameterIdByTypeAndCode(ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS));
+	    }
+	    if (getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+	    		ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			getManagedBean().setDirectPurchase(true);
+			getManagedBean().setFlgPaymentTracking(false);
+		} else {
+			this.getManagedBean().setDirectPurchase(false);
+		}
+	    // Retrieve Zones
+	    if (getManagedBean().getContractVer().getCtContractZones() != null 
+	    		&& this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+	    	Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+	    	retriveZonesByContractVer();
+	    }
+	    // Retrieve Supplier Information
+	    getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+	    getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
+		renderUpdateCheckbox(getManagedBean().getContractVer());
+		getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		
-		     getManagedBean().setContractVer(resDTO.getCtContractVer());
-	         getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-	    
-	         setBondRecordStatus(this.getManagedBean().getContractVer());
-	         if(getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
-	        	  	getManagedBean().setSelectedAgency(null);
-		           Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());		           
-		           for(CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
-		        	  checkAgencyStatus(ctAgency);		        	   
-		           }
-	         }
-	  
-	          if(getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
-	        	    getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
- 		            getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
- 		            getManagedBean().setSelectedItem(null);
- 		            getManagedBean().setSelectedServiceItem(null);	    	  
- 		            
- 		            for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
- 		            		// If effective date is after current date, status is still display old status
-			        	   if (item.getRecordStatusFlg() == 0) {				       		
-					       		if(item.getEffDate().after(getCurrentDate())) 
-					       			item.setChkStatus(true);
-					       		else 
-					       			item.setChkStatus(false);
-			        	   }
-			        	   else {
-					       		if(item.getEffDate().after(getCurrentDate())) 
-					       			item.setChkStatus(false);
-					       		else 
-					       			item.setChkStatus(true);		        		   
-			        	   }
- 		            	   if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-			        	          Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-				                  getManagedBean().getCtItemServiceList().add(item);			           
- 		            	   } else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
-			        	             Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-			        	             if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
-			        	        	       Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
-			        	        	       for(CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
-			        	 		        	  checkAgencyStatus(ceilingQty.getCtAgency());		        	   
-			        	 		           }
-			        	             }
-	        	                     this.getManagedBean().getCtItemList().add(item);
-			               }		             
- 		            } if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) 
-		                    Collections.sort(this.getManagedBean().getCtItemList(), new CtContractItem());
-	    	 
-	    	        if(this.getManagedBean().getCtItemServiceList() != null && this.getManagedBean().getCtItemServiceList().size() > 0) 
-			              Collections.sort(this.getManagedBean().getCtItemServiceList(), new CtContractItem());
-		     }
-		 
-		    if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0) {
-		         for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
-		             if(deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
-		    	          getManagedBean().setFlgPaymentTracking(true);
-		    	          getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
-		    	          calAdvancePaymentTracking(this.getManagedBean().getCtContract().getContractId());
-		           }
-		     }
-		
-		 } 
-		   
-		    if (getManagedBean().getContractVer().getCtSchedules() != null && !getManagedBean().getContractVer().getCtSchedules().isEmpty() ) {
-		        getManagedBean().setChkSchedule(true);
-		        Collections.sort(getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
-		        for(CtSchedule ctSchedule : getManagedBean().getContractVer().getCtSchedules()) {
-		        	if(ctSchedule.isUseInFulfilment()) {
-		        		getManagedBean().setDisableScheduleRadio(true);
-		        		break;
-		        	}
-		        }
-		        ScheduleDate();
-		 } if (getManagedBean().getContractVer().getCtProgressivePayments() != null && !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
-			     Collections.sort(getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
-			     for(CtProgressivePayment ctProgressivePayment : getManagedBean().getContractVer().getCtProgressivePayments()) {
-			    	 if(ctProgressivePayment.isUseInFulfilment()) {
-			    		 getManagedBean().setDisableScheduleRadio(true);
-			    		 break;
-			    	 }
-			     }ProgressiveDate();
-		   }
-		    
-		    if(getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
-		    	getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmParameter());
-		    	getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom().setParameterId(getParameterIdByTypeAndCode(ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS));
-		    }
-		  
-		    if(getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-		    	getManagedBean().setDirectPurchase(true);
-		    	getManagedBean().setFlgPaymentTracking(false);
-		    }
-		    else {
-		    	this.getManagedBean().setDirectPurchase(false);
-		    }
-		    
-		    if(getManagedBean().getContractVer().getCtContractZones() != null && this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
-		    	     Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
-		    		 retriveZonesByContractVer();
-		    }
-		  
-	    	getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-	    	getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
-		    renderUpdateCheckbox(getManagedBean().getContractVer());
-		    getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-		    
-	        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
-			     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			     getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			} 
-	          getManagedBean().setRemarkList(resDTO.getCtRemarks());
-			  getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+		} 
+	 	getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			
-			if(getManagedBean().getCtContract().isFrequencySchedule()){
-			    getManagedBean().setFrequencySchedule("S");
-			}else {
-				getManagedBean().setFrequencySchedule("P");
-			}
-			
-			 if(getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			    	getManagedBean().setDisableScheduleRadio(true);
-			    	getManagedBean().setFrequencySchedule("S");
-	  	  
-			 } else if( getManagedBean().getCtContract().getLoa().getScQtSchedules()!= null && !getManagedBean().getCtContract().getLoa().getScQtSchedules().isEmpty()){
-		    	getManagedBean().setDisableScheduleRadio(true);
-		    	getManagedBean().setFrequencySchedule("S");
-  	     
-			 }  else if( getManagedBean().getCtContract().getLoa().getScQtProgPayments() != null && !getManagedBean().getCtContract().getLoa().getScQtProgPayments().isEmpty()){
- 		    	getManagedBean().setDisableScheduleRadio(true);
- 		    	getManagedBean().setFrequencySchedule("P");
-   	         }
-			
-			if(getManagedBean().getCtContract().getLatestContractVer() != null && getManagedBean().getCtContract().getLatestContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)) {
-				    IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-					ContractAmendmentResDTO resAmendDto = amendSO.getAmendmentByLastestContractVer(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
-				    getManagedBean().setCtAmendment(resAmendDto.getAmendment());
-			}
-			
-			// Get performance bond rule amount
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(RuleTypeConst.BOND);
-			RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-			if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
-				getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
-			}
-			initializeRemarks();
-			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
-			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
-		    ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		if (getManagedBean().getCtContract().isFrequencySchedule()) {
+			getManagedBean().setFrequencySchedule("S");
+		} else {
+			getManagedBean().setFrequencySchedule("P");
+		}
+		if (getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			getManagedBean().setDisableScheduleRadio(true);
+			getManagedBean().setFrequencySchedule("S");
+		} else if (getManagedBean().getCtContract().getLoa().getScQtSchedules()!= null 
+				&& !getManagedBean().getCtContract().getLoa().getScQtSchedules().isEmpty()) {
+			getManagedBean().setDisableScheduleRadio(true);
+		    getManagedBean().setFrequencySchedule("S");
+		}  else if (getManagedBean().getCtContract().getLoa().getScQtProgPayments() != null 
+				&& !getManagedBean().getCtContract().getLoa().getScQtProgPayments().isEmpty()) {
+			getManagedBean().setDisableScheduleRadio(true);
+			getManagedBean().setFrequencySchedule("P");
+		}
+		// Retrieve latest amendment
+		if (getManagedBean().getCtContract().getLatestContractVer() != null) {
+			IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractAmendmentResDTO resAmendDto = amendSO.getLatestAmendmentLoaByContractId(getManagedBean().getCtContract().getContractId());
+			getManagedBean().setCtAmendment(resAmendDto.getAmendment());
+		}
+		// Get performance bond rule amount
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleTypeConst.BOND);
+		RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+		if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueList() != null 
+				&& roleResDTO.getRuleValueList().size() > 0) {
+			getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
+		}
+		initializeRemarks();
+		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
+		ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	}
-	
-	
-    /* public void ConstructSideTabMenu(){
-		
-		   MenuModel fulfilmentMenuModel = new DefaultMenuModel();
-		   CtTabSideMenus menu = new CtTabSideMenus();
-		
-		   int zoneTabIndex = 0;
-		   FacesContext facesContext = FacesContext.getCurrentInstance();
-		   getManagedBean().setFinalListOfSideMenu( new ArrayList<String>());
-		
-		   if(getManagedBean().getCtContract().getContractType() != null 
-				   && getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-		    	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
-			      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuAgency);
-			      if(getManagedBean().getCtContract().isZonalPricing()) {
-		 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
-			      }
-		 		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-		          if (!getManagedBean().isDirectPurchase() && getManagedBean().getContractVer().getCtDeductions() != null
-		        		  && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
-		    	  		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction); 
-			      } 
-		         
-		          if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-		            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);  
-			       }
-	 		          
-		           if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-	            	      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
-	                     
-		           } if(getManagedBean().isFlgPaymentTracking()) {
-	            	         getManagedBean().getFinalListOfSideMenu().addAll(menu.menuPaymentTracking);
-	                } 
-		            getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);
-	                
-		  } if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-		               getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
-		               if(getManagedBean().getCtContract().isZonalPricing()) {
-			 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
-				      }
-		               getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-	                   if(getManagedBean().getCtContract().isFactored()){
-	            	       getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
-		                }
-        	          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);   
-		      }
-		      
-	 	    for( String str : getManagedBean().getFinalListOfSideMenu()){
-	 	    	MenuItem zoneItem = new MenuItem();
-				zoneItem.setValue(str);
-				zoneItem.setId("zoneMenuID"+zoneTabIndex);
-				zoneItem.setUpdate("@form");
-				zoneItem.setActionExpression(FacesScopes
-						.createMethodExpression(facesContext,
-								"#{contractDetailsBackingBean.fulfilmentTabChangeAction("
-										+ zoneTabIndex + ")}", null,
-								new Class[] { Integer.class }));
-				fulfilmentMenuModel.addMenuItem(zoneItem);
-
-				zoneTabIndex++;
-	 	    } getManagedBean().setFulfilmentMenuModel(fulfilmentMenuModel);
-    }*/
-	
-	/* public void ConstructSideTabMenu(){
-			
-	    	MenuModel  fulfilmentMenuModel = new DefaultMenuModel();
-			  
-			  CtTabSideMenus menu = new CtTabSideMenus();	
-			   int zoneTabIndex = 0;
-			   FacesContext facesContext = FacesContext.getCurrentInstance();
-			   getManagedBean().setFinalListOfSideMenu( new ArrayList<String>());
-			
-			   if(getManagedBean().getCtContract().getContractType() != null 
-					   && getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-			    	
-				   getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
-				      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuAgency);
-				   
-				      if(getManagedBean().getCtContract().isZonalPricing()) {
-			 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
-				      }
-			 		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-			          if (!getManagedBean().isDirectPurchase() && getManagedBean().getContractVer().getCtDeductions() != null
-			        		  && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
-			    	  		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction); 
-				      } 
-			         
-			          if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-			            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);  
-				       }
-		 		          
-			           if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
-		            	      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
-		                     
-			           } if(getManagedBean().isFlgPaymentTracking()) {
-		            	         getManagedBean().getFinalListOfSideMenu().addAll(menu.menuPaymentTracking);
-		                } 
-			            getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);
-		                
-			  } if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-			               getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
-			               if(getManagedBean().getCtContract().isZonalPricing()) {
-				 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
-					      }
-			               getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-		                   if(getManagedBean().getCtContract().isFactored()){
-		            	       getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
-			                }
-	        	          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);   
-			      }
-			      
-		 	    for( String str : getManagedBean().getFinalListOfSideMenu()){
-		 	  
-		 	    	DefaultMenuItem item = new DefaultMenuItem();
-		 	    	item.setValue(str);
-		 	    	item.setId("zoneMenuID"+zoneTabIndex);
-		 	    	item.setUpdate("@form");
-		 	    	item.setCommand("#{contractDetailsBackingBean.fulfilmentTabChangeAction("
-											+ zoneTabIndex + ")}");
-		 	    	
-					fulfilmentMenuModel.addElement(item);
-					zoneTabIndex++;
-		 	    } getManagedBean().setFulfilmentMenuModel(fulfilmentMenuModel);
-	    }*/
-	
+    
     public boolean checkFactoringExpiryDate() {
-    	if(getManagedBean().getCtContract().getCtFactoring() != null  &&
-    		getManagedBean().getCtContract().getCtFactoring().getStatus() != null &&
-    		getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
-    		   return true;
-    	 }
+    	if (getManagedBean().getCtContract().getCtFactoring() != null 
+    			&& getManagedBean().getCtContract().getCtFactoring().getStatus() != null
+    			&& getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()) {
+    		return true;
+    	}
     	return false;
     }
     
-	public void fulfilmentTabChangeAction(Integer selectedTabIndex) {
-		if (log.isDebugEnabled()) {
-			log.debug("fulfilmentTabChangeAction");
-		}
-
-		getManagedBean().setSelectedTabIndex(selectedTabIndex);
-	}
 
 	
 	private void renderUpdateCheckbox(CtContractVer ctContractVer) {
-		if(ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE) &&
-			this.getManagedBean().isUpdateContract()) {
-			if(!ctContractVer.getCtContractValue().getSupplierName().equals(
-		      this.getManagedBean().getCtContract().getSmSupplier().getCompanyName())) {
-		    	this.getManagedBean().setUpdateCompanyName(true);
-		    }
-			
+		if (ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				&& this.getManagedBean().isUpdateContract()) {
+			if (!ctContractVer.getCtContractValue().getSupplierName().equals(
+					this.getManagedBean().getCtContract().getSmSupplier().getCompanyName())) {
+				this.getManagedBean().setUpdateCompanyName(true);
+			}
 			SmAddress latestAddress = retrieveLatestSupplierAddress();
-			if(!ctContractVer.getCtContractValue().getSupplierAddress().equals(latestAddress)) {
+			if (!ctContractVer.getCtContractValue().getSupplierAddress().equals(latestAddress)) {
 				this.getManagedBean().setUpdateSupplierAddress(true);
 			}
-		}
-		else {
+		} else {
 			this.getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
 			this.getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
 		}
 	}
 	
-	private void calAdvancePaymentTracking(Long contractId){
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+	private void calAdvancePaymentTracking(Long contractId) {
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractResDTO resDTO = new ContractResDTO();
 		resDTO = contractSO.calAdvancePaymentTracking(contractId);
 		
@@ -1165,7 +1078,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	   return 0;	
     }
 	
-	public void retriveZonesByContractVer() {
+	private void retriveZonesByContractVer() {
 		
 		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
 		TreeNode zoneNode =  null;
@@ -2628,7 +2541,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return activeList;
 	}
 	
-	public void ScheduleDate(){
+	private void scheduleDate(){
 	
 		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
 			   
@@ -2646,7 +2559,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  }
 	 }
 	
-	public void ProgressiveDate(){
+	private void progressiveDate(){
 	
 		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			   
