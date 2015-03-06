@@ -811,8 +811,8 @@ public class BSVAttendanceBackingBean extends
 
 	public boolean showRegistrationIcon(ScQtBsvDtl bsvDtl) {
 		if (null != bsvDtl) {
-			return DateUtils.isDateGreaterOrEqual(bsvDtl.getBsvDate(),
-					new Date());
+			return DateUtils.isDateGreaterOrEqual(new Date(),
+					bsvDtl.getBsvDate());
 		}
 		return false;
 	}
@@ -861,7 +861,8 @@ public class BSVAttendanceBackingBean extends
 				if (flag) {
 					registration.setAttended(true);
 					if (null == registration.getBsvRegistrationId()) {
-						registration.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						registration
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 					}
 				} else {
 					throw new EpException(MessageConst.ERROR_760043,
