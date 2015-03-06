@@ -2571,7 +2571,7 @@ public class LOIDetailBackingBean extends
 				}
 				scLoi.getScNegoTerms().removeAll(removeList);
 			}
-		} else{
+		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 			List<ScLoiTerm> unSelectedTerms = new ArrayList<ScLoiTerm>();
 			for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
 				if(!loiTerm.isSelected()){
