@@ -198,6 +198,12 @@
 						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
 							itemValue="O" />
 					</p:selectOneRadio></td>
+					<td> &#160; <p:graphicImage id="tooltip" library="ep/images/design"
+										name="tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
+										<p:outputLabel escape="false"
+											value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
+									</p:tooltip>&#160;					
+					</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" />
