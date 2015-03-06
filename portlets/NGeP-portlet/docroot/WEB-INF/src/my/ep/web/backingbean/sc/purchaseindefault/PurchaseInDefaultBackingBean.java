@@ -51,11 +51,10 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
-import my.ep.ntf.dto.NtfRequestDTO;
-import my.ep.ntf.dto.NtfResponseDTO;
-import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -74,7 +73,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -165,7 +163,15 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getPanelSupplierByPanelItem(purchaseInDefaultReqDTO);
 			CtPanelItem ctPanelItem = resDTO.getCtPanelItem();
 			if(ctPanelItem != null) {
-				scPurchaseInDefault.setPanelItem(ctPanelItem);
+				// check panel item zone or not
+				if(ctPanelItem.getCtPanelZones() != null && ctPanelItem.getCtPanelZones().size()>0){
+					List<CtPanelSupplier> ctPanelSuppliers =  uniquePanelZoneSuppliers(ctPanelItem);
+					ctPanelItem.setCtPanelSuppliers(ctPanelSuppliers);
+					scPurchaseInDefault.setPanelItem(ctPanelItem);
+				} else{
+					scPurchaseInDefault.setPanelItem(ctPanelItem);
+				}
+
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
 				purchaseInDefaultReqDTO.setPanelItem(ctPanelItem);
 				purchaseInDefaultReqDTO.setUserId(userId);
@@ -240,6 +246,30 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		return "purchaseInDefaultMain";
 	}	
 	
+	
+	/**
+	 * Unique panel zone suppliers.
+	 *
+	 * @param ctPanelItem the ct panel item
+	 * @return the list
+	 */
+	private	List<CtPanelSupplier> uniquePanelZoneSuppliers(CtPanelItem ctPanelItem){
+		List<CtPanelSupplier> uniquePanelSuppliers  = new ArrayList<>();
+		Map<Long, CtPanelSupplier >	uniqueCtPanelSuppliers	=	new HashMap<Long,  CtPanelSupplier>();
+		if(ctPanelItem.getCtPanelZones() != null){
+			for (CtPanelZone ctPanelZone : ctPanelItem.getCtPanelZones()) {
+				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size()>0){
+					for (CtPanelSupplier ctPanelSupplier : ctPanelZone.getCtPanelSuppliers()) {
+						getManagedBean().setCtPanelSupplier(ctPanelSupplier);
+						uniqueCtPanelSuppliers.put(ctPanelSupplier.getPanelSupplierId(), ctPanelSupplier);
+					}
+				}
+			}
+			 uniquePanelSuppliers = new ArrayList<CtPanelSupplier>(uniqueCtPanelSuppliers.values());
+		}
+		return uniquePanelSuppliers;
+	}
+
 	
 	/**
 	 * submit PurchaseInDefault.
