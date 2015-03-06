@@ -632,8 +632,9 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 					prInquiry.getPrInquiryId(), prInquiry.getPrInquiryNo() , originalText);
 		}
 
-		SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-		String signedData =  spkiBackingBean.spkiSignTransaction(originalText);
+		//SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+		//String signedData =  spkiBackingBean.spkiSignTransaction(originalText);
+		String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
 
 		// updating price 
 		List<ScRequestSupplierItem>	scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();

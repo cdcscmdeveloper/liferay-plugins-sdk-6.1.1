@@ -3633,8 +3633,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// spki 
-			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-			String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
+			//SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
+			//String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
+			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText());
 
 			// remarks
 			finalizeRemarks(quote.getRemarks());
@@ -4142,7 +4143,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 					if(zone != null){
 
-						if(zone.getZoneName().equalsIgnoreCase(tplSpecZoneDtl.getZoneName())){
+						if(zone.getZoneName().equals(tplSpecZoneDtl.getZoneName())){
 							throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
@@ -4214,7 +4215,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							}
 						}
 					}
-					if(prevsZone.getZoneName().equalsIgnoreCase(tplSpecZoneDtl.getZoneName())){
+					if(prevsZone.getZoneName().equals(tplSpecZoneDtl.getZoneName())){
 						throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}	
