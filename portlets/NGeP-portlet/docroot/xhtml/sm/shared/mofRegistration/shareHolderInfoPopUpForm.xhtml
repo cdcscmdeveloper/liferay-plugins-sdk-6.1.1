@@ -62,7 +62,7 @@
 
 				<td><p:outputPanel id="equiPerDtlIdenTypeLblPan">
 						<p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-							id="equiPerIcNumLbl" />
+							id="equiPerIcNumLbl" />							
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</p:outputPanel></td>
 
@@ -74,7 +74,7 @@
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
-							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />							
 						</p:inputText>
 						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
 							showSummary="true" showDetail="false" display="icon" />
@@ -87,6 +87,11 @@
 							<p:ajax process="@this" partialSubmit="true" update="@this"
 								listener="#{backingBean.trimPersonnelPassportValue}" />
 						</p:inputText>
+						   &#160; <p:graphicImage id="tooltip1" library="ep/images/design"
+										name="tooltips.png" /> <p:tooltip id="toolinfo1" for="tooltip1">
+										<p:outputLabel escape="false"
+											value="#{lbl['tt.sm.registration.identification.no']}" />
+									</p:tooltip>&#160;
 						<p:message id="equiPerPasptNumMsg" for="equiPerPasptNum"
 							showSummary="true" showDetail="false" display="icon" />
 					</p:outputPanel></td>
@@ -152,8 +157,12 @@
 						size="35">
 						<f:validateRegex
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-					</p:inputText> <p:message id="equiEmailMsg" for="equiEmail" showSummary="true"
-						showDetail="false" display="icon" /></td>
+					</p:inputText> &#160; <p:graphicImage id="tooltip2" library="ep/images/design"
+						name="tooltips.png" /> <p:tooltip id="toolinfo2" for="tooltip2">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
+					</p:tooltip>&#160; <p:message id="equiEmailMsg" for="equiEmail"
+						showSummary="true" showDetail="false" display="icon" /></td>
 
 				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /> <p:outputPanel
 						id="mobileOutputPanel">
@@ -245,9 +254,16 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change"
-							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel])"
+							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip4,tooltip5"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>					
+					</td><td>
+					<p:graphicImage id="tooltip3" library="ep/images/design"
+										name="tooltips.png" /> <p:tooltip id="toolinfo3" for="tooltip3">
+										<p:outputLabel escape="false"
+											value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
+									</p:tooltip>
+					</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}"
@@ -293,10 +309,19 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="2" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.issued']}" itemValue="1"
-							itemDisabled="true" />
+							itemDisabled="true" />							
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>					
+					</td><td>
+					 <p:graphicImage id="tooltip4" library="ep/images/design" 
+					 rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+					 and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}"									 
+					 name="tooltips.png" /> <p:tooltip id="toolinfo4" for="tooltip4" >
+										<p:outputLabel escape="false" 
+											value="#{lbl['tt.sm.registration.equity.owner.authorized.soft.cert']}" />
+									</p:tooltip></td>					
+					
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
@@ -308,7 +333,14 @@
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio>					
+					</td><td> <p:graphicImage id="tooltip5" library="ep/images/design"  
+					                rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}"
+									name="tooltips.png" /> <p:tooltip id="toolinfo5" for="tooltip5" >
+										<p:outputLabel escape="false" 
+											value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
+									</p:tooltip></td>
 			</tr>
 			<p:outputPanel rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and not empty backingBean.managedBean.selectedShareHolder.epRole}">
 				<tr>
