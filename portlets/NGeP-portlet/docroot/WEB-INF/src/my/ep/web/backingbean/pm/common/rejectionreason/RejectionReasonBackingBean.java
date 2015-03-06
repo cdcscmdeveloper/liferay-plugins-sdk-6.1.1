@@ -856,6 +856,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public void reasonCategoryChange(boolean isSearchBean, Long id){
 		log.info("reasonCategoryChange");
+		getManagedBean().getReasonSearchBean().setApplicationType(null);
+		getManagedBean().getReasonSearchBean().setSupplierType(null);
+		getManagedBean().getReasonSearchBean().setCompanyType(null);
 		if(id!=null && id>0L){
 			PmParameter paramObj = (PmParameter) reasonCategoryMapper.get(id);
 			System.out.println(paramObj.getParameterCode());
