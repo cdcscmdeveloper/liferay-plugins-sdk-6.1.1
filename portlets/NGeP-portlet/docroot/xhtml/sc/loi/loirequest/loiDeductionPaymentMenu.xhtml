@@ -90,7 +90,9 @@
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}" cols="150" rows="2"
 							maxlength="500" 
 							style=" margin-bottom:5px;"
-							rendered="#{isEditableStatus}" />
+							rendered="#{isEditableStatus}">
+							<p:ajax event="keyup" />
+							</p:inputTextarea>
 						
 						<h:outputText value="#{scQtDeductionClause.clauseDesc}" rendered="#{!isEditableStatus}" />
 					</h:panelGroup>

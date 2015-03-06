@@ -87,11 +87,12 @@
 					</f:facet>
 					
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
-						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}" cols="170" rows="2"
-							maxlength="500" 
-							style=" margin-bottom:5px;"
-							rendered="#{isEditableStatus}" />
-						
+						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
+							cols="170" rows="2" maxlength="500" style=" margin-bottom:5px;"
+							rendered="#{isEditableStatus}">
+							<p:ajax event="keyup" />
+						</p:inputTextarea>
+
 						<h:outputText value="#{scQtDeductionClause.clauseDesc}" rendered="#{!isEditableStatus}" />
 					</h:panelGroup>
 					
