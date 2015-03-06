@@ -35,6 +35,9 @@ import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -57,6 +60,12 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -93,6 +102,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -124,22 +134,38 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class LOADetailBackingBean.
+ *
  * @author Viswanath
- * 
  */
 @ManagedBean(name = "lOADetailBackingBean")
 @RequestScoped
 public class LOADetailBackingBean extends
 		SourcingBaseBackingBean<LOADetailManagedBean> {
+	
+	/** The log. */
 	public static Logger log = EpLogger.getLogger(LOADetailBackingBean.class);
+	
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
+	
+	/** The text before sign. */
 	private String textBeforeSign;
 
+	/**
+	 * Instantiates a new LOA detail backing bean.
+	 */
 	public LOADetailBackingBean() {
 		log.info("inside LOADetailBackingBean constructor");
 	}
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -147,6 +173,9 @@ public class LOADetailBackingBean extends
 		log.info(message);
 	}
 
+	/**
+	 * Adds the performance bond.
+	 */
 	public void addPerformanceBond() {
 
 		debugLogger("addPerformanceBond");
@@ -166,6 +195,12 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Edits the loa action.
+	 *
+	 * @param scLoa the sc loa
+	 * @return the string
+	 */
 	public String editLOAAction(ScLoa scLoa) {
 		debugLogger("editLOAAction");
 
@@ -232,6 +267,11 @@ public class LOADetailBackingBean extends
 		return QTConstants.LOA_PAGE;
 	}
 
+	/**
+	 * Edits the supplier loa action.
+	 *
+	 * @param loaId the loa id
+	 */
 	public void editSupplierLOAAction(Long loaId) {
 		debugLogger("editSupplierLOAAction");
 
@@ -299,6 +339,9 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		IQTAwardSO qtAwardSO = null;
@@ -350,6 +393,9 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Pre render supplier view.
+	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
 
@@ -377,6 +423,11 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Freq schedule validation.
+	 *
+	 * @param scQtSchedule the sc qt schedule
+	 */
 	private void freqScheduleValidation(ScQtSchedule scQtSchedule) {
 		debugLogger("frequencyScheduleValidation");
 		FacesScopes facesScopes = new FacesScopes();
@@ -449,6 +500,11 @@ public class LOADetailBackingBean extends
 
 	}
 	
+	/**
+	 * Populate loa details.
+	 *
+	 * @param resDTO the res dto
+	 */
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
 		getManagedBean().setScLoa(scLoa);
@@ -775,7 +831,7 @@ public class LOADetailBackingBean extends
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
 		if(scLoa.getLoaAmt() != null) {
-			userReqDTO.setApprovalLimit(scLoa.getLoaAmt());
+			//userReqDTO.setApprovalLimit(scLoa.getLoaAmt());
 		}
 		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
@@ -839,6 +895,11 @@ public class LOADetailBackingBean extends
 		// getManagedBean().setBondAmount(amt);
 	}
 
+	/**
+	 * Deduction type change.
+	 *
+	 * @param scQtDeduction the sc qt deduction
+	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
 
@@ -891,6 +952,9 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the deduction payment action.
+	 */
 	public void addDeductionPaymentAction() {
 		debugLogger("addDeductionPaymentAction");
 
@@ -910,6 +974,9 @@ public class LOADetailBackingBean extends
 		scQtDeductions.add(scQtDeduction);
 	}
 
+	/**
+	 * Adds the deduction clause action.
+	 */
 	public void addDeductionClauseAction() {
 		debugLogger("addDeductionClauseAction");
 
@@ -929,6 +996,9 @@ public class LOADetailBackingBean extends
 		scQtDeductionClauses.add(scQtDeductionClause);
 	}
 
+	/**
+	 * Delete deduction payment action.
+	 */
 	public void deleteDeductionPaymentAction() {
 		debugLogger("deleteDeductionPaymentAction");
 		if (getManagedBean().getScLoa().getScQtDeductions() != null
@@ -939,6 +1009,9 @@ public class LOADetailBackingBean extends
 		getManagedBean().setSelectedScQtDeduction(null);
 	}
 
+	/**
+	 * Adds the loa content action.
+	 */
 	public void addLoaContentAction() {
 		debugLogger("addLoaContentAction");
 
@@ -974,6 +1047,13 @@ public class LOADetailBackingBean extends
 		scLoaReports.add(scLoaReport);
 	}
 
+	/**
+	 * Handle file upload.
+	 *
+	 * @param event the event
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
@@ -1018,6 +1098,12 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Download report.
+	 *
+	 * @param scLoaReport the sc loa report
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
 		debugLogger("downloadReport");
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
@@ -1026,6 +1112,12 @@ public class LOADetailBackingBean extends
 		downloadFile(scLoaReportAttachment);
 	}
 
+	/**
+	 * Generate document attachment.
+	 *
+	 * @param scLoaReport the sc loa report
+	 * @return the sc loa report attachment
+	 */
 	private ScLoaReportAttachment generateDocumentAttachment(
 			ScLoaReport scLoaReport) {
 		String definitionType = scLoaReport.getDefinationType()
@@ -1081,6 +1173,14 @@ public class LOADetailBackingBean extends
 						scLoaReportAttachment.setFileName(filename.toString());
 						formJadualHarga((ScAttachment) scLoaReportAttachment,
 								scLoa);
+						
+					}else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION
+							.equals(docDefinitionKey)) {
+						filename.append(".xlsx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						formSpecification((ScAttachment) scLoaReportAttachment,
+								scLoa);
+						
 					}else if (SourcingConstants.DOC_DEF_KEY_FORMAT_BOND_EXECUTION
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -1134,6 +1234,11 @@ public class LOADetailBackingBean extends
 		return scLoaReportAttachment;
 	}
 
+	/**
+	 * Download all reports.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void downloadAllReports() throws IOException {
 		debugLogger("downloadAllReports");
 
@@ -1151,6 +1256,9 @@ public class LOADetailBackingBean extends
 		downloadAllFiles("NGeP-LOA-Report", scAttachments);
 	}
 
+	/**
+	 * Show veriry button.
+	 */
 	public void showVeriryButton() {
 	       
 		if(getManagedBean().isVerifyBtnFlag()){
@@ -1158,6 +1266,13 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Generate contract summary pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
 	public void generateContractSummaryPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa) throws Exception {
 
@@ -1211,6 +1326,14 @@ public class LOADetailBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate agreement letter pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @param scQt the sc qt
+	 * @throws Exception the exception
+	 */
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa, ScQt scQt) throws Exception {
 
@@ -1463,6 +1586,13 @@ public class LOADetailBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate declaration pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
 	public void generateDeclarationPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa) throws Exception {
 		String termsConditions = generateDeclarationFromVelocity(scLoa,getManagedBean().getScQt());
@@ -1474,6 +1604,14 @@ public class LOADetailBackingBean extends
 				termsConditions);
 	}
 
+	/**
+	 * Generate declaration from velocity.
+	 *
+	 * @param scLoa the sc loa
+	 * @param scQt the sc qt
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	private String generateDeclarationFromVelocity(ScLoa scLoa,ScQt scQt)
 			throws Exception {
 		PmUser pmUser = scLoa.getAckBy();
@@ -1521,6 +1659,12 @@ public class LOADetailBackingBean extends
 		return termsConditions;
 	}
 
+	/**
+	 * Gets the loa stream content.
+	 *
+	 * @return the loa stream content
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public StreamedContent getLoaStreamContent() throws IOException {
 		StreamedContent loaStreamContent = getManagedBean()
 				.getLoaStreamContent();
@@ -1559,7 +1703,9 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * @param scLoa
+	 * Retrieve bond dtls.
+	 *
+	 * @param scLoa the sc loa
 	 */
 	private void retrieveBondDtls(ScLoa scLoa) {
 		debugLogger("retrieveBondDtls");
@@ -1588,7 +1734,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * 
+	 * Show officer details.
 	 */
 	private void showOfficerDetails() {
 		IAddressSO addressSO;
@@ -1631,6 +1777,9 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Handle branch details changed.
+	 */
 	public void handleBranchDetailsChanged() {
 		debugLogger("handleBranchDetailsChanged");
 
@@ -1688,6 +1837,9 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Handle bank details changed.
+	 */
 	public void handleBankDetailsChanged() {
 		debugLogger("handleBankDetailsChanged");
 
@@ -1713,6 +1865,12 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the selected bank id by sc loa.
+	 *
+	 * @param scLoa the sc loa
+	 * @return the selected bank id by sc loa
+	 */
 	private Long getSelectedBankIdByScLoa(ScLoa scLoa) {
 		Long selectedBankId = null;
 		SupplierBankFK loaSupplierBankFK = new SupplierBankFK(scLoa);
@@ -1732,27 +1890,55 @@ public class LOADetailBackingBean extends
 		return selectedBankId;
 	}
 
+	/**
+	 * The Class SupplierBankFK.
+	 */
 	private class SupplierBankFK {
+		
+		/** The account no. */
 		private String accountNo;
+		
+		/** The bank name. */
 		private String bankName;
+		
+		/** The bank branch. */
 		private String bankBranch;
 
+		/**
+		 * Instantiates a new supplier bank fk.
+		 *
+		 * @param smSupplierBank the sm supplier bank
+		 */
 		public SupplierBankFK(SmSupplierBank smSupplierBank) {
 			this.accountNo = smSupplierBank.getAccountNo();
 			this.bankName = smSupplierBank.getPmFinancialOrg().getFinOrgName();
 			this.bankBranch = smSupplierBank.getBankBranch();
 		}
 
+		/**
+		 * Instantiates a new supplier bank fk.
+		 *
+		 * @param scLoa the sc loa
+		 */
 		public SupplierBankFK(ScLoa scLoa) {
 			this.accountNo = scLoa.getBankAccNo();
 			this.bankName = scLoa.getBankName();
 			this.bankBranch = scLoa.getBankBranch();
 		}
 
+		/**
+		 * Equals.
+		 *
+		 * @param other the other
+		 * @return true, if successful
+		 */
 		public boolean equals(SupplierBankFK other) {
 			return getPK(this).equals(getPK(other));
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
 		public int hashCode() {
 			int result = 3;
 
@@ -1772,6 +1958,8 @@ public class LOADetailBackingBean extends
 		}
 
 		/**
+		 * Gets the account no.
+		 *
 		 * @return the accountNo
 		 */
 		public String getAccountNo() {
@@ -1779,14 +1967,17 @@ public class LOADetailBackingBean extends
 		}
 
 		/**
-		 * @param accountNo
-		 *            the accountNo to set
+		 * Sets the account no.
+		 *
+		 * @param accountNo            the accountNo to set
 		 */
 		public void setAccountNo(String accountNo) {
 			this.accountNo = accountNo;
 		}
 
 		/**
+		 * Gets the bank name.
+		 *
 		 * @return the bankName
 		 */
 		public String getBankName() {
@@ -1794,14 +1985,17 @@ public class LOADetailBackingBean extends
 		}
 
 		/**
-		 * @param bankName
-		 *            the bankName to set
+		 * Sets the bank name.
+		 *
+		 * @param bankName            the bankName to set
 		 */
 		public void setBankName(String bankName) {
 			this.bankName = bankName;
 		}
 
 		/**
+		 * Gets the bank branch.
+		 *
 		 * @return the bankBranch
 		 */
 		public String getBankBranch() {
@@ -1809,13 +2003,20 @@ public class LOADetailBackingBean extends
 		}
 
 		/**
-		 * @param bankBranch
-		 *            the bankBranch to set
+		 * Sets the bank branch.
+		 *
+		 * @param bankBranch            the bankBranch to set
 		 */
 		public void setBankBranch(String bankBranch) {
 			this.bankBranch = bankBranch;
 		}
 
+		/**
+		 * Gets the pk.
+		 *
+		 * @param fk the fk
+		 * @return the pk
+		 */
 		private String getPK(SupplierBankFK fk) {
 			return new StringBuilder(
 					fk.getAccountNo() != null ? fk.getAccountNo() : "")
@@ -1829,7 +2030,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Method to save the LOA details
+	 * Method to save the LOA details.
 	 */
 	public void saveAction() {
 		debugLogger("saveAction");
@@ -1897,7 +2098,9 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Method to save the LOA details
+	 * Method to save the LOA details.
+	 *
+	 * @return the string
 	 */
 	public String submitAction() {
 		debugLogger("submitAction");
@@ -1970,8 +2173,10 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * @param action
-	 * @param object
+	 * Update bpm task.
+	 *
+	 * @param outcome the outcome
+	 * @param digiSign the digi sign
 	 * @return AwardSupplierResDTO
 	 */
 	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
@@ -2068,6 +2273,11 @@ public class LOADetailBackingBean extends
 		return resDTO;
 	}
 
+	/**
+	 * Update bpm task action.
+	 *
+	 * @param outcome the outcome
+	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
@@ -2084,6 +2294,12 @@ public class LOADetailBackingBean extends
 	}
 
 
+	/**
+	 * Validate loa details.
+	 *
+	 * @param scLoa the sc loa
+	 * @param outcome the outcome
+	 */
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
@@ -2096,6 +2312,12 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Parses the loa details.
+	 *
+	 * @param scLoa the sc loa
+	 * @param outcome the outcome
+	 */
 	private void parseLOADetails(ScLoa scLoa, String outcome) {
 		if (scLoa.isBrandNew()) {
 			scLoa.setIssueDate(new Date());
@@ -2165,6 +2387,9 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Contract type changed.
+	 */
 	public void contractTypeChanged() {
 		debugLogger("contractTypeChanged");
 
@@ -2240,6 +2465,9 @@ public class LOADetailBackingBean extends
 		contractAgencyChanged();
 	}
 
+	/**
+	 * Contract agency changed.
+	 */
 	public void contractAgencyChanged() {
 		debugLogger("contractAgencyChanged");
 
@@ -2283,6 +2511,9 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Contract admin changed.
+	 */
 	public void contractAdminChanged() {
 		debugLogger("contractAdminChanged");
 
@@ -2306,6 +2537,9 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Contract eff date changed.
+	 */
 	public void contractEffDateChanged() {
 		debugLogger("contractEffDateChanged");
 
@@ -2321,6 +2555,9 @@ public class LOADetailBackingBean extends
 		scLoa.setContractExpDate(contractExpDate.getTime());
 	}
 
+	/**
+	 * Approver changed.
+	 */
 	public void approverChanged() {
 		debugLogger("approverChanged");
 
@@ -2343,6 +2580,11 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Handle file attachment.
+	 *
+	 * @param event the event
+	 */
 	public void handleFileAttachment(FileUploadEvent event) {
 		debugLogger("handleFileAttachment");
 		ScPerformanceBond bondDtl = getManagedBean().getScBondDtl();
@@ -2358,6 +2600,9 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Adds the schedule details.
+	 */
 	public void addScheduleDetails() {
 
 		try {
@@ -2399,6 +2644,11 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the year details.
+	 *
+	 * @return the year details
+	 */
 	public List<SelectItem> getYearDetails() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		FacesScopes face = new FacesScopes();
@@ -2424,6 +2674,12 @@ public class LOADetailBackingBean extends
 		return getManagedBean().getYearList();
 	}
 	
+	/**
+	 * Gets the month.
+	 *
+	 * @param monthId the month id
+	 * @return the month
+	 */
 	private String getMonth(int monthId){
 		Calendar fullMonth = Calendar.getInstance();
 		fullMonth.set(00, monthId, 0000);
@@ -2434,11 +2690,21 @@ public class LOADetailBackingBean extends
 		return month;
 	}
 
+	/**
+	 * Calculate start month.
+	 *
+	 * @param event the event
+	 */
 	public void calculateStartMonth(AjaxBehaviorEvent event) {
 		event.getComponent().getAttributes().get("value");
 
 	}
 
+	/**
+	 * Gets the years display dtls.
+	 *
+	 * @return the years display dtls
+	 */
 	public List<SelectItem> getYearsDisplayDtls() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		ScLoa loa = 	getManagedBean().getScLoa();
@@ -2496,6 +2762,12 @@ public class LOADetailBackingBean extends
 		return getManagedBean().getYearsDisplayList();
 	}
 
+	/**
+	 * Calculate schedule months.
+	 *
+	 * @param schedule the schedule
+	 * @param startMonthAction the start month action
+	 */
 	public void calculateScheduleMonths(ScQtSchedule schedule, Boolean startMonthAction) {
 
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
@@ -2542,6 +2814,9 @@ public class LOADetailBackingBean extends
 		this.getManagedBean().setScheduleList(freqSchedule);
 	}
 
+	/**
+	 * Save schedule list.
+	 */
 	private void saveScheduleList() {
 		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoa()
 				.getScQtSchedules();
@@ -2640,6 +2915,11 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the deduction item type dropdown list.
+	 *
+	 * @return the deduction item type dropdown list
+	 */
 	public SelectItem[] getDeductionItemTypeDropdownList() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
@@ -2656,6 +2936,13 @@ public class LOADetailBackingBean extends
 				ParameterTypeConst.DEDUCTION_TYPE, searchBean);
 	}
 
+	/**
+	 * Generate frequency schedule pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
 	private void generateFrequencySchedulePdfFromVelocity(
 			ScAttachment attachment, ScLoa scLoa) throws Exception {
 
@@ -2709,6 +2996,13 @@ public class LOADetailBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Form jadual harga.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
 	public void formJadualHarga(ScAttachment attachment, ScLoa scLoa)
 			throws Exception {
 		populateAttachmentDetails(attachment);
@@ -2731,6 +3025,12 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Mapping jadual harga.
+	 *
+	 * @param item the item
+	 * @return the jadual harga bean
+	 */
 	private JadualHargaBean mappingJadualHarga(ScLoiLoaItem item) {
 		JadualHargaBean jadualHarga = new JadualHargaBean();
 		CommonUtils commonUtils = new CommonUtils();
@@ -2773,6 +3073,14 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Generate jadual harga.
+	 *
+	 * @param attachment the attachment
+	 * @param productList the product list
+	 * @param serviceList the service list
+	 * @throws Exception the exception
+	 */
 	private void generateJadualHarga(ScAttachment attachment,
 			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList)
 					throws Exception {
@@ -2884,7 +3192,208 @@ public class LOADetailBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Form specification.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
+	public void formSpecification(ScAttachment attachment, ScLoa scLoa)
+			throws Exception {
+		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
+		TemplateSpecReqDTO templateSpecReqDTO = new TemplateSpecReqDTO();
 
+		List<String> itemNames = new ArrayList<String>();
+		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
+			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+				itemNames.add(item.getScRequestItem().getItemName());
+			}
+		}
+		templateSpecReqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+		templateSpecReqDTO.setSupplier(scLoa.getScLoiLoa().getSmSupplier());
+		templateSpecReqDTO.setItemNameList(itemNames);
+		
+		List<TplSpecAnswer> serviceAnswers  = new ArrayList<>();
+		List<TplSpecAnswer> productAnswers  = new ArrayList<>();
+		TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.retrieveSupplierTechAnswersByItemNames(templateSpecReqDTO);
+		if(templateSpecResDTO.getSpecAnswerList() != null && templateSpecResDTO.getSpecAnswerList().size()>0){
+			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
+				if(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+					productAnswers.add(tplSpecAnswer);
+				} else if(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+					serviceAnswers.add(tplSpecAnswer);
+				}
+			}
+			generateSpecification(attachment, productAnswers, serviceAnswers);
+		}
+	}
+	
+	/**
+	 * Generate Specification
+	 *
+	 * @param attachment the attachment
+	 * @param productList the product list
+	 * @param serviceList the service list
+	 * @throws Exception the exception
+	 */
+	private void generateSpecification(ScAttachment attachment,
+			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
+					throws Exception {
+		if (serviceList.size() > 0 || productList.size() > 0) {
+			try {
+				/*FileInputStream inputStream = new FileInputStream(new File(
+						FacesContext.getCurrentInstance().getExternalContext()
+						.getRealPath("/WEB-INF/templates")
+						+ "/sc/loa/specification.xlsx"));*/
+
+				final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
+				InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
+				if (inputStream != null) {
+					XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
+					boolean emptyProductList = false;
+					Sheet productSheet = null;
+					Sheet serviceSheet = null;
+					Row row = null;
+					int rowIndex = 0;
+					int cellIndex = 0;
+					if (productList.size() > 0) {
+						rowIndex = 0;
+						productSheet = wb.getSheetAt(0);
+						wb.setSheetName(0, "ProductSheet");
+						for (TplSpecAnswer answer : productList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = productSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClItem() ? 
+									"N/A" : answer.getTplSpecQuestion().getClItem());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClSpecDetail() ? 
+									"N/A" : answer.getTplSpecQuestion().getClSpecDetail());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUom() ? 
+									"N/A" : answer.getTplSpecQuestion().getClUom().getUomName());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClPriceTypeCode() ? 
+									"N/A" : getParameterDesc(answer.getTplSpecQuestion().getClPriceTypeCode()));
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
+									"N/A" : answer.getTplSpecQuestion().getClQuantity().toString());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
+									"N/A" : answerType(answer));
+				
+							row.createCell(cellIndex++).setCellValue(null == answer.getAnswerRemark() ? 
+									"N/A" : answer.getAnswerRemark());
+						}
+						
+						// Auto size all the columns
+						for (int x = 0; x < productSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							productSheet.autoSizeColumn(x);
+						}
+					} else {
+						wb.removeSheetAt(0);
+						emptyProductList = true;
+					}
+
+					if (serviceList.size() > 0) {
+						rowIndex = 0;
+						if (emptyProductList) {
+							serviceSheet = wb.getSheetAt(0);
+							wb.setSheetName(0, "ServiceSheet");
+						} else {
+							serviceSheet = wb.getSheetAt(1);
+							wb.setSheetName(1, "ServiceSheet");
+						}
+
+						for (TplSpecAnswer answer : serviceList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = serviceSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClItem() ? 
+									"N/A" : answer.getTplSpecQuestion().getClItem());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClSpecDetail() ? 
+									"N/A" : answer.getTplSpecQuestion().getClSpecDetail());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUom() ? 
+									"N/A" : answer.getTplSpecQuestion().getClUom().getUomName());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomFrequency() ? 
+									"N/A" : answer.getTplSpecQuestion().getClUomFrequency().toString());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomPerDay() ? 
+									"N/A" : answer.getTplSpecQuestion().getClUomPerDay().toString());
+							
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomPerMonth() ? 
+									"N/A" : answer.getTplSpecQuestion().getClUomPerMonth().toString());
+
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
+									"N/A" : answer.getTplSpecQuestion().getClQuantity().toString());
+
+							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
+									"N/A" : answerType(answer));
+
+						    row.createCell(cellIndex++).setCellValue(null == answer.getAnswerRemark() ? 
+									"N/A" : answer.getAnswerRemark());
+						}
+
+						for (int x = 0; x < serviceSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							serviceSheet.autoSizeColumn(x);
+						}
+					} else {
+						wb.removeSheetAt(1);
+					}
+
+					wb.setActiveSheet(0);
+					FileOutputStream os = new FileOutputStream(
+							getActualFilePath(attachment));
+					wb.write(os);
+					os.flush();
+					os.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private String answerType(TplSpecAnswer answer){
+		String answerType="";
+		String answerTypeCode = answer.getTplSpecQuestion().getAnswerTypeCode().getParameterCode();
+
+		if(answerTypeCode.equals(ParameterConst.ANSWER_TYPE_TEXT)){
+
+			if(null == answer.getAnswerText()){
+				answerType = "N/A";
+			} else{
+				answerType = answer.getAnswerText();
+			}
+		} else if(answerTypeCode.equals(ParameterConst.ANSWER_TYPE_NUMERIC)){
+			if(null == answer.getAnswerText()){
+				answerType = "N/A";
+			} else{
+				answerType = answer.getAnswerNumeric().toString();
+			}
+		} else if(answerTypeCode.equals(ParameterConst.ANSWER_TYPE_DROPDOWN)){
+			if(answer.getAnswerCompliance()){
+				answerType  = SourcingConstants.YES;
+			} else{
+				answerType  = SourcingConstants.NO;
+			}
+		} 
+		return answerType;
+	}
+
+	/**
+	 * Creates the qt loa action.
+	 *
+	 * @param scLoiLoa the sc loi loa
+	 * @return the string
+	 */
 	public String createQtLOAAction(ScLoiLoa scLoiLoa) {
 		IStatusSO statusSO = null;
 		ScLoa scLoa = new ScLoa();
@@ -2912,6 +3421,12 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Go qt edit loa action.
+	 *
+	 * @param suppLoiLoaBean the supp loi loa bean
+	 * @return the string
+	 */
 	public String goQtEditLoaAction(SuppLoiLoaBean suppLoiLoaBean) {
 		IQTAwardSO qtAwardSO = null;
 		try {
@@ -2948,6 +3463,9 @@ public class LOADetailBackingBean extends
 		return "";
 	}
 
+	/**
+	 * Adds the progressive details.
+	 */
 	public void addProgressiveDetails() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		ScLoa scLoa = getManagedBean().getScLoa();
@@ -2987,6 +3505,9 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Save progressive paymnt list.
+	 */
 	private void saveProgressivePaymntList() {
 		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
 				.getProgressivePaymentList();
@@ -3081,6 +3602,12 @@ public class LOADetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the bond letter stream content.
+	 *
+	 * @return the bond letter stream content
+	 * @throws Exception the exception
+	 */
 	public StreamedContent getBondLetterStreamContent() throws Exception {
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
@@ -3093,6 +3620,13 @@ public class LOADetailBackingBean extends
 
 	}
 
+	/**
+	 * Generate bond letter from velocity to pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
 	private void generateBondLetterFromVelocityToPdf(ScAttachment attachment,ScLoa scLoa)
 			throws Exception {
 		CommonUtils commonUtils = new CommonUtils();
@@ -3141,6 +3675,11 @@ public class LOADetailBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Sort progressive payment list.
+	 *
+	 * @param progressivePaymentList the progressive payment list
+	 */
 	private void sortProgressivePaymentList(
 			List<ScQtProgressivePayment> progressivePaymentList) {
 		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
@@ -3154,6 +3693,11 @@ public class LOADetailBackingBean extends
 		Collections.sort(progressivePaymentList, comparator);
 	}
 
+	/**
+	 * Sort frequent schedule list.
+	 *
+	 * @param scQtScheduleList the sc qt schedule list
+	 */
 	private void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
 		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
 			@Override
@@ -3165,10 +3709,22 @@ public class LOADetailBackingBean extends
 		Collections.sort(scQtScheduleList, comparator);
 	}
 
+	/**
+	 * Gets the approval action display name.
+	 *
+	 * @param value the value
+	 * @return the approval action display name
+	 */
 	public String getApprovalActionDisplayName(String value) {
 		return ApprovalAction.getDisplayName(value);
 	}
 
+	/**
+	 * Calc sub total price.
+	 *
+	 * @param scLoiLoaItem the sc loi loa item
+	 * @return the big decimal
+	 */
 	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
 		BigDecimal total = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
@@ -3204,6 +3760,12 @@ public class LOADetailBackingBean extends
 		return total;
 	}
 	
+	/**
+	 * Calc total amount.
+	 *
+	 * @param scLoiLoaItems the sc loi loa items
+	 * @return the big decimal
+	 */
 	private BigDecimal calcTotalAmount(List<ScLoiLoaItem> scLoiLoaItems) {
 		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
 		BigDecimal  subTotal = null;
@@ -3217,18 +3779,38 @@ public class LOADetailBackingBean extends
 	}
 	
 	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param digiSign the digi sign
+	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 *
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 *
+	 * @param pmDigiSign the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 *
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
 		if(getManagedBean().getScLoa() != null){
@@ -3239,6 +3821,11 @@ public class LOADetailBackingBean extends
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
@@ -3279,6 +3866,8 @@ public class LOADetailBackingBean extends
 	
 	/**
 	 * mofNoListener method to pre render to direct nego.
+	 *
+	 * @param mofAccount the mof account
 	 */
 	public void mofNoListener(SmMofAccount mofAccount) {
 		debugLogger("mofNoListener");
@@ -3286,11 +3875,34 @@ public class LOADetailBackingBean extends
 		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(mofAccount.getSmSupplier());
 		getManagedBean().getScLoa().getScLoiLoa().setMofNo(mofAccount.getMofNo());
 		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(mofAccount.getSmSupplier().getCompanyName());
+		
+		
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierSearchSO.class);
+		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+		suppSearchReqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
+		SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
+
+
+		QTSupplierResDTO resDTO = new QTSupplierResDTO();
+		IQTSupplierSO qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, 
+				IQTSupplierSO.class);
+		QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
+		resDTO = qtSupplierSO.retrieveSupplierDetails(reqDTO);
+		// to get smpersonal
+		
+		
+		//handleBranchDetailsChanged();
 
 	}
 	
 	/**
 	 * preRenderDirectNegoView method to pre render to direct nego.
+	 *
+	 * @param suSmSupplier the su sm supplier
 	 */
 	public void supplierListener(SmSupplier suSmSupplier) {
 		debugLogger("supplierListener");
@@ -3299,7 +3911,9 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * 
+	 * Ptj dropdown list.
+	 *
+	 * @return the list
 	 */
 	public List<PmOrgProfile> ptjDropdownList() {
 		debugLogger("ptjDropdownList");
@@ -3321,6 +3935,11 @@ public class LOADetailBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Ptj change listener.
+	 *
+	 * @param orgProfile the org profile
+	 */
 	public void ptjChangeListener(PmOrgProfile orgProfile) {
 		List<PmOrgProfile> orgProfileList = getManagedBean()
 				.getPtjDropdownList();
