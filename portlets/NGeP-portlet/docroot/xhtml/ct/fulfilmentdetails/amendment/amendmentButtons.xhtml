@@ -5,8 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="btnPnl">
-		<ac:gpkiPopup
+	<ac:gpkiPopup
 			textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
@@ -19,7 +18,7 @@
 						action="#{amendmentBackingBean.backAction}" /></td>
 				<td class="ppRightBtn"><p:commandButton
 						value="#{lbl['lbl.btn.print']}" styleClass="ui-button"
-						update="btnPnl" onclick="printBtn.jq.click();"
+						update=":form:panelHeaderException" onclick="printBtn.jq.click();"
 						actionListener="#{amendmentBackingBean.showCompleteButton()}"
 						rendered="#{amendmentBackingBean.managedBean.showPrintButton}" />
 					<p:commandButton value="#{lbl['lbl.btn.print']}" ajax="false"
@@ -37,8 +36,7 @@
 					</ui:repeat></td>
 			</tr>
 		</table>
-	</p:panel>
-	<p:remoteCommand update="btnPnl"
+	<p:remoteCommand update=":form:panelHeaderException"
 		actionListener="#{amendmentBackingBean.showCompleteButton}"
 		name="showCompleteBtn" />
 </ui:composition>
