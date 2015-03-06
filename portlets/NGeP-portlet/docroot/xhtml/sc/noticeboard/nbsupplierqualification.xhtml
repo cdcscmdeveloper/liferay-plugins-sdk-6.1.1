@@ -47,8 +47,10 @@
 						value="#{fn:replace(qulificationBean.qtRequirement,':','&lt;/br&gt;')}"
 						size="50" escape="false" />
 				</p:column>
-
+				
+				
 				<p:column headerText="Qualification Status" style="width:20%;">
+				<ui:fragment rendered="#{qulificationBean.categoryCodeStatus eq null}">
 					<p:graphicImage library="ep/images/design" name="tick.png"
 						value="/resources/ep/images/design/tick.png"
 						rendered="#{qulificationBean.supplierStatus}"></p:graphicImage>
@@ -56,7 +58,19 @@
 					<p:graphicImage library="ep/images/design" name="cancel.png"
 						value="/resources/ep/images/design/cancel.png"
 						rendered="#{!qulificationBean.supplierStatus}"></p:graphicImage>
+				</ui:fragment>
+					<ui:repeat var="status" value="#{qulificationBean.categoryCodeStatus}">
+					<ui:fragment rendered="#{status ne 'optional'}">
+						<p:graphicImage library="ep/images/design" name="tick.png"
+							value="/resources/ep/images/design/tick.png"
+							rendered="#{status}"></p:graphicImage>
 
+						<p:graphicImage library="ep/images/design" name="cancel.png"
+							value="/resources/ep/images/design/cancel.png"
+							rendered="#{!status}"></p:graphicImage>
+					</ui:fragment>
+						<br/>
+					</ui:repeat>
 
 				</p:column>
 
