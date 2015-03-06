@@ -141,7 +141,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	
 	/**
 	 * Pre render doc search.
-	 * <p>remove from session.
+	 * <p>remove managedBean from session.
 	 * <p>reset doc search criteria.
 	 */
 	public void preRenderDocSearch() {
@@ -154,7 +154,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 
 	/**
-	 * Search document.
+	 * Transaction Type is mandatory field.
+	 * <p>Document Type is mandatory field.
+	 * <p>if the user specify the specific document no, the document type is not required to be filled in.
+	 * <p>get fl document Search result based on selected and filled in parameters.
 	 */
 	public void searchDocument(){
 		if(null == getManagedBean().getSearchOrderType()){ 
@@ -182,7 +185,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	/**
-	 * Gets the document type for doc type drop down.
+	 * Gets all document types for document type drop down.
 	 *
 	 * @return the document type drop down
 	 */
@@ -229,6 +232,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	
 	/**
 	 * Navigate to page based on doc type.
+	 * <p> if user select cancel action,to allow user to do document cancellation.
+	 * <p> if user select update action,to allow user to do document modification.
+	 * <p> if user select view action,to allow user to view document .
+	 * <p> if user select stop instruction action,to allow user to do document Stop Delivery Instruction.
 	 *
 	 * @return the string
 	 */
