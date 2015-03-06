@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel id="UserGroupPanel">
+	<p:panel id="userGroupSearch" header="#{lbl['lbl.pm.sa.search']}"
+		toggleable="true">
 
 		<table class="ppTwoTable">
 			<tr>
@@ -72,7 +73,7 @@
 							action="#{usergroupBackingBean.searchUserGroupAction}"
 							update=":form:searchGroupProfile" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							update=":form:UserGroupPanel,:form:searchGroupProfile" process="@this"
+							update="userGroupSearch,:form:searchGroupProfile" process="@this"
 							partialSubmit="true" action="#{usergroupBackingBean.reset}" />
 					</div>
 				</td>
