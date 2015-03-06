@@ -47,6 +47,11 @@
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
+		<p:outputPanel
+			rendered="#{backingBean.managedBean.supplierUser}"
+			id="addApplInfoHdr">
+			<ui:include src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
+		</p:outputPanel>
 		<ac:smPanel id="tt">
 			<p:messages id="messages" showDetail="true" showSummary="false"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}" escape="false"
