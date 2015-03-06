@@ -3209,18 +3209,18 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 	        	    	     
 	        	    	     if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 	        	    	    	 getManagedBean().setSelectedTabIndex(6);
-	        	    	         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT"))
+	        	    	         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate())
 		        	    	    	 getManagedBean().setSelectedTabIndex(7);
 	        	    	   
-	        	    	     } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        	    	     } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
 	        	    	            getManagedBean().setSelectedTabIndex(6);
 	        	             }
 	        		   }else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
       	    	    	                 getManagedBean().setSelectedTabIndex(5);
-    	    	                         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT"))
+    	    	                         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate())
         	    	    	             getManagedBean().setSelectedTabIndex(6);
 	        		 
-	        		   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        		   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
    	    	                  getManagedBean().setSelectedTabIndex(5);
 	        		   }
     	    	             
@@ -3228,18 +3228,18 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 	        		             getManagedBean().setSelectedTabIndex(4);
 	        		             if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
     	    	    	            getManagedBean().setSelectedTabIndex(5);	   
-    	    	    	            if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+    	    	    	            if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
     	    	    	            	 getManagedBean().setSelectedTabIndex(6);
     	    	    	            }
-	        		             }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        		             }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
 	      	    	                  getManagedBean().setSelectedTabIndex(5);
 	        		             }
 	        	   } else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 	        		              getManagedBean().setSelectedTabIndex(4);
-	        		              if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        		              if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
 	    	            	              getManagedBean().setSelectedTabIndex(5);
 	    	                       }
-	        	   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        	   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
    	                  getManagedBean().setSelectedTabIndex(4);
 		             }else {
 		            	 getManagedBean().setSelectedTabIndex(3);
@@ -3256,14 +3256,14 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 	        	    	     getManagedBean().setSelectedTabIndex(5);
 	        	    	     if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 	        	    	    	 getManagedBean().setSelectedTabIndex(6);
-	        	    	         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        	    	         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
 		        	    	    	 getManagedBean().setSelectedTabIndex(7);
 	        	    	             if(getManagedBean().isFlgPaymentTracking())
 	        	    	        	     getManagedBean().setSelectedTabIndex(8);
 	        	    	         }else if(getManagedBean().isFlgPaymentTracking()){
 		        	    	            getManagedBean().setSelectedTabIndex(7);
 		        	             }
-	        	    	     } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        	    	     } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
 	        	    	            getManagedBean().setSelectedTabIndex(6);
 	        	    	            if(getManagedBean().isFlgPaymentTracking())
 	        	    	        	     getManagedBean().setSelectedTabIndex(7);
@@ -3272,12 +3272,12 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 	        	             }
 	        		   }else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
       	    	    	                 getManagedBean().setSelectedTabIndex(5);
-    	    	                         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT"))
+    	    	                         if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate())
         	    	    	             getManagedBean().setSelectedTabIndex(6);
     	    	                         if(getManagedBean().isFlgPaymentTracking())
     	        	    	        	     getManagedBean().setSelectedTabIndex(7);
 	        		 
-	        		   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        		   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
    	    	                  getManagedBean().setSelectedTabIndex(5);
    	    	               if(getManagedBean().isFlgPaymentTracking())
   	    	        	     getManagedBean().setSelectedTabIndex(6);
@@ -3289,14 +3289,14 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 	        		             getManagedBean().setSelectedTabIndex(4);
 	        		             if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
     	    	    	            getManagedBean().setSelectedTabIndex(5);	   
-    	    	    	            if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")) {
+    	    	    	            if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
     	    	    	            	 getManagedBean().setSelectedTabIndex(6);
     	    	    	            	 if(getManagedBean().isFlgPaymentTracking())
     	    	          	    	    	 getManagedBean().setSelectedTabIndex(7);
     	    	    	            }else if(getManagedBean().isFlgPaymentTracking()){
 	      	    	                    getManagedBean().setSelectedTabIndex(6);
 	        		                }
-	        	               } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        	               } else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
 	        	   	                  getManagedBean().setSelectedTabIndex(5);
 	        	   	               if(getManagedBean().isFlgPaymentTracking())
 	    	          	    	    	 getManagedBean().setSelectedTabIndex(6);
@@ -3305,14 +3305,14 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
        		                }
 	        	     }  else if(getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 	        		              getManagedBean().setSelectedTabIndex(4);
-	        		              if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        		              if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
 	    	            	              getManagedBean().setSelectedTabIndex(5);
 	    	            	              if(getManagedBean().isFlgPaymentTracking())
 	 	    	          	    	    	 getManagedBean().setSelectedTabIndex(6);
 	    	                     }else if(getManagedBean().isFlgPaymentTracking()){
 	      	    	                    getManagedBean().setSelectedTabIndex(5);
 	        		                }
-	        	   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() && outputTab.equalsIgnoreCase("FT")){
+	        	   }else if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()){
    	                  getManagedBean().setSelectedTabIndex(4);
    	                  if(getManagedBean().isFlgPaymentTracking())
      	    	    	 getManagedBean().setSelectedTabIndex(5);
