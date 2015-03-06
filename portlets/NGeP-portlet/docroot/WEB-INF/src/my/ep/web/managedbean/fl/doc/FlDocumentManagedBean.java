@@ -210,6 +210,10 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	
 	/**
 	 * The Class FlDocumentPagingDataModel.
+	 * Transaction Type is mandatory field.
+	 * <p>Document Type is mandatory field.
+	 * <p>if the user specify the specific document no, the document type is not required to be filled in.
+	 * <p>get fl document Search result based on selected and filled in parameters.
 	 */
 	private class FlDocumentPagingDataModel extends PagingDataModel<VFlDocument> {
 		
@@ -355,7 +359,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * Filter search results.
+	 * Filter search results based on user id and doc type.
 	 *
 	 * @param searchResultList the search result list
 	 */
@@ -406,7 +410,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 										docsearchResult.setUpdateAction(false);
 									}
 								}
-								//System.out.println("final action update ### :: "+docsearchResult.isUpdateAction());
 							}
 							if(isCancel){
 								docsearchResult.setCancelAction(true);
@@ -416,17 +419,14 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 										docsearchResult.setCancelAction(false);
 									}
 								}								
-								//System.out.println("final action  cancel @@@@@@@:: "+docsearchResult.isCancelAction());
 							}
 							if(isStopFulfilment){
 								docsearchResult.setStopFulfilmentAction(true);
 								docsearchResult.setViewAction(true);
-								//System.out.println("final action  StopFulfilmen %%%%%%:: "+docsearchResult.isStopFulfilmentAction());
 							}
 							if(isRemoveFactoring){
 								docsearchResult.setRemoveFactoringAction(true);
 								docsearchResult.setViewAction(true);
-								//System.out.println("final action  RemoveFactoring @@@@@@@:: "+docsearchResult.isRemoveFactoringAction());
 							}
 					  }
 			     }
@@ -434,7 +434,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * Gets the status info.
+	 * Gets the status info based on doc type and doc id.
 	 *
 	 * @param docId the doc id
 	 * @param docType the doc type
@@ -526,7 +526,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					if(null != resDTO.getFlOrder()){
 						if(null != resDTO.getFlOrder().getStatus()){
 							if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-								//System.out.println("2222222222222222   po/co staus id is :::: "+resDTO.getFlOrder().getStatus().getStatusId());
 								orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
 								if(isFlFulfilmentApprover()){
 									orderInfo.setRole(RoleCode.FL_APPROVER.value());
