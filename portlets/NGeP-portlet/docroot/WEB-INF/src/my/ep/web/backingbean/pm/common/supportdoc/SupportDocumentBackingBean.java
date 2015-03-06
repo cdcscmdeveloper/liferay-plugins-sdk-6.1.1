@@ -570,7 +570,16 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public SelectItem[] applicationTypeOptions() {
 		log.info("applicationTypeOptions");
-		return getDropdownValues(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
+		
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(),
+						ParameterConst.BASIC_ACCOUNT));
+
+		return super.getDropdownValuesBySearchBean(
+				ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, searchBean);
 	}
 	
 	/**
