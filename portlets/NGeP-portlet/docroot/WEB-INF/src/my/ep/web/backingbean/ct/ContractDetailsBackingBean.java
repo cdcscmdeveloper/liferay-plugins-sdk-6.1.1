@@ -2342,7 +2342,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			amendBB.getManagedBean().setSelectedItem(null);
 			amendBB.getManagedBean().setSelectedServiceItem(null);
 			amendBB.setAmendmentContractVer(resDTO);
-			amendBB.ConstructTabSideMenu();
+		//	amendBB.ConstructTabSideMenu();
 		}finally {
 			contractSO = null;
 			ctBB = null;
@@ -3197,6 +3197,7 @@ public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 	           } else{
 	        	   getManagedBean().setSelectedTabIndex(3);
 	           }
+	        	getManagedBean().setFactoring(getManagedBean().getSelectedTabIndex());
 	        }
 	        	
 	        if(getManagedBean().isFlgPaymentTracking() && outputTab.equalsIgnoreCase("PY")) {
