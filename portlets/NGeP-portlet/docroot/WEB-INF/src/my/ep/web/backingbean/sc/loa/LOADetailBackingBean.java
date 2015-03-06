@@ -2117,7 +2117,7 @@ public class LOADetailBackingBean extends
 			validateLOADetails(scLoa, outcome);
 
 			parseLOADetails(scLoa, outcome);
-
+			scLoa.setScLoaWorkFlowStatuses(null);
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 			
