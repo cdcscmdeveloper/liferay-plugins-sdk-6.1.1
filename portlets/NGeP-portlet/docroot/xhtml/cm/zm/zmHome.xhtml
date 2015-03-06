@@ -16,18 +16,20 @@
 		<p:messages id="zmMsgs" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
 
-		<p:panelGrid styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
+		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
+			<table style="width: 100%;">
+				<tr>
+					<td style="white-space: nowrap; float: right;">
 					<p:commandButton value="#{lbl['lbl.cm.zm.save']}"
 						process="@this, zoneDetailsDataTable" partialSubmit="true"
 						update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable]), @([id$=zonePopupPanel])"
 						action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
 						style="float:right;"/>
-
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+					</td>
+				</tr>
+			</table>	
+		</p:panel>
+		
 		<h:panelGrid id="zoneTable" width="100%" style="margin-top:20px">
 			<p:dataTable id="zoneDetailsDataTable"
 				value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}"
