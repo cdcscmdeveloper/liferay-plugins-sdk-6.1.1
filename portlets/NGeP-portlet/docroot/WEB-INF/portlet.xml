@@ -4860,8 +4860,8 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Rejection Reason</title>
-				<short-title>Rejection Reason</short-title>
+				<title>Reason Maintenance</title>
+				<short-title>Reason Maintenance</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
