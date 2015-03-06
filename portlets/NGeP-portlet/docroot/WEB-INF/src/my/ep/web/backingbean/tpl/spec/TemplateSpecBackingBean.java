@@ -1174,6 +1174,7 @@ public class TemplateSpecBackingBean extends
 	public boolean isAllPriceTypesStandard(TemplateSpecBean templateSpecBean) {
 		boolean isAllPriceTypesStandard = true;
 		String contentType = templateSpecBean.getContentType();
+		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		List<TplSpecQuestion> specQuestions = null;
 
 		if (TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)
@@ -1199,6 +1200,7 @@ public class TemplateSpecBackingBean extends
 		if (specQuestions != null) {
 			TemplateSpecHelper templateSpecHelper = TemplateSpecHelper
 					.getInstance();
+			boolean specificationReq = specMaster.isSpecificationReq();
 
 			for (TplSpecQuestion specQuestion : specQuestions) {
 				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion
@@ -1206,7 +1208,8 @@ public class TemplateSpecBackingBean extends
 					String priceType = specQuestion.getClPriceTypeCode()
 							.getParameterCode();
 
-					if (!templateSpecHelper.isPriceTypeStandard(priceType)) {
+					if (!templateSpecHelper.isPriceTypeStandard(priceType) && 
+							(!specificationReq || (specificationReq && !templateSpecHelper.isPriceTypeZonalStandard((priceType))))) {
 						isAllPriceTypesStandard = false;
 
 						break;
