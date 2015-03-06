@@ -1394,12 +1394,14 @@ public class OrganisationBackingBean extends
 				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
 				
 				SmSupplier supplier = orgProfileSm.getSmSupplier();
-				for(SmPersonnel personnel :supplier.getSmAppl().getSmPersonnels()){
-					if(personnel.getPmUser().getUserId().equals(selectedUser.getUserId())){
-						personnel.setBrandNew(true);
-						personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-						addedPersonnelList.add(personnel);
-						found = true;
+				if(supplier !=null && supplier.getSmAppl() !=null){
+					for(SmPersonnel personnel :supplier.getSmAppl().getSmPersonnels()){
+						if(personnel.getPmUser().getUserId().equals(selectedUser.getUserId())){
+							personnel.setBrandNew(true);
+							personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							addedPersonnelList.add(personnel);
+							found = true;
+						}
 					}
 				}
 				if(!found){

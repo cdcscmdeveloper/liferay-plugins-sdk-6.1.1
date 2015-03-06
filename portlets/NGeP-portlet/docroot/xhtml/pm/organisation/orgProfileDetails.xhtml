@@ -45,7 +45,7 @@
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>				
 						<td><p:inputText id="orgCode" disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
-								label="#{lbl['lbl.pm.organisation.orgCode']}" size="40"
+								label="#{lbl['lbl.pm.organisation.orgCode']}" size="50"
 								styleClass="ppDisplayTextL"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
 								maxlength="20" required="#{!empty param['disableValidation']}" /></td>
@@ -78,7 +78,7 @@
 						<td><p:inputText id="orgName" disabled="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
-								required="#{!empty param['disableValidation']}" size="40" styleClass="ppDisplayTextL"
+								required="#{!empty param['disableValidation']}" size="50" styleClass="ppDisplayTextL"
 								maxlength="99" /></td>
 						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>					
 			</tr>
@@ -91,7 +91,7 @@
 							label="#{lbl['lbl.pm.zone.name']}" styleClass="ppDropDownWidthM"
 							value="#{organisationBackingBean.managedBean.orgProfile.pmZone.zoneId}"
 							required="#{organisationBackingBean.managedBean.orgType eq 'RHQ' or organisationBackingBean.managedBean.orgType eq 'RSH'or organisationBackingBean.managedBean.orgType eq 'RSQ'}"
-							style="width: 275px;margin-bottom: 5px;">
+							style="width: 300px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="zoneLs"
