@@ -260,7 +260,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			for (CtPanelZone ctPanelZone : ctPanelItem.getCtPanelZones()) {
 				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size()>0){
 					for (CtPanelSupplier ctPanelSupplier : ctPanelZone.getCtPanelSuppliers()) {
-						getManagedBean().setCtPanelSupplier(ctPanelSupplier);
 						uniqueCtPanelSuppliers.put(ctPanelSupplier.getPanelSupplierId(), ctPanelSupplier);
 					}
 				}
