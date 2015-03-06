@@ -10,124 +10,135 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-		<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true"></p:messages>
+		<ui:remove>
+			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
-		
+			</p:blockUI>
+		</ui:remove>
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-						icon="ui-icon-back" update=":form" process="@this"
-						action="#{categoryBackingBean.backToSearch}"
-						style="float:left;" /></td>
-				<td>
-				
-					<p:commandButton value="#{lbl['lbl.btn.save']}"
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true" update=":form" process="@this"
+						action="#{categoryBackingBean.backToSearch}" style="float:left;" /></td>
+				<td><p:commandButton value="#{lbl['lbl.btn.save']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
-						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;width: auto;" />
-						
-					<p:commandButton value="#{lbl['lbl.btn.create']}"
+						update="@([id$=Msg])" style="float:right;width: auto;" /> <p:commandButton
+						value="#{lbl['lbl.btn.create']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
-						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;width: auto;" />
-						
-				</td>
+						update="@([id$=Msg])" style="float:right;width: auto;" /></td>
 			</tr>
 
 
 		</table>
-		
-		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true" id="catLevel">
+
+		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
+			id="catLevel">
 			<h:panelGrid columns="2" columnClasses="cmWidth1,cmPadding5">
-			 	<h:panelGroup style="float: right">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.pm.bn.level']}" />
+				<h:panelGroup style="float: right">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.bn.level']}" />
 				</h:panelGroup>
-				<p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}" disabled="true"
-					style="width: 108px;">
+				<p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}"
+					disabled="true" style="width: 108px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}" itemValue="1" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}" itemValue="2" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
+						itemValue="2" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
 				</p:selectOneMenu>
-				
+
 				<h:panelGroup style="float: right">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
 				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" maxlength="2" rendered="#{categoryBackingBean.managedBean.newCategory}"/>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" maxlength="2" rendered="#{!categoryBackingBean.managedBean.newCategory}" readonly="true" disabled="true"/>
-				
+				<p:inputText
+					value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}"
+					size="15" maxlength="2"
+					rendered="#{categoryBackingBean.managedBean.newCategory}" />
+				<p:inputText
+					value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}"
+					size="15" maxlength="2"
+					rendered="#{!categoryBackingBean.managedBean.newCategory}"
+					readonly="true" disabled="true" />
+
 				<h:panelGroup style="float: right">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.pm.desc']}" />
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.desc']}" />
 				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryName}" size="120" />
-				
+				<p:inputText
+					value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryName}"
+					size="120" />
+
 				<h:panelGroup style="float: right">
-				<h:outputText value="* " styleClass="mandatory" />
-				<h:outputText value="#{lbl['lbl.pm.status']}" />
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.status']}" />
 				</h:panelGroup>
-				<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}" disabled="false"
-					style="width: 108px;">
-					<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="1" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="0" />
+				<p:selectOneMenu
+					value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}"
+					disabled="false" style="width: 108px;">
+					<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}"
+						itemValue="0" />
 				</p:selectOneMenu>
-				
+
 			</h:panelGrid>
 		</p:panel>
-		
-		
-		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
-		<p:panel header="#{lbl['lbl.pm.detail.category']}" toggleable="true" id="catdetails">
-		<p:dataTable id="catdetailsId" 
-		rowIndexVar="rowIndex" 
-		value="#{categoryBackingBean.managedBean.pmCategoryL1.pmCategoryL2s}"
-		width="100%" 
-		var="pmCategoryL2">
 
-			<ac:paginator for="catdetailsId"></ac:paginator>
-			<p:column>
-				<f:facet name="header">
+
+		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
+			<p:panel header="#{lbl['lbl.pm.detail.category']}" toggleable="true"
+				id="catdetails">
+				<p:dataTable id="catdetailsId" rowIndexVar="rowIndex"
+					value="#{categoryBackingBean.managedBean.pmCategoryL1.pmCategoryL2s}"
+					width="100%" var="pmCategoryL2">
+
+					<ac:paginator for="catdetailsId"></ac:paginator>
+					<p:column>
+						<f:facet name="header">
 					#{lbl['lbl.pm.bn.level']}
 				</f:facet>
-				<h:outputText value="#{lbl['lbl.pm.sub.category']}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.sub.category']}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
 					#{lbl['lbl.pm.bn.code']}
 				</f:facet>
-				<h:outputText value="#{pmCategoryL2.categoryL2Code}" />
-            </p:column>
-			<p:column>
-				<f:facet name="header">
+						<h:outputText value="#{pmCategoryL2.categoryL2Code}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
 					#{lbl['lbl.pm.contact.name']}
 				</f:facet>
-				<h:outputText value="#{pmCategoryL2.categoryName}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
+						<h:outputText value="#{pmCategoryL2.categoryName}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
 					#{lbl['lbl.pm.status']}
 				</f:facet>
-				<h:outputText value="#{lbl['lbl.pm.status.active']}" rendered="#{pmCategoryL2.recordStatusFlg == 1}"/>
-				<h:outputText value="#{lbl['lbl.pm.status.inactive']}" rendered="#{pmCategoryL2.recordStatusFlg == 0}"/>
-			</p:column>
+						<h:outputText value="#{lbl['lbl.pm.status.active']}"
+							rendered="#{pmCategoryL2.recordStatusFlg == 1}" />
+						<h:outputText value="#{lbl['lbl.pm.status.inactive']}"
+							rendered="#{pmCategoryL2.recordStatusFlg == 0}" />
+					</p:column>
 
-		</p:dataTable>
-		
-		<ui:remove>
-		<p>&nbsp;</p>
-		<div class="ppRightBtn">
-			<p:commandButton
-				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
-				action="#{categoryBackingBean.addSubCategory()}" />
-		</div>
-		</ui:remove>
-		
-		</p:panel>	
+				</p:dataTable>
+
+				<ui:remove>
+					<p>&nbsp;</p>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+							action="#{categoryBackingBean.addSubCategory()}" />
+					</div>
+				</ui:remove>
+
+			</p:panel>
 		</c:if>
-		
+
 	</ui:define>
 </ui:composition>
