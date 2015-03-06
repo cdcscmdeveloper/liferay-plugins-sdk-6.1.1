@@ -12,17 +12,23 @@
 
 
 	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" escape="false"/>
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 	
 		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<p:commandButton value="#{lbl['lbl.btn.back']}" ajax="false" icon="ui-icon-back"
+						<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							immediate="true" action="#{softCertBackingBean.cancel}" />
 					</td>
 					<td style="white-space: nowrap; float: right;">
 					    <p:commandButton value="#{lbl['lbl.sm.makePayment']}" style="float:right;" icon="ui-icon-next"
-					    	action="#{softCertBackingBean.makePayment}"/>
+					    	action="#{softCertBackingBean.makePayment}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					</td>
 				</tr>
 			</table>	

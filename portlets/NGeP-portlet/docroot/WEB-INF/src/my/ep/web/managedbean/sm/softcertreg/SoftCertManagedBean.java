@@ -8,14 +8,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.liferay.portal.model.Role;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -26,6 +23,10 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.liferay.portal.model.Role;
 
 @ManagedBean(name = "softCertMB")
 @SessionScoped
@@ -45,8 +46,10 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private String loginRoleName;
 	private IPagingDataModel<SmPersonnel> softCertPagingDataModel = new SoftCertPagingDataModel();
 	private String taskName;
-	
-	public SoftCertManagedBean(){
+	private String token;
+	private WorklistItemVO softCertBpmTask;
+
+	public SoftCertManagedBean() {
 		super();
 		FacesScopes sc = new FacesScopes();
 		List<Role> loginUserRoles = sc.getUserRoleList();
@@ -57,10 +60,12 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		}
 		if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)) {
 			setLoginRoleName(SupplierManagementConst.MOF_SUPPLIER_ADMIN);
-			System.out.println("  *** LOGGED IN USER IS MOF SUPPLIER ADMIN *** ");			
+			System.out
+					.println("  *** LOGGED IN USER IS MOF SUPPLIER ADMIN *** ");
 		} else {
-			setLoginRoleName(SupplierManagementConst.BASIC_SUPPLIER_ADMIN);			
-			System.out.println("  *** LOGGED IN USER IS BASIC SUPPLIER ADMIN *** ");
+			setLoginRoleName(SupplierManagementConst.BASIC_SUPPLIER_ADMIN);
+			System.out
+					.println("  *** LOGGED IN USER IS BASIC SUPPLIER ADMIN *** ");
 		}
 	}
 
@@ -72,21 +77,28 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<SmPersonnel> pageChangeListener(ISearchBean<SmPersonnel> searchBean) {
+		protected ISearchResultBean<SmPersonnel> pageChangeListener(
+				ISearchBean<SmPersonnel> searchBean) {
 			try {
-				
-				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppl.smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),getLoginUserPersonnelInfo().getSmAppl().getSmSupplier().getSupplierId()));
-				
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("smAppl.smSupplier.supplierId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getLoginUserPersonnelInfo().getSmAppl()
+										.getSmSupplier().getSupplierId()));
+
 				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 				reqDTO.setSearchPersonnelBean(searchBean);
 
 				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-						.getInstance().getServiceObject("sm", IPersonnelSO.class);
-				PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelBySupplierIdForSoftCert(reqDTO);
+						.getInstance().getServiceObject("sm",
+								IPersonnelSO.class);
+				PersonnelResDTO resDTO = smPersonnelSO
+						.retrievePersonnelBySupplierIdForSoftCert(reqDTO);
 
-				if(resDTO.isSuccessful()) {
-					setPersonnelRowSelection(resDTO.getSearchPersonnelResultBean().getResultList());
+				if (resDTO.isSuccessful()) {
+					setPersonnelRowSelection(resDTO
+							.getSearchPersonnelResultBean().getResultList());
 					return resDTO.getSearchPersonnelResultBean();
 				}
 			} catch (Exception e) {
@@ -95,8 +107,8 @@ public class SoftCertManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	
-	public void searchSmPersonnel(){
+
+	public void searchSmPersonnel() {
 		softCertPagingDataModel.reloadData();
 	}
 
@@ -133,7 +145,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	}
 
 	public BigDecimal getTotalPaymentAmount() {
-		if(totalPaymentAmount == null)
+		if (totalPaymentAmount == null)
 			totalPaymentAmount = BigDecimal.ZERO;
 		return totalPaymentAmount;
 	}
@@ -162,7 +174,8 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		return softCertPagingDataModel;
 	}
 
-	public void setSoftCertPagingDataModel(IPagingDataModel<SmPersonnel> softCertPagingDataModel) {
+	public void setSoftCertPagingDataModel(
+			IPagingDataModel<SmPersonnel> softCertPagingDataModel) {
 		this.softCertPagingDataModel = softCertPagingDataModel;
 	}
 
@@ -173,10 +186,26 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 	
+	public WorklistItemVO getSoftCertBpmTask() {
+		return softCertBpmTask;
+	}
+
+	public void setSoftCertBpmTask(WorklistItemVO softCertBpmTask) {
+		this.softCertBpmTask = softCertBpmTask;
+	}
+
 	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
 		for (SmPersonnel personnel : personnels) {
-			if (personnel.getSoftcertFlg() != SupplierManagementConst.IS_SOFTCERT_REQ) {
+			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
 				personnel.setDisableRowSelection(true);
 			} else {
 				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
