@@ -1541,12 +1541,12 @@ public class SmCommonUtil {
 					.getServiceObject(IBpmSO.class);
 			reqDTO = new BpmRequestDTO();
 			reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-			reqDTO.setOffset(1);
+			reqDTO.setOffset(0);
 			reqDTO.setState("ASSIGNED");
 			reqDTO.setDocType("");
 
 			reqDTO.setViewBy("");
-			reqDTO.setAssignment("");
+			reqDTO.setAssignment("ALL");
 			reqDTO.setCtxToken(token);
 			responseDTO = bpmSO.getWorklistItems(reqDTO);
 			if (responseDTO.getWorklistVO() != null

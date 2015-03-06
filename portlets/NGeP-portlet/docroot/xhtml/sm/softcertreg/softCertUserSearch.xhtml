@@ -13,7 +13,13 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" escape="false"/>
+	
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
 			<table style="width: 100%;">
 				<tr>
@@ -72,6 +78,9 @@
 
 				<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}" disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText
+						value="#{lbl['lbl.sm.person.composition.pending.request']}"
+						rendered="#{personnel.softcertFlg eq '4'}" />
+					<h:outputText
 						value="#{lbl['lbl.sm.person.composition.processing']}"
 						rendered="#{personnel.softcertFlg eq '3'}" />
 					<h:outputText
@@ -82,6 +91,11 @@
 					<h:outputText
 						value="#{lbl['lbl.sm.person.composition.notapplied']}"
 						rendered="#{personnel.softcertFlg eq '0'}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg eq '8'}" />
 				</p:column>
 
 				<p:column disabledSelection="#{personnel.disableRowSelection}"
@@ -104,7 +118,6 @@
 						<td>
 							<div align="center">
 								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
-									ajax="false"
 									action="#{softCertBackingBean.navigateToPaymentPage}" />
 								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 							</div>
