@@ -2429,7 +2429,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		reqDTO.setSupplierId(130012L);
 		SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(reqDTO);
 		
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
@@ -2467,7 +2467,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		} else { // reset to HQ info
 			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+			reqDTO.setSupplierId(130012L);
 			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
 			SmSupplier supplier = resDTO.getSmSupplier();
 			
@@ -2673,7 +2673,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setRequestItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
-		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		reqDTO.setSupplierId(130012L);
 		reqDTO.setPriceType(getManagedBean().getPmPriceType());
 		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getSupplierItemByReqItemIdNSupplierId(reqDTO);
 		getManagedBean().setReqItemInfoList(purResDTO.getSupplierItemPriceList());
@@ -2810,7 +2810,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		reqDTO.setSupplierId(130012L);
 		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
 		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
 			return resDTO.getMofAccount().getMofNo();
