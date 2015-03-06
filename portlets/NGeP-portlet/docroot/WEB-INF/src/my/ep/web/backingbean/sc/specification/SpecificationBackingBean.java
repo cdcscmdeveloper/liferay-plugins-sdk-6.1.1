@@ -1938,6 +1938,11 @@ public class SpecificationBackingBean extends
 					if (scQt.isZonal()
 							|| !scQt.getScQtSupplierCriteria().isAllState()) {
 						if (null == this.getManagedBean().getScQt()
+								.getScQtSupplierCriteria().getLocationLevel()) {
+							this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().setLocationLevel(new PmParameter());
+						}
+						if (null == this.getManagedBean().getScQt()
 								.getScQtSupplierCriteria().getLocationLevel()
 								.getParameterId()) {
 							if (tenderResDTO.getQtDetail().isZonal()) {
