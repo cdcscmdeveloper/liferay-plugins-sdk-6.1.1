@@ -81,6 +81,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
@@ -112,6 +113,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private String fileInitName;
 	private String templateDesc;
 	private Locale locale = new Locale("en");
+	private final String templateLangCode = "en";
 	
 	private StreamedContent file;
 	
@@ -120,123 +122,84 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private void populateSmSvAddresses(){
-		List<SmSvAddress> workshopAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> transportAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> insuranceAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> dockyardAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> manufacturingAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> printingAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> travelAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> bumiAddress = new ArrayList<SmSvAddress>();
-		List<SmSvAddress> readMaterialAddress = new ArrayList<SmSvAddress>();
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SiteVisitResDTO resDTO = new SiteVisitResDTO();
 		getManagedBean().setSmSvFacilityMap(new HashMap<String, SmFacility>());
 		
 		Map<String, SmFacility> facilityMap = new HashMap<String,SmFacility>();
-		Map<Long, String> facilityTypeAddressMap = new HashMap<Long,String>();
 		
-		for(SmSvAddress smSvAddress:getManagedBean().getSmSvTask().getSmSvAddresses()){
-			reqDTO.setSmAddressId(smSvAddress.getSmAddress().getAddressId());
-			resDTO = reqSO.retrieveSmFacilityByAddressId(reqDTO);
+		Map<String, ArrayList<String>> categoryFacilityMap = new HashMap<String,ArrayList<String>>();
+		
+		//get facility by category
+		for(SmSvCategory category :  getManagedBean().getSmSvTask().getSmSvCategories()){
+			if(categoryFacilityMap.get(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode()) == null){
+				categoryFacilityMap.put(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode(), new ArrayList<String>());
+			}
 			
-			if(resDTO.getSmFacility()!=null && resDTO.getSmFacilityType()!=null){
-				facilityMap.put(resDTO.getSmFacilityType(), resDTO.getSmFacility());
-				
-				if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)){
-					workshopAddress.add(smSvAddress);
-					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_WORKSHOP)==null){
-						getManagedBean().getSmSvFacilityMap().put(SupplierManagementConst.CAT_TYPE_WORKSHOP, resDTO.getSmFacility());
-					}
-				}	
-				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)){
-					dockyardAddress.add(smSvAddress);
-					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_DOCKYARD)==null){
-						getManagedBean().getSmSvFacilityMap().put(SupplierManagementConst.CAT_TYPE_DOCKYARD, resDTO.getSmFacility());
-					}
-				}
-				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_STORE)){
-					//printingAddress.add(smSvAddress);
-					readMaterialAddress.add(smSvAddress);
-					if(getManagedBean().getSmSvFacilityMap().get(SupplierManagementConst.CAT_TYPE_PRINTING)==null){
-						getManagedBean().getSmSvFacilityMap().put(SupplierManagementConst.CAT_TYPE_PRINTING, resDTO.getSmFacility());
-					}
-				}else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)){
-					printingAddress.add(smSvAddress);
-					manufacturingAddress.add(smSvAddress);
-				}
-				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)){
-					workshopAddress.add(smSvAddress);
-					dockyardAddress.add(smSvAddress);
-					transportAddress.add(smSvAddress);
-					insuranceAddress.add(smSvAddress);
-					manufacturingAddress.add(smSvAddress);
-					printingAddress.add(smSvAddress);
-					travelAddress.add(smSvAddress);
-					bumiAddress.add(smSvAddress);
-					readMaterialAddress.add(smSvAddress);
-				}
-				else if(resDTO.getSmFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)){
-					workshopAddress.add(smSvAddress);
-					dockyardAddress.add(smSvAddress);
-					transportAddress.add(smSvAddress);
-					insuranceAddress.add(smSvAddress);
-					manufacturingAddress.add(smSvAddress);
-					printingAddress.add(smSvAddress);
-					travelAddress.add(smSvAddress);
-					bumiAddress.add(smSvAddress);
-					readMaterialAddress.add(smSvAddress);
-				}
-				else{
-					insuranceAddress.add(smSvAddress);
-					//manufacturingAddress.add(smSvAddress);
-					//readMaterialAddress.add(smSvAddress);
-				}
-				
-				facilityTypeAddressMap.put(smSvAddress.getSvAddressId(), resDTO.getSmFacilityType());
-			}
-		}
-		this.getManagedBean().setFacilityTypeAddressMap(facilityTypeAddressMap);
-		this.getManagedBean().setAllFacilityMap(facilityMap);
-		
-		//added by Andrew : to set default to those without premise location
-		for(Map.Entry<String, SmSvTemplate> svTemplate : getManagedBean().getSmSvTemplateMap().entrySet()){
-			if(svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
-					svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING) || 
-					svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
-				
-				if(getManagedBean().getSmSvFacilityMap().get(svTemplate.getKey()) == null){
-					if(facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) != null){
-						getManagedBean().getSmSvFacilityMap().put(svTemplate.getKey(), facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
-					}else{
-						if(facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) != null){
-							getManagedBean().getSmSvFacilityMap().put(svTemplate.getKey(), facilityMap.get(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
-						}
-					}
-				}
-			}
+			categoryFacilityMap.get(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode()).add(category.getPmCategoryL3().getFacilityType());
+			
+			//categoryFacilityMap.put(category.getPmCategoryL3().getCategoryTypeCode().getParameterCode(), category.getPmCategoryL3().getFacilityType());
 		}
 		
 		getManagedBean().setSmSvAddressMap(new HashMap<String, List<SmSvAddress>>());
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_TRANSPORTATION, transportAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_BUMIPUTERA, bumiAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_DOCKYARD, dockyardAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_INSURANCE, insuranceAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_MANUFACTURING, manufacturingAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_PRINTING, printingAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_TRAVEL, travelAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_WORKSHOP, workshopAddress);
-		getManagedBean().getSmSvAddressMap().put(SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA, readMaterialAddress);
-		
-		for(Map.Entry<String, SmSvTemplate> svTemplate : getManagedBean().getSmSvTemplateMap().entrySet()){
-			if(getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).size() < 1){
-				for(SmSvAddress svAddr : getManagedBean().getSmSvTask().getSmSvAddresses()){
-					getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(svAddr);
+		for(SmSvAddress smSvAddress : getManagedBean().getSmSvTask().getSmSvAddresses()){
+			reqDTO.setSmAddressId(smSvAddress.getSmAddress().getAddressId());
+			resDTO = reqSO.retrieveSmFacilityByAddressId(reqDTO);
+			
+			// to group the related facility by template
+			if(resDTO.getSmFacility() != null && resDTO.getSmFacilityType() != null){
+				
+				//store all facilities. use it when no matched facility
+				facilityMap.put(resDTO.getSmFacilityType(), resDTO.getSmFacility());
+				
+				for(Map.Entry<String, SmSvTemplate> svTemplate : getManagedBean().getSmSvTemplateMap().entrySet()){
+					if(getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()) == null){
+						getManagedBean().getSmSvAddressMap().put(svTemplate.getKey(), new ArrayList<SmSvAddress>());
+					}			
+					
+					//find the matched facility address and put in the MAP by template type
+					if(categoryFacilityMap.get(svTemplate.getKey()) != null){
+						
+						for(String fac : categoryFacilityMap.get(svTemplate.getKey())){
+							if(resDTO.getSmFacilityType().equalsIgnoreCase(fac)){
+								log.info("**************fac*************" + fac);
+								log.info("******Address Map******" + getManagedBean().getSmSvAddressMap().size());
+								
+								getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(smSvAddress);
+								
+								if(svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
+										svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING) || 
+										svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)){
+									//set the 
+									if(getManagedBean().getSmSvFacilityMap().get(svTemplate.getKey()) == null){
+										getManagedBean().getSmSvFacilityMap().put(svTemplate.getKey(), resDTO.getSmFacility());
+									}
+								}
+							}
+						}
+					}
+					
+					if(resDTO.getSmFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) || 
+							resDTO.getSmFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)){
+						int count = 0;
+						for(SmSvAddress svAddress : getManagedBean().getSmSvAddressMap().get(svTemplate.getKey())){
+							if(svAddress.getSvAddressId() == smSvAddress.getSvAddressId()){
+								count++;
+							}
+						}
+						
+						if(count < 1){
+							getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(smSvAddress);
+						}
+					}
+					
 				}
+				
 			}
 		}
 		
+		this.getManagedBean().setAllFacilityMap(facilityMap);
 	}
 	
 	private void setSelectedSvTemplateAddresses(String templateType){
@@ -255,11 +218,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			log.info("allFacilityMap****" + this.getManagedBean().getAllFacilityMap().size());
 			if(smFacility == null){
 				// randomly assign a facility
-				String key = getManagedBean().getFacilityTypeAddressMap().get(getManagedBean().getSmSvTask().getSmSvAddresses().get(0).getSvAddressId());
-				smFacility = this.getManagedBean().getAllFacilityMap().get(key);
-				
-				log.info("******KEY************" + key);
-				log.info("******SmFacility******" + smFacility);
+				//String key = getManagedBean().getFacilityTypeAddressMap().get(getManagedBean().getSmSvTask().getSmSvAddresses().get(0).getSvAddressId());
+				smFacility = this.getManagedBean().getAllFacilityMap().entrySet().iterator().next().getValue();
+
+				log.info("******SmFacility******" + smFacility.getFacilityType());
 			}
 			
 			NumberFormat formatter = new DecimalFormat("#0.00");
@@ -1198,6 +1160,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//Locale locale = new Locale("en");
 		String applType = ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
 		
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
 		context.put("applNo", svTask.getSmAppl().getApplNo());
 		context.put("applType", applType);
@@ -1230,12 +1193,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("businessRegistrationNo",  svTask.getSmAppl().getSmSupplier().getRegNo());
 		context.put("visitingPurpose", templateDesc);
 		context.put("catApplicable", this.getManagedBean().getSvTaskCategories());
+		context.put("telNo", svTask.getSmAppl().getSmCompanyBasic().getPhoneNo());
 		
 		if(this.getManagedBean().getContactPerson() != null){
 			context.put("contactPersonName", this.getManagedBean().getContactPerson().getName());
 			context.put("contactPersonDesignation", this.getManagedBean().getContactPerson().getDesignation());
 		}
 		
+		context.put("smVmUtil", new VmUtil());
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
 		context.put("svAddresses", this.getManagedBean().getSmSvAddressMap().get(templateType));
 		context.put("addressFormatter", new AddressUtils());
@@ -1275,6 +1241,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}else{
 			sb.append("");
 		}
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("accptDate", accptDate);
 		context.put("svOfficers", sb.toString());
 		context.put("addrLiines",getAddressLines(addr));
@@ -1300,6 +1267,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		VelocityContext context = new VelocityContext();
 		String vmEquity= "/sm/sitevisit/sv-section-a.vm";
 		
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("authorizedCapital", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getAuthorizedCapital()));
 		context.put("paidUpCapital", formatEquity(svTask.getSmAppl().getSmCompanyBasic().getPaidUpCapital()));
 		context.put("countOwner", this.getManagedBean().getTotalEquityOwner());
@@ -1398,6 +1366,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			svBankInfo.getSmSupplierBank().getPmFinancialOrg().setFinOrgName(e);
 		}
 */
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("bankInfo", svTask.getSmSvBankInfos());
 		
 		context.put("financialCheckList", finLsItem);
@@ -1428,7 +1397,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			//context.put("templateCode", templateType);
 			//context.put("templateDesc", value);
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
-			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.DOCKYARD_WORKSHOP_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
+			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.DOCKYARD_WORKSHOP_LICENSE_INS, templateLangCode);
 //			List<PmParameterDesc>  equipmentMaintLs = new ArrayList<PmParameterDesc>();
 //			List<PmParameterDesc>  equipmentBeatingLs = new ArrayList<PmParameterDesc>();
 			String eqMaintParam = null;
@@ -1463,8 +1432,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				eqBeatingParam = ParameterTypeConst.WORKSHOP_EQUIPMENT_BEATING;
 			}
 			
-			List<PmParameterDesc>  equipmentMaintLs = SmCommonUtil.retrieveParameterDescList(eqMaintParam, new FacesScopes().getUserLocale().getLanguage());
-			List<PmParameterDesc>  equipmentBeatingLs = SmCommonUtil.retrieveParameterDescList(eqBeatingParam, new FacesScopes().getUserLocale().getLanguage());
+			List<PmParameterDesc>  equipmentMaintLs = SmCommonUtil.retrieveParameterDescList(eqMaintParam, templateLangCode);
+			List<PmParameterDesc>  equipmentBeatingLs = SmCommonUtil.retrieveParameterDescList(eqBeatingParam, templateLangCode);
 			
 			context.put("licenseInsurance", licenseInsuranceLs);
 			context.put("equipmentMaintenance", equipmentMaintLs);
@@ -1473,25 +1442,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
 			//SmSvTemplate manufacturingTemplate = null;
-
-			//retrieve Purchase Method && apply puchase method to map
-			Map<String, String> purchaseMethodMap = new HashMap<String,String>();
-			List<PmParameterDesc> purchaseMethodLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PURCHASING_METHOD, "en");
 			
-			if(purchaseMethodLs.size() > 0){
-				for(PmParameterDesc pmDesc : purchaseMethodLs){
-					purchaseMethodMap.put(pmDesc.getPmParameter().getParameterCode(),pmDesc.getCodeName());
-				}
-			}
+			List<PmParameterDesc> financialDocLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.MANUFACTURING_FINANCIAL_DOC, templateLangCode);
 			
-			List<PmParameterDesc> financialDocLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.MANUFACTURING_FINANCIAL_DOC, new FacesScopes().getUserLocale().getLanguage());
-			context.put("smCommonUtil", new SmCommonUtil());
 			context.put("financialDocLs", financialDocLs);
 			context.put("additionalDocLs", "");
 			context.put("machineLs", svTask.getSmAppl().getSmMachineDtls());
-			context.put("purchaseMethodMap", purchaseMethodMap);
+			
 		}else if(templateType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PRINTING_LICENSE_INS, new FacesScopes().getUserLocale().getLanguage());
+			List<PmParameterDesc> licenseInsuranceLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PRINTING_LICENSE_INS, templateLangCode);
 			SmFacility smFacility = this.getManagedBean().getSmSvFacilityMap().get(templateType);
 			
 			String lblOwnerShip = null;
@@ -1540,7 +1499,25 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		
+		if(templateType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || 
+				templateType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
+				templateType.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+			//retrieve Purchase Method && apply puchase method to map
+			Map<String, String> purchaseMethodMap = new HashMap<String,String>();
+			List<PmParameterDesc> purchaseMethodLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PURCHASING_METHOD, "en");
+			
+			if(purchaseMethodLs.size() > 0){
+				for(PmParameterDesc pmDesc : purchaseMethodLs){
+					purchaseMethodMap.put(pmDesc.getPmParameter().getParameterCode(),pmDesc.getCodeName());
+				}
+			}
+			
+			context.put("purchaseMethodMap", purchaseMethodMap);
+		}
+		
 		log.info("****Template Type****" + templateType);
+		context.put("smVmUtil", new VmUtil());
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
 		
@@ -1584,7 +1561,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			context.put("categoryCodeLs", catLs);
 		}
 		
-		
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
 		
@@ -1610,6 +1587,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String svOfficePurchasePrice = officePrice != null ? formatter.format(officePrice).toString() : null;
 		String svOfficeRentalRate = officeRentalRate != null ? formatter.format(officeRentalRate).toString() : null;
 		
+		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
 		context.put("officeOwnership", officeOwnership);
@@ -1949,7 +1927,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
-	public void preLocationFloorEnvOnChange(SmSvFacility premiseLocation){
+	public void preLocationFloorEnvOnChange(){
+		//SmSvFacility premiseLocation = t.managedBean.selectedSvTemplate.smSvFacility.
+		SmSvFacility premiseLocation =  this.getManagedBean().getSelectedSvTemplate().getSmSvFacility();
+		
 		if(!premiseLocation.isOtherFloor()){
 			premiseLocation.setOtherFloorRemark(null);
 		}
@@ -1981,5 +1962,20 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		UIViewRoot UIV = ViewH.createView(fc,refreshpage);
 		UIV.setViewId(refreshpage);
 		fc.setViewRoot(UIV);
+	}
+	
+	private String getLogoHeaderPath(){
+		StringBuilder path = new StringBuilder();
+		FacesScopes fs = new FacesScopes();
+		
+		//path.append("http://");
+		path.append(fs.getRequest().getServerName());
+		
+		if(fs.getRequest().getServerPort() > 0){
+			path.append(":");
+			path.append(fs.getRequest().getServerPort());
+		}		
+		
+		return path.toString();
 	}
 }
