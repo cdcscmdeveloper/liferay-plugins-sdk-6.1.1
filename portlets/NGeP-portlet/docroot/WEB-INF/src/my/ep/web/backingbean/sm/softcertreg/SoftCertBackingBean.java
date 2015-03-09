@@ -128,6 +128,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			userList.add(pmUser.getLoginId());
 
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			
+			//if already got soft cert request, include in new bill.
 			for (SmPersonnel smPersonnel : getManagedBean()
 					.getLoginUserPersonnelInfo().getSmAppl().getSmPersonnels()) {
 				if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
