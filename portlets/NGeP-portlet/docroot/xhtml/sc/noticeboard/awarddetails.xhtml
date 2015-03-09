@@ -7,17 +7,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.qt.nb.awarded.list']}" toggleable="true">
-	<p:spacer height="10px"/>
+	
 		<ui:fragment
-			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq 'I'}">
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td"
-				border="1" width="20%">
-				<p:outputLabel value="#{lbl['lbl.qt.nb.award.type']}"></p:outputLabel>
+			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypeItem}">
+			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+				<p:outputLabel value="#{lbl['lbl.qt.nb.award.type']}" style="width:130px"></p:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
 			</h:panelGrid>
-			<p:spacer height="15px" />
-
+			<p:spacer height="10px" />
 			<p:dataTable id="itemizedtbl" var="awardedItem" style="width:100%"
 				value="#{noticeBoardBackingBean.managedBean.awardedItems}"
 				rowIndexVar="index">
@@ -29,9 +27,9 @@
 						<p:column colspan="3" style="text-align:center" headerText="#{lbl['lbl.qt.nb.offered.price']}" />
 					</p:row>
 					<p:row>
-						<p:column headerText="By LOA" />
-						<p:column headerText="By Proposal" />
-						<p:column headerText="By Bidding" />
+						<p:column headerText="#{lbl['lbl.qt.nb.by.loa']}" />
+						<p:column headerText="#{lbl['lbl.qt.nb.by.proposal']}" />
+						<p:column headerText="#{lbl['lbl.qt.nb.by.bidding']}" />
 					</p:row>
 				</p:columnGroup>
 				<p:column>
@@ -67,13 +65,13 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq 'P'}">
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td"
-				cellpadding="5%">
-				<p:outputLabel value="#{lbl['lbl.qt.nb.award.type']}"></p:outputLabel>
+			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypePackage}">
+			
+			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+				<p:outputLabel value="#{lbl['lbl.qt.nb.award.type']}" ></p:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
-				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" style="width:130px"></p:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.supplierName}"></h:outputText>
 			</h:panelGrid>
