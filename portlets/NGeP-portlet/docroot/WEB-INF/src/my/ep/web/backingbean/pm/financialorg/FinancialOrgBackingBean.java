@@ -269,18 +269,19 @@ public class FinancialOrgBackingBean extends
 			 }			
 			 
 			 if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
-				 System.out.println("Record Status Flag--==>"+financialSvc.getRecordStatusFlg());
+				
 				
 				 if(DbValueConst.RECORD_STATUS_DELETED == financialSvc.getRecordStatusFlg()){
-					 System.out.println("Before------"+getManagedBean().isShowFactoringBank());
+					 
 					 this.getManagedBean().setShowFactoringBank(false);
 				 }	
-				 System.out.println("After------"+getManagedBean().isShowFactoringBank());
+				
 				 for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
 					 if(!getManagedBean().getFinancialOrg().getPmFinancialSvcs().isEmpty()&& getManagedBean().getFinancialOrg().getPmFinancialSvcs()!=null){						 
 					
 						 IFinancialOrgSO financialOrgSO = null;
 							FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+							log.info("FinancialOrg ID"+financialAcc.getPmPaymentBankOrg().getFinancialOrgId());
 							reqDTO.setFinancialOrgId(financialAcc.getPmPaymentBankOrg().getFinancialOrgId());
 							financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 									IFinancialOrgSO.class);
@@ -288,7 +289,10 @@ public class FinancialOrgBackingBean extends
 									.retrieveFinancialSvcByFinancialOrgId(reqDTO);
 
 							PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
-							financialAcc.setBankCode(pmFinancialSvc.getBankCode());					 
+							if(null!=pmFinancialSvc){
+							//log.info("BankCode"+pmFinancialSvc.getBankCode());
+							financialAcc.setBankCode(pmFinancialSvc.getBankCode());		
+							}
 					 }
 				 }
 		}
@@ -1181,6 +1185,7 @@ public class FinancialOrgBackingBean extends
 
 		PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
 		if(resDTO.isSuccessful()){
+			if(null!=pmFinancialSvc){
 			System.out.println("BANK CODE"+pmFinancialSvc.getBankCode()
 					 + "|" + pmFinancialSvc.getFinancialSvcId());
 			for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
@@ -1191,7 +1196,7 @@ public class FinancialOrgBackingBean extends
 			   }
 		}
 		
-		
+		}
 		
 	}
 	/* Factoring Bank - END */
