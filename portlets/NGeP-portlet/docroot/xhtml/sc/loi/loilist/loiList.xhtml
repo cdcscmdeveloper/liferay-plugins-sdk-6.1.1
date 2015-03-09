@@ -60,24 +60,24 @@
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="lOI/LOA LIST" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.loiloa.loiloalist']}"  toggleable="true">
 
 			<p:dataTable id="loiLoaId" var="loiloaBean" 
 				value="#{lOIDetailBackingBean.managedBean.loiLoaBeans}"
 				rowIndexVar="rowIndex">
 
-				<p:column headerText="LOI/LOA No">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
 					<h:outputText value="#{loiloaBean.scLoi.loiNo}"
 						rendered="#{loiloaBean.scLoi ne null}" />
 					<h:outputText value="#{loiloaBean.scLoa.loaNo}"
 						rendered="#{loiloaBean.scLoa ne null}" />
 				</p:column>
 
-				<p:column headerText="Type" style="width:20%">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.type']}" style="width:20%">
 					<h:outputText value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
 				</p:column>
 
-				<p:column headerText="Item" style="width:15%">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.loi.item']}" style="width:15%">
 					<p:commandButton  value="view"
 						partialSubmit="true" process="@this"
 						action="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
@@ -86,7 +86,7 @@
 					</p:commandButton>
 				</p:column>
 
-				<p:column headerText="Status" style="width:15%">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.status']}" style="width:15%">
 					<h:outputText value="#{loiloaBean.loiLoaStatus}" />
 				</p:column>
 

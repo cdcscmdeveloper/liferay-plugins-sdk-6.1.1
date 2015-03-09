@@ -1199,7 +1199,7 @@ public class LOIDetailBackingBean extends
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 
 			populateLOIDetails(resDTO);
-
+			getManagedBean().setEditFlag(true);
 		} catch (Exception ex) {
 			handleException(ex);
 		}
