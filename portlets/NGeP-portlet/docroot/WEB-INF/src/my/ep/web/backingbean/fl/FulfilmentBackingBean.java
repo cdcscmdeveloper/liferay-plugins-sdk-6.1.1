@@ -38,9 +38,10 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+// TODO: Auto-generated Javadoc
 /**
- * Backing Bean for Fulfilment
- * 
+ * Backing Bean for Fulfilment.
+ *
  * @author KK LIM
  * @since 20/11/2013
  */
@@ -48,17 +49,36 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean(name = "fulfilmentBackingBean")
 @RequestScoped
 public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(FulfilmentBackingBean.class);
 
+	/**
+	 * Instantiates a new fulfilment backing bean.
+	 */
 	public FulfilmentBackingBean() {
 
 	}
 	
+	/**
+	 * Instantiates a new fulfilment backing bean.
+	 *
+	 * @param docType the doc type
+	 * @param docNo the doc no
+	 */
 	public FulfilmentBackingBean(String docType, String docNo) {
 		getManagedBean().setDocType(docType);
 		getManagedBean().setDocNo(docNo);
 	}	
 
+	/**
+	 * Handle file upload.
+	 * <p> call this method  as user click on AttachFiles button in attachment panel
+	 * 
+	 *
+	 * @param event the event
+	 * @throws Exception the exception
+	 */
 	public void handleFileUpload(FileUploadEvent event) throws Exception {
 		log.debug("FulfilmentBackingBean.handleFileUpload()");
 		FacesScopes facesScopes = new FacesScopes();
@@ -88,6 +108,12 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		getManagedBean().getAttachmentList().add(attachment);		
 	}
 
+	/**
+	 * Determine icon based on file extension.
+	 *
+	 * @param attachment the attachment
+	 * @return the string
+	 */
 	public String determineIcon(FlAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
 		String ext = "";
@@ -113,6 +139,13 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		return imageFileName;
 	}
 
+	/**
+	 * Download file.
+	 * <p> call this method  as user click on upload button.
+	 *
+	 * @param attachment the attachment
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void downloadFile(FlAttachment attachment) throws IOException {
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
@@ -149,18 +182,32 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
+	/**
+	 * Confirm delete attachment.
+	 *
+	 * @param index the index
+	 */
 	public void confirmDeleteAttachment(int index) {
 		
 		//set to the managedbean property and show the diloag box.
 		this.getManagedBean().setAttachedFileIndex(index);
 	}
+	
+	/**
+	 * Delete attachment action.
+	 * <p>Call this method when user clicks on confirm.no need to call once the user rejects.
+	 * <p>Read the index from managed bean and delete.
+	 */
 	public void deleteAttachmentAction() {
-		//Cal this method when user clicks on confirm.no need to call once the user rejects.
-		//Read the index from managed bean and delete
 		this.getManagedBean().getAttachmentList().remove(this.getManagedBean().getAttachedFileIndex());
 		RequestContext.getCurrentInstance().execute("delFileDlg.hide()");
 	}
 
+	/**
+	 * Initialize remark and attachement.
+	 * @param remarkList the remark list
+	 * @param attachmentList the attachment list
+	 */
 	@Deprecated
 	public void initializeRemarkAndAttachement(List<FlRemark> remarkList,
 			List<FlAttachment> attachmentList) {
@@ -185,6 +232,13 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		getManagedBean().setAttachmentList(attachmentList);
 	}
 
+	/**
+	 * Initialize remark and attachment.
+	 * <p> get remarks and attachment lists.
+	 * @param flWorkflowStatus the fl workflow status
+	 * @param remarkList the remark list
+	 * @param attachmentList the attachment list
+	 */
 	public void initializeRemarkAndAttachement(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList, List<FlAttachment> attachmentList) {
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -217,6 +271,12 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		getManagedBean().setAttachmentList(attachmentList);
 	}
 	
+	/**
+	 * Open attachment page.
+	 * <p> call this method  as user click on down load icon in attachment panel
+	 *
+	 * @param fldelAddress the fldel address
+	 */
 	public void openAttachmentPage(FlDeliveryAddress fldelAddress) {
 		if(fldelAddress.getRemarkList().isEmpty() || !compareUserName(fldelAddress.getRemarkList().get(0).getUserId())) {
 			FacesScopes facesScopes = new FacesScopes();
@@ -237,6 +297,12 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		getManagedBean().setAttachmentList(fldelAddress.getAttachmentList());
 	}
 
+	/**
+	 * Compare attachment user name.
+	 *
+	 * @param username the username
+	 * @return true, if successful
+	 */
 	public boolean compareAttachmentUserName(String username){
 		FacesScopes facesScopes = new FacesScopes();
 		if(username.equals(facesScopes.getUserSessionBean().getUserName())) {
