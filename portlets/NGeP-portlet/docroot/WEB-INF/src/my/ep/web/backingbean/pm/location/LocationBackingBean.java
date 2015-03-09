@@ -199,7 +199,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public String saveLocation() {
 		log.info("Save Method");
 		
-		try {
 			if (getManagedBean().getSelectedType().equalsIgnoreCase(
 					ParameterConst.LOCATION_LEVEL_STATE)) {
 
@@ -211,8 +210,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				PmState state = this.getManagedBean().getState();
 				state.setStateCode(state.getStateCode().toUpperCase());
 				reqDTO.setPmState(state);
+				try {
 				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
-
+        
 				if (resDTO.isSuccessful()) {
 					result = resDTO.isSuccessful();
 					FacesContext.getCurrentInstance().addMessage(
@@ -222,6 +222,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 											.getStateName()
 											+ " is Successfully saved"));
 
+				}
+				} catch (Exception e) {
+					e.printStackTrace();
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+									.toString(), "Save Location failed."));
+					throw e;
 				}
 
 			} else if (getManagedBean().getSelectedType().equalsIgnoreCase(
@@ -273,7 +281,11 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 				PmDistrict district = this.getManagedBean().getDistrict();
 				district.setDistrictCode(district.getDistrictCode().toUpperCase());
-				if(district.getPmDivision() != null && district.getPmDivision().getDivisionId()== null){
+				if(!this.getManagedBean().getDivisionBox()){
+					if(district.getPmDivision().getDivisionId()== null){
+						throw new EpException("Please select division.");
+					}
+				}else{
 					district.setPmDivision(null);
 				}
 				reqDTO.setPmDistrict(district);
@@ -312,6 +324,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				PmCity city = this.getManagedBean().getCity();
                 city.setCityCode(city.getCityCode().toUpperCase());
 				reqDTO.setPmCity(city);
+				try{
 				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
 
 				if (resDTO.isSuccessful()) {
@@ -324,19 +337,18 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 											+ " is Successfully saved"));
 
 				}
+				} catch (Exception e) {
+					e.printStackTrace();
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+									.toString(), "Save Location failed."));
+					throw e;
+				}
+				
 
 			}
 
-		} catch (Exception e) {
-			throw new EpException("Save Location failed.");
-			/*
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							"Save Location failed."));
-			throw e;
-		*/}
 		this.getManagedBean().setSelectedType(null);
 		return NAV_TO_SEARCH;
 
@@ -538,6 +550,18 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public void retrieveDivisionList(AjaxBehaviorEvent e) {
 		Long stateId = (Long) e.getComponent().getAttributes().get("value");
+		
+		StateReqDTO stateReqDTO = new StateReqDTO();
+		stateReqDTO.setStateId(stateId);
+		IStateSO stateReqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateResDTO stateResDTO = stateReqSO.retriveStateByID(stateReqDTO);
+		PmState pmState = null;
+		if(null!=stateResDTO.getPmState()){
+			pmState = stateResDTO.getPmState();
+		}
+		
 		DivisionReqDTO reqDTO = new DivisionReqDTO();
 		
 		reqDTO.setStateId(stateId);
@@ -548,12 +572,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setDivisions(resDTO.getDivisionList());	
 		
 		
-		if(resDTO.getDivisionList()!= null && !resDTO.getDivisionList().isEmpty()) {
+		if(pmState.getAdoptDivision()) {
 			getManagedBean().setDivisionBox(false);
-			//getManagedBean().getDistrict().setPmDivision(new PmDivision());	
 		}
 		else{	
-			//getManagedBean().getDistrict().setPmDivision(null);
 			getManagedBean().getDistrict().getPmDivision().setDivisionId(null);
 			getManagedBean().setDivisionBox(true);
 		}
