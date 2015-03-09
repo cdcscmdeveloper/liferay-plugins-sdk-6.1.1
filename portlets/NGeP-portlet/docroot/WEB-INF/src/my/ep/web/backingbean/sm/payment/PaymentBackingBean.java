@@ -205,22 +205,29 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 
 		SmBill smBill = this.getManagedBean().getSmBill();
 		BigDecimal ttlAmount = new BigDecimal(0);
-		log.info("****MAP SIE****" + this.getManagedBean().getDefaultCertPaymentMap().size());
 		this.getManagedBean().setNewSmBillDtlLs(new ArrayList<SmBillDtl>());
 		retrievePaymentItem();
 		
-		Map<Long,SmPersonnel> selectedSoftCertMap = new HashMap<Long,SmPersonnel>();
-		for(SmPersonnel selectedPersonnel : this.getManagedBean().getSelectedSoftCertLs()){
-			selectedSoftCertMap.put(selectedPersonnel.getPersonnelId(), selectedPersonnel);
-		}
+		Map<Long, SmPersonnel> selectedSoftCertMap = new HashMap<Long, SmPersonnel>();
+		if (this.getManagedBean().getSelectedSoftCertLs() != null
+				&& this.getManagedBean().getSelectedSoftCertLs().length > 0) {
+			for (SmPersonnel selectedPersonnel : this.getManagedBean()
+					.getSelectedSoftCertLs()) {
+				selectedSoftCertMap.put(selectedPersonnel.getPersonnelId(),
+						selectedPersonnel);
+			}
+		}	
 		
-		
-		for(SmBillDtl billDtl : smBill.getSmBillDtls()){
-			if(billDtl.getPmParameter().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
-				if(selectedSoftCertMap.containsKey(billDtl.getSmPersonnel().getPersonnelId())){
+		for (SmBillDtl billDtl : smBill.getSmBillDtls()) {
+			if (billDtl.getPmParameter().getParameterCode()
+					.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
+				if (selectedSoftCertMap != null
+						&& !selectedSoftCertMap.isEmpty()
+						&& selectedSoftCertMap.containsKey(billDtl
+								.getSmPersonnel().getPersonnelId())) {
 					this.getManagedBean().getNewSmBillDtlLs().add(billDtl);
 				}
-			}else{
+			} else {
 				this.getManagedBean().getNewSmBillDtlLs().add(billDtl);
 			}
 		}
