@@ -69,7 +69,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -79,7 +78,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -478,44 +476,7 @@ public class OrganisationBackingBean extends
 		
 		// check govSeller		
 		if (this.getManagedBean().getOrgProfile().isGovtSeller()) {
-			List<SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>();
-			if (this.getManagedBean().getSmSupplierBanks() == null) {
-				throw new EpException(MessageConst.ERROR_775101);
-			} else {
-				// filter list for active records and check again
-
-				for (SmSupplierBank supplierBank : this.getManagedBean()
-						.getSmSupplierBanks()) {
-					log.info("..............supplierBank.getRecordStatusFlg="
-							+ supplierBank.getRecordStatusFlg());
-					log.info("..............supplierBank.isRecordStatus="
-							+ supplierBank.isRecordStatus());
-					if (supplierBank.getRecordStatusFlg() == 1) {
-						tempSupplierBankList.add(supplierBank);
-					}
-				}
-				log.info(".................tempSupplierBankList.size="
-						+ tempSupplierBankList.size());
-				if (tempSupplierBankList.isEmpty()) {
-					throw new EpException(MessageConst.ERROR_775101);
-				}
-
-			}
-			if (this.getManagedBean().getSmPersonnels() == null) {
-				throw new EpException(MessageConst.ERROR_775102);
-			} else {
-				// filter list for active records and check again
-				List<SmPersonnel> tempPersonnelList = new ArrayList<SmPersonnel>();
-				for (SmPersonnel personnel : this.getManagedBean()
-						.getSmPersonnels()) {
-					if (personnel.getRecordStatusFlg() == 1) {
-						tempPersonnelList.add(personnel);
-					}
-				}
-				if (tempPersonnelList.isEmpty()) {
-					throw new EpException(MessageConst.ERROR_775102);
-				}
-			}
+			validateSupplierBankListAndSupplierPersonnel();			
 		}
 		// check group org
 		if (this.getManagedBean().getOrgProfile().isGroupOrg()) {
@@ -603,7 +564,7 @@ public class OrganisationBackingBean extends
 							IRegistrationSO.class);		
 		
 		if (getManagedBean().getOrgProfile().isGovtSeller()) {
-			validateSupplierBankList(getManagedBean().getSmSupplierBanks());
+		
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
@@ -778,7 +739,7 @@ public class OrganisationBackingBean extends
 			for(PmAddressType addressType:getManagedBean().getOrgProfile().getPmAddressTypes()){				
 				if(addressType.getAddressType().equals(AddressType.BILLING_ADDRESS.value())&&(addressType.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) && !getManagedBean().getAddressTypesList().contains(addressType)){
 					getManagedBean().getAddressTypesList().add(addressType);
-				}				
+				}
 			}
 			//Validate the Delivery Address
               for(PmAddressType deliveryAddress:getManagedBean().getAddressTypesList()){
@@ -818,7 +779,7 @@ public class OrganisationBackingBean extends
 		}		
 		
 		reqDTO.setPmOrgProfile(orgProfile);
-		OrgProfileResDTO resDTO = orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
+		OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 		/*reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 		OrgProfileResDTO resDTO1 = orgProfileSO
 				.retrieveOrgDetailsByOrgId(reqDTO);
@@ -1154,8 +1115,10 @@ public class OrganisationBackingBean extends
  		if (getManagedBean().getSelectedAddressTypes().size() > 0) {
  			for (PmAddressType address : getManagedBean()
  					.getSelectedAddressTypes()) {
- 				getManagedBean().getAddressTypesList()
- 						.remove(address);
+ 				if(address.isBrandNew() && address.getAddressTypeId() == null){
+	 				getManagedBean().getAddressTypesList()
+	 						.remove(address);
+ 				}
  			}
  			getManagedBean().getSelectedAddressTypes().clear();
  		} else {
@@ -1536,13 +1499,51 @@ public class OrganisationBackingBean extends
 		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());	
 	}
 	
-	private void validateSupplierBankList(List<SmSupplierBank> smSupplierBanks){
+	private void validateSupplierBankListAndSupplierPersonnel(){
+		List<SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>();
+		if (this.getManagedBean().getSmSupplierBanks() == null) {
+			throw new EpException(MessageConst.ERROR_775101);
+		} else {
+			// filter list for active records and check again
+			for (SmSupplierBank supplierBank : this.getManagedBean()
+					.getSmSupplierBanks()) {
+				log.info("..............supplierBank.getRecordStatusFlg="
+						+ supplierBank.getRecordStatusFlg());
+				log.info("..............supplierBank.isRecordStatus="
+						+ supplierBank.isRecordStatus());
+				if (supplierBank.getRecordStatusFlg() == 1) {
+					tempSupplierBankList.add(supplierBank);
+				}
+			}
+			log.info(".................tempSupplierBankList.size="
+					+ tempSupplierBankList.size());
+			if (tempSupplierBankList.isEmpty()) {
+				throw new EpException(MessageConst.ERROR_775101);
+			}
+
+		}
+		if (this.getManagedBean().getSmPersonnels() == null) {
+			throw new EpException(MessageConst.ERROR_775102);
+		} else {
+			// filter list for active records and check again
+			List<SmPersonnel> tempPersonnelList = new ArrayList<SmPersonnel>();
+			for (SmPersonnel personnel : this.getManagedBean()
+					.getSmPersonnels()) {
+				if (personnel.getRecordStatusFlg() == 1) {
+					tempPersonnelList.add(personnel);
+				}
+			}
+			if (tempPersonnelList.isEmpty()) {
+				throw new EpException(MessageConst.ERROR_775102);
+			}
+		}		
+		
 		boolean isUnique = true;
-		if(smSupplierBanks!=null && !smSupplierBanks.isEmpty()){	
-			List <SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>(smSupplierBanks);
+		if(getManagedBean().getSmSupplierBanks()!=null && !getManagedBean().getSmSupplierBanks().isEmpty()){	
+			tempSupplierBankList = new ArrayList<SmSupplierBank>(getManagedBean().getSmSupplierBanks());
 			Set<String> tempSupplierBankSet = new HashSet<String>();
 			StringBuilder sb = null;
-			for(SmSupplierBank suppBank : smSupplierBanks){
+			for(SmSupplierBank suppBank : getManagedBean().getSmSupplierBanks()){
 				sb = new StringBuilder();
 				sb.append(suppBank.getPmFinancialOrg().getFinancialOrgId());
 				sb.append(suppBank.getAccountNo());
