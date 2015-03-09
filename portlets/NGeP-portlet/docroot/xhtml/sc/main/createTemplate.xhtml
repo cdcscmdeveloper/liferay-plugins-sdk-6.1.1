@@ -124,12 +124,12 @@
 			</h:panelGroup>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
-					action="#{specificationBackingBean.searchScqtDocAction}"
+					action="#{specificationBackingBean.searchTemplateSpecAction}"
 					partialSubmit="true" process="@this,searchBospec"
 					update="createList" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
-					partialSubmit="true" update="searchBospec"
-					process="@this" action="#{specificationBackingBean.resetTemplate}" />
+					partialSubmit="true" update="searchBospec" process="@this"
+					action="#{specificationBackingBean.resetTemplate}" />
 			</div>
 
 		</p:panel>
@@ -188,7 +188,7 @@
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 							<p:commandButton value="Create" process="@all"
 								update=":form:searchBospec"
-								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}" ></p:commandButton>
+								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"></p:commandButton>
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">

@@ -19,7 +19,7 @@
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}"
 				style="float:left;" immediate="true"
-				action="#{specificationBackingBean.backAction}" />
+				action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" immediate="true"
 				onclick="createTechnicalDialog.show();"></p:commandButton>
@@ -107,7 +107,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
 						oncomplete="createTechnicalDialog.hide();"
-						action="#{specificationBackingBean.backAction}" />
+						action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="createTechnicalDialog.hide();" type="button" />
 				</div>

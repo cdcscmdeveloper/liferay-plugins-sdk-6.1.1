@@ -73,7 +73,7 @@
 						label="#{lbl['lbl.sc.spec.stage.title']}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialCheckListtitle"
-							listener="#{specificationBackingBean.financialTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+							listener="#{specificationBackingBean.financialCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 
 					</p:inputText>
 					<p:message id="finChecklistId" for="finChecklistTitle"
@@ -104,10 +104,10 @@
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
 							style="width:100px;">
 							<f:selectItems
-								value="#{specificationBackingBean.getFinChecklIstActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
+								value="#{specificationBackingBean.getFinChecklistActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scoreFinanceView,uploadFinance"
-								listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="financialactionnull1" for="financialactionnull"
 							display="icon"></p:message>
@@ -120,10 +120,10 @@
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
 							style="width:100px;">
 							<f:selectItems
-								value="#{specificationBackingBean.getFinChecklIstActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
+								value="#{specificationBackingBean.getFinChecklistActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scoreFinanceView,uploadFinance"
-								listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="financialactionnotnull1"
 							for="financialactionnotnull" display="icon"></p:message>
@@ -170,7 +170,7 @@
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="actionView"
-							listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+							listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectBooleanCheckbox>
 
 				</h:panelGroup>
@@ -205,7 +205,7 @@
 					<p:commandLink
 						rendered="#{stageTwofunctional.scQtCheckListAttachment.fileName ne null}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-						action="#{specificationBackingBean.deleteCheckListFile(stageTwofunctional.scQtCheckListAttachment)}"
+						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwofunctional.scQtCheckListAttachment)}"
 						immediate="true" update="@form">
 						<h:graphicImage library="ep/images/design" name="trash.png"
 							styleClass="tasklist_title1" />
@@ -259,12 +259,12 @@
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this" partialSubmit="true"
 				oncomplete="stageTwoFinance.show();"
-				actionListener="#{specificationBackingBean.stageTwoFincompilenceList}"
+				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
 				update="stageTwoFinPopup" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,financeProposaltwo" partialSubmit="true"
-				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
+				action="#{specificationBackingBean.addFinancialCheckList}"
 				update="@all,financeProposaltwo" />
 
 
