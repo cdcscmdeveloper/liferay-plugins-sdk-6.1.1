@@ -954,6 +954,10 @@ public class SpecificationBackingBean extends
 	 */
 	public void resetCircular() {
 		getManagedBean().setCtSearchBean(new CtCircularSearchBean());
+		this.getManagedBean().setCircularType("");
+		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
+		this.getManagedBean().setCircularVer(null);
+		searchCircular.reloadData();
 	}
 
 	/**
