@@ -1,5 +1,5 @@
 <u>Employee</u>
-<br />
+<br /><br />
 
 <table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
@@ -9,4 +9,18 @@
 			<th width="20%">IC No.</th>
 			<th width="25%">Experience</th>
 		</tr>
+		
+		#if($workerLs.size() > 0)
+			<tr>
+				<td width="5%"></td>
+				<td width="25%"></td>
+				<td width="25%"></td>
+				<td width="20%"></td>
+				<td width="25%"></td>
+			</tr>
+		#else
+		 	<tr>
+		 		<td colspan="5" align="center">No Record Found</td>
+		 	</tr>
+		#end
 </table>

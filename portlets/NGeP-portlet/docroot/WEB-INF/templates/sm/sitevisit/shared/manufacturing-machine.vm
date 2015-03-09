@@ -24,7 +24,7 @@
 				<td>$!machine.qty</td>
 				<td style="text-align:right">
 				#if($machine.value) 
-					$smCommonUtil.formatToTwoDecimalPoint($machine.value)
+					$smVmUtil.formatToTwoDecimalPoint($machine.value)
 				#end
 				</td>
 				<td>
