@@ -12,7 +12,7 @@
 		<p:commandLink value="#{lbl['lbl.sc.spec.stage.proposal.checklist']}"></p:commandLink>
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
-			 style="width:100%" rowIndexVar="index"
+			style="width:100%" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
 			rowKey="#{stageTwoTechnical}">
 			<ac:paginator for="stageTwotechProposal" />
@@ -20,16 +20,16 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 				style="width:30%">
 				<ui:fragment rendered="#{stageTwoTechnical.title !=null}">
-						<h:outputText value="#{stageTwoTechnical.title}" size="50"  />
-					</ui:fragment>
-					<ui:fragment rendered="#{stageTwoTechnical.title ==null}">
-						<p:inputText value="#{stageTwoTechnical.title}" size="50"></p:inputText>
-					</ui:fragment>
-					
+					<h:outputText value="#{stageTwoTechnical.title}" size="50" />
+				</ui:fragment>
+				<ui:fragment rendered="#{stageTwoTechnical.title ==null}">
+					<p:inputText value="#{stageTwoTechnical.title}" size="50"></p:inputText>
+				</ui:fragment>
+
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
 				style="width:20%">
-					<h:outputText value="Specification"></h:outputText>
+				<h:outputText value="Specification"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.mandatory']}"
 				style="width:10%">
@@ -39,34 +39,40 @@
 					<f:selectItem itemLabel="No" itemValue="0" />
 				</p:selectOneMenu>
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}" style="width:10%">
-				<p:selectOneMenu value="#{stageTwoTechnical.scQtWeightage.weightageTitle}">
+
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
+				style="width:10%">
+				<p:selectOneMenu
+					value="#{stageTwoTechnical.scQtWeightage.weightageTitle}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-					<f:selectItems 
+					<f:selectItems
 						value="#{specificationBackingBean.managedBean.weightageTechnical}"
 						var="weightage" itemValue="#{weightage.weightageTitle}"
-						itemLabel="#{weightage.weightageTitle}"  />
-						<p:ajax event="change" listener="#{specificationBackingBean.handleS2TechChanged(stageTwoTechnical)}"
-            				partialSubmit="true" process="@this"  />
+						itemLabel="#{weightage.weightageTitle}" />
+					<p:ajax event="change"
+						listener="#{specificationBackingBean.handleS2TechChanged(stageTwoTechnical)}"
+						partialSubmit="true" process="@this" />
 				</p:selectOneMenu>
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}" style="width:10%">
-			<ui:include src="/xhtml/sc/specification/scoring.xhtml" />
+
+			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
+				style="width:10%">
+				<ui:include src="/xhtml/sc/specification/scoring.xhtml" />
 				<p:commandLink oncomplete="specScoring.show();return false;">
 					<p:graphicImage library="ep/images/design" name="btn_add.png"
 						value="/resources/ep/images/design/btn_add.png" />
-							<f:setPropertyActionListener value="#{stageTwoTechnical}"
+					<f:setPropertyActionListener value="#{stageTwoTechnical}"
 						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 				</p:commandLink>
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}" style="width:10%">
+
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}"
+				style="width:10%">
 				<p:inputText value="#{stageTwoTechnical.checklistSeq}"></p:inputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.temp.status']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage2.temp.status']}"
+				style="width:10%">
 				<h:outputText value="InProgress"></h:outputText>
 
 			</p:column>
@@ -88,14 +94,17 @@
 		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="Populate" process="@this" partialSubmit="true"
-				oncomplete="stageTwoTech.show();" actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}" update="compilencestageTwo" />
+			<p:commandButton value="Populate" process="@this"
+				partialSubmit="true" oncomplete="stageTwoTech.show();"
+				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
+				update="compilencestageTwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,stageTwotechProposal" partialSubmit="true"
-				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
-				update="stageTwotechProposal"  />
+				action="#{specificationBackingBean.addTechnicalCheckList}"
+				update="stageTwotechProposal" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				 action="#{specificationBackingBean.deleteS2Tech}" update="stageTwotechProposal"/>
+				action="#{specificationBackingBean.deleteS2Tech}"
+				update="stageTwotechProposal" />
 
 		</div>
 
@@ -124,20 +133,23 @@
 					<f:selectItem itemLabel="No" itemValue="0" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
+				style="width:10%">
 				<p:selectOneMenu
-					value="#{stageTwoTechnicalAdditional.scQtWeightage.weightageTitle}" >
+					value="#{stageTwoTechnicalAdditional.scQtWeightage.weightageTitle}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems
 						value="#{specificationBackingBean.managedBean.weightageTechnical}"
 						var="techweightage" itemValue="#{techweightage.weightageTitle}"
 						itemLabel="#{techweightage.weightageTitle}" />
-							<p:ajax event="change" listener="#{specificationBackingBean.handleS2AddTechChanged(stageTwoTechnicalAdditional)}"
-            				partialSubmit="true" process="@this"  />
+					<p:ajax event="change"
+						listener="#{specificationBackingBean.handleS2AddTechChanged(stageTwoTechnicalAdditional)}"
+						partialSubmit="true" process="@this" />
 				</p:selectOneMenu>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:20%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
+				style="width:20%">
 				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS2TechAdd.show();return false;"
 					update="techAdditionaltwo">
@@ -152,12 +164,14 @@
 					value="#{stageTwoTechnicalAdditional.scQtCheckListAttachment.fileName}"></h:outputText>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.max.score']} " style="width:5%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.max.score']} "
+				style="width:5%">
 
 				<p:inputText value="#{stageTwoTechnicalAdditional.maxScore}"></p:inputText>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}" style="width:5%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}"
+				style="width:5%">
 				<p:inputText value="#{stageTwoTechnicalAdditional.checklistSeq}"></p:inputText>
 			</p:column>
 			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
@@ -183,7 +197,8 @@
 				action="#{specificationBackingBean.stageTwoAdditionalAdd}"
 				update="techAdditionaltwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				 action="#{specificationBackingBean.deleteS2TechAdd}" update="techAdditionaltwo"/>
+				action="#{specificationBackingBean.deleteS2TechAdd}"
+				update="techAdditionaltwo" />
 
 		</div>
 	</p:panel>
@@ -201,11 +216,11 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 				style="width:30%">
 				<ui:fragment rendered="#{stageTwofunctional.title !=null}">
-						<h:outputText value="#{stageTwofunctional.title}" size="50"  />
-					</ui:fragment>
-					<ui:fragment rendered="#{stageTwofunctional.title ==null}">
-						<p:inputText value="#{stageTwofunctional.title}" size="50"></p:inputText>
-					</ui:fragment>
+					<h:outputText value="#{stageTwofunctional.title}" size="50" />
+				</ui:fragment>
+				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
+					<p:inputText value="#{stageTwofunctional.title}" size="50"></p:inputText>
+				</ui:fragment>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
@@ -220,32 +235,38 @@
 					<f:selectItem itemLabel="No" itemValue="0" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}" style="width:10%">
-				<p:selectOneMenu value="#{stageTwofunctional.scQtWeightage.weightageTitle}" >
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
+				style="width:10%">
+				<p:selectOneMenu
+					value="#{stageTwofunctional.scQtWeightage.weightageTitle}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-					<f:selectItems 
+					<f:selectItems
 						value="#{specificationBackingBean.managedBean.weightageFinancial}"
 						var="finweightage" itemValue="#{finweightage.weightageTitle}"
 						itemLabel="#{finweightage.weightageTitle}" />
-						<p:ajax event="change" listener="#{specificationBackingBean.handleS2FinChanged(stageTwofunctional)}"
-            				partialSubmit="true" process="@this"  />
+					<p:ajax event="change"
+						listener="#{specificationBackingBean.handleS2FinChanged(stageTwofunctional)}"
+						partialSubmit="true" process="@this" />
 				</p:selectOneMenu>
 			</p:column>
-			
-				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}" style="width:10%">
-			<ui:include src="/xhtml/sc/specification/scoring.xhtml" />
+
+			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
+				style="width:10%">
+				<ui:include src="/xhtml/sc/specification/scoring.xhtml" />
 				<p:commandLink oncomplete="specScoring.show();return false;">
 					<p:graphicImage library="ep/images/design" name="btn_add.png"
 						value="/resources/ep/images/design/btn_add.png" />
-							<f:setPropertyActionListener value="#{stageTwofunctional}"
+					<f:setPropertyActionListener value="#{stageTwofunctional}"
 						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 				</p:commandLink>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}"
+				style="width:10%">
 				<p:inputText value="#{stageTwofunctional.checklistSeq}"></p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.temp.status']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage2.temp.status']}"
+				style="width:10%">
 				<h:outputText value="InProgress"></h:outputText>
 
 			</p:column>
@@ -267,14 +288,17 @@
 		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-		<p:commandButton value="Populate" process="@this" partialSubmit="true"
-				oncomplete="stageTwoFinance.show();" actionListener="#{specificationBackingBean.stageTwoFincompilenceList}" update="stageTwoFinPopup"/>
+			<p:commandButton value="Populate" process="@this"
+				partialSubmit="true" oncomplete="stageTwoFinance.show();"
+				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
+				update="stageTwoFinPopup" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,financeProposaltwo" partialSubmit="true"
-				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
+				action="#{specificationBackingBean.addFinancialCheckList}"
 				update="financeProposaltwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				 action="#{specificationBackingBean.deleteS2Fin}" update="financeProposaltwo"/>
+				action="#{specificationBackingBean.deleteS2Fin}"
+				update="financeProposaltwo" />
 
 		</div>
 
@@ -304,7 +328,8 @@
 					<f:selectItem itemLabel="No" itemValue="0" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
+				style="width:10%">
 				<p:selectOneMenu
 					value="#{stageTwofunctionalAdditional.scQtWeightage.weightageTitle}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -312,12 +337,14 @@
 						value="#{specificationBackingBean.managedBean.weightageFinancial}"
 						var="s2finweightage" itemValue="#{s2finweightage.weightageTitle}"
 						itemLabel="#{s2finweightage.weightageTitle}" />
-						<p:ajax event="change" listener="#{specificationBackingBean.handleS2AddFinChanged(stageTwofunctionalAdditional)}"
-            				partialSubmit="true" process="@this"  />
+					<p:ajax event="change"
+						listener="#{specificationBackingBean.handleS2AddFinChanged(stageTwofunctionalAdditional)}"
+						partialSubmit="true" process="@this" />
 				</p:selectOneMenu>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:20%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
+				style="width:20%">
 				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS2FinAdd.show();return false;"
 					update="financeAdditionaltwo">
@@ -332,12 +359,14 @@
 					value="#{stageTwofunctionalAdditional.scQtCheckListAttachment.fileName}"></h:outputText>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.max.score']}" style="width:5%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.max.score']}"
+				style="width:5%">
 
 				<p:inputText value="#{stageTwofunctionalAdditional.maxScore}"></p:inputText>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}" style="width:5%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}"
+				style="width:5%">
 				<p:inputText value="#{stageTwofunctionalAdditional.checklistSeq}"></p:inputText>
 			</p:column>
 			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
@@ -362,7 +391,8 @@
 				action="#{specificationBackingBean.stageTwoFiAdditioalProposalAdd}"
 				update="financeAdditionaltwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				 action="#{specificationBackingBean.deleteS2FinAdd}" update="financeAdditionaltwo"/>
+				action="#{specificationBackingBean.deleteS2FinAdd}"
+				update="financeAdditionaltwo" />
 
 		</div>
 	</p:panel>

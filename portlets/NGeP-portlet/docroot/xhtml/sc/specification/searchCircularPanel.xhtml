@@ -35,11 +35,11 @@
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 			action="#{specificationBackingBean.searchCircularList}"
-			update="circularList,panelItemGroupList"/>
+			update="circularList,panelItemGroupList" />
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 			action="#{specificationBackingBean.resetCircular}"
-			update="circular,panelItemGroupList"
-			resetValues="true" partialSubmit="true" process="@this" />
+			update="circular,panelItemGroupList" resetValues="true"
+			partialSubmit="true" process="@this" />
 	</div>
 
 
@@ -147,7 +147,7 @@
 
 					<ac:paginator for="panelItemList"></ac:paginator>
 					<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true"
-						listener="#{specificationBackingBean.panelListSelect}"></p:ajax>
+						listener="#{specificationBackingBean.panelItemSelect}"></p:ajax>
 					<p:columnGroup>
 						<p:row>
 

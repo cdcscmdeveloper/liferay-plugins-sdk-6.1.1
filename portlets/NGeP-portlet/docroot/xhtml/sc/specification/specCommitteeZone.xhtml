@@ -25,7 +25,7 @@
 							selection="#{specificationBackingBean.managedBean.panelZoneSelect}">
 							<p:ajax event="select"
 								update="@([id$=specCommitteepaleYesSuppliers])"
-								listener="#{specificationBackingBean.retriveZoneBySupplier}" />
+								listener="#{specificationBackingBean.retriveSupplierByZonal}" />
 
 							<p:ajax event="unselect"
 								listener="#{specificationBackingBean.unSelectPanelYesTreenode}" />

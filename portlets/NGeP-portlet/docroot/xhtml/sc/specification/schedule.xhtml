@@ -71,7 +71,8 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.startMonth}">
 
-							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<f:selectItems
+								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scheduleDetails,scheduleendMonth"
 								listener="#{specificationBackingBean.calculateStartMonth(frequency)}"></p:ajax>
@@ -101,7 +102,8 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.endMonth}">
 
-							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<f:selectItems
+								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
@@ -221,7 +223,8 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{payment.startMonth}">
 
-							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<f:selectItems
+								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="paymentEndMonth"
 								listener="#{specificationBackingBean.calculateProgressiveStartMonth(payment)}"></p:ajax>
@@ -251,7 +254,8 @@
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{payment.endMonth}">
 
-							<f:selectItems value="#{specificationBackingBean.yearDetails}">
+							<f:selectItems
+								value="#{specificationBackingBean.monthDropDownValues}">
 							</f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>

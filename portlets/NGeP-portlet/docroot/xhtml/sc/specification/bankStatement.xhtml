@@ -25,7 +25,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				style="float:right;"
-				action="#{specificationBackingBean.acceptBankScore}">
+				action="#{specificationBackingBean.saveBankCheckListScores}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
 					value="50" />
@@ -64,10 +64,11 @@
 							label="#{lbl['lbl.sc.spec.from.month']}"
 							value="#{specificationBackingBean.managedBean.fromMonth}">
 
-							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
+							<f:selectItems
+								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
 							<p:ajax event="change"
 								update="toDetailsUpdate,bankInfo,amountdetails"
-								listener="#{specificationBackingBean.fromChange}"></p:ajax>
+								listener="#{specificationBackingBean.bankStatementsfromChange}"></p:ajax>
 						</p:selectOneMenu> <p:spacer width="1"></p:spacer> <p:selectOneMenu
 							style="width:60px;"
 							value="#{specificationBackingBean.managedBean.startYear}">
@@ -77,7 +78,7 @@
 							</f:selectItems>
 							<p:ajax event="change"
 								update="toDetailsUpdate,bankInfo,amountdetails"
-								listener="#{specificationBackingBean.yearChange}"></p:ajax>
+								listener="#{specificationBackingBean.bankStatementsyearsChange}"></p:ajax>
 						</p:selectOneMenu></td>
 
 					<td style="width: 35%"><p:outputLabel
