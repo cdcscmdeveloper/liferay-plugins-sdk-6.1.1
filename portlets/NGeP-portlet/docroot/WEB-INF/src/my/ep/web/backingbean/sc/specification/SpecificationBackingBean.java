@@ -1,12 +1,18 @@
-/**
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
+ ****************************************************
  */
 package my.ep.web.backingbean.sc.specification;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,7 +23,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +60,6 @@ import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -94,7 +98,6 @@ import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
-import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
@@ -161,7 +164,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
@@ -192,53 +194,68 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 /**
- * @author ACER
+ * The Class SpecificationBackingBean.
  * 
+ * @author:Garikapati Mangaiah.
  */
 @ManagedBean(name = "specificationBackingBean")
 @ViewScoped
 public class SpecificationBackingBean extends
 		SourcingBaseBackingBean<SpecificationManagedBean> {
+
+	/** The search circular. */
 	private IPagingDataModel<CtCircularVer> searchCircular = new SearchCircularPagingDataModel();
+
+	/** The template spec create. */
 	private IPagingDataModel<TplSpecMaster> templateSpecCreate = new CreateTemplateSpecPagingDataModel();
+
+	/** The search delivery address. */
 	private IPagingDataModel<PmAddressType> searchDeliveryAddress = new DeliveryPagingDataModel();
+
+	/** The log. */
 	private static Logger log = Logger
 			.getLogger(SpecificationBackingBean.class);
 	// private List<SpecificationCompilanceBean> selectedCompilenceList;
+	/** The count. */
 	private int count;
 
+	/** The selct value. */
 	private String selctValue;
+
+	/** The current tab. */
 	private int currentTab;
+
+	/** The output tab. */
 	private int outputTab;
+
+	/** The text before sign. */
 	private String textBeforeSign;
 
+	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
 
+	/**
+	 * Instantiates a new specification backing bean.
+	 */
 	public SpecificationBackingBean() {
 
 	}
 
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
+	/**
+	 * Business owner back action.click on back search panel item button in
+	 * business owner.it will navigate to panel Yes/No selection page.
+	 * 
+	 * 
+	 * @return the string
+	 */
 	public String businessOwnerBackAction() {
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setTempIndex(0);
-		// this.getManagedBean().setCircularType("");
-		// this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
-		// this.getManagedBean().setPanelItemCategory(null);
-		// this.getManagedBean().setSelectPanelItem(false);
 		if (this.getManagedBean().getScQt().isPanel()) {
-			retriveBusinessOwnerQualificationCriteri("BO");
+			retriveSupplierQualificationCriteria("BO");
 			if (null != this.getManagedBean().getCtPanelItem()) {
 
 				List<CtPanelItem> panelItem = this.getManagedBean()
@@ -258,18 +275,24 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getCtCircularVer().getDocType());
 				this.getManagedBean().setCircularVer(
 						this.getManagedBean().getCtCircularVer());
-				/*
-				 * if (null != this.getManagedBean().getCtPanelItem()) {
-				 * this.getManagedBean().setSelectCtPanelItem(
-				 * this.getManagedBean().getCtPanelItem()); }
-				 */
+
 			}
 		}
 		return "specificationview.xhtml";
 	}
 
-	private List<ScQtLocCriteria> getQuoteZones(List<TreeNode> treeNodes,
-			ScQtSupplierCriteria supplierCriteria) {
+	/**
+	 * Convert tree nodes to location criteria.convert supplier location tree
+	 * node list to supplier location objects
+	 * 
+	 * @param treeNodes
+	 *            (list of treenodes)
+	 * @param supplierCriteria
+	 *            (supplierCriteria object)
+	 * @return List<ScQtLocCriteria>
+	 */
+	private List<ScQtLocCriteria> convertTreeNodesToLocationCriteria(
+			List<TreeNode> treeNodes, ScQtSupplierCriteria supplierCriteria) {
 		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
 		if (null != treeNodes && !treeNodes.isEmpty()) {
 			for (TreeNode treeNode : treeNodes) {
@@ -323,7 +346,17 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
-	private List<TplSpecZoneDtl> getZoneBusinessOwnerLocations(
+	/**
+	 * Convert tree nodes to zone criteria.convert General treenode list to
+	 * TplSpecZoneLoc objects.
+	 * 
+	 * @param treeNodes
+	 *            (list of treeNodes)
+	 * @param zoneDtl
+	 *            (TplSpecZoneDtl Object)
+	 * @return List<TplSpecZoneDtl>
+	 */
+	private List<TplSpecZoneDtl> convertTreeNodesToZoneCriteria(
 			List<TreeNode> treeNodes, TplSpecZoneDtl zoneDtl) {
 
 		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
@@ -442,7 +475,9 @@ public class SpecificationBackingBean extends
 		return zoneList;
 	}
 
-	// Method to save the specifcation Details..
+	/**
+	 * Save specification dtls.method to save the businessOwner details.
+	 */
 	public void saveSpecificationDtls() {
 		validateBusinessOwner(false);
 		FacesContext.getCurrentInstance().addMessage(
@@ -455,7 +490,13 @@ public class SpecificationBackingBean extends
 								new FacesScopes().getUserLocale())));
 	}
 
-	public void validateBusinessOwner(boolean isSpecComplete) {
+	/**
+	 * Validate business owner.Validate businessOwner tabs Data.
+	 * 
+	 * @param isSpecComplete
+	 *            (boolean isSpecComplete).
+	 */
+	private void validateBusinessOwner(boolean isSpecComplete) {
 		try {
 			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -511,7 +552,7 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri("BO");
+				retriveSupplierQualificationCriteria("BO");
 
 				break;
 			case 2:
@@ -535,7 +576,7 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri("BO");
+				retriveSupplierQualificationCriteria("BO");
 				if (!isSpecComplete) {
 					retriveTechnicalSpecification();
 				}
@@ -560,7 +601,7 @@ public class SpecificationBackingBean extends
 
 				// .getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri("BO");
+				retriveSupplierQualificationCriteria("BO");
 				// retriveTechnicalSpecification();
 				retriveFinancialSpecification();
 				break;
@@ -602,6 +643,10 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Secretary submit task.Event handle specification Committee send remainder
+	 * to all committee members.
+	 */
 	public void secretarySubmitTask() {
 		ICommitteSO committeSO = null;
 
@@ -621,6 +666,10 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Save specification committee dtls.save the specification committee
+	 * details.
+	 */
 	public void saveSpecificationCommitteeDtls() {
 
 		try {
@@ -650,6 +699,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Construct fin specs n socre.set socreweightage for all financial specs.
+	 * 
+	 * @param scQtCheckList
+	 *            (scQtCheckList)
+	 * @return List<ScQtCheckList>
+	 */
 	private List<ScQtCheckList> constructFinSpecsNSocre(
 			ScQtCheckList scQtCheckList) {
 		List<ScQtCheckList> finSpecCheckLists = this.getManagedBean()
@@ -668,12 +724,7 @@ public class SpecificationBackingBean extends
 							offerPrice.add(this.getManagedBean()
 									.getOfferPricePackage());
 						}
-						/*
-						 * if (null !=
-						 * this.getManagedBean().getOfferPriceItem()) {
-						 * offerPrice.add(this.getManagedBean()
-						 * .getOfferPriceItem()); }
-						 */
+
 						scQtCheckList.getQtScoreWeightage()
 								.setScQtScoreOfferPrices(offerPrice);
 					} else {
@@ -700,18 +751,6 @@ public class SpecificationBackingBean extends
 												.getOfferPricePackage());
 									}
 								}
-								/*
-								 * if (localOfferprice .getOfferPriceType()
-								 * .equalsIgnoreCase(
-								 * ParameterConst.RECOMMEND_TYPE_ITEM)) { if
-								 * (null != this.getManagedBean()
-								 * .getOfferPriceItem()) {
-								 * otherofferpriceofferPrice
-								 * .remove(localOfferprice);
-								 * 
-								 * otherofferpriceofferPrice.add(this
-								 * .getManagedBean() .getOfferPriceItem()); } }
-								 */
 
 							}
 							scQtCheckList.getQtScoreWeightage()
@@ -728,7 +767,13 @@ public class SpecificationBackingBean extends
 		return finSpecCheckLists;
 	}
 
-	public String newProceedAction() {
+	/**
+	 * Business owner next action.click next button in businessowner panel
+	 * selection.navigate to business owner tabs.
+	 * 
+	 * @return the string
+	 */
+	public String businessOwnerNextAction() {
 		this.getManagedBean().setScQtCheckSt2techProposal(
 				new ArrayList<ScQtCheckList>());
 		this.getManagedBean().setScQtCheckSt2financeProposalList(
@@ -754,6 +799,16 @@ public class SpecificationBackingBean extends
 				RequestContext.getCurrentInstance().execute(
 						"panelApprovalDlgs.show()");
 			} else {
+				if ((null == this.getManagedBean().getScQt()
+						.getZoneLocationLevel())
+						|| (null != this.getManagedBean().getScQt()
+								.getZoneLocationLevel() && null == this
+								.getManagedBean().getScQt()
+								.getZoneLocationLevel().getParameterId())) {
+					this.getManagedBean().getScQt().setZonal(false);
+					this.getManagedBean().setZoneGeneralTrees(
+							new ArrayList<TreeNode>());
+				}
 
 				return "specificationCreation.xhtml?faces-redirect=true";
 			}
@@ -787,6 +842,10 @@ public class SpecificationBackingBean extends
 				if ((null == supplierCriteria)
 						|| (null != supplierCriteria && null == supplierCriteria
 								.getQtSupplierCriteriaId())) {
+					this.getManagedBean().setZoneTrees(
+							new ArrayList<TreeNode>());
+					this.getManagedBean().setSuppCriteriaopenList(
+							new ArrayList<ScQtCategory>());
 					this.getManagedBean().setScQtCheckSt2techProposal(null);
 					supplierCriteria = new ScQtSupplierCriteria();
 					supplierCriteria.setScQt(scQt);
@@ -800,7 +859,7 @@ public class SpecificationBackingBean extends
 									.getPanelItemId()) {
 
 						this.getManagedBean().getScQt().setZonal(false);
-						retriveZonesByCircularNo();
+						retriveZonesOrSuppliersByItem();
 						if (null != this.getManagedBean().getZoneGeneralTrees()
 								&& !this.getManagedBean().getZoneGeneralTrees()
 										.isEmpty()) {
@@ -838,7 +897,7 @@ public class SpecificationBackingBean extends
 													new PmParameter());
 								}
 								this.getManagedBean().getScQt().setZonal(false);
-								retriveZonesByCircularNo();
+								retriveZonesOrSuppliersByItem();
 								if (null != this.getManagedBean()
 										.getZoneGeneralTrees()
 										&& !this.getManagedBean()
@@ -890,17 +949,32 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Reset circular.Event handle to reset all the circular search information.
+	 */
 	public void resetCircular() {
 		getManagedBean().setCtSearchBean(new CtCircularSearchBean());
 	}
 
-	public String backAction() {
+	/**
+	 * Business owner template spec back action.Event handle navigate to
+	 * business owner Menu page.
+	 * 
+	 * @return the string
+	 */
+	public String businessOwnerTemplateSpecBackAction() {
 		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
 		return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 
 	}
 
+	/**
+	 * Committee back action.Event handle navigate to specfication committee
+	 * Menu page.
+	 * 
+	 * @return the string
+	 */
 	public String committeeBackAction() {
 		// this.getManagedBean().setScQtCheckSt2techProposal(null);
 		// retriveTechnicalCheckList();
@@ -917,16 +991,29 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Business owner template spec.navigate to Template spec Search in
+	 * Businness owner.
+	 * 
+	 * @return the string
+	 */
 	public String businessOwnerTemplateSpec() {
 		return "/xhtml/sc/main/createTemplate.xhtml?faces-redirect=true";
 	}
 
+	/**
+	 * Retrive templatespec.navigate to Template spec Search in Specification
+	 * committee.
+	 * 
+	 * @return the string
+	 */
 	public String retriveTemplatespec() {
 		return "/xhtml/sc/main/createCommitteeTemplate.xhtml?faces-redirect=true";
 	}
 
 	/**
-	 * To add empty row to category open code data table
+	 * Adds the new category action.added empty row for category codes
+	 * datatable.
 	 */
 	public void addNewCategoryAction() {
 		// debugLogger("addNewCategoryAction");
@@ -949,6 +1036,9 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Delete category codes.delete row from the category codes datatable.
+	 */
 	public void deleteCategoryCodes() {
 
 		List<ScQtCategory> openList = this.getManagedBean()
@@ -973,139 +1063,13 @@ public class SpecificationBackingBean extends
 
 	}
 
-	/*
-	 * private ISearchResultBean<ScQtCheckList> retriveChecklistByIdAndTitle(
-	 * String title) { IQTSpecSO specSo = null; SpecificationResDTO resDTo =
-	 * null; try { SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-	 * SearchBean<ScQtCheckList> searchBean = new SearchBean<ScQtCheckList>();
+	/**
+	 * Business owner tab change.Event handle change the menu in business
+	 * owner.accoring to index it will display menu information.
 	 * 
-	 * String doccategory = QTConstants.FINANCIAL_DOC_TYPE; SearchFilterBean
-	 * usernameSearchBean = new SearchFilterBean(
-	 * SearchOperator.OPERATOR_EQUALS.value());
-	 * usernameSearchBean.setSearchField("scQt.qtId");
-	 * usernameSearchBean.setSearchValue(getManagedBean().getScQt() .getQtId());
-	 * searchBean.getDataFilterBeans().add(usernameSearchBean);
-	 * 
-	 * SearchFilterBean idNoSearchBean = new SearchFilterBean(
-	 * SearchOperator.OPERATOR_EQUALS.value());
-	 * idNoSearchBean.setSearchField("title");
-	 * idNoSearchBean.setSearchValue(title);
-	 * searchBean.getDataFilterBeans().add(idNoSearchBean);
-	 * 
-	 * SearchFilterBean specType = new SearchFilterBean(
-	 * SearchOperator.OPERATOR_EQUALS.value());
-	 * specType.setSearchField("docCategory");
-	 * specType.setSearchValue(doccategory);
-	 * searchBean.getDataFilterBeans().add(specType);
-	 * 
-	 * reqDTO.setTitleSearchChecklistBean(searchBean);
-	 * 
-	 * specSo = BusinessDelegate.getInstance().getServiceObject(
-	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class); resDTo =
-	 * specSo.retrieveChecklistByIdAndTitle(reqDTO);
-	 * 
-	 * } finally {
-	 * 
-	 * } return resDTo.getSpecResultBean(); }
+	 * @param activeIndex
+	 *            (int activeIndex).
 	 */
-
-	public String saveEditTemplateSpec(String processName) {
-		IQTTemplateSO qtTemplateSO = null;
-		try {
-			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
-			ScQtDoc qtDoc = this.getManagedBean().getScqtDoc();
-			ScQtCheckList checklist = this.getManagedBean().getScqtDoc()
-					.getScQtCheckList();
-			checklist.setTitle(qtDoc.getTplSpecMaster().getSpecName());
-			List<TplSpecQuestion> questions = getManagedBean()
-					.getTemplateSpecBean().getSpecMaster()
-					.getTplSpecQuestions();
-
-			for (TplSpecQuestion tplSpecQuestion : questions) {
-				tplSpecQuestion.setTplSpecMaster(qtDoc.getTplSpecMaster());
-			}
-			qtDoc.setScQtCheckList(checklist);
-			qtDoc.getTplSpecMaster().setTplSpecQuestions(questions);
-
-			List<ScQtDoc> docs = new ArrayList<ScQtDoc>();
-			docs.add(qtDoc);
-			qtTemplateReqDTO.setScQtDoc(docs);
-
-			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
-			QTTemplateDocResDTO resDTO = qtTemplateSO
-					.saveOrUpdateTemplateDoc(qtTemplateReqDTO);
-
-			List<ScQtDoc> savedSpecs = resDTO.getSavedDocs();
-			String specType = this.getManagedBean().getSpecType();
-			ScQtCheckList savedCheckList = null;
-			if (null != savedSpecs && savedSpecs.size() > 1) {
-				for (int i = 0; i < savedSpecs.size(); i++) {
-					if (SourcingConstants.TECHINICAL_STAGE
-							.equalsIgnoreCase(savedSpecs.get(i)
-									.getScQtCheckList().getDocCategory())) {
-						savedCheckList = savedSpecs.get(i).getScQtCheckList();
-					}
-				}
-
-			} else {
-				if (SourcingConstants.TECHINICAL_STAGE
-						.equalsIgnoreCase(specType)) {
-					savedCheckList = savedSpecs.get(0).getScQtCheckList();
-
-				} else if (SourcingConstants.FINANCIAL_STAGE
-						.equalsIgnoreCase(specType)) {
-					savedCheckList = savedSpecs.get(0).getScQtCheckList();
-
-				}
-
-			}
-			int index = this.getManagedBean().getSelectedCheckList();
-			if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(specType)) {
-				this.getManagedBean().getScQtCheckSt2techProposal()
-						.remove(index);
-				this.getManagedBean().getScQtCheckSt2techProposal()
-						.add(index, savedCheckList);
-
-			} else if (SourcingConstants.FINANCIAL_STAGE
-					.equalsIgnoreCase(specType)) {
-				this.getManagedBean().getScQtCheckSt2financeProposalList()
-						.remove(index);
-				this.getManagedBean().getScQtCheckSt2financeProposalList()
-						.add(index, savedCheckList);
-			}
-
-			if (resDTO.isSuccessful()) {
-
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700004,
-														new String[] { getMessageCommon("lbl.sc.template.spec") },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-			}
-		} finally {
-			qtTemplateSO = null;
-
-		}
-		if (null == processName || "".equals(processName)) {
-
-			return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
-		} else {
-			return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
-
-		}
-
-	}
-
 	public void businessOwnerTabChange(int activeIndex) {
 		int previousIndex = this.getManagedBean().getActiveIndex();
 
@@ -1138,7 +1102,7 @@ public class SpecificationBackingBean extends
 			retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
 			break;
 		case 1:
-			retriveBusinessOwnerQualificationCriteri("BO");
+			retriveSupplierQualificationCriteria("BO");
 			break;
 
 		case 2:
@@ -1161,7 +1125,14 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void checktemplateSpecStatus(ScQt scqt) {
+	/**
+	 * Checktemplate spec status.Check the Template Spec is Exist or not in
+	 * Specification committee.
+	 * 
+	 * @param scqt
+	 *            (Scqt scqt).
+	 */
+	private void checktemplateSpecStatus(ScQt scqt) {
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
 
@@ -1209,7 +1180,15 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void isTemplateSpec(List<ScQtCheckList> techCheckList, ScQt scqt) {
+	/**
+	 * Checks if is template spec.
+	 * 
+	 * @param techCheckList
+	 *            (List<ScQtCheckList>)
+	 * @param scqt
+	 *            (ScQt scqt)
+	 */
+	private void isTemplateSpec(List<ScQtCheckList> techCheckList, ScQt scqt) {
 		int count = 0;
 		for (ScQtCheckList checkList : techCheckList) {
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -1238,7 +1217,16 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setTechnicalSpecCount(count);
 	}
 
-	public void isTemplateSpecStatus(List<ScQtCheckList> techCheckList,
+	/**
+	 * Checks if is template spec status.check the Technical Spec Status is
+	 * pending or completed.
+	 * 
+	 * @param techCheckList
+	 *            the tech check list
+	 * @param scqt
+	 *            the scqt
+	 */
+	private void isTemplateSpecStatus(List<ScQtCheckList> techCheckList,
 			ScQt scqt) {
 		int count = 0;
 		for (ScQtCheckList checkList : techCheckList) {
@@ -1270,7 +1258,14 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void checkFinancialSpecStatus(ScQt scqt) {
+	/**
+	 * Check financial spec status.Check the Financial Spec Status is Pending or
+	 * Completed.
+	 * 
+	 * @param scqt
+	 *            (ScQt scqt).
+	 */
+	private void checkFinancialSpecStatus(ScQt scqt) {
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (null == financialCheckList || financialCheckList.isEmpty()) {
@@ -1297,7 +1292,13 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void isFinancialSpec(List<ScQtCheckList> techCheckList) {
+	/**
+	 * Checks if is financial spec.Check Financial Specs is Existing or not.
+	 * 
+	 * @param techCheckList
+	 *            the tech check list
+	 */
+	private void isFinancialSpec(List<ScQtCheckList> techCheckList) {
 		int count = 0;
 		for (ScQtCheckList checkList : techCheckList) {
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -1322,6 +1323,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Qt checklist tab change.Event handle change the menu in Specification
+	 * Committee .accoring to index it will display menu information.
+	 * 
+	 * @param activeIndex
+	 *            (int activeIndex).
+	 */
 	public void qtChecklistTabChange(int activeIndex) {
 
 		int previousIndex = this.getManagedBean().getActiveIndex();
@@ -1646,7 +1654,7 @@ public class SpecificationBackingBean extends
 			retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
 			break;
 		case 1:
-			retriveBusinessOwnerQualificationCriteri("SC");
+			retriveSupplierQualificationCriteria("SC");
 			break;
 
 		case 2:
@@ -1829,12 +1837,18 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * To reload the data after saving...
+	 * Load prepare spec details.Event handle click on submit button to retrieve
+	 * all the business owner menus information.
+	 * 
+	 * @param qtId
+	 *            (Long qtId)
+	 * @param docType
+	 *            (String docType).
 	 */
-	public void loadPrepareSpecDetails(Long qtId, String docType) {
+	private void loadPrepareSpecDetails(Long qtId, String docType) {
 
 		retriveSpecdetails(qtId, docType);
-		retriveBusinessOwnerQualificationCriteri("BO");
+		retriveSupplierQualificationCriteria("BO");
 		retriveTechnicalSpecification();
 		retriveFinancialSpecification();
 		retriveApprovalRemarks();
@@ -1843,13 +1857,19 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * To reload the data after saving...
+	 * Load prepare spec committee details.Event handle click on submit button
+	 * to retrieve all the Specification Committee menus information.
+	 * 
+	 * @param qtId
+	 *            (Long qtId)
+	 * @param docType
+	 *            (String docType)
 	 */
-	public void loadPrepareSpecCommitteeDetails(Long qtId, String docType) {
+	private void loadPrepareSpecCommitteeDetails(Long qtId, String docType) {
 
 		retriveSpecdetails(qtId, docType);
 
-		retriveBusinessOwnerQualificationCriteri("SC");
+		retriveSupplierQualificationCriteria("SC");
 		if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 				.getManagedBean().getScQt().getEvaluationType())
 				&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
@@ -1880,9 +1900,13 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * To get the Supplier Qualification Criteria Details for BO PrepareSpec..
+	 * Retrieve supplier qualification criteria.retrieve all the Supplier
+	 * Qualification Criteria Menu information and display.
+	 * 
+	 * @param type
+	 *            (String type)
 	 */
-	public void retriveBusinessOwnerQualificationCriteri(String type) {
+	private void retriveSupplierQualificationCriteria(String type) {
 		log.info("retriveBusinessOwnerQualificationCriteri - START");
 		IQTDetailSO QtDetailsSO;
 		QuationTenderResDTO tenderResDTO;
@@ -1940,7 +1964,8 @@ public class SpecificationBackingBean extends
 						if (null == this.getManagedBean().getScQt()
 								.getScQtSupplierCriteria().getLocationLevel()) {
 							this.getManagedBean().getScQt()
-							.getScQtSupplierCriteria().setLocationLevel(new PmParameter());
+									.getScQtSupplierCriteria()
+									.setLocationLevel(new PmParameter());
 						}
 						if (null == this.getManagedBean().getScQt()
 								.getScQtSupplierCriteria().getLocationLevel()
@@ -2008,6 +2033,7 @@ public class SpecificationBackingBean extends
 						scQt.getScQtSupplierCriteria().setAllState(false);
 						if (scQt.isZonal()
 								&& !scQt.getScQtSupplierCriteria().isAllState()) {
+
 							if (null == this.getManagedBean().getScQt()
 									.getScQtSupplierCriteria()
 									.getLocationLevel().getParameterId()) {
@@ -2062,7 +2088,7 @@ public class SpecificationBackingBean extends
 				if (null != this.getManagedBean().getZoneGeneralTrees()
 						&& this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
-					retriveZonesByCircularNo();
+					retriveZonesOrSuppliersByItem();
 				}
 			}
 		} finally {
@@ -2071,6 +2097,13 @@ public class SpecificationBackingBean extends
 		log.info("retriveBusinessOwnerQualificationCriteri - END");
 	}
 
+	/**
+	 * Gets the locations list.
+	 * 
+	 * @param zoneLocation
+	 *            the zone location
+	 * @return the locations list
+	 */
 	private List<ScQtLocCriteria> getLocationsList(TreeNode zoneLocation) {
 		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
 		for (TreeNode zoneNode : zoneLocation.getChildren()) {
@@ -2110,20 +2143,53 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Removespec dtls.change Panle yes to no or no to yes delete all the
+	 * existing information.
+	 */
 	private void removespecDtls() {
 		IQTSpecSO specSo = null;
 		try {
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			if (null != this.getManagedBean().getExistingSupplierLocationList()
+					&& !this.getManagedBean().getExistingSupplierLocationList()
+							.isEmpty()) {
+				this.getManagedBean()
+						.setSupplierLocationList(
+								this.getManagedBean()
+										.getExistingSupplierLocationList());
+				List<ScQtLocCriteria> qtLocCriteriaRemoveList = this
+						.getManagedBean().getSupplierLocationList();
+				if (null != qtLocCriteriaRemoveList
+						&& !qtLocCriteriaRemoveList.isEmpty()) {
+					for (ScQtLocCriteria criteria : qtLocCriteriaRemoveList) {
+						criteria.setDeleted(true);
+					}
+				}
+				reqDTO.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
+			}
+
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			SpecificationResDTO resDTO = specSo.removeBOSpecDetails(reqDTO);
 			this.getManagedBean().setScQt(resDTO.getScQt());
+			this.getManagedBean().setExistingSupplierLocationList(
+					new ArrayList<ScQtLocCriteria>());
+			this.getManagedBean().setSupplierLocationList(
+					new ArrayList<ScQtLocCriteria>());
 		} finally {
 			specSo = null;
 		}
 	}
 
+	/**
+	 * Creates the circular item spec.Pnel item as a specfic create item as a
+	 * template spec in technical specification menu.
+	 * 
+	 * @param panelItem
+	 *            (CtPanelItem panelItem)
+	 */
 	private void createCircularItemSpec(CtPanelItem panelItem) {
 		IParameterSO parameterSo = null;
 		try {
@@ -2308,7 +2374,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void retriveTechnicalSpecification() {
+	/**
+	 * Retrive technical specification.retrieve all the technical specification
+	 * menu information and display in business owner.
+	 */
+	private void retriveTechnicalSpecification() {
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 		// this.getManagedBean().setActiveIndex(2);
@@ -2347,7 +2417,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void retriveFinancialSpecification() {
+	/**
+	 * Retrive financial specification.retrieve all the financial specification
+	 * menu information and display in business owner.
+	 */
+	private void retriveFinancialSpecification() {
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 		// this.getManagedBean().setActiveIndex(3);
@@ -2375,7 +2449,12 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void retriveApprovalRemarks() {
+	/**
+	 * Retrive approval remarks.retrieve all the approval Remarks menu
+	 * information and display in business owner.
+	 */
+
+	private void retriveApprovalRemarks() {
 		IQTDetailSO qtDetailSO;
 		QuationTenderResDTO resDto;
 		// this.getManagedBean().setActiveIndex(4);
@@ -2413,7 +2492,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void procurementCategoryCode(ScQt scQt) {
+	/**
+	 * Procurement category code.set procurement category code from scqt.
+	 * 
+	 * @param scQt
+	 *            (ScQt scQt)
+	 */
+	private void procurementCategoryCode(ScQt scQt) {
 		try {
 			PmParameter procurementCategory = scQt.getPmProcurementCategory();
 			if (null != procurementCategory
@@ -2429,9 +2514,10 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Will be called to get the both the checklists if technical is empty
+	 * Retrieve technical check list.retrieve all the Technical CheckList menu
+	 * information and display in Specification committee.
 	 */
-	public void retriveTechnicalCheckList() {
+	private void retriveTechnicalCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
 
@@ -2488,9 +2574,10 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Will be called to get financial check list if not exist in managed bean
+	 * Retrieve financial check list.retrieve all the Financial CheckList menu
+	 * information and display in Specification committee.
 	 */
-	public void retriveFinancialCheckList() {
+	private void retriveFinancialCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
 
@@ -2500,12 +2587,7 @@ public class SpecificationBackingBean extends
 		}
 
 		try {
-			/*
-			 * if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
-			 * .getManagedBean().getScQt().getEvaluationType()) &&
-			 * !this.getManagedBean().getScQt().isTechEvaluationReq()) {
-			 * this.getManagedBean().setScQtCheckSt2financeProposalList(null); }
-			 */
+
 			if (null == this.getManagedBean()
 					.getScQtCheckSt2financeProposalList()
 					|| this.getManagedBean()
@@ -2526,6 +2608,14 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Checks if is atleast one serive req.check service spec is existing or not
+	 * in Technical checklist.
+	 * 
+	 * @param checklist
+	 *            (List<ScQtCheckList> checklist)
+	 * @return true, if is atleast one serive req
+	 */
 	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
 		int i = 0;
 		if (null != checklist && !checklist.isEmpty()) {
@@ -2568,40 +2658,15 @@ public class SpecificationBackingBean extends
 		return false;
 	}
 
-	public List<ScQtCheckList> convertCheckListByDocument(
-			List<PmDocument> documentList, String docType) {
-		List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
-		try {
-			for (PmDocument pmDoc : documentList) {
-				ScQtCheckList checkList = new ScQtCheckList();
-				checkList.setTitle(pmDoc.getDocName());
-				checkList.setDefinationType(pmDoc.getDocDefinitionTypeCode());
-				checkList.setManditory(true);
-				checkList.setScoringReq(true);
-				checkList.setScQt(this.getManagedBean().getScQt());
-				// checkList.setQtScoreWeightage(new
-				// ScQtScoreWeightage());
-				checkList.setAction(pmDoc.getChecklistActionCode());
-				checkList.setPmDocument(pmDoc);
-				checkList.setDocCategory(docType);
-				PmStatus status = new PmStatus();
-				status.setStatusId(1L);
-				checkList.setPmStatus(status);
-				checkList.setChecklistSeq(pmDoc.getDisplaySeq());
-				PmStatus evalStatus = new PmStatus();
-				evalStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
-				checkList.setPmEvalStatus(evalStatus);
-				checkListList.add(checkList);
-			}
-
-		} finally {
-
-		}
-		return checkListList;
-
-	}
-
-	public ScQtScoreSetting constructScoreSetting(int settingType) {
+	/**
+	 * Construct score setting.create Score Setting Object for
+	 * Technical/Financial/Demo/Package/Item passing scores.
+	 * 
+	 * @param settingType
+	 *            (int settingType)
+	 * @return ScQtScoreSetting.
+	 */
+	private ScQtScoreSetting constructScoreSetting(int settingType) {
 		ScQtScoreSetting scQtScoreSetting = new ScQtScoreSetting();
 		scQtScoreSetting.setPassingScore(new BigDecimal(0));
 		scQtScoreSetting.setOverallFin(new BigDecimal(0));
@@ -2615,7 +2680,13 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public String retriveTechnicalScoring() {
+	/**
+	 * Retrieve technical scoring.retrieve all the Technical Scoring menu
+	 * information and display in Specification committee.
+	 * 
+	 * @return the string
+	 */
+	private String retriveTechnicalScoring() {
 		IQTSpecSO specSo = null;
 
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -2719,7 +2790,13 @@ public class SpecificationBackingBean extends
 		return "weightageGroup.xhtml";
 	}
 
-	public String retriveFinancialScoring() {
+	/**
+	 * Retrieve financial scoring.retrieve all the Financial Scoring menu
+	 * information and display in Specification committee.
+	 * 
+	 * @return the string
+	 */
+	private String retriveFinancialScoring() {
 		IQTSpecSO specSo = null;
 
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -2894,21 +2971,7 @@ public class SpecificationBackingBean extends
 									pkgOfferPrice);
 							offerPrice.add(pkgOfferPrice);
 						}
-						/*
-						 * if (null ==
-						 * this.getManagedBean().getOfferPriceItem()) {
-						 * ScQtScoreOfferPrice itemOfferPrice = new
-						 * ScQtScoreOfferPrice();
-						 * itemOfferPrice.setScQtScoreWeightage(tmpCheckList
-						 * .getQtScoreWeightage()); itemOfferPrice
-						 * .setOfferPriceType
-						 * (ParameterConst.RECOMMEND_TYPE_ITEM);
-						 * setUserDetails(itemOfferPrice);
-						 * this.getManagedBean().setOfferPriceItem(
-						 * itemOfferPrice); offerPrice.add(itemOfferPrice);
-						 * 
-						 * }
-						 */
+
 						tmpCheckList.getQtScoreWeightage()
 								.setScQtScoreOfferPrices(offerPrice);
 
@@ -2925,14 +2988,7 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().setOfferPricePackage(
 											scoreOfferPrice);
 								}
-							}/*
-							 * else if (ParameterConst.RECOMMEND_TYPE_ITEM
-							 * .equalsIgnoreCase(scoreOfferPrice
-							 * .getOfferPriceType())) { if (null ==
-							 * this.getManagedBean() .getOfferPriceItem()) {
-							 * this.getManagedBean().setOfferPriceItem(
-							 * scoreOfferPrice); } }
-							 */
+							}
 						}
 
 					}
@@ -2956,7 +3012,13 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public String retriveRecommendationDetails() {
+	/**
+	 * Retrieve recommendation details.retrieve all the Recommendation menu
+	 * information and display in Specification committee.
+	 * 
+	 * @return the string
+	 */
+	private String retriveRecommendationDetails() {
 		IQTSpecSO specSo = null;
 
 		try {
@@ -3026,7 +3088,11 @@ public class SpecificationBackingBean extends
 		return "recomondation.xhtml";
 	}
 
-	public void retriveFulfilmentDtls() {
+	/**
+	 * Retrieve fulfilment dtls.retrieve all the FulfilMentDetails menu
+	 * information and display in Specification committee.
+	 */
+	private void retriveFulfilmentDtls() {
 		IQTSpecSO specSo = null;
 
 		try {
@@ -3293,7 +3359,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void retriveDeliveryDetails() {
+	/**
+	 * Retrieve delivery details.retrieve all the Delivery Details menu
+	 * information and display in Specification committee.
+	 */
+	private void retriveDeliveryDetails() {
 		IQTSpecSO specSo = null;
 
 		try {
@@ -3361,7 +3431,11 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void retriveStateList() {
+	/**
+	 * Retrieve state list.retrieve all the state list information for Delivery
+	 * Addresses.
+	 */
+	private void retriveStateList() {
 		IStateSO stateSo = null;
 		StateResDTO resDto = null;
 		ICountrySO countrySo = null;
@@ -3391,6 +3465,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * District bystate.retrieve all the District list information by state for
+	 * Delivery Addresses.
+	 * 
+	 * @param event
+	 *            (Long stateId).
+	 */
 	public void districtBystate(AjaxBehaviorEvent event) {
 		IDistrictSO districtSo = null;
 		DistrictResDTO resDto = null;
@@ -3435,6 +3516,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Retrieve division district.retrieve all the District list information by
+	 * division for Delivery Addresses.
+	 * 
+	 * @param event
+	 *            (Long divisionId).
+	 */
 	public void retriveDivisionDistrict(AjaxBehaviorEvent event) {
 		IDistrictSO districtSo = null;
 		DistrictResDTO resDto = null;
@@ -3469,6 +3557,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * District code.set District code for Delivery Address Search.
+	 * 
+	 * @param event
+	 *            (Long districtId)
+	 */
 	public void districtCode(AjaxBehaviorEvent event) {
 		try {
 			Long districtId = (Long) event.getComponent().getAttributes()
@@ -3495,7 +3589,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void retriveMinistryList() {
+	/**
+	 * Retrieve ministry list.retrieve all the Ministry list information for
+	 * Delivery Addresses.
+	 */
+	private void retriveMinistryList() {
 		IOrgProfileSO orgProfileSO = null;
 		try {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -3514,6 +3612,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * De part ment by ministry.retrive Department List by mininstry for
+	 * Delivery Addresses.
+	 * 
+	 * @param event
+	 *            (Long ministryId).
+	 */
 	public void dePartMentByMinistry(AjaxBehaviorEvent event) {
 		IOrgProfileSO orgProfileSO = null;
 		try {
@@ -3541,6 +3646,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Ptj by depart ment.retrive Ptj List by mininstry for Delivery Addresses.
+	 * 
+	 * @param departmentd
+	 *            the departmentd
+	 */
 	public void ptjByDepartMent(Long departmentd) {
 		IOrgProfileSO orgProfileSO = null;
 		try {
@@ -3572,7 +3683,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void retriveCommitteeEndorsment() {
+	/**
+	 * Retrieve committee endorsment.retrieve all the Committee Endorsmnet menu
+	 * information and display in Specification committee.
+	 */
+	private void retriveCommitteeEndorsment() {
 		ICommitteSO committeSO = null;
 		CommitteResDTO resDTO = null;
 		IQTDetailSO qtDetailSO;
@@ -3631,11 +3746,26 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve parameter desc by type.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @returnList<PmParameterDesc>
+	 */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
 
+	/**
+	 * Gets the locations.convert Treenode to Location Criteria objects in
+	 * supplier qualification criteria.
+	 * 
+	 * @param zoneLocation
+	 *            (TreeNode zoneLocation)
+	 * @return List<ScQtLocCriteria>
+	 */
 	private List<ScQtLocCriteria> getLocations(TreeNode zoneLocation) {
 		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
 		if (zoneLocation.isLeaf()) {
@@ -3650,6 +3780,14 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Gets the zone locations. convert Treenode to TplSpecZoneLoc objects in
+	 * general information.
+	 * 
+	 * @param zoneLocation
+	 *            (TreeNode zoneLocation)
+	 * @return List<TplSpecZoneLoc>
+	 */
 	private List<TplSpecZoneLoc> getZoneLocations(TreeNode zoneLocation) {
 
 		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
@@ -3666,28 +3804,16 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
-	/*
-	 * private TplSpecZoneDtl getZone(TreeNode zoneLocation) { TplSpecZoneDtl
-	 * result = null; if (zoneLocation.getData() instanceof TplSpecZoneDtl) {
-	 * TplSpecZoneDtl locationDTO = (TplSpecZoneDtl) zoneLocation .getData(); if
-	 * (locationDTO != null) { result = locationDTO; } else { if
-	 * (zoneLocation.getChildren() != null && zoneLocation.getChildren().size()
-	 * > 0) { for (TreeNode childLocationNode : zoneLocation .getChildren()) {
-	 * result = getZone(childLocationNode); } } } } else { if
-	 * (zoneLocation.getChildren() != null && zoneLocation.getChildren().size()
-	 * > 0) { for (TreeNode childLocationNode : zoneLocation.getChildren()) {
-	 * result = getZone(childLocationNode); } } }
-	 * 
-	 * return result; }
-	 */
-
 	/**
-	 * Method to edit the zones By BO..
+	 * Edits the supplier locations.click pencil icon in supplier qualification
+	 * criteria navigate to Locations Popup.
 	 * 
 	 * @param rootZoneLocation
+	 *            (TreeNode rootZoneLocation)
 	 * @param index
+	 *            (int index)
 	 */
-	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
+	public void editSupplierLocations(TreeNode rootZoneLocation, int index) {
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
 
@@ -3759,7 +3885,7 @@ public class SpecificationBackingBean extends
 							locationLevelCode, ScQtLocCriteria.class));
 			int i = index;
 
-			this.getManagedBean().setIndex(i);
+			// this.getManagedBean().setIndex(i);
 		} finally {
 			parameterSo = null;
 		}
@@ -3768,9 +3894,16 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Edit General ZoneLocations Method
-	public void editBusinessOwnerZoneLocation(TreeNode rootZoneLocation,
-			int index) {
+	/**
+	 * Edits the zones.click pencil icon in general information menu navigate to
+	 * ZoneLocation Popup.
+	 * 
+	 * @param rootZoneLocation
+	 *            (TreeNode rootZoneLocation)
+	 * @param index
+	 *            (int index).
+	 */
+	public void editZones(TreeNode rootZoneLocation, int index) {
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
 		try {
@@ -3838,16 +3971,29 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Close listener.close popup
+	 */
 	public void closeListener() {
 		getManagedBean().setRequired(Boolean.FALSE);
 		this.getManagedBean().setZoneLocation(Boolean.FALSE);
 	}
 
+	/**
+	 * Technical spec bo validate.Validate Template spec Popup.
+	 */
 	public void technicalSpecBoValidate() {
 		getManagedBean().setRequired(Boolean.TRUE);
 	}
 
-	// Display Location level Dropdown values
+	/**
+	 * Gets the dropdown location values.display the Location level dropdown
+	 * values.
+	 * 
+	 * @param locationLevel
+	 *            the location level
+	 * @return the dropdown location values
+	 */
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
 		IOrgProfileSO orgProfile = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -3891,81 +4037,11 @@ public class SpecificationBackingBean extends
 		// return getDropdownCodeValues(committeeRole);
 	}
 
-	// Check method for supplier Locations existing
-	private List<ScQtLocCriteria> checkExistingLocation(
-			List<ScQtLocCriteria> currentLocationList,
-			List<ScQtLocCriteria> existingLocations, String locationLevelCode) {
-		List<ScQtLocCriteria> criteriaList = new ArrayList<ScQtLocCriteria>();
-		if (null == existingLocations || existingLocations.isEmpty()) {
-			if (null != currentLocationList && !currentLocationList.isEmpty())
-
-				criteriaList.addAll(currentLocationList);
-		} else {
-			if (null != currentLocationList) {
-				List<PmState> states = new ArrayList<PmState>();
-				List<PmDivision> divisions = new ArrayList<PmDivision>();
-				List<PmDistrict> districts = new ArrayList<PmDistrict>();
-				for (ScQtLocCriteria specLoc : currentLocationList) {
-					if (null != locationLevelCode
-							&& ParameterConst.LOCATION_LEVEL_STATE
-									.equalsIgnoreCase(locationLevelCode)) {
-						PmState state = specLoc.getPmState();
-						if (null != state) {
-							if (states.isEmpty()) {
-								for (ScQtLocCriteria existingLoc : existingLocations) {
-									states.add(existingLoc.getPmState());
-									criteriaList.add(existingLoc);
-								}
-							}
-
-							if (!states.contains(state)) {
-								criteriaList.add(specLoc);
-							}
-
-						}
-					} else if (null != locationLevelCode
-							&& ParameterConst.LOCATION_LEVEL_DISTRICT
-									.equalsIgnoreCase(locationLevelCode)) {
-						PmDistrict district = specLoc.getPmDistrict();
-						if (null != district) {
-							if (districts.isEmpty()) {
-								for (ScQtLocCriteria existingLoc : existingLocations) {
-									districts.add(existingLoc.getPmDistrict());
-									criteriaList.add(existingLoc);
-								}
-							}
-
-							if (!districts.contains(district)) {
-								criteriaList.add(specLoc);
-							}
-						}
-					} else if (null != locationLevelCode
-							&& ParameterConst.LOCATION_LEVEL_DIVISION
-									.equalsIgnoreCase(locationLevelCode)) {
-						PmDivision divison = specLoc.getPmDivision();
-						if (null != divison) {
-							if (divisions.isEmpty()) {
-								for (ScQtLocCriteria existingLoc : existingLocations) {
-									divisions.add(existingLoc.getPmDivision());
-									criteriaList.add(existingLoc);
-								}
-							}
-
-							if (!divisions.contains(divison)) {
-								criteriaList.add(specLoc);
-							}
-						}
-
-					}
-				}
-			}
-		}
-
-		return criteriaList;
-	}
-
-	// Supplier Locations Pop Up Method
-	public void showZoneLocationPopup() {
+	/**
+	 * Show supplier location popup.Event handle navigate to the Supplier
+	 * Locations Popup.
+	 */
+	public void showSupplierLocationPopup() {
 
 		ICountrySO countrySo = null;
 		try {
@@ -3978,18 +4054,7 @@ public class SpecificationBackingBean extends
 					.getParameterId();
 
 			if (locationLevel == null) {
-				/*
-				 * ParameterReqDTO districtReqDTO = new ParameterReqDTO();
-				 * districtReqDTO
-				 * .setParameterType(ParameterTypeConst.LOCATION_LEVEL);
-				 * districtReqDTO
-				 * .setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
-				 * ParameterResDTO districtResDTO = parameterSo
-				 * .retrieveParameterByTypeAndCode(districtReqDTO);
-				 * 
-				 * locationLevel = districtResDTO.getPmParameter()
-				 * .getParameterId();
-				 */
+
 				throw new EpException(MessageConst.ERROR_760063);
 			}
 
@@ -4006,8 +4071,7 @@ public class SpecificationBackingBean extends
 							.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 					CountryResDTO countryResDTO = countrySo
 							.retrieveCountryByCode(countryReqDTo);
-					// List<TplSpecZoneLoc> locationDTOs = new
-					// ArrayList<TplSpecZoneLoc>();
+
 					List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
 					if (getManagedBean().getZoneTrees() != null) {
 						for (TreeNode treeNode : getManagedBean()
@@ -4045,8 +4109,11 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Zone Details Pop up method
-	public void showGeneralZoneLocationPopup() {
+	/**
+	 * Show general zones popup.Event handle navigate to the ZoneLocations
+	 * Popup.
+	 */
+	public void showGeneralZonesPopup() {
 
 		ICountrySO countrySo = null;
 
@@ -4057,18 +4124,7 @@ public class SpecificationBackingBean extends
 			countrySo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 			if (locationLevel == null) {
-				/*
-				 * ParameterReqDTO districtReqDTO = new ParameterReqDTO();
-				 * districtReqDTO
-				 * .setParameterType(ParameterTypeConst.LOCATION_LEVEL);
-				 * districtReqDTO
-				 * .setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
-				 * ParameterResDTO districtResDTO = parameterSo
-				 * .retrieveParameterByTypeAndCode(districtReqDTO);
-				 * 
-				 * locationLevel = districtResDTO.getPmParameter()
-				 * .getParameterId();
-				 */
+
 				throw new EpException(MessageConst.ERROR_760063);
 			}
 
@@ -4110,8 +4166,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Supplier Qualification Criteria Locations Add Method
-	public void updateZoneLocation() {
+	/**
+	 * Update supplier locations.Event handle add Locations to Supplier
+	 * qualification criteria menu.
+	 */
+	public void updateSupplierLocations() {
 		List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
 		this.getManagedBean().setSupplierLocationList(
 				getManagedBean().getExistingSupplierLocationList());
@@ -4147,7 +4206,10 @@ public class SpecificationBackingBean extends
 		log.info("updateZoneLocation - END");
 	}
 
-	// General Zone Locations Add Method
+	/**
+	 * Update zone general location.Event handle add zones to general
+	 * information menu.
+	 */
 	public void updateZoneGeneralLocation() {
 		if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
 			this.getManagedBean().setTotalSuppliersSpecLoc(
@@ -4158,29 +4220,6 @@ public class SpecificationBackingBean extends
 		String locationLevel = this.getManagedBean().getStateCode();
 		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
-			/*
-			 * for (TreeNode treeNode : getManagedBean()
-			 * .getSelectedGeneralTreeNodes()) {
-			 * 
-			 * if (!treeNode.getParent().isSelected()) { List<TplSpecZoneLoc>
-			 * locationDTO = getZoneLocations(treeNode);
-			 * 
-			 * this.getManagedBean().getTotalSuppliersSpecLoc()
-			 * .addAll(locationDTO);
-			 * 
-			 * allNodes.addAll(locationDTO); }
-			 * 
-			 * else { List<TplSpecZoneLoc> locationDTO =
-			 * getZoneLocations(treeNode);
-			 * 
-			 * this.getManagedBean().getTotalSuppliersSpecLoc()
-			 * .addAll(locationDTO);
-			 * 
-			 * allNodes.addAll(locationDTO); }
-			 * 
-			 * }
-			 */
-
 			for (TreeNode treeNode : getManagedBean()
 					.getSelectedGeneralTreeNodes()) {
 
@@ -4298,6 +4337,15 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Check zone exists or not.
+	 * 
+	 * @param tplSpecZoneDtl
+	 *            (TplSpecZoneDtl tplSpecZoneDtl)
+	 * @param index
+	 *            (int index)
+	 * @return List<Long>
+	 */
 	private List<Long> checkZoneExistsOrNot(TplSpecZoneDtl tplSpecZoneDtl,
 			int index) {
 		List<Long> results = new ArrayList<Long>();
@@ -4322,6 +4370,14 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Check duplicate state or div or dist.
+	 * 
+	 * @param tplSpecZoneDtl
+	 *            (TplSpecZoneDtl tplSpecZoneDtl)
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 */
 	private void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl,
 			List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> stateIds = null;
@@ -4405,6 +4461,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the pm state ids.
+	 * 
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 * @return (List<Long>).
+	 */
 	private List<Long> getPmStateIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> results = new ArrayList<Long>();
 
@@ -4419,6 +4482,13 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Gets the pm division ids.
+	 * 
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 * @return (List<Long>).
+	 */
 	private List<Long> getPmDivisionIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> results = new ArrayList<Long>();
 
@@ -4433,6 +4503,13 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Gets the pm districts ids.
+	 * 
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 * @return (List<Long>).
+	 */
 	private List<Long> getPmDistrictsIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> results = new ArrayList<Long>();
 
@@ -4447,6 +4524,14 @@ public class SpecificationBackingBean extends
 		return results;
 	}
 
+	/**
+	 * Delete state or div or dist.
+	 * 
+	 * @param tplSpecZoneDtl
+	 *            (TplSpecZoneDtl tplSpecZoneDtl)
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 */
 	private void deleteStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl,
 			List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		List<Long> stateIds = null;
@@ -4523,9 +4608,10 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Method to construct spec details to save...
+	 * Prepare spec req.Prepare Data for Business Owner
+	 * save/Submit/Accept/Revise buttons.
 	 * 
-	 * @return
+	 * @return the specification req dto
 	 */
 
 	private SpecificationReqDTO prepareSpecReq() {
@@ -4543,7 +4629,7 @@ public class SpecificationBackingBean extends
 			if (scQt.isZonal()
 					&& scQt.getQtType().equals(QTConstants.OPEN_TYPE)) {
 
-				List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+				List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
 						this.getManagedBean().getZoneGeneralTrees(), null);
 
 				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
@@ -4572,36 +4658,8 @@ public class SpecificationBackingBean extends
 				setUserDetails(qtSupplierCriteria);
 				scQt.setScQtSupplierCriteria(qtSupplierCriteria);
 			}
-
-			/*
-			 * if ((!scQt.isZonal() &&
-			 * scQt.getQtType().equals(QTConstants.OPEN_TYPE) && !this
-			 * .getManagedBean().getScQt().getScQtSupplierCriteria()
-			 * .isAllState()) || (scQt.isZonal() &&
-			 * scQt.getQtType().equals(QTConstants.OPEN_TYPE) &&
-			 * this.getManagedBean().getScQt() .getEstimatedAmount().intValue()
-			 * > 500000 && !this .getManagedBean().getScQt()
-			 * .getScQtSupplierCriteria().isAllState())) {
-			 * 
-			 * List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>)
-			 * getQuoteZones( this.getManagedBean().getZoneTrees(),
-			 * qtSupplierCriteria); List<ScQtLocCriteria>
-			 * existingcheckLocCriteria = (List<ScQtLocCriteria>)
-			 * checkExistingLocation( locCriteria, this.getManagedBean()
-			 * .getExistingSupplierLocationList(), this
-			 * .getManagedBean().getLocalLevelCode()); if
-			 * (existingcheckLocCriteria != null &&
-			 * !existingcheckLocCriteria.isEmpty()) {
-			 * scQt.getScQtSupplierCriteria().setScQtLocCriteria(
-			 * existingcheckLocCriteria);
-			 * 
-			 * }
-			 * 
-			 * }
-			 */
-
 			if (!scQt.getScQtSupplierCriteria().isAllState()) {
-				List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
+				List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) convertTreeNodesToLocationCriteria(
 						this.getManagedBean().getZoneTrees(),
 						qtSupplierCriteria);
 				if (locCriteria != null && !locCriteria.isEmpty()) {
@@ -4658,7 +4716,7 @@ public class SpecificationBackingBean extends
 			}
 		} else if (scQt.isPanel()) {
 
-			List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+			List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
 					this.getManagedBean().getZoneGeneralTrees(), null);
 
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
@@ -4728,19 +4786,23 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	public void init() {
 
 	}
 
 	/**
-	 * Method to retrieve the General info tab details for the BO.
+	 * Retrive specdetails.retrive all the general menu information and display.
 	 * 
 	 * @param qtId
+	 *            the qt id
 	 * @param docType
-	 *            (To get the status we need to docType)
+	 *            the doc type
 	 */
-	public void retriveSpecdetails(Long qtId, String docType) {
+	private void retriveSpecdetails(Long qtId, String docType) {
 
 		IQTDetailSO QtDetailsSO;
 		try {
@@ -4799,19 +4861,18 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Retrive Non Panel Zone Details Method
-	public void retriveNonpanelZoneDtls(List<TplSpecZoneDtl> zonedtls) {
+	/**
+	 * Retrive nonpanel zone dtls.retrive all the zones informations and
+	 * display.
+	 * 
+	 * @param zonedtls
+	 *            the zonedtls
+	 */
+	private void retriveNonpanelZoneDtls(List<TplSpecZoneDtl> zonedtls) {
 
 		try {
 			List<ZonesBean> beans = getManagedBean().getBeans();
-			/*
-			 * QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-			 * ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			 * QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			 * tenderReqDTO.setQtId(qtId); tenderReqDTO.setDocType(docType);
-			 * QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-			 * tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
-			 */
+
 			this.getManagedBean().setCtzones(false);
 			if (isNotNullOREmpty(zonedtls)) {
 
@@ -4824,14 +4885,7 @@ public class SpecificationBackingBean extends
 						zonesBean.setTplSpecZoneLocs(zone.getTplSpecZoneLocs());
 						beans.add(zonesBean);
 					}
-					/*
-					 * if (null == this.getManagedBean()
-					 * .getTotalSuppliersSpecLoc()) {
-					 * this.getManagedBean().setTotalSuppliersSpecLoc( new
-					 * ArrayList<TplSpecLoc>()); }
-					 * this.getManagedBean().getTotalSuppliersSpecLoc()
-					 * .addAll(zone.getTplSpecZoneLocs());
-					 */
+
 					getManagedBean().getZoneGeneralTrees().add(
 							LocationSingleton.getInstance().constuctTreeNode(
 									zone, zone.getTplSpecZoneLocs()));
@@ -4845,7 +4899,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Evaluation Type set Method
+	/**
+	 * Tier event.change Evaluation Type(OneTier/TwoTier) radion button in
+	 * business owner.
+	 * 
+	 * @param event
+	 *            (String EvaluationType).
+	 */
 	public void tierEvent(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -4853,14 +4913,26 @@ public class SpecificationBackingBean extends
 	}
 
 	// Open For Change set Method
-	public void openChange(AjaxBehaviorEvent event) {
+	/**
+	 * Open for change.change open for(Bumiputra/All) radion button in business
+	 * owner.
+	 * 
+	 * @param event
+	 *            (String Openfor)
+	 */
+	public void openForChange(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().getScQt().setOpenFor(type);
 	}
 
-	// Quaptaion/Tender Type Set Method
-
+	/**
+	 * On change qt type.change qt Type(open/restricted) radion button in
+	 * business owner.
+	 * 
+	 * @param event
+	 *            ( String qttype)
+	 */
 	public void onChangeQtType(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -4882,27 +4954,23 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getScQt().setQtType(type);
 	}
 
-	// Panel Yes or no Method
-	public void panelChangeValue() {
-
-		// this.getManagedBean().getScQt().setPanel(panel);
-	}
-
+	/**
+	 * Panel conformation.change panel(Yes/No) radion button in business owner.
+	 * 
+	 * @param event
+	 *            (boolean panelType).
+	 */
 	public void panelConformation(AjaxBehaviorEvent event) {
 		// Boolean panel = this.getManagedBean().getScQt().isPanel();
 		Boolean panel = (Boolean) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().getScQt().setPanel(panel);
-		/*
-		 * if (null != this.getManagedBean().getScQt() && null !=
-		 * this.getManagedBean().getScQt().getEstimatedAmount()) {
-		 * RequestContext.getCurrentInstance().execute(
-		 * "reviceApprovalDlgs.show()");
-		 * 
-		 * }
-		 */
+
 	}
 
+	/**
+	 * Panel no conformation.change panel yes to No or No to yes Confirmation .
+	 */
 	public void panelNoConformation() {
 		Boolean panel = this.getManagedBean().getScQt().isPanel();
 		if (panel) {
@@ -4913,6 +4981,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Panel conformation delete.change panel yes to No or No to yes
+	 * Confirmation to delete Existing data.
+	 * 
+	 * @return navigate to busineess owner menu pages.
+	 */
 	public String panelConformationDelete() {
 		if (!this.getManagedBean().getScQt().isPanel()) {
 
@@ -4991,7 +5065,7 @@ public class SpecificationBackingBean extends
 								.getPanelItemId()) {
 
 					this.getManagedBean().getScQt().setZonal(false);
-					retriveZonesByCircularNo();
+					retriveZonesOrSuppliersByItem();
 					if (null != this.getManagedBean().getZoneGeneralTrees()
 							&& !this.getManagedBean().getZoneGeneralTrees()
 									.isEmpty()) {
@@ -5007,8 +5081,18 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Technical Checklist Action values Chnanged by DocDefination type method
-	public void typeChange(int index, List<ScQtCheckList> checkList) {
+	/**
+	 * Technical check list type change.change Technical Checilist Type Dropdown
+	 * in specification committee based on type you will get action values in
+	 * technical checklist
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checkList
+	 *            (List<ScQtCheckList> checkList).
+	 */
+	public void technicalCheckListTypeChange(int index,
+			List<ScQtCheckList> checkList) {
 		// Long type = (Long) event.getComponent().getAttributes().get("value");
 		ScQtCheckList list = checkList.get(index);
 
@@ -5095,8 +5179,15 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Finncial Checklist Action Dropdown Values
-	public SelectItem[] getFinChecklIstActionValues(String type) {
+	/**
+	 * Gets the fin checklist action values.display Financial Checklist action
+	 * values in dropdown.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @return SelectItem[].
+	 */
+	public SelectItem[] getFinChecklistActionValues(String type) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -5112,8 +5203,15 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
-	// Technical Checklist Defination Type DropDOwn Values
-	public SelectItem[] getTechnicalChecklIstDefValues(String type) {
+	/**
+	 * Gets the technical checklist def type values.display Technical Checklist
+	 * Type Dropdown values.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @return SelectItem[].
+	 */
+	public SelectItem[] getTechnicalChecklistDefTypeValues(String type) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -5136,6 +5234,13 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Spec title change.Event handle change Title in Template Spec.
+	 * 
+	 * @param event
+	 *            (String title)
+	 * 
+	 */
 	public void specTitleChange(AjaxBehaviorEvent event) {
 		// Boolean panel = this.getManagedBean().getScQt().isPanel();
 		String title = (String) event.getComponent().getAttributes()
@@ -5143,69 +5248,51 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getScQtChecklist().setTitle(title);
 	}
 
-	public void technicalTitleChange(int index, List<ScQtCheckList> checklist) {
+	/**
+	 * Technical check list title change.Event handle Change Title in Technical
+	 * Checklist.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checklist
+	 *            (List<ScQtCheckList> checklist)
+	 */
+	public void technicalCheckListTitleChange(int index,
+			List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
-		// checklist.remove(index);
-		List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
-		for (int i = 0; i < checklist.size() - 1; i++) {
-			ScQtCheckList anotherchecklist = checklist.get(i);
-			localCheckList.add(anotherchecklist);
-		}
-		if (localCheckList.contains(list)) {
-			list.setTitle(null);
-			/*
-			 * throw new EpException(MessageConst.ERROR_760207, new String[] {
-			 * list.getTitle() });
-			 */
 
-		}
 		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
 
 	}
 
-	public void financialTitleChange(int index, List<ScQtCheckList> checklist) {
+	/**
+	 * Financial check list title change.Event handle change title in Financial
+	 * Checklist.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checklist
+	 *            (List<ScQtCheckList> checklist)
+	 */
+	public void financialCheckListTitleChange(int index,
+			List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
-		// checklist.remove(index);
-		List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
-		for (int i = 0; i < checklist.size() - 1; i++) {
-			ScQtCheckList anotherchecklist = checklist.get(i);
-			localCheckList.add(anotherchecklist);
-		}
-		if (localCheckList.contains(list)) {
-			list.setTitle(null);
 
-			/*
-			 * throw new EpException(MessageConst.ERROR_760207, new String[] {
-			 * list.getTitle() });
-			 */
-		}
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 
 	}
 
-	// Set technical Checklist DropDown Values Set to List
-	public void checklistActionChange(int index, List<ScQtCheckList> checklist) {
-		ScQtCheckList list = checklist.get(index);
-
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SC_SUPPLIER_ACTION);
-		String parameterCode = null;
-		for (PmParameterDesc paramDesc : localParamDesc) {
-
-			if (paramDesc.getPmParameter().getParameterId()
-					.equals(Long.valueOf(list.getAction().getParameterId()))) {
-				parameterCode = paramDesc.getPmParameter().getParameterCode();
-				list.setAction(paramDesc.getPmParameter());
-				break;
-			}
-		}
-
-		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
-
-	}
-
-	// Set Financial Checklist DropDown Values Set to List
-	public void financialCheckListAction(int index,
+	/**
+	 * Technical checklist drop down action change.Event handle change Action
+	 * dropdown in Technical Checklist.
+	 * 
+	 * @param index
+	 *            the index
+	 * @param checklist
+	 *            the checklist
+	 */
+	public void technicalChecklistDropDownActionChange(int index,
 			List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
 
@@ -5220,20 +5307,47 @@ public class SpecificationBackingBean extends
 				break;
 			}
 		}
-		/*
-		 * if (null != list.getPmDocument() &&
-		 * QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
-		 * .equalsIgnoreCase(list.getPmDocument() .getDocDefinitionKey()) &&
-		 * list.isScoringReq()) { throw new
-		 * EpException(MessageConst.ERROR_760196);
-		 * 
-		 * }
-		 */
+
+		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
+
+	}
+
+	/**
+	 * Financial check list drop down action change.Event handle Change Action
+	 * Dropdown in Financial Checklist.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checklist
+	 *            (List<ScQtCheckList> checklist)
+	 */
+	public void financialCheckListDropDownActionChange(int index,
+			List<ScQtCheckList> checklist) {
+		ScQtCheckList list = checklist.get(index);
+
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+		String parameterCode = null;
+		for (PmParameterDesc paramDesc : localParamDesc) {
+
+			if (paramDesc.getPmParameter().getParameterId()
+					.equals(Long.valueOf(list.getAction().getParameterId()))) {
+				parameterCode = paramDesc.getPmParameter().getParameterCode();
+				list.setAction(paramDesc.getPmParameter());
+				break;
+			}
+		}
+
 		this.getManagedBean().getScQtCheckSt2financeProposalList()
 				.set(index, list);
 
 	}
 
+	/**
+	 * Sets the evaluation type.based on Estimated Price set Evaluation Type.
+	 * 
+	 * @param scQt
+	 *            (ScQt scQt)
+	 */
 	public void setEvaluationType(ScQt scQt) {
 
 		IParameterSO parameterSo = null;
@@ -5285,7 +5399,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Set Procurement Mode Quotation/Tender Method.
+	/**
+	 * Sets the procurement mode.based on Estimated price set Procuremnt
+	 * Mode(Quotation/Tender).
+	 * 
+	 * @param scQt
+	 *            (ScQt scQt)
+	 */
 	public void setProcurementMode(ScQt scQt) {
 		IParameterSO parameterSo = null;
 		try {
@@ -5385,7 +5505,12 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// set FulFilMent Dropdown Values Method
+	/**
+	 * Fulfilment change.changed Fulfilemnt Dropdown in specification committee.
+	 * 
+	 * @param event
+	 *            (Long fulfilmentId)
+	 */
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
 		IQTSpecSO specso = getSpecSO();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
@@ -5427,14 +5552,27 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Set FulFilmentType Parameter Code Method
-	public void getfulfilmentDtls(ScQt scQt) {
+	/**
+	 * Gets the fulfilment dtls.set Fulfilment Type parameter code in Spec
+	 * committee.
+	 * 
+	 * @param scQt
+	 *            (ScQt scQt)
+	 * 
+	 */
+	private void getfulfilmentDtls(ScQt scQt) {
 		this.getManagedBean().setFulfilmentType(
 				scQt.getFulfilmentType().getParameterCode());
 
 	}
 
-	// Set Procurement Category Parameter Code method
+	/**
+	 * Procurement change.change Procurement Category Dropdown in Business
+	 * owner.
+	 * 
+	 * @param event
+	 *            (Long procuremntCategoryId).
+	 */
 	public void procurementChange(AjaxBehaviorEvent event) {
 		try {
 			Long type = (Long) event.getComponent().getAttributes()
@@ -5455,7 +5593,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Supplier Qualification Criteria All Stats Select Or DeSelect Methos
+	/**
+	 * State change.supplier qualification criteria all states check/Uncheck
+	 * checkbox.
+	 * 
+	 * @param event
+	 *            (boolean allstates)
+	 */
 	public void stateChange(AjaxBehaviorEvent event) {
 		boolean state = (boolean) event.getComponent().getAttributes()
 				.get("value");
@@ -5479,7 +5623,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Frequency Schedule Type change Method
+	/**
+	 * Schedule type change.Event handle change Schedule
+	 * type(Schedule/Progressive payment)in Specification committee.
+	 * 
+	 * @param event
+	 *            (String ScheduleType).
+	 */
 	public void scheduleTypeChange(AjaxBehaviorEvent event) {
 		IQTSpecSO specso = getSpecSO();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
@@ -5494,7 +5644,13 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Standard or Non standard Spec Selection Method
+	/**
+	 * Template change.Change Templte Type(Standard/Non Standard)in Template
+	 * Spec.
+	 * 
+	 * @param event
+	 *            (String templateType).
+	 */
 	public void templateChange(AjaxBehaviorEvent event) {
 		String template = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -5502,6 +5658,13 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setStandardTemplate(template);
 	}
 
+	/**
+	 * Item type change.Change Item Type(product/Service) Dropdown in Template
+	 * Spec Popup.
+	 * 
+	 * @param event
+	 *            (Long itemType)
+	 */
 	public void itemTypeChange(AjaxBehaviorEvent event) {
 		Long itemId = (Long) event.getComponent().getAttributes().get("value");
 		if (null != itemId) {
@@ -5511,26 +5674,34 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Method to set the location level drop down values
-	public void selectLocation(AjaxBehaviorEvent event) {
-		Long location = (Long) event.getComponent().getAttributes()
-				.get("value");
-		if (null != location) {
-			if (this.getManagedBean().getScQt().isZonal()) {
-				if (null != this.getManagedBean().getZoneGeneralTrees()
-						&& !this.getManagedBean().getZoneGeneralTrees()
-								.isEmpty()) {
-					this.getManagedBean().setZoneGeneralTrees(null);
-					this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
-				}
+	/**
+	 * Select zone location level.change Location Level Dropdown in General
+	 * information menu.
+	 * 
+	 * @param event
+	 *            (Long locationLevelId).
+	 */
+	public void selectZoneLocationLevel(AjaxBehaviorEvent event) {
 
+		if (this.getManagedBean().getScQt().isZonal()) {
+			if (null != this.getManagedBean().getZoneGeneralTrees()
+					&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+				this.getManagedBean().setZoneGeneralTrees(null);
+				this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 			}
+
 		}
+
 	}
 
+	/**
+	 * Select supplier location.chnage Location level dropdown in Supplier
+	 * Qualification criteria menu.
+	 * 
+	 * @param event
+	 *            (Long locationLevelId).
+	 */
 	public void selectSupplierLocation(AjaxBehaviorEvent event) {
-		Long location = (Long) event.getComponent().getAttributes()
-				.get("value");
 		if (null != getManagedBean().getZoneTrees()
 				&& !getManagedBean().getZoneTrees().isEmpty()) {
 			this.getManagedBean().setSupplierLocationList(
@@ -5539,7 +5710,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// User And Auto Score Select Methods in spec committee
+	/**
+	 * Score type change.Change Checklist Score type(Auto/User) Scores in
+	 * specification committee menu.
+	 * 
+	 * @param event
+	 *            (String scoreType).
+	 */
 	public void scoreTypeChange(AjaxBehaviorEvent event) {
 		String scoreType = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -5573,7 +5750,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// User And Auto Score Select Methods in spec committee
+	/**
+	 * Companyscore type change.Change Checklist Score type(Auto/User) Scores in
+	 * specification committee menu.
+	 * 
+	 * @param event
+	 *            (String ScoreType).
+	 */
 	public void companyscoreTypeChange(AjaxBehaviorEvent event) {
 		String scoreType = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -5607,7 +5790,14 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void fromChange(AjaxBehaviorEvent event) {
+	/**
+	 * Bank statementsfrom change.change bankStatemnt checklist month dropdown
+	 * in specification committee.
+	 * 
+	 * @param event
+	 *            (String formMonth)
+	 */
+	public void bankStatementsfromChange(AjaxBehaviorEvent event) {
 		String formvalue = (String) event.getComponent().getAttributes()
 				.get("value");
 		String currentYear = this.getManagedBean().getStartYear();
@@ -5620,7 +5810,14 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void yearChange(AjaxBehaviorEvent event) {
+	/**
+	 * Bank statementsyears change.hange bankStatemnt checklist years dropdown
+	 * in specification committee.
+	 * 
+	 * @param event
+	 *            (String Year).
+	 */
+	public void bankStatementsyearsChange(AjaxBehaviorEvent event) {
 		String year = (String) event.getComponent().getAttributes()
 				.get("value");
 
@@ -5635,6 +5832,15 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Calculate bank months.set StartMonth and EndMonth for bankStatement
+	 * checklist.
+	 * 
+	 * @param j
+	 *            (int month)
+	 * @param currentYear
+	 *            (int currentYear).
+	 */
 	private void calculateBankMonths(int j, int currentYear) {
 		String Startmonth = "";
 		if (j == 0) {
@@ -5679,7 +5885,18 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setEndYear(String.valueOf(currentYear));
 	}
 
-	// While Technical Checklist click on edit will call this..
+	/**
+	 * Technical checklist edit action.click on pencil icon in technical
+	 * checklist navigate to checklist score page.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checkList
+	 *            (ScQtCheckList checkList)
+	 * @param specType
+	 *            ( String specType)
+	 * @return navigate to checklist score page.
+	 */
 	public String technicalChecklistEditAction(int index,
 			ScQtCheckList checkList, String specType) {
 		IQTSpecSO specSo = null;
@@ -5953,16 +6170,6 @@ public class SpecificationBackingBean extends
 
 						this.getManagedBean().setChecklistScoreType(null);
 						this.getManagedBean().setCompanyScoreType(null);
-						// ScQtCheckListValue checkListValue = new
-						// ScQtCheckListValue();
-						// setUserDetails(checkListValue);
-						// checkListValue.setScQtCheckList(checkList);
-
-						// checkList.setScQtCheckListValue(checkListValue);
-						/*
-						 * this.getManagedBean().setCheckListScore( new
-						 * ArrayList<ScQtCheckListScore>());
-						 */
 
 					} else {
 
@@ -6088,13 +6295,30 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Return check list scores.checklist score in ascending order.
+	 * 
+	 * @param checklistScores
+	 *            the checklist scores
+	 */
 	private void returnCheckListScores(List<ScQtCheckListScore> checklistScores) {
 
 		Collections.sort(checklistScores);
 
 	}
 
-	// All Financial Checklists Edit Actions
+	/**
+	 * Financial checklist edit action.click on pencil icon in financial
+	 * checklist navigate to checklist score page.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checkList
+	 *            (ScQtCheckList checkList)
+	 * @param specType
+	 *            (String specType)
+	 * @return navigate to checklist score page.
+	 */
 	public String financialChecklistEditAction(int index,
 			ScQtCheckList checkList, String specType) {
 		IQTSpecSO specSo = null;
@@ -6137,18 +6361,6 @@ public class SpecificationBackingBean extends
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
 
-				/*
-				 * if (this.getManagedBean().getScQt().isZonal()) {
-				 * ScQtSupplierCriteria supplierCriteria = this
-				 * .getManagedBean().getScQt() .getScQtSupplierCriteria(); if
-				 * (null != supplierCriteria && null !=
-				 * supplierCriteria.getQtZoneCriterias()) {
-				 * supplierCriteria.getQtZoneCriterias().setModified(true);
-				 * templateSpecBean.getSpecMaster().setTplSpecZone(
-				 * supplierCriteria.getQtZoneCriterias());
-				 * 
-				 * } }
-				 */
 				if (this.getManagedBean().getScQt().isZonal()
 						&& this.getManagedBean().getScQt().getQtType()
 								.equals(QTConstants.OPEN_TYPE)) {
@@ -6157,7 +6369,7 @@ public class SpecificationBackingBean extends
 					ScQtSupplierCriteria supplierCriteria = this
 							.getManagedBean().getScQt()
 							.getScQtSupplierCriteria();
-					List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+					List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
 							this.getManagedBean().getZoneGeneralTrees(), null);
 
 					if (businessOwnerZone != null
@@ -6327,17 +6539,6 @@ public class SpecificationBackingBean extends
 							|| resDTO.getCheckListScores().isEmpty()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
-
-						// ScQtCheckListValue checkListValue = new
-						// ScQtCheckListValue();
-						// setUserDetails(checkListValue);
-
-						// checkListValue.setScQtCheckList(checkList);
-						// checkList.setScQtCheckListValue(checkListValue);
-						/*
-						 * this.getManagedBean().setCheckListScore( new
-						 * ArrayList<ScQtCheckListScore>());
-						 */
 
 					} else {
 
@@ -6529,18 +6730,6 @@ public class SpecificationBackingBean extends
 
 						this.getManagedBean().setChecklistScoreType(null);
 
-						// ScQtCheckListValue checkListValue = new
-						// ScQtCheckListValue();
-						// setUserDetails(checkListValue);
-
-						// checkListValue.setScQtCheckList(checkList);
-
-						// checkList.setScQtCheckListValue(checkListValue);
-						/*
-						 * this.getManagedBean().setCheckListScore( new
-						 * ArrayList<ScQtCheckListScore>());
-						 */
-
 					} else {
 
 						List<ScQtCheckListScore> assetLiability = new ArrayList<ScQtCheckListScore>();
@@ -6718,6 +6907,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Retrive from month to manth dtls.set Frommonth and tomonth for
+	 * bankstatement checklist.
+	 * 
+	 * @param checkListValue
+	 *            (ScQtCheckListValue checkListValue).
+	 */
 	private void retriveFromMonthToManthDtls(ScQtCheckListValue checkListValue) {
 		if (null != checkListValue) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -6830,41 +7026,18 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void compareChecklistScore(int index,
-			List<ScQtCheckListScore> checklistScore) {
-		try {
-
-			if (checklistScore.size() > 1) {
-				ScQtCheckListScore current = checklistScore.get(index);
-
-				ScQtCheckListScore previous = checklistScore.get(index - 1);
-
-				if (current.getRangeFrom().intValue() > previous.getRangeTo()
-						.intValue()
-						&& current.getRangeTo().intValue() > current
-								.getRangeFrom().intValue()) {
-
-				} else {
-					/*
-					 * throw new EpException( MessageConst.ERROR_100022, new
-					 * String[] { "You Can't Provide Numbers In between" +
-					 * previous.getRangeFrom() + " and " + previous.getRangeTo()
-					 * });
-					 */
-				}
-
-			}
-		} finally {
-
-		}
-	}
-
-	public String createCommitteeSpecification() {
-		this.getManagedBean().setScqtDoc(new ScQtDoc());
-		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
-	}
-
-	// Spec Committee One tier Edit Action
+	/**
+	 * Committee spec edit action.Event handle navigate to Template Spec in
+	 * Specification committee.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checklist
+	 *            (ScQtCheckList checklist)
+	 * @param specType
+	 *            (String specType)
+	 * @return navigate to template spec.
+	 */
 	public String committeeSpecEditAction(int index, ScQtCheckList checklist,
 			String specType) {
 
@@ -6901,51 +7074,25 @@ public class SpecificationBackingBean extends
 		return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 	}
 
-	public void toChange(AjaxBehaviorEvent event) {
-		String toValue = (String) event.getComponent().getAttributes()
-				.get("value");
-		this.getManagedBean().setToMonth(toValue);
-		int n = Integer.parseInt(this.getManagedBean().getFromMonth());
-		int j = Integer.parseInt(toValue);
-		List<BankingBean> monthList = new ArrayList<BankingBean>();
-		String monthvalue = "";
-		String amount = "";
-		for (int i = n; i <= j; i++) {
-
-			monthList.add(new BankingBean(monthvalue, amount));
-		}
-		int totalamount = 0;
-		this.getManagedBean().setBankList(monthList);
-		for (int i = 0; i < this.getManagedBean().getBankList().size(); i++) {
-			BankingBean bean = (BankingBean) this.getManagedBean()
-					.getBankList().get(i);
-			totalamount = totalamount + Integer.parseInt(bean.getAmount());
-			BigDecimal b1 = new BigDecimal(totalamount);
-			BigDecimal techWeightage = new BigDecimal(this.getManagedBean()
-					.getBankList().size());
-			MathContext mc = new MathContext(4);
-			BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
-			this.getManagedBean().setTotalAmountAvg(techWeightage1);
-		}
-		this.getManagedBean().setTotalAmount(totalamount);
-
-	}
-
-	public ScQtCheckList createSpecList(String stage) {
-		// ScQtSpec scQtSpec = getManagedBean().getScQtSpec();
-		// ScQtScoreWeightage weightage = new ScQtScoreWeightage();
-		// setUserDetails(weightage);
+	/**
+	 * Creates the spec list.
+	 * 
+	 * @param stage
+	 *            the stage
+	 * @return the sc qt check list
+	 */
+	private ScQtCheckList createSpecList(String stage) {
 
 		ScQtCheckList additionProposalst1 = new ScQtCheckList();
-		// additionProposalst1.setQtScoreWeightage(weightage);
-		// additionProposalst1.sets
 
-		// additionProposalst1.setScQtSpec(scQtSpec);
 		return additionProposalst1;
 	}
 
-	// financial checklist Add Action
-	public void stageTwoFiProposalAdd() {
+	/**
+	 * Adds the financial check list.add empty row for financial checklist
+	 * datatable.
+	 */
+	public void addFinancialCheckList() {
 		IStatusSO statussO;
 		IParameterSO parameterSo = null;
 		try {
@@ -7005,8 +7152,11 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Standard Technical checklist Popup methos
-	public void stageTwoTechProposal() {
+	/**
+	 * Adds the technical compliance list.add standard checklist to technical
+	 * checklist in specification committee.
+	 */
+	public void addTechnicalComplianceList() {
 
 		try {
 
@@ -7025,6 +7175,7 @@ public class SpecificationBackingBean extends
 				boolean isRequired = false;
 				for (ScQtCheckList techStandard : compilance) {
 					if (techStandard.getTitle().equals(document.getDocName())) {
+						this.getManagedBean().setTechStandaraChecklist(true);
 						isRequired = true;
 						throw new EpException(document.getDocName() + " "
 								+ "is Existed");
@@ -7075,8 +7226,11 @@ public class SpecificationBackingBean extends
 		RequestContext.getCurrentInstance().execute("stageTwoTech.hide()");
 	}
 
-	// Technical Checklist Add method in Spec committee
-	public void stageTwoTechnicalAddProposal() {
+	/**
+	 * Adds the technical check list.add empty row for Technical checklist
+	 * datatable.
+	 */
+	public void addTechnicalCheckList() {
 		IStatusSO statussO;
 
 		try {
@@ -7123,8 +7277,11 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Financial Standard checklist slect
-	public void stageTwoFinanceCheckList() {
+	/**
+	 * Adds the financial compliance list.add standard checklist to financial
+	 * checklist datatable.
+	 */
+	public void addFinancialComplianceList() {
 		IStatusSO statussO;
 
 		try {
@@ -7148,6 +7305,7 @@ public class SpecificationBackingBean extends
 				for (ScQtCheckList techStandard : compilance) {
 					if (techStandard.getTitle().equals(document.getDocName())) {
 						isRequired = true;
+						this.getManagedBean().setFinStandaraChecklist(true);
 						throw new EpException(document.getDocName() + " "
 								+ "is Existed");
 					}
@@ -7197,8 +7355,11 @@ public class SpecificationBackingBean extends
 		RequestContext.getCurrentInstance().execute("stageTwoFinance.hide();");
 	}
 
-	// Technical Checklist Pm Documnet method
-	public void stageTwoTechcompilenceList() {
+	/**
+	 * Retrive technical standard check list.retrieve technical standard
+	 * checklist from pmdocument.
+	 */
+	public void retriveTechnicalStandardCheckList() {
 		IDocumentSO documentSo;
 		DocumentResDTO resDTO;
 		try {
@@ -7246,6 +7407,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Delivery list.delivery address zones tab change.
+	 * 
+	 * @param zoneDetail
+	 *            (TplSpecZoneDtl zoneDetail).
+	 */
 	public void deliveryList(TplSpecZoneDtl zoneDetail) {
 		try {
 			this.getManagedBean().setTplSpecZoneDtl(zoneDetail);
@@ -7256,10 +7423,19 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Zone delivery change.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void zoneDeliveryChange(TabChangeEvent event) {
 
 	}
 
+	/**
+	 * Delivery address reset.to clear all the delivery address data.
+	 */
 	public void deliveryAddressReset() {
 		try {
 			getManagedBean().setStateId(null);
@@ -7275,6 +7451,9 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Delivery accept.added delivery addresses to delivery address data table.
+	 */
 	public void deliveryAccept() {
 		IAddressSO addressSo = null;
 		try {
@@ -7446,6 +7625,12 @@ public class SpecificationBackingBean extends
 		RequestContext.getCurrentInstance().execute("deliveryAddress.hide();");
 	}
 
+	/**
+	 * Delete delivery zone.delete delivery addresses based on zonal.
+	 * 
+	 * @param deliveryZoneName
+	 *            the delivery zone name
+	 */
 	public void deleteDeliveryZone(String deliveryZoneName) {
 		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
 				.getDeliveryLocBean();
@@ -7519,6 +7704,9 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Delete delivery dtls.delete delivery addresses non zonal.
+	 */
 	public void deleteDeliveryDtls() {
 		try {
 			List<ScQtDeliveryLoc> nonzone = this.getManagedBean()
@@ -7555,7 +7743,11 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void stageTwoFincompilenceList() {
+	/**
+	 * Retrive financial standard check list.retrieve Financial Standard
+	 * checklist from pmdocument.
+	 */
+	public void retriveFinancialStandardCheckList() {
 
 		IDocumentSO documentSo;
 		DocumentResDTO resDTO;
@@ -7582,6 +7774,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Circular date comparision.circular list date comparision
+	 * 
+	 * @param enddate
+	 *            (Date CircularExpiaryDate)
+	 * @return (boolean true/false).
+	 */
 	public boolean circularDateComparision(Date enddate) {
 		boolean isDate = false;
 		Date d1 = new Date();
@@ -7597,6 +7796,13 @@ public class SpecificationBackingBean extends
 		return isDate;
 	}
 
+	/*
+	 * supplierStatusDateComparision.panel suppliers Date comparision.
+	 * 
+	 * @param enddate (Date suppliersExpiaryDate)
+	 * 
+	 * @return (boolean true/false).
+	 */
 	public boolean supplierStatusDateComparision(Date enddate) {
 		boolean isDate = false;
 		Date d1 = new Date();
@@ -7612,7 +7818,12 @@ public class SpecificationBackingBean extends
 		return isDate;
 	}
 
-	public ScQtCheckListScore createCheckList() {
+	/**
+	 * Creates the check list.create checklist score.
+	 * 
+	 * @return ScQtCheckListScore.
+	 */
+	private ScQtCheckListScore createCheckList() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
 		ScQtCheckListScore score = new ScQtCheckListScore();
 		score.setCheckList(checkList);
@@ -7620,6 +7831,12 @@ public class SpecificationBackingBean extends
 		return score;
 	}
 
+	/**
+	 * Adds the scoring.add emptty row for scoring datatable.
+	 * 
+	 * @param criteriaType
+	 *            (String criteriaType).
+	 */
 	public void addScoring(String criteriaType) {
 
 		try {
@@ -7641,11 +7858,7 @@ public class SpecificationBackingBean extends
 					.getChecklistScoreType()));
 			if (prevSpecScoring != null) {
 				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
-				/*
-				 * if (null != prevRangeTo && prevRangeTo.intValue() == 0) {
-				 * throw new EpException(
-				 * "To Value Canot be Zero Must be Greater Then from Value"); }
-				 */
+
 				if (prevRangeTo != null) {
 					if (criteriaType.equalsIgnoreCase("50")
 							|| criteriaType.equalsIgnoreCase("60")) {
@@ -7666,6 +7879,12 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the scoringyears.add empty row for scoring datatable.
+	 * 
+	 * @param CriteriaType
+	 *            (String CriteriaType).
+	 */
 	public void addScoringyears(String CriteriaType) {
 
 		try {
@@ -7686,11 +7905,6 @@ public class SpecificationBackingBean extends
 					.getCompanyScoreType()));
 			if (prevSpecScoring != null) {
 				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
-				/*
-				 * if (null != prevRangeTo && prevRangeTo.intValue() == 0) {
-				 * throw new EpException(
-				 * "To Value Canot be Zero Must be Greater Then from Value"); }
-				 */
 				if (prevRangeTo != null) {
 					score.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(1)));
 				}
@@ -7703,6 +7917,10 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the schedule details.add empty rows for frequency schedule
+	 * datatable.
+	 */
 	public void addScheduleDetails() {
 		IQTSpecSO specso = getSpecSO();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
@@ -7808,6 +8026,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Calculate start month.change start month dropdown in frequency schedule
+	 * menu.
+	 * 
+	 * @param schedule
+	 *            (ScQtSchedule schedule).
+	 */
 	public void calculateStartMonth(ScQtSchedule schedule) {
 		// event.getComponent().getAttributes().get("value");
 		List<ScQtSchedule> freqSchedule = this.getManagedBean()
@@ -7873,6 +8098,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Calculate progressive start month.change start month in progessive
+	 * payment.
+	 * 
+	 * @param progressivepayment
+	 *            (ScQtProgressivePayment progressivepayment).
+	 */
 	public void calculateProgressiveStartMonth(
 			ScQtProgressivePayment progressivepayment) {
 		// event.getComponent().getAttributes().get("value");
@@ -7893,12 +8125,26 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Calculate progressivepayment.change end month dropdown in progressive
+	 * payment.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void calculateProgressivepayment(AjaxBehaviorEvent event) {
 
 		event.getComponent().getAttributes().get("value");
 
 	}
 
+	/**
+	 * Calculate schedule percentage.calculate months difference in Frequency
+	 * schedule.
+	 * 
+	 * @param schedule
+	 *            (ScQtSchedule schedule).
+	 */
 	public void calculateSchedulePercentage(ScQtSchedule schedule) {
 		/*
 		 * String endMonth = (String) event.getComponent().getAttributes()
@@ -7961,6 +8207,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Retrive month dtls.
+	 * 
+	 * @param Start
+	 *            the start
+	 * @return the string
+	 */
 	private String retriveMonthDtls(int Start) {
 		String month = "";
 		if (Start == 0) {
@@ -7991,6 +8244,10 @@ public class SpecificationBackingBean extends
 		return month;
 	}
 
+	/**
+	 * Adds the progressive details.add empty rows for progressive payment
+	 * datatable.
+	 */
 	public void addProgressiveDetails() {
 		IQTSpecSO specso = getSpecSO();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
@@ -8050,6 +8307,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Calculate total package.calculate package Technical and Financial scores
+	 * in Recommendation Menu.
+	 * 
+	 * @param technical
+	 *            (ScQtScoreSetting package).
+	 */
 	public void calculateTotalPackage(ScQtScoreSetting technical) {
 		try {
 			if (null == technical.getOverallTechnical()) {
@@ -8068,6 +8332,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Calculate recommendtechnical score.calculate Item Technical Scores in
+	 * Recommendation Menu.
+	 * 
+	 * @param technical
+	 *            (ScQtScoreSetting technical).
+	 */
 	public void calculateRecommendtechnicalScore(ScQtScoreSetting technical) {
 		try {
 			if (null == technical.getOverallTechnical()) {
@@ -8080,19 +8351,19 @@ public class SpecificationBackingBean extends
 					+ technical.getOverallOtherTechnical().intValue();
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-			/*
-			 * if (local > this.getManagedBean().getRecommendationPackageTotal()
-			 * .intValue()) { throw new
-			 * EpException("You can't Enter More Than Total Score"); } else {
-			 * 
-			 * this.getManagedBean().setRecommendTechnicalScore( new
-			 * BigDecimal(local)); }
-			 */
+
 		} finally {
 
 		}
 	}
 
+	/**
+	 * Calculate recommend financial score.calculate Item Financial Scores in
+	 * Recommendation Menu.
+	 * 
+	 * @param financial
+	 *            (ScQtScoreSetting financial).
+	 */
 	public void calculateRecommendFinancialScore(ScQtScoreSetting financial) {
 		try {
 			if (null == financial.getOverallFin()) {
@@ -8111,6 +8382,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Compare checklist value current year.check checklist year greater than
+	 * current year.
+	 * 
+	 * @param checkListValue
+	 *            (ScQtCheckListValue checkListValue)
+	 */
 	public void compareChecklistValueCurrentYear(
 			ScQtCheckListValue checkListValue) {
 		if (null != checkListValue) {
@@ -8124,7 +8402,10 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void acceptCompanyScoring() {
+	/**
+	 * Save check list scores.save checklist scores.
+	 */
+	public void saveCheckListScores() {
 		try {
 
 			IQTSpecSO specSo;
@@ -8143,6 +8424,11 @@ public class SpecificationBackingBean extends
 			if (null != checkList && null != checkList.getScQtCheckListValue()) {
 				int year = Calendar.getInstance().get(Calendar.YEAR);
 				if (null != checkList.getScQtCheckListValue().getYear()) {
+					String checkListValueYear = checkList
+							.getScQtCheckListValue().getYear().toString();
+					if (checkListValueYear.length() < 4) {
+						throw new EpException(MessageConst.ERROR_760246);
+					}
 					if (checkList.getScQtCheckListValue().getYear().intValue() > year) {
 						throw new EpException(MessageConst.ERROR_760169);
 					}
@@ -8363,7 +8649,10 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void acceptBankScore() {
+	/**
+	 * Save bank check list scores.save bank statemnt checklist scores.
+	 */
+	public void saveBankCheckListScores() {
 		try {
 			IQTSpecSO specSo;
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -8589,7 +8878,12 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public List<SelectItem> getYearDetails() {
+	/**
+	 * Gets the month drop down values.display months in dropdown.
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getMonthDropDownValues() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 
 		try {
@@ -8615,6 +8909,11 @@ public class SpecificationBackingBean extends
 		return getManagedBean().getYearList();
 	}
 
+	/**
+	 * Gets the years display dtls.display years in dropdown.
+	 * 
+	 * @return List<SelectItem>.
+	 */
 	public List<SelectItem> getYearsDisplayDtls() {
 
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
@@ -8636,6 +8935,11 @@ public class SpecificationBackingBean extends
 		return getManagedBean().getYearsDisplayList();
 	}
 
+	/**
+	 * Gets the score details.display scoresTypes in dropdown.
+	 * 
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> getScoreDetails() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 
@@ -8652,20 +8956,21 @@ public class SpecificationBackingBean extends
 		return this.getManagedBean().getScoreTypeList();
 	}
 
-	public void handleFileUpload(FileUploadEvent event)
+	/**
+	 * Check list file upload.Event handle to upload technical and financial
+	 * checklist files.
+	 * 
+	 * @param event
+	 *            (FileUploadEvent)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void checkListFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 
 		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
-
-		/*
-		 * FacesContext.getCurrentInstance().addMessage( null, new
-		 * FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-		 * .getMessage(MessageConst.INFO_700003, new String[] {
-		 * getMessageCommon("lbl.sc.file") },
-		 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
-		 * FacesScopes().getUserLocale())));
-		 */
-
 		ScQtCheckListAttachment attachment = scQtChecklist
 				.getScQtCheckListAttachment();
 		if (null == attachment) {
@@ -8680,20 +8985,31 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * @return the selctValue
+	 * Gets the selct value.
+	 * 
+	 * @return the selct value
 	 */
 	public String getSelctValue() {
 		return selctValue;
 	}
 
 	/**
+	 * Sets the selct value.
+	 * 
 	 * @param selctValue
-	 *            the selctValue to set
+	 *            the new selct value
 	 */
 	public void setSelctValue(String selctValue) {
 		this.selctValue = selctValue;
 	}
 
+	/**
+	 * Update bpm task.Event handle Submit/Accept/Revise in Business owner.
+	 * 
+	 * @param action
+	 *            (String action)
+	 * @return navigate to acknowledgement page.
+	 */
 	public String updateBpmTask(String action) {
 
 		SpecificationReqDTO spReqDTO = null;
@@ -8762,45 +9078,36 @@ public class SpecificationBackingBean extends
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
-			/*
-			 * spReqDTO.setOutcome(action);
-			 * spReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 * spReqDTO.setPayLoad
-			 * (this.getManagedBean().getSpecificationDataType()); FacesScopes
-			 * facesScopes = new FacesScopes(); String ctx =
-			 * facesScopes.getBPMAuthenticationCtxToken();
-			 * spReqDTO.setToken(ctx); IQTSpecSO specSO = getSpecSO();
-			 * 
-			 * try { SpecificationResDTO resDTO =
-			 * specSO.updateBPMAction(spReqDTO); if (resDTO.isSuccessful()) {
-			 * ScQt qt = resDTO.getScQt(); // Code to renew the session Object..
-			 * renewSesionObject();
-			 * FacesContext.getCurrentInstance().addMessage( null, new
-			 * FacesMessage(FacesMessage.SEVERITY_INFO, null,
-			 * MessageUtils.getMessage( getMessgeConstant(action), new String[]
-			 * { getMessageCommon("lbl.sc.specification.for"), qt.getQtNo() },
-			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
-			 * FacesScopes().getUserLocale())));
-			 * 
-			 * return CommonUIConst.ACKNOWLEDGE_PAGE;
-			 * 
-			 * } } finally { specSO = null; }
-			 */
 
 		}
 		return null;
 	}
 
+	/**
+	 * Gets the spec so.
+	 * 
+	 * @return the spec so
+	 */
 	private IQTSpecSO getSpecSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 	}
 
+	/**
+	 * Paneltab change.
+	 * 
+	 * @param event
+	 *            the event
+	 */
 	public void paneltabChange(TabChangeEvent event) {
 
 	}
 
-	public void retriveZonesByCircularNo() {
+	/**
+	 * Retrive zones or suppliers by item.retrive zones or suppliers based on
+	 * item in supplier qualification criteria.
+	 */
+	public void retriveZonesOrSuppliersByItem() {
 		IPanelSupplierSO panelSupplierSO;
 		PanelSupplierResDTO resDTO = new PanelSupplierResDTO();
 		try {
@@ -8818,23 +9125,12 @@ public class SpecificationBackingBean extends
 				reqDTO.setPanelItem(this.getManagedBean().getCtPanelItem());
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			}
-			/*
-			 * this.getManagedBean().setCtZoneSupplierList( new
-			 * ArrayList<CtPanelSupplier>());
-			 * getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
-			 * this.getManagedBean().setCtPanelZones(new
-			 * ArrayList<CtPanelZone>());
-			 */
 
 			if (null != resDTO && null != resDTO.getCtPanelZones()
 					&& !resDTO.getCtPanelZones().isEmpty()) {
 
 				if (isNotNullOREmpty(resDTO.getCtPanelZones())) {
-					/* this.getManagedBean().setCtzones(true); */
-					/*
-					 * getManagedBean().setCtZoneSuppliers( new
-					 * ArrayList<TreeNode>());
-					 */
+
 					this.getManagedBean().setCtzones(true);
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
@@ -8862,12 +9158,7 @@ public class SpecificationBackingBean extends
 													tplSpecZoneDtl, states,
 													districts, null, null,
 													true, TplSpecZoneLoc.class));
-							/*
-							 * getManagedBean() .getZoneGeneralTrees()
-							 * .add(LocationSingleton .getInstance()
-							 * .constuctPanelTreeNodes( panelZones, panelZones
-							 * .getPanelZoneDtls()));
-							 */
+
 						}
 					}
 
@@ -8916,76 +9207,13 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void updateContractZoneLocation() {
-
-		if (getManagedBean().getCtZoneTreeSelectedNodes() != null) {
-			TreeNode treelocal = consturctTreeNode(getManagedBean()
-					.getCtZoneTreeSelectedNodes());
-
-			this.getManagedBean().getCtZoneSuppliers().add(treelocal);
-		}
-
-	}
-
-	public TreeNode consturctTreeNode(TreeNode[] selectedNode) {
-		Set<TreeNode> parentNodes = new HashSet<>();
-		List<CtPanelZone> zone = this.getManagedBean().getCtPanelZones();
-		CtPanelZone panelZone = null;
-		if (null == zone) {
-			zone = new ArrayList<CtPanelZone>();
-		}
-		for (TreeNode treeNode : selectedNode) {
-
-			if ("zone"
-					.equalsIgnoreCase((treeNode.getParent() != null) ? treeNode
-							.getParent().getType() : null)) {
-
-				parentNodes.add(treeNode.getParent());
-
-			}
-
-		}
-
-		TreeNode root = new DefaultTreeNode("Root", null);
-		for (TreeNode node : parentNodes) {
-			TreeNode zoneNode = new DefaultTreeNode(node.getType(),
-					node.getData(), root);
-
-			System.out.println(node.getChildCount());
-			if (node.getChildCount() > 0) {
-				for (TreeNode stateNode : node.getChildren()) {
-
-					if (stateNode.isSelected()) {
-						TreeNode state = new DefaultTreeNode(
-								stateNode.getType(), stateNode.getData(),
-								zoneNode);
-
-						for (TreeNode districtNode : stateNode.getChildren()) {
-							if (districtNode.isSelected()) {
-								new DefaultTreeNode(districtNode.getType(),
-										districtNode.getData(), state);
-
-							}
-						}
-
-					}
-
-				}
-
-			}
-
-			panelZone = (CtPanelZone) node.getData();
-			if (!zone.contains(panelZone)) {
-				zone.add(panelZone);
-			}
-			this.getManagedBean().setCtPanelZones(zone);
-
-		}
-
-		return root;
-
-	}
-
+	/**
+	 * Retrive tpl spec zone dtls.
+	 * 
+	 * @param selectedTreeNode
+	 *            the selected tree node
+	 * @return the tpl spec zone dtl
+	 */
 	private TplSpecZoneDtl retriveTplSpecZoneDtls(TreeNode selectedTreeNode) {
 		TplSpecZoneDtl tplSpecZoneDtl = null;
 		List<TreeNode> zoneNodes = selectedTreeNode.getChildren();
@@ -9052,7 +9280,14 @@ public class SpecificationBackingBean extends
 		return tplSpecZoneDtl;
 	}
 
-	public void retriveZoneBySupplier(NodeSelectEvent event) {
+	/**
+	 * Retrive supplier by zonal.retrieve suppliers based on zonal in supplier
+	 * qualification criteria.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void retriveSupplierByZonal(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		TplSpecZoneDtl tplSpecZoneDtl = null;
@@ -9097,6 +9332,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Un select panel yes treenode.Event handle to unselect panel treenodes.
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
 	public void unSelectPanelYesTreenode(NodeUnselectEvent event) {
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
@@ -9108,6 +9349,13 @@ public class SpecificationBackingBean extends
 		selectedTreeNode.setSelected(false);
 	}
 
+	/**
+	 * Retrive supplier dtls.retrive supplier information based on supplier in
+	 * supplier qualification criteria.
+	 * 
+	 * @param panelSupplier
+	 *            (CtPanelSupplier panelSupplier).
+	 */
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
 
 		this.getManagedBean().setCtpanelSupplier(panelSupplier);
@@ -9166,92 +9414,18 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void deleteS2Tech() {
-		List<ScQtCheckList> s2Technical = getManagedBean()
-				.getScQtCheckSt2techProposal();
-		List<ScQtCheckList> selects2Tenical = getManagedBean()
-				.getS2TechSelect();
-		List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
-				.getChecklistRemoveList();
-		if (null == checklistRemoveList) {
-			checklistRemoveList = new ArrayList<ScQtCheckList>();
-		}
-		checklistRemoveList.addAll(selects2Tenical);
-		if (s2Technical.size() == selects2Tenical.size()) {
-			s2Technical.clear();
-		} else {
-			for (ScQtCheckList checkList : selects2Tenical) {
-				checkList.setDeleted(true);
-				s2Technical.remove(checkList);
-			}
-		}
-		this.getManagedBean().setChecklistRemoveList(checklistRemoveList);
-	}
-
-	public void deleteS2Fin() {
-		List<ScQtCheckList> s2Fin = getManagedBean()
-				.getScQtCheckSt2financeProposalList();
-		List<ScQtCheckList> selects2Fin = getManagedBean().getS2FinSelect();
-		List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
-				.getChecklistRemoveList();
-		if (null == checklistRemoveList) {
-			checklistRemoveList = new ArrayList<ScQtCheckList>();
-		}
-		checklistRemoveList.addAll(selects2Fin);
-		if (s2Fin.size() == selects2Fin.size()) {
-			s2Fin.clear();
-		} else {
-			for (ScQtCheckList checkList : selects2Fin) {
-				checkList.setDeleted(true);
-				s2Fin.remove(checkList);
-			}
-		}
-		this.getManagedBean().setChecklistRemoveList(checklistRemoveList);
-
-	}
-
-	public void deleteScoring(String otherType) {
-		try {
-			List<ScQtCheckListScore> toBeRemoveScores = this.getManagedBean()
-					.getToBeRemoveList();
-			if (null == toBeRemoveScores) {
-				toBeRemoveScores = new ArrayList<ScQtCheckListScore>();
-			}
-
-			if (null == otherType || "".equals(otherType)) {
-				List<ScQtCheckListScore> mainScoringDtls = getManagedBean()
-						.getCheckListScore();
-				List<ScQtCheckListScore> selectchecklistScoring = this
-						.getManagedBean().getCheckListSelectScore();
-				for (ScQtCheckListScore scoring : selectchecklistScoring) {
-					mainScoringDtls.remove(scoring);
-				}
-				toBeRemoveScores.addAll(selectchecklistScoring);
-			} else if ("NoOfYears".equalsIgnoreCase(otherType)) {
-				List<ScQtCheckListScore> scoringYears = getManagedBean()
-						.getScoringForYears();
-				List<ScQtCheckListScore> selectOtherScoring = this
-						.getManagedBean().getOtherScoreSelected();
-				for (ScQtCheckListScore scoring : selectOtherScoring) {
-					scoringYears.remove(scoring);
-				}
-				toBeRemoveScores.addAll(selectOtherScoring);
-			}
-			this.getManagedBean().setToBeRemoveList(toBeRemoveScores);
-		} finally {
-
-		}
-
-	}
-
-	// Circular List Set method
+	/**
+	 * Circular list select.retrieve Panel Item List based on circular
+	 * information.
+	 * 
+	 * @param circular
+	 *            (CtCircularVer circular).
+	 */
 	public void circularListSelect(CtCircularVer circular) {
 		ICircularDetailSO circularDetailSO;
 		try {
 			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
-			// CtCircularVer circular = (CtCircularVer) selectEvent.getObject();
 			this.getManagedBean().setCtCircularVer(circular);
-
 			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.CONTRACT_MANAGEMENT,
@@ -9261,20 +9435,10 @@ public class SpecificationBackingBean extends
 				reqDTO.setQuotationTender(true);
 				CircularDetailResDTO resDTO = circularDetailSO
 						.getPanelItemsByCircularVerId(reqDTO);
-				/*
-				 * for (CtPanelItem panelItem : resDTO.getPanelItemList()) {
-				 * System.out.println(panelItem.getItemName());
-				 * this.getManagedBean().setCtPanelItem(panelItem); }
-				 */
 				this.getManagedBean().setCircularExpDate(circular.getEndDate());
 				this.getManagedBean().setCirCularNo(circular.getCircularNo());
 				this.getManagedBean().setCircularName(circular.getName());
 				this.getManagedBean().setCircularType(circular.getDocType());
-
-				// this.getManagedBean().setCircularType(getParameterDesc(circular.getCtPanelItems().get(0).getItemCategoryId()));
-				// System.out.println("=======circular type==="+
-				// this.getManagedBean().getCircularType());
-
 				this.getManagedBean().setPanelItemList(
 						resDTO.getPanelItemList());
 			}
@@ -9285,9 +9449,13 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Panel Items Set Method
-
-	public void panelListSelect(SelectEvent selectEvent) {
+	/**
+	 * Panel item select.Event handle to select panel Item in business owner.
+	 * 
+	 * @param selectEvent
+	 *            (CtPanelItem ctPanelItem).
+	 */
+	public void panelItemSelect(SelectEvent selectEvent) {
 		CtPanelItem ctPanelItem = (CtPanelItem) selectEvent.getObject();
 		List<CtPanelItem> panelList = this.getManagedBean()
 				.getSelectpanelItem();
@@ -9303,8 +9471,10 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Technical weightage Sum
-	public void techWeightageSum() {
+	/**
+	 * Tech weightage sum.calculate technical scoring weightage.
+	 */
+	private void techWeightageSum() {
 		try {
 			int total = 0;
 			List<ScQtCheckList> weightageList = this.getManagedBean()
@@ -9329,14 +9499,7 @@ public class SpecificationBackingBean extends
 				if (total > 100) {
 					throw new EpException(MessageConst.ERROR_760148);
 				}
-				// BigDecimal b1 = new BigDecimal(total);
-				// BigDecimal techWeightage = new BigDecimal(100);
-				// MathContext mc = new MathContext(4);
-				// BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
-				/*
-				 * this.getManagedBean().setTechnicalWeightageScore( new
-				 * BigDecimal(total));
-				 */
+
 			}
 		} finally {
 
@@ -9344,6 +9507,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Tech scoring check list.Event handle change scores in technical scoring
+	 * Menu.
+	 * 
+	 * @param checkList
+	 *            (ScQtCheckList checkList)
+	 */
 	public void techScoringCheckList(ScQtCheckList checkList) {
 		techScoreSum();
 		techWeightageSum();
@@ -9365,6 +9535,13 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Fin scoring check list.Event handle change scores in Financial scoring
+	 * Menu.
+	 * 
+	 * @param checkList
+	 *            (ScQtCheckList checkList).
+	 */
 	public void finScoringCheckList(ScQtCheckList checkList) {
 		finScoreSum();
 		finWeightageSum();
@@ -9386,8 +9563,10 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Technical Scoring sum
-	public void techScoreSum() {
+	/**
+	 * Tech score sum.calculate technical scoring sum.
+	 */
+	private void techScoreSum() {
 		try {
 			int total = 0;
 			List<ScQtCheckList> weightageList = this.getManagedBean()
@@ -9416,8 +9595,10 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Financial Scoring Sum
-	public void finScoreSum() {
+	/**
+	 * Fin score sum.calculate financial score sum.
+	 */
+	private void finScoreSum() {
 		try {
 			int total = 0;
 			List<ScQtCheckList> weightageList = this.getManagedBean()
@@ -9459,8 +9640,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Financial Weightage Calculation
-	public void financialWeightageCalculate() {
+	/**
+	 * Financial weightage calculate.calculate financial weightage in financial
+	 * scoring menu.
+	 */
+	private void financialWeightageCalculate() {
 		if (null != this.getManagedBean().getFinancialScoreSetting()
 				&& this.getManagedBean().getFinancialScoreSetting()
 						.isWeightageReq()
@@ -9505,7 +9689,11 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void technicalWeightageCalculate() {
+	/**
+	 * Technical weightage calculate.calculate technical weightage in technical
+	 * scoring menu.
+	 */
+	private void technicalWeightageCalculate() {
 		if (null != this.getManagedBean().getTechnicalScoreSetting()
 				&& this.getManagedBean().getTechnicalScoreSetting()
 						.isWeightageReq()
@@ -9543,8 +9731,10 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Finacial Scoring Weightage Sum
-	public void finWeightageSum() {
+	/**
+	 * Fin weightage sum.calculate Financial weightage.
+	 */
+	private void finWeightageSum() {
 		try {
 			int total = 0;
 			List<ScQtCheckList> weightageList = this.getManagedBean()
@@ -9570,10 +9760,6 @@ public class SpecificationBackingBean extends
 				if (total > 100) {
 					throw new EpException(MessageConst.ERROR_760148);
 				}
-				// BigDecimal b1 = new BigDecimal(total);
-				// BigDecimal techWeightage = new BigDecimal(100);
-				// MathContext mc = new MathContext(4);
-				// BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
 
 			}
 		} finally {
@@ -9582,6 +9768,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Spec offerprice package from varieance.check offer price from varienace
+	 * null or less than zero.
+	 * 
+	 * @param (ScQtScoreOfferPrice offerPrice).
+	 */
 	public void specOfferpricePackageFromVarieance(
 			ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
@@ -9594,6 +9786,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Spec offerprice package to varieance.check offer price to varienace null
+	 * or less than zero.
+	 * 
+	 * @param (ScQtScoreOfferPrice offerPrice).
+	 */
 	public void specOfferpricePackageToVarieance(ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
 			if (null == offerPrice.getToVariance()
@@ -9605,6 +9803,14 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Spec offerprice package below score.check offer price belowScore null or
+	 * less than zero.
+	 * 
+	 * @param (ScQtScoreOfferPrice offerPrice).
+	 * 
+	 * 
+	 */
 	public void specOfferpricePackageBelowScore(ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
 			if (null == offerPrice.getBelowScore()
@@ -9616,6 +9822,14 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Spec offerprice package above score.check offer price aboveScore null or
+	 * less than zero.
+	 * 
+	 * @param (ScQtScoreOfferPrice offerPrice).
+	 * 
+	 * 
+	 */
 	public void specOfferpricePackageAboveScore(ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
 
@@ -9627,6 +9841,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Check technical passing score.check technical passing score null or less
+	 * than zero or greater than hundred.
+	 * 
+	 * @param technicalScoreSetting
+	 *            (ScQtScoreSetting technicalScoreSetting).
+	 */
 	public void checkTechnicalPassingScore(
 			ScQtScoreSetting technicalScoreSetting) {
 		if (null != technicalScoreSetting) {
@@ -9656,6 +9877,15 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Check financial passing score.check financial passing score null or less
+	 * than zero or greater than hundred.
+	 * 
+	 * @param financialScoreSetting
+	 *            (ScQtScoreSetting financialScoreSetting).
+	 * 
+	 * 
+	 */
 	public void checkFinancialPassingScore(
 			ScQtScoreSetting financialScoreSetting) {
 		if (null != financialScoreSetting) {
@@ -9687,6 +9917,14 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Check demo passing score..check technical demo passing score null or less
+	 * than zero or greater than hundred.
+	 * 
+	 * @param demoScoreSetting
+	 *            (ScQtScoreSetting demoScoreSetting).
+	 * 
+	 */
 	public void checkDemoPassingScore(ScQtScoreSetting demoScoreSetting) {
 		if (null != demoScoreSetting) {
 
@@ -9704,44 +9942,60 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * @return the searchCircular
+	 * Gets the search circular.
+	 * 
+	 * @return the search circular
 	 */
 	public IPagingDataModel<CtCircularVer> getSearchCircular() {
 		return searchCircular;
 	}
 
 	/**
+	 * Sets the search circular.
+	 * 
 	 * @param searchCircular
-	 *            the searchCircular to set
+	 *            the new search circular
 	 */
 	public void setSearchCircular(IPagingDataModel<CtCircularVer> searchCircular) {
 		this.searchCircular = searchCircular;
 	}
 
 	// Search circular Details Method.
+	/**
+	 * Search circular list.
+	 */
 	public void searchCircularList() {
 		searchCircular.reloadData();
 		this.getManagedBean().setCircularVer(null);
-		// this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
-		// this.getManagedBean().setCtPanelItem(null);
-		// this.getManagedBean().setCircularExpDate(new Date());
-		// this.getManagedBean().setCirCularNo(null);
-		// this.getManagedBean().setCircularName(null);
-		// this.getManagedBean().setCircularType(null);
 
 	}
 
-	// ct Circular Details paging Data Model
+	/**
+	 * The Class SearchCircularPagingDataModel.search circular paging data
+	 * model.
+	 */
 	private class SearchCircularPagingDataModel extends
 			PagingDataModel<CtCircularVer> {
+
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search circular paging data model.
+		 */
 		public SearchCircularPagingDataModel() {
 
 			super("circularList");
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
 		public ISearchResultBean<CtCircularVer> pageChangeListener(
 				ISearchBean<CtCircularVer> searchBean) {
 			ICircularSO circularSO;
@@ -9823,17 +10077,23 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	// Search template Spec
-	public void searchScqtDocAction() {
+	/**
+	 * Search template spec action.Event handle search template spec.
+	 */
+	public void searchTemplateSpecAction() {
 		templateSpecCreate.reloadData();
 	}
 
-	// Search Delivery Address
+	/**
+	 * Search delivery address.Event handle search delivery addresses.
+	 */
 	public void searchDeliveryAddress() {
 		searchDeliveryAddress.reloadData();
 	}
 
-	// Reset Template Spec
+	/**
+	 * Reset template.Event handle to clear all the template spec data.
+	 */
 	public void resetTemplate() {
 		getManagedBean().setSpecName(null);
 		// getManagedBean().setStandardTemplate(null);
@@ -9844,17 +10104,32 @@ public class SpecificationBackingBean extends
 		getManagedBean().setPublishDate(null);
 	}
 
-	// Template Spec Paging Data Model
+	/**
+	 * The Class CreateTemplateSpecPagingDataModel.search Template spec paging
+	 * data model.
+	 */
 	private class CreateTemplateSpecPagingDataModel extends
 			PagingDataModel<TplSpecMaster> {
+
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new creates the template spec paging data model.
+		 */
 		public CreateTemplateSpecPagingDataModel() {
 
 			super("createList", false);
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
 		public ISearchResultBean<TplSpecMaster> pageChangeListener(
 				ISearchBean<TplSpecMaster> searchBean) {
 			ITemplateSpecSO qtTemplateSO;
@@ -9982,17 +10257,32 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Delivery Details Paging Data Model
+	/**
+	 * The Class DeliveryPagingDataModel.search delivery addresses paging data
+	 * model.
+	 */
 	private class DeliveryPagingDataModel extends
 			PagingDataModel<PmAddressType> {
+
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new delivery paging data model.
+		 */
 		public DeliveryPagingDataModel() {
 
 			super("deliveryAddress");
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
 		public ISearchResultBean<PmAddressType> pageChangeListener(
 				ISearchBean<PmAddressType> searchBean) {
 			IAddressSO addressSO;
@@ -10075,15 +10365,19 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * @return the templateSpecCreate
+	 * Gets the template spec create.
+	 * 
+	 * @return the template spec create
 	 */
 	public IPagingDataModel<TplSpecMaster> getTemplateSpecCreate() {
 		return templateSpecCreate;
 	}
 
 	/**
+	 * Sets the template spec create.
+	 * 
 	 * @param templateSpecCreate
-	 *            the templateSpecCreate to set
+	 *            the new template spec create
 	 */
 	public void setTemplateSpecCreate(
 			IPagingDataModel<TplSpecMaster> templateSpecCreate) {
@@ -10091,53 +10385,69 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * @return the currentTab
+	 * Gets the current tab.
+	 * 
+	 * @return the current tab
 	 */
 	public int getCurrentTab() {
 		return currentTab;
 	}
 
 	/**
+	 * Sets the current tab.
+	 * 
 	 * @param currentTab
-	 *            the currentTab to set
+	 *            the new current tab
 	 */
 	public void setCurrentTab(int currentTab) {
 		this.currentTab = currentTab;
 	}
 
 	/**
-	 * @return the outputTab
+	 * Gets the output tab.
+	 * 
+	 * @return the output tab
 	 */
 	public int getOutputTab() {
 		return outputTab;
 	}
 
 	/**
+	 * Sets the output tab.
+	 * 
 	 * @param outputTab
-	 *            the outputTab to set
+	 *            the new output tab
 	 */
 	public void setOutputTab(int outputTab) {
 		this.outputTab = outputTab;
 	}
 
 	/**
-	 * @return the searchDeliveryAddress
+	 * Gets the search delivery address.
+	 * 
+	 * @return the search delivery address
 	 */
 	public IPagingDataModel<PmAddressType> getSearchDeliveryAddress() {
 		return searchDeliveryAddress;
 	}
 
 	/**
+	 * Sets the search delivery address.
+	 * 
 	 * @param searchDeliveryAddress
-	 *            the searchDeliveryAddress to set
+	 *            the new search delivery address
 	 */
 	public void setSearchDeliveryAddress(
 			IPagingDataModel<PmAddressType> searchDeliveryAddress) {
 		this.searchDeliveryAddress = searchDeliveryAddress;
 	}
 
-	/**
-	 * To redirect BO prepareSpec Screen..
+	/*
+	 * 
+	 * 
+	 * 
+	 * preRenderView().Event handle navigate to business owner and specification
+	 * committee screens.
 	 */
 	public void preRenderView() {
 
@@ -10263,7 +10573,12 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Prepare Qt Checklist Data Construct method
+	/**
+	 * Construct spec committe dtls.prepare data for specification committee
+	 * save/submit/accept/Revise.
+	 * 
+	 * @return SpecificationReqDTO
+	 */
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
@@ -10297,24 +10612,9 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> technicalScoring = this.getManagedBean()
 				.getTechnicalScoring();
 		if (technicalScoring != null && !technicalScoring.isEmpty()) {
-			// List<ScQtCheckList> localTechScoring=techCheckList;
-			// techCheckList=null;
-			/*
-			 * for (ScQtCheckList scoringCheckList : technicalScoring) { for
-			 * (ScQtCheckList technicalCheckList : techCheckList) { if
-			 * (technicalCheckList.getTitle().equalsIgnoreCase(
-			 * scoringCheckList.getTitle())) { if (null !=
-			 * scoringCheckList.getQtScoreWeightage() &&
-			 * scoringCheckList.getQtScoreWeightage() .getScore().intValue() >
-			 * 0) { technicalCheckList .setQtScoreWeightage(scoringCheckList
-			 * .getQtScoreWeightage()); } } }
-			 * 
-			 * }
-			 */
+
 			techWeightageSum();
 
-			// localChecklist.addAll(technicalScoring);
-			// scQt.setScQtChecklists(localChecklist);
 		}
 		List<ScQtCheckList> financialScoring = this.getManagedBean()
 				.getFinancialScoring();
@@ -10363,23 +10663,6 @@ public class SpecificationBackingBean extends
 				}
 			}
 
-			/*
-			 * for (ScQtCheckList financialSpecs : financialScoring) { for
-			 * (ScQtCheckList financialList : financialCheckList) { if
-			 * (financialList.getTitle().equalsIgnoreCase(
-			 * financialSpecs.getTitle()) &&
-			 * !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-			 * .equalsIgnoreCase(financialSpecs .getDefinationType()
-			 * .getParameterCode())) { if (null !=
-			 * financialSpecs.getQtScoreWeightage() &&
-			 * financialSpecs.getQtScoreWeightage() .getScore().intValue() > 0)
-			 * { financialList.setQtScoreWeightage(financialSpecs
-			 * .getQtScoreWeightage()); } } }
-			 * 
-			 * }
-			 */
-			// localChecklist.addAll(financialScoring);
-			// scQt.setScQtChecklists(localChecklist);
 		}
 
 		if (techCheckList != null && !techCheckList.isEmpty()) {
@@ -10816,6 +11099,11 @@ public class SpecificationBackingBean extends
 		return reqDTO;
 	}
 
+	/**
+	 * Gets the to be remove list.remove technical and financial checklists.
+	 * 
+	 * @return List<ScQtCheckList>
+	 */
 	private List<ScQtCheckList> getToBeRemoveList() {
 		List<ScQtCheckList> toBeRemoveList = new ArrayList<ScQtCheckList>();
 
@@ -10834,8 +11122,11 @@ public class SpecificationBackingBean extends
 		return toBeRemoveList;
 	}
 
-	// Prepare Qt Checklist Save related method
-	public void validatePrepareQtChecklist() {
+	/**
+	 * Validate prepare qt checklist.validate specification committee menus
+	 * data.
+	 */
+	private void validatePrepareQtChecklist() {
 		try {
 			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -10901,7 +11192,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri("SC");
+				retriveSupplierQualificationCriteria("SC");
 
 				break;
 			case 2:
@@ -10955,19 +11246,6 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
-
-				/*
-				 * if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(resDTO
-				 * .getScQt().getEvaluationType()) &&
-				 * !resDTO.getScQt().isTechEvaluationReq()) {
-				 * retriveTechnicalSpecification(); } else if
-				 * (QTConstants.EVALUATION_TWO_TIER
-				 * .equalsIgnoreCase(resDTO.getScQt().getEvaluationType()) ||
-				 * (QTConstants.EVALUATION_ONE_TIER
-				 * .equalsIgnoreCase(resDTO.getScQt() .getEvaluationType()) &&
-				 * resDTO .getScQt().isTechEvaluationReq())) {
-				 * retriveTechnicalCheckList(); }
-				 */
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
 				retriveFinancialCheckList();
 				break;
@@ -11322,16 +11600,16 @@ public class SpecificationBackingBean extends
 		finally {
 
 		}
-		/*
-		 * this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
-		 * this
-		 * .getManagedBean().setScQtCheckSt2techProposal(techchecklistScore);
-		 * this.getManagedBean().setFinancialScoring(financialScoring);
-		 * this.getManagedBean().setTechnicalScoring(technicalScoringList);
-		 */
-
 	}
 
+	/**
+	 * Spec committe bpm task.Event handle Submit/Revise/Accept in specification
+	 * committee.
+	 * 
+	 * @param action
+	 *            (String action)
+	 * @return navigate to acknowledgement page.
+	 */
 	public String specCommitteBpmTask(String action) {
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -11402,12 +11680,24 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Select zone tree node.Event handle check non panel Treenodes.
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode)
+	 */
 	public void selectZoneTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(true);
 	}
 
+	/**
+	 * Un select zone tree node.Event handle uncheck Nonpanel treeNodes.
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
 	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
@@ -11415,7 +11705,8 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * To delete the selected TreeNode from list..
+	 * Delete panel tree node.Event handle delete zones from panel supplier
+	 * qualification criteria.
 	 */
 	public void deletePanelTreeNode() {
 
@@ -11450,7 +11741,8 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * To delete the selected TreeNode from list..
+	 * Delete tree node.Event handle delete NonPanel Zones from General
+	 * information.
 	 */
 	public void deleteTreeNode() {
 
@@ -11466,13 +11758,20 @@ public class SpecificationBackingBean extends
 					.getScQtSupplierCriteria()
 					.getQtZoneCriterias()
 					.setTplSpecZoneDtls(
-							getZoneBusinessOwnerLocations(rootTrees, zoneDtl));
+							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
 		}
 		this.getManagedBean().setIndex(-1);
 
 	}
 
-	public List<TreeNode> deleteZonesTreeNodes(List<TreeNode> rootTrees) {
+	/**
+	 * Delete zones tree nodes.
+	 * 
+	 * @param rootTrees
+	 *            the root trees
+	 * @return the list
+	 */
+	private List<TreeNode> deleteZonesTreeNodes(List<TreeNode> rootTrees) {
 		TplSpecZoneDtl tplSpecZoneDtl = null;
 		List<TreeNode> removedList = new ArrayList<TreeNode>();
 		if (rootTrees != null) {
@@ -11522,6 +11821,13 @@ public class SpecificationBackingBean extends
 		return removedList;
 	}
 
+	/**
+	 * Delete zone child tree nodes.
+	 * 
+	 * @param treeNodes
+	 *            the tree nodes
+	 * @return the list
+	 */
 	private List<TreeNode> deleteZoneChildTreeNodes(List<TreeNode> treeNodes) {
 		List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
 		if (treeNodes != null) {
@@ -11548,12 +11854,26 @@ public class SpecificationBackingBean extends
 		return nodesToRemoved;
 	}
 
+	/**
+	 * Select location tree node.Event handle check treeNode Locations in
+	 * Supplier qualification criteria .
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
 	public void selectLocationTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(true);
 	}
 
+	/**
+	 * Un select location tree node.Event handle Uncheck treeNode Locations in
+	 * Supplier qualification criteria .
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
 	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
 
@@ -11561,7 +11881,8 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * To delete the selected TreeNode from list..
+	 * Delete supplier qualification tree node.Event handle delete Locations
+	 * from supplier qualification criteria.
 	 */
 	public void deleteSupplierQualificationTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
@@ -11578,7 +11899,8 @@ public class SpecificationBackingBean extends
 					.getScQt()
 					.getScQtSupplierCriteria()
 					.setScQtLocCriteria(
-							getQuoteZones(rootTrees, supplierCriteria));
+							convertTreeNodesToLocationCriteria(rootTrees,
+									supplierCriteria));
 			for (ScQtLocCriteria locCriteria : this.getManagedBean().getScQt()
 					.getScQtSupplierCriteria().getScQtLocCriteria()) {
 				// Criteria.add(locCriteria);
@@ -11594,7 +11916,13 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setIndex(-1);
 	}
 
-	public void deleteTreeNodes(List<TreeNode> rootTrees) {
+	/**
+	 * Delete tree nodes.
+	 * 
+	 * @param rootTrees
+	 *            the root trees
+	 */
+	private void deleteTreeNodes(List<TreeNode> rootTrees) {
 		if (rootTrees != null) {
 			for (int row = 0; row < rootTrees.size(); row++) {
 				TreeNode rootTree = rootTrees.get(row);
@@ -11604,7 +11932,7 @@ public class SpecificationBackingBean extends
 						ScQtLocCriteria loccriteria = (ScQtLocCriteria) zoneTree
 								.getData();
 						rootTrees.remove(row--);
-						deleteSupplierLocacriteria(loccriteria);
+						// deleteSupplierLocacriteria(loccriteria);
 					} else {
 						deleteChildTreeNodes(zoneTree.getChildren());
 
@@ -11617,6 +11945,12 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete child tree nodes.
+	 * 
+	 * @param treeNodes
+	 *            the tree nodes
+	 */
 	private void deleteChildTreeNodes(List<TreeNode> treeNodes) {
 		if (treeNodes != null) {
 			List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
@@ -11646,30 +11980,16 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	private void deleteSupplierLocacriteria(ScQtLocCriteria locCriteria) {
-		List<ScQtLocCriteria> existingLocation = this.getManagedBean()
-				.getExistingSupplierLocationList();
-		if (null != existingLocation && !existingLocation.isEmpty()) {
-			List<ScQtLocCriteria> exchangeLoccriteria = new ArrayList<ScQtLocCriteria>();
-			for (int i = 0; i < existingLocation.size(); i++) {
-				ScQtLocCriteria locallocCriteria = (ScQtLocCriteria) existingLocation
-						.get(i);
-				if (!locallocCriteria.getSpecLocId().equals(
-						locCriteria.getSpecLocId())) {
-					exchangeLoccriteria.add(locallocCriteria);
-
-				}
-			}
-
-			/*
-			 * this.getManagedBean().setExistingSupplierLocationList(
-			 * exchangeLoccriteria);
-			 */
-
-		}
-
-	}
-
+	/**
+	 * Category codes update.Update category code to Category codes list.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param categoryList
+	 *            (List<ScQtCategory> categoryList)
+	 * @param categoryL3
+	 *            (PmCategoryL3 categoryL3).
+	 */
 	public void categoryCodesUpdate(int index, List<ScQtCategory> categoryList,
 			PmCategoryL3 categoryL3) {
 		ICategoryCodeSO categoryCodeSo;
@@ -11763,8 +12083,14 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// Ministry Spec Approval Method
-
+	/**
+	 * Ministry specgpki sign action.click on submit in ministry spec committee
+	 * approval.
+	 * 
+	 * @param digiSign
+	 *            ((PmDigiSign digiSign)
+	 * @return navigate to acknowledgement page.
+	 */
 	public String ministrySpecgpkiSignAction(PmDigiSign digiSign) {
 		SpecificationResDTO resDTO = prepareSpecChirPersonRequest(this
 				.getManagedBean().getLocalOutCome(), digiSign);
@@ -11794,6 +12120,15 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Prepare spec chir person request.
+	 * 
+	 * @param action
+	 *            the action
+	 * @param pmDigiSign
+	 *            the pm digi sign
+	 * @return the specification res dto
+	 */
 	private SpecificationResDTO prepareSpecChirPersonRequest(String action,
 			PmDigiSign pmDigiSign) {
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
@@ -11843,10 +12178,11 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Method to return the docType..
+	 * Gets the doc type by task name.
 	 * 
 	 * @param taskName
-	 * @return
+	 *            the task name
+	 * @return the doc type by task name
 	 */
 	private String getDocTypeByTaskName(String taskName) {
 		String DOC_TYPE = QTConstants.DOCTYPE_QT;
@@ -11854,8 +12190,10 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Method to create the supplier criteria object and zonecriteria and
-	 * loccriteria based on radio selection.
+	 * Zone radio change.change zone location level radio in business owner.
+	 * 
+	 * @param event
+	 *            (boolean zoneLocationlevel).
 	 */
 	public void zoneRadioChange(AjaxBehaviorEvent event) {
 		Boolean isZonal = (Boolean) event.getComponent().getAttributes()
@@ -11894,28 +12232,14 @@ public class SpecificationBackingBean extends
 
 	}
 
-	// View Circular Attachment Download Method
-	public void downloadCircularDtls() throws IOException {
-		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
-		itemList = new ArrayList<CtPanelItem>();
-		itemList.add(this.getManagedBean().getCtPanelItem());
-
-		String filePath = this.getManagedBean().getCtCircularVer()
-				.getCircularFilePath();
-		String fileName = this.getManagedBean().getCtCircularVer()
-				.getCircularFileName();
-
-		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
-		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		actualFilePath.append(filePath);
-
-		downloadFile(actualFilePath.toString(), fileName);
-		this.getManagedBean().setSelectpanelItem(itemList);
-	}
-
-	// Spec Item Type DropDOwn Values method
+	/**
+	 * Gets the role type dropdown values.display item type(product/Service)in
+	 * template spec dropdown.
+	 * 
+	 * @param itemType
+	 *            (String itemType)
+	 * @return SelectItem[] .
+	 */
 	public SelectItem[] getRoleTypeDropdownValues(String itemType) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -11935,7 +12259,14 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
-	// Spec Item Type DropDOwn Values method
+	/**
+	 * Gets the quotation tendervalues.display quotation/Tender
+	 * Type(open/Restricted) radio values in business owner.
+	 * 
+	 * @param quotationTenderType
+	 *            ((String quotationTenderType)
+	 * @return SelectItem[].
+	 */
 	public SelectItem[] getQuotationTendervalues(String itemType) {
 
 		// ISearchBean<PmParameterDesc> searchBean = new
@@ -11973,7 +12304,14 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
-	// Local Goods DisPlay List Values Method
+	/**
+	 * Gets the local goods radio values.display Local goods (Local/Import)
+	 * radio values in template spec.
+	 * 
+	 * @param itemType
+	 *            (String itemType)
+	 * @return SelectItem[].
+	 */
 	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
 
 		List<String> types = new ArrayList<String>();
@@ -12005,10 +12343,21 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Gets the text before sign.
+	 * 
+	 * @return the text before sign
+	 */
 	public String getTextBeforeSign() {
 		return textBeforeSign;
 	}
 
+	/**
+	 * Sets the text before sign.Event handle set gpki data.
+	 * 
+	 * @param textBeforeSign
+	 *            (String textBeforeSign).
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		// Temp : QtNumber + userId
 		StringBuilder sb = new StringBuilder();
@@ -12017,6 +12366,15 @@ public class SpecificationBackingBean extends
 		this.textBeforeSign = sb.toString();
 	}
 
+	/**
+	 * Update spec committe dtls.
+	 * 
+	 * @param action
+	 *            the action
+	 * @param digiSign
+	 *            the digi sign
+	 * @return the specification res dto
+	 */
 	public SpecificationResDTO updateSpecCommitteDtls(String action,
 			PmDigiSign digiSign) {
 		ScQt scQt = this.getManagedBean().getScQt();
@@ -12087,6 +12445,11 @@ public class SpecificationBackingBean extends
 		return resDTO;
 	}
 
+	/**
+	 * Cancel qt.cancel quotation tender.
+	 * 
+	 * @return navigate to acknowledgement page.
+	 */
 	public String cancelQt() {
 		SpecificationReqDTO spReqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
@@ -12150,6 +12513,13 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Gpki sign action.submit in specification committee chairperson.
+	 * 
+	 * @param digiSign
+	 *            (PmDigiSign digiSign)
+	 * @return navigate to acknowledgement page.
+	 */
 	public String gpkiSignAction(PmDigiSign digiSign) {
 		SpecificationResDTO resDTO = updateSpecCommitteDtls(this
 				.getManagedBean().getLocalOutCome(), digiSign);
@@ -12179,6 +12549,12 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Revise ministry spec approval.Event handle revise in ministry
+	 * specification committee approval.
+	 * 
+	 * @return navigate to acknowledgement page.
+	 */
 	public String reviseMinistrySpecApproval() {
 		SpecificationResDTO resDTO = prepareSpecChirPersonRequest(this
 				.getManagedBean().getLocalOutCome(), null);
@@ -12208,6 +12584,12 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Revise specification committee.Event handle revise in specification
+	 * committee .
+	 * 
+	 * @return navigate to acknowledgement page.
+	 */
 	public String reviseSpecificationCommittee() {
 		SpecificationResDTO resDTO = updateSpecCommitteDtls(this
 				.getManagedBean().getLocalOutCome(), null);
@@ -12238,18 +12620,31 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Gets the pm digi sign.
+	 * 
+	 * @return the pm digi sign
+	 */
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
 
+	/**
+	 * Sets the pm digi sign.
+	 * 
+	 * @param pmDigiSign
+	 *            the new pm digi sign
+	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
 
 	/**
-	 * will be called to remove specification..
+	 * Cancel spec action.delete existing specs from database.
 	 * 
-	 * @return
+	 * @param flowType
+	 *            (String flowType).
+	 * @return navigate to business owner or specification committee menu.
 	 */
 	public String cancelSpecAction(String flowType) {
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -12339,10 +12734,13 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Will be called to save or edit for both techinical flowType maybe
-	 * preparespec or scroing
+	 * Save template spec details.
 	 * 
-	 * @return
+	 * @param flowType
+	 *            (String flowType)
+	 * @param specType
+	 *            (String specType)
+	 * @return the string
 	 */
 	public String saveTemplateSpecDetails(String flowType, String specType) {
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
@@ -12504,6 +12902,12 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Sets the technical check list.
+	 * 
+	 * @param localCheckList
+	 *            (ScQtCheckList localCheckList).
+	 */
 	private void setTechnicalCheckList(ScQtCheckList localCheckList) {
 		// this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setScQtChecklist(localCheckList);
@@ -12530,7 +12934,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(localCheckList.getDocCategory())) {
 					retriveSpecdetails(this.getManagedBean().getScQt()
 							.getQtId(), "QT");
-					List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+					List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
 							this.getManagedBean().getZoneGeneralTrees(), null);
 
 					if (businessOwnerZone != null
@@ -12612,6 +13016,12 @@ public class SpecificationBackingBean extends
 
 	}
 
+	/**
+	 * Sets the fin spec score weightage.
+	 * 
+	 * @param scoreWeightage
+	 *            (ScQtCheckList scoreWeightage).
+	 */
 	private void setFinSpecScoreWeightage(ScQtCheckList scoreWeightage) {
 		List<ScQtCheckList> finacialspecLists = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
@@ -12628,6 +13038,12 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Sets the template spec list.
+	 * 
+	 * @param savedCheckLists
+	 *            (List<ScQtCheckList> savedCheckLists).
+	 */
 	private void settemplateSpecList(List<ScQtCheckList> savedCheckLists) {
 
 		if (null != savedCheckLists && !savedCheckLists.isEmpty()) {
@@ -12753,11 +13169,13 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Will be called to save or edit for both techinical flowType maybe
-	 * preparespec or scroing
+	 * Complete template spec details.
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @param flowType
+	 *            ((String flowType)
+	 * @param specType
+	 *            (String specType)
+	 * @return navigate to business owner or specification committee menu.
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
 
@@ -12999,10 +13417,13 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * will be called to create new template spec
+	 * Creates the template spec.
 	 * 
 	 * @param tplSpecMaster
-	 * @return
+	 *            (TplSpecMaster tplSpecMaster)
+	 * @param flowtype
+	 *            (String flowtype)
+	 * @return navigate to template spec screens.
 	 */
 	public String createTemplateSpec(TplSpecMaster tplSpecMaster,
 			String flowtype) {
@@ -13067,6 +13488,15 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Construct qt doc by type.
+	 * 
+	 * @param specMaster
+	 *            the spec master
+	 * @param docType
+	 *            the doc type
+	 * @return the sc qt check list
+	 */
 	private ScQtCheckList constructQtDocByType(TplSpecMaster specMaster,
 			String docType) {
 		IParameterSO parameterSo = null;
@@ -13134,6 +13564,18 @@ public class SpecificationBackingBean extends
 		return checkList;
 	}
 
+	/**
+	 * Spec edit action.Technical or Financail specification action will edit
+	 * template spec.
+	 * 
+	 * @param checklist
+	 *            (ScQtCheckList checklist)
+	 * @param index
+	 *            (int index)
+	 * @param specType
+	 *            (String specType)
+	 * @return navigate to technical or financial template screens.
+	 */
 	public String specEditAction(ScQtCheckList checklist, int index,
 			String specType) {
 		this.getManagedBean().setSpecStatusId(
@@ -13170,7 +13612,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(specType)
 						&& !supplierCriteria.getQtZoneCriterias().isModified()) {
 
-					List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
+					List<TplSpecZoneDtl> businessOwnerZone = convertTreeNodesToZoneCriteria(
 							this.getManagedBean().getZoneGeneralTrees(), null);
 
 					if (businessOwnerZone != null
@@ -13210,8 +13652,8 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Method to find the total suppliers count based on supplier qualification
-	 * criteria..
+	 * Search for supplier count.search for Total suppliers in supplier
+	 * qualification criteria.
 	 */
 	public void searchForSupplierCount() {
 		log.info("searchForSupplierCount - START");
@@ -13283,16 +13725,7 @@ public class SpecificationBackingBean extends
 				if (null == tplSpecLocList) {
 					tplSpecLocList = new ArrayList<TplSpecLoc>();
 				}
-				/*
-				 * //List<TreeNode> rootZoneLocation =
-				 * getManagedBean().getZoneGeneralTrees(); List<TreeNode>
-				 * rootZoneLocation = getManagedBean().getZoneTrees(); if
-				 * (rootZoneLocation != null) { for (TreeNode treeNode :
-				 * rootZoneLocation) {
-				 * 
-				 * List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
-				 * tplSpecLocList.addAll(locationDTO); } }
-				 */
+
 				List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
 				if (getManagedBean().getZoneTrees() != null) {
 					for (TreeNode treeNode : getManagedBean().getZoneTrees()) {
@@ -13343,6 +13776,9 @@ public class SpecificationBackingBean extends
 		log.info("searchForSupplierCount - END");
 	}
 
+	/**
+	 * Evaluation type change.change evaluation type radio in business owner.
+	 */
 	public void evaluationTypeChange() {
 		String evaluationType = getManagedBean().getScQt().getEvaluationType();
 		if (evaluationType.equals("2")) {
@@ -13351,6 +13787,10 @@ public class SpecificationBackingBean extends
 		techEvaluationReqChanged();
 	}
 
+	/**
+	 * Tech evaluation req changed.change Required Technical Evaluation radio in
+	 * business owner.
+	 */
 	public void techEvaluationReqChanged() {
 		boolean isTechEvaluationReq = getManagedBean().getScQt()
 				.isTechEvaluationReq();
@@ -13372,6 +13812,13 @@ public class SpecificationBackingBean extends
 		// specMaster.setScoringReq(isTechEvaluationReq);
 	}
 
+	/**
+	 * Construct l3 ids.
+	 * 
+	 * @param categories
+	 *            the categories
+	 * @return the list
+	 */
 	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
 		List<Long> categoryIds = null;
 		if (null != categories) {
@@ -13384,6 +13831,17 @@ public class SpecificationBackingBean extends
 		return categoryIds;
 	}
 
+	/**
+	 * Gets the states n district.
+	 * 
+	 * @param locations
+	 *            the locations
+	 * @param codes
+	 *            the codes
+	 * @param locLevel
+	 *            the loc level
+	 * @return the states n district
+	 */
 	private void getStatesNDistrict(List<? extends TplSpecLoc> locations,
 			List<String> codes, String locLevel) {
 
@@ -13444,6 +13902,14 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Update selected check list indx.
+	 * 
+	 * @param checkList
+	 *            the check list
+	 * @param index
+	 *            the index
+	 */
 	public void updateSelectedCheckListIndx(ScQtCheckList checkList, int index) {
 		if (checkList.isSelected()) {
 			checkList.setIndex(index);
@@ -13452,6 +13918,12 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the bank years display dtls.display bankstatement checklist years
+	 * dropdown values.
+	 * 
+	 * @return List<SelectItem>.
+	 */
 	public List<SelectItem> getBankYearsDisplayDtls() {
 
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
@@ -13474,13 +13946,31 @@ public class SpecificationBackingBean extends
 		return this.getManagedBean().getBankyearsList();
 	}
 
-	public void deleteCheckListFile(ScQtCheckListAttachment checkListAttachment) {
+	/**
+	 * Delete check list attachment file.delete uploaded checklist attachemnt
+	 * from Technical and Financial Checklist menu.
+	 * 
+	 * @param checkListAttachment
+	 *            (ScQtCheckListAttachment checkListAttachment).
+	 */
+	public void deleteCheckListAttachmentFile(
+			ScQtCheckListAttachment checkListAttachment) {
 		checkListAttachment = null;
 		this.getManagedBean().getScQtChecklist()
 				.setScQtCheckListAttachment(checkListAttachment);
 
 	}
 
+	/**
+	 * Retrieve sm mof account.retrive suupplier information based on supplier
+	 * in restricted tender tab.
+	 * 
+	 * @param scQtSupplier
+	 *            the sc qt supplier
+	 * @param smSupplier
+	 *            the sm supplier
+	 * @return the sm mof account
+	 */
 	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier,
 			SmSupplier smSupplier) {
 		// debugLogger("retrieveSmMofAccount");
@@ -13528,6 +14018,13 @@ public class SpecificationBackingBean extends
 		return smMofAccount;
 	}
 
+	/**
+	 * Show supplier details.retrive suupplier address based on supplier in
+	 * restricted tender tab
+	 * 
+	 * @param qtSupplier
+	 *            (ScQtSupplier qtSupplier).
+	 */
 	public void showSupplierDetails(ScQtSupplier qtSupplier) {
 		// debugLogger("showSupplierDetails");
 		IQTSupplierSO qtSupplierSO = null;
@@ -13569,6 +14066,10 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrive one tier check list.retrive all technical Specs and display in
+	 * Prepare Specification menu.
+	 */
 	public void retriveOneTierCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
@@ -13604,7 +14105,10 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
+	 * Retriev location dtls.
+	 * 
 	 * @param scQtLocCriteriaList
+	 *            the sc qt loc criteria list
 	 */
 	private void retrievLocationDtls(List<ScQtLocCriteria> scQtLocCriteriaList) {
 		log.info("retrievLocationDtls - START");
@@ -13730,6 +14234,9 @@ public class SpecificationBackingBean extends
 		log.info("retrievLocationDtls - END");
 	}
 
+	/**
+	 * Retrieve non zonal dtls.
+	 */
 	private void retrieveNonZonalDtls() {
 		log.info("retrieveNonZonalDtls - START");
 		Long locationLevel = this.getManagedBean().getScQt()
@@ -13756,6 +14263,13 @@ public class SpecificationBackingBean extends
 		log.info("retrieveNonZonalDtls - END");
 	}
 
+	/**
+	 * View circular attachments.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @return navigate to ctcircular page.
+	 */
 	public String viewCircularAttachments(String type) {
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
@@ -13785,6 +14299,25 @@ public class SpecificationBackingBean extends
 		}
 		this.getManagedBean().setSelectpanelItem(itemList);
 		return pageView;
+	}
+
+	/**
+	 * Gets the count.
+	 * 
+	 * @return the count
+	 */
+	public int getCount() {
+		return count;
+	}
+
+	/**
+	 * Sets the count.
+	 * 
+	 * @param count
+	 *            the new count
+	 */
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }
