@@ -24,6 +24,7 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -1650,7 +1651,10 @@ public class SmPersonnelBackingBean extends
 						.parseInt(ParameterConst.FLAG_YES));
 			} else if (smPersonnel.getEpRole().equals(
 					RoleCode.BASIC_SUPPLIER_USER.value())) {
-				smPersonnel.setSoftcertFlg(2);
+				if (smPersonnel.getSoftcertFlg() == 0) {
+					smPersonnel
+							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+				}
 				smPersonnel.setAuthorizedFlg(Integer
 						.parseInt(ParameterConst.FLAG_YES));
 			}
@@ -1739,37 +1743,18 @@ public class SmPersonnelBackingBean extends
 
 	private boolean isHavePendingTaskList() {
 		boolean retVal = false;
-		IBpmSO bpmSO = null;
-		BpmRequestDTO reqDTO = null;
-		BpmResponseDTO responseDTO = null;
-		try {
-			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			reqDTO = new BpmRequestDTO();
-			reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-			reqDTO.setOffset(1);
-			reqDTO.setState("ASSIGNED");
-			reqDTO.setDocType("");
+		if (getManagedBean().getToken() == null
+				|| StringUtils.isBlank(getManagedBean().getToken())) {
+			FacesScopes face = new FacesScopes();
+			getManagedBean().setToken(face.getBPMAuthenticationCtxToken());
+		}
+		List<WorklistItemVO> taskList = SmCommonUtil
+				.getBpmTaskListByAuthToken(getManagedBean().getToken());
 
-			reqDTO.setViewBy("");
-			reqDTO.setAssignment("");
-			// get bpm token only if not yet authenticate
-			if (getManagedBean().getToken() == null
-					|| StringUtils.isBlank(getManagedBean().getToken())) {
-				FacesScopes face = new FacesScopes();
-				getManagedBean().setToken(face.getBPMAuthenticationCtxToken());
-			}
-			reqDTO.setCtxToken(getManagedBean().getToken());
-			responseDTO = bpmSO.getWorklistItems(reqDTO);
-			if (responseDTO.getWorklistVO() != null) {
-				if (responseDTO.getWorklistVO().getTotal() > 0) {
-					retVal = true;
-				}
-			}
-		} finally {
-			bpmSO = null;
-			reqDTO = null;
-			responseDTO = null;
+		if (taskList == null || taskList.isEmpty()) {
+			retVal = false;
+		} else {
+			retVal = true;
 		}
 		return retVal;
 	}

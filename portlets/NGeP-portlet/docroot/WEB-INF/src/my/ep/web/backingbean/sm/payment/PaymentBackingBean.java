@@ -184,32 +184,17 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	}
 	
 	public void proceedToItemList(List<SmBillDtl> smBillDtlLs){
-		ArrayList<SmPersonnel> billDtlLs = new ArrayList<SmPersonnel>();
-		this.getManagedBean().setDefaultCertPaymentMap(new HashMap<Long,SmBillDtl>());
 		for(SmBillDtl billDtl : smBillDtlLs){
 			if(billDtl.getPmParameter().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
-				billDtlLs.add(billDtl.getSmPersonnel());
-				this.getManagedBean().getDefaultCertPaymentMap().put(billDtl.getSmPersonnel().getPersonnelId(), billDtl);
+				getManagedBean().setSoftcertPayment(true);
 			}else{
-				//this.getManagedBean().setApplicationPayment(new SmBillDtl());
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-
-		//SmBillDtl[] billDtlArr = (SmBillDtl[]) billDtlLs.toArray();
-		this.getManagedBean().setSelectedSoftCertLs(billDtlLs.toArray(new SmPersonnel[billDtlLs.size()]));
-		log.info("**********SelectedSoftCertLs****" + this.getManagedBean().getSelectedSoftCertLs().length);
-
-
-		if(this.getManagedBean().getSelectedSoftCertLs() != null && this.getManagedBean().getSelectedSoftCertLs().length > 0){
-			this.getManagedBean().setSoftCertReqPersonnels(new ArrayList<SmPersonnel>());
-			for(SmPersonnel softcertPersonnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
-				if(softcertPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ){
-					this.getManagedBean().getSoftCertReqPersonnels().add(softcertPersonnel);
-				}
-			}
+		
+		if(getManagedBean().isSoftcertPayment()){
+			setBilledSoftCertPersonnels(smBillDtlLs);
 		}
-
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/portletViewMode.xhtml");
@@ -231,34 +216,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		
 		
 		for(SmBillDtl billDtl : smBill.getSmBillDtls()){
-			boolean nonExistBillDtl = false;
-			
 			if(billDtl.getPmParameter().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
-				for(SmPersonnel scPersonnel : this.getManagedBean().getSelectedSoftCertLs()){
-					log.info("*******>>>" + scPersonnel + "<<<<********");
-					if(!this.getManagedBean().getDefaultCertPaymentMap().containsKey(scPersonnel.getPersonnelId())){
-						nonExistBillDtl = true;
-						break;
-					}
+				if(selectedSoftCertMap.containsKey(billDtl.getSmPersonnel().getPersonnelId())){
+					this.getManagedBean().getNewSmBillDtlLs().add(billDtl);
 				}
-
-				if(nonExistBillDtl){
-					SmBillDtl  newScPersonnel = new SmBillDtl();
-					PmParameterDesc pmParamDesc = supplierPaymentItemMap.get("SF");
-					newScPersonnel.setPmParameter(pmParamDesc.getPmParameter());
-					newScPersonnel.setItemDesc(pmParamDesc.getCodeDesc());
-					newScPersonnel.setItemPrice(new BigDecimal(150.00));
-
-					newScPersonnel.setSmBill(smBill);
-					newScPersonnel.setSmPersonnel(billDtl.getSmPersonnel());
-
-					this.getManagedBean().getNewSmBillDtlLs().add(newScPersonnel);
-				}else{
-					if(selectedSoftCertMap.containsKey(billDtl.getSmPersonnel().getPersonnelId())){
-						this.getManagedBean().getNewSmBillDtlLs().add(billDtl);
-					}
-				}
-
 			}else{
 				this.getManagedBean().getNewSmBillDtlLs().add(billDtl);
 			}
@@ -270,11 +231,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 	
 		this.getManagedBean().setTotalAmount(ttlAmount);
-//		for(SmPersonnel personnel : this.getManagedBean().getSoftCertReqPersonnels()){
-//			for(SmPersonnel scPersonnel : this.getManagedBean().getSelectedSoftCertLs()){
-//				if(scPersonnel.getPersonnelId() == personnel.get)
-//			}
-//		}
 		return "paymentSummary";
 	}
 	
@@ -802,6 +758,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			smPaymentRes.setPaidAmt(txAmount);
 			paymentOrder.getSmPaymentResponses().add(smPaymentRes);
 			
+			pymtReqDTO.setPaidPersonnels(getManagedBean().getSoftCertReqPersonnels());
 			pymtReqDTO.setValidPayment(validPayment);
 			pymtReqDTO.setSmPayment(smPayment);
 			pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
@@ -870,6 +827,34 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 		
 		return desc;
+	}
+	
+	private void setBilledSoftCertPersonnels(List<SmBillDtl> smBillDtlLs) {
+		ArrayList<SmPersonnel> billDtlLs = new ArrayList<SmPersonnel>();
+		this.getManagedBean().setDefaultCertPaymentMap(
+				new HashMap<Long, SmBillDtl>());
+		for (SmBillDtl billDtl : smBillDtlLs) {
+			if (billDtl.getPmParameter().getParameterCode()
+					.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
+				billDtlLs.add(billDtl.getSmPersonnel());
+				this.getManagedBean()
+						.getDefaultCertPaymentMap()
+						.put(billDtl.getSmPersonnel().getPersonnelId(), billDtl);
+			}
+		}
+		this.getManagedBean().setSelectedSoftCertLs(
+				billDtlLs.toArray(new SmPersonnel[billDtlLs.size()]));
+		if (this.getManagedBean().getSelectedSoftCertLs() != null
+				&& this.getManagedBean().getSelectedSoftCertLs().length > 0) {
+			this.getManagedBean().setSoftCertReqPersonnels(
+					new ArrayList<SmPersonnel>());
+			for (SmBillDtl billedPersonnel : smBillDtlLs) {
+				if (billedPersonnel.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
+					this.getManagedBean().getSoftCertReqPersonnels()
+							.add(billedPersonnel.getSmPersonnel());
+				}
+			}
+		}
 	}
 
 	public PaymentBean getPaymentBean() {

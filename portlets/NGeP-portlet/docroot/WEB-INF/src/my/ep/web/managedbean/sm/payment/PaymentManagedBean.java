@@ -38,6 +38,7 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private List<SmBillDtl> newSmBillDtlLs;
 	private Map<Long,SmBillDtl> defaultCertPaymentMap;
 	private Object bpmPojo;
+	private boolean softcertPayment;
 	
 	//private boolean offlinePayment;
 	private Long appId;
@@ -265,6 +266,12 @@ public class PaymentManagedBean extends BaseManagedBean{
 	}
 	public void setBpmPojo(Object bpmPojo) {
 		this.bpmPojo = bpmPojo;
+	}
+	public boolean isSoftcertPayment() {
+		return softcertPayment;
+	}
+	public void setSoftcertPayment(boolean softcertPayment) {
+		this.softcertPayment = softcertPayment;
 	}
 
 }
