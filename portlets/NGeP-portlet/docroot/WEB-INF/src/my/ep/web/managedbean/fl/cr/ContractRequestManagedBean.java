@@ -249,6 +249,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private BigDecimal UomPerMonth ; 
 	private BigDecimal UomPerDay ; 
 	private BigDecimal pricePerUom;
+	private BigDecimal ctQuantity;
 	private String uomName;
 	
 	private boolean emailValidate = false;
@@ -2533,6 +2534,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFlRequestLink(boolean isFlRequestLink) {
 		this.isFlRequestLink = isFlRequestLink;
+	}
+
+	/**
+	 * @return the ctQuantity
+	 */
+	public BigDecimal getCtQuantity() {
+		return ctQuantity;
+	}
+
+	/**
+	 * @param ctQuantity the ctQuantity to set
+	 */
+	public void setCtQuantity(BigDecimal ctQuantity) {
+		this.ctQuantity = ctQuantity;
 	}
 
 }
