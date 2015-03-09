@@ -798,6 +798,7 @@ public class ReportBackingBean extends
 	private String scRequestNoteStatus;
 	private String scSimpleQuoteStatus;
 	private String scSimpleQuoteDtlGroup;
+	private String scPurchaseInDefaultStatus;
 	// cm
 	private String cmItemType;
 	private String cmItemStatus;
@@ -946,6 +947,14 @@ public class ReportBackingBean extends
 	private String ctSubType;
 
 	
+	public String getScPurchaseInDefaultStatus() {
+		return scPurchaseInDefaultStatus;
+	}
+
+	public void setScPurchaseInDefaultStatus(String scPurchaseInDefaultStatus) {
+		this.scPurchaseInDefaultStatus = scPurchaseInDefaultStatus;
+	}
+
 	public String getScSimpleQuoteDtlGroup() {
 		return scSimpleQuoteDtlGroup;
 	}
@@ -4673,6 +4682,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((getScProcessRptQuotationNo() != null) && (getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getScCommonStatus() != null) && (getScCommonStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScSimpleQuoteStatus() != null) && (getScSimpleQuoteStatus() != ReportConst.EMPTY_VAL))
+				|| ((getScPurchaseInDefaultStatus() != null) && (getScPurchaseInDefaultStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScRequestNoteStatus() != null) && (getScRequestNoteStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScSimpleQuoteDtlGroup() != null) && (getScSimpleQuoteDtlGroup() != ReportConst.EMPTY_VAL))
@@ -4772,6 +4782,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getScCommonStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScCommonStatusVar(ReportConst.SC_AMP_STATUS_EQ
 						+ this.getScCommonStatus());
+			}
+			if ((this.getScPurchaseInDefaultStatus() != null)
+					&& (this.getScPurchaseInDefaultStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setScPurchaseInDefaultStatusVar(ReportConst.SC_AMP_STATUS_EQ
+						+ this.getScPurchaseInDefaultStatus());
 			}
 			if ((this.getScSimpleQuoteStatus() != null)
 					&& (this.getScSimpleQuoteStatus() != ReportConst.EMPTY_VAL)) {
@@ -4951,6 +4966,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getScPublishFromDateVar()
 						+ rptGenBean.getScPublishToDateVar()
 						+ rptGenBean.getScCommonStatusVar()
+						+ rptGenBean.getScPurchaseInDefaultStatusVar()
 						+ rptGenBean.getScSimpleQuoteStatusVar()
 						+ rptGenBean.getScRequestNoteStatusVar()
 						+ rptGenBean.getScLAPRNPURCHDEFAULTGroupVar()
@@ -5737,6 +5753,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setScProcurementType(null);
 		this.setScProcessRptQuotationNo(null);
 		this.setScCommonStatus(null);
+		this.setScPurchaseInDefaultStatus(null);
 		this.setScSimpleQuoteStatus(null);
 		this.setScRequestNoteStatus(null);
 		this.setScLAPRNPURCHDEFAULTGroup(null);

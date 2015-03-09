@@ -78,6 +78,7 @@ public class ReportsGenerateBean {
 		private boolean scRequestNoteStatusView = false;
 		private boolean scSimpleQuoteStatusView = false;
 		private boolean scSimpleQuoteDtlGroupView = false;
+		private boolean scPurchaseInDefaultStatusView = false;
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -347,6 +348,7 @@ public class ReportsGenerateBean {
 		private String scRequestNoteStatusVar=ReportConst.EMPTY_VAL;
 		private String scSimpleQuoteStatusVar=ReportConst.EMPTY_VAL;
 		private String scSimpleQuoteDtlGroupVar=ReportConst.EMPTY_VAL;
+		private String scPurchaseInDefaultStatusVar=ReportConst.EMPTY_VAL;
 		//CT
 		private String ctContractNoVar=ReportConst.EMPTY_VAL;
 		private String ctAgreementVar=ReportConst.EMPTY_VAL;
@@ -391,6 +393,19 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isScPurchaseInDefaultStatusView() {
+			return scPurchaseInDefaultStatusView;
+		}
+		public void setScPurchaseInDefaultStatusView(
+				boolean scPurchaseInDefaultStatusView) {
+			this.scPurchaseInDefaultStatusView = scPurchaseInDefaultStatusView;
+		}
+		public String getScPurchaseInDefaultStatusVar() {
+			return scPurchaseInDefaultStatusVar;
+		}
+		public void setScPurchaseInDefaultStatusVar(String scPurchaseInDefaultStatusVar) {
+			this.scPurchaseInDefaultStatusVar = scPurchaseInDefaultStatusVar;
+		}
 		public boolean isScSimpleQuoteDtlGroupView() {
 			return scSimpleQuoteDtlGroupView;
 		}

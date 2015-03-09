@@ -49,7 +49,20 @@
 					 				partialSubmit="true" update="@form"/>	
 									</p:inputText>																					
 									</c:if>
-																  
+									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPurchaseInDefaultStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scPurchaseInDefaultStatus}" style="margin-top:5px;width:300px;">
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.Completed']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.scPendingApproval']}" itemValue="#{lbl['lbl.rpt.scPendingApproval']}"></f:selectItem>											
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingsubmission']}" itemValue="#{lbl['lbl.rpt.pendingsubmission']}"></f:selectItem>																	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingRNCreation']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingSQCreation']}" itemValue="#{lbl['lbl.rpt.PendingSQCreation']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingVerification']}" itemValue="#{lbl['lbl.rpt.PendingVerification']}"></f:selectItem>	
+																		<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>																																																																			
+									</p:selectOneMenu>
+								  </c:if>							  
 								   	<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scCommonStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scCommonStatus}" style="margin-top:5px;width:300px;">
@@ -223,9 +236,9 @@
 										 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.REQUISI']}" itemValue="#{lbl['lbl.rpt.REQUISI']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.SUPPL']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>																																										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.CONTRPKPNO']}" itemValue="#{lbl['lbl.rpt.CONTRPKPNO']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.CONTRACTTYPE']}" itemValue="#{lbl['lbl.rpt.CONTRACTTYPE']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.APPROVER']}" itemValue="#{lbl['lbl.rpt.APPROVER']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.prcmnttype']}" itemValue="#{lbl['lbl.rpt.CONTRPKPNO']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.CONTRACTTYPE']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsscsimplequoteno']}" itemValue="#{lbl['lbl.rpt.APPROVER']}"></f:selectItem>
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scREQUESTNOTESUMMARYGroupView}">
