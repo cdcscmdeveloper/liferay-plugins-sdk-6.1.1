@@ -415,8 +415,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);	    		
-	    		rptGenBean.setScCommonStatusView(true);
-	    		rptGenBean.setScLAPRNPURCHDEFAULTGroupView(true);
+	    		rptGenBean.setScPurchaseInDefaultStatusView(true);
 	    		rptGenBean.setScPIDNoView(true);
 	    		rptGenBean.setScContractOrPKPTypeView(true);
 	    		rptGenBean.setScContractOrPKPNoView(true);
@@ -525,6 +524,22 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScProcurementTypeView(true);
 	    		rptGenBean.setScCommonStatusView(true);	
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	            break;
+	        case ReportConst.SC_S1_PURCHASE_DEFAULT_DTLS_RPT_VAL:
+	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        		rptGenBean.setScRequisenerIdView(true);
+	        	}
+	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	        		rptGenBean.setScPtjView(true);
+	        	}
+	    		rptGenBean.setScSupplierView(true);	    		
+	    		rptGenBean.setScPurchaseInDefaultStatusView(true);
+	    		rptGenBean.setScLAPRNPURCHDEFAULTGroupView(true);
+	    		rptGenBean.setScPIDNoView(true);
+	    		rptGenBean.setScContractOrPKPTypeView(true);
+	    		rptGenBean.setScContractOrPKPNoView(true);
+	    		rptGenBean.setScContractOrPKPNameView(true);
 	            break;
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
