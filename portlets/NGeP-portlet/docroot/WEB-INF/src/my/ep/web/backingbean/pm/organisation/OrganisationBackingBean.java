@@ -1538,7 +1538,7 @@ public class OrganisationBackingBean extends
 	
 	private void validateSupplierBankList(List<SmSupplierBank> smSupplierBanks){
 		boolean isUnique = true;
-		if(smSupplierBanks!=null && smSupplierBanks.size()>1){	
+		if(smSupplierBanks!=null && !smSupplierBanks.isEmpty()){	
 			List <SmSupplierBank> tempSupplierBankList = new ArrayList<SmSupplierBank>(smSupplierBanks);
 			Set<String> tempSupplierBankSet = new HashSet<String>();
 			StringBuilder sb = null;
