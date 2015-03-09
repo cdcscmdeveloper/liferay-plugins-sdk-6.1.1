@@ -24,7 +24,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				style="float:right;" update="@all"
-				action="#{specificationBackingBean.acceptCompanyScoring}">
+				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
 					value="10" />

@@ -110,7 +110,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" listener="#{specificationBackingBean.openChange}"></p:ajax>
+								update="@form" listener="#{specificationBackingBean.openForChange}"></p:ajax>
 						</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
 				</ui:fragment>
 			</tr>
@@ -231,7 +231,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 							<p:ajax event="change" update="generalLocationList"
-								listener="#{specificationBackingBean.selectLocation}"></p:ajax>
+								listener="#{specificationBackingBean.selectZoneLocationLevel}"></p:ajax>
 						</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
 					</td>
 				</tr>
@@ -282,7 +282,7 @@
 						style="width:10%">
 						<p:commandLink
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							actionListener="#{specificationBackingBean.editBusinessOwnerZoneLocation(zoneTree,index)}"
+							actionListener="#{specificationBackingBean.editZones(zoneTree,index)}"
 							process="@this" update="@([id$=zonePopupGeneral])"
 							oncomplete="ZoneGeneral.show();">
 							<p:graphicImage library="ep/images/design" name="edit.png"
@@ -296,7 +296,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}" />
+					actionListener="#{specificationBackingBean.showGeneralZonesPopup}" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					action="#{specificationBackingBean.deleteTreeNode}"

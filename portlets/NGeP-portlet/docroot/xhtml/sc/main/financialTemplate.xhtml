@@ -17,9 +17,9 @@
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;" immediate="true"
-				action="#{specificationBackingBean.backAction}" />
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
+				action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
 				style="float:right;" update="@all"
@@ -30,7 +30,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',2)}"/>
+				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',2)}" />
 
 
 		</div>

@@ -24,7 +24,7 @@
 						<p:tree value="#{Zones}" var="location" selectionMode="single"
 							selection="#{specificationBackingBean.managedBean.panelZoneSelect}">
 							<p:ajax event="select" update="@([id$=totalSuppliersPanleyes])"
-								listener="#{specificationBackingBean.retriveZoneBySupplier}" />
+								listener="#{specificationBackingBean.retriveSupplierByZonal}" />
 
 							<p:ajax event="unselect"
 								listener="#{specificationBackingBean.unSelectPanelYesTreenode}" />

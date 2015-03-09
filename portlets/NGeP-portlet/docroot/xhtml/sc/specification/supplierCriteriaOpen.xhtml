@@ -173,7 +173,8 @@
 								<f:selectItems
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change" update="zoneLocationDataTable"
-									process="@this" partialSubmit="true" listener="#{specificationBackingBean.selectSupplierLocation}" />
+									process="@this" partialSubmit="true"
+									listener="#{specificationBackingBean.selectSupplierLocation}" />
 							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon"></p:message>
 						</td>
 					</tr>
@@ -214,7 +215,7 @@
 						<p:column headerText="Action" style="width:10%">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								actionListener="#{specificationBackingBean.editZoneLocation(zoneTree,index)}"
+								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
 								<p:graphicImage library="ep/images/design" name="edit.png"
@@ -228,7 +229,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						actionListener="#{specificationBackingBean.showZoneLocationPopup}" />
+						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 						update="zoneLocationDataTable"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -312,7 +313,7 @@
 							style="width:10%">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								actionListener="#{specificationBackingBean.editZoneLocation(zoneTree,index)}"
+								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
 								<p:graphicImage library="ep/images/design" name="edit.png"
@@ -327,7 +328,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						actionListener="#{specificationBackingBean.showZoneLocationPopup}" />
+						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}"
@@ -375,7 +376,7 @@
 					value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
 					style="float:right;" onclick="ZoneLocation.hide();" process="@all"
 					update="@this, zoneLocationDataTable, zonePopupPanel, zoneyesDataTable"
-					action="#{specificationBackingBean.updateZoneLocation}">
+					action="#{specificationBackingBean.updateSupplierLocations}">
 				</p:commandButton>
 
 			</p:dialog>

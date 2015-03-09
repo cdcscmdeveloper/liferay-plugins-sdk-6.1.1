@@ -70,7 +70,7 @@
 						value="#{stageTwoTechnical.title}" size="30" maxlength="1000">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalChecklisttypes"
-							listener="#{specificationBackingBean.technicalTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 					</p:inputText>
 					<p:message id="techChecklistId" for="techChecklistTitle"
 						display="icon"></p:message>
@@ -123,10 +123,10 @@
 							label="#{lbl['lbl.sc.spec.stage.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
-								value="#{specificationBackingBean.getTechnicalChecklIstDefValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
 							<p:ajax event="change" process="@this"
 								update="technicalChecklistsupplier" partialSubmit="true"
-								listener="#{specificationBackingBean.typeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="techChecklistTitlenullType1"
 							for="techChecklistTitlenullType" display="icon"></p:message>
@@ -143,10 +143,10 @@
 							label="#{lbl['lbl.sc.spec.stage.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
-								value="#{specificationBackingBean.getTechnicalChecklIstDefValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
 							<p:ajax event="change" process="@this"
 								update="technicalChecklistsupplier" partialSubmit="true"
-								listener="#{specificationBackingBean.typeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="techChecklistTitlenotnullType1"
 							for="techChecklistTitlenotnullType" display="icon"></p:message>
@@ -166,7 +166,7 @@
 								value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scoreView,uploadtech"
-								listener="#{specificationBackingBean.checklistActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="actionTitlenullType1" for="actionTitlenullType"
 							display="icon"></p:message>
@@ -182,7 +182,7 @@
 								value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scoreView,uploadtech"
-								listener="#{specificationBackingBean.checklistActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
+								listener="#{specificationBackingBean.technicalChecklistDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 
 						<p:message id="actionTitlenotnullType1"
@@ -260,7 +260,7 @@
 					<p:commandLink
 						rendered="#{stageTwoTechnical.scQtCheckListAttachment.fileName ne null}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-						action="#{specificationBackingBean.deleteCheckListFile(stageTwoTechnical.scQtCheckListAttachment)}"
+						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwoTechnical.scQtCheckListAttachment)}"
 						immediate="true" update="@form">
 						<h:graphicImage library="ep/images/design" name="trash.png"
 							styleClass="tasklist_title1" />
@@ -299,7 +299,7 @@
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" oncomplete="stageTwoTech.show();"
-				actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}"
+				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="compilencestageTwo" />
 			<p:commandButton value="Create Specification" process="@this"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -308,7 +308,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,stageTwotechProposal"
-				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
+				action="#{specificationBackingBean.addTechnicalCheckList}"
 				update="@all,stageTwotechProposal" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
