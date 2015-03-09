@@ -312,7 +312,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonDescById(reasonReqDTO);
 			PmReasonDesc reasonDesc=reasonResDTO.getReasonDesc();
 			if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(resDTO.getFlStopInstr().getPmReason().getReasonCode())) {
-				doMB.getManagedBean().setReasonDesc(FulfilmentConst.REASON_CODE + resDTO.getFlStopInstr().getReasonDesc());
+				doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc() + " " +  "-"+ " "+ resDTO.getFlStopInstr().getReasonDesc());
 			}else{
 				doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc());
 			}
