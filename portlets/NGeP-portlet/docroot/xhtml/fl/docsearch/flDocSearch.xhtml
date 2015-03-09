@@ -111,7 +111,7 @@
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
 					<p:inputText size="28"
-						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+						value="#{flDocumentBackingBean.managedBean.searchPhysLoaNo}"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
@@ -192,14 +192,14 @@
 				<p:column
 					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}">
 					<h:outputText
-						value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
+						value="#{flDocumentBackingBean.getStatusDescById(flDocument.statusId)}" />
 				</p:column>  
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
 					style="text-align: center">
 					<p:menuButton value="">
 									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
 							        rendered="#{flDocument.isViewAction()}"
-							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}, {name:'statusDesc', value:'#{flDocument.status.statusId}'}])"/>
+							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
 										rendered="#{!(flDocument.docType==ParameterConst.doctypePurchaseRequest || flDocument.docType==ParameterConst.doctypeContractRequest || flDocument.docType==ParameterConst.doctypeShippingInstruction || flDocument.docType==ParameterConst.doctypeStopDelivery )}"
 										action="#{flDocumentBackingBean.generateReport(flDocument.docType, flDocument.docNo)}" />							        
