@@ -289,6 +289,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		reqDTO.setFlOrderId(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+		//String others="Justification Other";
 		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
 		doMB.setDeliveryOrder(resDTO);
@@ -310,7 +311,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reasonReqDTO.setLanguage("en");
 			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonDescById(reasonReqDTO);
 			PmReasonDesc reasonDesc=reasonResDTO.getReasonDesc();
-			doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc());
+			if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(resDTO.getFlStopInstr().getPmReason().getReasonCode())) {
+				doMB.getManagedBean().setReasonDesc(FulfilmentConst.REASON_CODE + resDTO.getFlStopInstr().getReasonDesc());
+			}else{
+				doMB.getManagedBean().setReasonDesc(reasonDesc.getReasonDesc());
+			}
+			
 			doMB.getManagedBean().getFlStopInstr().setChangedDate(resDTO.getFlStopInstr().getChangedDate());
 			doMB.getManagedBean().getFlStopInstr().setStopInstrNo(resDTO.getFlStopInstr().getStopInstrNo());
 			doMB.getManagedBean().setRejectedRemark(resDTO.getStopInstrRejectedRemarkList());

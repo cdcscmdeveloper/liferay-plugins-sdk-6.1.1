@@ -149,16 +149,8 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<h:panelGroup rendered="#{createDOBackingBean.managedBean.reasonDesc ne 'OTHERS'}">
-					<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.reason.justification']}" /></td>
-					<td><p:inputText disabled="true" size="53"	value="#{createDOBackingBean.managedBean.reasonDesc}" /></td>
-				</h:panelGroup>
-				<h:panelGroup rendered="#{createDOBackingBean.managedBean.reasonDesc eq 'OTHERS'}">
-					<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.others']}" /></td>
-					<td><p:inputText size="50"  value="#{createDOBackingBean.managedBean.flStopInstr.reasonDesc}"  
-							disabled="true" />
-					</td>
-				</h:panelGroup>	
+				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.reason.justification']}" /></td>
+				<td><p:inputText disabled="true" size="53"	value="#{createDOBackingBean.managedBean.reasonDesc}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 				<td><p:inputTextarea cols="40"  value="#{createDOBackingBean.managedBean.rejectedRemark.get(0).remark}" disabled="true"/> </td>
 			</tr>
