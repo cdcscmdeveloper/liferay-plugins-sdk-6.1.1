@@ -1,4 +1,4 @@
-#include("templates/sm/sitevisit/shared/header.vm")
+#parse("templates/sm/sitevisit/shared/header.vm")
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
@@ -71,10 +71,10 @@
 	        <td>$applNo</td>
     	</tr>
     	
-       	<tr>
+       #*	<tr>
 	        <td width="30%"><b>Scheduled Date of Visit</b></td>
 	        <td></td>
-    	</tr>
+    	</tr>*#
     	
     	<tr>
 	        <td width="30%"><b>Visiting Date</b></td>

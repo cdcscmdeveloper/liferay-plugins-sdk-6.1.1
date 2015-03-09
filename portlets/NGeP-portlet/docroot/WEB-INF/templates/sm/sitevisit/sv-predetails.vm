@@ -1,4 +1,4 @@
-#include("templates/sm/sitevisit/shared/header.vm")
+#parse("templates/sm/sitevisit/shared/header.vm")
 
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
@@ -50,6 +50,10 @@
 			        <td>$svAdd.smAddress.pmState.stateName</td>
 		    	</tr>
 		    	
+		    	<tr>
+		    		<td><b>Schedule Date of Visit</b></td>
+		    		<td>$smVmUtil.formatDate($svAdd.scheduleDate)</td>
+		    	</tr>
 		    	<tr><td><br /></td></tr>
 	    	#end
     	#end
@@ -57,7 +61,7 @@
     	
    	    <tr>
 	        <td width="35%"><b>Telephone No.</b></td>
-	        <td></td>
+	        <td>$telNo</td>
     	</tr>
     	
        	<tr>
