@@ -65,7 +65,7 @@
          </td>
          <td>Jadual Penghantaran
          </td>
-         <td>Seperti dilampiran
+         <td>Seperti di lampiran
          </td>
       </tr>
       <tr>
@@ -97,31 +97,15 @@
          </td>
          <td>Tempoh Kontrak Tambahan
          </td>
-         <td>$extendMonths
-         </td>
-      </tr>
-      <tr>
-         <td>
-         </td>
          <td><table><tr><td>$extStartDate</td><td width="10px"></td><td>$extEndDate</td></tr></table>
-         </td>
-         <td>
          </td>
       </tr>
       <tr>
          <td>xi.
          </td>
-         <td>Tarikh Kuatkuasa Pindaan
-         </td>
-         <td>
-         </td>
-      </tr>
-      <tr>
-         <td>
+         <td>Tempoh Kuatkuasa Pindaan
          </td>
          <td>$amendEffExpDate
-         </td>
-         <td>
          </td>
       </tr>
       <tr>
@@ -145,7 +129,7 @@
          </td>
          <td>Spesifikasi Tugas / Skop Kerja
          </td>
-         <td>Seperti dilampiran
+         <td>Seperti di lampiran
          </td>
       </tr>
       <tr>
@@ -161,7 +145,7 @@
          </td>
          <td>Lain-lain Terma
          </td>
-         <td>Seperti dilampiran
+         <td>Seperti di lampiran
          </td>
       </tr>
       </table>
