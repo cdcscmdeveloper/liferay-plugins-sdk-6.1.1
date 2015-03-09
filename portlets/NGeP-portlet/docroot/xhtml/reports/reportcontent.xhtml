@@ -62,7 +62,7 @@
 												label="#{lbl['lbl.rpt.rptName']}" id="reportName"
 												value="#{reportBackingBean.reportValue}" required="true"
 												style="margin-top:5px;width:300px;">
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>												
 												<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
 												<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}" process="@this"
 									 			partialSubmit="true" update="@all"/>

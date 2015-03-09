@@ -62,7 +62,17 @@
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingSupplierResponse']}" itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>																																		
 									</p:selectOneMenu>
 								  </c:if>
-								  	
+								  	<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSimpleQuoteStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scSimpleQuoteStatus}" style="margin-top:5px;width:300px;">
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>									
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.Completed']}" itemValue="#{lbl['lbl.rpt.Completed']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingsubmission']}" itemValue="#{lbl['lbl.rpt.pendingsubmission']}"></f:selectItem>																	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingRNCreation']}" itemValue="#{lbl['lbl.rpt.PendingRNCreation']}"></f:selectItem>	
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.Cancelled']}" itemValue="#{lbl['lbl.rpt.Cancelled']}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.PendingSupplierResponse']}" itemValue="#{lbl['lbl.rpt.PendingSupplierResponse']}"></f:selectItem>																																		
+									</p:selectOneMenu>
+								  </c:if>
 								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequestNoteStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scRequestNoteStatus}" style="margin-top:5px;width:300px;">
@@ -141,7 +151,7 @@
 									</p:inputText>																					
 									</c:if>	
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcessRptQuotationNoView}" >			
-									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.scsimplequoteno']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}" style="margin-top:5px;width:290px;">										
 									</p:inputText>																					
 									</c:if>
@@ -194,6 +204,17 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.PINumber']}" itemValue="#{lbl['lbl.rpt.PINumber']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplerNm']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>																																										
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scSimpleQuoteDtlGroupView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.scSimpleQuoteDtlGroup}" style="margin-top:5px;width:300px;">
+										 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.REQUISI']}" itemValue="#{lbl['lbl.rpt.REQUISI']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.SUPPL']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>																																										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.prcmnttype']}" itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsscsimplequoteno']}" itemValue="#{lbl['lbl.rpt.capsscsimplequoteno']}"></f:selectItem>
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scLAPRNPURCHDEFAULTGroupView}">
