@@ -1891,7 +1891,10 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
 						0);
 			} else {
-				getManagedBean().getSelectedShareHolder().setSoftcertFlg(2);
+				if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
+					getManagedBean().getSelectedShareHolder().setSoftcertFlg(
+							SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+				}
 				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
 						0);
 			}
@@ -6673,16 +6676,17 @@ public class SmApplicationBackingBean extends
 				|| getManagedBean().getSmAppl().getApplType()
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			payReq = true;
-		} else {
-			for (SmPersonnel per : getManagedBean().getSmAppl()
-					.getSmPersonnels()) {
-				if (per.getAuthorizedFlg() == 1 && per.getSoftcertFlg() == 2) {
-					payReq = true;
-					break;
-				}
-
-			}
 		}
+		// else {
+		// for (SmPersonnel per : getManagedBean().getSmAppl()
+		// .getSmPersonnels()) {
+		// if (per.getAuthorizedFlg() == 1 && per.getSoftcertFlg() == 2) {
+		// payReq = true;
+		// break;
+		// }
+		//
+		// }
+		// }
 		return payReq;
 	}
 
