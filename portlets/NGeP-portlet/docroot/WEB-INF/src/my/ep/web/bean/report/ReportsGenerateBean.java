@@ -76,6 +76,8 @@ public class ReportsGenerateBean {
 		private boolean scContractOrPKPNameView = false;
 		private boolean scRequestQuoteNoView = false;
 		private boolean scRequestNoteStatusView = false;
+		private boolean scSimpleQuoteStatusView = false;
+		private boolean scSimpleQuoteDtlGroupView = false;
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -343,6 +345,8 @@ public class ReportsGenerateBean {
 		private String scContractOrPKPNameVar=ReportConst.EMPTY_VAL;
 		private String scRequestQuoteNoVar=ReportConst.EMPTY_VAL;
 		private String scRequestNoteStatusVar=ReportConst.EMPTY_VAL;
+		private String scSimpleQuoteStatusVar=ReportConst.EMPTY_VAL;
+		private String scSimpleQuoteDtlGroupVar=ReportConst.EMPTY_VAL;
 		//CT
 		private String ctContractNoVar=ReportConst.EMPTY_VAL;
 		private String ctAgreementVar=ReportConst.EMPTY_VAL;
@@ -387,6 +391,30 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isScSimpleQuoteDtlGroupView() {
+			return scSimpleQuoteDtlGroupView;
+		}
+		public void setScSimpleQuoteDtlGroupView(boolean scSimpleQuoteDtlGroupView) {
+			this.scSimpleQuoteDtlGroupView = scSimpleQuoteDtlGroupView;
+		}
+		public String getScSimpleQuoteDtlGroupVar() {
+			return scSimpleQuoteDtlGroupVar;
+		}
+		public void setScSimpleQuoteDtlGroupVar(String scSimpleQuoteDtlGroupVar) {
+			this.scSimpleQuoteDtlGroupVar = scSimpleQuoteDtlGroupVar;
+		}
+		public boolean isScSimpleQuoteStatusView() {
+			return scSimpleQuoteStatusView;
+		}
+		public void setScSimpleQuoteStatusView(boolean scSimpleQuoteStatusView) {
+			this.scSimpleQuoteStatusView = scSimpleQuoteStatusView;
+		}
+		public String getScSimpleQuoteStatusVar() {
+			return scSimpleQuoteStatusVar;
+		}
+		public void setScSimpleQuoteStatusVar(String scSimpleQuoteStatusVar) {
+			this.scSimpleQuoteStatusVar = scSimpleQuoteStatusVar;
+		}
 		public boolean isScRequestNoteStatusView() {
 			return scRequestNoteStatusView;
 		}

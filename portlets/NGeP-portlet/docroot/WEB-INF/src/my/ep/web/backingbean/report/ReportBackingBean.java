@@ -9,7 +9,9 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +22,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -55,6 +59,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -128,6 +133,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> scPtjList = new ArrayList<SelectItem>();
 	private List<SelectItem> scRequisitionerList = new ArrayList<SelectItem>();
 	private List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
+	private List<SelectItem> smUPSSVOUserList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -171,11 +177,13 @@ public class ReportBackingBean extends
 	private boolean showParentMsg;
 	private List<SmSupplierCategory> selectedCatList;
 	private List<SmSupplierCategory> selectCatDeletionList;
+	
+	private Map<String, List<SelectItem>> moduleItemMap=new HashMap<String, List<SelectItem>>();
 
 	public List<SmSupplierCategory> getSelectCatDeletionList() {
 		return selectCatDeletionList;
 	}
-
+	SelectItem[] items = null;
 	public void setSelectCatDeletionList(
 			List<SmSupplierCategory> selectCatDeletionList) {
 		this.selectCatDeletionList = selectCatDeletionList;
@@ -189,6 +197,14 @@ public class ReportBackingBean extends
 	
 
 	
+
+	public List<SelectItem> getSmUPSSVOUserList() {
+		return smUPSSVOUserList;
+	}
+
+	public void setSmUPSSVOUserList(List<SelectItem> smUPSSVOUserList) {
+		this.smUPSSVOUserList = smUPSSVOUserList;
+	}
 
 	public List<SelectItem> getScDescOfficerList() {
 		return scDescOfficerList;
@@ -780,6 +796,8 @@ public class ReportBackingBean extends
 	private String scContractOrPKPName;
 	private String scRequestQuoteNo;
 	private String scRequestNoteStatus;
+	private String scSimpleQuoteStatus;
+	private String scSimpleQuoteDtlGroup;
 	// cm
 	private String cmItemType;
 	private String cmItemStatus;
@@ -928,6 +946,30 @@ public class ReportBackingBean extends
 	private String ctSubType;
 
 	
+	public String getScSimpleQuoteDtlGroup() {
+		return scSimpleQuoteDtlGroup;
+	}
+
+	public void setScSimpleQuoteDtlGroup(String scSimpleQuoteDtlGroup) {
+		this.scSimpleQuoteDtlGroup = scSimpleQuoteDtlGroup;
+	}
+
+	public String getScSimpleQuoteStatus() {
+		return scSimpleQuoteStatus;
+	}
+
+	public void setScSimpleQuoteStatus(String scSimpleQuoteStatus) {
+		this.scSimpleQuoteStatus = scSimpleQuoteStatus;
+	}
+
+	public SelectItem[] getItems() {
+		return items;
+	}
+
+	public void setItems(SelectItem[] items) {
+		this.items = items;
+	}
+
 	public String getScRequestNoteStatus() {
 		return scRequestNoteStatus;
 	}
@@ -2642,7 +2684,69 @@ public class ReportBackingBean extends
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
 		return resDTO.getCategoryL2List();
 	}
+	
+	public List<SelectItem>  retrieveReportListByAuthorization() {
+		rptGenBean = new ReportsGenerateBean();
+		this.setReportValue(null);
+		reportList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
+					lngUserId = new FacesScopes().getUserSessionBean().getUserId();				
+					//lngUserId = (long) 220152;
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue(),"MOD");
+					for (Object[] object : reportModList) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1].toString());
+						reportList.add(selectItem);
+					}
+				}
+				return reportList;	
+			}
+	
+    public void getReportIdlist() {
+    	rptGenBean = new ReportsGenerateBean();
+		this.setReportValue(null);
+    	String paramModule = null;
+    	items = null; 
+    	if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+	    	if ((this.getModuleValue()) != null){
+	    		paramModule="MOD";
+	    	}
+	    	items=super.getRadioButtonCodeValuesBySearchBean(paramModule,this.getReportSearchBean());
+	    	processItemsByModule(items);
+	    	
+    	}
+	}
+	private void processItemsByModule(SelectItem[] items) {
+		Map<String,List<SelectItem>> localModuleItemMap=new HashMap<String,List<SelectItem>>();
+		if(null!=items){
+			for(SelectItem item:items){
+				String[] moduleItemArr= (String[])((String)item.getValue()).split("_");
+				if(localModuleItemMap.keySet().contains(moduleItemArr[0])){
+					//code for contains
+					localModuleItemMap.get(moduleItemArr[0]).add(item);
+				} else {
+					//not contains
+					List<SelectItem> moduleItems=new ArrayList<SelectItem>();
+					moduleItems.add(item);
+					localModuleItemMap.put(moduleItemArr[0], moduleItems);
+				}
+			}
+		}
+		this.setReportList(localModuleItemMap.get(this.getModuleValue()));
+		
+		setModuleItemMap(localModuleItemMap);
+		
+	}
 
+	public ISearchBean<PmParameterDesc> getReportSearchBean() {
+		
+		return super.createSearchBean(
+				PmParameterDesc.class, "reportName");
+	}
 	public void populateExperienceSubChildCategoryByChild(long childId,
 			PmCategoryL3 catL3) {
 		try {
@@ -2727,6 +2831,7 @@ public class ReportBackingBean extends
 		
 		this.getSelectedCatList().add(cat);
 	}
+	
 
 	/*
 	 * Retrieve module list
@@ -2793,13 +2898,13 @@ public class ReportBackingBean extends
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setRptGenBean(null);
-		
+		resetReportForm();
 		if (this.getModuleValue() != null) {
 			retriveReportListByModule(this.getModuleValue());
 		}
 		getManagedBean().setReportList(reportList);
 		getManagedBean().setRptGenBean(rptGenBean);
-		resetReportForm();
+		
 		retrieveRolecode();
 		
 		
@@ -2851,6 +2956,24 @@ public class ReportBackingBean extends
 							.getMessageCommon(ReportConst.REPORTS_NOT_AVAILABLE_BY_MODULE));
 		}
 		return reportList;
+	}
+	public List<SelectItem> retrieveUPSSVOUser(){
+		smUPSSVOUserList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 240500;
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> ptLst = reportSO.retrieveUPSSVOUser(lngUserId);			
+			for (Object[] object : ptLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				smUPSSVOUserList.add(selectItem);
+			}
+        }
+		return smUPSSVOUserList;
 	}
 	public List<SelectItem> retrievePTJ(){
 		scPtjList = new ArrayList<SelectItem>();
@@ -3141,7 +3264,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 		return ministryList;	
 	}
-    public List<SelectItem>  retrieveFMIMinistryList() {
+public List<SelectItem>  retrieveFMIMinistryList() {
 if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
@@ -3514,6 +3637,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 				assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
+				retrieveUPSSVOUser();
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(
 						rptGenBean, authoriztionList);
 			} else if ((this.getModuleValue()
@@ -4548,8 +4672,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((getScProcurementType() != null) && (getScProcurementType() != ReportConst.EMPTY_VAL))
 				|| ((getScProcessRptQuotationNo() != null) && (getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getScCommonStatus() != null) && (getScCommonStatus() != ReportConst.EMPTY_VAL))
+				|| ((getScSimpleQuoteStatus() != null) && (getScSimpleQuoteStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScRequestNoteStatus() != null) && (getScRequestNoteStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))
+				|| ((getScSimpleQuoteDtlGroup() != null) && (getScSimpleQuoteDtlGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScREQUESTNOTESUMMARYGroup() != null) && (getScREQUESTNOTESUMMARYGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScPIDNo() != null) && (getScPIDNo() != ReportConst.EMPTY_VAL))
 				|| ((getScContractOrPKPType() != null) && (getScContractOrPKPType() != ReportConst.EMPTY_VAL))
@@ -4636,10 +4762,21 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						.setScLAPRNPURCHDEFAULTGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
 								+ this.getScLAPRNPURCHDEFAULTGroup());
 			}
+			if ((this.getScSimpleQuoteDtlGroup() != null)
+					&& (this.getScSimpleQuoteDtlGroup() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setScSimpleQuoteDtlGroupVar(ReportConst.SC_AMP_PRCESS_RPT_GROUP_EQ
+								+ this.getScSimpleQuoteDtlGroup());
+			}
 			if ((this.getScCommonStatus() != null)
 					&& (this.getScCommonStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setScCommonStatusVar(ReportConst.SC_AMP_STATUS_EQ
 						+ this.getScCommonStatus());
+			}
+			if ((this.getScSimpleQuoteStatus() != null)
+					&& (this.getScSimpleQuoteStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setScSimpleQuoteStatusVar(ReportConst.SC_AMP_STATUS_EQ
+						+ this.getScSimpleQuoteStatus());
 			}
 			if ((this.getScRequestNoteStatus() != null)
 					&& (this.getScRequestNoteStatus() != ReportConst.EMPTY_VAL)) {
@@ -4814,8 +4951,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getScPublishFromDateVar()
 						+ rptGenBean.getScPublishToDateVar()
 						+ rptGenBean.getScCommonStatusVar()
+						+ rptGenBean.getScSimpleQuoteStatusVar()
 						+ rptGenBean.getScRequestNoteStatusVar()
 						+ rptGenBean.getScLAPRNPURCHDEFAULTGroupVar()
+						+ rptGenBean.getScSimpleQuoteDtlGroupVar()
 						+ rptGenBean.getScREQUESTNOTESUMMARYGroupVar()
 						+ rptGenBean.getScPIDNoVar()
 						+ rptGenBean.getScContractOrPKPTypeVar()
@@ -5598,8 +5737,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setScProcurementType(null);
 		this.setScProcessRptQuotationNo(null);
 		this.setScCommonStatus(null);
+		this.setScSimpleQuoteStatus(null);
 		this.setScRequestNoteStatus(null);
 		this.setScLAPRNPURCHDEFAULTGroup(null);
+		this.setScSimpleQuoteDtlGroup(null);
 		this.setScREQUESTNOTESUMMARYGroup(null);
 		this.setScPIDNo(null);
 		this.setScContractOrPKPType(null);
@@ -5684,4 +5825,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		buf.close();
 		out.close();
 	}
+
+	public Map<String, List<SelectItem>> getModuleItemMap() {
+		return moduleItemMap;
+	}
+
+	public void setModuleItemMap(Map<String, List<SelectItem>> moduleItemMap) {
+		this.moduleItemMap = moduleItemMap;
+	}
+	
 }

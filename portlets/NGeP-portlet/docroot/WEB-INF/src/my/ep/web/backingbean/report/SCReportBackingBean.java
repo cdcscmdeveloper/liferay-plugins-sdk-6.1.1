@@ -484,7 +484,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	}
 	    		rptGenBean.setScSupplierView(true);
 	    		rptGenBean.setScProcurementTypeView(true);
-	    		rptGenBean.setScCommonStatusView(true);	
+	    		rptGenBean.setScSimpleQuoteStatusView(true);	
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break; 
 	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL:
@@ -509,8 +509,9 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	}
 	    		rptGenBean.setScSupplierView(true);
 	    		rptGenBean.setScProcurementTypeView(true);
-	    		rptGenBean.setScCommonStatusView(true);	
+	    		rptGenBean.setScSimpleQuoteStatusView(true);	
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
+	    		rptGenBean.setScSimpleQuoteDtlGroupView(true);
 	            break;
 	        case ReportConst.SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);

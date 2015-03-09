@@ -159,7 +159,8 @@ public class ReportConst {
 	//CM Module reports end
 	//FL Module reports start
 	//Ministry	
-	public static final String CON_REQ_RPT_MIN_VAL = "FL_001";	
+	//public static final String CON_REQ_RPT_MIN_VAL = "FL_001";
+	public static final String CON_REQ_RPT_MIN_VAL = "FL_001";
 	public static final String CON_ORD_RPT_MIN_VAL = "FL_002";	
 	public static final String DEL_ORD_RPT_MIN_VAL = "FL_003";	
 	public static final String FL_REC_NOTE_RPT_MIN_VAL = "FL_004";	

@@ -322,11 +322,14 @@
 							<p:column>
 								<table style="width: 100%">
 									<tr>
-										<td style="width: 84%"><p:inputText
+										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.svouser']}" id="smSVOUser"
-												maxlength="16" value="#{reportBackingBean.smSVOUser}"
-												required="true" style="margin-top:5px;width:290px;">
-											</p:inputText></td>
+												value="#{reportBackingBean.smSVOUser}"
+												required="true" style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItems value="#{reportBackingBean.smUPSSVOUserList}"></f:selectItems>
+											</p:selectOneMenu></td>
 										<td><p:message id="smSVOUserMsg" for="smSVOUser"
 												display="icon" /></td>
 									</tr>
