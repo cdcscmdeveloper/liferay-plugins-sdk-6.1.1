@@ -79,54 +79,46 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				log.debug("pageChangeListener");
 			}
 			try {
-//				if(null == getSearchOrderType()){ 
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}else if((null ==getSearchDocType() &&  "".equalsIgnoreCase(getSearchOrderNo()) && "".equalsIgnoreCase(getSearchDocNo()))){
-//					throw new EpException(MessageConst.ERROR_740023);
-//				}
-				System.out.println("pageChangeListener");
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean("orderType",SearchOperator.OPERATOR_EQUALS.value(),getSearchOrderType()));
+				FlDocumentReqDTO reqDTO = new FlDocumentReqDTO();
+				searchBean.setUseEntityClass(true);
+				reqDTO.setSearchBean(searchBean);
+				
+				reqDTO.setOrderType(getSearchOrderType());
+				if(getSearchOrderNo()!=null && getSearchOrderNo()!="") {
+					reqDTO.setOrderNo(getSearchOrderNo());
+				}					
 				if(getSearchDocType()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocType()));
+					reqDTO.setDocType(getSearchDocType());
 				} else {
-					List<String> flDocTypeList = getDocTypeListByRole();
-					if(flDocTypeList.size()>0) {
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_IN.value(),flDocTypeList));
-					}
-				}
+					reqDTO.setDocTypeList(getDocTypeListByRole());
+				}	
 				if(getSearchDocNo()!=null && getSearchDocNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocNo()));
+					reqDTO.setDocNo(getSearchDocNo());
 				}
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
+					reqDTO.setContractNo(getSearchContractNo());
 				}
-				/*if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
-				}*/
+				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
+					reqDTO.setPhysicalContractNo(getSearchPhysContractNo());
+				}
 				if(getSearchCircularNo()!=null && getSearchCircularNo()!="")  {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),getSearchCircularNo()));
+					reqDTO.setCircularNo(getSearchCircularNo());
 				}
 				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
+					reqDTO.setLoaNo(getSearchLoaNo());
 				}
-				/*if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
-				}	*/
+				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
+					reqDTO.setPhysicalLoaNo(getSearchPhysLoaNo());
+				}
 				if(getStatusDescId()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getStatusDescId()));
+					reqDTO.setStatusId(getStatusDescId());
 				}
 				if(getSearchTitle()!=null && getSearchTitle()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getSearchTitle(), true));
+					reqDTO.setTitle(getSearchTitle());
 				}
 				if(getSearchSuppName()!=null && getSearchSuppName()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getSearchSuppName(), true));
+					reqDTO.setSupplierName(getSearchSuppName());
 				}
-				if(getSearchOrderNo()!=null && getSearchOrderNo()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("orderNo",SearchOperator.OPERATOR_LIKE.value(),getSearchOrderNo()));
-				}
-			
-				FlDocumentReqDTO reqDTO = new FlDocumentReqDTO();
-				reqDTO.setSearchBean(searchBean);
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
