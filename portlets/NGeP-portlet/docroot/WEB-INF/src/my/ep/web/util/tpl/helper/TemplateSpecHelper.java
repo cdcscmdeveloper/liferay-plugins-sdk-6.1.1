@@ -144,13 +144,19 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecMaster(newSpecMaster);
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
+								newSpecQuestion.setTplSpecScorings(null);
 								
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newSpecQuestion.getQuestionType())){
 										newSpecQuestion.setAnswerTypeCode(null);
-									}else{
-										newSpecQuestion.setAnswerTypeCode(new PmParameter());
+									} else{
+										if (newSpecQuestion.getAnswerTypeCode() == null) {
+											newSpecQuestion.setAnswerTypeCode(new PmParameter());
+										}
 									}
+									
+									// clone spec scoring
+									cloneTplSpecScoring(newSpecQuestion, specQuestion.getTplSpecScorings());	
 									
 								} else {
 									IParameterSO parameterSO = null;
@@ -169,12 +175,13 @@ public class TemplateSpecHelper {
 									
 									resetEstimations(newSpecQuestion);
 									resetPriceType(newSpecMaster, newSpecQuestion);
+									
+									newSpecQuestion.setScoreTypeCode(null);
+									newSpecQuestion.setMaxScore(null);
 								}
-								newSpecQuestion.setScoreTypeCode(null);
-								newSpecQuestion.setMaxScore(null);
+								
 								newSpecQuestion.setWeightageReq(false);
 								newSpecQuestion.setWeightage(null);
-								newSpecQuestion.setTplSpecScorings(null);
 								
 								if (prevNewSpecQuestion != null && TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newSpecQuestion.getQuestionType())) {
 									String prevQuestionType = prevNewSpecQuestion.getQuestionType();
