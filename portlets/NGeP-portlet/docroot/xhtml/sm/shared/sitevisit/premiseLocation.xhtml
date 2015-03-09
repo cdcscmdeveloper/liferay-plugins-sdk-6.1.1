@@ -11,11 +11,18 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.ownership']}" /></td>
 			<td>
+				<ui:remove>
 				<p:selectOneMenu style="width:100px" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}" disabled="true">
 					<f:selectItem itemLabel = "#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}" itemValue="O" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}" itemValue="R" />
 				</p:selectOneMenu>
+				</ui:remove>
+				
+				<p:outputLabel value="#{lbl['lbl.sm.facility.own']}" 
+				rendered="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType eq 'O'}" style="float : left"/>
+				<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}" 
+				rendered="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType eq 'R'}" style="float : left"/>
 			</td>
 			
 			<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}" /></td>
@@ -44,10 +51,11 @@
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.floor']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.tarFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.tar']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor}">
-					<p:ajax event="change" update="otherFloorRemarkId" listenter="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange(smSvFacility)}" />
+					<p:ajax event="change" update="otherFloorRemarkId" listener="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange}" />
 				</p:selectBooleanCheckbox>#{lbl['lbl.sm.sitevist.premiseloc.others']}
 				<br />
 				<p:inputTextarea value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloorRemark}" 
+				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.floor']} :  #{lbl['lbl.sm.sitevisit.if.others']}"
 				maxlength="50" id="otherFloorRemarkId" label="#{lbl['lbl.sm.sitevist.remarks']}"
 				disabled="#{!svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor || viewFlag}"
 				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor and !viewFlag}" ></p:inputTextarea>
@@ -59,10 +67,11 @@
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envClean}" />#{lbl['lbl.sm.sitevist.premiseloc.cleanliness']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envOrganize}" />#{lbl['lbl.sm.sitevist.premiseloc.organized']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv}" update="otherEnvRemarkId">
-					<p:ajax event="change" update="otherEnvRemarkId" listenter="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange(smSvFacility)}" />
+					<p:ajax event="change" update="otherEnvRemarkId" listener="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange}" />
 				</p:selectBooleanCheckbox>#{lbl['lbl.sm.sitevist.premiseloc.others']}
 				<br />
 				<p:inputTextarea value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnvRemark}" 
+				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.environment']} : #{lbl['lbl.sm.sitevisit.if.others']}" 
 				maxlength="50" id="otherEnvRemarkId" label="#{lbl['lbl.sm.sitevist.remarks']}"
 				disabled="#{!svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv || viewFlag}"
 				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv and !viewFlag}"></p:inputTextarea>
