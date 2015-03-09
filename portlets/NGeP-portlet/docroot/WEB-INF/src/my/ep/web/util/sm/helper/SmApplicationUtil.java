@@ -2134,7 +2134,11 @@ public class SmApplicationUtil {
 				null));
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
-			if (cat.isOverLapCategory()) {
+			if (cat.isOverLapCategory()
+					&& (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
+							.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
 				managedBean.setOverLappedCategoryExists(true);
 				sb.append("<br/>").append(++i).append(".) ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
@@ -4861,7 +4865,7 @@ public class SmApplicationUtil {
 				reqSO = null;
 			}
 			long dayBal = DateUtils.getDaysDifference(new Date(),
-					smAppl.getDraftExpiryDate())+1;
+					smAppl.getDraftExpiryDate()) + 1;
 			String[] dayLeftParam = { dayBal + "" };
 			applStatusInfo.setSubmissionDate(DateUtils.dateToString(
 					"dd-MMM-yyyy", smAppl.getDraftExpiryDate()));
