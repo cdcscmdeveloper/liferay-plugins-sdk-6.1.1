@@ -106,7 +106,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getFinChecklistActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scoreFinanceView,uploadFinance"
+								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus"
 								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="financialactionnull1" for="financialactionnull"
@@ -122,7 +122,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getFinChecklistActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="scoreFinanceView,uploadFinance"
+								update="scoreFinanceView,uploadFinance,financialChecklistSpecificationStatus"
 								listener="#{specificationBackingBean.financialCheckListDropDownActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="financialactionnotnull1"
@@ -178,8 +178,10 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
 				style="width:7%;white-space: normal;">
-				<h:outputText
-					value="#{specificationBackingBean.getStatusDescById(stageTwofunctional.pmStatus.statusId)}"></h:outputText>
+				<h:panelGroup id="financialChecklistSpecificationStatus">
+					<h:outputText
+						value="#{specificationBackingBean.getStatusDescById(stageTwofunctional.pmStatus.statusId)}"></h:outputText>
+				</h:panelGroup>
 
 			</p:column>
 
