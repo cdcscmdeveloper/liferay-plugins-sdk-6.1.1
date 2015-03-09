@@ -35,11 +35,11 @@
 				<td style="width: 460px;"><p:inputText size="8" id="preparedOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
-						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
+						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View' or contractRequestBackingBean.isApprover()}"
-						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:controlOff" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}">
 					</ac:lov></td>
