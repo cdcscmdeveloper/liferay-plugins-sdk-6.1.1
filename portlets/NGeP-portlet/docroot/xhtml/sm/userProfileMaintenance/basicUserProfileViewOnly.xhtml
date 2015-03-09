@@ -19,7 +19,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
+		<p:panel style="width:100%">
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td>
@@ -31,79 +31,76 @@
 		</p:panel>
 
 
-		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-			<p:panel id="UserProfile"
-				styleClass="noBorders tr,noBorders td" style="width:100%;"
-				toggleable="true">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
-					<h:outputText value="#{lbl['lbl.sm.userprofile.edit']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
-				</f:facet>
-				<table style="width: 100%;table-layout:fixed">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.accountstatus']}" styleClass="outputLabel-view-label"/></td>
-						<td>
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 1}"/>
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.deactivate']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 9}"/>
-							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 8}"/>
-						</td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.name}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.nationality']}" styleClass="outputLabel-view-label" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmCountry.countryName}" /></td>
-					</tr>
+		<p:panel id="UserProfile" style="width:100%;"
+			toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
+				<h:outputText value="#{lbl['lbl.sm.userprofile.edit']}" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
+			</f:facet>
+			<table style="width: 100%;table-layout:fixed">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.accountstatus']}" styleClass="outputLabel-view-label"/></td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 1}"/>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.deactivate']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 9}"/>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.recordStatusFlg eq 8}"/>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" styleClass="outputLabel-view-label"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.name}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.nationality']}" styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmCountry.countryName}" /></td>
+				</tr>
 
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" styleClass="outputLabel-view-label"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.selectedPersonnelIdentificationType}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.idno']}" styleClass="outputLabel-view-label" id="equiPerIcNumLbl" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.email']}" styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.designation']}" styleClass="outputLabel-view-label"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.designation}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.phone']}" styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.mobile']}" styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"/></td>
+				</tr>	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" styleClass="outputLabel-view-label"/></td>
+					<td><ac:labelDate styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" /></td>		
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" styleClass="outputLabel-view-label"/></td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
+							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER') 
+							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER') 
+							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER')}"/>
+						<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+					</td>
+				</tr>
+				<p:outputPanel rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
+							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER') 
+							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER') 
+							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER')}">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" styleClass="outputLabel-view-label"/></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.selectedPersonnelIdentificationType}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.idno']}" styleClass="outputLabel-view-label" id="equiPerIcNumLbl" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.email']}" styleClass="outputLabel-view-label" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"/></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.designation']}" styleClass="outputLabel-view-label"/></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.designation}"/></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.phone']}" styleClass="outputLabel-view-label" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"/></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.mobile']}" styleClass="outputLabel-view-label" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"/></td>
-					</tr>	
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" styleClass="outputLabel-view-label" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"/></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" styleClass="outputLabel-view-label"/></td>
-						<td><ac:labelDate styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" /></td>		
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" styleClass="outputLabel-view-label"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isContrSign']}"  rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/></td>		
 						<td>
-							<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
-								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER') 
-								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER') 
-								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER')}"/>
-							<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+							<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 1}"/>
+							<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 0}"/>
 						</td>
 					</tr>
-					<p:outputPanel rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
-								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER') 
-								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER') 
-								or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER')}">
-						<tr>
-							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.isContrSign']}"  rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/></td>		
-							<td>
-								<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 1}"/>
-								<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg eq 0}"/>
-							</td>
-						</tr>
-					</p:outputPanel>
-				</table>
-			</p:panel>
-		</p:panelGrid>
+				</p:outputPanel>
+			</table>
+		</p:panel>
 
 		
 		<p:panel toggleable="true">
