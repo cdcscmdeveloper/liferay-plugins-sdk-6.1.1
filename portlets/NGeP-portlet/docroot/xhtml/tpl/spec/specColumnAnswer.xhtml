@@ -26,7 +26,7 @@
 				</h:panelGroup>
 			</p:column>
 			
-			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal}" headerText="#{lbl['lbl.sc.zone']}">
+			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and !isSpecificationReq}" headerText="#{lbl['lbl.sc.zone']}">
 				<p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
