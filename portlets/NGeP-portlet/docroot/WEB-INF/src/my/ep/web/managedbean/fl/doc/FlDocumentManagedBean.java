@@ -356,9 +356,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				docsearchResult.setUpdateAction(false);
 				docsearchResult.setViewAction(false);
 				docsearchResult.setCancelAction(false);
-				if(null == docsearchResult.getStatus() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) ){
+				if(null == docsearchResult.getStatusId() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) ){
 					docsearchResult.setViewAction(true);
-				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatus().getStatusId())){
+				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatusId())){
 					docsearchResult.setUpdateAction(true);
 					docsearchResult.setViewAction(true);
 				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())){
@@ -372,11 +372,11 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					FLOrderInfo orderInfo=null;
 					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
 						if(null != orderInfo){						
-							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId());
-							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(),orderInfo.getRole());
+							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
+							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId());
+							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatusId(),docsearchResult.getDocId(),orderInfo.getRole());
 							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
-								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
+								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
 							}	
 							if(isUpdate || isCancel) {
 								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
