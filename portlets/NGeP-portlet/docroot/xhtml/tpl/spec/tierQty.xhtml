@@ -78,7 +78,7 @@
 				process="@this, tierQtyTbl" partialSubmit="true"
 				action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
 				oncomplete="tierQtyWidget.paginator.endLink.click();"
-				update="tierQtyTbl" icon="ui-icon-add"
+				update="tierQtyTbl" 
 				rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}" />
 			<p:tooltip id="addTierTtp" for="addTierBtn">
 				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}"  />
@@ -86,7 +86,6 @@
 			
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this" partialSubmit="true"
-				icon="ui-icon-delete"
 				action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}"
 				update="tierQtyTbl"
 				rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}">

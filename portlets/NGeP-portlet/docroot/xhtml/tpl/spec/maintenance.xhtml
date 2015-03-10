@@ -18,14 +18,12 @@
 		<tr>
 			<td>
 				<p:commandButton value="#{lbl['lbl.btn.back']}" 
-					icon="ui-icon-back" 
 					action="templateSpecSearch"
 					partialSubmit="true"
 					process="@this" />
 			</td>
 			<td class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.save']}" 
-					icon="ui-icon-save" 
 					action="#{templateSpecBackingBean.saveAction(templateSpecBackingBean.managedBean.templateSpecBean)}"
 					update="@form" />
 			</td>
