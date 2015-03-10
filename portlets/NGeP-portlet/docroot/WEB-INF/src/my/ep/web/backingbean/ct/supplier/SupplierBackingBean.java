@@ -681,7 +681,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	/**
-	 * Method used to set value for security check
+	 * The method used to set value for security check
 	 * before save the change bank request.
 	 * 
 	 * @param  pmDigiSign  an object of digital sign
@@ -743,7 +743,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	/**
-	 * Method used to set value for security check
+	 * The method used to set value for security check
 	 * before save the factoring request.
 	 * 
 	 * @param  pmDigiSign  an object of digital sign
@@ -1122,7 +1122,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     }
     
 	/**
-	 * The method used to upload agreement content file.
+	 * The method used to upload factoring file.
 	 * 
 	 * @param  event      the upload event for file upload from screen
 	 * @throws Exception  if an exception occurred

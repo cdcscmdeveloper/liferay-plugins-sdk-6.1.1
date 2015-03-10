@@ -759,6 +759,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * The method used for initializing the remarks of agreement signing.
 	 * This method will create new remark object for every single new 
 	 * process, else will display all remarks.
+	 * 
+	 * @param remarkList  the list of remarks to display. If the remarkList is null, 
+	 *                    initiate a new remark
 	 */
 	private void initiateRemark(List<CtRemark> remarks) {
 		boolean ctWorkflowStatusMatch = false;
@@ -1397,7 +1400,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	/**
-	 * The method used to add an new user defined agreement content.
+	 * The method used to add a new user defined agreement content.
 	 * This method will generate a new record in agreement content
 	 * list, user allow to enter the title and attachment. 
 	 */
