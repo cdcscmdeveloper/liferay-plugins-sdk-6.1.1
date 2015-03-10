@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	
-	<h:panelGrid columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
+	<h:panelGrid  columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
 				
 					<h:panelGrid columns="2" style="float:right;">
 					     <p:outputLabel value="*" styleClass="mandatory" />
@@ -51,28 +51,32 @@
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			   		</p:inputText>		
 			   		
-			   		
-			   		
-			   		<h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
+			   		<p:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 			   		<p:inputText value="#{panelBackingBean.managedBean.circularVer.endDate}" disabled="true" style="width:85px; margin-top:3px;" >
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			   		</p:inputText>	 
 			   		
-			    <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" />
-			    <p:calendar  value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" 
-			        disabled="true" size="10"  id="popupButtonCal5" showOn="button"
+			   		<p:outputLabel value="Circular Extension" />
+			   	        <p:selectBooleanCheckbox id="extensionId" value="#{panelBackingBean.managedBean.circularExtension}">
+			                 <p:ajax event="change" update=":form:pc" listener="#{panelBackingBean.chkCircularExtension}" process="@this"/> 
+			           </p:selectBooleanCheckbox>
+			           
+			           <f:verbatim/> <f:verbatim/>
+			   		
+			    <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" rendered="#{panelBackingBean.managedBean.circularExtension}" />
+			    <p:calendar  value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
+			         maxdate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}"
+			         rendered="#{panelBackingBean.managedBean.circularExtension}"  size="10"  id="popupButtonCal5" showOn="button"
 				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 		       </p:calendar>
 		       
 		       
-		       <h:panelGrid columns="2" style="float:right;">
-					  <p:outputLabel value="*" styleClass="mandatory" />
-		             <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" />
-		      </h:panelGrid>
-		   
+		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"  rendered="#{panelBackingBean.managedBean.circularExtension}"  />
 		   <p:calendar size="10"  value="#{panelBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
-		         mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" required="true"
-				  label="#{lbl['lbl.ct.extension.end.date']}" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
+		         mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
+				   rendered="#{panelBackingBean.managedBean.circularExtension}" 
+				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
+				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
 				</p:calendar>
 				
 				    <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
