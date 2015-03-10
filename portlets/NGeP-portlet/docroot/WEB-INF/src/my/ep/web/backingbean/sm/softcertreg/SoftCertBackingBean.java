@@ -52,7 +52,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 		initAuthorizedPersonnels();
-		setSoftCertPaymentBpmTask();
 		redirectToPage("softCertUserSearch.xhtml", "");
 	}
 
@@ -102,6 +101,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		this.getManagedBean().setSoftCertPayList(
 				this.getManagedBean().getSoftCertSelectList());
 		updateAmount();
+		setSoftCertPaymentBpmTask();
+		SmCommonUtil.closeBlockUI();
 		return "softCertPaymentPage.xhtml";
 	}
 
@@ -175,8 +176,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	private void setSoftCertPaymentBpmTask() {
 		getManagedBean().setSoftCertBpmTask(null);
-		getManagedBean().setToken(
-				new FacesScopes().getBPMAuthenticationCtxToken());
+		if (getManagedBean().getToken() == null
+				|| StringUtils.isBlank(getManagedBean().getToken())) {
+			getManagedBean().setToken(
+					new FacesScopes().getBPMAuthenticationCtxToken());
+		}
 		List<WorklistItemVO> taskList = SmCommonUtil
 				.getBpmTaskListByAuthToken(getManagedBean().getToken());
 		if (taskList != null && !taskList.isEmpty()) {
