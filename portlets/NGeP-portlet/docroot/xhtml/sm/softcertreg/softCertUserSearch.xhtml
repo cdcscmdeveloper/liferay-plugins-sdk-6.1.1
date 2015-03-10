@@ -34,10 +34,8 @@
 
 		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultPanelId">
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
-				rowIndexVar="index" lazy="true"
-				value="#{softCertBackingBean.managedBean.softCertPagingDataModel}"
-				var="personnel"
-				selection="#{softCertBackingBean.managedBean.softCertSelectList}">
+				rowIndexVar="index" value="#{softCertBackingBean.managedBean.authorizedPersonnels}"
+				var="personnel" selection="#{softCertBackingBean.managedBean.softCertSelectList}">
 				<ac:paginator for="softCertPageDataModelId" />
 				
 				<p:ajax event="rowSelect" listener="#{softCertBackingBean.unSelectPersonnel}"
@@ -118,7 +116,7 @@
 						<td>
 							<div align="center">
 								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
-									action="#{softCertBackingBean.navigateToPaymentPage}" />
+									action="#{softCertBackingBean.navigateToPaymentPage}" onstart="blockWidget.show()"/>
 								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 							</div>
 						</td>
