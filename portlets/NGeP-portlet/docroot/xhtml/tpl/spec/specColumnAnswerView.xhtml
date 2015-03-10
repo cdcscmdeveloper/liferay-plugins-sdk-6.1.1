@@ -7,7 +7,11 @@
 	
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="qtySection">
-			<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
+			<p:column style="width:60px;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
+				<f:facet name="footer">
+					<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
+				</f:facet>
+				
 				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
 					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
@@ -36,22 +40,7 @@
 		</ui:define>
 	</ui:decorate>
 	
-	<p:column style="width:70px; white-space:normal; text-align:right;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
-		<f:facet name="footer">
-			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isSpecTypeFinancial}" />
-		</f:facet>
-		<h:outputText value="#{tplSpecAnswer.ratePerUom}"
-			rendered="#{isQuestionTypeItem}">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-		</h:outputText>
-	</p:column>	
-	<p:column style="width:90px;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
-		<h:outputText value="#{tplSpecAnswer.amountPerYear}"
-			rendered="#{isQuestionTypeItem}">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-		</h:outputText>
-	</p:column>
-	<p:column style="width:82px;white-space:normal;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
+	<p:column style="width:82px;white-space:normal;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.total']}">
 		<f:facet name="footer">
 			<h:outputText id="totalEstAmount" 
 				styleClass="calcEstAmount" 
@@ -67,7 +56,29 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
 	</p:column>
+	<p:column style="width:70px; white-space:normal; text-align:right;" rendered="#{isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+		<h:outputText value="#{tplSpecAnswer.ratePerUom}"
+			rendered="#{isQuestionTypeItem}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</h:outputText>
+	</p:column>	
+	<p:column style="width:82px; white-space:normal; text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<f:facet name="footer">
+			<h:outputText value="#{templateSpecBean.specMaster.totalAmountPerYear}" rendered="#{isSpecTypeFinancial}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</f:facet>
+		<h:outputText value="#{tplSpecAnswer.amountPerYear}"
+			rendered="#{isQuestionTypeItem}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</h:outputText>
+	</p:column>
 	<p:column style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
+		<f:facet name="footer">
+			<h:outputText value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}" rendered="#{isSpecTypeFinancial}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</f:facet>
 		<h:panelGroup>
 			<h:outputText value="#{tplSpecAnswer.answerText}" rendered="#{isAnswerTypeText}" />
 			<h:outputText value="#{tplSpecAnswer.answerNumeric}" rendered="#{isAnswerTypeNumeric}">
