@@ -19,7 +19,7 @@
                   
             <p:column style="width:2%;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
 	     		<p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" styleClass="myCustomChekBox">
-			  		<p:ajax event="change" update=":form:delBtn" listener="#{contractDetailsBackingBean.selectOneCheckboxSelect}"></p:ajax>
+			  		<p:ajax event="change" update=":form:delBtn" listener="#{contractDetailsBackingBean.selectAgencyListner}"></p:ajax>
 		       	</p:selectBooleanCheckbox>
 	      	</p:column>
             

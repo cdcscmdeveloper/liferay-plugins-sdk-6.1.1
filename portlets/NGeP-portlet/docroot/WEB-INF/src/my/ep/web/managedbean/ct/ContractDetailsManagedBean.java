@@ -116,7 +116,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private boolean disableScheduleRadio;
 	private boolean updateSupplierAddress;
 	private boolean updateCompanyName;
-	private boolean showZoneDetails;
 	private boolean updateContract = false;
 	private boolean viewContract = false;
 	private boolean chkJustification;
@@ -846,20 +845,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setUpdateCompanyName(boolean updateCompanyName) {
 		this.updateCompanyName = updateCompanyName;
-	}
-
-	/**
-	 * @return the showZoneDetails
-	 */
-	public boolean isShowZoneDetails() {
-		return showZoneDetails;
-	}
-
-	/**
-	 * @param showZoneDetails the showZoneDetails to set
-	 */
-	public void setShowZoneDetails(boolean showZoneDetails) {
-		this.showZoneDetails = showZoneDetails;
 	}
 
 	/**

@@ -327,7 +327,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	}
 	
 	/**
-	 * The method used to reset the search criteria
+	 * The method used to reset the search criteria.
 	 */
 	public void searchReset(){
 		this.getManagedBean().setProjectName(null);
