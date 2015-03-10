@@ -20,7 +20,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -115,7 +114,6 @@ import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
@@ -2573,12 +2571,14 @@ public class SPDetailBackingBean extends
 		return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
 	}
 
-	public void zoneTabChange(int index) {
+	public void zoneTabChange() {
+		
+		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedZoneTabIndex"));
 
-		getManagedBean().setActiveIndex(index);
+		getManagedBean().setActiveIndex(selectedZoneTabIndex);
 		debugLogger("zoneTabChange");
 		TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
-				.getZones().get(index);
+				.getZones().get(selectedZoneTabIndex);
 		log.info("Selected Zone : " + specZoneDtl.getZoneName());
 
 		if (getManagedBean().getSelectedZone() != null) {
@@ -3194,12 +3194,8 @@ public class SPDetailBackingBean extends
 					zoneItem.setAjax(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
-					zoneItem.setUpdate("@form");
-					zoneItem.setActionExpression(FacesScopes
-							.createMethodExpression(facesContext,
-									"#{supplierProposalDetailBackingBean.zoneTabChange("
-											+ zoneTabIndex + ")}", Void.class,
-									new Class[] { Integer.class }));
+					zoneItem.setUpdate("@this");
+					zoneItem.setOnclick("zoneTabChange([ {name : 'selectedZoneTabIndex', value : " + zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
 				}
