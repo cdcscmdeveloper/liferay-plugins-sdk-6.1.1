@@ -2704,7 +2704,7 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue(),"MOD");
+					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue(),"REP");
 					for (Object[] object : reportModList) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
@@ -2722,7 +2722,7 @@ public class ReportBackingBean extends
     	items = null; 
     	if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	    	if ((this.getModuleValue()) != null){
-	    		paramModule="MOD";
+	    		paramModule="REP";
 	    	}
 	    	items=super.getRadioButtonCodeValuesBySearchBean(paramModule,this.getReportSearchBean());
 	    	processItemsByModule(items);
