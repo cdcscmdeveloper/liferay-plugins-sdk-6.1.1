@@ -76,7 +76,6 @@
 			<portlet id="scDirectPurchaseTask" />
 			<portlet id="scSupplierReview" />
 			<portlet id="scQuotationTender" />
-			<portlet id="scCommitteeAppointment" />
 			<portlet id="scCommittee" />
 			<portlet id="scSpecification BusinessOwner" />
 			<portlet id="scSpecification Committee" />

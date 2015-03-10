@@ -30,6 +30,9 @@
 		</p:panel>
 	</c:if>
 	<p:spacer height="3" />
+	
+	<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />
+	
 	<p:tabMenu
 		activeIndex="#{approvalBackingBean.managedBean.selectedTabIndex}"
 		model="#{approvalBackingBean.managedBean.menuModel}">
