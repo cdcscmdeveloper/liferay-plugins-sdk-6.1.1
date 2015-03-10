@@ -90,6 +90,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean chkCancelPage;
 	private boolean fromCircularNotice;
 	private boolean differentModule;
+	private boolean circularExtension;
 	private int index = -1;
 	
 	
@@ -507,6 +508,14 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setSupplierList(List<SmSupplier> supplierList) {
 		this.supplierList = supplierList;
+	}
+
+	public boolean isCircularExtension() {
+		return circularExtension;
+	}
+
+	public void setCircularExtension(boolean circularExtension) {
+		this.circularExtension = circularExtension;
 	}
 
 	public boolean isChkCancelPage() {

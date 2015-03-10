@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -235,7 +234,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    getManagedBean().setCircularVer(resDTO.getCircularVer());
 		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 		
-		   /* if(getManagedBean().getCircularVer().getCtPanelItems() != null && getManagedBean().getCircularVer().getCtPanelItems().size() > 0){
+		    if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
+		    	  getManagedBean().setCircularExtension(true);
+		    }
+		 
+		    
+		    /* if(getManagedBean().getCircularVer().getCtPanelItems() != null && getManagedBean().getCircularVer().getCtPanelItems().size() > 0){
 			 
 		    	      Collections.sort(getManagedBean().getCircularVer().getCtPanelItems(), new CtPanelItem());
 			          for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()) {
@@ -596,6 +600,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			/*if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
+			
 			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 			}
@@ -1095,12 +1100,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				    reqDTO.setUpdateAction(true);
 				    getManagedBean().setUpdateAction(true);
 					getManagedBean().setViewContract(false);
+					getManagedBean().setCircularExtension(false);
 				    getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			
 			}
 			
 			setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
-			extendStartEndDate();
+		//	extendStartEndDate();
 			return "circularBase.xhtml?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1673,7 +1679,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	        getManagedBean().setUpdateAction(false);
 			getManagedBean().setViewContract(true);
 			setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
-			extendStartEndDate();
+		//	extendStartEndDate();
 			return "/xhtml/ct/circular/portal/panelCircularTab.xhtml?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1682,5 +1688,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			circularSO = null;
 		}
 		return null;
+	}
+	
+	public void chkCircularExtension(){
+		if(getManagedBean().isCircularExtension()) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(getManagedBean().getCircularVer().getEndDate());
+				c.add(Calendar.DATE, 1);
+				getManagedBean().getCircularVer().setExtendStartDate(c.getTime());
+		} else {
+			getManagedBean().getCircularVer().setExtendStartDate(null);
+			getManagedBean().getCircularVer().setExtendEndDate(null);
+		}
 	}
 }
