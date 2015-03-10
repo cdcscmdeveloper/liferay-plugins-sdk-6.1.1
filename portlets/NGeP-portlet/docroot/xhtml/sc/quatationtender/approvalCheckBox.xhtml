@@ -25,6 +25,8 @@
 			</tr>
 		</table>
 		<p:spacer height="10" />
+		
+		<p:remoteCommand name="approvalTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.approvalTabChangeAction}" />
 
 		<p:tabMenu
 			activeIndex="#{qTDetailBB.managedBean.selectedApprovalTabIndex}"
