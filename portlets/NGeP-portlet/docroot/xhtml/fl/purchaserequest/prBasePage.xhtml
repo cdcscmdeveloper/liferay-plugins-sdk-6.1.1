@@ -30,6 +30,7 @@
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form"
 								update="@form"
 								action="#{purchaseRequestBackingBean.gpkiSignAction(bpmAction)}"/>	
@@ -63,20 +64,23 @@
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd">
 					<p:tabMenu styleClass="sidemenu" activeIndex="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" >
-						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(1)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(1)}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>	
-						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(2)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(2)}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="2" />
 						</p:menuitem>	
-						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(3)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(3)}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="3" />
 						</p:menuitem>	
 						<p:menuitem value="#{lbl['lbl.fl.menu.approver.list']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(4)}"
-						rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}" >
+							rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="4" />
 						</p:menuitem>																								
 					</p:tabMenu></td>
