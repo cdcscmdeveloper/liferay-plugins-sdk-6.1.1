@@ -1514,11 +1514,7 @@ public class QTDetailBackingBean extends
 						committeItem.setIcon("ui-icon-endorse");
 					}
 				}
-				committeItem.setActionExpression(FacesScopes
-						.createMethodExpression(facesContext,
-								"#{qTDetailBB.committeTabChangeAction("
-										+ zoneTabIndex + ")}", null,
-								new Class[] { Integer.class }));
+				committeItem.setOnclick("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
 				menuModel.addMenuItem(committeItem);
 				zoneTabIndex++;
 			}
@@ -1990,11 +1986,7 @@ public class QTDetailBackingBean extends
 				MenuItem approvalItem = new MenuItem();
 				approvalItem.setValue(approvalTabBean.getTitleName());
 				approvalItem.setUpdate("@all");
-				approvalItem.setActionExpression(FacesScopes
-						.createMethodExpression(facesContext,
-								"#{qTDetailBB.approvalTabChangeAction("
-										+ approvalTabIndex + ")}", null,
-								new Class[] { Integer.class }));
+				approvalItem.setOnclick("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : " + approvalTabIndex + "}]);");
 				menuModel.addMenuItem(approvalItem);
 				approvalTabIndex++;
 			}
@@ -3135,55 +3127,30 @@ public class QTDetailBackingBean extends
 		}
 	}
 
-	public void committeTabChangeAction(Integer selectedZoneTabIndex) {
+	public void committeTabChangeAction() {
 		if (log.isDebugEnabled()) {
 			log.debug("Committe Tab change Action");
 		}
+		
+		Integer selectedCommitteeTabIndex = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedCommitteeTabIndex"));
+		
 		this.getManagedBean().setToBeDelCommitteMemebers(null);
-		TabBean previousTabBean = this.getManagedBean().getSelectedTabBean();
-		int selectedTabIndx = this.getManagedBean().getSelectedTabIndex();
-		if (!QTConstants.FINALIZATION_SECRETARY_TAB
-				.equalsIgnoreCase(previousTabBean.getTitleName())) {
-			ScCommittee committe = null;
-			if (selectedTabIndx == 0 && selectedZoneTabIndex != 1) {
-				for (TabBean tabBean : this.getManagedBean()
-						.getScCommitteeMemberTabList()) {
-
-					if (QTConstants.SPECIFICATION_COMMITTEE_TAB
-							.equalsIgnoreCase(tabBean.getTitleName())) {
-						committe = tabBean.getScQtCommittee().getScCommittee();
-						break;
-					}
-				}
-			} else {
-				committe = previousTabBean.getScQtCommittee().getScCommittee();
-			}
-			// Commented validation calling for Bug #2802
-			/*
-			 * if (committe.isApprovalReq()) {
-			 * 
-			 * ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-			 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-			 * ICommitteSO.class); CommitteReqDTO reqDTO = new CommitteReqDTO();
-			 * reqDTO.setScCommittee(committe);
-			 * reqDTO.setScQt(this.getManagedBean().getQt()); reqDTO.setUser(new
-			 * FacesScopes().getUserSessionBean());
-			 * committeSO.validateCommitteDtls(reqDTO); }
-			 */
-		}
-		this.getManagedBean().setSelectedTabIndex(selectedZoneTabIndex);
+		this.getManagedBean().setSelectedTabIndex(selectedCommitteeTabIndex);
 		TabBean committeTabBean = this.getManagedBean()
-				.getScCommitteeMemberTabList().get(selectedZoneTabIndex);
+				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
 
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
 	}
 
-	public void approvalTabChangeAction(Integer selectedZoneTabIndex) {
+	public void approvalTabChangeAction() {
 		if (log.isDebugEnabled()) {
 			log.debug("ApprovalTabChange Action");
 		}
+		
+		Integer selectedApprovalTabIndex = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedApprovalTabIndex"));
+		
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
-				.get(selectedZoneTabIndex);
+				.get(selectedApprovalTabIndex);
 		/*if (approvalTabBean.getScQtApproval().getApprovalType().equals(QTConstants.OTHERS_APPROVAL)) {
 			for (ScQtApprovalRequest approvalRequest : approvalTabBean.getScQtApproval().getScQtApprovalDtls()) {
 				if (null == approvalRequest.getApproverAction()) {
@@ -3194,7 +3161,7 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}*/
-		this.getManagedBean().setSelectedApprovalTabIndex(selectedZoneTabIndex);
+		this.getManagedBean().setSelectedApprovalTabIndex(selectedApprovalTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
 	}
 
