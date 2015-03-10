@@ -24,7 +24,7 @@
 			 <f:facet name="header">
 					<p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="tableBond" listener="#{contractDetailsBackingBean.selectAll()}" />
+							update="tableBond" listener="#{contractDetailsBackingBean.selectAllBond()}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{varBond.selectedCheckBox}" styleClass="myCustomChekBox">
@@ -127,7 +127,7 @@
 			</h:panelGrid>
 			<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="tableBond" 
-		         process="@this" actionListener="#{contractDetailsBackingBean.removeAddRow()}" onclick="dlgPerformDel.hide();">
+		         process="@this" actionListener="#{contractDetailsBackingBean.removePerformanceBond()}" onclick="dlgPerformDel.hide();">
 		         <f:setPropertyActionListener
 					target="#{contractDetailsBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
