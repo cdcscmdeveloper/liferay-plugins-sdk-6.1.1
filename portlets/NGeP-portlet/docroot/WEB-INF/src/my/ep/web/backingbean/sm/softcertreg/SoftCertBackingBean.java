@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -48,15 +47,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	}
 
-	@PostConstruct
-	public void init() {
-
-	}
-
 	public void preRenderSoftCert() {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
+		initAuthorizedPersonnels();
 		setSoftCertPaymentBpmTask();
 		redirectToPage("softCertUserSearch.xhtml", "");
 	}
@@ -128,8 +123,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			userList.add(pmUser.getLoginId());
 
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			
-			//if already got soft cert request, include in new bill.
+
+			// if already got soft cert request, include in new bill.
 			for (SmPersonnel smPersonnel : getManagedBean()
 					.getLoginUserPersonnelInfo().getSmAppl().getSmPersonnels()) {
 				if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
@@ -212,5 +207,33 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, page);
+	}
+
+	private void initAuthorizedPersonnels() {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplId(getManagedBean().getLoginUserPersonnelInfo()
+				.getSmAppl().getApplId());
+		getManagedBean().setAuthorizedPersonnels(new ArrayList<SmPersonnel>());
+		List<SmPersonnel> personnelList = getPersonnelSO()
+				.retrievePersonnelByApplIdForSoftCert(reqDTO)
+				.getSmPersonnelList();
+		if (personnelList != null && !personnelList.isEmpty()) {
+			setPersonnelRowSelection(personnelList);
+			getManagedBean().setAuthorizedPersonnels(personnelList);
+		}
+	}
+
+	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
+		for (SmPersonnel personnel : personnels) {
+			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+				personnel.setDisableRowSelection(true);
+			} else {
+				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
+					if (personnel.getPmUser() == null) {
+						personnel.setDisableRowSelection(true);
+					}
+				}
+			}
+		}
 	}
 }
