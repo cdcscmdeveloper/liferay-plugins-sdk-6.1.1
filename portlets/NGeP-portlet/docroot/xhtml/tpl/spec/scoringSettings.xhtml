@@ -230,11 +230,10 @@
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this, scoringTbl" partialSubmit="true"
 					action="#{templateSpecBackingBean.addScoringAction(templateSpecBean.selectedSpecQuestion)}"
-					update="scoringTbl" icon="ui-icon-add"
+					update="scoringTbl" 
 					rendered="#{!isCompliance and !isSpecTypeFinancial and editable}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this" partialSubmit="true"
-					icon="ui-icon-delete"
 					action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings)}"
 					update="scoringTbl"
 					rendered="#{!isCompliance and !isSpecTypeFinancial and editable}">
