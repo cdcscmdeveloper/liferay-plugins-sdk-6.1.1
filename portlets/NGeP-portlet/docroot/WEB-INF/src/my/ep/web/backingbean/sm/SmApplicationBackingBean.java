@@ -6502,7 +6502,7 @@ public class SmApplicationBackingBean extends
 				}
 				if (getManagedBean().isOverLappedCategoryExists()
 						&& StringUtils.isNotBlank(getManagedBean()
-								.getOverLappedCategoryMsg())) {
+								.getApplnOverLapRemarks())) {
 					SmApplicationUtil.manageAndSaveNewSmRemarks(
 							getManagedBean().getSmAppl().getApplId(),
 							ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY,
