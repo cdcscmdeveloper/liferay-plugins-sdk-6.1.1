@@ -160,10 +160,10 @@
             </h:panelGrid>
             <p:spacer width="10"/>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="#{delConfirmPopup}.hide();" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
 					partialSubmit="true" process="@this" update="spg" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-cancel"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					partialSubmit="true" process="@this" update="@this" 
 					oncomplete="#{delConfirmPopup}.hide();return false">
 					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{false}" />
@@ -185,14 +185,13 @@
 				
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-						icon="ui-icon-accept"
 						action="#{templateSpecBackingBean.tierQtyOkAction(templateSpecBean)}"
 						partialSubmit="true"
 						process="@this, tierQtyPnl"
 						update="tierQtyPnl">
 						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 						partialSubmit="true" process="@this" update="@this" 
 						action="#{templateSpecBackingBean.tierQtyCancelAction(templateSpecBean)}"
 						oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable}" />
@@ -211,14 +210,13 @@
 				
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-						icon="ui-icon-accept"
 						action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
 						partialSubmit="true"
 						process="@this, scoreSettPnl"
 						update="scoreSettPnl, @(.scoringBtn)">
 						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 						partialSubmit="true" process="@this" update="@this"
 						action="#{templateSpecBackingBean.scoringCancelAction(templateSpecBean)}"
 						oncomplete="#{scoringSetPopup}.hide()" rendered="#{editable}" />
@@ -239,14 +237,13 @@
 				
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-						icon="ui-icon-accept"
 						action="#{templateSpecBackingBean.estCostOkAction(templateSpecBean)}"
 						partialSubmit="true"
 						process="@this, estimationPnl"
 						update="estimationPnl, @(.calcEstAmount)">
 						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 					</p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 						partialSubmit="true" process="@this" update="@this"
 						action="#{templateSpecBackingBean.estCostCancelAction(templateSpecBean)}"
 						oncomplete="#{estimationPopup}.hide()" rendered="#{editable}" />
