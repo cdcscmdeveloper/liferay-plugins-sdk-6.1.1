@@ -100,6 +100,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.cc.CentralContractManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -916,8 +917,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * The method to retrieve list of active circular item 
 	 * */
 	public List<CtCircularItem> getActiveCircularItem() {
+		log.debug("CentralContractBackingBean.getActiveCircularItem()");
 		List<CtCircularItem> activeItemList = new ArrayList<CtCircularItem>();
-		Date currentDate = new Date();
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
 		
 		if(getManagedBean().getSelectedCircularContract() != null && getManagedBean().getSelectedCircularContract().getCtCircularItems() != null) {
 		for(CtCircularItem circularItem : getManagedBean().getSelectedCircularContract().getCtCircularItems()) {
