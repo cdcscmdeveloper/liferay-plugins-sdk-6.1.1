@@ -173,6 +173,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
@@ -3704,7 +3705,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					Date expDate = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate();
 					int days = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtSetting().getLastCOBeforeExpiryDays();
 					Calendar today = Calendar.getInstance();
-					today.setTime(new Date());
+					today.setTime(DateUtils.getCurrentDateWithoutTime());
 					today.add(Calendar.DATE, days);
 					if(today.getTime().after(expDate)) {
 						throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
