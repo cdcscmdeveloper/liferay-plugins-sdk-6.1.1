@@ -22,9 +22,13 @@
 				action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
 				update="@all" />
 		</div>
+		
+		<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />
+		
 		<p:tabMenu id="committeTabMenu"
 			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}"
 			model="#{qTDetailBB.managedBean.menuModel}">
+			<f:param></f:param>
 
 		</p:tabMenu>
 
