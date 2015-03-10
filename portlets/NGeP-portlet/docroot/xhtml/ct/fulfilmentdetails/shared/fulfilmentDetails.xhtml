@@ -157,7 +157,7 @@
 			 </h:panelGrid>
 	       </h:panelGrid>	
 	       <h:panelGrid columns="3" 
-	           rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
+	           rendered="#{false and !contractDetailsBackingBean.managedBean.directPurchase}">
 			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.mto}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
