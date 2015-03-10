@@ -160,7 +160,8 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
 				
-				if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster)) {
+				if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster) &&
+						resDTO.getSpecAnswerList() != null) {
 					calcGrandTotalAmount(templateSpecBean);
 				}
 			}
