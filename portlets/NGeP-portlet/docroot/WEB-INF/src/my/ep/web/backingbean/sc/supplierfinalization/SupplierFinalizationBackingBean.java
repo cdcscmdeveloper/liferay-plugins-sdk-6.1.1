@@ -3025,7 +3025,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	 * To navigate to the selected zone tab, under Supplier Finalization tab
 	 * @param zoneTabIndex  the selected zone tab index
 	 */
-	public void onZoneTabChangeAction(Integer zoneTabIndex) {
+	public void onZoneTabChangeAction() {
+		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedZoneTabIndex"));
+		
+		onZoneTabChangeAction(selectedZoneTabIndex);
+	}
+	
+	private void onZoneTabChangeAction(Integer zoneTabIndex) {
 		debugLogger("onZoneTabChangeAction");
 		
 		this.getManagedBean().setShortlistedItemSupplierList(null);
@@ -3242,12 +3248,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					zoneItem.setAjax(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
-					zoneItem.setUpdate("@([id$=zonalMenu],[id$=itemPanel],[id$=supplierPanel])");
-					zoneItem.setActionExpression(FacesScopes
-							.createMethodExpression(facesContext,
-									"#{suppFinalizationBackingBean.onZoneTabChangeAction("
-											+ zoneTabIndex + ")}", Void.class,
-									new Class[] { Integer.class }));
+					zoneItem.setUpdate("@this");
+					zoneItem.setOnclick("onZoneTabChangeAction([ {name : 'selectedZoneTabIndex', value : " + zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
 				}
