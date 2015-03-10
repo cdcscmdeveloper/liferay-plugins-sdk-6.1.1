@@ -27,7 +27,8 @@
 							immediate="true" action="#{softCertBackingBean.cancel}" />
 					</td>
 					<td style="white-space: nowrap; float: right;">
-					    <p:commandButton value="#{lbl['lbl.sm.makePayment']}" style="float:right;" icon="ui-icon-next"
+					    <p:commandButton value="#{lbl['lbl.sm.makePayment']}" style="float:right;" icon="ui-icon-next" 
+					    	disabled="#{empty softCertBackingBean.managedBean.softCertPayList}" id="makePaymentBtnId"
 					    	action="#{softCertBackingBean.makePayment}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					</td>
 				</tr>
@@ -51,11 +52,11 @@
 			</p:row>
 		</p:columnGroup>
  
- 		<p:ajax event="toggleSelect" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList"/>
-		<p:ajax event="rowSelect" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList"/>
-		<p:ajax event="rowSelectCheckbox" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList"/>
-		<p:ajax event="rowUnselectCheckbox" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList"/>
-		<p:ajax event="rowUnselect" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList"/>
+ 		<p:ajax event="toggleSelect" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList,@([id$=makePaymentBtnId])"/>
+		<p:ajax event="rowSelect" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList,@([id$=makePaymentBtnId])"/>
+		<p:ajax event="rowSelectCheckbox" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList,@([id$=makePaymentBtnId])"/>
+		<p:ajax event="rowUnselectCheckbox" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList,@([id$=makePaymentBtnId])"/>
+		<p:ajax event="rowUnselect" listener="#{softCertBackingBean.updateAmount()}" update=":form:paymentList,@([id$=makePaymentBtnId])"/>
  
 		<p:column selectionMode="multiple" style="width:2%"/> 
 						
