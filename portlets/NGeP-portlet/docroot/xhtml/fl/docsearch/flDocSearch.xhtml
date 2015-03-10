@@ -169,7 +169,7 @@
 				width="100%">
 				<ac:paginator for="flDocListDt" />
 				<p:column
-					headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}">
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}" style="white-space:normal;" >
 					<h:outputText
 						value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
 				</p:column>
@@ -179,7 +179,7 @@
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.order.no']}">
 					<h:outputText value="#{flDocument.orderNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}" style="white-space:normal;" >
 					<h:outputText value="#{flDocument.title}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}">
@@ -190,7 +190,7 @@
 					<h:outputText value="#{flDocument.circularNo}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}">
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}" style="white-space:normal;" >
 					<h:outputText
 						value="#{flDocumentBackingBean.getStatusDescById(flDocument.statusId)}" />
 				</p:column>  
