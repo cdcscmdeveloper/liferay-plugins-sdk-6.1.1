@@ -34,6 +34,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FLProcessNameConst;
@@ -64,6 +65,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
+import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -92,6 +94,7 @@ import com.liferay.portal.util.PortalUtil;
 public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManagedBean> {
 	
 	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
+	private static final String NAV_STOP_INSTRUCTION = "/xhtml/fl/shared/hyperlinkView/stopInstrPage/stopInstrHyperlink.xhtml";
 	private static Logger log = Logger.getLogger(DeliveryOrderBackingBean.class);
 	private FlFulfilmentItemAddr amountSectionItemRow;
 	
@@ -1052,5 +1055,28 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		orderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 		
 		return NAV_ORDERNO;
+	}
+	
+	/**
+	 * Navigate to stop instruction view page.
+	 * @param docId
+	 * @return String gotoCommonViewPage
+	 */
+	public String navigateDocument(Long docId){
+		IFulfilmentOrderSO orderSO= (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		StopInstrBackingBean siBB = new StopInstrBackingBean();
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		flReqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+		flReqDTO.setStopRequestId(docId);
+		flReqDTO.setStatusDesc(FulfilmentStatusConst.SD_REJECTED.toString());
+		FulfilmentResDTO resDTO = orderSO.retrieveStopInstruction(flReqDTO);
+		siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+		siBB.getManagedBean().setSelectedTabIndex(0);
+		siBB.populateChargeLineData();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		siBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+		
+		
+		return NAV_STOP_INSTRUCTION;
 	}
 }

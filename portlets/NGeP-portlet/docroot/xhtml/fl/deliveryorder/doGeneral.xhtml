@@ -140,7 +140,8 @@
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
-				<td><p:inputText disabled="true" size="30" value="#{createDOBackingBean.managedBean.flStopInstr.stopInstrNo}"/></td>
+				<td><p:commandLink value="#{createDOBackingBean.managedBean.flStopInstr.stopInstrNo}" 
+				action="#{createDOBackingBean.navigateDocument(createDOBackingBean.managedBean.flStopInstr.stopInstrId)}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.txt.reject.date']}" /></td>
 				<td><p:inputText disabled="true" size="15"
 						value="#{createDOBackingBean.managedBean.flStopInstr.changedDate}">
