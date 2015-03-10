@@ -557,7 +557,7 @@ public class NoticeBoardBackingBean extends
 		scQt.setQtId(qtId);
 		this.getManagedBean().setScQt(scQt);
 
-		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml?faces-redirect=true";
+		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
 	}
 
 	public String gotoSupplierRegistration(Long qtId) {
@@ -723,7 +723,7 @@ public class NoticeBoardBackingBean extends
 			
 		} finally {
 		}
-		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml?faces-redirect=true";
+		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml";
 	}
 
 	public String getMofNo() {
@@ -1404,7 +1404,7 @@ public class NoticeBoardBackingBean extends
 		} finally {
 		}
 
-		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
+		return "/xhtml/sc/noticeboard/awardsupplier.xhtml";
 	}
 
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
@@ -1882,6 +1882,7 @@ public class NoticeBoardBackingBean extends
 					scLoiLoaItemSupplierId == scBidSupplierItem
 						.getScBidSupplier().getSmSupplier().getSupplierId()) {
 					finalPrice = scBidSupplierItem.getFinalPrice();
+					break;
 				}
 			}
 		} finally{
