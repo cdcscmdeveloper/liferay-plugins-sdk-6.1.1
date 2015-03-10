@@ -159,6 +159,8 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
+				
+				calcGrandTotalAmount(templateSpecBean);
 			}
 		} finally {
 			templateSpecSO = null;
