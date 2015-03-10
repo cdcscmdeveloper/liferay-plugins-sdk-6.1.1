@@ -346,9 +346,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 			
-			//TODO waiting for sm api to check the current date against the suppleir exp date.
-//			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
-
 			if(isRequisitioner()){
 				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -509,7 +506,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-	
+	/**
+	 * Gets the supplier branches list based on SupplierId.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the supplier branches list
+	 */
 	public List<SelectItem> getSupplierBranchesList(List<SmSupplierBranch> branches){
 		
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
@@ -519,7 +521,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 		return supplierBranches;
 	}
-	
+	/**
+	 * Removes the selected delivery addresses from delivery Address List.
+	 * <p>
+	 * clear the order quantity from item list which is assigned to selected delivery addresses
+	 */
 	public void removeAddRow(){
 		if(null !=getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFlRequest().getFlDeliveryAddresses().iterator();
@@ -544,7 +550,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
-
+	/**
+	 * To remove a contract item from a delivery address.
+	 */
 	public void removeItemRow() {
 		List<Long> deletedItemId = new ArrayList<Long>();
 		for(FlFulfilmentItemAddr flItemAddr : getManagedBean().getSelectedItemsRows()) {
@@ -581,7 +589,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			populateItemsForSelectedAddress();
 		}
 	}
-	
+	/**
+	 * Close listener.
+	 */
 	public void closeListener() {
 		log.info("closeListener");
 		getManagedBean().setEmailValidate(true);
@@ -622,7 +632,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 		sortAddressType(getManagedBean().getAddressTypesList());
 	}
-	
+	/**
+	 * flManualDeliveryAddr Method loads country List.
+	 * default selected one is Malaysia.
+	 * loads states list based malaysia country.
+	 */
 	public void flManualDeliveryAddr() {
 		getManagedBean().setEmailValidate(false);
 		retrieveCountryList();
@@ -833,10 +847,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 
-	public void checkPtjFlg() {
-		getManagedBean().setCheckPtjFlg(false);
-	}
-
 	/**
 	 * retrieve Contract items pagination.
 	 * 
@@ -924,38 +934,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 
-	private List<String> getAvailableApproverList() {
-		List<String> availableApprovers = new ArrayList<String>();
-		IUserSO userSO = null;
-		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-			PmUser user = getFacesScopes().getUserSessionBean();
-
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(user.getUserId());
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
-			reqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
-
-			resDTO = userSO.retrieveUserGroupList(reqDTO);
-			for (PmUserGroupUser userGroup : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
-				getManagedBean().getApproverMap().put(userGroup.getPmUser().getUserName(), userGroup);
-				availableApprovers.add(userGroup.getPmUser().getUserName());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							"Circular save failed."));
-		} finally {
-			userSO = null;
-		}
-		return availableApprovers;
-	}
-
 	/**
 	 * renew session. Retrieve fulfilment request object and set it into managedBean.
 	 * 
@@ -993,7 +971,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			flReqDTO.setFlRequestId(coObj.getOrderDetails().getRequestId().longValue());
 
-			///flReqDTO.setSelectedApprovers(coObj.getApproverList());
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
@@ -1014,15 +991,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}	
 
-			if (coObj.getContractId().intValue() == 0) {//TODO
+			if (coObj.getContractId().intValue() == 0) {
 				FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
 			
-				resDTO.getFlFulfilmentRequest().setCtContract(contractSO.retrieveContract(contractReqDTO).getContract());//TODO
-				//TODO db changes
-//				contractReqDTO.setLoaId(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtMtoLoas().get(0).getLoa().getLoaId());
+				resDTO.getFlFulfilmentRequest().setCtContract(contractSO.retrieveContract(contractReqDTO).getContract());
 				ContractResDTO ctResDTO = contractSO.retrieveContractByLoaId(contractReqDTO);
 				
 				flRequest.setCtContract(ctResDTO.getContract());
@@ -1414,7 +1389,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * 
 	 * @param FlItemSummaryReqDTO reqDTO - contractId, orgProfileId,itemId
 	 */
-	public void checkCeilingQty(FlFulfilmentRequest flRequest){//TODO db change qt item change
+	public void checkCeilingQty(FlFulfilmentRequest flRequest){
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
 		
@@ -2816,18 +2791,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		TreeNode root = getManagedBean().getContractListTree();
 		root = new DefaultTreeNode("root", null);
 		TreeNode parent = null;
-		TreeNode child = null;
 		
 		for(VCtActiveContract vCtActiveContract : getManagedBean().getActiveContractList()){
 			if(contractTree.containsKey(vCtActiveContract.getContract().getContractId())){
 				parent = contractTree.get(vCtActiveContract.getContract().getContractId());
-				child = new DefaultTreeNode(
+					new DefaultTreeNode(
 						new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
 			}else{
 				parent = new DefaultTreeNode(
 						new CtActiveContractVO(vCtActiveContract.getContractNo(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId()),root);
 				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-					child = new DefaultTreeNode(
+					new DefaultTreeNode(
 							new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
 				}
 				
