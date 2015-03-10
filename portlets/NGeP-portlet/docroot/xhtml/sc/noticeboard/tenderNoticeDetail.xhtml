@@ -15,7 +15,7 @@
 		<p:messages id="tenderDetails" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
 		<ui:include src="noticeboardLocationPopUp.xhtml"></ui:include>
-		<p:panel>
+		
 			<p:panelGrid style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
@@ -26,7 +26,7 @@
 
 				</p:row>
 			</p:panelGrid>
-		</p:panel>
+	
 
 		<p:panel
 			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}"
@@ -268,36 +268,7 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-
-
-		<p:panel header="#{lbl['lbl.so.document.list']}" toggleable="true">
-			<p:dataTable var="document" id="doctbl"
-				value="#{noticeBoardBackingBean.managedBean.scQtDocReports}"
-				styleClass="documentslist" rows="10">
-				<ac:paginator for="doctbl" />
-
-				<p:column headerText="#{lbl['lbl.so.title']}">
-					<h:outputText value="#{document.title}"
-						rendered="#{document.brandNew eq false}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
-					<p:commandButton id="download" icon="ui-icon-download"
-						style="background-color:transparent !important; border:0px none;"
-						ajax="false"
-						action="#{noticeBoardBackingBean.downloadReport(document)}" />
-				</p:column>
-			</p:dataTable>
-			<p:spacer height="20px" />
-
-			<div align="right">
-				<p:commandButton ajax="false" value="#{lbl['lbl.btn.download.all']}"
-					icon="ui-icon-download"
-					rendered="#{noticeBoardBackingBean.managedBean.scQtDocReports ne null and noticeBoardBackingBean.managedBean.scQtDocReports.size()>0}"
-					style="background-color:transparent !important; border:0px none;"
-					action="#{noticeBoardBackingBean.downloadAllQTDocuments(noticeBoardBackingBean.managedBean.scQt.qtId)}" />
-			</div>
-		</p:panel>
+		<ui:include src="/xhtml/sc/noticeboard/nbdocumentList.xhtml"></ui:include>
 
 	</ui:define>
 </ui:composition>
