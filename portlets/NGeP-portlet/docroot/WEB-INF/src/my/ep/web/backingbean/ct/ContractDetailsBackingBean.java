@@ -124,6 +124,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.AddressUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -895,7 +896,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 */
     public void validateCtContractVer(String action) throws EpException {
     	CtContractVer contractVer = getManagedBean().getContractVer();
-    	Date today = new Date();
+    	Date today = DateUtils.getCurrentDateWithoutTime();
     	getManagedBean().setAutoUpdate(true);
 		// Validation for remark
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)
@@ -1137,7 +1138,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					if (item.getCtItemMaxQties().size() != 0) {
 						BigDecimal maxCeilingQty = new BigDecimal(0);
 						for (CtItemMaxQty ctItemMaxQty : item.getCtItemMaxQties()) {
-							if (ctItemMaxQty.getEffDate().before(today) && ctItemMaxQty.getExpDate().after(today)) {
+							if (ctItemMaxQty.getEffDate().getTime()<=today.getTime() && ctItemMaxQty.getExpDate().getTime()>=today.getTime()) {
 								maxCeilingQty = ctItemMaxQty.getMaxQuantity();
 								break;
 							}
@@ -2696,13 +2697,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * larger than the maximum quantity of the item.
 	 */
     public void validateCeilingQty(CtItemCeilingQty ceilingQtyData) {
-    	Date today = new Date();
+    	Date today = DateUtils.getCurrentDateWithoutTime();
     	double totalCeilingQuantity = 0.0;
     	CtContractItem item = this.getManagedBean().getSelectedItem();
 		if (item.getCtItemMaxQties().size() != 0) {
 			BigDecimal maxCeilingQty = new BigDecimal(0);
 			for (CtItemMaxQty ctItemMaxQty : item.getCtItemMaxQties()) {
-				if (ctItemMaxQty.getEffDate().before(today) && ctItemMaxQty.getExpDate().after(today)) {
+				if (ctItemMaxQty.getEffDate().getTime()<=today.getTime() && ctItemMaxQty.getExpDate().getTime()>=today.getTime()) {
 					maxCeilingQty = ctItemMaxQty.getMaxQuantity();
 					break;
 				}
