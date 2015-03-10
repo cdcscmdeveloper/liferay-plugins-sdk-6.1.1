@@ -120,8 +120,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL:	
 	        	rptGenBean.setSmExtraTwoColumnView(true);
 	        	rptGenBean.setSmMandatorySupplierTypeView(true);
-	        	rptGenBean.setSmMandatoryFromDateView(true);
-	        	rptGenBean.setSmMandatoryDateView(true);
+	        	rptGenBean.setSmMandatoryReceivedFromDateView(true);
 	            break;
 		 case ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL:	
 			    rptGenBean.setSmMandatoryCompanyNameView(true);
@@ -193,7 +192,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
 	        	rptGenBean.setSmMandatoryBothSupplierTypeView(true);
 	        	rptGenBean.setSmReportTypeView(true);
-	        	rptGenBean.setSmMandatoryReceivedFromDateView(true);					
+	        	rptGenBean.setSmMandatoryCreatedFromDateView(true);					
 	            break;
 		 case ReportConst.SM_PAY_REGIS_FEE_RPT_VAL:
 			    rptGenBean.setSmCompanyNameView(true);	        	

@@ -149,6 +149,7 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryBothSupplierTypeView = false;
 		private boolean smYearTextView = false;
 		private boolean smMandatoryReceivedFromDateView = false;
+		private boolean smMandatoryCreatedFromDateView = false;
 		private boolean smRejectedDateView = false;
 		private boolean smRegisteredDateView = false;
 		private boolean smScheduleSiteVisitDateView = false;
@@ -393,6 +394,13 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmMandatoryCreatedFromDateView() {
+			return smMandatoryCreatedFromDateView;
+		}
+		public void setSmMandatoryCreatedFromDateView(
+				boolean smMandatoryCreatedFromDateView) {
+			this.smMandatoryCreatedFromDateView = smMandatoryCreatedFromDateView;
+		}
 		public boolean isScPurchaseInDefaultStatusView() {
 			return scPurchaseInDefaultStatusView;
 		}
