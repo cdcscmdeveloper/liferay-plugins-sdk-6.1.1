@@ -409,12 +409,11 @@ public class ApprovalBackingBean extends
 			for (TabBean tabBean : tabBeans) {
 				MenuItem committeItem = new MenuItem();
 				committeItem.setValue(tabBean.getTitleName());
-				committeItem.setUpdate("@form");
-				committeItem.setActionExpression(FacesScopes
-						.createMethodExpression(facesContext,
-								"#{qTDetailBB.committeTabChangeAction("
-										+ zoneTabIndex + ")}", null,
-								new Class[] { Integer.class }));
+				committeItem.setPartialSubmit(true);
+				committeItem.setProcess("@this");
+				committeItem.setUpdate("@this");
+				//committeItem.setUpdate("@form");
+				committeItem.setOnclick("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
 				menuModel.addMenuItem(committeItem);
 				zoneTabIndex++;
 			}

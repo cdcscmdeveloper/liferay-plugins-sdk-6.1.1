@@ -1503,9 +1503,9 @@ public class QTDetailBackingBean extends
 			for (TabBean tabBean : committeTabs) {
 				MenuItem committeItem = new MenuItem();
 				committeItem.setValue(tabBean.getTitleName());
-				committeItem.setUpdate("@form");
+				committeItem.setUpdate("@this");
 				committeItem.setPartialSubmit(true);
-				committeItem.setProcess("@form");
+				committeItem.setProcess("@this");
 				if (!QTConstants.FINALIZATION_SECRETARY_TAB
 						.equalsIgnoreCase(tabBean.getTitleName())) {
 					if (tabBean.getScQtCommittee().getScCommittee()
@@ -1985,7 +1985,9 @@ public class QTDetailBackingBean extends
 			for (TabBean approvalTabBean : tabBeans) {
 				MenuItem approvalItem = new MenuItem();
 				approvalItem.setValue(approvalTabBean.getTitleName());
-				approvalItem.setUpdate("@all");
+				approvalItem.setUpdate("@this");
+				approvalItem.setPartialSubmit(true);
+				approvalItem.setProcess("@this");
 				approvalItem.setOnclick("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : " + approvalTabIndex + "}]);");
 				menuModel.addMenuItem(approvalItem);
 				approvalTabIndex++;
