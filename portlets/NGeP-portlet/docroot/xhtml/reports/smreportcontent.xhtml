@@ -134,7 +134,7 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatorySupplierTypeView}">
 							<p:column >
-								<table style="width: 182px;">
+								<table style="width: 180px;">
 									<tr style="width: 100%;">
 										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"
 												 /><p:outputLabel value="*" styleClass="mandatory"
@@ -883,10 +883,43 @@
 	</div>
 	<div>
 		<c:if
-			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceivedFromDateView}">
+			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryCreatedFromDateView}">
 			<TABLE style="margin-top: 10px; width: 60%;">
 				<TR>
 					<TD style="width:145px;" ><p:outputLabel value="#{lbl['lbl.rpt.createddatefrom']}"
+							/><p:outputLabel value="*" styleClass="mandatory"
+							/></TD>
+
+					<TD><p:calendar label="#{lbl['lbl.rpt.frmdate']}"
+							id="MandatoryCreatedFromDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar></TD>
+					<TD><p:message id="MandatoryCreatedFromDateMsg"
+							for="MandatoryCreatedFromDate" display="icon" /></TD>
+					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+							style="width:145px;" /></TD>
+					<TD><p:calendar label="#{lbl['lbl.rpt.todate']}"
+							id="MandatoryCreatedToDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.toDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar></TD>
+					<TD><p:message id="MandatoryCreatedToDateMsg" for="MandatoryCreatedToDate"
+							display="icon" /></TD>
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
+	<div>
+		<c:if
+			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryReceivedFromDateView}">
+			<TABLE style="margin-top: 10px; width: 60%;">
+				<TR>
+					<TD style="width:145px;" ><p:outputLabel value="#{lbl['lbl.rpt.receiveddatefrom']}"
 							/><p:outputLabel value="*" styleClass="mandatory"
 							/></TD>
 
