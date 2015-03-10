@@ -134,6 +134,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> scRequisitionerList = new ArrayList<SelectItem>();
 	private List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
 	private List<SelectItem> smUPSSVOUserList = new ArrayList<SelectItem>();
+	private List<SelectItem> ctSubTypeList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -197,6 +198,14 @@ public class ReportBackingBean extends
 	
 
 	
+
+	public List<SelectItem> getCtSubTypeList() {
+		return ctSubTypeList;
+	}
+
+	public void setCtSubTypeList(List<SelectItem> ctSubTypeList) {
+		this.ctSubTypeList = ctSubTypeList;
+	}
 
 	public List<SelectItem> getSmUPSSVOUserList() {
 		return smUPSSVOUserList;
@@ -2570,6 +2579,35 @@ public class ReportBackingBean extends
 
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
+	}
+	
+	public List<SelectItem> retrieveSubTypeList(){
+		ctSubTypeList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 240500;
+        	if (null != this.getCtUserType()) {
+        		String userTypeRoleCode = null;
+        		if (this.getCtUserType().equals("Minsitry Contract Admin")) {
+        			userTypeRoleCode="MIN_CONTRACT_ADMIN";
+        		}else if(this.getCtUserType().equals("Approver")) {
+        			userTypeRoleCode="CT_APPROVER";
+        		}
+        		if (null != userTypeRoleCode) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<Object[]> ptLst = reportSO.retrieveSubTypeList(lngUserId,userTypeRoleCode);			
+					for (Object[] object : ptLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						ctSubTypeList.add(selectItem);
+					}
+        	    }
+        	}
+        }
+		return ctSubTypeList;
 	}
 
 	public void assignNewCompanyExperience(List<SmSupplierCategory> catList) {
