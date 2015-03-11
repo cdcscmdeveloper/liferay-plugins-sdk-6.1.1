@@ -911,12 +911,16 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					&& getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				for (SmSupplierBank smSupplierBank : getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
 					if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						
 						String account = smSupplierBank.getAccountNo();
 						if (smSupplierBank.getPmFinancialOrg() != null 
 								&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
 							account = account + " / " + smSupplierBank.getPmFinancialOrg().getFinOrgName();
 						}
-						populateBankAccountList.add(new SelectItem(smSupplierBank.getAccountNo(), account));
+						 if(getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() ==1 ){
+						    	getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(account);
+						 }
+						populateBankAccountList.add(new SelectItem(account, account));
 						if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
 							getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
 						}
