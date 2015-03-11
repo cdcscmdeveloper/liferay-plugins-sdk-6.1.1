@@ -2,9 +2,9 @@ package my.ep.web.backingbean.sm.applicationView;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -12,6 +12,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -32,7 +33,6 @@ public class ViewSuppProfileBackingBean extends
 		MofRegistrationResDTO resDTO = mofRegistrationSO
 				.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
 
-		FacesContext fc = FacesContext.getCurrentInstance();
 		String redirectToAppl = SmApplicationUtil.getApplicationErrorPage();
 
 		if (resDTO.getSmAppl() != null) {
@@ -42,18 +42,17 @@ public class ViewSuppProfileBackingBean extends
 			if (applNo != null && StringUtils.isNotBlank(applNo)) {
 				initApplication(resDTO.getSmAppl());
 				redirectToAppl = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
-
+				SmCommonUtil.redirectToPage(redirectToAppl, "");
 			} else {
 				log.error("*****************applNo is null**************");
-				SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
+				SmCommonUtil.redirectToPage(redirectToAppl,
+						MessageConst.INFO_721212);
 			}
 		} else {
 			log.error("*****************appl is null**************");
-			SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
+			SmCommonUtil.redirectToPage(redirectToAppl,
+					MessageConst.INFO_721212);
 		}
-
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, redirectToAppl);
 		setTabParam();
 	}
 
