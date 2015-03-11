@@ -233,12 +233,9 @@
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scLAPRNPURCHDEFAULTGroupView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scLAPRNPURCHDEFAULTGroup}" style="margin-top:5px;width:300px;">
-										 <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.REQUISI']}" itemValue="#{lbl['lbl.rpt.REQUISI']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.SUPPL']}" itemValue="#{lbl['lbl.rpt.SUPPL']}"></f:selectItem>																																										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.prcmnttype']}" itemValue="#{lbl['lbl.rpt.CONTRPKPNO']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.CONTRACTTYPE']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsscsimplequoteno']}" itemValue="#{lbl['lbl.rpt.APPROVER']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.contractpkpno']}" itemValue="#{lbl['lbl.rpt.contractpkpno']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capscontracttype']}" itemValue="#{lbl['lbl.rpt.capscontracttype']}"></f:selectItem>																																										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsapprover']}" itemValue="#{lbl['lbl.rpt.capsapprover']}"></f:selectItem>										
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scREQUESTNOTESUMMARYGroupView}">
