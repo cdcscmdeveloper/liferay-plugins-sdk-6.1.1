@@ -64,6 +64,9 @@
 				update="natureBusinessId,bizDialog"
 				action="#{registrationBackingBean.addBusinessNature}" />
 			</ui:remove>
+			#{lbl['lbl.sm.payment.click']}
+			<a href="http://www.statistics.gov.my/portal/images/stories/files/otherlinks/Piawaian_Klasifikasi_Industri_Malaysia_2008.pdf" target="_blank">#{lbl['lbl.sm.payment.here']}</a>
+			#{lbl['lbl.sm.download.natureofbusiness']}
 		    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 				postUpdateListener="registrationBackingBean.postUpdateBizNature"
 				headerText="Business Nature" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
