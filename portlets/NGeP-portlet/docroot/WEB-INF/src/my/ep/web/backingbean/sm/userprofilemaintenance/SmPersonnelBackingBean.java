@@ -106,9 +106,7 @@ public class SmPersonnelBackingBean extends
 
 		initAuthorizedPersonnels(smSupplier);
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "userProfileSearch.xhtml");
+		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "");
 	}
 
 	public void preRenderUpdateOwnProfilePage() {
@@ -136,9 +134,7 @@ public class SmPersonnelBackingBean extends
 					getManagedBean().getUpdateSmPersonnelMailingAddress()
 							.getSmAddress());
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "updateUserProfile.xhtml");
+		SmCommonUtil.redirectToPage("updateUserProfile.xhtml", "");
 	}
 
 	public void preRenderDeactivateSuppAdmin() {
@@ -160,12 +156,11 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
 
 		String redirectPage = SmApplicationUtil.getApplicationErrorPage();
-		FacesContext fc = FacesContext.getCurrentInstance();
 
 		getManagedBean().setNoSupplierUserMsg("");
 
 		if (isHavePendingTaskList()) {
-			setDisallowedDeactivateSuppAdminMsg(fc);
+			SmCommonUtil.redirectToPage(redirectPage, MessageConst.INFO_721213);
 		} else {
 			redirectPage = "adminReAssign.xhtml";
 			if (resDTO.getSmPersonnelList() != null
@@ -199,10 +194,9 @@ public class SmPersonnelBackingBean extends
 						new ArrayList<SmPersonnel>());
 				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			}
-		}
 
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, redirectPage);
+			SmCommonUtil.redirectToPage(redirectPage, "");
+		}
 
 	}
 
@@ -1026,16 +1020,15 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void save() throws Exception {
-		FacesContext fc = FacesContext.getCurrentInstance();
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			getManagedBean().setBasicSmPersonnel(
-					saveNewUser(getManagedBean().getBasicSmPersonnel(), fc));
+					saveNewUser(getManagedBean().getBasicSmPersonnel()));
 			initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 			getManagedBean().setDisableAddNewUser(
 					validatePersonLimit(getManagedBean().getSmSupplier()));
 		} else {
 			if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				updateUser(getManagedBean().getBasicSmPersonnel(), fc);
+				updateUser(getManagedBean().getBasicSmPersonnel());
 				initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 				getManagedBean().setDisableAddNewUser(
 						validatePersonLimit(getManagedBean().getSmSupplier()));
@@ -1051,7 +1044,7 @@ public class SmPersonnelBackingBean extends
 							"confirmDialog.show()");
 				} else {
 					getManagedBean().getBasicSmPersonnel().setEpRole(null);
-					updateUser(getManagedBean().getBasicSmPersonnel(), fc);
+					updateUser(getManagedBean().getBasicSmPersonnel());
 					initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 					getManagedBean().setDisableAddNewUser(
 							validatePersonLimit(getManagedBean()
@@ -1071,32 +1064,24 @@ public class SmPersonnelBackingBean extends
 	}
 
 	public void deactivateOrTerminate() throws Exception {
-		FacesContext fc = FacesContext.getCurrentInstance();
-		updateUser(getManagedBean().getBasicSmPersonnel(), fc);
+		updateUser(getManagedBean().getBasicSmPersonnel());
 		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
 		getManagedBean().setDisableAddNewUser(
 				validatePersonLimit(getManagedBean().getSmSupplier()));
 		getManagedBean().setDeactivateTerminateConfirmMsg("");
 	}
 
-	public void updateUser(SmPersonnel smPersonnel, FacesContext fc)
-			throws Exception {
+	public void updateUser(SmPersonnel smPersonnel) throws Exception {
 		PersonnelResDTO resDTO = updatePersonnel(smPersonnel);
 		log.info("Result:" + resDTO.isSuccessful());
 		if (resDTO.isSuccessful()) {
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_100002,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "userProfileSearch.xhtml");
+			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
+					MessageConst.INFO_100002);
 			getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
 		}
 	}
 
-	public SmPersonnel saveNewUser(SmPersonnel smPersonnel, FacesContext fc) {
+	public SmPersonnel saveNewUser(SmPersonnel smPersonnel) {
 
 		validatePersonnelBeforeSave(smPersonnel);
 		setAuthorizedFlag(smPersonnel);
@@ -1138,14 +1123,8 @@ public class SmPersonnelBackingBean extends
 		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721014,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "userProfileSearch.xhtml");
+			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
+					MessageConst.INFO_721014);
 			return resDTO.getSmPersonnel();
 		} else
 			return null;

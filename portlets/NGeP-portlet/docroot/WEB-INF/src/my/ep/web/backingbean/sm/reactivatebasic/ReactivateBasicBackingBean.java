@@ -17,12 +17,13 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 @ManagedBean(name = "reactivateBasicBackingBean")
 @ViewScoped
 public class ReactivateBasicBackingBean extends
-BaseBackingBean<BaseManagedBean>{
+		BaseBackingBean<BaseManagedBean> {
 
 	private ReactivateSupplierVO reactivateBasic;
 
@@ -49,18 +50,9 @@ BaseBackingBean<BaseManagedBean>{
 			RegistrationResDTO resDTO = reqSO.reactivateBasicAccount(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_721028,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"/xhtml/sm/userProfileMaintenance/outputMsg");
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/userProfileMaintenance/outputMsg",
+						MessageConst.INFO_721028);
 			}
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
