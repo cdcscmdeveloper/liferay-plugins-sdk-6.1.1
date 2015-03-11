@@ -20,6 +20,9 @@
 					<p:menuitem value="#{lbl['lbl.sc.declaration']}"
 						action="#{supplierProposalDetailBackingBean.retrieveDeclarationList}"
 						update="@form" />
+						<p:menuitem value="#{lbl['lbl.sc.integrity']}"
+						action="#{supplierProposalDetailBackingBean.retrieveIntegrityDetails}"
+						update="@form" />
 				</p:tabMenu></td>
 			<td width="90%" style="vertical-align: top; overflow : auto"><h:panelGroup
 					id="menuSPContent">
@@ -34,6 +37,10 @@
 					<h:panelGroup
 						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
 						<ui:include src="spdeclaration.xhtml" />
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '3'}">
+						<ui:include src="spintegrity.xhtml" />
 					</h:panelGroup>
 				</h:panelGroup></td>
 		</tr>

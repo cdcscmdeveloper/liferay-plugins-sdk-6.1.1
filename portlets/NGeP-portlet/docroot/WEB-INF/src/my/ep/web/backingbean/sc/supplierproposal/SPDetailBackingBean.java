@@ -276,6 +276,9 @@ public class SPDetailBackingBean extends
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			this.getManagedBean().setScQtPRPExperiences(null);
+			this.getManagedBean().setScQtPRPExperienceNCheckLists(null);
 
 			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
 			List<ScQtProposalChecklist> technicalChecklist = getManagedBean()
@@ -3203,5 +3206,18 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setProposalZonalMenuModel(zoneMenuModel);
 		}
 	}
+	
+	public void retrieveIntegrityDetails() throws Exception{
+		debugLogger("retrieveIntegrityDetails");
+		this.getManagedBean().setPrepareActiveIndex(3);
+		VelocityContext context = new VelocityContext();
+		String othersTermsConditions = DocumentGenerator.getInstance()
+				.getHtmlFromVelocity(
+						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY,
+						context);
+		getManagedBean().setOthersTermsConditions(othersTermsConditions);
+	}
+	
+	
 
 }
