@@ -1,4 +1,4 @@
-#include("templates/sm/sitevisit/shared/header.vm")
+#parse("templates/sm/sitevisit/shared/header.vm")
 
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
