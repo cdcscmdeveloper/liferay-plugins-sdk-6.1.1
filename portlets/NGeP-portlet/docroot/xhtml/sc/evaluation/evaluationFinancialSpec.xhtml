@@ -42,7 +42,10 @@
 		<h:panelGroup>
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 16%" valign="top"><p:tabMenu
+					<td style="width: 16%" valign="top">
+						<p:remoteCommand name="specTabChange" update="@form" partialSubmit="true" process="@this" action="#{evaluationBackingBean.specTabChange}" />
+						
+						<p:tabMenu
 							styleClass="sidemenu" id="zonalMenu"
 							activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 							style="display : table-caption;"
