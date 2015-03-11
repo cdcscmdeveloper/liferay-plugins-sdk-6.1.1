@@ -164,10 +164,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			resDTO = getPersonnelSO().updatePersonnelAndRequestSoftCert(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				String msgKey = MessageConst.INFO_721060;
+				if (getManagedBean().getTotalPaymentAmount().compareTo(
+						BigDecimal.ZERO) == 0) {
+					msgKey = MessageConst.INFO_721061;
+				}
 				renewSesionObject();
 				SmCommonUtil.redirectToPage(
-						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721060);
+						SmApplicationUtil.getApplicationErrorPage(), msgKey);
 			}
 		}
 	}
