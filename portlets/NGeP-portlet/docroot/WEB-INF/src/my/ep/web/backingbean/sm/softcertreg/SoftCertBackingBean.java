@@ -194,7 +194,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	public String getPersonnelSoftCertPrice(SmPersonnel smPersonnel) {
 		if (smPersonnel.isFreeSoftCert()) {
-			return "0.00";
+			return "0.00 ("
+					+ SmCommonUtil
+							.getMessage("lbl.sm.softcert.firstfree", null)
+					+ ")";
 		} else {
 			return "150.00";
 		}
