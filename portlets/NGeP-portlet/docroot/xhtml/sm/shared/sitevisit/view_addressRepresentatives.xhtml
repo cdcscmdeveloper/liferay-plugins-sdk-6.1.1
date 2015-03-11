@@ -9,12 +9,14 @@
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" id="pnlSvSelectSvAdd" align="left">
 		<p:dataTable var="svAdd" id="dtblSelectedSvAdd" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAddresses}">
+			<ui:remove>
+			<p:column headerText="#{lbl['lbl.sm.facility.type']}">
+				#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType,svoSiteVisitBackingBean.managedBean.facilityTypeAddressMap[svAdd.svAddressId])}
+			</p:column>
+			</ui:remove>
 			<p:column headerText="#{lbl['lbl.sm.address']}">
-					#{svAdd.smAddress.address1}<br />
-					#{svAdd.smAddress.address2}<br />
-					#{svAdd.smAddress.address3}<br />
-					#{svAdd.smAddress.address4}
-				</p:column>
+				#{svoSiteVisitBackingBean.displayAddress(svAdd.smAddress)}
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.postcode']}">
 				#{svAdd.smAddress.postcode}
@@ -38,7 +40,7 @@
 		</p:dataTable>
 	</p:panel>
 	
-<!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/categoryCodeByTemplate.xhtml" /> -->
+<!-- 	<ui:include src="/xhtml/sm/shared/sitevisit/assistingOfficer.xhtml" /> -->
 	
 	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep">
 		<p:dataTable id="dtIntRepTbl" var="interviewee" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}" 
