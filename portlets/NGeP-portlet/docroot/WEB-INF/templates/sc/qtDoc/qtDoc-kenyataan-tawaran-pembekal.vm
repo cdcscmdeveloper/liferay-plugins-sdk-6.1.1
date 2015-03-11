@@ -25,6 +25,20 @@
 	text-align: center;
 	position: running(footer);
 }
+
+.headerfont {
+		font-weight:bold;
+		font-size:10px;
+		font-family: Times New Roman;
+}
+
+.textfont {
+		
+		font-size:10px;
+		font-family: Times New Roman;
+
+}
+
 </style>
 </head>
 <body>
@@ -77,8 +91,8 @@
 			</tr>
 			<tr align='left'>
 				<td>
-					<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
 						<table class="table2" width='100%'>
+						<span class="headerfont">
 							<tr>
 								<td>Category Code</td>
 								<td>Main-Category</td>
@@ -86,7 +100,9 @@
 								<td>Sub-Category Division</td>
 								<td>Mandatory</td>
 							</tr>
+						</span>
 							#foreach( $categoryResults in $categoryResults1 )
+							<span class="textfont">
 							<tr>
 								<td>
 									$categoryResults.pmCategoryL1.categoryL1Code
@@ -103,9 +119,9 @@
 									#end
             					</td>
 							</tr>
+							</span>
 							#end
 						</table>
-					</span>
 				</td>
 			</tr>
 			<tr>
@@ -131,8 +147,9 @@
 					#if ($locLevel == "true")
 						<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
 						
-						<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
+						<span class="headerfont"> Location </span>
 						<table width='100%' class="table2">
+						<span class="headerfont">
 		            		<tr>
 		            			<td>Zone</td>
 								<td>State</td>
@@ -140,8 +157,10 @@
 									<td>District</td>
 								#end
 		            		</tr>
+		            	</span>
 							#foreach($location in $zoneLocality)
 								#foreach($locCriteria in $location.tplSpecZoneLocs)
+								<span class="textfont">
 								<tr>
 									<td>$location.zoneName</td>
 									<td>
@@ -152,24 +171,27 @@
 											$locCriteria.pmDistrict.districtName
 										</td>
 									#end
-									
 								</tr>
+								</span>
 								#end
 							#end
 						</table>
-					</span>
+					
 					#end
 					#if ($locLevel == "false")
 						#if ($subLocLevel == "true")
-							<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
+							<span class="headerfont"> Location </span>
 							<table width='100%' class="table2">
+							<span class="headerfont">
 								<tr>
 									<td>State</td>
 									#if ($locationLevel == "District")
 										<td>District</td>
 									#end
 								</tr>
+								</span>
 								#foreach($tplSpecLoc in $locality)
+								  <span class="textfont">
 									<tr>
 										<td>
 											$tplSpecLoc.pmState.stateName
@@ -180,9 +202,10 @@
 											</td>
 										#end
 									</tr>
+								</span>
 								#end
 							</table>
-							</span>
+							
 						#end
 						#if ($subLocLevel == "false")
 						#end
@@ -197,9 +220,9 @@
 			</tr>
 			<tr align='left'>
 		        <td>
-		            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
 		            	
 		            		 #foreach( $zoneList in $zoneBeans )
+		            		  <span class="headerfont">
 		            		 	#if ( $isZone)
 									$zoneList.tplSpecZoneDtl.zoneName<br/>
 				            	#end
@@ -208,8 +231,10 @@
 									Yes
 								#else 
 									No 
-								#end<br/>
+								#end </span> <br/>
+								#if($zoneList.briefingList && $zoneList.briefingList.size() > 0)
 		            		 	<table width='100%' class="table2">
+		            		 	 <span class="headerfont">
 				            		<tr>
 				            			<td>Description</td>
 				            			<td>Date/Time</td>
@@ -217,24 +242,32 @@
 				            			<td>Coordinationg Officer</td>
 				            			<td>Max Attendance</td>
 				            		</tr>
+				            	 </span>
 				            		#foreach( $briefingdtls in $zoneList.briefingList )
+				            		<span class="textfont">
 				            		<tr>
 				            			<td>$briefingdtls.bsvDesc</td>
-				            			<td>$briefingdtls.bsvDate</td>
+				            			<td>$commonUtils.getFormattedDate($briefingdtls.bsvDate, "dd/MM/yyyy hh:mm a")</td>
 				            			<td>$briefingdtls.location</td>
 				            			<td>$briefingdtls.coordinatingOfficer</td>
 				            			<td>$briefingdtls.maxNoOfAttendance</td>
 				            		</tr>
+				            		</span>
 				             		#end
 				            	</table>
+				            	<span class="headerfont">
 								Attendance for Briefing : 
 								#if ($zoneList.scQtBsv.allBriefingReq)
 									Yes
 								#else 
 									No 
-								#end<br/>
+								#end </span> 
+								<br/>
 								<br />
+								#end
+							#if($zoneList.sitevisitList && $zoneList.sitevisitList.size() > 0)
 								<table width='100%' class="table2">
+								 <span class="headerfont">
 				            		<tr>
 				            			<td>Description</td>
 				            			<td>Date/Time</td>
@@ -242,25 +275,28 @@
 				            			<td>Coordinationg Officer</td>
 				            			<td>Max Attendance</td>
 				            		</tr>
+				            	 </span>
 				            		#foreach( $sitevisitdtls in $zoneList.sitevisitList )
+				            		<span class="textfont">
 				            		<tr>
 				            			<td>$sitevisitdtls.bsvDesc</td>
-				            			<td>$sitevisitdtls.bsvDate</td>
+				            			<td>$commonUtils.getFormattedDate($sitevisitdtls.bsvDate,"dd/MM/yyyy hh:mm a")</td>
 				            			<td>$sitevisitdtls.location</td>
 				            			<td>$sitevisitdtls.coordinatingOfficer</td>
 				            			<td>$sitevisitdtls.maxNoOfAttendance</td>
 				            		</tr>
+				            		</span>
 				             		#end
 				            	</table>
+				            <span class="headerfont">
 								Attendance for Site Visit : 
 								#if ($zoneList.scQtBsv.allSiteVisitReq)
 									Yes
 								#else 
 									No 
-								#end<br/>
+								#end </span> <br/>
 							#end
-		            	
-		            </span>
+						#end	
 		        </td>
 		    </tr>
 			<tr align="left">
