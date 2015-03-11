@@ -550,14 +550,26 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		try{
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
-
+			
 			this.getManagedBean().getPmCategoryL1().setCategoryName(this.getManagedBean().getPmCategoryL1().getCategoryName().toUpperCase());
 			
+			this.getManagedBean().getPmCategoryL1().setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());
+			
+			for(PmCategoryL2 pmCategoryL2:this.getManagedBean().getPmCategoryL1().getPmCategoryL2s())
+			{
+				for(PmCategoryL3 pmCategoryL3:pmCategoryL2.getPmCategoryL3s())
+				{
+					pmCategoryL3.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());					
+				}
+				pmCategoryL2.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());
+			}			
+			
+			       
 			if (!validatePmCategoryL1()){
 				return "/xhtml/pm/category/categoryl1.xhtml"; 
 			}
 			
-			reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
+			reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());			
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveCategory(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -587,6 +599,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 
 			this.getManagedBean().getPmCategoryL2().setCategoryName(this.getManagedBean().getPmCategoryL2().getCategoryName().toUpperCase());
+			this.getManagedBean().getPmCategoryL2().setRecordStatusFlg(this.getManagedBean().getPmCategoryL2().getRecordStatusFlg());
+
+			for(PmCategoryL3 pmCategoryL3:this.getManagedBean().getPmCategoryL2().getPmCategoryL3s())
+			{
+				pmCategoryL3.setRecordStatusFlg(this.getManagedBean().getPmCategoryL2().getRecordStatusFlg());
+
+			}
+			
 			
 			if (!validatePmCategoryL2()){
 				return "/xhtml/pm/category/categoryl2.xhtml"; 
@@ -651,6 +671,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().getPmCategoryL3().setCategoryName(this.getManagedBean().getPmCategoryL3().getCategoryName().toUpperCase());
 			this.getManagedBean().getPmCategoryL3().setBasicCategoryReq(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue()?1:0);
 			this.getManagedBean().getPmCategoryL3().setHomeOperated(this.getManagedBean().getPmCategoryL3().isHomeOperatedValue()?1:0);
+			this.getManagedBean().getPmCategoryL3().setRecordStatusFlg(this.getManagedBean().getPmCategoryL3().getRecordStatusFlg());
 			
 			if (this.getManagedBean().isNewCategory()){
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
