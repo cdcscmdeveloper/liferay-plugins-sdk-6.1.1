@@ -52,7 +52,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 		initAuthorizedPersonnels();
-		redirectToPage("softCertUserSearch.xhtml", "");
+		SmCommonUtil.redirectToPage("softCertUserSearch.xhtml", "");
 	}
 
 	public void preRenderSoftCertPay() {
@@ -80,7 +80,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			paymentBB.getManagedBean().setTaskId(taskId);
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 			paymentBB.retrieveBillInfo();
-			redirectToPage("/xhtml/sm/payment/portletViewMode.xhtml", "");
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/payment/portletViewMode.xhtml", "");
 		}
 	}
 
@@ -151,7 +152,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				renewSesionObject();
-				redirectToPage(SmApplicationUtil.getApplicationErrorPage(),
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
 						MessageConst.INFO_721060);
 			}
 		}
@@ -197,20 +199,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private IPersonnelSO getPersonnelSO() {
 		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-	}
-
-	private void redirectToPage(String page, String msgKeyId) {
-		FacesContext fc = FacesContext.getCurrentInstance();
-		if (StringUtils.isNotBlank(msgKeyId)) {
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(msgKeyId,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		}
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, page);
 	}
 
 	private void initAuthorizedPersonnels() {
