@@ -566,6 +566,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
 				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 			}
+			recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			recNoteBB.getManagedBean().setDocMaintainRemarks(true);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
@@ -958,5 +959,4 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			throw new EpException("Report is not available for this document.");
 		}
 	}
-	
 }
