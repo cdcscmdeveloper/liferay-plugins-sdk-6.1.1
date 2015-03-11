@@ -56,8 +56,7 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class ForceReplaceSuppAdminBackingBean extends
 		BaseBackingBean<ForceReplaceSuppAdminManagedBean> {
-	
-	
+
 	public void preRenderForceReplaceAdmin() {
 		renewSesionObject();
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
@@ -73,9 +72,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		initCountries();
 		initStatest();
 		SmCommonUtil.setMDCUserId();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "forceReplaceAdmin.xhtml");
+		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "");
 	}
 
 	public void submit() {
@@ -238,11 +235,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// replace with new personnel
 		if (!getManagedBean().isExistingUser()) {
 			initDefaultNewAdmin();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml");
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "");
 		}
 		// replace with existing personnel
 		else {
@@ -389,17 +383,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 	private void redirectToSuccessPage(PersonnelResDTO resDto) {
 		if (resDto.isSuccessful()) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721027,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/userProfileMaintenance/outputMsg");
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.INFO_721027);
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
 		}
