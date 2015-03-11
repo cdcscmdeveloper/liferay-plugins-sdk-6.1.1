@@ -533,7 +533,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	/**
-	 * Prepender page navigation to request note page based on task id
+	 * Pre render page navigation to request note page based on task id
 	 * @return void
 	 */
 	public void preRenderView() {
@@ -834,7 +834,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	/**
 	 * Update bpm task.
-	 *
+	 * Authenticating gpki before update bpm
 	 * @param outcome the outcome
 	 * @param digiSign the digi sign
 	 * @return the request note res dto
@@ -3566,7 +3566,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	/**
 	 * Gpki sign action.
-	 *
+	 * Authenticating gpki before update bpm.
 	 * @param digiSign the digi sign
 	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
