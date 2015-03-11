@@ -2233,13 +2233,8 @@ public class EvaluationBackingBean extends
 					zoneItem.setAjax(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
-					// zoneItem.setUpdate("@([id$=zonalMenu]),@([id$=financialSpecEvaluationStage])");
-					zoneItem.setUpdate("@form");
-					zoneItem.setActionExpression(FacesScopes
-							.createMethodExpression(facesContext,
-									"#{evaluationBackingBean.specTabChange("
-											+ zoneTabIndex + ")}", Void.class,
-									new Class[] { Integer.class }));
+					zoneItem.setUpdate("@this");
+					zoneItem.setOnclick("specTabChange([ {name : 'selectedZoneTabIndex', value : " + zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
 				}
@@ -2417,14 +2412,15 @@ public class EvaluationBackingBean extends
 	 * @param event
 	 *            (Mandatory)
 	 */
-	public void specTabChange(int index) {
+	public void specTabChange() {
 		IQTEvaluationSO evaluationSo = null;
 		try {
+			Integer selectedZoneTabIndex = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedZoneTabIndex"));
 
-			this.getManagedBean().setSpecZoneTabIndex(index);
+			this.getManagedBean().setSpecZoneTabIndex(selectedZoneTabIndex);
 			debugLogger("zoneTabChange");
 			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) getManagedBean()
-					.getSpecZoneDtls().get(index);
+					.getSpecZoneDtls().get(selectedZoneTabIndex);
 			log.info("Selected Zone : " + specZoneDtl.getZoneName());
 			getManagedBean().setSelectedZone(specZoneDtl);
 			/*
