@@ -2,11 +2,12 @@ package my.ep.web.backingbean.sm.applicationView;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.constant.MessageConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -25,21 +26,18 @@ public class ViewPreRenderSmApplBackingBean {
 		String applType = originalServletRequest
 				.getParameter("applicationType");
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		String redirectToAppl = SmApplicationUtil
-				.getApplicationErrorPage();
+		String redirectToAppl = SmApplicationUtil.getApplicationErrorPage();
 
 		if (StringUtils.isNotBlank(applNo) && StringUtils.isNotBlank(applType)) {
 			redirectToAppl = applNo.substring(applNo.length() - 3,
 					applNo.length()).equals("APP") ? SmApplicationUtil
 					.getReviewApplicationBasePage(applType) : SmApplicationUtil
 					.getReviewApplicationSupplierBasePage(applType);
-		}else{
-			SmApplicationUtil.showSuppProfileNotReadyMsg(fc);
+			SmCommonUtil.redirectToPage(redirectToAppl, "");
+		} else {
+			SmCommonUtil.redirectToPage(redirectToAppl,
+					MessageConst.INFO_721212);
 		}
-
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, redirectToAppl);
 
 	}
 

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -17,8 +16,6 @@ import javax.portlet.PortletSession;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -36,10 +33,8 @@ import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -389,38 +384,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
 		}
-	}
-
-	private boolean isHavePendingTaskList() {
-		boolean retVal = false;
-		BpmRequestDTO reqDTO = null;
-		BpmResponseDTO responseDTO = null;
-		try {
-			reqDTO = new BpmRequestDTO();
-			reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-			reqDTO.setOffset(1);
-			reqDTO.setState("ASSIGNED");
-			reqDTO.setDocType("");
-
-			reqDTO.setViewBy("");
-			reqDTO.setAssignment("");
-			// get bpm token only if not yet authenticate
-			if (getManagedBean().getToken() == null
-					|| StringUtils.isBlank(getManagedBean().getToken())) {
-				getManagedBean().setToken(getBpmAuthenticateToken());
-			}
-			reqDTO.setCtxToken(getManagedBean().getToken());
-			responseDTO = getBpmSO().getWorklistItems(reqDTO);
-			if (responseDTO.getWorklistVO() != null) {
-				if (responseDTO.getWorklistVO().getTotal() > 0) {
-					retVal = true;
-				}
-			}
-		} finally {
-			reqDTO = null;
-			responseDTO = null;
-		}
-		return retVal;
 	}
 
 	public void assignIdentificationType(AjaxBehaviorEvent e) {
