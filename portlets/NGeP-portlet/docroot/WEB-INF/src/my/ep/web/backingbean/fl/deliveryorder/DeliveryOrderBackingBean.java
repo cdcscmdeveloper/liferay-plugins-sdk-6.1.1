@@ -542,7 +542,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		String orderId = originalServletRequest.getParameter("orderId");
-		System.out.println("orderId :" + orderId);
 		if(orderId != null){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			//FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
