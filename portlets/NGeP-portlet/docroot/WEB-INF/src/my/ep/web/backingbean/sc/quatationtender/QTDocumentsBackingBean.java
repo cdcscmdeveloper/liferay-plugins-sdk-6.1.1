@@ -1311,7 +1311,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
     	VelocityContext context = new VelocityContext();
-		
+    	context.put("commonUtils", commonUtils);
     	context.put("ministry", qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
     	context.put("agency", qt.getPmOrgProfile().getOrgName());
     	String title = qt.getQtTitle();
