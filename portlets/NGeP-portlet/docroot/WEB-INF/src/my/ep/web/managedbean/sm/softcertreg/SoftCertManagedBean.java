@@ -8,23 +8,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.type.aut.SearchOperator;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
 
@@ -43,11 +31,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private HashMap<Long, BigDecimal> paymentMap = new HashMap<Long, BigDecimal>();
 	private BigDecimal totalPaymentAmount;
 	private SmPersonnel loginUserPersonnelInfo;
+	private SmPersonnel freeSoftCertPersonnel;
 	private String loginRoleName;
 	private String taskName;
 	private String token;
+	private String paymentBtnLbl;
 	private WorklistItemVO softCertBpmTask;
 	private List<SmPersonnel> authorizedPersonnels;
+	private boolean alreadyHadFreeSoftcert;
 
 	public SoftCertManagedBean() {
 		super();
@@ -157,6 +148,30 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setAuthorizedPersonnels(List<SmPersonnel> authorizedPersonnels) {
 		this.authorizedPersonnels = authorizedPersonnels;
+	}
+
+	public String getPaymentBtnLbl() {
+		return paymentBtnLbl;
+	}
+
+	public void setPaymentBtnLbl(String paymentBtnLbl) {
+		this.paymentBtnLbl = paymentBtnLbl;
+	}
+
+	public boolean isAlreadyHadFreeSoftcert() {
+		return alreadyHadFreeSoftcert;
+	}
+
+	public void setAlreadyHadFreeSoftcert(boolean alreadyHadFreeSoftcert) {
+		this.alreadyHadFreeSoftcert = alreadyHadFreeSoftcert;
+	}
+
+	public SmPersonnel getFreeSoftCertPersonnel() {
+		return freeSoftCertPersonnel;
+	}
+
+	public void setFreeSoftCertPersonnel(SmPersonnel freeSoftCertPersonnel) {
+		this.freeSoftCertPersonnel = freeSoftCertPersonnel;
 	}
 
 }

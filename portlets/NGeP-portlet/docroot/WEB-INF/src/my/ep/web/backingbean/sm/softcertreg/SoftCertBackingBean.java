@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,7 +20,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.util.MessageUtils;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -109,17 +107,31 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	public void updateAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
+		int i = 0;
 		for (SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()) {
-			this.getManagedBean().getPaymentMap()
-					.put(personnel.getPersonnelId(), BigDecimal.valueOf(150));
-			amount = amount.add(BigDecimal.valueOf(150));
+			if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
+				this.getManagedBean().getPaymentMap()
+						.put(personnel.getPersonnelId(), BigDecimal.ZERO);
+				amount = amount.add(BigDecimal.ZERO);
+				personnel.setFreeSoftCert(true);
+				getManagedBean().setFreeSoftCertPersonnel(personnel);
+			} else {
+				this.getManagedBean()
+						.getPaymentMap()
+						.put(personnel.getPersonnelId(),
+								BigDecimal.valueOf(150));
+				amount = amount.add(BigDecimal.valueOf(150));
+			}
+			i++;
 		}
 		this.getManagedBean().setTotalPaymentAmount(amount);
+		setPaymentBtnLbl();
 	}
 
 	public void makePayment() {
-		if (getManagedBean().getSoftCertPayList() != null
-				&& getManagedBean().getSoftCertPayList().size() > 0) {
+		if ((getManagedBean().getSoftCertPayList() != null && getManagedBean()
+				.getSoftCertPayList().size() > 0)
+				|| getManagedBean().getFreeSoftCertPersonnel() != null) {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			List<String> userList = new ArrayList<String>();
 			userList.add(pmUser.getLoginId());
@@ -133,7 +145,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					getManagedBean().getSoftCertPayList().add(smPersonnel);
 				}
 			}
-			reqDTO.setSmPersonnelList(getManagedBean().getSoftCertPayList());
+			reqDTO.setSmPersonnelList(getFinalPaidPersonnels());
+			reqDTO.setSmPersonnel(getManagedBean().getFreeSoftCertPersonnel());
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 			reqDTO.setToken(getManagedBean().getToken());
 			reqDTO.setUserList(userList);
@@ -173,6 +186,24 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					}
 				}
 			}
+		}
+	}
+
+	public String getPersonnelSoftCertPrice(SmPersonnel smPersonnel) {
+		if (smPersonnel.isFreeSoftCert()) {
+			return "0.00";
+		} else {
+			return "150.00";
+		}
+	}
+
+	private void setPaymentBtnLbl() {
+		if (getManagedBean().getTotalPaymentAmount().compareTo(BigDecimal.ZERO) == 0) {
+			getManagedBean().setPaymentBtnLbl(
+					SmCommonUtil.getMessage("lbl.sm.request.softcert", null));
+		} else {
+			getManagedBean().setPaymentBtnLbl(
+					SmCommonUtil.getMessage("lbl.sm.makePayment", null));
 		}
 	}
 
@@ -220,6 +251,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
 				personnel.setDisableRowSelection(true);
 			} else {
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+					getManagedBean().setAlreadyHadFreeSoftcert(true);
+				}
 				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
 					if (personnel.getPmUser() == null) {
 						personnel.setDisableRowSelection(true);
@@ -227,5 +261,20 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 		}
+	}
+
+	private List<SmPersonnel> getFinalPaidPersonnels() {
+		List<SmPersonnel> finalPayPersonnels = new ArrayList<SmPersonnel>();
+		if (getManagedBean().getFreeSoftCertPersonnel() != null) {
+			for (SmPersonnel payPersonnel : getManagedBean()
+					.getSoftCertPayList()) {
+				if (!payPersonnel.isFreeSoftCert()) {
+					finalPayPersonnels.add(payPersonnel);
+				}
+			}
+		} else {
+			finalPayPersonnels.addAll(getManagedBean().getSoftCertPayList());
+		}
+		return finalPayPersonnels;
 	}
 }
