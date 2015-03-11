@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +70,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -647,6 +650,35 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 		
 		return null;
+		
+	}
+	
+	/**
+	 * sorting all the items showing in Item menu
+	 *
+	 * @param flFulfilmentNoteItemList the Fl Fulfilment Note Item list
+	 */
+	public void sortItems(List<FlFulfilmentNoteItem> flFulfilmentNoteItemList) {
+		//Creating Comparator
+		if(null==flFulfilmentNoteItemList || flFulfilmentNoteItemList.isEmpty()){
+			return;
+		}
+		  Comparator<FlFulfilmentNoteItem> comparator = new Comparator<FlFulfilmentNoteItem>() {
+	            @Override
+	            public int compare(FlFulfilmentNoteItem o1, FlFulfilmentNoteItem o2) {
+	            	String object1Code = o1.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemCode();
+	            	String object2Code = o2.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemCode();
+	                return new CompareToBuilder()
+		                .append(object1Code, object2Code)
+		                .toComparison();
+	            }
+	        };
+			Collections.sort(flFulfilmentNoteItemList, comparator);
+    }
+	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==1){
+			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
+		}
 		
 	}
 }

@@ -67,7 +67,7 @@
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.menu.items']}" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.items']}" update="@form" actionListener="#{receivedNoteBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
