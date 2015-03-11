@@ -4477,6 +4477,8 @@ public class SmApplicationUtil {
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
 				&& !smAppl.getApplType().equalsIgnoreCase(
 						ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				&& !smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW)
 				&& disallowedOwnerEdit) {
 			for (SmPersonnel currPersonnel : smAppl.getSmPersonnels()) {
 				setPrevDirectorEquityOwner(prevApprovedPersonnels,
