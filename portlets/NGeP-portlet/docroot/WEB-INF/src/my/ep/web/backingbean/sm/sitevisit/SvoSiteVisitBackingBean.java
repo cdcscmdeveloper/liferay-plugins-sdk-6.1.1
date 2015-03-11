@@ -1976,6 +1976,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			path.append(fs.getRequest().getServerPort());
 		}		
 		
+		log.info("********HOST URL*********" +  path.toString());
+		
 		return path.toString();
 	}
 }
