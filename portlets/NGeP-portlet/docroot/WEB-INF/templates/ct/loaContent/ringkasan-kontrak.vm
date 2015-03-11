@@ -85,19 +85,11 @@
          </td>
       </tr>
       <tr>
-         <td>
-         </td>
-         <td><table><tr><td>$effStartDate</td><td width="10px"></td><td>$effEndDate</td></tr></table>
-         </td>
-         <td>
-         </td>
-      </tr>
-      <tr>
          <td>x.
          </td>
          <td>Tempoh Kontrak Tambahan
          </td>
-         <td><table><tr><td>$extStartDate</td><td width="10px"></td><td>$extEndDate</td></tr></table>
+         <td><table><tr><td>$effStartDate</td><td width="10px"></td><td>$effEndDate</td></tr></table>
          </td>
       </tr>
       <tr>
