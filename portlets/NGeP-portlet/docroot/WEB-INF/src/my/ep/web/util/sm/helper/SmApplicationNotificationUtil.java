@@ -8,6 +8,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DateUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 public class SmApplicationNotificationUtil {
@@ -31,6 +32,20 @@ public class SmApplicationNotificationUtil {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(managedBean));
 			// reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
 		}
+		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
+			if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SABAH)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sabah", null));
+			} else if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SARAWAK)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sarawak", null));
+			} else {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.semunanjung", null));
+			}
+		}
 		reqDTO.setNotifLink("<a href=\"https://www.google.com.my\"> Sila Klik </a>");
 
 	}
@@ -44,6 +59,20 @@ public class SmApplicationNotificationUtil {
 			reqDTO.setApproverOrPoRemarks(managedBean
 					.getApplnRejectionRemarks());
 			reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
+		}
+		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
+			if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SABAH)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sabah", null));
+			} else if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SARAWAK)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sarawak", null));
+			} else {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.semunanjung", null));
+			}
 		}
 
 	}
@@ -59,7 +88,7 @@ public class SmApplicationNotificationUtil {
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(DateUtils.dateToString("dd-mmm-yyyy", managedBean
+				.append(DateUtils.dateToString("dd-MMM-yyyy", managedBean
 						.getSmAppl().getApplSubmitDate())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
