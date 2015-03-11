@@ -267,14 +267,11 @@
 		</p:panel>
 
 		
-		<p:panel toggleable="true" id="addressInfoPanelId">
-			<f:facet name="header">
-				<h:outputText value="#{lbl['lbl.sm.userprofile.addr.info']}"/>
-			</f:facet>
+		<p:panel toggleable="true" id="addressInfoPanelId" header="#{lbl['lbl.sm.userprofile.addr.info']}">
 			
 			<table style="width: 100%;">
 				<tr>
-					<td>
+					<td valign="top" width="50%">
 						<p:panel id="PermanentAddressInfo" >
 							<table style="width: 100%;">
 								<tr>
@@ -421,7 +418,7 @@
 							</table>
 						</p:panel>
 					</td>
-					<td>
+					<td valign="top">
 						<p:panel id="MailingAddressInfo">
 							<table style="width: 100%;">
 								<tr>
