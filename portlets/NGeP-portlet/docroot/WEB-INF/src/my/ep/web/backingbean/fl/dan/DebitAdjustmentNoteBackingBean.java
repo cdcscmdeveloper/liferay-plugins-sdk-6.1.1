@@ -5,7 +5,10 @@ package my.ep.web.backingbean.fl.dan;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -56,6 +59,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -396,5 +400,35 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			return NAV_INVOICE;
 		}
 		return null;
+	}
+	
+	/**
+	 * sorting all the items showing in Item menu
+	 *
+	 * @param flFulfilmentNoteItemList the Fl Fulfilment Note Item list
+	 */
+	public void sortItems(List<FlAdjustmentItem> flAdjustmentItem) {
+		//Creating Comparator
+		if(null==flAdjustmentItem || flAdjustmentItem.isEmpty()){
+			return;
+		}
+		  Comparator<FlAdjustmentItem> comparator = new Comparator<FlAdjustmentItem>() {
+	            @Override
+	            public int compare(FlAdjustmentItem o1, FlAdjustmentItem o2) {
+	            	String object1Code = o1.getFlItem().getItemCode();
+	            	String object2Code = o2.getFlItem().getItemCode();
+	                return new CompareToBuilder()
+		                .append(object1Code, object2Code)
+		                .toComparison();
+	            }
+	        };
+			Collections.sort(flAdjustmentItem, comparator);
+    }
+	
+	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==1){
+			sortItems(getManagedBean().getAdjustment().getFlAdjustmentItem());
+		}
+		
 	}
 }
