@@ -20,7 +20,6 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
