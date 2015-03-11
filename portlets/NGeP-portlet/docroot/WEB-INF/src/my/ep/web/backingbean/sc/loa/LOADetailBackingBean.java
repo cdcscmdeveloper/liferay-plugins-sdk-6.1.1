@@ -197,7 +197,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Edits the loa action.
-	 *
+	 * page navigate to loa details page.
 	 * @param scLoa the sc loa
 	 * @return the string
 	 */
@@ -269,7 +269,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Edits the supplier loa action.
-	 *
+	 * page navigate to loa supplier page.
 	 * @param loaId the loa id
 	 */
 	public void editSupplierLOAAction(Long loaId) {
@@ -339,8 +339,9 @@ public class LOADetailBackingBean extends
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	/**
+	 * Pre render page navigation to loa page based on task id
+	 * @return void
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
@@ -392,9 +393,10 @@ public class LOADetailBackingBean extends
 			handleException(e);
 		}
 	}
-
+	
 	/**
-	 * Pre render supplier view.
+	 * Pre render page navigation to loa supplier page based on task id
+	 * @return void
 	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
@@ -897,7 +899,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Deduction type change.
-	 *
+	 * Deduction Clause will show when deduction type changes
 	 * @param scQtDeduction the sc qt deduction
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
@@ -953,7 +955,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Adds the deduction payment action.
+	 * Adds the deduction payment in deduction payment.
 	 */
 	public void addDeductionPaymentAction() {
 		debugLogger("addDeductionPaymentAction");
@@ -975,7 +977,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Adds the deduction clause action.
+	 * Adds the deduction clause in deduction payment.
 	 */
 	public void addDeductionClauseAction() {
 		debugLogger("addDeductionClauseAction");
@@ -997,7 +999,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Delete deduction payment action.
+	 * Delete deduction payment deduction payment.
 	 */
 	public void deleteDeductionPaymentAction() {
 		debugLogger("deleteDeductionPaymentAction");
@@ -1099,7 +1101,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Download report.
+	 * Download report as pdf or xlsx files in Letter of Acceptance.
 	 *
 	 * @param scLoaReport the sc loa report
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -1235,8 +1237,8 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Download all reports.
-	 *
+	 * Download all reports as  pdf or xlsx files in Letter of Acceptance.
+	 * 
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void downloadAllReports() throws IOException {
@@ -1257,7 +1259,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Show veriry button.
+	 * Show verify button.
 	 */
 	public void showVeriryButton() {
 	       
@@ -1587,12 +1589,12 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Generate declaration pdf from velocity.
+	 * Generate declaration pdf from velocity in Performance Bond.
 	 *
 	 * @param attachment the attachment
 	 * @param scLoa the sc loa
 	 * @throws Exception the exception
-	 */
+	 */ 
 	public void generateDeclarationPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa) throws Exception {
 		String termsConditions = generateDeclarationFromVelocity(scLoa,getManagedBean().getScQt());
@@ -1660,7 +1662,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Gets the loa stream content.
+	 * Gets the agreement letter.
 	 *
 	 * @return the loa stream content
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -1779,6 +1781,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Handle branch details changed.
+	 *  shows the supplier address details.
 	 */
 	public void handleBranchDetailsChanged() {
 		debugLogger("handleBranchDetailsChanged");
@@ -1839,6 +1842,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Handle bank details changed.
+	 * shows the supplier address details for selected branch and bank.
 	 */
 	public void handleBankDetailsChanged() {
 		debugLogger("handleBankDetailsChanged");
@@ -2030,7 +2034,9 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Method to save the LOA details.
+	 * save the LOA details.
+	 * save - save data into database and initiate task for LOA details.
+	 * page navigate to loa details page.
 	 */
 	public void saveAction() {
 		debugLogger("saveAction");
@@ -2096,11 +2102,13 @@ public class LOADetailBackingBean extends
 			qtAwardSO = null;
 		}
 	}
-
+	
 	/**
-	 * Method to save the LOA details.
-	 *
+	 * submit LOA details.
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
 	 * @return the string
+	 * page navigate to acknowledge page.
 	 */
 	public String submitAction() {
 		debugLogger("submitAction");
@@ -2272,10 +2280,11 @@ public class LOADetailBackingBean extends
 		
 		return resDTO;
 	}
-
+	
 	/**
 	 * Update bpm task action.
-	 *
+	 * update bpm - save data into database and BPM process will route to the next respective user.
+	 * Authenticating gpki before update bpm.
 	 * @param outcome the outcome
 	 */
 	public void updateBpmTaskAction(String outcome) {
@@ -2389,6 +2398,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Contract type changed.
+	 * shows Agency based on contract type changes.
 	 */
 	public void contractTypeChanged() {
 		debugLogger("contractTypeChanged");
@@ -2467,6 +2477,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Contract agency changed.
+	 * shows Contract Administrator based on agency changes.
 	 */
 	public void contractAgencyChanged() {
 		debugLogger("contractAgencyChanged");
@@ -2539,6 +2550,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Contract eff date changed.
+	 *  calculate Completion Expiry Date based on Completion Period.
 	 */
 	public void contractEffDateChanged() {
 		debugLogger("contractEffDateChanged");
@@ -2581,9 +2593,11 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Handle file attachment.
+	 * Handle file upload.
 	 *
 	 * @param event the event
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void handleFileAttachment(FileUploadEvent event) {
 		debugLogger("handleFileAttachment");
@@ -2601,7 +2615,7 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Adds the schedule details.
+	 * Adds the schedule details in Fulfillment Schedule.
 	 */
 	public void addScheduleDetails() {
 
@@ -2646,7 +2660,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Gets the year details.
-	 *
+	 * Shows start month and end month drop downs based on Total Frequency.
 	 * @return the year details
 	 */
 	public List<SelectItem> getYearDetails() {
@@ -2676,7 +2690,7 @@ public class LOADetailBackingBean extends
 	
 	/**
 	 * Gets the month.
-	 *
+	 * 
 	 * @param monthId the month id
 	 * @return the month
 	 */
@@ -2702,7 +2716,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Gets the years display dtls.
-	 *
+	 * Shows start year and end year drop downs based on Total Frequency.
 	 * @return the years display dtls
 	 */
 	public List<SelectItem> getYearsDisplayDtls() {
@@ -2764,7 +2778,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Calculate schedule months.
-	 *
+	 * Calculating start month , start year , end month and end year to display total months.
 	 * @param schedule the schedule
 	 * @param startMonthAction the start month action
 	 */
@@ -2998,7 +3012,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Form jadual harga.
-	 *
+	 * To download jadual-harga.xlsx file
 	 * @param attachment the attachment
 	 * @param scLoa the sc loa
 	 * @throws Exception the exception
@@ -3192,10 +3206,10 @@ public class LOADetailBackingBean extends
 			}
 		}
 	}
-	
+
 	/**
 	 * Form specification.
-	 *
+	 * To download specification.xlsx file
 	 * @param attachment the attachment
 	 * @param scLoa the sc loa
 	 * @throws Exception the exception
@@ -3231,7 +3245,7 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * Generate Specification
+	 * Generate Specification.
 	 *
 	 * @param attachment the attachment
 	 * @param productList the product list
@@ -3361,6 +3375,12 @@ public class LOADetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Answer type.
+	 *
+	 * @param answer the answer
+	 * @return the string
+	 */
 	private String answerType(TplSpecAnswer answer){
 		String answerType="";
 		String answerTypeCode = answer.getTplSpecQuestion().getAnswerTypeCode().getParameterCode();
@@ -3389,8 +3409,8 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
-	 * Creates the qt loa action.
-	 *
+	 * Creates the QT Loa.
+	 * page navigate to qt loi details page.
 	 * @param scLoiLoa the sc loi loa
 	 * @return the string
 	 */
@@ -3420,10 +3440,10 @@ public class LOADetailBackingBean extends
 		return editLOAAction(scLoa);
 
 	}
-
+	
 	/**
 	 * Go qt edit loa action.
-	 *
+	 * page navigate to loa details page.
 	 * @param suppLoiLoaBean the supp loi loa bean
 	 * @return the string
 	 */
@@ -3721,7 +3741,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Calc sub total price.
-	 *
+	 * calculating subtotal for item list in award details.
 	 * @param scLoiLoaItem the sc loi loa item
 	 * @return the big decimal
 	 */
@@ -3781,7 +3801,7 @@ public class LOADetailBackingBean extends
 	
 	/**
 	 * Gpki sign action.
-	 *
+	 * Authenticating gpki before update bpm.
 	 * @param digiSign the digi sign
 	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
@@ -3808,7 +3828,7 @@ public class LOADetailBackingBean extends
 
 	/**
 	 * Gets the text before sign.
-	 *
+	 * prepare sign in data for gpki authentication.
 	 * @return the text before sign
 	 */
 	public String getTextBeforeSign() {
@@ -3831,7 +3851,7 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * Page navigation to dp and qt loa list.
+	 * Page navigation from loa details page to loa list.
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
@@ -3840,9 +3860,9 @@ public class LOADetailBackingBean extends
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
 	
-	
+
 	/**
-	 * preRenderDirectNegoView method to pre render to direct nego.
+	 * Pre render page navigation to direct nego or loa
 	 */
 	public void preRenderDirectNegoView() {
 		debugLogger("preRenderDirectNegoView");
@@ -3864,9 +3884,10 @@ public class LOADetailBackingBean extends
 	}
 	
 	
+	
 	/**
-	 * mofNoListener method to pre render to direct nego.
-	 *
+	 * Mof no listener.
+	 * Gets supplier, branch and adress details based on mof nor.
 	 * @param mofAccount the mof account
 	 */
 	public void mofNoListener(SmMofAccount mofAccount) {
@@ -3899,9 +3920,10 @@ public class LOADetailBackingBean extends
 
 	}
 	
+	
 	/**
-	 * preRenderDirectNegoView method to pre render to direct nego.
-	 *
+	 * Supplier listener.
+	 * Gets mof no, branch and adress details based on mof nor.
 	 * @param suSmSupplier the su sm supplier
 	 */
 	public void supplierListener(SmSupplier suSmSupplier) {
