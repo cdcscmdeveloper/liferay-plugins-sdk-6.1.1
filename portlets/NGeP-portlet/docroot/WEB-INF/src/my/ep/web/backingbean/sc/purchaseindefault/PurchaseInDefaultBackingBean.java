@@ -815,7 +815,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    }
 
 	/**
-	 * Prepender page navigation to purchase in default based on task id
+	 * Pre render page navigation to purchase in default based on task id
 	 * @return void
 	 */
 	public void preRenderView() {

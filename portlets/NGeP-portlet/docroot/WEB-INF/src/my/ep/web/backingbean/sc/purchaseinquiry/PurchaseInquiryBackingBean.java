@@ -77,7 +77,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
@@ -895,7 +894,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 	}
 
 	/**
-	 * Prepender page navigation to purchase inquiry based on task id
+	 * Pre render page navigation to purchase inquiry based on task id
 	 * @return void
 	 */
 	public void preRenderView() {

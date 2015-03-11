@@ -40,117 +40,263 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.StreamedContent;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class LOIDetailManagedBean.
+ *
  * @author Viswanath
- * 
  */
 @ManagedBean(name = "lOIDetailManagedBean")
 @SessionScoped
 public class LOIDetailManagedBean extends BaseManagedBean {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The qt. */
 	private ScQt qt;
 
+	/** The comittee users. */
 	private List<SelectItem> comitteeUsers;
+	
+	/** The approval date. */
 	public String approvalDate;
 
+	/** The sc loi. */
 	private ScLoi scLoi;
+	
+	/** The sm supplier. */
 	private SmSupplier smSupplier;
+	
+	/** The sm mof account. */
 	private SmMofAccount smMofAccount;
 	
+	/** The selected tab index. */
 	private int selectedTabIndex;
+	
+	/** The supplier hq personnel. */
 	private SmPersonnel supplierHQPersonnel;
 
 	
+	/** The sc nego location. */
 	private ScLoiNegoLocation scNegoLocation;
+	
+	/** The nego location list. */
 	private List<ScLoiNegoLocation> negoLocationList;
+	
+	/** The selected nego location list. */
 	private List<ScLoiNegoLocation> selectedNegoLocationList;
+	
+	/** The sc nego term. */
 	private ScLoiTerm scNegoTerm;
+	
+	/** The nego terms list. */
 	private List<ScLoiTerm> negoTermsList;
+	
+	/** The selected nego terms list. */
 	private List<ScLoiTerm> selectedNegoTermsList;
+	
+	/** The pm user. */
 	private PmUser pmUser;
+	
+	/** The sc qt proposal ranking. */
 	private ScQtProposalRanking scQtProposalRanking;
+	
+	/** The branchs list. */
 	private List<SmSupplierBranch> branchsList;
+	
+	/** The sc qt evaluation result. */
 	private ScQtEvaluationResult scQtEvaluationResult;
 	
+	/** The status. */
 	private String status;
+	
+	/** The req approve. */
 	public String reqApprove;
+	
+	/** The Address. */
 	public String Address;
 	
+	/** The sc qt item list. */
 	private List<ScRequestItem> scQtItemList;
+	
+	/** The user ministry list. */
 	private List<PmOrgProfile> userMinistryList;
+	
+	/** The user department list. */
 	private List<PmOrgProfile> userDepartmentList;
 
+	/** The sm supplier branch. */
 	private SmSupplierBranch smSupplierBranch;
+	
+	/** The branch name. */
 	private String branchName;
+	
+	/** The select item list. */
 	private List<SelectItem> selectItemList;
+	
+	/** The approver names. */
 	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
+	
+	/** The contract signers. */
 	private List<PmUser>  contractSigners; // Drop down Listing for Contract Signers
 	
+	/** The sc qt finalization. */
 	private ScQtFinalization scQtFinalization;
+	
+	/** The sc qt recommends. */
 	private List<ScQtRecommend> scQtRecommends= new ArrayList<ScQtRecommend>();
+	
+	/** The recommend. */
 	private ScQtRecommend recommend = new ScQtRecommend();
+	
+	/** The sc qt recommend dtls. */
 	private List<ScQtRecommendDtl> scQtRecommendDtls = new ArrayList<ScQtRecommendDtl>();
+	
+	/** The loi loas. */
 	private List<ScLoiLoa> loiLoas = new ArrayList<ScLoiLoa>();
+	
+	/** The rec supplier list. */
 	private List<ScLoiLoa> recSupplierList = new ArrayList<ScLoiLoa>();
+	
+	/** The lois. */
 	private List<ScLoi> lois = new ArrayList<ScLoi>();
 	
+	/** The org profile id. */
 	private Long orgProfileId;
+	
+	/** The selected ptj. */
 	private PmOrgProfile selectedPtj = new PmOrgProfile();
+	
+	/** The ptj list. */
 	private List<PmOrgProfile> ptjList;
 	
+	/** The source id. */
 	private Long sourceId;
+	
+	/** The loi loa beans. */
 	private List<LoiLoaBean>  loiLoaBeans  = new ArrayList<LoiLoaBean>();
+	
+	/** The selected loi loa. */
 	private ScLoiLoa selectedLoiLoa = new ScLoiLoa();
 
+	/** The sc loi loa items. */
 	private List<ScLoiLoaItem> scLoiLoaItems;
+	
+	/** The contract signer user. */
 	private PmUser contractSignerUser;
+	
+	/** The doc type. */
 	private String docType;
+	
+	/** The pay load data. */
 	private Object payLoadData;
+	
+	/** The approver user. */
 	private PmUser approverUser;
+	
+	/** The sc loi approval. */
 	private ScLoiApproval scLoiApproval;
 	
+	/** The ec activity list. */
 	private List<ScQtCommitteeActivity> ecActivityList;
+	
+	/** The tec activity list. */
 	private List<ScQtCommitteeActivity> tecActivityList;
+	
+	/** The fec activity list. */
 	private List<ScQtCommitteeActivity> fecActivityList;
+	
+	/** The sc qt committee. */
 	private ScQtCommittee scQtCommittee;
+	
+	/** The selected meeting att list. */
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
+	/** The recommend dtl ids. */
 	private List<String> recommendDtlIds;
+	
+	/** The selected sc qt deduction. */
 	private ScQtDeduction selectedScQtDeduction;
+	
+	/** The selected deduction clauses. */
 	private List<ScQtDeductionClause> selectedDeductionClauses;
+	
+	/** The total frequency. */
 	private int totalFrequency;
+	
+	/** The schedule list. */
 	private List<ScQtSchedule> scheduleList;
+	
+	/** The year list. */
 	private List<SelectItem> yearList;
+	
+	/** The years display list. */
 	private List<SelectItem> yearsDisplayList;
 	
+	/** The total progressive payment. */
 	private int totalProgressivePayment;
+	
+	/** The progressive payment list. */
 	private List<ScQtProgressivePayment> progressivePaymentList;
 	
+	/** The recommended loi. */
 	private ScLoi recommendedLoi;
+	
+	/** The selected sc loi reports. */
 	private List<ScLoiReport> selectedScLoiReports;
+	
+	/** The selected sc loi report. */
 	private ScLoiReport selectedScLoiReport;
+	
+	/** The attachment doc type. */
 	private String attachmentDocType;
 	
+	/** The sc qt. */
 	private ScQt scQt;
+	
+	/** The selected sc loi supp docs. */
 	private List<ScLoiSupportingDoc> selectedScLoiSuppDocs;
+	
+	/** The selected sc loi supp doc. */
 	private ScLoiSupportingDoc selectedScLoiSuppDoc;
 	
+	/** The recommend list. */
 	private List<ScQtRecommend> recommendList;
+	
+	/** The selected recommend list. */
 	private List<ScQtRecommend> selectedRecommendList;
 	
+	/** The action. */
 	private String action;
+	
+	/** The edit flag. */
 	private boolean editFlag;
+	
+	/** The streamed content. */
 	private StreamedContent streamedContent;
 	
+	/** The award supplier id. */
 	private Long awardSupplierId;
+	
+	/** The committee type. */
 	private String committeeType;
+	
+	/** The multiple loi flag. */
 	private boolean multipleLoiFlag;
+	
+	/** The item details flag. */
 	private boolean itemDetailsFlag;
+	
+	/** The hide column flag. */
 	private boolean hideColumnFlag = true;
+	
+	/** The back to previous page. */
 	private String backToPreviousPage;
 	
 	/**
+	 * Gets the sc qt evaluation result.
+	 *
 	 * @return the scQtEvaluationResult
 	 */
 	public ScQtEvaluationResult getScQtEvaluationResult() {
@@ -158,6 +304,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt evaluation result.
+	 *
 	 * @param scQtEvaluationResult the scQtEvaluationResult to set
 	 */
 	public void setScQtEvaluationResult(ScQtEvaluationResult scQtEvaluationResult) {
@@ -165,6 +313,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the approver names.
+	 *
 	 * @return the approverNames
 	 */
 	public List<PmUser> getApproverNames() {
@@ -172,6 +322,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the approver names.
+	 *
 	 * @param approverNames the approverNames to set
 	 */
 	public void setApproverNames(List<PmUser> approverNames) {
@@ -179,6 +331,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the select item list.
+	 *
 	 * @return the selectItemList
 	 */
 	public List<SelectItem> getSelectItemList() {
@@ -186,6 +340,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the select item list.
+	 *
 	 * @param selectItemList the selectItemList to set
 	 */
 	public void setSelectItemList(List<SelectItem> selectItemList) {
@@ -193,6 +349,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected nego terms list.
+	 *
 	 * @return the selectedNegoTermsList
 	 */
 	public List<ScLoiTerm> getSelectedNegoTermsList() {
@@ -200,6 +358,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected nego terms list.
+	 *
 	 * @param selectedNegoTermsList the selectedNegoTermsList to set
 	 */
 	public void setSelectedNegoTermsList(List<ScLoiTerm> selectedNegoTermsList) {
@@ -207,6 +367,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected nego location list.
+	 *
 	 * @return the selectedNegoLocationList
 	 */
 	public List<ScLoiNegoLocation> getSelectedNegoLocationList() {
@@ -214,6 +376,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected nego location list.
+	 *
 	 * @param selectedNegoLocationList the selectedNegoLocationList to set
 	 */
 	public void setSelectedNegoLocationList(
@@ -222,6 +386,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the branch name.
+	 *
 	 * @return the branchName
 	 */
 	public String getBranchName() {
@@ -229,6 +395,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the branch name.
+	 *
 	 * @param branchName the branchName to set
 	 */
 	public void setBranchName(String branchName) {
@@ -236,6 +404,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sm supplier branch.
+	 *
 	 * @return the smSupplierBranch
 	 */
 	public SmSupplierBranch getSmSupplierBranch() {
@@ -243,6 +413,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sm supplier branch.
+	 *
 	 * @param smSupplierBranch the smSupplierBranch to set
 	 */
 	public void setSmSupplierBranch(SmSupplierBranch smSupplierBranch) {
@@ -250,6 +422,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the user ministry list.
+	 *
 	 * @return the userMinistryList
 	 */
 	public List<PmOrgProfile> getUserMinistryList() {
@@ -257,6 +431,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the user ministry list.
+	 *
 	 * @param userMinistryList the userMinistryList to set
 	 */
 	public void setUserMinistryList(List<PmOrgProfile> userMinistryList) {
@@ -264,6 +440,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the user department list.
+	 *
 	 * @return the userDepartmentList
 	 */
 	public List<PmOrgProfile> getUserDepartmentList() {
@@ -271,6 +449,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the user department list.
+	 *
 	 * @param userDepartmentList the userDepartmentList to set
 	 */
 	public void setUserDepartmentList(List<PmOrgProfile> userDepartmentList) {
@@ -279,6 +459,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Gets the sc qt item list.
+	 *
 	 * @return the scQtItemList
 	 */
 	public List<ScRequestItem> getScQtItemList() {
@@ -286,6 +468,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt item list.
+	 *
 	 * @param scQtItemList the scQtItemList to set
 	 */
 	public void setScQtItemList(List<ScRequestItem> scQtItemList) {
@@ -293,6 +477,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the branchs list.
+	 *
 	 * @return the branchsList
 	 */
 	public List<SmSupplierBranch> getBranchsList() {
@@ -300,6 +486,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the branchs list.
+	 *
 	 * @param branchsList the branchsList to set
 	 */
 	public void setBranchsList(List<SmSupplierBranch> branchsList) {
@@ -307,6 +495,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the address.
+	 *
 	 * @return the address
 	 */
 	public String getAddress() {
@@ -314,14 +504,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param address
-	 *            the address to set
+	 * Sets the address.
+	 *
+	 * @param address            the address to set
 	 */
 	public void setAddress(String address) {
 		Address = address;
 	}
 
 	/**
+	 * Gets the pm user.
+	 *
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
@@ -329,14 +522,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmUser
-	 *            the pmUser to set
+	 * Sets the pm user.
+	 *
+	 * @param pmUser            the pmUser to set
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
 	}
 
 	/**
+	 * Gets the sc qt proposal ranking.
+	 *
 	 * @return the scQtProposalRanking
 	 */
 	public ScQtProposalRanking getScQtProposalRanking() {
@@ -344,14 +540,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtProposalRanking
-	 *            the scQtProposalRanking to set
+	 * Sets the sc qt proposal ranking.
+	 *
+	 * @param scQtProposalRanking            the scQtProposalRanking to set
 	 */
 	public void setScQtProposalRanking(ScQtProposalRanking scQtProposalRanking) {
 		this.scQtProposalRanking = scQtProposalRanking;
 	}
 
 	/**
+	 * Gets the req approve.
+	 *
 	 * @return the reqApprove
 	 */
 	public String getReqApprove() {
@@ -359,13 +558,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param reqApprove
-	 *            the reqApprove to set
+	 * Sets the req approve.
+	 *
+	 * @param reqApprove            the reqApprove to set
 	 */
 	public void setReqApprove(String reqApprove) {
 		this.reqApprove = reqApprove;
 	}
+	
 	/**
+	 * Gets the sc nego term.
+	 *
 	 * @return the scNegoTerm
 	 */
 	public ScLoiTerm getScNegoTerm() {
@@ -373,14 +576,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scNegoTerm
-	 *            the scNegoTerm to set
+	 * Sets the sc nego term.
+	 *
+	 * @param scNegoTerm            the scNegoTerm to set
 	 */
 	public void setScNegoTerm(ScLoiTerm scNegoTerm) {
 		this.scNegoTerm = scNegoTerm;
 	}
 
 	/**
+	 * Gets the nego terms list.
+	 *
 	 * @return the negoTermsList
 	 */
 	public List<ScLoiTerm> getNegoTermsList() {
@@ -388,14 +594,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param negoTermsList
-	 *            the negoTermsList to set
+	 * Sets the nego terms list.
+	 *
+	 * @param negoTermsList            the negoTermsList to set
 	 */
 	public void setNegoTermsList(List<ScLoiTerm> negoTermsList) {
 		this.negoTermsList = negoTermsList;
 	}
 
 	/**
+	 * Gets the nego location list.
+	 *
 	 * @return the negoLocationList
 	 */
 	public List<ScLoiNegoLocation> getNegoLocationList() {
@@ -403,14 +612,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param negoLocationList
-	 *            the negoLocationList to set
+	 * Sets the nego location list.
+	 *
+	 * @param negoLocationList            the negoLocationList to set
 	 */
 	public void setNegoLocationList(List<ScLoiNegoLocation> negoLocationList) {
 		this.negoLocationList = negoLocationList;
 	}
 
 	/**
+	 * Gets the sc nego location.
+	 *
 	 * @return the scNegoLocation
 	 */
 	public ScLoiNegoLocation getScNegoLocation() {
@@ -418,14 +630,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scNegoLocation
-	 *            the scNegoLocation to set
+	 * Sets the sc nego location.
+	 *
+	 * @param scNegoLocation            the scNegoLocation to set
 	 */
 	public void setScNegoLocation(ScLoiNegoLocation scNegoLocation) {
 		this.scNegoLocation = scNegoLocation;
 	}
 
 	/**
+	 * Gets the status.
+	 *
 	 * @return the status
 	 */
 	public String getStatus() {
@@ -433,8 +648,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param status
-	 *            the status to set
+	 * Sets the status.
+	 *
+	 * @param status            the status to set
 	 */
 	public void setStatus(String status) {
 		this.status = status;
@@ -442,6 +658,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	
 	/**
+	 * Gets the sm supplier.
+	 *
 	 * @return the smSupplier
 	 */
 	public SmSupplier getSmSupplier() {
@@ -449,14 +667,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smSupplier
-	 *            the smSupplier to set
+	 * Sets the sm supplier.
+	 *
+	 * @param smSupplier            the smSupplier to set
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
 
 	/**
+	 * Gets the sm mof account.
+	 *
 	 * @return the smMofAccount
 	 */
 	public SmMofAccount getSmMofAccount() {
@@ -464,14 +685,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smMofAccount
-	 *            the smMofAccount to set
+	 * Sets the sm mof account.
+	 *
+	 * @param smMofAccount            the smMofAccount to set
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
 	}
 
 	/**
+	 * Gets the sc loi.
+	 *
 	 * @return the scLoi
 	 */
 	public ScLoi getScLoi() {
@@ -479,14 +703,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scLoi
-	 *            the scLoi to set
+	 * Sets the sc loi.
+	 *
+	 * @param scLoi            the scLoi to set
 	 */
 	public void setScLoi(ScLoi scLoi) {
 		this.scLoi = scLoi;
 	}
 
 	/**
+	 * Gets the comittee users.
+	 *
 	 * @return the comitteeUsers
 	 */
 	public List<SelectItem> getComitteeUsers() {
@@ -494,14 +721,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param comitteeUsers
-	 *            the comitteeUsers to set
+	 * Sets the comittee users.
+	 *
+	 * @param comitteeUsers            the comitteeUsers to set
 	 */
 	public void setComitteeUsers(List<SelectItem> comitteeUsers) {
 		this.comitteeUsers = comitteeUsers;
 	}
 
 	/**
+	 * Gets the approval date.
+	 *
 	 * @return the approvalDate
 	 */
 	public String getApprovalDate() {
@@ -509,14 +739,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param approvalDate
-	 *            the approvalDate to set
+	 * Sets the approval date.
+	 *
+	 * @param approvalDate            the approvalDate to set
 	 */
 	public void setApprovalDate(String approvalDate) {
 		this.approvalDate = approvalDate;
 	}
 
 	/**
+	 * Gets the qt.
+	 *
 	 * @return the qt
 	 */
 	public ScQt getQt() {
@@ -524,14 +757,17 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qt
-	 *            the qt to set
+	 * Sets the qt.
+	 *
+	 * @param qt            the qt to set
 	 */
 	public void setQt(ScQt qt) {
 		this.qt = qt;
 	}
 
 	/**
+	 * Gets the selected tab index.
+	 *
 	 * @return the selectedTabIndex
 	 */
 	public int getSelectedTabIndex() {
@@ -539,6 +775,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected tab index.
+	 *
 	 * @param selectedTabIndex the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
@@ -546,6 +784,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc qt finalization.
+	 *
 	 * @return the scQtFinalization
 	 */
 	public ScQtFinalization getScQtFinalization() {
@@ -553,6 +793,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt finalization.
+	 *
 	 * @param scQtFinalization the scQtFinalization to set
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
@@ -560,6 +802,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc qt recommends.
+	 *
 	 * @return the scQtRecommends
 	 */
 	public List<ScQtRecommend> getScQtRecommends() {
@@ -567,6 +811,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt recommends.
+	 *
 	 * @param scQtRecommends the scQtRecommends to set
 	 */
 	public void setScQtRecommends(List<ScQtRecommend> scQtRecommends) {
@@ -574,6 +820,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc qt recommend dtls.
+	 *
 	 * @return the scQtRecommendDtls
 	 */
 	public List<ScQtRecommendDtl> getScQtRecommendDtls() {
@@ -581,6 +829,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt recommend dtls.
+	 *
 	 * @param scQtRecommendDtls the scQtRecommendDtls to set
 	 */
 	public void setScQtRecommendDtls(List<ScQtRecommendDtl> scQtRecommendDtls) {
@@ -588,6 +838,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the serialversionuid.
+	 *
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {
@@ -595,6 +847,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the loi loas.
+	 *
 	 * @return the loiLoas
 	 */
 	public List<ScLoiLoa> getLoiLoas() {
@@ -602,6 +856,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the loi loas.
+	 *
 	 * @param loiLoas the loiLoas to set
 	 */
 	public void setLoiLoas(List<ScLoiLoa> loiLoas) {
@@ -609,6 +865,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the lois.
+	 *
 	 * @return the lois
 	 */
 	public List<ScLoi> getLois() {
@@ -616,6 +874,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the lois.
+	 *
 	 * @param lois the lois to set
 	 */
 	public void setLois(List<ScLoi> lois) {
@@ -623,6 +883,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the recommend.
+	 *
 	 * @return the recommend
 	 */
 	public ScQtRecommend getRecommend() {
@@ -630,6 +892,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the recommend.
+	 *
 	 * @param recommend the recommend to set
 	 */
 	public void setRecommend(ScQtRecommend recommend) {
@@ -637,6 +901,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected ptj.
+	 *
 	 * @return the selectedPtj
 	 */
 	public PmOrgProfile getSelectedPtj() {
@@ -644,6 +910,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected ptj.
+	 *
 	 * @param selectedPtj the selectedPtj to set
 	 */
 	public void setSelectedPtj(PmOrgProfile selectedPtj) {
@@ -651,6 +919,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the ptj list.
+	 *
 	 * @return the ptjList
 	 */
 	public List<PmOrgProfile> getPtjList() {
@@ -658,6 +928,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ptj list.
+	 *
 	 * @param ptjList the ptjList to set
 	 */
 	public void setPtjList(List<PmOrgProfile> ptjList) {
@@ -665,6 +937,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the org profile id.
+	 *
 	 * @return the orgProfileId
 	 */
 	public Long getOrgProfileId() {
@@ -672,6 +946,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the org profile id.
+	 *
 	 * @param orgProfileId the orgProfileId to set
 	 */
 	public void setOrgProfileId(Long orgProfileId) {
@@ -679,6 +955,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the contract signers.
+	 *
 	 * @return the contractSigners
 	 */
 	public List<PmUser> getContractSigners() {
@@ -686,6 +964,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the contract signers.
+	 *
 	 * @param contractSigners the contractSigners to set
 	 */
 	public void setContractSigners(List<PmUser> contractSigners) {
@@ -693,6 +973,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the rec supplier list.
+	 *
 	 * @return the recSupplierList
 	 */
 	public List<ScLoiLoa> getRecSupplierList() {
@@ -700,6 +982,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the rec supplier list.
+	 *
 	 * @param recSupplierList the recSupplierList to set
 	 */
 	public void setRecSupplierList(List<ScLoiLoa> recSupplierList) {
@@ -707,6 +991,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the source id.
+	 *
 	 * @return the sourceId
 	 */
 	public Long getSourceId() {
@@ -714,6 +1000,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the source id.
+	 *
 	 * @param sourceId the sourceId to set
 	 */
 	public void setSourceId(Long sourceId) {
@@ -721,6 +1009,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc loi loa items.
+	 *
 	 * @return the scLoiLoaItems
 	 */
 	public List<ScLoiLoaItem> getScLoiLoaItems() {
@@ -728,6 +1018,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc loi loa items.
+	 *
 	 * @param scLoiLoaItems the scLoiLoaItems to set
 	 */
 	public void setScLoiLoaItems(List<ScLoiLoaItem> scLoiLoaItems) {
@@ -735,6 +1027,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the loi loa beans.
+	 *
 	 * @return the loiLoaBeans
 	 */
 	public List<LoiLoaBean> getLoiLoaBeans() {
@@ -742,6 +1036,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the loi loa beans.
+	 *
 	 * @param loiLoaBeans the loiLoaBeans to set
 	 */
 	public void setLoiLoaBeans(List<LoiLoaBean> loiLoaBeans) {
@@ -749,6 +1045,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected loi loa.
+	 *
 	 * @return the selectedLoiLoa
 	 */
 	public ScLoiLoa getSelectedLoiLoa() {
@@ -756,37 +1054,71 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected loi loa.
+	 *
 	 * @param selectedLoiLoa the selectedLoiLoa to set
 	 */
 	public void setSelectedLoiLoa(ScLoiLoa selectedLoiLoa) {
 		this.selectedLoiLoa = selectedLoiLoa;
 	}
 
+	/**
+	 * Gets the supplier hq personnel.
+	 *
+	 * @return the supplier hq personnel
+	 */
 	public SmPersonnel getSupplierHQPersonnel() {
 		return supplierHQPersonnel;
 	}
 
+	/**
+	 * Sets the supplier hq personnel.
+	 *
+	 * @param supplierHQPersonnel the new supplier hq personnel
+	 */
 	public void setSupplierHQPersonnel(SmPersonnel supplierHQPersonnel) {
 		this.supplierHQPersonnel = supplierHQPersonnel;
 	}
 
+	/**
+	 * Gets the contract signer user.
+	 *
+	 * @return the contract signer user
+	 */
 	public PmUser getContractSignerUser() {
 		return contractSignerUser;
 	}
 
+	/**
+	 * Sets the contract signer user.
+	 *
+	 * @param contractSignerUser the new contract signer user
+	 */
 	public void setContractSignerUser(PmUser contractSignerUser) {
 		this.contractSignerUser = contractSignerUser;
 	}
 
+	/**
+	 * Gets the doc type.
+	 *
+	 * @return the doc type
+	 */
 	public String getDocType() {
 		return docType;
 	}
 
+	/**
+	 * Sets the doc type.
+	 *
+	 * @param docType the new doc type
+	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
 	}
 
 	/**
+	 * Gets the pay load data.
+	 *
 	 * @return the payLoadData
 	 */
 	public Object getPayLoadData() {
@@ -794,6 +1126,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pay load data.
+	 *
 	 * @param payLoadData the payLoadData to set
 	 */
 	public void setPayLoadData(Object payLoadData) {
@@ -801,6 +1135,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the ec activity list.
+	 *
 	 * @return the ecActivityList
 	 */
 	public List<ScQtCommitteeActivity> getEcActivityList() {
@@ -808,6 +1144,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the ec activity list.
+	 *
 	 * @param ecActivityList the ecActivityList to set
 	 */
 	public void setEcActivityList(List<ScQtCommitteeActivity> ecActivityList) {
@@ -815,6 +1153,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the tec activity list.
+	 *
 	 * @return the tecActivityList
 	 */
 	public List<ScQtCommitteeActivity> getTecActivityList() {
@@ -822,6 +1162,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the tec activity list.
+	 *
 	 * @param tecActivityList the tecActivityList to set
 	 */
 	public void setTecActivityList(List<ScQtCommitteeActivity> tecActivityList) {
@@ -829,6 +1171,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the fec activity list.
+	 *
 	 * @return the fecActivityList
 	 */
 	public List<ScQtCommitteeActivity> getFecActivityList() {
@@ -836,6 +1180,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the fec activity list.
+	 *
 	 * @param fecActivityList the fecActivityList to set
 	 */
 	public void setFecActivityList(List<ScQtCommitteeActivity> fecActivityList) {
@@ -843,6 +1189,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the sc qt committee.
+	 *
 	 * @return the scQtCommittee
 	 */
 	public ScQtCommittee getScQtCommittee() {
@@ -850,6 +1198,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the sc qt committee.
+	 *
 	 * @param scQtCommittee the scQtCommittee to set
 	 */
 	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
@@ -857,6 +1207,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected meeting att list.
+	 *
 	 * @return the selectedMeetingAttList
 	 */
 	public List<ScQtMeetingAttendance> getSelectedMeetingAttList() {
@@ -864,6 +1216,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected meeting att list.
+	 *
 	 * @param selectedMeetingAttList the selectedMeetingAttList to set
 	 */
 	public void setSelectedMeetingAttList(
@@ -873,48 +1227,100 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 
 
+	/**
+	 * Gets the sc loi approval.
+	 *
+	 * @return the sc loi approval
+	 */
 	public ScLoiApproval getScLoiApproval() {
 		return scLoiApproval;
 	}
 
+	/**
+	 * Sets the sc loi approval.
+	 *
+	 * @param scLoiApproval the new sc loi approval
+	 */
 	public void setScLoiApproval(ScLoiApproval scLoiApproval) {
 		this.scLoiApproval = scLoiApproval;
 	}
 
+	/**
+	 * Gets the approver user.
+	 *
+	 * @return the approver user
+	 */
 	public PmUser getApproverUser() {
 		return approverUser;
 	}
 
+	/**
+	 * Sets the approver user.
+	 *
+	 * @param approverUser the new approver user
+	 */
 	public void setApproverUser(PmUser approverUser) {
 		this.approverUser = approverUser;
 	}
 
+	/**
+	 * Gets the recommend dtl ids.
+	 *
+	 * @return the recommend dtl ids
+	 */
 	public List<String> getRecommendDtlIds() {
 		return recommendDtlIds;
 	}
 
+	/**
+	 * Sets the recommend dtl ids.
+	 *
+	 * @param recommendDtlIds the new recommend dtl ids
+	 */
 	public void setRecommendDtlIds(List<String> recommendDtlIds) {
 		this.recommendDtlIds = recommendDtlIds;
 	}
 
 
+	/**
+	 * Gets the selected sc qt deduction.
+	 *
+	 * @return the selected sc qt deduction
+	 */
 	public ScQtDeduction getSelectedScQtDeduction() {
 		return selectedScQtDeduction;
 	}
 
+	/**
+	 * Sets the selected sc qt deduction.
+	 *
+	 * @param selectedScQtDeduction the new selected sc qt deduction
+	 */
 	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
 		this.selectedScQtDeduction = selectedScQtDeduction;
 	}
 
+	/**
+	 * Gets the selected deduction clauses.
+	 *
+	 * @return the selected deduction clauses
+	 */
 	public List<ScQtDeductionClause> getSelectedDeductionClauses() {
 		return selectedDeductionClauses;
 	}
 
+	/**
+	 * Sets the selected deduction clauses.
+	 *
+	 * @param selectedDeductionClauses the new selected deduction clauses
+	 */
 	public void setSelectedDeductionClauses(List<ScQtDeductionClause> selectedDeductionClauses) {
 		this.selectedDeductionClauses = selectedDeductionClauses;
 	}
 
 	/**
+	 * Gets the total frequency.
+	 *
 	 * @return the totalFrequency
 	 */
 	public int getTotalFrequency() {
@@ -922,6 +1328,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the total frequency.
+	 *
 	 * @param totalFrequency the totalFrequency to set
 	 */
 	public void setTotalFrequency(int totalFrequency) {
@@ -929,6 +1337,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the schedule list.
+	 *
 	 * @return the scheduleList
 	 */
 	public List<ScQtSchedule> getScheduleList() {
@@ -936,6 +1346,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the schedule list.
+	 *
 	 * @param scheduleList the scheduleList to set
 	 */
 	public void setScheduleList(List<ScQtSchedule> scheduleList) {
@@ -943,6 +1355,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the year list.
+	 *
 	 * @return the yearList
 	 */
 	public List<SelectItem> getYearList() {
@@ -950,6 +1364,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the year list.
+	 *
 	 * @param yearList the yearList to set
 	 */
 	public void setYearList(List<SelectItem> yearList) {
@@ -957,6 +1373,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the years display list.
+	 *
 	 * @return the yearsDisplayList
 	 */
 	public List<SelectItem> getYearsDisplayList() {
@@ -964,6 +1382,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the years display list.
+	 *
 	 * @param yearsDisplayList the yearsDisplayList to set
 	 */
 	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
@@ -971,6 +1391,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the total progressive payment.
+	 *
 	 * @return the totalProgressivePayment
 	 */
 	public int getTotalProgressivePayment() {
@@ -978,6 +1400,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the total progressive payment.
+	 *
 	 * @param totalProgressivePayment the totalProgressivePayment to set
 	 */
 	public void setTotalProgressivePayment(int totalProgressivePayment) {
@@ -985,6 +1409,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the progressive payment list.
+	 *
 	 * @return the progressivePaymentList
 	 */
 	public List<ScQtProgressivePayment> getProgressivePaymentList() {
@@ -992,6 +1418,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the progressive payment list.
+	 *
 	 * @param progressivePaymentList the progressivePaymentList to set
 	 */
 	public void setProgressivePaymentList(
@@ -1001,6 +1429,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 
 	/**
+	 * Gets the recommended loi.
+	 *
 	 * @return the recommendedLoi
 	 */
 	public ScLoi getRecommendedLoi() {
@@ -1008,6 +1438,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the recommended loi.
+	 *
 	 * @param recommendedLoi the recommendedLoi to set
 	 */
 	public void setRecommendedLoi(ScLoi recommendedLoi) {
@@ -1015,6 +1447,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected sc loi reports.
+	 *
 	 * @return the selectedScLoiReports
 	 */
 	public List<ScLoiReport> getSelectedScLoiReports() {
@@ -1022,6 +1456,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected sc loi reports.
+	 *
 	 * @param selectedScLoiReports the selectedScLoiReports to set
 	 */
 	public void setSelectedScLoiReports(List<ScLoiReport> selectedScLoiReports) {
@@ -1029,6 +1465,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected sc loi report.
+	 *
 	 * @return the selectedScLoiReport
 	 */
 	public ScLoiReport getSelectedScLoiReport() {
@@ -1036,6 +1474,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected sc loi report.
+	 *
 	 * @param selectedScLoiReport the selectedScLoiReport to set
 	 */
 	public void setSelectedScLoiReport(ScLoiReport selectedScLoiReport) {
@@ -1043,6 +1483,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the attachment doc type.
+	 *
 	 * @return the attachmentDocType
 	 */
 	public String getAttachmentDocType() {
@@ -1050,38 +1492,72 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the attachment doc type.
+	 *
 	 * @param attachmentDocType the attachmentDocType to set
 	 */
 	public void setAttachmentDocType(String attachmentDocType) {
 		this.attachmentDocType = attachmentDocType;
 	}
 
+	/**
+	 * Gets the sc qt.
+	 *
+	 * @return the sc qt
+	 */
 	public ScQt getScQt() {
 		return scQt;
 	}
 
+	/**
+	 * Sets the sc qt.
+	 *
+	 * @param scQt the new sc qt
+	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
 	}
 
+	/**
+	 * Gets the selected sc loi supp doc.
+	 *
+	 * @return the selected sc loi supp doc
+	 */
 	public ScLoiSupportingDoc getSelectedScLoiSuppDoc() {
 		return selectedScLoiSuppDoc;
 	}
 
+	/**
+	 * Sets the selected sc loi supp doc.
+	 *
+	 * @param selectedScLoiSuppDoc the new selected sc loi supp doc
+	 */
 	public void setSelectedScLoiSuppDoc(ScLoiSupportingDoc selectedScLoiSuppDoc) {
 		this.selectedScLoiSuppDoc = selectedScLoiSuppDoc;
 	}
 
+	/**
+	 * Gets the selected sc loi supp docs.
+	 *
+	 * @return the selected sc loi supp docs
+	 */
 	public List<ScLoiSupportingDoc> getSelectedScLoiSuppDocs() {
 		return selectedScLoiSuppDocs;
 	}
 
+	/**
+	 * Sets the selected sc loi supp docs.
+	 *
+	 * @param selectedScLoiSuppDocs the new selected sc loi supp docs
+	 */
 	public void setSelectedScLoiSuppDocs(List<ScLoiSupportingDoc> selectedScLoiSuppDocs) {
 		this.selectedScLoiSuppDocs = selectedScLoiSuppDocs;
 	}
 
 	
 	/**
+	 * Gets the recommend list.
+	 *
 	 * @return the recommendList
 	 */
 	public List<ScQtRecommend> getRecommendList() {
@@ -1089,6 +1565,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the recommend list.
+	 *
 	 * @param recommendList the recommendList to set
 	 */
 	public void setRecommendList(List<ScQtRecommend> recommendList) {
@@ -1096,6 +1574,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected recommend list.
+	 *
 	 * @return the selectedRecommendList
 	 */
 	public List<ScQtRecommend> getSelectedRecommendList() {
@@ -1103,37 +1583,71 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected recommend list.
+	 *
 	 * @param selectedRecommendList the selectedRecommendList to set
 	 */
 	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
 		this.selectedRecommendList = selectedRecommendList;
 	}
 
+	/**
+	 * Gets the action.
+	 *
+	 * @return the action
+	 */
 	public String getAction() {
 		return action;
 	}
 
+	/**
+	 * Sets the action.
+	 *
+	 * @param action the new action
+	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
 
+	/**
+	 * Checks if is edits the flag.
+	 *
+	 * @return true, if is edits the flag
+	 */
 	public boolean isEditFlag() {
 		return editFlag;
 	}
 
+	/**
+	 * Sets the edits the flag.
+	 *
+	 * @param editFlag the new edits the flag
+	 */
 	public void setEditFlag(boolean editFlag) {
 		this.editFlag = editFlag;
 	}
 
+	/**
+	 * Gets the streamed content.
+	 *
+	 * @return the streamed content
+	 */
 	public StreamedContent getStreamedContent() {
 		return streamedContent;
 	}
 
+	/**
+	 * Sets the streamed content.
+	 *
+	 * @param streamedContent the new streamed content
+	 */
 	public void setStreamedContent(StreamedContent streamedContent) {
 		this.streamedContent = streamedContent;
 	}
 
 	/**
+	 * Gets the award supplier id.
+	 *
 	 * @return the awardSupplierId
 	 */
 	public Long getAwardSupplierId() {
@@ -1141,6 +1655,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the award supplier id.
+	 *
 	 * @param awardSupplierId the awardSupplierId to set
 	 */
 	public void setAwardSupplierId(Long awardSupplierId) {
@@ -1148,6 +1664,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the committee type.
+	 *
 	 * @return the committeeType
 	 */
 	public String getCommitteeType() {
@@ -1155,40 +1673,82 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the committee type.
+	 *
 	 * @param committeeType the committeeType to set
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
 	}
 
+	/**
+	 * Checks if is multiple loi flag.
+	 *
+	 * @return true, if is multiple loi flag
+	 */
 	public boolean isMultipleLoiFlag() {
 		return multipleLoiFlag;
 	}
 
+	/**
+	 * Sets the multiple loi flag.
+	 *
+	 * @param multipleLoiFlag the new multiple loi flag
+	 */
 	public void setMultipleLoiFlag(boolean multipleLoiFlag) {
 		this.multipleLoiFlag = multipleLoiFlag;
 	}
 
+	/**
+	 * Checks if is item details flag.
+	 *
+	 * @return true, if is item details flag
+	 */
 	public boolean isItemDetailsFlag() {
 		return itemDetailsFlag;
 	}
 
+	/**
+	 * Sets the item details flag.
+	 *
+	 * @param itemDetailsFlag the new item details flag
+	 */
 	public void setItemDetailsFlag(boolean itemDetailsFlag) {
 		this.itemDetailsFlag = itemDetailsFlag;
 	}
 
+	/**
+	 * Checks if is hide column flag.
+	 *
+	 * @return true, if is hide column flag
+	 */
 	public boolean isHideColumnFlag() {
 		return hideColumnFlag;
 	}
 
+	/**
+	 * Sets the hide column flag.
+	 *
+	 * @param hideColumnFlag the new hide column flag
+	 */
 	public void setHideColumnFlag(boolean hideColumnFlag) {
 		this.hideColumnFlag = hideColumnFlag;
 	}
 
+	/**
+	 * Gets the back to previous page.
+	 *
+	 * @return the back to previous page
+	 */
 	public String getBackToPreviousPage() {
 		return backToPreviousPage;
 	}
 
+	/**
+	 * Sets the back to previous page.
+	 *
+	 * @param backToPreviousPage the new back to previous page
+	 */
 	public void setBackToPreviousPage(String backToPreviousPage) {
 		this.backToPreviousPage = backToPreviousPage;
 	}
