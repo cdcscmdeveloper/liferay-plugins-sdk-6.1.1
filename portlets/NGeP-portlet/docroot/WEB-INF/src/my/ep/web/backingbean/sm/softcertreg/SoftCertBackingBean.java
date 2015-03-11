@@ -256,10 +256,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		for (SmPersonnel personnel : personnels) {
 			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
 				personnel.setDisableRowSelection(true);
-			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 				}
+			} else {
 				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
 					if (personnel.getPmUser() == null) {
 						personnel.setDisableRowSelection(true);
