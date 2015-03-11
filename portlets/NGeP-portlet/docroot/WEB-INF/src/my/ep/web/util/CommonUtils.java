@@ -3,6 +3,8 @@
  */
 package my.ep.web.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,5 +170,22 @@ public class CommonUtils {
 	
 	public int convertStringToInteger(String word){
 		return Integer.parseInt(word);
+	}
+	
+	/**
+	 * Get the formated date based on specific format.
+	 * 
+	 * @param actualDate
+	 * @param format
+	 * @return formattedDate
+	 */
+	public String getFormattedDate(Date actualDate, String format) {
+		
+		String formattedDate = null;
+		if (actualDate != null) {
+			SimpleDateFormat dateSDF = new SimpleDateFormat(format);
+			formattedDate = dateSDF.format(actualDate);
+		}
+		return formattedDate;
 	}
 }
