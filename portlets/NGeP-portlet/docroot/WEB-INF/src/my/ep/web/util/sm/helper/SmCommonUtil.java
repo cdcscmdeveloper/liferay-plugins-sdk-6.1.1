@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
@@ -67,6 +69,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.sm.ApplType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -1528,6 +1531,7 @@ public class SmCommonUtil {
 
 	/**
 	 * Get Bpm Task List by token
+	 * 
 	 * @param token
 	 * @return List<WorklistItemVO>
 	 */
@@ -1559,5 +1563,25 @@ public class SmCommonUtil {
 			responseDTO = null;
 		}
 		return taskList;
+	}
+
+	/**
+	 * Redirect to page with msg as optional
+	 * 
+	 * @param page
+	 * @param msgKeyId
+	 */
+	public static void redirectToPage(String page, String msgKeyId) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (StringUtils.isNotBlank(msgKeyId)) {
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(msgKeyId,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, page);
 	}
 }
