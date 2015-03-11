@@ -52,6 +52,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
@@ -1690,6 +1691,37 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		return null;
+	}
+
+	public void postUpdateBizNature(List<BaseEntity> bisNatures) {
+		log.info("bisNatures: " + bisNatures);
+
+		IBusinessNatureSO bizNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		Map<Long, PmBusinessNature> bizNatureUniqueMap = new HashMap<Long, PmBusinessNature>();
+		
+		for(SmSupplierBusiness ssb : this.getManagedBean().getSmSupp().getSmSupplierBusinesses()) {
+			bizNatureUniqueMap.put(ssb.getPmBusinessNature().getBusinessNatureId(), ssb.getPmBusinessNature());
+		}
+		
+		for(int i = 0; i < bisNatures.size(); i++) {
+			PmBusinessNature bn = (PmBusinessNature)bisNatures.get(i);
+			log.info("bn.getLevelName(): " + bn.getLevelName());
+			
+			if(!bizNatureUniqueMap.containsKey(bn.getBusinessNatureId())) {
+				
+				BusinessNatureReqDTO bnReqDTO = new BusinessNatureReqDTO();
+				bnReqDTO.setBusinessNatureId(bn.getBusinessNatureId());
+				BusinessNatureResDTO resDTO = bizNatureSO.fetchParentBusinessNature(bnReqDTO);
+				bn = resDTO.getBusinessNature();
+				bizNatureUniqueMap.put(bn.getBusinessNatureId(), bn);
+
+				SmSupplierBusiness suppBusiness = new SmSupplierBusiness();
+				suppBusiness.setPmBusinessNature(bn);
+				suppBusiness.setSmSupplier(this.getManagedBean().getSmSupp());
+				this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(suppBusiness);
+			}
+		
+		}
 	}
 }
 

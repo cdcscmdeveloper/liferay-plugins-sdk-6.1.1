@@ -71,6 +71,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmBusinessNature> businessNatureL3;
 	private List<PmBusinessNature> businessNatureL4;
 	private List<PmBusinessNature> businessNatureL5;
+	private List<PmBusinessNature> bizNatures;
 
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	private SmSupplierBusiness selectedBusinessNature;
@@ -507,4 +508,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setUserBumiFlg(Integer userBumiFlg) {
 		this.userBumiFlg = userBumiFlg;
 	}
+
+	public List<PmBusinessNature> getBizNatures() {
+		return bizNatures;
+	}
+
+	public void setBizNatures(List<PmBusinessNature> bizNatures) {
+		this.bizNatures = bizNatures;
+	}
+	
 }
