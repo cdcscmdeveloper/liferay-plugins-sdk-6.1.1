@@ -189,7 +189,8 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Pre render loi list view.
+	 * Pre render page navigation to loi list view page based on task id
+	 * @return void
 	 */
 	public void preRenderLoiListView() {
 		debugLogger("preRenderLoiListView");
@@ -241,8 +242,9 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	/**
+	 * Pre render page navigation to loi page based on task id
+	 * @return void
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
@@ -295,8 +297,10 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	
 	/**
-	 * Pre render supplier view.
+	 * Pre render page navigation to suppler response page based on task id
+	 * @return void
 	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
@@ -346,7 +350,8 @@ public class LOIDetailBackingBean extends
 	}
 	
 	/**
-	 * Pre render multiple loi view.
+	 * Pre render page navigation to  multiple loi page based on task id
+	 * @return void
 	 */
 	public void preRenderMultipleLoiView() {
 		debugLogger("preRenderMultipleLoiView");
@@ -427,7 +432,7 @@ public class LOIDetailBackingBean extends
 	
 	/**
 	 * Retrieve qt details.
-	 *
+	 * get scQt details from the database.
 	 * @param qtId the qt id
 	 */
 	public void retrieveQTDetails(Long qtId) {
@@ -449,7 +454,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Retrieve loi list.
-	 *
+	 * get loi list from database to show in loi list page
 	 * @param qtId the qt id
 	 */
 	public void retrieveLOIList(Long qtId) {
@@ -529,7 +534,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * On row rec supplier action.
-	 *
+	 * show item details and nego terms by selecting supplier in award details.
 	 * @param event the event
 	 */
 	public void onRowRecSupplierAction(SelectEvent event) {
@@ -553,8 +558,8 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Tab menu listener.
-	 *
-	 * @param selectedTabIndex the selected tab index
+	 * Tab navigation from one tab to another.
+	 * @param selectedTabIndex the selected tab index.
 	 */
 	public void tabMenuListener(Integer selectedTabIndex) {
 		debugLogger("tabMenuListener");
@@ -686,7 +691,7 @@ public class LOIDetailBackingBean extends
 
 	
 	/**
-	 * getting Approver drop down listing.
+	 * getting Approver drop down listing in approval details.
 	 *
 	 * @return the approver names
 	 */
@@ -718,7 +723,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * To get status for loi.
+	 * To get current status for loi.
 	 *
 	 * @param statusId the status id
 	 * @return the current status
@@ -751,7 +756,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Page navigation to loi loa list.
+	 * Page navigation from loi details page to loi loa list.
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
@@ -782,7 +787,7 @@ public class LOIDetailBackingBean extends
 	 */
 
 	/**
-	 * Adds the negotiation location.
+	 * Adds the negotiation location in negotiation details.
 	 */
 	public void addNegotiationLocation() {
 		debugLogger("addNegotiationLocation");
@@ -800,7 +805,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Adds the negotiation term.
+	 * Adds the negotiation term in negotiation details.
 	 */
 	public void addNegotiationTerm() {
 		debugLogger("addNegotiationTerm");
@@ -850,7 +855,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Adds the predefined terms.
+	 * Adds the predefined terms in negotiation details.
 	 */
 	public void addPredefinedTerms() {
 		debugLogger("addPredefinedTerms");
@@ -875,7 +880,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Delete nego term.
+	 * Delete nego terms in negotiation details.
 	 */
 	public void deleteNegoTerm() {
 		List<ScLoiTerm> negoTermsList = new ArrayList<ScLoiTerm>();
@@ -898,7 +903,7 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Delete nego locations.
+	 * Delete nego locations in negotiation details.
 	 */
 	public void deleteNegoLocations() {
 		List<ScLoiNegoLocation> selectedNegoLocs = getManagedBean()
@@ -915,9 +920,10 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Handle Department dropdown changed - reset selected ptj profile and
+	 * Handle Department drop down changed - reset selected ptj profile and
 	 * populate list of department.
-	 * */
+	 * 
+	 */
 	public void handleMinistryProfileChanged() {
 		debugLogger("handleMinistryProfileChanged");
 
@@ -995,8 +1001,8 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#populateParentOrgProfile(my.ep.persistence.entity.sc.quationtender.ScQt)
+	/**
+	 * Method to populate parent orgprofiles for scqt.
 	 */
 	public void populateParentOrgProfile(ScQt scQt) {
 		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
@@ -1019,8 +1025,8 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Creates the loi action.
-	 *
+	 * Creates the loi.
+	 * page navigate to loi details page.
 	 * @param scQtEvaluationResult the sc qt evaluation result
 	 * @param docType the doc type
 	 * @return the string
@@ -1184,8 +1190,10 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Creates the loi.
-	 *
+	 * page navigate to loi details page.
 	 * @param scLoiLoa the sc loi loa
+	 * @return the string
+	 * 
 	 */
 	public void createLOI(ScLoiLoa scLoiLoa) {
 		try {
@@ -1212,7 +1220,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Edits the loi.
-	 *
+	 * page navigate to loi details page.
 	 * @param scLoi the sc loi
 	 */
 	public void editLOI(ScLoi scLoi) {
@@ -1241,7 +1249,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Edits the loi action.
-	 *
+	 * page navigate to loi details page.
 	 * @param scLoi the sc loi
 	 * @return the string
 	 */
@@ -1698,6 +1706,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Handle branch details changed.
+	 * shows the supplier address details.
 	 */
 	public void handleBranchDetailsChanged() {
 		log.info("handleBranchDetailsChanged");
@@ -1766,7 +1775,9 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Method to save the LOA details.
+	 * save the LOI details.
+	 * save - save data into database and initiate task for LOI details.
+	 * page navigate to loi details page.
 	 */
 	public void saveAction() {
 		debugLogger("saveAction");
@@ -1881,9 +1892,11 @@ public class LOIDetailBackingBean extends
 	}
 	
 	/**
-	 * Submit loi list action.
-	 *
+	 * submit LOI list details.
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
 	 * @return the string
+	 * page navigate to acknowledge page.
 	 */
 	public String submitLoiListAction() {
 		debugLogger("submitLoiListAction");
@@ -1930,9 +1943,11 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Submit action.
-	 *
+	 * submit LOI details.
+	 * submit - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
 	 * @return the string
+	 * page navigate to acknowledge page.
 	 */
 	public String submitAction() {
 		debugLogger("submitAction");
@@ -1996,8 +2011,11 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Update loi list bpm task action.
+	 * update bpm - save data into database and BPM process will route to the next respective user.
 	 *
 	 * @param outcome the outcome
+	 * @return the string
+	 * page navigate to acknowledge page.
 	 */
 	public void updateLOIListBpmTaskAction(String outcome) {
 		debugLogger("updateLOIListBpmTaskAction");
@@ -2028,7 +2046,7 @@ public class LOIDetailBackingBean extends
 	
 	/**
 	 * Update bpm task.
-	 *
+	 * update bpm - save data into database and BPM process will route to the next respective user.
 	 * @param outcome the outcome
 	 * @param digiSign the digi sign
 	 * @return AwardSupplierResDTO
@@ -2108,7 +2126,8 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Update bpm task action.
-	 *
+	 * update bpm - save data into database and BPM process will route to the next respective user.
+	 * Authenticating gpki before update bpm.
 	 * @param outcome the outcome
 	 */
 	public void updateBpmTaskAction(String outcome) {
@@ -2127,7 +2146,10 @@ public class LOIDetailBackingBean extends
 	}
 	
 	/**
-	 * Save multiple loi action.
+	 * save multiple loi action.
+	 * save - save data into database and initiate task for LOI details.
+	 * 
+	 * page navigate to acknowledge page.
 	 */
 	public void saveMultipleLoiAction() {
 		debugLogger("saveMultipleLoiAction");
@@ -2173,7 +2195,8 @@ public class LOIDetailBackingBean extends
 	
 	/**
 	 * Update multi loi bpm task action.
-	 *
+	 * update bpm - save data into database and BPM process will route to the next respective user.
+	 * Authenticating gpki before update bpm.
 	 * @param outcome the outcome
 	 */
 	public void updateMultiLoiBpmTaskAction(String outcome) {
@@ -2232,7 +2255,7 @@ public class LOIDetailBackingBean extends
 	
 	/**
 	 * Parses the multiple loi dtls.
-	 *
+	 * prepare mulitple loi details to save or submit into database.
 	 * @return the award supplier req dto
 	 */
 	private AwardSupplierReqDTO parseMultipleLoiDtls() {
@@ -2286,7 +2309,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Gets the loi letter stream content.
-	 *
+	 * to preview loi content as a pdf and can download.
 	 * @return the loi letter stream content
 	 * @throws Exception the exception
 	 */
@@ -2303,7 +2326,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Preview letter.
-	 *
+	 * to preview loi cover letter as a pdf and can download.
 	 * @throws Exception the exception
 	 */
 	public void previewLetter() throws Exception {
@@ -2590,8 +2613,6 @@ public class LOIDetailBackingBean extends
 			}
 			
 		}
-		
-
 	}
 
 	/**
@@ -3366,11 +3387,6 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
-	
-	
-	
-	
-	
 	/**
 	 * Generate document attachment.
 	 *
@@ -3644,8 +3660,8 @@ public class LOIDetailBackingBean extends
 	}
 	
 	/**
-	 * Select all.
-	 *
+	 * Select all
+	 * select all nego terms 
 	 * @param event the event
 	 */
 	public void selectAll(AjaxBehaviorEvent event) {
@@ -3662,6 +3678,10 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Nego term price event.
+	 * when price found in terms, shows original offered price and after nego offered price.
+	 */
 	public void negoTermPriceEvent() {
 		boolean termPriceFound = false;
 		ScLoi scLoi = getManagedBean().getScLoi();
@@ -3676,6 +3696,10 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setHideColumnFlag(termPriceFound);	
 	}
 	
+	/**
+	 * Price key in event.
+	 * when keyin unit price, calculate subtotal after nego.
+	 */
 	public void priceKeyInEvent() {
 		ScLoi scLoi = getManagedBean().getScLoi();
 
@@ -3800,7 +3824,7 @@ public class LOIDetailBackingBean extends
 	
 	/**
 	 * Calc sub total price.
-	 *
+	 * calculating subtotal for item list in award details.
 	 * @param scLoiLoaItem the sc loi loa item
 	 * @return the big decimal
 	 */
@@ -3838,11 +3862,10 @@ public class LOIDetailBackingBean extends
 
 		return total;
 	}
-	
 
 	/**
 	 * Gpki sign action.
-	 *
+	 * Authenticating gpki before update bpm.
 	 * @param digiSign the digi sign
 	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
@@ -3851,7 +3874,7 @@ public class LOIDetailBackingBean extends
 	
 	/**
 	 * Gpki sign multi loi action.
-	 *
+	 * Authenticating gpki before update bpm.
 	 * @param digiSign the digi sign
 	 */
 	public void gpkiSignMultiLoiAction(PmDigiSign digiSign) {
@@ -3878,7 +3901,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Gets the text before sign.
-	 *
+	 * prepare sign in data for gpki authentication.
 	 * @return the text before sign
 	 */
 	public String getTextBeforeSign() {
