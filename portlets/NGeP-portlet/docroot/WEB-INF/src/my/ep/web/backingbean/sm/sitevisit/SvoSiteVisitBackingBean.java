@@ -198,8 +198,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				
 			}
 		}
-		
-		this.getManagedBean().setAllFacilityMap(facilityMap);
 	}
 	
 	private void setSelectedSvTemplateAddresses(String templateType){
@@ -215,31 +213,41 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				&& getManagedBean().getSelectedSvTemplate().getSmSvFacility().getSvFacilityId()!=null){
 			log.info("***already set smsvfacility***");
 		}else{
-			log.info("allFacilityMap****" + this.getManagedBean().getAllFacilityMap().size());
+/*			log.info("allFacilityMap****" + this.getManagedBean().getAllFacilityMap().size());
 			if(smFacility == null){
 				// randomly assign a facility
 				//String key = getManagedBean().getFacilityTypeAddressMap().get(getManagedBean().getSmSvTask().getSmSvAddresses().get(0).getSvAddressId());
 				smFacility = this.getManagedBean().getAllFacilityMap().entrySet().iterator().next().getValue();
 
 				log.info("******SmFacility******" + smFacility.getFacilityType());
-			}
+			}*/
 			
-			NumberFormat formatter = new DecimalFormat("#0.00");
-			smSvFacility = new SmSvFacility();
-			smSvFacility.setOwnershipType(smFacility.getOwnershipType());
-			smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-			smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
-			if(smFacility.getAreaSquareFeet()!=null){
-				smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
-				smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
-			}
-			if(smFacility.getOwnershipType().equals("R")){
-				smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
+			if(smFacility != null){
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				smSvFacility = new SmSvFacility();
+				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
+				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+				if(smFacility.getAreaSquareFeet()!=null){
+					smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
+					smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
+				}
+				if(smFacility.getOwnershipType().equals("R")){
+					smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
+				}else{
+					smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
+				}
+				smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
+				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}else{
-				smSvFacility.setPurchaseRentPrice(smFacility.getPurchasePrice());
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				smSvFacility = new SmSvFacility();
+				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+		
+				smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
+				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}
-			smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
-			getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 		}
 	}
 	
