@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:spacer height="5"></p:spacer>
+		<!-- lbl.sc.integrity.pact -->	
+	<p:panel header="#{lbl['lbl.sc.sp.others']}" style="width : 870px;"  toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="870px">
+			<tr>
+				<td><p:editor controls="" id="othersEditor" style="overflow : auto"
+						value="#{supplierProposalDetailBackingBean.managedBean.othersTermsConditions}"
+						disabled="true" width="870" height="430" /></td>
+			</tr>
+			<tr height="10">
+				<td></td>
+			</tr>
+			<tr>
+				<td><p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}" />
+					<p:spacer width="2" /> <p:outputLabel 
+						value="#{lbl['lbl.sc.others.note']}"
+						style="vertical-align:top; float: none;" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>
