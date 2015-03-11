@@ -4722,9 +4722,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((getScSimpleQuoteStatus() != null) && (getScSimpleQuoteStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScPurchaseInDefaultStatus() != null) && (getScPurchaseInDefaultStatus() != ReportConst.EMPTY_VAL))
 				|| ((getScRequestNoteStatus() != null) && (getScRequestNoteStatus() != ReportConst.EMPTY_VAL))
-				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))
-				|| ((getScSimpleQuoteDtlGroup() != null) && (getScSimpleQuoteDtlGroup() != ReportConst.EMPTY_VAL))
-				|| ((getScREQUESTNOTESUMMARYGroup() != null) && (getScREQUESTNOTESUMMARYGroup() != ReportConst.EMPTY_VAL))
+				|| ((getScLAPRNPURCHDEFAULTGroup() != null) && (getScLAPRNPURCHDEFAULTGroup() != ReportConst.EMPTY_VAL))				
+				
 				|| ((getScPIDNo() != null) && (getScPIDNo() != ReportConst.EMPTY_VAL))
 				|| ((getScContractOrPKPType() != null) && (getScContractOrPKPType() != ReportConst.EMPTY_VAL))
 				|| ((getScContractOrPKPNo() != null) && (getScContractOrPKPNo() != ReportConst.EMPTY_VAL))
