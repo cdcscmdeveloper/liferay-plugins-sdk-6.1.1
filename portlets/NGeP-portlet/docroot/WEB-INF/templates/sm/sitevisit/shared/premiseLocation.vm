@@ -56,5 +56,9 @@
 		<td class="txtBold" width="40%">Organized</td>
 	</tr>
 	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Others</td>
+	</tr>
 
 </table>
