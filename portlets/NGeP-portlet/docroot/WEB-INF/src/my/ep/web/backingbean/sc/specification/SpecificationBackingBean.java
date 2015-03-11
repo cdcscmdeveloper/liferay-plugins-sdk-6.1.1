@@ -5348,11 +5348,16 @@ public class SpecificationBackingBean extends
 			if (paramDesc.getPmParameter().getParameterId()
 					.equals(Long.valueOf(list.getAction().getParameterId()))) {
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
-				list.setPmStatus(statusres.getPmStatus());
+				if (null != list.getDefinationType()
+						&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+								.equalsIgnoreCase(list.getDefinationType()
+										.getParameterCode())) {
+					StatusReqDTO statusreq = new StatusReqDTO();
+					statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+					StatusResDTO statusres = statussO
+							.retrieveStatusByStatusId(statusreq);
+					list.setPmStatus(statusres.getPmStatus());
+				}
 				list.setAction(paramDesc.getPmParameter());
 				break;
 			}
