@@ -27,7 +27,7 @@
 							immediate="true" action="#{softCertBackingBean.cancel}" />
 					</td>
 					<td style="white-space: nowrap; float: right;">
-					    <p:commandButton value="#{lbl['lbl.sm.makePayment']}" style="float:right;" icon="ui-icon-next" 
+					    <p:commandButton value="#{softCertBackingBean.managedBean.paymentBtnLbl}" style="float:right;" icon="ui-icon-next" 
 					    	disabled="#{empty softCertBackingBean.managedBean.softCertPayList}" id="makePaymentBtnId"
 					    	action="#{softCertBackingBean.makePayment}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					</td>
@@ -65,7 +65,7 @@
        </p:column>
        
        <p:column>
-        <h:outputText value="150.00" />  
+        <h:outputText value="#{softCertBackingBean.getPersonnelSoftCertPrice(personnel)}" />  
        </p:column>
        
        <p:columnGroup type="footer">
