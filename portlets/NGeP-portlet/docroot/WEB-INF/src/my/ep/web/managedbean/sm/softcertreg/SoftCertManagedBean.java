@@ -44,10 +44,10 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private BigDecimal totalPaymentAmount;
 	private SmPersonnel loginUserPersonnelInfo;
 	private String loginRoleName;
-	private IPagingDataModel<SmPersonnel> softCertPagingDataModel = new SoftCertPagingDataModel();
 	private String taskName;
 	private String token;
 	private WorklistItemVO softCertBpmTask;
+	private List<SmPersonnel> authorizedPersonnels;
 
 	public SoftCertManagedBean() {
 		super();
@@ -67,49 +67,6 @@ public class SoftCertManagedBean extends BaseManagedBean {
 			System.out
 					.println("  *** LOGGED IN USER IS BASIC SUPPLIER ADMIN *** ");
 		}
-	}
-
-	private class SoftCertPagingDataModel extends PagingDataModel<SmPersonnel> {
-		private static final long serialVersionUID = 1L;
-
-		public SoftCertPagingDataModel() {
-			super("softCertPageDataModelId");
-		}
-
-		@Override
-		protected ISearchResultBean<SmPersonnel> pageChangeListener(
-				ISearchBean<SmPersonnel> searchBean) {
-			try {
-
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("smAppl.smSupplier.supplierId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								getLoginUserPersonnelInfo().getSmAppl()
-										.getSmSupplier().getSupplierId()));
-
-				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-				reqDTO.setSearchPersonnelBean(searchBean);
-
-				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-						.getInstance().getServiceObject("sm",
-								IPersonnelSO.class);
-				PersonnelResDTO resDTO = smPersonnelSO
-						.retrievePersonnelBySupplierIdForSoftCert(reqDTO);
-
-				if (resDTO.isSuccessful()) {
-					setPersonnelRowSelection(resDTO
-							.getSearchPersonnelResultBean().getResultList());
-					return resDTO.getSearchPersonnelResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
-	public void searchSmPersonnel() {
-		softCertPagingDataModel.reloadData();
 	}
 
 	public List<SmPersonnel> getPersonnelList() {
@@ -170,15 +127,6 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		this.loginRoleName = loginRoleName;
 	}
 
-	public IPagingDataModel<SmPersonnel> getSoftCertPagingDataModel() {
-		return softCertPagingDataModel;
-	}
-
-	public void setSoftCertPagingDataModel(
-			IPagingDataModel<SmPersonnel> softCertPagingDataModel) {
-		this.softCertPagingDataModel = softCertPagingDataModel;
-	}
-
 	public String getTaskName() {
 		return taskName;
 	}
@@ -194,7 +142,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
+
 	public WorklistItemVO getSoftCertBpmTask() {
 		return softCertBpmTask;
 	}
@@ -203,18 +151,12 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		this.softCertBpmTask = softCertBpmTask;
 	}
 
-	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
-		for (SmPersonnel personnel : personnels) {
-			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
-				personnel.setDisableRowSelection(true);
-			} else {
-				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
-					if (personnel.getPmUser() == null) {
-						personnel.setDisableRowSelection(true);
-					}
-				}
-			}
-		}
+	public List<SmPersonnel> getAuthorizedPersonnels() {
+		return authorizedPersonnels;
+	}
+
+	public void setAuthorizedPersonnels(List<SmPersonnel> authorizedPersonnels) {
+		this.authorizedPersonnels = authorizedPersonnels;
 	}
 
 }
