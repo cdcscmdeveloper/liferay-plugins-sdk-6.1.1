@@ -89,6 +89,7 @@
 									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.template.type']}" />
 									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.created.user']}" />
 									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.created.date']}" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.pm.status']}" />
 									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.search.action']}" />
 								</p:row>
 							</p:columnGroup>
@@ -115,6 +116,9 @@
 									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</h:outputText>
 							</p:column>
+							<p:column>  
+					            #{(tplMasterObj.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+					        </p:column> 
 							<p:column style="width:4%">
 								<p:commandButton icon="ui-icon-edit" style="background-color:transparent !important; border:0px none;"
 									action="#{templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBackingBean.managedBean.templateSpecBean)}">

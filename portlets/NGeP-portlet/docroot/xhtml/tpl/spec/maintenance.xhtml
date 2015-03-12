@@ -136,6 +136,32 @@
 						</h:panelGroup>
 					</td>
 				</tr>
+				<tr>
+					<td class="TableFieldLeft">
+						<p:outputLabel value="#{lbl['lbl.tpl.spec.ministry.owner']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td class="TableFieldRight" colspan="3">
+						<p:inputText id="minOwner" 
+							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.ownerOrgProfile.orgName}"
+							disabled="true" style="width:280px"  />
+					</td>
+				</tr>
+				<tr>
+					<td class="TableFieldLeft">
+						<p:outputLabel value="#{lbl['lbl.pm.status']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td class="TableFieldRight" colspan="3">
+						<p:selectOneMenu id="recStatus" 
+							required="true" style="width:148px" 
+							label="#{lbl['lbl.pm.status']}"  disabled="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.brandNew}"
+							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.recordStatusFlg}">
+							<f:selectItems  value="#{templateSpecBackingBean.getStatusOptions()}"/>
+						</p:selectOneMenu>
+						<p:message id="recStatusMsg" for="recStatus" display="icon" />
+					</td>
+				</tr>
 			</table>
 		</p:panel>
 		
