@@ -29,8 +29,7 @@
 						<p:commandButton value="Search"
 							action="#{templateDocBackingBean.tempDocSearch}"
 							  process="@this,panel1" update="resultID" />
-					</td>
-					<td colspan="4" style="text-align:right;">
+
 						<p:commandButton value="Reset" action="#{templateDocBackingBean.reset}" 
 							   update="panel1,panel2" resetValues="true" partialSubmit="true" process="@this">
 					    </p:commandButton>						 
