@@ -9,7 +9,7 @@
 			<table style="width:100%">
 				<tr>
 					<td class="TableFieldLeft" style="width:120px">
-						<h:outputLabel value=" Template Category" />
+						<h:outputLabel value=" Procurement Category" />
 					</td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.procurementCategoryId}" id="templateCategory">
@@ -17,39 +17,22 @@
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px">
-						<h:outputLabel value=" Process Type" />
-					</td>
-					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processTypeId}">
-							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.tplDocProcessType)}" />
-						</p:selectOneMenu>
-					</td>
-				</tr>
-				<tr style="height: 5px;"></tr>
-				<tr>
-					<td class="TableFieldLeft" style="width:120px">
 					      <h:outputLabel value=" Title" />
 					</td>
 					<td class="TableFieldRight">
-					     <p:inputText value="#{templateDocBackingBean.managedBean.title}" style="width:280px" />
-					</td>
-					<td class="TableFieldLeft" style="width:120px">
-					     <h:outputLabel value=" Decription" />
-					</td>
-					<td class="TableFieldRight">
-					    <p:inputTextarea value="#{templateDocBackingBean.managedBean.desc}" style="width:280px" cols="33" rows="2" />
-					</td>
+					     <p:inputText id="templateTitle" value="#{templateDocBackingBean.managedBean.title}" style="width:280px" />
+					</td>					
 				</tr>
 				<tr style="height: 3px;"></tr>
 				<tr>
 					<td colspan="4" style="text-align:right;">
 						<p:commandButton value="Search"
 							action="#{templateDocBackingBean.tempDocSearch}"
-							  process="@this,templateCategory" update="resultID" />
+							  process="@this,panel1" update="resultID" />
 					</td>
 					<td colspan="4" style="text-align:right;">
 						<p:commandButton value="Reset" action="#{templateDocBackingBean.reset}" 
-							   update="panel1,panel2" icon="ui-icon-reset" resetValues="true" partialSubmit="true" process="@this">
+							   update="panel1,panel2" resetValues="true" partialSubmit="true" process="@this">
 					    </p:commandButton>						 
 					 
 					</td>

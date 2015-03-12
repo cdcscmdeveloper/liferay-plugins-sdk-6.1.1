@@ -28,9 +28,11 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.ModuleCodeConst;
@@ -38,10 +40,13 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
@@ -528,6 +533,13 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			docMaster.setDocName("");
 			docMaster.setDocTitle("");
 			docMaster.setDocDesc("");
+			
+			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+			paramReqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
+			paramReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
+			docMaster.setProcessType(parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter());
+			
 			getManagedBean().setSelectedTemplate(docMaster);
 			getManagedBean().setDocSectionMap(new HashMap<TplDocSection, TreeNode>());
 			TreeNode selectedNode = (new DefaultTreeNode("root", "", null));
@@ -780,13 +792,10 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			if(null != templLong){
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementCategory.parameterId",SearchOperator.OPERATOR_EQUALS.value(),templLong));
 			}
-			Long processValue =this.getManagedBean().getProcessTypeId();
-			if(null != processValue){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.parameterId",SearchOperator.OPERATOR_EQUALS.value(),processValue));
-			}
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD));
 			String title=this.getManagedBean().getTitle();
 			if(null != title){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_LIKE.value(),title));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_LIKE.value(),title,true));
 			}
 			String desc=this.getManagedBean().getDesc();
 			if(null != desc){
@@ -861,5 +870,24 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		return null;
 	}
 	
+	public String getUserNameById(Long userId) {
+		IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(userId);
+		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+		if(resDTO.getPmUser()!=null) {
+			return resDTO.getPmUser().getUserName();
+		}
+		return "";
+	}
+	
+	public ISearchBean<PmParameterDesc> getRecordStatusSearchBean() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recordStatusList = new ArrayList<String>();
+		recordStatusList.add(ParameterConst.RECORD_STATUS_ACTIVE);
+		recordStatusList.add(ParameterConst.RECORD_STATUS_INACTIVE);
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_IN.value(), recordStatusList));
+		return searchBean;
+	}
 	
 }
