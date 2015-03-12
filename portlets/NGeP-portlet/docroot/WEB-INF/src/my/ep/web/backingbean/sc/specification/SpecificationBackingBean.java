@@ -5981,13 +5981,13 @@ public class SpecificationBackingBean extends
 						new ArrayList<ScQtCheckListScore>());
 				this.getManagedBean().setToBeRemoveList(
 						new ArrayList<ScQtCheckListScore>());
+
 				if (QTConstants.TECHNICAL_GOV_CODE.equalsIgnoreCase(checkList
 						.getPmDocument().getDocDefinitionKey())) {
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()
-							|| null == resDTO.getScQtCheckListValue()) {
+					if (null == resDTO.getScQtCheckListValue()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
@@ -5997,11 +5997,6 @@ public class SpecificationBackingBean extends
 						setUserDetails(checkListValue);
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
-						this.getManagedBean().setScoringForYears(
-								new ArrayList<ScQtCheckListScore>());
 
 					} else {
 
@@ -6087,8 +6082,7 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()
-							|| null == resDTO.getScQtCheckListValue()) {
+					if (null == resDTO.getScQtCheckListValue()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
@@ -6099,10 +6093,6 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
-						this.getManagedBean().setScoringForYears(
-								new ArrayList<ScQtCheckListScore>());
 
 					} else {
 
@@ -6191,7 +6181,7 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (resDTO.getCheckListScores() == null
+					if (null == resDTO.getCheckListScores()
 							|| resDTO.getCheckListScores().isEmpty()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
@@ -6251,8 +6241,7 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (resDTO.getCheckListScores() == null
-							|| resDTO.getScQtCheckListValue() == null) {
+					if (null == resDTO.getScQtCheckListValue()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 						this.getManagedBean().setCompanyScoreType(null);
@@ -6261,9 +6250,6 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
 
 					} else {
 
@@ -6433,8 +6419,7 @@ public class SpecificationBackingBean extends
 						.getPmDocument().getDocDefinitionKey())) {
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()
-							|| null == resDTO.getScQtCheckListValue()) {
+					if (null == resDTO.getScQtCheckListValue()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
@@ -6442,9 +6427,6 @@ public class SpecificationBackingBean extends
 						setUserDetails(checkListValue);
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
 
 					} else {
 
@@ -6497,8 +6479,7 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()
-							|| null == resDTO.getScQtCheckListValue()) {
+					if (null == resDTO.getScQtCheckListValue()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
 
@@ -6506,9 +6487,6 @@ public class SpecificationBackingBean extends
 						setUserDetails(checkListValue);
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
 
 					} else {
 
@@ -6622,9 +6600,6 @@ public class SpecificationBackingBean extends
 
 						this.getManagedBean().setChecklistScoreType(null);
 
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
-
 					} else {
 
 						List<ScQtCheckListScore> cashOnHand = new ArrayList<ScQtCheckListScore>();
@@ -6680,8 +6655,7 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()
-							|| null == resDTO.getScQtCheckListValue()) {
+					if (null == resDTO.getScQtCheckListValue()) {
 						this.getManagedBean()
 								.setStartYear(String.valueOf(year));
 						this.getManagedBean().setEndYear(String.valueOf(year));
@@ -6693,9 +6667,6 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
 
 					} else {
 
@@ -6874,9 +6845,6 @@ public class SpecificationBackingBean extends
 					if (null == resDTO.getCheckListScores()) {
 
 						this.getManagedBean().setChecklistScoreType(null);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
 
 					} else {
 
@@ -7237,9 +7205,12 @@ public class SpecificationBackingBean extends
 									.equalsIgnoreCase(scqtlist
 											.getDefinationType()
 											.getParameterCode())) {
-
-						statusreq
-								.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+						if (!scqtlist.isScoringReq()) {
+							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+						} else if (scqtlist.isScoringReq()) {
+							statusreq
+									.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+						}
 						StatusResDTO statusres = statussO
 								.retrieveStatusByStatusId(statusreq);
 						scqtlist.setPmStatus(statusres.getPmStatus());
@@ -7386,8 +7357,12 @@ public class SpecificationBackingBean extends
 											.getDefinationType()
 											.getParameterCode())) {
 
-						statusreq
-								.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+						if (!scqtlist.isScoringReq()) {
+							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+						} else if (scqtlist.isScoringReq()) {
+							statusreq
+									.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+						}
 						StatusResDTO statusres = statussO
 								.retrieveStatusByStatusId(statusreq);
 						scqtlist.setPmStatus(statusres.getPmStatus());
@@ -8485,6 +8460,7 @@ public class SpecificationBackingBean extends
 			String totalNoOfYearsType = this.getManagedBean()
 					.getCompanyScoreType();
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
+			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
 			if (null != checkList && null != checkList.getScQtCheckListValue()) {
 				int year = Calendar.getInstance().get(Calendar.YEAR);
 				if (null != checkList.getScQtCheckListValue().getYear()) {
@@ -8498,118 +8474,122 @@ public class SpecificationBackingBean extends
 					}
 				}
 			}
-			if (null == contractScoreType
-					|| "".equalsIgnoreCase(contractScoreType)) {
-				throw new EpException(MessageConst.ERROR_760190);
-			}
-
-			if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
-				ScQtCheckListScore noContract = this.getManagedBean()
-						.getScQtCheckListScore();
-				noContract.setScoreType(new BigDecimal(this.getManagedBean()
-						.getChecklistScoreType()));
-				noContract.setCriteriaType(new Integer(this.getManagedBean()
-						.getCriteriaType()));
-				noContract.setCheckList(checkList);
-				setUserDetails(noContract);
-				noOfContractScore.add(noContract);
-
-			} else if (QTConstants.AUTO_SCORE
-					.equalsIgnoreCase(contractScoreType)) {
-				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
-						.getCheckListScore();
-
-				if (null == checkListScore) {
-					checkListScore = new ArrayList<ScQtCheckListScore>();
-				}
-				if (checkListScore.size() < 2) {
-					throw new EpException(MessageConst.ERROR_760140);
-				}
-				List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
-				for (int i = 0; i < checkListScore.size(); i++) {
-					ScQtCheckListScore Score = checkListScore.get(i);
-					if (null == Score.getScore()
-							|| Score.getScore().intValue() <= 0) {
-						throw new EpException(MessageConst.ERROR_760139);
-
-					}
-					if (null != checkList.getPmDocument()
-							&& QTConstants.FINANCIAL_CREDIT_FACILITY_CODE
-									.equalsIgnoreCase(checkList.getPmDocument()
-											.getDocDefinitionKey())) {
-						if (null != Score.getRangeTo()
-								&& Score.getRangeTo().intValue() > 100) {
-							throw new EpException(MessageConst.ERROR_760170);
-						}
-					}
-
+			if (checkList.isScoringReq()) {
+				if (null == contractScoreType
+						|| "".equalsIgnoreCase(contractScoreType)) {
+					throw new EpException(MessageConst.ERROR_760190);
 				}
 
-				for (int i = 0; i < checkListScore.size() - 1; i++) {
-					ScQtCheckListScore Score = checkListScore.get(i);
-					localScore.add(Score);
-				}
+				if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
+					ScQtCheckListScore noContract = this.getManagedBean()
+							.getScQtCheckListScore();
+					noContract.setScoreType(new BigDecimal(this
+							.getManagedBean().getChecklistScoreType()));
+					noContract.setCriteriaType(new Integer(this
+							.getManagedBean().getCriteriaType()));
+					noContract.setCheckList(checkList);
+					setUserDetails(noContract);
+					noOfContractScore.add(noContract);
 
-				// Collections.sort(localScore);
-				if (null != checkListScore) {
-					noOfContractScore.addAll(checkListScore);
-				}
-			}
-			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
-			if ((null != checkList && null != checkList.getPmDocument())
-					&& (QTConstants.TECHNICAL_GOV_CODE
-							.equalsIgnoreCase(checkList.getPmDocument()
-									.getDocDefinitionKey()) || QTConstants.TECHNICAL_PRIVATE_CODE
-							.equalsIgnoreCase(checkList.getPmDocument()
-									.getDocDefinitionKey()))) {
-
-				if (QTConstants.USER_SCORE.equalsIgnoreCase(totalNoOfYearsType)) {
-					ScQtCheckListScore scoreOfYears = this.getManagedBean()
-							.getScQtContractScore();
-					scoreOfYears.setScoreType(new BigDecimal(this
-							.getManagedBean().getCompanyScoreType()));
-					scoreOfYears.setCriteriaType(new Integer(this
-							.getManagedBean().getOtherCriteriaType()));
-					scoreOfYears.setCheckList(checkList);
-					setUserDetails(scoreOfYears);
-					noOfYearsScore.add(scoreOfYears);
 				} else if (QTConstants.AUTO_SCORE
-						.equalsIgnoreCase(totalNoOfYearsType)) {
-					List<ScQtCheckListScore> scoreYears = this.getManagedBean()
-							.getScoringForYears();
+						.equalsIgnoreCase(contractScoreType)) {
+					List<ScQtCheckListScore> checkListScore = this
+							.getManagedBean().getCheckListScore();
 
-					if (null == scoreYears) {
-						scoreYears = new ArrayList<ScQtCheckListScore>();
+					if (null == checkListScore) {
+						checkListScore = new ArrayList<ScQtCheckListScore>();
 					}
-					if (scoreYears.size() >= 1) {
-
-						if (scoreYears.size() < 2) {
-							throw new EpException(MessageConst.ERROR_760140);
-						}
+					if (checkListScore.size() < 2) {
+						throw new EpException(MessageConst.ERROR_760140);
 					}
-
-					for (int i = 0; i < scoreYears.size(); i++) {
-						ScQtCheckListScore Score = scoreYears.get(i);
+					List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
+					for (int i = 0; i < checkListScore.size(); i++) {
+						ScQtCheckListScore Score = checkListScore.get(i);
 						if (null == Score.getScore()
 								|| Score.getScore().intValue() <= 0) {
 							throw new EpException(MessageConst.ERROR_760139);
 
 						}
-						/*
-						 * if (null != Score.getRangeTo() &&
-						 * Score.getRangeTo().intValue() > 100) { throw new
-						 * EpException(MessageConst.ERROR_760170); }
-						 */
+						if (null != checkList.getPmDocument()
+								&& QTConstants.FINANCIAL_CREDIT_FACILITY_CODE
+										.equalsIgnoreCase(checkList
+												.getPmDocument()
+												.getDocDefinitionKey())) {
+							if (null != Score.getRangeTo()
+									&& Score.getRangeTo().intValue() > 100) {
+								throw new EpException(MessageConst.ERROR_760170);
+							}
+						}
+
 					}
 
-					List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
-					for (int i = 0; i < scoreYears.size() - 1; i++) {
-						ScQtCheckListScore Score = scoreYears.get(i);
+					for (int i = 0; i < checkListScore.size() - 1; i++) {
+						ScQtCheckListScore Score = checkListScore.get(i);
 						localScore.add(Score);
 					}
+
 					// Collections.sort(localScore);
-					if (null != scoreYears) {
-						noOfYearsScore.addAll(scoreYears);
+					if (null != checkListScore) {
+						noOfContractScore.addAll(checkListScore);
+					}
+				}
+
+				if ((null != checkList && null != checkList.getPmDocument())
+						&& (QTConstants.TECHNICAL_GOV_CODE
+								.equalsIgnoreCase(checkList.getPmDocument()
+										.getDocDefinitionKey()) || QTConstants.TECHNICAL_PRIVATE_CODE
+								.equalsIgnoreCase(checkList.getPmDocument()
+										.getDocDefinitionKey()))) {
+
+					if (QTConstants.USER_SCORE
+							.equalsIgnoreCase(totalNoOfYearsType)) {
+						ScQtCheckListScore scoreOfYears = this.getManagedBean()
+								.getScQtContractScore();
+						scoreOfYears.setScoreType(new BigDecimal(this
+								.getManagedBean().getCompanyScoreType()));
+						scoreOfYears.setCriteriaType(new Integer(this
+								.getManagedBean().getOtherCriteriaType()));
+						scoreOfYears.setCheckList(checkList);
+						setUserDetails(scoreOfYears);
+						noOfYearsScore.add(scoreOfYears);
+					} else if (QTConstants.AUTO_SCORE
+							.equalsIgnoreCase(totalNoOfYearsType)) {
+						List<ScQtCheckListScore> scoreYears = this
+								.getManagedBean().getScoringForYears();
+
+						if (null == scoreYears) {
+							scoreYears = new ArrayList<ScQtCheckListScore>();
+						}
+						if (scoreYears.size() >= 1) {
+
+							if (scoreYears.size() < 2) {
+								throw new EpException(MessageConst.ERROR_760140);
+							}
+						}
+
+						for (int i = 0; i < scoreYears.size(); i++) {
+							ScQtCheckListScore Score = scoreYears.get(i);
+							if (null == Score.getScore()
+									|| Score.getScore().intValue() <= 0) {
+								throw new EpException(MessageConst.ERROR_760139);
+
+							}
+							/*
+							 * if (null != Score.getRangeTo() &&
+							 * Score.getRangeTo().intValue() > 100) { throw new
+							 * EpException(MessageConst.ERROR_760170); }
+							 */
+						}
+
+						List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
+						for (int i = 0; i < scoreYears.size() - 1; i++) {
+							ScQtCheckListScore Score = scoreYears.get(i);
+							localScore.add(Score);
+						}
+						// Collections.sort(localScore);
+						if (null != scoreYears) {
+							noOfYearsScore.addAll(scoreYears);
+						}
 					}
 				}
 			}
@@ -8674,6 +8654,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setScQtCheckList(checkList);
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
 			reqDTO.setCheckListValue(checkList.getScQtCheckListValue());
+			reqDTO.setScoringReq(checkList.isScoringReq());
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
 			// resDTO.getScQtCheckList();
 			ScQtCheckList updatedCheckList = resDTO.getScQtCheckList();
@@ -8728,50 +8709,52 @@ public class SpecificationBackingBean extends
 					.getChecklistScoreType();
 
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
-			if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
-				ScQtCheckListScore noContract = this.getManagedBean()
-						.getScQtCheckListScore();
-				noContract.setScoreType(new BigDecimal(this.getManagedBean()
-						.getChecklistScoreType()));
-				noContract.setCriteriaType(new Integer(this.getManagedBean()
-						.getCriteriaType()));
-				noContract.setCheckList(checkList);
-				setUserDetails(noContract);
-				noOfContractScore.add(noContract);
-			} else if (QTConstants.AUTO_SCORE
-					.equalsIgnoreCase(contractScoreType)) {
-				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
-						.getCheckListScore();
+			if (checkList.isScoringReq()) {
+				if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
+					ScQtCheckListScore noContract = this.getManagedBean()
+							.getScQtCheckListScore();
+					noContract.setScoreType(new BigDecimal(this
+							.getManagedBean().getChecklistScoreType()));
+					noContract.setCriteriaType(new Integer(this
+							.getManagedBean().getCriteriaType()));
+					noContract.setCheckList(checkList);
+					setUserDetails(noContract);
+					noOfContractScore.add(noContract);
+				} else if (QTConstants.AUTO_SCORE
+						.equalsIgnoreCase(contractScoreType)) {
+					List<ScQtCheckListScore> checkListScore = this
+							.getManagedBean().getCheckListScore();
 
-				if (null == checkListScore) {
-					checkListScore = new ArrayList<ScQtCheckListScore>();
-				}
-				if (checkListScore.size() < 2) {
-					throw new EpException(MessageConst.ERROR_760140);
-				}
+					if (null == checkListScore) {
+						checkListScore = new ArrayList<ScQtCheckListScore>();
+					}
+					if (checkListScore.size() < 2) {
+						throw new EpException(MessageConst.ERROR_760140);
+					}
 
-				for (int i = 0; i < checkListScore.size(); i++) {
-					ScQtCheckListScore Score = checkListScore.get(i);
-					if (null == Score.getScore()
-							|| Score.getScore().intValue() <= 0) {
-						throw new EpException(MessageConst.ERROR_760139);
+					for (int i = 0; i < checkListScore.size(); i++) {
+						ScQtCheckListScore Score = checkListScore.get(i);
+						if (null == Score.getScore()
+								|| Score.getScore().intValue() <= 0) {
+							throw new EpException(MessageConst.ERROR_760139);
+
+						}
+						/*
+						 * if (null != Score.getRangeTo() &&
+						 * Score.getRangeTo().intValue() > 100) { throw new
+						 * EpException(MessageConst.ERROR_760170); }
+						 */
 
 					}
-					/*
-					 * if (null != Score.getRangeTo() &&
-					 * Score.getRangeTo().intValue() > 100) { throw new
-					 * EpException(MessageConst.ERROR_760170); }
-					 */
+					List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
+					for (int i = 0; i < checkListScore.size() - 1; i++) {
+						ScQtCheckListScore Score = checkListScore.get(i);
+						localScore.add(Score);
+					}
 
-				}
-				List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
-				for (int i = 0; i < checkListScore.size() - 1; i++) {
-					ScQtCheckListScore Score = checkListScore.get(i);
-					localScore.add(Score);
-				}
-
-				if (null != checkListScore) {
-					noOfContractScore.addAll(checkListScore);
+					if (null != checkListScore) {
+						noOfContractScore.addAll(checkListScore);
+					}
 				}
 			}
 			String Startmonth = "";
@@ -8869,6 +8852,7 @@ public class SpecificationBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 			// checkList.setScQtCheckListScores(noOfContractScore);
 			reqDTO.setCheckListScores(noOfContractScore);
 
@@ -8917,6 +8901,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setScQtCheckList(checkList);
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
 			reqDTO.setCheckListValue(checkList.getScQtCheckListValue());
+			reqDTO.setScoringReq(checkList.isScoringReq());
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
 			ScQtCheckList updatedCheckList = resDTO.getScQtCheckList();
 
@@ -14363,6 +14348,80 @@ public class SpecificationBackingBean extends
 		}
 		this.getManagedBean().setSelectpanelItem(itemList);
 		return pageView;
+	}
+
+	/**
+	 * technical checklist score change.Event handle check/Uncheck score
+	 * checkbox in technical checklist based on score you will display
+	 * specification status.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checklist
+	 *            (List<ScQtCheckList> checklist).
+	 */
+
+	public void technicalCheckListScoreReqChange(int index,
+			List<ScQtCheckList> checklist) {
+		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		ScQtCheckList list = checklist.get(index);
+
+		if (((null != list.getDefinationType()) && (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+				.equalsIgnoreCase(list.getDefinationType().getParameterCode())
+				&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+						.equalsIgnoreCase(list.getDefinationType()
+								.getParameterCode()) && !ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
+					.equalsIgnoreCase(list.getDefinationType()
+							.getParameterCode())))) {
+			StatusReqDTO statusreq = new StatusReqDTO();
+			if (list.isScoringReq()) {
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+			} else if (!list.isScoringReq()) {
+				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			}
+			StatusResDTO statusres = statussO
+					.retrieveStatusByStatusId(statusreq);
+			list.setPmStatus(statusres.getPmStatus());
+		}
+
+		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
+	}
+
+	/**
+	 * financial checklist score change.Event handle check/Uncheck score
+	 * checkbox in financial checklist based on score you will display
+	 * specification status.
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checklist
+	 *            (List<ScQtCheckList> checklist).
+	 */
+
+	public void financialCheckListScoreReqChange(int index,
+			List<ScQtCheckList> checklist) {
+		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		ScQtCheckList list = checklist.get(index);
+
+		if (null != list.getDefinationType()
+				&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+						.equalsIgnoreCase(list.getDefinationType()
+								.getParameterCode())) {
+			StatusReqDTO statusreq = new StatusReqDTO();
+			if (list.isScoringReq()) {
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+			} else if (!list.isScoringReq()) {
+				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			}
+			StatusResDTO statusres = statussO
+					.retrieveStatusByStatusId(statusreq);
+			list.setPmStatus(statusres.getPmStatus());
+		}
+
+		this.getManagedBean().getScQtCheckSt2financeProposalList()
+				.set(index, list);
 	}
 
 	/**
