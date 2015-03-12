@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
@@ -37,16 +47,24 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 /**
+ * The Class QTDeductionPaymentBackingBean.
+ *
  * @author Sudheer Kumar
- * 
  */
 @ManagedBean(name = "qTDeductionPaymentBackingBean")
 @RequestScoped
 public class QTDeductionPaymentBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
+	
+	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTDeductionPaymentBackingBean.class);
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -54,9 +72,17 @@ public class QTDeductionPaymentBackingBean extends
 		log.info(message);
 	}
 
+	/**
+	 * Instantiates a new QT deduction payment backing bean.
+	 */
 	public QTDeductionPaymentBackingBean() {
 	}
 
+	/**
+	 * Deduction type change.
+	 * Deduction Clause will show when deduction type changes
+	 * @param scQtDeduction
+	 */
 	public void deductionTypeChange(int index, ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
 		
@@ -117,6 +143,9 @@ public class QTDeductionPaymentBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the deduction payment in deduction payment.
+	 */
 	public void addDeductionPaymentAction() {
 		debugLogger("addDeductionPaymentAction");
 		List<ScQtDeduction> scQtDeductions = this.getManagedBean().getScQtDeductionList();
@@ -130,6 +159,9 @@ public class QTDeductionPaymentBackingBean extends
 		this.getManagedBean().getScQtDeductionList().add(scQtDeduction);
 	}
 
+	/**
+	 * Delete deduction payment deduction payment.
+	 */
 	public void deleteDeductionPaymentAction() {
 		debugLogger("deleteDeductionPaymentAction");
 		List<ScQtDeduction> deductionList = this.getManagedBean().getScQtDeductionList();
@@ -147,24 +179,13 @@ public class QTDeductionPaymentBackingBean extends
 				deductionList.remove(qtDeduction);
 			}
 		}
-		/*if (deductionList.size() == selectedList.size()) {
-			deductionList.clear();
-		} else {
-			for (ScQtDeduction qtDeduction : selectedList){
-				qtDeduction.setDeleted(true);
-				deductionList.remove(qtDeduction);
-				
-			}
-		}*/
-		/*if (null != selectedList && !selectedList.isEmpty()) {
-			for (int i = 0; i < selectedList.size(); i++) {
-				deductionList.remove(i);
-			}
-		}*/
 		this.getManagedBean().setScQtDeductionList(deductionList);
 		this.getManagedBean().setRemoveDeductions(removeDeductionList);
 	}
 	
+	/**
+	 * Adds the deduction clause in deduction payment.
+	 */
 	public void addDeductionClauseAction() {
 		debugLogger("addDeductionClauseAction");
 		ScQtDeduction selectedScQtDeduction = this.getManagedBean()
@@ -181,6 +202,11 @@ public class QTDeductionPaymentBackingBean extends
 				.setScQtDeductionClauses(scQtDeductionClauses);
 	}
 
+	/**
+	 * Retrieve deduction cluses.
+	 *
+	 * @param selectEvent the select event
+	 */
 	public void retrieveDeductionCluses(SelectEvent selectEvent) {
 		ScQtDeduction deduction = (ScQtDeduction) selectEvent.getObject();
 		if (null != deduction) {
@@ -202,6 +228,9 @@ public class QTDeductionPaymentBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete rows action.
+	 */
 	public void deleteRowsAction() {
 		ScQtDeduction deduction = this.getManagedBean()
 				.getSelectedScQtDeduction();
@@ -219,6 +248,11 @@ public class QTDeductionPaymentBackingBean extends
 		this.getManagedBean().setSelectedScQtDeduction(deduction);
 	}
 	
+	/**
+	 * Row unselect event.
+	 *
+	 * @param selectEvent the select event
+	 */
 	public void rowUnselectEvent(UnselectEvent selectEvent) {
 		ScQtDeduction deduction = (ScQtDeduction) selectEvent.getObject();
 		if(ParameterConst.DEDUCTION_TYPE_OTHERS.equalsIgnoreCase(deduction.getDeductionType().getParameterCode())){
@@ -227,6 +261,11 @@ public class QTDeductionPaymentBackingBean extends
 		
 	}
 	
+	/**
+	 * Gets the deduction types.
+	 *
+	 * @return the deduction types
+	 */
 	public SelectItem[] getDeductionTypes(){
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		
