@@ -7,14 +7,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		
+
 	<ui:define name="contentSection">
-	
-		<ui:include src="/xhtml/pm/usergroupsearch/userGroupNavigationButton.xhtml"></ui:include>
-	    <br />
-	    <br />
-	    <br />
+		<p:messages id="usergroupmsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true"></p:messages>
+		<ui:include
+			src="/xhtml/pm/usergroupsearch/userGroupNavigationButton.xhtml"></ui:include>
+		<br />
+		<br />
 		<ui:include src="/xhtml/pm/usergroupsearch/userGroupInfo.xhtml"></ui:include>
-							
+
 	</ui:define>
 </ui:composition>

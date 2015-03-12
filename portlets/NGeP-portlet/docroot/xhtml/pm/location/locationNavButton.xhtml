@@ -11,7 +11,4 @@
 		value="#{!locationBackingBean.managedBean.disabledVal? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 		update="@([id$=Msg])" action="#{locationBackingBean.saveLocation}"
 		style="float:right;" />
-
-	<p:messages id="location" showDetail="true" autoUpdate="true"
-		closable="true" showSummary="true"></p:messages>
 </ui:composition>
