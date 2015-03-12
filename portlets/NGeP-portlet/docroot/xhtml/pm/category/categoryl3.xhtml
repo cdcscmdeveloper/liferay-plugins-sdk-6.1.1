@@ -96,15 +96,16 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItems
 							value="#{categoryBackingBean.managedBean.specialCategory}"
-							var="specialCategory" itemLabel="#{specialCategory.codeName}" itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
+							var="specialCategory" itemLabel="#{specialCategory.codeName}" itemValue="#{specialCategory.pmParameter.parameterId}">							
+						</f:selectItems>
+					    <p:ajax event="change" process="@this" partialSubmit="true" listener="#{categoryBackingBean.updateSpecialCategory}" update="@form"/>								
 					</p:selectOneMenu>
 					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}" rendered="#{categoryBackingBean.managedBean.newCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItems
 							value="#{categoryBackingBean.managedBean.specialCategory}"
-							var="specialCategory" itemLabel="#{specialCategory.codeName}" itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
-					</p:selectOneMenu>
-					
+							var="specialCategory" itemLabel="#{specialCategory.codeName}" itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>												
+				   </p:selectOneMenu>					
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -183,8 +184,8 @@
 			</h:panelGrid>
 		</p:panel>
 		
-		<p:panel id="groupdetails">
-		<p:panel header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
+		
+		<p:panel id="groupdetails" header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
 		<p:dataTable id="groupdetailsId" 
 			rowKey="#{pmBasicCategory.createdDate}"
 			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
@@ -233,10 +234,9 @@
 		</div>
 
 		</p:panel>
-		</p:panel>
 		
-		<p:panel id="machineDetails">
-		<p:panel header="#{lbl['lbl.pm.special.equipment']}" toggleable="true">
+		
+		<p:panel header="#{lbl['lbl.pm.special.equipment']}" id="machineDetails" rendered="#{!categoryBackingBean.managedBean.checkSpecialCategory}" toggleable="true">
 		<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
 			rowKey="#{pmMachineCategory.createdDate}"
 			selection="#{categoryBackingBean.managedBean.selectedpmMachineCategory}"
@@ -296,7 +296,7 @@
 		</div>
 		
 		</p:panel>
-		</p:panel>
+		
 		
 		
 		<p:remoteCommand name="updateCategory" update="groupdetails,resultPanel" action="#{categoryBackingBean.populateToSaveLOV}" />
