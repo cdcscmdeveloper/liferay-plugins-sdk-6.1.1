@@ -19,8 +19,8 @@
 								<p:row>
 									<p:column rowspan="1" headerText="Title"></p:column>
 									<p:column rowspan="1" headerText="Category"></p:column>
-									<p:column rowspan="1" headerText="Process Type"></p:column>
-									<p:column rowspan="1" headerText="Type"></p:column>
+									<ui:remove><p:column rowspan="1" headerText="Process Type"></p:column>
+									 <p:column rowspan="1" headerText="Type"></p:column></ui:remove>
 									<p:column rowspan="1" headerText="View/Edit"></p:column>
 								</p:row>
 							</p:columnGroup>
@@ -28,14 +28,20 @@
 								<h:outputText value="#{tplMasterObj.docTitle}" />
 							</p:column>
 							<p:column>
-								
+							#{templateDocBackingBean.getParameterDesc(tplMasterObj.procurementCategory)}
+								<h:outputText value="#{tplMasterObj.procurementCategory}" />
 							</p:column>
+							<ui:remove>  
 							<p:column>
-								 
-							</p:column>   
-							<p:column>
-								
+							
+								<h:outputText value="#{tplMasterObj.processType}" /> 
 							</p:column>
+							
+							 
+							<p:column>								
+							</p:column>
+							</ui:remove>
+							
 							<p:column>
                                 <p:commandLink action="#{templateDocBackingBean.goToMaint(tplMasterObj)}">
                                       <p:graphicImage library="ep/images/design/edit.png" 
