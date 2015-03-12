@@ -401,8 +401,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {
-			
+		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
 			try {
 				// Filter By - parameterType
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
@@ -2077,7 +2076,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
 			
 			List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
-		    items = new SelectItem[list.size()+1];
+		    items = new SelectItem[list.size() + 1];
 		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		    
@@ -3228,7 +3227,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 */
 	public void deleteAttachmentAction(int index) {
 		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
-	}  
+	} 
 
 	/**
 	 * The method used to upload AP201 file.
