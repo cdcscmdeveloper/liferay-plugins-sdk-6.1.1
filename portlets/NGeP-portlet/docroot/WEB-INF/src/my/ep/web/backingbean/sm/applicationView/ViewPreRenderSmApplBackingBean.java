@@ -17,6 +17,9 @@ import com.liferay.compat.portal.util.PortalUtil;
 @RequestScoped
 public class ViewPreRenderSmApplBackingBean {
 
+	/**
+	 * Redirect to view previous application page
+	 */
 	public void navigateToRevAppl() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());

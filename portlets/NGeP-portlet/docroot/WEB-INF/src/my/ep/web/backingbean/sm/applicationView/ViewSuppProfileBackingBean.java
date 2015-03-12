@@ -21,6 +21,9 @@ import org.apache.commons.lang.StringUtils;
 public class ViewSuppProfileBackingBean extends
 		BaseReviewApplicationBackingBean<ViewSuppProfileManagedBean> {
 
+	/**
+	 * Redirect to View Supplier Profile page
+	 */
 	public void navigateToViewSuppProfile() {
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 
