@@ -44,6 +44,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	}
 
+	/**
+	 * Pre - render Request Softcert page
+	 */
 	public void preRenderSoftCert() {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
@@ -52,6 +55,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		SmCommonUtil.redirectToPage("softCertUserSearch.xhtml", "");
 	}
 
+	/**
+	 * Pre - render Softcert Payment from task list
+	 */
 	public void preRenderSoftCertPay() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -82,10 +88,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Return back to Request Softcert first page
+	 * 
+	 * @return String
+	 */
 	public String cancel() {
 		return "softCertUserSearch.xhtml";
 	}
 
+	/**
+	 * Get personnel by login user
+	 * 
+	 * @param PmUser
+	 *            usr
+	 */
 	public void getPersonnelByPmUser(PmUser usr) {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
@@ -95,6 +112,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		this.getManagedBean().setLoginUserPersonnelInfo(smPersonnel);
 	}
 
+	/**
+	 * Navigate to Softcert payment page
+	 * 
+	 * @return String
+	 */
 	public String navigateToPaymentPage() {
 		this.getManagedBean().setSoftCertPayList(
 				this.getManagedBean().getSoftCertSelectList());
@@ -104,6 +126,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		return "softCertPaymentPage.xhtml";
 	}
 
+	/**
+	 * Update total amount
+	 */
 	public void updateAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
 		int i = 0;
@@ -127,6 +152,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		setPaymentBtnLbl();
 	}
 
+	/**
+	 * Create bill, update personnel and call softcert payment BPM
+	 */
 	public void makePayment() {
 		if ((getManagedBean().getSoftCertPayList() != null && getManagedBean()
 				.getSoftCertPayList().size() > 0)
@@ -175,6 +203,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Remove check box tick from data table
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
 	public void unSelectPersonnel(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSoftCertSelectList() != null) {
 			Iterator<SmPersonnel> iterator = getManagedBean()
@@ -192,6 +226,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Get personnel softcert price (free for first request)
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @return String
+	 */
 	public String getPersonnelSoftCertPrice(SmPersonnel smPersonnel) {
 		if (smPersonnel.isFreeSoftCert()) {
 			return "0.00 ("
@@ -203,6 +244,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Set payment button label
+	 */
 	private void setPaymentBtnLbl() {
 		if (getManagedBean().getTotalPaymentAmount().compareTo(BigDecimal.ZERO) == 0) {
 			getManagedBean().setPaymentBtnLbl(
@@ -213,6 +257,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Get if already got softcert payment in task list for the login user
+	 */
 	private void setSoftCertPaymentBpmTask() {
 		getManagedBean().setSoftCertBpmTask(null);
 		if (getManagedBean().getToken() == null
@@ -233,11 +280,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
-	private IPersonnelSO getPersonnelSO() {
-		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-	}
-
+	/**
+	 * Initialized authorized personnel list
+	 */
 	private void initAuthorizedPersonnels() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setApplId(getManagedBean().getLoginUserPersonnelInfo()
@@ -252,6 +297,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Set list of personnel row whether need to be disabled from check box tick
+	 * 
+	 * @param List
+	 *            <SmPersonnel> personnels
+	 */
 	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
 		for (SmPersonnel personnel : personnels) {
 			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
@@ -269,6 +320,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Get list of personnel that selected to request soft certificate
+	 * 
+	 * @return List<SmPersonnel>
+	 */
 	private List<SmPersonnel> getFinalPaidPersonnels() {
 		List<SmPersonnel> finalPayPersonnels = new ArrayList<SmPersonnel>();
 		if (getManagedBean().getFreeSoftCertPersonnel() != null) {
@@ -282,5 +338,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			finalPayPersonnels.addAll(getManagedBean().getSoftCertPayList());
 		}
 		return finalPayPersonnels;
+	}
+
+	/**
+	 * Get IPersonnelSO
+	 * 
+	 * @return IPersonnelSO
+	 */
+	private IPersonnelSO getPersonnelSO() {
+		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 	}
 }
