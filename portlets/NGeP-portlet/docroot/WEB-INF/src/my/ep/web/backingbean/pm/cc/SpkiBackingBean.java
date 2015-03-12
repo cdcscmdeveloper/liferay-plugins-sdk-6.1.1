@@ -83,7 +83,7 @@ public class SpkiBackingBean {
  
 	FacesScopes facesScope = new FacesScopes();
 
-	private String s;
+	private String signedData;
 
 	public SpkiBackingBean() {}
 	
@@ -180,7 +180,7 @@ public class SpkiBackingBean {
 	
 	public String spkiSignTransaction(String originalText) {
 		try{
-//			String s ;
+//			String signedData ;
 			KMCClient client = getClient();
 
 //			// Request service for user selected question for authentication
@@ -233,13 +233,12 @@ public class SpkiBackingBean {
 //				fos.flush();
 //				fos.close();
 //				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				s = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
-				System.out.println("Data signing successful. SIGNEDTEXT " +  s);
+				signedData = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
+				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				break;
 
 			default:
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-//				return "SIGNEDTEXT";
 				throw new EpException(MessageConst.ERROR_776051);
 		}
 			
@@ -247,7 +246,7 @@ public class SpkiBackingBean {
 		{
 			ex.printStackTrace();
 		}
-		return s;
+		return signedData;
 	}
 	public void spkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
         String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("inputTextBeforeSign");
