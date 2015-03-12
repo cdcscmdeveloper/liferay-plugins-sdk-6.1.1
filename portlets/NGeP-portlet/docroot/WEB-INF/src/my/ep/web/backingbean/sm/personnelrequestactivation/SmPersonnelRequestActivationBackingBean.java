@@ -29,6 +29,9 @@ public class SmPersonnelRequestActivationBackingBean {
 	private List<SmPersonnel> selectedExpiredActivationPersonnels;
 	private List<SmPersonnel> expiredActivationPersonnels;
 
+	/**
+	 * Initialized reactivation information
+	 */
 	@PostConstruct
 	public void init() {
 		selectedExpiredActivationPersonnels = new ArrayList<SmPersonnel>();
@@ -37,6 +40,9 @@ public class SmPersonnelRequestActivationBackingBean {
 		SmCommonUtil.setMDCUserId();
 	}
 
+	/**
+	 * Re - send activation email to selected personnel
+	 */
 	public void resendActivation() {
 		validate();
 		FacesScopes fs = new FacesScopes();
@@ -50,11 +56,19 @@ public class SmPersonnelRequestActivationBackingBean {
 				MessageConst.INFO_721028);
 	}
 
+	/**
+	 * Get IPersonnelSO
+	 * 
+	 * @return IPersonnelSO
+	 */
 	public IPersonnelSO getPersonnelSO() {
 		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 	}
 
+	/**
+	 * Initialize all personnel that activation link already expired by supplier
+	 */
 	private void initExpiredPersonnels() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
@@ -71,6 +85,9 @@ public class SmPersonnelRequestActivationBackingBean {
 
 	}
 
+	/**
+	 * Validate if dont have any personnel selected for resend activation email
+	 */
 	private void validate() {
 		if (CollectionUtils.isEmpty(selectedExpiredActivationPersonnels)) {
 			throw new EpException(MessageConst.ERROR_722587,
