@@ -921,8 +921,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 						    	getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(account);
 						 }
 						populateBankAccountList.add(new SelectItem(account, account));
-						if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
+						if (!getManagedBean().getSupplierBankAccountMap().containsKey(account)) {
+							getManagedBean().getSupplierBankAccountMap().put(account, smSupplierBank);
 						}
 					}
 				}
