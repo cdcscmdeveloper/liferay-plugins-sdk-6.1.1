@@ -40,12 +40,12 @@
 					<p:outputLabel value="#{lbl['lbl.sc.main.category']}" />
 				</td>
 				<td>
-					<p:selectOneMenu id="catCodeLvl1"
+					<h:selectOneMenu id="catCodeLvl1"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}"
 						style="width: 500px;">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level1CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this" update="catCodeLvl2,catCodeLvl3" />
-					</p:selectOneMenu>
+					</h:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
@@ -53,12 +53,12 @@
 					<p:outputLabel value="#{lbl['lbl.sc.sub.category']}" />
 				</td>
 				<td>
-					<p:selectOneMenu id="catCodeLvl2"
+					<h:selectOneMenu id="catCodeLvl2"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}"
 						style="width: 500px;">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this" update="catCodeLvl3" />
-					</p:selectOneMenu>
+					</h:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
@@ -66,12 +66,12 @@
 					<p:outputLabel value="#{lbl['lbl.sc.sub.category.division']}" />
 				</td>
 				<td>
-					<p:selectOneMenu id="catCodeLvl3"
+					<h:selectOneMenu id="catCodeLvl3"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
 						style="width: 500px;">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
-					</p:selectOneMenu>
+					</h:selectOneMenu>
 				</td>
 			</tr>
 			</c:if>
