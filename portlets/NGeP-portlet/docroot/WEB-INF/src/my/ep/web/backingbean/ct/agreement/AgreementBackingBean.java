@@ -40,7 +40,6 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -63,8 +62,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -918,7 +915,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * The method used to navigate to template doc screen
 	 * for creation or view purpose.
 	 * 
-	 * @return templateDocUrl  the navigate URL 
+	 * @param agreementContent  an object of agreement content
+	 * @return templateDocUrl   the navigate URL 
 	 */
 	public String gotoTemplateDoc(CtAgreementContent agreementContent) {
 		String templateDocUrl = null;
@@ -1174,13 +1172,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    	}
 				// Template Doc
 				else if (agreementContent.getContentType().getParameterId().equals(
-						retrieveParameterByCodeType(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
+						getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
 								ParameterConst.AGREEMENT_TEMPLATE_DOC).getParameterId())) {
 					// TODO: download template doc
 				}
 				// User Upload Doc
 				else if (agreementContent.getContentType().getParameterId().equals(
-						retrieveParameterByCodeType(ParameterConst.DOCUMENT_DEFINITION_TYPE,
+						getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE,
 								ParameterConst.AGREEMENT_USER_UPLOAD_DOC).getParameterId())) {
 					if (agreementContent.getFilePath() != null) {
 						fileList.add(new File(agreementContent.getFilePath()));
@@ -1370,36 +1368,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	/**
-	 * The method used to retrieve the element of profile management
-	 * by type and code.
-	 * 
-	 * @param  parameterType    the type of the element
-	 * @param  parameterCode    the code of the element
-	 * @return the object of the element of profile management
-	 */
-	private PmParameter retrieveParameterByCodeType(String parameterType, String parameterCode) {
-		IParameterSO parameterSO = null;
-		ParameterReqDTO reqDTO = null;
-		try {
-			reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterCode(parameterCode);
-			reqDTO.setParameterType(parameterType);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			return resDTO.getPmParameter();
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		} finally {
-			parameterSO = null;
-		}
-		return null;
-	}
-
-	/**
 	 * The method used to add a new user defined agreement content.
 	 * This method will generate a new record in agreement content
 	 * list, user allow to enter the title and attachment. 
@@ -1408,7 +1376,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		CtAgreementContent contents = new CtAgreementContent();
 		if (contents.getContentType() == null) {
 			contents.setContentType(new PmParameter());
-			contents.setContentType(retrieveParameterByCodeType(
+			contents.setContentType(getParameterByTypeAndCode(
 					ParameterConst.DOCUMENT_DEFINITION_TYPE, ParameterConst.AGREEMENT_USER_UPLOAD_DOC));
 		}
 		getManagedBean().getCtAgreement().getAgreementContents().add(contents);
@@ -1440,7 +1408,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			 }
 		     CtAgreementParty ctAgreementParty = new CtAgreementParty();
 		     ctAgreementParty.setAgreementPartyType(new PmParameter());
-		     ctAgreementParty.setAgreementPartyType(retrieveParameterByCodeType(
+		     ctAgreementParty.setAgreementPartyType(getParameterByTypeAndCode(
 		    		 ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
 	         ctAgreementParty.setOfficer(new PmUser());
 		     ctAgreementParty.setOrgProfile(new PmOrgProfile());
@@ -1511,8 +1479,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CtAgreementParty ctAgreementParty = new CtAgreementParty();
 	        ctAgreementParty.setAgreementPartyType(new PmParameter());
 	        ctAgreementParty.getAgreementPartyType().setParameterId(
-			retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, 
-					ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId());
+	        		getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE, 
+	        				ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId());
 	        getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
 	    }
 	}
@@ -1582,7 +1550,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			ctAgreementParty.setAgreementPartyType(new PmParameter());
 			ctAgreementParty.getAgreementPartyType().setParameterId(
-					retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId());
+					getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId());
 			if (ctAgreementParty.getOfficer() == null) {
 				ctAgreementParty.setOfficer(new PmUser());
 			}
@@ -1651,8 +1619,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			ctAgreementParty.setAgreementPartyType(new PmParameter());
 			ctAgreementParty.getAgreementPartyType().setParameterId(
-			retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,
-					ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
+					getParameterByTypeAndCode(ParameterTypeConst.AGREEMENT_PARTY_TYPE,
+							ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
 			getManagedBean().getCtSupplierWitness().add(ctAgreementParty);	    
 		}
 	}

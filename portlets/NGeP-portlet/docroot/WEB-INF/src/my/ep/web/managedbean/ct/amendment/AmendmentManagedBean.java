@@ -72,11 +72,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean termAndConditionFlg;
 	private boolean existingUsers = true;
 	private boolean newUsers;
-	private boolean chkClause;
 	private boolean chkConceValue;
-	private boolean chkAmendOtherValue;
-	private boolean chkAmendExtendValue;
-	private boolean chkAmendAllValue;
 	private boolean pbConfirmMeeting;
 	private boolean memberSignOff;
 	private boolean letterOfAcceptance;
@@ -484,20 +480,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the chkClause
-	 */
-	public boolean isChkClause() {
-		return chkClause;
-	}
-	
-	/**
-	 * @param chkClause the chkClause to set
-	 */
-	public void setChkClause(boolean chkClause) {
-		this.chkClause = chkClause;
-	}
-	
-	/**
 	 * @return the chkConceValue
 	 */
 	public boolean isChkConceValue() {
@@ -509,48 +491,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setChkConceValue(boolean chkConceValue) {
 		this.chkConceValue = chkConceValue;
-	}
-	
-	/**
-	 * @return the chkAmendOtherValue
-	 */
-	public boolean isChkAmendOtherValue() {
-		return chkAmendOtherValue;
-	}
-	
-	/**
-	 * @param chkAmendOtherValue the chkAmendOtherValue to set
-	 */
-	public void setChkAmendOtherValue(boolean chkAmendOtherValue) {
-		this.chkAmendOtherValue = chkAmendOtherValue;
-	}
-	
-	/**
-	 * @return the chkAmendExtendValue
-	 */
-	public boolean isChkAmendExtendValue() {
-		return chkAmendExtendValue;
-	}
-	
-	/**
-	 * @param chkAmendExtendValue the chkAmendExtendValue to set
-	 */
-	public void setChkAmendExtendValue(boolean chkAmendExtendValue) {
-		this.chkAmendExtendValue = chkAmendExtendValue;
-	}
-	
-	/**
-	 * @return the chkAmendAllValue
-	 */
-	public boolean isChkAmendAllValue() {
-		return chkAmendAllValue;
-	}
-	
-	/**
-	 * @param chkAmendAllValue the chkAmendAllValue to set
-	 */
-	public void setChkAmendAllValue(boolean chkAmendAllValue) {
-		this.chkAmendAllValue = chkAmendAllValue;
 	}
 	
 	/**
