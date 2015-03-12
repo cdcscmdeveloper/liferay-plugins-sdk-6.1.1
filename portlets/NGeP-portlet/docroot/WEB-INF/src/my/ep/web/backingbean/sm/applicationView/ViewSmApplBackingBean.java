@@ -14,6 +14,9 @@ public class ViewSmApplBackingBean extends
 
 	public static Logger log = Logger.getLogger(ViewSmApplBackingBean.class);
 
+	/**
+	 *  Initialized and construct ViewSmApplBackingBean
+	 */
 	public ViewSmApplBackingBean() {
 		initMain();
 	}

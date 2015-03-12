@@ -98,12 +98,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private static final String FOLDER_NAME_SM = "SM";
 	private static final String FOLDER_NAME_REVISION = "Revision";
 
+	/**
+	 * Initialized and construct BaseReviewApplicationBackingBean
+	 */
 	public BaseReviewApplicationBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 	}
 
+	/**
+	 * Initialized all related steps in View Application
+	 */
 	public void initMain() {
 		if (reloadApplication()) {
 			initApplication(null);
@@ -112,6 +118,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		setTabParam();
 	}
 
+	/**
+	 * Initialized all related smAppl from SER file
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 */
 	public void initApplication(SmAppl smAppl) {
 		ISmApplRevisionSO applRevisionSO = null;
 
@@ -154,6 +166,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	}
 
+	/**
+	 * Check if need to reload application
+	 * 
+	 * @return boolean
+	 */
 	public boolean reloadApplication() {
 		boolean reload = false;
 		HttpServletRequest servletRequest = PortalUtil
@@ -178,6 +195,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return reload;
 	}
 
+	/**
+	 * Download supporting document
+	 * 
+	 * @param String
+	 *            fileName
+	 * @param String
+	 *            filePath
+	 */
 	public void downloadSelectedSuppDoc(String fileName, String filePath) {
 		String finalFilePath = filePath + fileName;
 		try {
@@ -189,10 +214,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		finalFilePath = null;
 	}
 
+	/**
+	 * View check signatory by SmSupplierBank
+	 * 
+	 * @param SmSupplierBank
+	 *            signAcctBean
+	 */
 	public void viewSignatories(SmSupplierBank signAcctBean) {
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
+	/**
+	 * Get authorized personnel account status label
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @return String
+	 */
 	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel) {
 		String accStatus = "";
 		if (smPersonnel.getEpRole() != null
@@ -213,25 +251,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return accStatus;
 	}
 
-	private void printJsfBeanList() {
-		ApplicationAssociate application = ApplicationAssociate
-				.getInstance(FacesContext.getCurrentInstance()
-						.getExternalContext());
-		BeanManager beanManager = application.getBeanManager();
-		Map<String, BeanBuilder> beanMap = beanManager.getRegisteredBeans();
-		Set<Entry<String, BeanBuilder>> beanEntries = beanMap.entrySet();
-
-		for (Entry<String, BeanBuilder> bean : beanEntries) {
-			String beanName = bean.getKey();
-			if (beanManager.isManaged(beanName)) {
-				BeanBuilder builder = bean.getValue();
-				log.info("Bean name: " + beanName);
-				log.info("Bean class: " + builder.getBeanClass());
-				log.info("Bean scope: " + builder.getScope());
-			}
-		}
-	}
-
+	/**
+	 * Get SER file name and path
+	 * 
+	 * @param String
+	 *            applNoParam
+	 * @return String
+	 */
 	private String getDeSerFileNameAndPath(String applNoParam) {
 		String appNo = applNoParam.substring(0, applNoParam.length() - 4);
 
@@ -245,6 +271,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return tempDir;
 	}
 
+	/**
+	 * Get drop down value for display purpose by code
+	 * 
+	 * @param String
+	 *            parameterType
+	 * @param String
+	 *            parameterCode
+	 * @return String
+	 */
 	private String getDropDownViewOnlyValueByCode(String parameterType,
 			String parameterCode) {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
@@ -261,6 +296,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 
+	/**
+	 * Get drop down value for display purpose by id
+	 * 
+	 * @param String
+	 *            parameterType
+	 * @param String
+	 *            parameterId
+	 * @return String
+	 */
 	private String getDropDownViewOnlyValueById(String parameterType,
 			Long parameterId) {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
@@ -277,6 +321,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 
+	/**
+	 * Get active MofAccount by supplier
+	 * 
+	 * @return SmMofAccount
+	 */
 	private SmMofAccount getSingleSmMofAccount() {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
 				.getInstance().getServiceObject(
@@ -299,6 +348,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return smMofAccount;
 	}
 
+	/**
+	 * Set tab value for first load
+	 */
 	public void setTabParam() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -318,6 +370,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Set tab value
+	 * 
+	 * @param int outputTab
+	 * @param String
+	 *            outputPageType
+	 */
 	public void setTabValue(int outputTab, String outputPageType) {
 		getManagedBean().setTabActiveIndex(outputTab);
 		getManagedBean().setRedirectToPersonPage(false);
@@ -325,6 +384,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 	}
 
+	/**
+	 * Set default address to Malaysia
+	 * 
+	 * @return SmAddress
+	 */
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
 		PmCountry cntry = new PmCountry();
@@ -344,6 +408,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return addr;
 	}
 
+	/**
+	 * Set revision application steps
+	 * 
+	 * @param SmApplRevisionResDTO
+	 *            resDTO
+	 */
 	private void setApplication(SmApplRevisionResDTO resDTO) {
 		initStep0BaseInfo(resDTO);
 		initStep1CompanyInfo();
@@ -359,6 +429,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initBumiRecommendNote();
 	}
 
+	/**
+	 * Initialized base information
+	 * 
+	 * @param SmApplRevisionResDTO
+	 *            resDTO
+	 */
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
@@ -375,6 +451,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setReviewApplicationExist(true);
 	}
 
+	/**
+	 * Initialized revision application company information step
+	 */
 	private void initStep1CompanyInfo() {
 		// companyBasicInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmCompanyBasic() == null) {
@@ -413,6 +492,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Initialized branch company information step
+	 */
 	private void initStep2BranchCompanyInfo() {
 		// branchCompanyInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmSupplierBranches() == null) {
@@ -441,6 +523,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	}
 
+	/**
+	 * Initialized personnel information step
+	 */
 	private void initStep4PersonnelInfo() {
 		// personnelInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
@@ -497,6 +582,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Initialized capital and equity information step
+	 */
 	private void initStep3CaptialAndEquityInfo() {
 		// captialOrEquityStatusInfoFormViewOnly
 		SmCommonUtil
@@ -514,6 +602,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Initialized Bank Information step
+	 */
 	private void initStep5BankInfo() {
 		if (getManagedBean().getSmAppl().getSmSupplierBanks() == null) {
 			getManagedBean().getSmAppl().setSmSupplierBanks(
@@ -521,6 +612,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Initialized register category code step
+	 */
 	private void initStep6RegisterCategoryCode() {
 		if (getManagedBean().getSmAppl().getSmSupplierCategories() == null) {
 			getManagedBean().getSmAppl().setSmSupplierCategories(
@@ -531,11 +625,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		setCategoryTypeConfirm();
 	}
 
+	/**
+	 * Initialized Factory Information step
+	 */
 	private void initStep6_1ViewFactoryInfo() {
 		// factoryOrWorkshopInfoFormViewOnly/dockyardInfoFormViewOnly/workshopInfoFormViewOnly/storeInfoFormViewOnly
 		setApplicationFacilities();
 	}
 
+	/**
+	 * Initialized Equipment Information step
+	 */
 	private void initStep6_2EquipmentInfo() {
 		// machineryInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmMachineDtls() == null) {
@@ -549,6 +649,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Initialized Suppoerting Document Information step
+	 */
 	private void initStep7SupportingDocumentsInfo() {
 		// offlineSupportingDocsFormViewOnly/onlineSupportingDocsFormViewOnly
 		if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
@@ -557,6 +660,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Initialized PO or Approver Default Decision page
+	 */
 	private void initStep8_9PoApproverDefaultDecision() {
 		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
 		setReviewSectionRemarks();
@@ -567,6 +673,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.toString());
 	}
 
+	/**
+	 * Set supplier cancellation remarks
+	 * 
+	 * @param String
+	 *            docType
+	 * @param String
+	 *            docId
+	 */
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
 		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType,
 				docId);
@@ -581,6 +695,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Set personnel information calculation summary
+	 */
 	private void setPersonnelInfoCalculationSummary() {
 		getManagedBean().setPersonCalc(
 				SmCommonUtil.calcPersonnelListCount(getManagedBean()
@@ -589,6 +706,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.getSmAppl().getSupplierType()));
 	}
 
+	/**
+	 * Set status
+	 * 
+	 * @param String
+	 *            statusId
+	 */
 	private void setPmStatusDesc(String statusId) {
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(Long.parseLong(statusId));
@@ -603,16 +726,34 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Assign selected associate company and close block UI
+	 * 
+	 * @param SmAssociateCompany
+	 *            assocBean
+	 */
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
 		getManagedBean().setSelectedAssocCompany(assocBean);
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected branch and close block UI
+	 * 
+	 * @param SmSupplierBranch
+	 *            branchBean
+	 */
 	public void assignSelBranch(SmSupplierBranch branchBean) {
 		getManagedBean().setSelectedBranch(branchBean);
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected certificate
+	 * 
+	 * @param SmSupplierCert
+	 *            certBean
+	 */
 	public void assignSelCert(SmSupplierCert certBean) {
 		getManagedBean().setSelectedCert(certBean);
 		getManagedBean().setSelectedCertType(
@@ -623,6 +764,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected bank and close block UI
+	 * 
+	 * @param SmSupplierBank
+	 *            shareBankBean
+	 */
 	public void assignSelBank(SmSupplierBank shareBankBean) {
 		getManagedBean().setSelBankBranchName("");
 
@@ -657,10 +804,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected equity company
+	 * 
+	 * @param SmEquityCompany
+	 *            equiCompBean
+	 */
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
 		getManagedBean().setSelectedEquityCompany(equiCompBean);
 	}
 
+	/**
+	 * Assign selected factory and close block UI
+	 * 
+	 * @param SmFacility
+	 *            facilityBean
+	 */
 	public void assignSelFactory(SmFacility facilityBean) {
 		getManagedBean().setSelectedFactoryFacility(facilityBean);
 		getManagedBean().setFacilityType(
@@ -669,6 +828,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected workshop and close block UI
+	 * 
+	 * @param SmFacility
+	 *            facilityBean
+	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
 		getManagedBean().setSelectedWorkShopFacility(facilityBean);
 		getManagedBean().setFacilityType(
@@ -677,6 +842,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected dockyard and close block UI
+	 * 
+	 * @param SmFacility
+	 *            facilityBean
+	 */
 	public void assignSelDockyard(SmFacility facilityBean) {
 		getManagedBean().setSelectedDockyardFacility(facilityBean);
 		getManagedBean().setFacilityType(
@@ -685,6 +856,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected store and close block UI
+	 * 
+	 * @param SmFacility
+	 *            facilityBean
+	 */
 	public void assignSelStore(SmFacility facilityBean) {
 		getManagedBean().setSelectedStoreFacility(facilityBean);
 		getManagedBean().setFacilityType(
@@ -693,11 +870,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected manufacturer and close block UI
+	 * 
+	 * @param SmManufacturingDtl
+	 *            manBean
+	 */
 	public void assignSelManufacturer(SmManufacturingDtl manBean) {
 		getManagedBean().setSelectedManufacturer(manBean);
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected machinery and close block UI
+	 * 
+	 * @param SmMachineDtl
+	 *            macBean
+	 */
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setSelectedMachine(macBean);
 
@@ -715,6 +904,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected company experience
+	 * 
+	 * @param SmCompanyExperience
+	 *            consultantBean
+	 */
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
 
@@ -752,10 +947,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected association body
+	 * 
+	 * @param SmAssociationBody
+	 *            assocBean
+	 */
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
 	}
 
+	/**
+	 * Redirect back to personnel section
+	 */
 	public void backFromPersonnelPage() {
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
@@ -801,6 +1005,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
 
+	/**
+	 * Set selected bank account purpose
+	 */
 	private void setSelectedBankAccountPurpose() {
 		Locale locale = new FacesScopes().getUserLocale();
 		switch (getManagedBean().getSelectedBank().getAccountPurpose()) {
@@ -827,6 +1034,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Set category type confirmation
+	 */
 	private void setCategoryTypeConfirm() {
 		Locale locale = new FacesScopes().getUserLocale();
 		String[] params = { "" };
@@ -842,6 +1052,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 	}
 
+	/**
+	 * Set application facility type
+	 */
 	private void setApplicationFacilities() {
 		getManagedBean().setApplFactoryFacilities(new ArrayList<SmFacility>());
 		getManagedBean().setApplDockyardFacilities(new ArrayList<SmFacility>());
@@ -870,6 +1083,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Set review section remarks
+	 */
 	private void setReviewSectionRemarks() {
 		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null) {
 			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
@@ -886,6 +1102,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Assign selected share holder
+	 * 
+	 * @param SmPersonnel
+	 *            shareHolderBean
+	 */
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
 		Locale locale = new FacesScopes().getUserLocale();
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
@@ -961,6 +1183,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSelectedPersonnel(per);
 	}
 
+	/**
+	 * Assign selected share holder addresses
+	 * 
+	 * @param SmPersonnel
+	 *            shareHolderBean
+	 */
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 
 		if (shareHolderBean.getSmPersonnelAddresses() != null
@@ -1001,6 +1229,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 	}
 
+	/**
+	 * Set personnel company role
+	 */
 	public void managePersonnelRoles() {
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
@@ -1054,26 +1285,59 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Assign selected share holder job function and close block UI
+	 * 
+	 * @param SmStaffExperience
+	 *            exp
+	 */
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
 		getManagedBean().setSelectedJobFunction(exp);
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected share holder related company and close block UI
+	 * 
+	 * @param SmRelatedCompany
+	 *            com
+	 */
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
 		getManagedBean().setSelectedRelatedCompany(com);
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected share holder professional body and close block UI
+	 * 
+	 * @param SmAssociationBody
+	 *            asb
+	 */
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
 		getManagedBean().setSelectedStfPrfBdy(asb);
 		closeBlockUI();
 	}
 
+	/**
+	 * Assign selected share holder academics and close block UI
+	 * 
+	 * @param SmStaffAcademic
+	 *            aca
+	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
 		getManagedBean().setSelectedStaffAcademic(aca);
 		closeBlockUI();
 	}
-	
+
+	/**
+	 * Get authorized personnel account status
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @param SmSupplier
+	 *            smSupplier
+	 * @return String
+	 */
 	public String getAuthorizedPersonnelAccountStatus(SmPersonnel smPersonnel,
 			SmSupplier smSupplier) {
 		String accStatus = "";
@@ -1096,6 +1360,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return accStatus;
 	}
 
+	/**
+	 * Set application share holders
+	 * 
+	 * @param List
+	 *            <SmPersonnel> perList
+	 */
 	private void setApplicationShareHolders(List<SmPersonnel> perList) {
 		getManagedBean().setSmapplShareHolders(new ArrayList<SmPersonnel>());
 
@@ -1108,6 +1378,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	}
 
+	/**
+	 * Set list of active category
+	 */
 	private void setActiveCategoryList() {
 		List<SmSupplierCategory> catList = new ArrayList<>();
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -1122,6 +1395,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setActiveCategoryList(catList);
 	}
 
+	/**
+	 * Initialized and construct bumi recommendation message
+	 */
 	private void initBumiRecommendNote() {
 		getManagedBean().setBumiRecommendationNote("");
 		if (getManagedBean().getSmAppl() != null) {
@@ -1142,6 +1418,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	}
 
+	/**
+	 * Create if SER file not exist
+	 * 
+	 * @param SmAppl
+	 *            smApplFromSuppProfile
+	 */
 	private void createSerFileIfNotExist(SmAppl smApplFromSuppProfile) {
 		log.info("inside createSerFileIfNotExist....");
 		getManagedBean().setReviewApplicationExist(true);
@@ -1191,6 +1473,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Set revision application view type
+	 */
 	private void setRevisionApplType() {
 		String serType = getManagedBean()
 				.getApplicationNoParam()
@@ -1212,6 +1497,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
+	/**
+	 * Get max tab by application type
+	 * 
+	 * @param String
+	 *            applType
+	 * @param String
+	 *            applCategoryType
+	 * @return int
+	 */
 	private int getMaxTabByApplTypeAndCatType(String applType,
 			String applCategoryType) {
 		int maxTab = 0;
@@ -1284,10 +1578,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return maxTab;
 	}
 
+	/**
+	 * Close block UI
+	 */
 	private void closeBlockUI() {
 		SmCommonUtil.closeBlockUI();
 	}
 
+	/**
+	 * Set maximum no of tab by application type
+	 */
 	private void setMaxTab() {
 		int maxTab = 0;
 		if (getManagedBean().getSmAppl() != null) {
