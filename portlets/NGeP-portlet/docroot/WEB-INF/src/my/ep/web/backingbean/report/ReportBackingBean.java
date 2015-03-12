@@ -135,6 +135,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
 	private List<SelectItem> smUPSSVOUserList = new ArrayList<SelectItem>();
 	private List<SelectItem> ctSubTypeList = new ArrayList<SelectItem>();
+	private List<String> paramList = new ArrayList<String>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -198,6 +199,14 @@ public class ReportBackingBean extends
 	
 
 	
+
+	public List<String> getParamList() {
+		return paramList;
+	}
+
+	public void setParamList(List<String> paramList) {
+		this.paramList = paramList;
+	}
 
 	public List<SelectItem> getCtSubTypeList() {
 		return ctSubTypeList;
@@ -2609,7 +2618,42 @@ public class ReportBackingBean extends
         }
 		return ctSubTypeList;
 	}
-
+	public List<SelectItem> callfunction(){
+		ctSubTypeList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 240500;
+        	
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<Object[]> ptLst = reportSO.callfunction(lngUserId);			
+					for (Object[] object : ptLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						ctSubTypeList.add(selectItem);
+					}
+        	    
+        }
+		return ctSubTypeList;
+	}
+	public List<String> retrieveParamCodeByUser(){
+		paramList = new ArrayList<String>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 242262;        	
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<String> ptLst = reportSO.retrieveParamCodeByUser(lngUserId);			
+					for (int i = 0; i < ptLst.size(); i++) {
+						paramList.add(ptLst.get(i));
+					}
+        	    
+        }
+		return paramList;
+	}
 	public void assignNewCompanyExperience(List<SmSupplierCategory> catList) {
 		
 		if (catList == null) {
@@ -2916,7 +2960,7 @@ public class ReportBackingBean extends
 				.getMessageCommon(ReportConst.MOD_CT_TTL));
 		selectItem4.setValue(ReportConst.CT_MOD_VAL);
 		moduleList.add(selectItem4);
-		
+		//callfunction();
 		return moduleList;
 	}
 
@@ -3664,10 +3708,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 			}
 			retrieveParameterCodeType();
+			retrieveParamCodeByUser();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
-						authoriztionList);
+						authoriztionList,paramList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))
 					|| (this.getModuleValue()
