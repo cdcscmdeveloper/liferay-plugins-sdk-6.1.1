@@ -123,6 +123,7 @@ import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author Viswanath
+ * @author Venkat Chanumolu
  * 
  */
 @ManagedBean(name = "supplierProposalDetailBackingBean")
@@ -276,7 +277,7 @@ public class SPDetailBackingBean extends
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			
+
 			this.getManagedBean().setScQtPRPExperiences(null);
 			this.getManagedBean().setScQtPRPExperienceNCheckLists(null);
 
@@ -389,10 +390,14 @@ public class SPDetailBackingBean extends
 					.setExperienceNCheckLists(experienceNCheckLists);
 			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			// to delete the deleted experiences from db
-			// reqDTO.setTobeRemovedExperience(getManagedBean()
-			// .getDeletedPRPExperiences());
+			// to update technical non fed govt exp checklist whenever financial
+			// checklist is saved
+			ScQtProposalChecklist techncalProposalChecklist = findProposalChecklistByDocDefKey(
+					getManagedBean().getTecCheckDetailsList(),
+					SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
+			reqDTO.setChecklistType(SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			reqDTO.setTobeUpdateTechProposalChecklist(techncalProposalChecklist);
 
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
@@ -405,6 +410,11 @@ public class SPDetailBackingBean extends
 						.indexOf(scQtProposalChecklist);
 				getManagedBean().getFinanceCheckDetailsList().set(index,
 						resDTO.getProposalChecklist());
+				// retrieveTechnicalFedNonGovCheklist
+				updateQtFinNdTechProposalCheckList(
+						techncalProposalChecklist,
+						resDTO.getTobeUpdateTechProposalChecklist(),
+						SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
@@ -752,8 +762,10 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
 
-				updateQtFinProposalCheckList(finProposalChecklist,
-						resDTO.getTobeUpdateProposalChecklist());
+				updateQtFinNdTechProposalCheckList(
+						finProposalChecklist,
+						resDTO.getTobeUpdateProposalChecklist(),
+						SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 
 				int index = getManagedBean().getTecCheckDetailsList().indexOf(
 						scQtProposalChecklist);
@@ -2575,8 +2587,10 @@ public class SPDetailBackingBean extends
 	}
 
 	public void zoneTabChange() {
-		
-		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedZoneTabIndex"));
+
+		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
+				.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("selectedZoneTabIndex"));
 
 		getManagedBean().setActiveIndex(selectedZoneTabIndex);
 		debugLogger("zoneTabChange");
@@ -2871,8 +2885,10 @@ public class SPDetailBackingBean extends
 	private String navigatePrepareFinProposalCheckList(
 			ScQtProposalChecklist currProposalChecklist,
 			ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
-		updateQtFinProposalCheckList(currProposalChecklist,
-				newProposalChecklist);
+		updateQtFinNdTechProposalCheckList(
+				currProposalChecklist,
+				newProposalChecklist,
+				SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 
 		prepareFinancialAction(newProposalChecklist);
 
@@ -2898,8 +2914,10 @@ public class SPDetailBackingBean extends
 			updateQtTechProposalCheckList(currProposalChecklist,
 					newProposalChecklist);
 		} else {
-			updateQtFinProposalCheckList(currProposalChecklist,
-					newProposalChecklist);
+			updateQtFinNdTechProposalCheckList(
+					currProposalChecklist,
+					newProposalChecklist,
+					SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
 		}
 	}
 
@@ -2915,14 +2933,24 @@ public class SPDetailBackingBean extends
 		getManagedBean().setQtProposalChecklist(newProposalChecklist);
 	}
 
-	private void updateQtFinProposalCheckList(
+	private void updateQtFinNdTechProposalCheckList(
 			ScQtProposalChecklist currProposalChecklist,
-			ScQtProposalChecklist newProposalChecklist) {
-		int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
-				currProposalChecklist);
-		if (index >= 0) {
-			getManagedBean().getFinanceCheckDetailsList().set(index,
-					newProposalChecklist);
+			ScQtProposalChecklist newProposalChecklist, String finOrTech) {
+		if (finOrTech == SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV) {
+			int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
+					currProposalChecklist);
+			if (index >= 0) {
+				getManagedBean().getFinanceCheckDetailsList().set(index,
+						newProposalChecklist);
+			}
+		}
+		if (finOrTech == SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV) {
+			int index = getManagedBean().getTecCheckDetailsList().indexOf(
+					currProposalChecklist);
+			if (index >= 0) {
+				getManagedBean().getTecCheckDetailsList().set(index,
+						newProposalChecklist);
+			}
 		}
 		getManagedBean().setQtProposalChecklist(newProposalChecklist);
 	}
@@ -3156,7 +3184,8 @@ public class SPDetailBackingBean extends
 		StreamedContent slStreamContent = getAttachmentStreamContent(
 				slAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 		getManagedBean().setSampleLabelStreamContent(slStreamContent);
-		RequestContext.getCurrentInstance().execute("supplierSampleLabelDlg.show();");
+		RequestContext.getCurrentInstance().execute(
+				"supplierSampleLabelDlg.show();");
 	}
 
 	private void generateSampleLabelsFromVelocityToPdf(ScAttachment attachment)
@@ -3169,7 +3198,7 @@ public class SPDetailBackingBean extends
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
 		VelocityContext context = new VelocityContext();
-		
+
 		context.put("sampleItems", getManagedBean().getScQtSampleLable()
 				.getSampleItems());
 		context.put("lableNo", getManagedBean().getScQtSampleLable()
@@ -3198,7 +3227,8 @@ public class SPDetailBackingBean extends
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
-					zoneItem.setOnclick("zoneTabChange([ {name : 'selectedZoneTabIndex', value : " + zoneTabIndex + "}]);");
+					zoneItem.setOnclick("zoneTabChange([ {name : 'selectedZoneTabIndex', value : "
+							+ zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
 				}
@@ -3206,18 +3236,15 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setProposalZonalMenuModel(zoneMenuModel);
 		}
 	}
-	
-	public void retrieveIntegrityDetails() throws Exception{
+
+	public void retrieveIntegrityDetails() throws Exception {
 		debugLogger("retrieveIntegrityDetails");
 		this.getManagedBean().setPrepareActiveIndex(3);
 		VelocityContext context = new VelocityContext();
 		String othersTermsConditions = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
-						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY,
-						context);
+						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY, context);
 		getManagedBean().setOthersTermsConditions(othersTermsConditions);
 	}
-	
-	
 
 }
