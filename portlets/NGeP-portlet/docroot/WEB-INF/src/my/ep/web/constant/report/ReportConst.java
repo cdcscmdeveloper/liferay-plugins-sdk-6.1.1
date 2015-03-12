@@ -593,9 +593,9 @@ public class ReportConst {
 	public static final String CT_AMP_PLOAPHYSICALNO_EQ = "&PLOAPHYSICALNO=";
 	public static final String CT_AMP_PMINISTRY_EQ = "&PMINIS=";
 	public static final String CT_AMP_PPTJNAME_EQ = "&PPTJ=";
-	public static final String CT_AMP_PROCUREMENTMODE_EQ = "&PROCUREMENTMODE=";
-	public static final String CT_AMP_USERTYPE_EQ = "&USERTYPE=";
-	public static final String CT_AMP_SUBTYPE_EQ = "&SUBTYPE=";
+	public static final String CT_AMP_PROCUREMENTMODE_EQ = "&PPROCUREMENTMODE=";
+	public static final String CT_AMP_USERTYPE_EQ = "&PUSERTYPE=";
+	public static final String CT_AMP_SUBTYPE_EQ = "&PUSERSUBTYPE=";
 	
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
