@@ -20,49 +20,27 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:20%">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" />
+					<h:outputText value="#{lbl['lbl.sc.category.code']}" />
 				</f:facet>
-				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
-					maxlength="2" size="1" style="margin-right: 3px !important;">
-					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
-						process="@this"
-						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL1Code(cateGory)}" />
-				</p:inputText>
-
-				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
-					maxlength="2" size="1">
-					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
-						process="@this"
-						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(cateGory)}" />
-				</p:inputText>
-
-				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" size="1"
-					headerText="Category Lov"
-					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3"
-					postUpdateListener="qTSupplierQulCriteriaBackingBean.categoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList, qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3)"
-					value="#{cateGory.pmCategoryL3.categoryL3Code}"
-					update=":form:openPnlId">
-				</ac:lov>
-
+				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
+			<p:column headerText="#{lbl['lbl.sc.main.category']}"
 				style="width:28%; white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 				style="width:26%; white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 				style="width:25%; white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
+			<p:column headerText="#{lbl['lbl.sc.category.type']}">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
@@ -75,14 +53,18 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this, openPnlId" partialSubmit="true" update="openPnlId"
-				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}" />
+				process="@this, openPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
+				oncomplete="catCodePopup.show();"
+				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, openPnlId" partialSubmit="true"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
 				update="openPnlId" />
 		</div>
-		<ac:lovPopup />
+		
+		<ac:categoryCodePopup 
+			okAction="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}"
+			update="@([id$=openPnlId])" />
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"

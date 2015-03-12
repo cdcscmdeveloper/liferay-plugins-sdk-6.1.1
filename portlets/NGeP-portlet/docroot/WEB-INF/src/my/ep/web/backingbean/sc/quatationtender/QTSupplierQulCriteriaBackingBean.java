@@ -235,7 +235,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	/**
 	 * To add empty row to category open code data table.
 	 */
-	public void addNewCategoryAction() {
+	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		debugLogger("addNewCategoryAction");
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
 				.getQtCategoryList();
@@ -243,13 +243,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 			qtCategoryList = new ArrayList<ScQtCategory>();
 			this.getManagedBean().setQtCategoryList(qtCategoryList);
 		}
+		
+		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
 		ScQtCategory category = new ScQtCategory();
 		// category.setScQt(scQt);
-		category.setPmCategoryL1(new PmCategoryL1());
-		category.setPmCategoryL2(new PmCategoryL2());
-		category.setPmCategoryL3(new PmCategoryL3());
+		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
+		category.setPmCategoryL2(pmCategoryL2);
+		category.setPmCategoryL3(pmCategoryL3);
 		qtCategoryList.add(category);
-		this.getManagedBean().setQtCategoryList(qtCategoryList);
 	}
 
 	/**
