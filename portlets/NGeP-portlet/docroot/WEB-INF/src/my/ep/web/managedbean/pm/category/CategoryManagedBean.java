@@ -37,6 +37,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private PmCategoryL3 pmCategoryL3;
 	private String catLevel;
 	private boolean newCategory = false;
+	private boolean checkSpecialCategory = false;
 	private boolean displayCategoryGrouping = false;
 	private List<PmParameterDesc> supplierType;
 	private List<PmParameterDesc> specialCategory;
@@ -114,6 +115,14 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 		this.subCatDesc = subCatDesc;
 	}
 
+	public boolean isCheckSpecialCategory() {
+		return checkSpecialCategory;
+	}
+
+	public void setCheckSpecialCategory(boolean checkSpecialCategory) {
+		this.checkSpecialCategory = checkSpecialCategory;
+	}
+	
 	public String getSubDivDesc() {
 		return subDivDesc;
 	}

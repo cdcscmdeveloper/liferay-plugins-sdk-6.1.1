@@ -309,8 +309,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			if (resDTO.isSuccessful()) {
 				this.getManagedBean().setPmCategoryL1(resDTO.getCategoryL1());
 				
-				PmCategoryL2 pmCategoryL2 = new PmCategoryL2();
-				pmCategoryL2.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
+				PmCategoryL2 pmCategoryL2 = new PmCategoryL2();				
+				pmCategoryL2.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());				
 				this.getManagedBean().setPmCategoryL2(pmCategoryL2);
 				this.getManagedBean().setCatLevel("2");
 				this.getManagedBean().setNewCategory(true);
@@ -515,12 +515,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				log.info("***editSubDivision - Category Name***" + resDTO.getCategoryL3().getCategoryName());
+				
 				this.getManagedBean().setCatLevel("3");
 				resDTO.getCategoryL3().setBasicCategoryReqValue(resDTO.getCategoryL3().getBasicCategoryReq()==1?true:false);
 				resDTO.getCategoryL3().setHomeOperatedValue(resDTO.getCategoryL3().getHomeOperated()==1?true:false);
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
 				this.getManagedBean().setNewCategory(false);
-				reloadSelectionPmCategoryL3();
+				reloadSelectionPmCategoryL3();				
+				updateSpecialCategory();
 				for(PmBasicCategory pmBasicCategory: this.getManagedBean().getPmCategoryL3().getPmBasicCategory()){
 					reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
 					CategoryCodeResDTO bresDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
@@ -534,7 +536,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 				this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL3().getPmCategoryL2());
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
-				
+								
 				log.info("***editSubDivision - managed bean L3 - Category Name***" +this.getManagedBean().getPmCategoryL3().getCategoryName());
 			}
 		}catch(Exception e){
@@ -601,12 +603,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().getPmCategoryL2().setCategoryName(this.getManagedBean().getPmCategoryL2().getCategoryName().toUpperCase());
 			this.getManagedBean().getPmCategoryL2().setRecordStatusFlg(this.getManagedBean().getPmCategoryL2().getRecordStatusFlg());
 
-			for(PmCategoryL3 pmCategoryL3:this.getManagedBean().getPmCategoryL2().getPmCategoryL3s())
+			if(this.getManagedBean().getPmCategoryL2().getPmCategoryL3s()!=null && this.getManagedBean().getPmCategoryL2().getPmCategoryL3s().size()>0)
 			{
-				pmCategoryL3.setRecordStatusFlg(this.getManagedBean().getPmCategoryL2().getRecordStatusFlg());
+				for(PmCategoryL3 pmCategoryL3:this.getManagedBean().getPmCategoryL2().getPmCategoryL3s())
+				{
+					pmCategoryL3.setRecordStatusFlg(this.getManagedBean().getPmCategoryL2().getRecordStatusFlg());
 
+				}
 			}
-			
 			
 			if (!validatePmCategoryL2()){
 				return "/xhtml/pm/category/categoryl2.xhtml"; 
@@ -1203,14 +1207,24 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-			
+			List<PmParameterDesc> listOfPmParameterDesc=new ArrayList<PmParameterDesc>();
 			reqDTO.setParameterType("ST");
 			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 			this.getManagedBean().setSupplierType(resDTO.getParameterDescList());
 			
 			reqDTO.setParameterType("CAT");
 			resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-			this.getManagedBean().setSpecialCategory(resDTO.getParameterDescList());
+			if(reqDTO.getParameterType().equals("CAT")){
+				for(PmParameterDesc pmParameterDesc:resDTO.getParameterDescList())
+				{ 
+					if(!pmParameterDesc.getCodeName().equalsIgnoreCase(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NOT_APPLICABLE))
+					{
+						listOfPmParameterDesc.add(pmParameterDesc);
+					}
+				}
+			}
+			
+			this.getManagedBean().setSpecialCategory(listOfPmParameterDesc);
 			
 			//default value for Special Category
 			if(this.getManagedBean().isNewCategory()){
@@ -1218,6 +1232,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				reqDTO.setParameterCode("-");
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				this.getManagedBean().getPmCategoryL3().setCategoryTypeCodeVal(resDTO.getPmParameter().getParameterId());
+				
 			}
 			
 			//default value for Special Group
@@ -1277,6 +1292,23 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setDisplayCategoryGrouping(false);
 		}
 			
+	}
+	public void updateSpecialCategory(){		
+		for(PmParameterDesc PmParameterDesc:this.getManagedBean().getSpecialCategory()){	
+
+			if(this.getManagedBean().getPmCategoryL3().getCategoryTypeCode().getParameterId().equals(PmParameterDesc.getPmParameter().getParameterId())){
+
+				if(PmParameterDesc.getPmParameter().getParameterCode().equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NORMAL)){
+
+					this.getManagedBean().setCheckSpecialCategory(true);	
+
+				}else {
+					this.getManagedBean().setCheckSpecialCategory(false);
+				}
+			}
+
+		}
+
 	}
 	
 	public void updateMachine(){
