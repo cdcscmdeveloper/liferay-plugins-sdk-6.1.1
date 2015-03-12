@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -106,6 +107,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -414,6 +416,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					ministryProfileId = 0L;
 				}
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("parentOrgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(),ministryProfileId));
+				
+				Date currentDate = DateUtils.getCurrentDateWithoutTime();
+				// Filter By - Org effDate
+				searchBean.getDataFilterBeans()
+						.add(new SearchFilterBean("pmOrgValidity.effDate",
+								SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+
+				// Filter By - Org expDate
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								currentDate), new SearchFilterBean(
+								"pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_IS_NULL.value(), null,
+								SearchCondition.CONDITION_OR.value())));
 				
 				if (getManagedBean().getPtjCodeName() != null
 						&& (getManagedBean().getPtjCodeNameSearchValues() != null || getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
