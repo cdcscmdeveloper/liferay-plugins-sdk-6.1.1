@@ -21,9 +21,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -66,9 +63,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -88,10 +83,16 @@ public class SmPersonnelBackingBean extends
 
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
 
+	/**
+	 * Instantiate SmPersonnelBackingBean and set MDC user id
+	 */
 	public SmPersonnelBackingBean() {
 		SmCommonUtil.setMDCUserId();
 	}
 
+	/**
+	 * Pre-render and redirect to Supplier User Maintenance screen
+	 */
 	public void preRenderSmPersonnel() {
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		getManagedBean().setSmSupplier(smSupplier);
@@ -109,6 +110,9 @@ public class SmPersonnelBackingBean extends
 		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "");
 	}
 
+	/**
+	 * Pre - render and redirect to Supplier User Profile screen
+	 */
 	public void preRenderUpdateOwnProfilePage() {
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
@@ -137,6 +141,9 @@ public class SmPersonnelBackingBean extends
 		SmCommonUtil.redirectToPage("updateUserProfile.xhtml", "");
 	}
 
+	/**
+	 * Pre - render and redirect to Deactivate Supplier Admin screen
+	 */
 	public void preRenderDeactivateSuppAdmin() {
 		boolean isHasSupplierUser = false;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
@@ -200,12 +207,18 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * reset search value
+	 */
 	public void resetSmPersonnelSearch() {
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
 	}
 
+	/**
+	 * construct valid roles
+	 */
 	private void buildRoleList() {
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 
@@ -237,6 +250,14 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Validate whether need to disable add personnel button in Supplier User
+	 * Maintenance screen
+	 * 
+	 * @param SmSupplier
+	 *            smSupplier
+	 * @return boolean
+	 */
 	private boolean validatePersonLimit(SmSupplier smSupplier) {
 		boolean validPerCount = false;
 
@@ -270,6 +291,11 @@ public class SmPersonnelBackingBean extends
 		return validPerCount;
 	}
 
+	/**
+	 * Redirect to add new personnel screen in Supplier User Maintenance
+	 * 
+	 * @return String page
+	 */
 	public String navigateToAddNewUserPage() {
 		getManagedBean().setEditMode(false);
 		getManagedBean().setDeactivatePersonnel(false);
@@ -332,12 +358,21 @@ public class SmPersonnelBackingBean extends
 		return "basicUserProfile.xhtml";
 	}
 
+	/**
+	 * Initialize personnel by login id
+	 */
 	public void initUserPersonnelInfo() {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 	}
 
+	/**
+	 * Initialize authorized personnel by supplier
+	 * 
+	 * @param SmSupplier
+	 *            smSupplier
+	 */
 	private void initAuthorizedPersonnels(SmSupplier smSupplier) {
 		getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -386,6 +421,13 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Redirect to update personnel screen in Supplier User Maintenance
+	 * 
+	 * @param String
+	 *            personnelId
+	 * @return String page
+	 */
 	public String navigateToUpdateUserPage(String personnelId) {
 		getManagedBean().setEditMode(true);
 		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
@@ -406,6 +448,11 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Redirect to first screen in Supplier User Maintenance
+	 * 
+	 * @return String page
+	 */
 	public String cancel() {
 		return "userProfileSearch.xhtml";
 
@@ -415,6 +462,9 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Initialize personnel addresses
+	 */
 	public void initializeLists() {
 		getCountryList();
 
@@ -503,6 +553,9 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Initialize updated personnel addresses
+	 */
 	public void initializeUpdateLists() {
 		getCountryList();
 
@@ -599,6 +652,9 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Get list of country
+	 */
 	public void getCountryList() {
 
 		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
@@ -631,6 +687,17 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Update mail address for state,district and city list based on dropdown
+	 * selection
+	 * 
+	 * @param String
+	 *            countryId
+	 * @param String
+	 *            stateId
+	 * @param String
+	 *            districtId
+	 */
 	public void updateMailAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
@@ -650,6 +717,17 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Update permanent address for state,district and city list based on
+	 * dropdown selection
+	 * 
+	 * @param String
+	 *            countryId
+	 * @param String
+	 *            stateId
+	 * @param String
+	 *            districtId
+	 */
 	public void updatePermAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
@@ -669,6 +747,9 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Update mail address if tick same as permanent address
+	 */
 	public void setUpdateMailingAddrSameAsPerm() {
 		if (getManagedBean().getUpdateSmPersonnelMailingAddress()
 				.isSameAsPerm()) {
@@ -695,6 +776,13 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Copy address to new address object
+	 * 
+	 * @param SmAddress
+	 *            refAddress
+	 * @return SmAddress
+	 */
 	private SmAddress cloneAddress(SmAddress refAddress) {
 		SmAddress address = new SmAddress();
 		if (refAddress.getAddress1() != null)
@@ -729,6 +817,11 @@ public class SmPersonnelBackingBean extends
 		return address;
 	}
 
+	/**
+	 * Set default address to Malaysia
+	 * 
+	 * @return SmAddress
+	 */
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
 		PmCountry cntry = new PmCountry();
@@ -747,6 +840,12 @@ public class SmPersonnelBackingBean extends
 		return addr;
 	}
 
+	/**
+	 * Get personnel by personnel id
+	 * 
+	 * @param String
+	 *            personnelId
+	 */
 	public void getPersonnelInfoById(String personnelId) {
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance()
@@ -886,6 +985,12 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Get personnel by PmUser
+	 * 
+	 * @param PmUser
+	 *            usr
+	 */
 	public void getPersonnelByPmUser(PmUser usr) {
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance()
@@ -899,6 +1004,12 @@ public class SmPersonnelBackingBean extends
 		this.getManagedBean().setUpdateSmPersonnel(smPersonnel);
 	}
 
+	/**
+	 * Fetch updated personnel addresses (mail and permanent)
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 */
 	public void fetchUpdateSmPersonnelAddresses(SmPersonnel smPersonnel) {
 		if (smPersonnel.getSmPersonnelAddresses() != null
 				&& smPersonnel.getSmPersonnelAddresses().size() > 0) {
@@ -1019,6 +1130,11 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Save or update personnel in Supplier User Maintenance
+	 * 
+	 * @throws Exception
+	 */
 	public void save() throws Exception {
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			getManagedBean().setBasicSmPersonnel(
@@ -1063,6 +1179,11 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Deactivate or terminate authorized personnel
+	 * 
+	 * @throws Exception
+	 */
 	public void deactivateOrTerminate() throws Exception {
 		updateUser(getManagedBean().getBasicSmPersonnel());
 		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
@@ -1071,6 +1192,13 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDeactivateTerminateConfirmMsg("");
 	}
 
+	/**
+	 * Update existing personnel
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @throws Exception
+	 */
 	public void updateUser(SmPersonnel smPersonnel) throws Exception {
 		PersonnelResDTO resDTO = updatePersonnel(smPersonnel);
 		log.info("Result:" + resDTO.isSuccessful());
@@ -1081,6 +1209,13 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Save new personnel record
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @return
+	 */
 	public SmPersonnel saveNewUser(SmPersonnel smPersonnel) {
 
 		validatePersonnelBeforeSave(smPersonnel);
@@ -1130,6 +1265,14 @@ public class SmPersonnelBackingBean extends
 			return null;
 	}
 
+	/**
+	 * Update existing personnel record in Supplier User Maintenance
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @return
+	 * @throws Exception
+	 */
 	private PersonnelResDTO updatePersonnel(SmPersonnel smPersonnel)
 			throws Exception {
 		setAuthorizedFlag(smPersonnel);
@@ -1160,6 +1303,12 @@ public class SmPersonnelBackingBean extends
 		return smPersonnelSO.updatePersonnelAccountStatusOrEpRole(reqDTO);
 	}
 
+	/**
+	 * Set and construct personnel addresses
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 */
 	private void setPersonnelAddress(SmPersonnel smPersonnel) {
 
 		SmAddress s1 = getManagedBean().getBasicSmPersonnelPermanentAddress()
@@ -1280,6 +1429,12 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Validate personnel before save in Supplier User Maintenance
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 */
 	private void validatePersonnelBeforeSave(SmPersonnel smPersonnel) {
 
 		if (smPersonnel.getIdentificationType().getParameterCode()
@@ -1318,6 +1473,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Verify personnel with my identity
+	 * 
+	 * @param SmPersonnel
+	 *            per
+	 */
 	public void myIdentityVerification(SmPersonnel per) {
 		String postCode = "";
 		for (SmPersonnelAddress addr : per.getSmPersonnelAddresses()) {
@@ -1358,11 +1519,23 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Get portal company id
+	 * 
+	 * @return String portalCompanyId
+	 */
 	public String getCompanyId() {
 		return EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.PORTAL_COMPANY_ID);
 	}
 
+	/**
+	 * Check if email already exist in Pm
+	 * 
+	 * @param String
+	 *            email
+	 * @return boolean
+	 */
 	public boolean isExistEmailInPmUser(String email) {
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1379,6 +1552,13 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Check if identification no already exist in Pm
+	 * 
+	 * @param String
+	 *            idNo
+	 * @return boolean
+	 */
 	public boolean isExistUserByIdentificationNo(String idNo) {
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1394,6 +1574,13 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Update personnel and redirect to success page
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @return
+	 */
 	public String update(SmPersonnel smPersonnel) {
 
 		setUpdateMailingAddrSameAsPerm();
@@ -1432,6 +1619,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Set personnel authorization
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
 	public void assignAccountPrivilege(AjaxBehaviorEvent e) {
 		if (getManagedBean().getBasicSmPersonnel().getAuthorizedFlg() == 0) {
 			getManagedBean().getBasicSmPersonnel().setSoftcertFlg(0);
@@ -1443,6 +1636,9 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Remove role from current role list
+	 */
 	public void removeEPRole() {
 		int smUserListSize = 0;
 		if (getManagedBean().getSmPersonnelDataModel2().getList() != null)
@@ -1454,6 +1650,12 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setDisableRole(true);
 	}
 
+	/**
+	 * Set personnel identification type
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
 		if (getManagedBean().getBasicSmPersonnel().getIdentificationTypeId() != null) {
 			getManagedBean().getBasicSmPersonnel().setIdentificationType(
@@ -1469,6 +1671,13 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve parameter by parameter id
+	 * 
+	 * @param Long
+	 *            paramId
+	 * @return PmParameter
+	 */
 	private PmParameter retrievePmParameterById(Long paramId) {
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1480,6 +1689,9 @@ public class SmPersonnelBackingBean extends
 		return resDTO.getPmParameter();
 	}
 
+	/**
+	 * Set personnel account status
+	 */
 	public void validateAccountStatus() {
 		if (getManagedBean().getBasicSmPersonnel().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 				&& getManagedBean().getBasicSmPersonnel().getPmUser() != null
@@ -1531,6 +1743,12 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Set personnel verification type
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
 	public void assignVerifyIdentType(AjaxBehaviorEvent e) {
 		if (getManagedBean().getAdminVerifyIdType().getParameterId() != null) {
 			getManagedBean().setAdminVerifyIdType(
@@ -1544,6 +1762,9 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Show deactivate admin confirmation dialog box
+	 */
 	public void confirmDeactivateAdmin() {
 		if (getManagedBean().getSelectedPersonnelToReassign() == null) {
 			throw new EpException(MessageConst.ERROR_721111);
@@ -1552,6 +1773,9 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Process deactivate old admin and replace with new admin
+	 */
 	public void deactivateAdmin() {
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance()
@@ -1589,6 +1813,13 @@ public class SmPersonnelBackingBean extends
 
 	}
 
+	/**
+	 * Get current active application by supplier
+	 * 
+	 * @param SmSupplier
+	 *            smSupplier
+	 * @return
+	 */
 	private SmAppl getCurrActiveSmAppl(SmSupplier smSupplier) {
 		if (getManagedBean().isUpgradeMofDraftAppl()) {
 			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
@@ -1605,6 +1836,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Construct message for deactivate supplier admin
+	 * 
+	 * @param SmSupplier
+	 *            smSupplier
+	 */
 	private void constructNoSupplierUserToDeactivateMsg(SmSupplier smSupplier) {
 		if (smSupplier.getSmAppl().getApplType()
 				.equals(ParameterConst.BASIC_ACCOUNT)) {
@@ -1621,6 +1858,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Set personnel authorized flag
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 */
 	private void setAuthorizedFlag(SmPersonnel smPersonnel) {
 		if (smPersonnel != null && smPersonnel.getEpRole() != null
 				&& StringUtils.isNotBlank(smPersonnel.getEpRole())) {
@@ -1640,15 +1883,9 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
-	private void setDisallowedDeactivateSuppAdminMsg(FacesContext fc) {
-		fc.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_721213,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-	}
-
+	/**
+	 * Set to disable or enable active or deactivate radio button
+	 */
 	private void setDisabledActivateDeactivateRadioButton() {
 		getManagedBean().setDisabledActivateAndDeactivate(false);
 		if (getManagedBean().getBasicSmPersonnel() != null
@@ -1665,6 +1902,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Set whether the personnel can be edited or only for view
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 */
 	private void setPersonnelViewOnlyMode(SmPersonnel smPersonnel) {
 		getManagedBean().setViewOnlyPersonnel(false);
 		if (getManagedBean().isEditMode() && smPersonnel.getPmUser() == null
@@ -1675,6 +1918,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Set personnel view only mode identification type and role
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 */
 	private void setPersonnelViewOnlyData(SmPersonnel smPersonnel) {
 		if (getManagedBean().isViewOnlyPersonnel()) {
 			getManagedBean()
@@ -1691,6 +1940,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Set personnel view only mode for addresses
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 */
 	private void setPersonnelViewOnlyAddresses(SmPersonnel smPersonnel) {
 		if (getManagedBean().isViewOnlyPersonnel()) {
 			if (smPersonnel.getSmPersonnelAddresses() != null
@@ -1720,6 +1975,11 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Check whether the login user have pending task in task list
+	 * 
+	 * @return boolean
+	 */
 	private boolean isHavePendingTaskList() {
 		boolean retVal = false;
 		if (getManagedBean().getToken() == null
@@ -1738,6 +1998,12 @@ public class SmPersonnelBackingBean extends
 		return retVal;
 	}
 
+	/**
+	 * Set whether the personnel is deactivated or not
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 */
 	private void setDeactivateEpRole(SmPersonnel personnel) {
 		getManagedBean().setDeactivatePersonnel(false);
 		if (personnel != null && personnel.getEpRole() == null
@@ -1750,6 +2016,12 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Set personnel previous role
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 */
 	private void setPrevEpRole(SmPersonnel personnel) {
 		if (personnel.getEpRole() == null) {
 			personnel.setPrevEpRole(getDeactivateEpRole(personnel));
@@ -1758,6 +2030,13 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	/**
+	 * Get ep role for deactivated personnel
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 * @return String
+	 */
 	private String getDeactivateEpRole(SmPersonnel personnel) {
 		String epRole = "";
 		if (personnel != null && personnel.getEpRole() == null
