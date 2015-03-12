@@ -1,10 +1,8 @@
 package my.ep.web.backingbean.sm.reactivatebasic;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
@@ -12,7 +10,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -27,11 +24,17 @@ public class ReactivateBasicBackingBean extends
 
 	private ReactivateSupplierVO reactivateBasic;
 
+	/**
+	 * Initialize Reactivate Basic Account
+	 */
 	@PostConstruct
 	public void init() {
 		reactivateBasic = new ReactivateSupplierVO();
 	}
 
+	/**
+	 * Reactivate basic account
+	 */
 	public void reactivateBasic() {
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		FacesScopes fs = new FacesScopes();
