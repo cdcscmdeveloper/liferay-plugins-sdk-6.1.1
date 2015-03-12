@@ -81,6 +81,8 @@ public class SpkiBackingBean {
  
 	FacesScopes facesScope = new FacesScopes();
 
+	private String s;
+
 	public SpkiBackingBean() {}
 	
 	private static final Logger logger = EpLogger
@@ -116,7 +118,7 @@ public class SpkiBackingBean {
 			KMCClient client = getClient();
 			
 			// Request service for user selected question for authentication
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("890823108979", 1));
 //			List<String> challs = null;
 			switch(res.getStatusCode())
 			{
@@ -176,6 +178,7 @@ public class SpkiBackingBean {
 	
 	public String spkiSignTransaction(String originalText) {
 		try{
+//			String s ;
 			KMCClient client = getClient();
 
 //			// Request service for user selected question for authentication
@@ -214,7 +217,7 @@ public class SpkiBackingBean {
 			// Simulate usel expression that maps to a server side
  
 			String pin = getPassword();
-			
+	
 			System.out.println("SIGN" + getChallengeQues1() + getChallengeAns1() + getPassword());
 			// Request service to signData based on the answered challenges and data 
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823108979","eP-1008N0001", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
@@ -228,7 +231,7 @@ public class SpkiBackingBean {
 //				fos.flush();
 //				fos.close();
 //				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				String s = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
+				s = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
 				System.out.println("Data signing successful. SIGNEDTEXT " +  s);
 				break;
 
@@ -241,7 +244,7 @@ public class SpkiBackingBean {
 		{
 			ex.printStackTrace();
 		}
-		return "SIGNEDTEXT";
+		return s;
 	}
 	public void spkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
         String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("inputTextBeforeSign");
