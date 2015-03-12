@@ -3217,13 +3217,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 
 			// service and product
-			List<TplSpecQuestion> tplSpecQuestions = new ArrayList<TplSpecQuestion>();
 			if(scQuote.getQuoteDocs() != null){
 				for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
 					TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
 					if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 						if(specMaster.getTplSpecQuestions() == null){
-							specMaster.setTplSpecQuestions(tplSpecQuestions);
+							specMaster.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 						}
 						productTplSpecBean.setSpecMaster(specMaster);
 						getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
@@ -3231,7 +3230,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 						TplSpecMaster serviceMaster = scQuoteDoc.getSpecMaster();
 						if(serviceMaster.getTplSpecQuestions() == null){
-							serviceMaster.setTplSpecQuestions(tplSpecQuestions);
+							serviceMaster.setTplSpecQuestions(new ArrayList<TplSpecQuestion>());
 						}
 						serviceTplSpecBean.setSpecMaster(serviceMaster);
 						getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
