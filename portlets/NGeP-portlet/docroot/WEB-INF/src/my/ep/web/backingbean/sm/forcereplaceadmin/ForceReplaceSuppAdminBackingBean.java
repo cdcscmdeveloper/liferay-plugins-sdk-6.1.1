@@ -8,10 +8,8 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletSession;
 
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -52,6 +50,9 @@ import org.primefaces.context.RequestContext;
 public class ForceReplaceSuppAdminBackingBean extends
 		BaseBackingBean<ForceReplaceSuppAdminManagedBean> {
 
+	/**
+	 * Pre - render and redirect to Force Replace Supplier Admin page
+	 */
 	public void preRenderForceReplaceAdmin() {
 		renewSesionObject();
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
@@ -70,6 +71,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "");
 	}
 
+	/**
+	 * Submit force replace and display pop up (for existing personnel) or
+	 * redirect to new personnel record page
+	 */
 	public void submit() {
 		getManagedBean().setExistingUser(false);
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
@@ -91,6 +96,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	/**
+	 * Replace admin with new personnel and redirect to success page
+	 */
 	public void replaceWithNewUser() {
 		getManagedBean().getNewAdmin().setIdentificationTypeId(
 				getManagedBean().getReactivateBasic()
@@ -102,27 +110,49 @@ public class ForceReplaceSuppAdminBackingBean extends
 		redirectToSuccessPage(resDto);
 	}
 
+	/**
+	 * Replace admin with existing personnel and redirect to success page
+	 */
 	public void replaceWithExistingUser() {
 		PersonnelResDTO resDto = getPersonnelSO().reassignNewSupplierAdmin(
 				getReqDTO());
 		redirectToSuccessPage(resDto);
 	}
 
+	/**
+	 * Redirect back to Force Replace Admin first page from add new personnel
+	 * information
+	 * 
+	 * @return String
+	 */
 	public String cancelAddInFo() {
 		getManagedBean().setExistingUser(false);
 		return "forceReplaceAdmin.xhtml";
 	}
 
+	/**
+	 * Close terms and condition pop up
+	 */
 	public void cancelTncPopup() {
 		getManagedBean().setExistingUser(false);
 		getManagedBean().setAgreeTnc(false);
 		RequestContext.getCurrentInstance().execute("tncDialog.hide()");
 	}
 
+	/**
+	 * Get current date
+	 * 
+	 * @return Date
+	 */
 	public Date getCurrDate() {
 		return new Date();
 	}
 
+	/**
+	 * Get constructed DTO
+	 * 
+	 * @return PersonnelReqDTO
+	 */
 	private PersonnelReqDTO getReqDTO() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
@@ -138,6 +168,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		return reqDTO;
 	}
 
+	/**
+	 * Validate before proceed to force replace admin
+	 */
 	private void validate() {
 
 		// check if new admin identificationNo same as existing admin
@@ -226,6 +259,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 	}
 
+	/**
+	 * Execute based on decision for existing personnel call terms and condition
+	 * dialog pop up and for new personnel redirect to new personnel info page
+	 */
 	private void executeDecision() {
 		// replace with new personnel
 		if (!getManagedBean().isExistingUser()) {
@@ -239,12 +276,18 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	/**
+	 * Initialize new admin values
+	 */
 	private void initDefaultNewAdmin() {
 		getManagedBean().setNewAdmin(new SmPersonnel());
 		setDefaultNewAdminPersonnelValues();
 		setDefaultNewAdminAddress();
 	}
 
+	/**
+	 * Initialize list of identification types
+	 */
 	private void initIdentificationTypes() {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
 				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
@@ -270,6 +313,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	/**
+	 * Initialize list of country
+	 */
 	private void initCountries() {
 		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -288,6 +334,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().setMailCountries(countryList);
 	}
 
+	/**
+	 * Initialize list of state
+	 */
 	private void initStatest() {
 		getManagedBean().setPermStates(
 				SmCommonUtil.getStateList(getManagedBean().getMyCountryId()));
@@ -295,6 +344,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 				SmCommonUtil.getStateList(getManagedBean().getMyCountryId()));
 	}
 
+	/**
+	 * Update mail address country, state and district dropdown list
+	 * 
+	 * @param String
+	 *            countryId
+	 * @param String
+	 *            stateId
+	 * @param String
+	 *            districtId
+	 */
 	public void updateMailAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
@@ -314,6 +373,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	/**
+	 * Update permanent address country, state and district dropdown list
+	 * 
+	 * @param String
+	 *            countryId
+	 * @param String
+	 *            stateId
+	 * @param String
+	 *            districtId
+	 */
 	public void updatePermAddLists(String countryId, String stateId,
 			String districtId) {
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
@@ -333,6 +402,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	/**
+	 * Set default permanent and mail address to Malaysia
+	 */
 	private void setDefaultNewAdminAddress() {
 		PmCountry countryMy = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -357,6 +429,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.add(getManagedBean().getMailAddr());
 	}
 
+	/**
+	 * Set default new personnel values
+	 */
 	private void setDefaultNewAdminPersonnelValues() {
 		getManagedBean().getNewAdmin().setEpRole(
 				getManagedBean().getOldAdmin().getEpRole());
@@ -376,6 +451,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 				new ArrayList<SmPersonnelAddress>());
 	}
 
+	/**
+	 * Redirect to success page
+	 * 
+	 * @param PersonnelResDTO
+	 *            resDto
+	 */
 	private void redirectToSuccessPage(PersonnelResDTO resDto) {
 		if (resDto.isSuccessful()) {
 			SmCommonUtil.redirectToPage(
@@ -386,6 +467,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	/**
+	 * Set identification type
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
 	public void assignIdentificationType(AjaxBehaviorEvent e) {
 		if (getManagedBean().getReactivateBasic().getNewIdentificationType() != null) {
 			getManagedBean().setIdentificationType(
@@ -394,36 +481,34 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	/**
+	 * Get IPersonnelSO
+	 * 
+	 * @return IPersonnelSO
+	 */
 	public IPersonnelSO getPersonnelSO() {
 		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 	}
 
+	/**
+	 * Get ISupplierSearchSO
+	 * 
+	 * @return ISupplierSearchSO
+	 */
 	public ISupplierSearchSO getSupplierSO() {
 		return (ISupplierSearchSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierSearchSO.class);
 	}
 
+	/**
+	 * Get IBpmSO
+	 * 
+	 * @return IBpmSO
+	 */
 	public IBpmSO getBpmSO() {
 		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
 				IBpmSO.class);
-	}
-
-	private String getBpmAuthenticateToken() {
-		PortletSession portletSession = (PortletSession) FacesContext
-				.getCurrentInstance().getExternalContext().getSession(false);
-		Object ctxToken = portletSession.getAttribute("BPM_AUTH_CONTEXT_TOKEN",
-				PortletSession.APPLICATION_SCOPE);
-		if (null == ctxToken) {
-			String loginId = getManagedBean().getOldAdmin().getPmUser()
-					.getLoginId();
-			if (loginId != null) {
-				ctxToken = getBpmSO().authenticate(loginId);
-				portletSession.setAttribute("BPM_AUTH_CONTEXT_TOKEN", ctxToken,
-						PortletSession.APPLICATION_SCOPE);
-			}
-		}
-		return (String) ctxToken;
 	}
 }
