@@ -22,7 +22,7 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
@@ -132,7 +132,8 @@
 
 		<p:panel id="companyExpPrivateContracts"
 			header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
-			toggleable="true">
+			toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -216,7 +217,8 @@
 		<p:spacer height="75"></p:spacer>
 
 		<p:panel id="techcompanyExpPrivateNumbersOfYears"
-			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true">
+			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
 					<td><p:outputLabel
