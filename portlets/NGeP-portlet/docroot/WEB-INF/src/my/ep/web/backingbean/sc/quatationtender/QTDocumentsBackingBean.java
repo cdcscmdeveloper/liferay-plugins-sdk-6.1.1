@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.File;
@@ -108,17 +118,27 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class QTDocumentsBackingBean.
+ *
  * @author SudheerKumar
- * 
  */
 @ManagedBean(name = "qTDocumentsBackingBean")
 @RequestScoped
 public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/** The Constant log. */
 	private static final Logger log = EpLogger.getLogger(QTDocumentsBackingBean.class);
+	
+	/** The Constant DOCUMENT_PAGE. */
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -126,27 +146,46 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		log.info(message);
 	}
 
+	/** The select all. */
 	private boolean selectAll;
 	
+	/**
+	 * Instantiates a new QT documents backing bean.
+	 */
 	public QTDocumentsBackingBean() {
 		// PagingDataModel for Clone Quotation Tender List
 		IPagingDataModel<ScQt> cloneSearchDocumentDataModel = getManagedBean().getCloneDocumentDataModel();
 		
 		if (cloneSearchDocumentDataModel == null) {
-			getManagedBean().setCloneDocumentDataModel(new DocumentPagingDataModel("clonesearchboid", getManagedBean().getCloneDocumentSearchBean()));
+			getManagedBean().setCloneDocumentDataModel(new DocumentPagingDataModel("clonesearchdocid", getManagedBean().getCloneDocumentSearchBean()));
 		}
 	}
 	
+	/**
+	 * The Class DocumentPagingDataModel.
+	 */
 	private class DocumentPagingDataModel extends PagingDataModel<ScQt> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/** The clone document search bean. */
 		private QtnTenderSearchBean cloneDocumentSearchBean;
 
+		/**
+		 * Instantiates a new document paging data model.
+		 *
+		 * @param componentId the component id
+		 * @param cloneDocumentSearchBean the clone document search bean
+		 */
 		public DocumentPagingDataModel(String componentId, QtnTenderSearchBean cloneDocumentSearchBean) {
 			super(componentId);
 			this.cloneDocumentSearchBean = cloneDocumentSearchBean;
 		}
 		
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<ScQt> pageChangeListener(ISearchBean<ScQt> searchBean) {
 			if (log.isDebugEnabled()) {
@@ -167,8 +206,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	/**
-	 * @param cloneBusinessOwnerSearchBean
-	 * @param searchBean
+	 * Populate clone qt search criteria.
+	 *
+	 * @param cloneDocumentSearchBean the clone document search bean
+	 * @param qtSearchBean the qt search bean
 	 */
 	private void populateCloneQTSearchCriteria(QtnTenderSearchBean cloneDocumentSearchBean, ISearchBean<ScQt> qtSearchBean) {
 		if (cloneDocumentSearchBean != null) {
@@ -214,10 +255,16 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 
+	/**
+	 * Clone search document action.
+	 */
 	public void cloneSearchDocumentAction() {
 		getManagedBean().getCloneDocumentDataModel().reloadData();
 	}
 	
+	/**
+	 * Clone document popup action.
+	 */
 	public void cloneDocumentPopupAction() {
 		debugLogger("cloneDocumentPopupAction");
 		getManagedBean().getCloneDocumentDataModel().reloadData();
@@ -230,6 +277,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		getManagedBean().setCloneScQtDocReports(null);
 	}
 
+	/**
+	 * Gets the procurement mode dropdown values.
+	 *
+	 * @return the procurement mode dropdown values
+	 */
 	public SelectItem[] getProcurementModeDropdownValues(){
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -240,6 +292,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return items;
     }
 	
+	/**
+	 * To add empty row to document data table.
+	 */
 	public void addDocumentList() {
 		debugLogger("addDocumentList");
 		ScQt scQt = this.getManagedBean().getQt();
@@ -266,6 +321,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		scQtDocReports.add(scQtDocReport);
 	}
 	
+	/**
+	 * To remove documents from data table
+	 */
 	public void deleteDocumentList() {
 		debugLogger("deleteDocumentList");
 		List<ScQtDocReport> docReportsList = this.getManagedBean().getScQtDocReportList();
@@ -294,6 +352,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		this.getManagedBean().setRemoveDocReports(removeDocumentList);
 	}
 
+	/**
+	 * Add attachment to list.
+	 *
+	 * @param event 		File upload event instance
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void handleFileAttachment(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleFileAttachment");
 		if (event.getFile() != null) {
@@ -314,6 +379,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 
+	/**
+	 * On row scQtDocReports in clone action.
+	 *
+	 * @param event the event
+	 */
 	public void onRowCloneAction(SelectEvent event) {
 		ScQt scQt = (ScQt) event.getObject();
 		IQTDetailSO detailSO;
@@ -331,6 +401,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 
+	/**
+	 * Adds the document clone action.
+	 */
 	public void addDocumentCloneAction() {
 		debugLogger("addDocumentCloneAction");
 		List<ScQtDocReport> reportList = getManagedBean().getScQtDocReportList();
@@ -361,7 +434,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	/**
-	 * determineIcon for displaying image icon in pid
+	 * determineIcon for displaying image icon in pid.
+	 *
+	 * @param attachment the attachment
+	 * @return the string
 	 */
 	public String determineIcon(ScQtCheckListAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
@@ -389,6 +465,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return imageFileName;
 	}
 
+	/**
+	 * Reset document search bean.Event handle to clear all the document search data.
+	 */
 	public void resetClone() {
 		debugLogger("resetClone");
 		this.getManagedBean().getCloneDocumentSearchBean().setQtTitle(null);
@@ -399,7 +478,17 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		this.getManagedBean().getCloneDocumentSearchBean().setQtStatus(null);
 	}
 
-	public String showTemplateAction(int index,ScQtDocReport scQtDocReport) 
+	/**
+	 * Show template action.
+	 *
+	 * @param scQtDocReport the sc qt doc report
+	 * @return the string
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws InstantiationException the instantiation exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws NoSuchMethodException the no such method exception
+	 */
+	public String showTemplateAction(int index, ScQtDocReport scQtDocReport) 
 		throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
 		debugLogger("showTemplateAction");
 		
@@ -437,6 +526,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 	
 	//retrieve the scQtDocReport for Syarat-syarat Am/ Arahan/Syarat-syarat Khas
+	/**
+	 * Retrive rules and regulation report.
+	 *
+	 * @param scQtDocReport the sc qt doc report
+	 * @return ScQtDocReport
+	 */
 	private ScQtDocReport retriveRulesAndRegulationReport(ScQtDocReport scQtDocReport){
 		debugLogger("retriveRulesAndRegulationReport");
 		IQTDetailSO qTDetailSO = null;
@@ -457,7 +552,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 	
-	//save to scQtDocReport
+	/**
+	 * Save to scQtDocReport.
+	 * 
+	 * @param scQtDocReport
+	 *            the sc qt doc report
+	 * @return scQtDocReport
+	 */
 	private ScQtDocReport saveScQtReportList(ScQtDocReport scQtDocReport){
 		debugLogger("saveScQtReportList");
 		QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
@@ -470,6 +571,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 	
+	/**
+	 * Save cloned tpl doc master.
+	 *
+	 * @param scQtDocReport the sc qt doc report
+	 * @return scQtDocReport
+	 */
 	private TplDocMaster saveClonedTplDocMaster(ScQtDocReport scQtDocReport){
 		debugLogger("saveClonedTplDocMaster");
 		IQTTemplateSO qtTemplateSO = null;
@@ -489,6 +596,16 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 	
+	/**
+	 * Clone tpl doc master dtls.
+	 *
+	 * @param scQtDocReport the sc qt doc report
+	 * @return the tpl doc master
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws InstantiationException the instantiation exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws NoSuchMethodException the no such method exception
+	 */
 	private TplDocMaster cloneTplDocMasterDtls(ScQtDocReport scQtDocReport) 
 		throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
 		debugLogger("cloneTplDocMasterDtls");
@@ -573,6 +690,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return tplDocMaster;
 	}
 	
+	/**
+	 * Retrieve standard tpl doc master.
+	 *
+	 * @param scQt the scqt
+	 * @return TplDocMaster
+	 */
 	public TplDocMaster retrieveStandardTplDocMaster(ScQt scQt){
 		debugLogger("retrieveStandardTplDocMaster");
 		ITemplateDocSO templateDocSO = null;
@@ -600,6 +723,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 	
+	/**
+	 * Retrieve tpl doc master by master id.
+	 *
+	 * @param masterId the master id
+	 * @return TplDocMaster
+	 */
 	private TplDocMaster retrieveTplDocMasterById(Long masterId){
 		debugLogger("retrieveTplDocMasterById");
 		IQTTemplateSO qtTemplateSO = null;
@@ -618,6 +747,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 	
+	/**
+	 * Gets the pm parameter.
+	 *
+	 * @param parameterType the parameter type
+	 * @param parameterCode the parameter code
+	 * @return the pm parameter
+	 */
 	private PmParameter getPmParameter(String parameterType, String parameterCode){
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterType(parameterType);
@@ -627,11 +763,22 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return resDTO.getPmParameter();
 	}
 
+	/**
+	 * Template Document Page to Documents list page.
+	 *
+	 * @return the string
+	 */
 	public String documentBackAction() {
 		debugLogger("documentBackAction");
 		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 	}
 	
+	/**
+	 * Download report.
+	 *
+	 * @param scQtDocReport the sc qt doc report
+	 * @throws Exception the exception
+	 */
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport.getScQtDocReportAttachment();
@@ -642,6 +789,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		downloadFile(scQtDocReportAttachment);
 	}
 	
+	/**
+	 * Download all reports.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
 		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReportList();
@@ -658,9 +810,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 	
 	/**
-	 * @param scQtReport
-	 * @return
-	 * @throws Exception 
+	 * Generate document attachment.generate all document report.
+	 *
+	 * @param scQtDocReport the sc qt doc report
+	 * @return ScQtDocReportAttachment
+	 * @throws Exception the exception
 	 */
 	public ScQtDocReportAttachment generateDocumentAttachment(ScQtDocReport scQtDocReport) throws Exception {
 		String definitionType = scQtDocReport.getDefinationType().getParameterCode();
@@ -744,6 +898,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return scQtDocReportAttachment;
 	}
 
+	/**
+	 * Generate syarat syarat am pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param scQtDocReport the sc qt doc report
+	 * @throws Exception the exception
+	 */
 	private void generateSyaratSyaratAmPdfFromVelocity(ScAttachment attachment, ScQtDocReport scQtDocReport) throws Exception {
 		debugLogger("generateSyaratSyaratAmPdfFromVelocity");
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_SYARAT_AM);
@@ -754,6 +915,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdf(new FileOutputStream(getActualFilePath(attachment)), html);
 	}
 
+	/**
+	 * Generate syarat syarat am from velocity.
+	 *
+	 * @param scQtDocReport the sc qt doc report
+	 * @param scQt the sc qt
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	private String generateSyaratSyaratAmFromVelocity(ScQtDocReport scQtDocReport, ScQt scQt) throws Exception {
 		debugLogger("generateSyaratSyaratAmFromVelocity");
 		
@@ -821,6 +990,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	return html;
 	}
 
+	/**
+	 * Generate skop perkhidmatan pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateSkopPerkhidmatanPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
@@ -886,6 +1062,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 */
 
+	/**
+	 * Generate terma kontrak pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateTermaKontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment); 
 		
@@ -932,6 +1115,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_CONTRACT_TERM, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate senarai semak untuk pematuhan kewangan pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateSenaraiSemakUntukPematuhanKewanganPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -961,6 +1151,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_FIN_COMPLIANCE_CHECKLIST, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate senarai semak untuk pematuhan teknikal pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateSenaraiSemakUntukPematuhanTeknikalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -993,6 +1190,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_TECH_COMPLIANCE_CHECKLIST, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate delivery address pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateDeliveryAddressPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);
 		populateAttachmentDetails(attachment);
@@ -1031,6 +1235,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_DELIVERY_ADDRESS, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
+	/**
+	 * Generate frequency schedule pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateFrequencySchedulePdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -1061,6 +1272,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_FREQUENCY_SCHEDULE, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate progressive payment pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateProgressivePaymentPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -1090,6 +1308,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_PROGRASSIVE_PAYMENT, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate spesifikasi pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -1164,6 +1389,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_SPECIFICATION, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate samplesalinankontrak pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		debugLogger("generateSamplesamplesalinankontrakPdfFromVelocity");
 		attachment.setFileName("Sampel_Kontrak_Umum.docx");
@@ -1176,27 +1408,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
 
-		/*StringBuilder filePath = new StringBuilder();
-		filePath.append(DateUtils.getLast2DigitOfYear());
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(attachment.getDocNo());
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(attachment.getDocType());
-		attachment.setFilePath(filePath.toString());
-
-		File theDir = new File(getActualFilePath(attachment));
-		theDir.mkdirs();
-		
-		AttachmentFormat scFormat =getAttachFormat(attachment);
-		String formatedFileName = scFormat.format(attachment.getFileName(),
-				attachment.getPrefixFileName());
-
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(formatedFileName);
-		attachment.setFilePath(filePath.toString());*/
-		
 		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
 		
@@ -1216,6 +1427,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		attachment.setFilePath(filePath.toString());
 	}
 
+	/**
+	 * Gets the attach format.
+	 *
+	 * @param scAttachment the sc attachment
+	 * @return the attach format
+	 */
 	private AttachmentFormat getAttachFormat(ScAttachment scAttachment) {
 		if (scAttachment instanceof ScLoaReportAttachment
 				|| scAttachment instanceof ScQtCheckListAttachment
@@ -1229,6 +1446,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 
+	/**
+	 * Generate sample surat setuju terima pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateSampleSuratSetujuTerimaPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -1289,6 +1513,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_LOA_SAMPLE, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate sample surat pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateSampleSuratPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -1305,6 +1536,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_INTEGRITY_PACT_SAMPLE, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Generate kenyataan tawaran pembekal pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param qt the qt
+	 * @throws Exception the exception
+	 */
 	private void generateKenyataanTawaranPembekalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
 		
@@ -1467,15 +1705,30 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_SUPP_OFFER_STATEMENT, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	/**
+	 * Gets the parameter so.
+	 *
+	 * @return the parameter so
+	 */
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
+	/**
+	 * Checks if is select all.
+	 *
+	 * @return true, if is select all
+	 */
 	public boolean isSelectAll() {
 		return selectAll;
 	}
 
+	/**
+	 * Sets the select all.
+	 *
+	 * @param selectAll the new select all
+	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
 	}
