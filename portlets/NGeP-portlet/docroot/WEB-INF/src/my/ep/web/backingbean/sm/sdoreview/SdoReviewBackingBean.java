@@ -54,6 +54,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return facesScopes;
 	}
 
+	/**
+	 * Retrieve the application by appl ID
+	 * set the value and populate info on screen
+	 * 
+	 */
 	public void viewSupportingDocument() {
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
 		//this.getManagedBean().setAppId(1257696);
@@ -112,7 +117,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		log.info("----------Supporting document-------------" +  this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
 	}
 
-	
+	/**
+	 * Get Business Type Description
+	 * @param String - businessType
+	 * @return String
+	 */
 	public String getBusinessType(String businessType){
 		String retVal = "";
 		if(getManagedBean().getBusinessTypeLs()!=null && !getManagedBean().getBusinessTypeLs().isEmpty()){
@@ -126,7 +135,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return retVal;
 	}
 	
-	
+	/**
+	 * submit SDO Review Action
+	 * @param String resAction
+	 * @return String
+	 */
 	public String submitSDOReviewAction(String resAction) {
 		if(resAction != null && !resAction.equalsIgnoreCase("")){
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
@@ -218,6 +231,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return null;
 	}
 
+	/**
+	 * Show the dialog based on action
+	 * -if action is "VERIFY", show submission confirmation dialog
+	 * -if action is "INQUIRY", populate the invalid/ unsubmitted doc and show the inquiry dialog
+	 * @param action
+	 * 
+	 */
 	public void showSdoActionDialog(String action){
 		if(action.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 			RequestContext.getCurrentInstance().execute("submissionDlg.show()");
@@ -240,6 +260,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		}
 	}
 	
+	/**
+	 * inquiry row select
+	 */
 	public void inquiryRowSelect(){
 		log.info("*************inquiryRowSelect***********"+ this.getManagedBean().getSelectedInquiryResponse().getInquiryText());
 		RequestContext.getCurrentInstance().update("resOutPanelId");
@@ -254,6 +277,10 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		this.getManagedBean().setBusinessTypeLs(pmDesc);
 	}*/
 	
+	/**
+	 * navigate to acknowledge page
+	 * @return
+	 */
 	public String navigateToAck(){
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721103,
 		MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -263,12 +290,16 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	//for local testing purpose
-	public void preRenderView(){
+	/*public void preRenderView(){
 		if(this.getManagedBean().getSmAppl() == null){
 			viewSupportingDocument();
 		}
-	}
+	}*/
 	
+	/**
+	 * update unselectedSuppLs when user check/ uncheck the receive status
+	 * @param SmApplSupportDoc applSuppDoc
+	 */
 	public void receiveStatusChange(SmApplSupportDoc applSuppDoc){
 		log.debug("-----applSuppDoc----" + applSuppDoc.getPmDocument().getDocName());
 		List<SmApplSupportDoc> unselectedSuppDocLs = this.getManagedBean().getUnselectedSmApplSuppDocs();
@@ -295,14 +326,27 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		log.debug("-----applSuppDoc size----" + unselectedSuppDocLs.size());
 	}
 	
+	/**
+	 * get Supplier Application Type description
+	 * @param applType
+	 * @return String
+	 */
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
 	
+	/**
+	 * show Verify Confirmation dialog box
+	 */
 	public void showVerifyConfirmation(){
 		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
 	}
 	
+	/**
+	 * download the uploaded supporting doc
+	 * @param fileName
+	 * @param filePath
+	 */
 	public void downloadSuppDoc(String fileName, String filePath) {
 		file = null;
 		String finalFilePath = filePath + fileName;
@@ -315,10 +359,18 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		finalFilePath = null;
 	}
 	
+	/**
+	 * method to get the streamed content
+	 * @return StreamedContent
+	 */
 	public StreamedContent getFile(){
 		return file;
 	}
 	
+	/**
+	 * get user role
+	 * @return
+	 */
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()))
 			return RoleCode.UPS_SDO.value();		
@@ -326,6 +378,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			return null;
 	}
 	
+	/**
+	 * retrieve zone by state id
+	 * @param stateId
+	 * @return String
+	 */
 	private String retrieveZoneByStateId(Long stateId){
 		IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
