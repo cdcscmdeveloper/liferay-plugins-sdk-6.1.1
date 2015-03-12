@@ -557,15 +557,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			
 			this.getManagedBean().getPmCategoryL1().setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());
 			
-			for(PmCategoryL2 pmCategoryL2:this.getManagedBean().getPmCategoryL1().getPmCategoryL2s())
-			{
-				for(PmCategoryL3 pmCategoryL3:pmCategoryL2.getPmCategoryL3s())
+			if(this.getManagedBean().getPmCategoryL1().getPmCategoryL2s()!=null && !this.getManagedBean().getPmCategoryL1().getPmCategoryL2s().isEmpty()){
+				for(PmCategoryL2 pmCategoryL2:this.getManagedBean().getPmCategoryL1().getPmCategoryL2s())
 				{
-					pmCategoryL3.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());					
-				}
-				pmCategoryL2.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());
-			}			
-			
+					for(PmCategoryL3 pmCategoryL3:pmCategoryL2.getPmCategoryL3s())
+					{
+						pmCategoryL3.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());					
+					}
+					pmCategoryL2.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());
+				}			
+			}
 			       
 			if (!validatePmCategoryL1()){
 				return "/xhtml/pm/category/categoryl1.xhtml"; 
@@ -1215,15 +1216,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setParameterType("CAT");
 			resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 			if(reqDTO.getParameterType().equals("CAT")){
-				for(PmParameterDesc pmParameterDesc:resDTO.getParameterDescList())
-				{ 
-					if(!pmParameterDesc.getCodeName().equalsIgnoreCase(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NOT_APPLICABLE))
-					{
-						listOfPmParameterDesc.add(pmParameterDesc);
+				if(resDTO.getParameterDescList()!=null && !resDTO.getParameterDescList().isEmpty())
+				{
+					for(PmParameterDesc pmParameterDesc:resDTO.getParameterDescList())
+					{ 
+						if(!pmParameterDesc.getCodeName().equalsIgnoreCase(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NOT_APPLICABLE))
+						{
+							listOfPmParameterDesc.add(pmParameterDesc);
+						}
 					}
 				}
 			}
-			
 			this.getManagedBean().setSpecialCategory(listOfPmParameterDesc);
 			
 			//default value for Special Category
@@ -1293,22 +1296,25 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 			
 	}
-	public void updateSpecialCategory(){		
-		for(PmParameterDesc PmParameterDesc:this.getManagedBean().getSpecialCategory()){	
+	public void updateSpecialCategory(){
 
-			if(this.getManagedBean().getPmCategoryL3().getCategoryTypeCode().getParameterId().equals(PmParameterDesc.getPmParameter().getParameterId())){
+		if(this.getManagedBean().getSpecialCategory()!=null && !this.getManagedBean().getSpecialCategory().isEmpty()){
 
-				if(PmParameterDesc.getPmParameter().getParameterCode().equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NORMAL)){
+			for(PmParameterDesc PmParameterDesc:this.getManagedBean().getSpecialCategory()){	
 
-					this.getManagedBean().setCheckSpecialCategory(true);	
+				if(this.getManagedBean().getPmCategoryL3().getCategoryTypeCode().getParameterId().equals(PmParameterDesc.getPmParameter().getParameterId())){
 
-				}else {
-					this.getManagedBean().setCheckSpecialCategory(false);
+					if(PmParameterDesc.getPmParameter().getParameterCode().equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_NORMAL)){
+
+						this.getManagedBean().setCheckSpecialCategory(true);	
+
+					}else {
+						this.getManagedBean().setCheckSpecialCategory(false);
+					}
 				}
+
 			}
-
 		}
-
 	}
 	
 	public void updateMachine(){
@@ -1376,27 +1382,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.searchLOVPagingDataModel = searchLOVPagingDataModel;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-
-
-	
-	
-
-	
 
 	public void reset() {
 		
 	}
 	
-
-
-
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
