@@ -137,13 +137,13 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Retrieve parameter desc list.
+	 * Retrieve parameter description list by param type and language code.
 	 * 
 	 * @param paramType
-	 *            the param type
+	 *            -String param type
 	 * @param lang
-	 *            the lang
-	 * @return the list
+	 *            -String lang
+	 * @return List<PmParameterDesc>
 	 */
 	public static List<PmParameterDesc> retrieveParameterDescList(
 			String paramType, String lang) {
@@ -161,8 +161,8 @@ public class SmCommonUtil {
 	 * Retrieve country by country code.
 	 * 
 	 * @param countryCode
-	 *            the country code
-	 * @return the pm country
+	 *            -String country code
+	 * @return PmCountry object
 	 */
 	public static PmCountry retrieveCountryByCountryCode(String countryCode) {
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -176,15 +176,15 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Retrieve pm status list.
+	 * Retrieve pm status list based in module code,document type, language.
 	 * 
 	 * @param moduleCode
-	 *            the module code
+	 *            - String moduleCode
 	 * @param docType
-	 *            the doc type
+	 *            -String docType
 	 * @param lang
-	 *            the lang
-	 * @return the list
+	 *            -String lang
+	 * @return List<PmStatusDesc>
 	 */
 	public static List<PmStatusDesc> retrievePmStatusList(String moduleCode,
 			String docType, String lang) {
@@ -200,11 +200,11 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Conver pm status list to map.
+	 * Convert pm status list to map.
 	 * 
 	 * @param pmStatusDescLs
-	 *            the pm status desc ls
-	 * @return the map
+	 *            - List<PmStatusDesc>
+	 * @return Map<Long, PmStatusDesc>
 	 */
 	public static Map<Long, PmStatusDesc> converPmStatusListToMap(
 			List<PmStatusDesc> pmStatusDescLs) {
@@ -216,15 +216,15 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Retrieve parameter by type and code.
+	 * Retrieve parameter by parameter type ,parameter code and language.
 	 * 
 	 * @param paramType
-	 *            the param type
+	 *            -String param type
 	 * @param paramCode
-	 *            the param code
+	 *            -String param code
 	 * @param lang
-	 *            the lang
-	 * @return the pm parameter
+	 *            -String lang
+	 * @return PmParameter object
 	 */
 	public static PmParameter retrieveParameterByTypeAndCode(String paramType,
 			String paramCode, String lang) {
@@ -1332,7 +1332,7 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Create TrackingDiaryVO object
+	 * Create TrackingDiaryVO object.
 	 * 
 	 * @param actionDesc
 	 *            action Desc
@@ -1342,7 +1342,6 @@ public class SmCommonUtil {
 	 *            Appl No
 	 * @param userRole
 	 *            User Role
-	 * 
 	 * @return SmTrackingDairyVO
 	 */
 	public static SmTrackingDairyVO assignTrackingDiaryValues(
@@ -1363,10 +1362,10 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Get states based on country
+	 * Get states based on country.
 	 * 
 	 * @param countryId
-	 * 
+	 *            the country id
 	 * @return List<SelectItem>
 	 */
 	public static List<SelectItem> getStateList(Long countryId) {
@@ -1388,10 +1387,10 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Get districts based on state
+	 * Get districts based on state.
 	 * 
 	 * @param stateId
-	 * 
+	 *            the state id
 	 * @return List<SelectItem>
 	 */
 	public static List<SelectItem> getDistrictList(Long stateId) {
@@ -1412,10 +1411,10 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Get cities based on district
+	 * Get cities based on district.
 	 * 
 	 * @param districtId
-	 * 
+	 *            the district id
 	 * @return List<SelectItem>
 	 */
 	public static List<SelectItem> getCityList(Long districtId) {
@@ -1436,11 +1435,12 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Set personnel role name for display purposes based on properties
+	 * Set personnel role name for display purposes based on properties.
 	 * 
-	 * @param String
-	 *            suppType,List<SmPersonnel> smPersonnels
-	 * 
+	 * @param supplierType
+	 *            the supplier type
+	 * @param smPersonnels
+	 *            the sm personnels
 	 */
 	public static void setRoleName(String supplierType,
 			List<SmPersonnel> smPersonnels) {
@@ -1516,7 +1516,7 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Set MDC user_id value to be used in BaseEntity for auditing purposes
+	 * Set MDC user_id value to be used in BaseEntity for auditing purposes.
 	 */
 	public static void setMDCUserId() {
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -1530,9 +1530,10 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Get Bpm Task List by token
+	 * Get Bpm Task List by token.
 	 * 
 	 * @param token
+	 *            the token
 	 * @return List<WorklistItemVO>
 	 */
 	public static List<WorklistItemVO> getBpmTaskListByAuthToken(String token) {
@@ -1566,10 +1567,12 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Redirect to page with msg as optional
+	 * Redirect to page with msg as optional.
 	 * 
 	 * @param page
+	 *            the page
 	 * @param msgKeyId
+	 *            the msg key id
 	 */
 	public static void redirectToPage(String page, String msgKeyId) {
 		FacesContext fc = FacesContext.getCurrentInstance();
