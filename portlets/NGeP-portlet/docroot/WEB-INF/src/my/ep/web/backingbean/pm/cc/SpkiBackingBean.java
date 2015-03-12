@@ -31,11 +31,13 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.digisign.DigiSignReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.logging.LogKey;
@@ -237,8 +239,9 @@ public class SpkiBackingBean {
 
 			default:
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				return "SIGNEDTEXT";
-			}
+//				return "SIGNEDTEXT";
+				throw new EpException(MessageConst.ERROR_776051);
+		}
 			
 		} catch (Exception ex)
 		{
