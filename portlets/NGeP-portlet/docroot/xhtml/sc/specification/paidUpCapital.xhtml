@@ -24,7 +24,7 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
@@ -60,7 +60,8 @@
 		</p:panel>
 		<p:spacer height="75"></p:spacer>
 		<p:panel id="financialPaidUpCapitalScore"
-			header="Scoring For Paid Up Capital" toggleable="true">
+			header="Scoring For Paid Up Capital" toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
 					<td><p:outputLabel

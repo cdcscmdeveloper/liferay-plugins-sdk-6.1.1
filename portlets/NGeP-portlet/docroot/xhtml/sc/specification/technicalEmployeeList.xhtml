@@ -22,7 +22,7 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
@@ -86,7 +86,8 @@
 		</table>
 		<p:spacer height="75"></p:spacer>
 		<p:panel id="technicalStaffListScoring"
-			header="#{lbl['lbl.sc.spec.score.tot.tech.staff']}" toggleable="true">
+			header="#{lbl['lbl.sc.spec.score.tot.tech.staff']}" toggleable="true"
+			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -107,7 +108,7 @@
 							for="techNoOfEmployeeAutoScore" display="icon"></p:message></td>
 				</tr>
 			</table>
-<p:spacer height="5"></p:spacer>
+			<p:spacer height="5"></p:spacer>
 			<h:panelGroup id="employeelist">
 				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
