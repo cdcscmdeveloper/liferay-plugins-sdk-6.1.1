@@ -2674,7 +2674,7 @@ public class LOIDetailBackingBean extends
 
 	/**
 	 * Deduction type change.
-	 *
+	 * Deduction Clause will show when deduction type changes
 	 * @param scQtDeduction the sc qt deduction
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
