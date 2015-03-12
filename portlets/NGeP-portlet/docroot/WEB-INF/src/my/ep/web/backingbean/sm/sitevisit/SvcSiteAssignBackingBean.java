@@ -43,6 +43,10 @@ public class SvcSiteAssignBackingBean extends
 
 	}
 
+	/**
+	 * retrieve site visit assignment Info by applId
+	 * and populate on screen
+	 */
 	public void retrieveSiteAssignInfo() {
 		//		this.getManagedBean().setAppId(1257118);
 		//Old Version - Working set
@@ -61,6 +65,10 @@ public class SvcSiteAssignBackingBean extends
 		this.getManagedBean().setSmRemark(new SmRemark());
 	}
 	
+	/**
+	 * set PO Remark and populate
+	 * @param List<SmApplSectionReview> secReviews
+	 */
 	public void setPoRemarkToSVC(List<SmApplSectionReview> secReviews){
 		for(SmApplSectionReview rev : secReviews){
 			if(rev.getRoleType() != null && rev.getRoleType().equalsIgnoreCase(
@@ -70,6 +78,11 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
+	/**
+	 * Submit Site Visi Assignment
+	 * @param String action
+	 * return String
+	 */
 	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
 		
@@ -123,7 +136,11 @@ public class SvcSiteAssignBackingBean extends
 
 	}
 	
-
+	/**
+	 * retrieve the SVO based on supplier type and zone. 
+	 * Populate the SVO List on screen for SVC to pick up
+	 * @param SmAppl smAppl - SmAppl Object
+	 */
 	private void retrieveSVOList(SmAppl smAppl){
 		SiteAssignReqDTO userListReqDTO = new SiteAssignReqDTO();
 		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance().getServiceObject("sm", ISiteAssignSO.class);
@@ -142,6 +159,9 @@ public class SvcSiteAssignBackingBean extends
 		this.getManagedBean().setSvoUserList(new DualListModel<PmUser>(this.getManagedBean().getSourceSVO(), this.getManagedBean().getSelectedSVO()));
 	}
 	
+	/**
+	 * Validation - to ensure at least 2 SVO being selected
+	 */
 	public void validateForm(){
 		if(this.getManagedBean().getSvoUserList().getTarget().size() < 2){
 			throw new EpException(MessageConst.ERROR_721201);
@@ -150,6 +170,10 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
+	/**
+	 * Navigation to Acknowledgement page
+	 * @return
+	 */
 	public String navigateToAck(){
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721103,
 		MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -163,17 +187,26 @@ public class SvcSiteAssignBackingBean extends
 		return facesScopes;
 	}
 	
+	/**
+	 * get Supplier Application Type Description
+	 * @param String applType - application type
+	 * @return String
+	 */
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
 
 	//for local testing purpose
-	public void preRenderView(){
+/*	public void preRenderView(){
 		if(this.getManagedBean().getSmSvTask() == null){
 			retrieveSiteAssignInfo();
 		}
-	}
+	}*/
 	
+	/**
+	 * to get User Role - SVC
+	 * @return String
+	 */
 	private String getUserRole() {		
 		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()))
 			return RoleCode.UPS_SVC.value();		
