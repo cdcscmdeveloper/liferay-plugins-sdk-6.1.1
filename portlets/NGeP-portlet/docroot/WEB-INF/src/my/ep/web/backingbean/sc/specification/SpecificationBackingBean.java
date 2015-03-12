@@ -14376,9 +14376,9 @@ public class SpecificationBackingBean extends
 							.getParameterCode())))) {
 			StatusReqDTO statusreq = new StatusReqDTO();
 			if (list.isScoringReq()) {
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-			} else if (!list.isScoringReq()) {
 				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			} else if (!list.isScoringReq()) {
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
 			}
 			StatusResDTO statusres = statussO
 					.retrieveStatusByStatusId(statusreq);
@@ -14411,9 +14411,9 @@ public class SpecificationBackingBean extends
 								.getParameterCode())) {
 			StatusReqDTO statusreq = new StatusReqDTO();
 			if (list.isScoringReq()) {
-				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-			} else if (!list.isScoringReq()) {
 				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+			} else if (!list.isScoringReq()) {
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
 			}
 			StatusResDTO statusres = statussO
 					.retrieveStatusByStatusId(statusreq);
