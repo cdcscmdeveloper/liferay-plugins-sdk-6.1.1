@@ -107,7 +107,7 @@
 			   <p:selectOneMenu id="signer" style="width:310px" label="#{lbl['lbl.ct.loa.signer']}"
 			        disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
 			       value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
-				   <f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}" />
+				   <f:selectItems value="#{amendmentBackingBean.getContractSignerDropdown()}" />
 				   <p:ajax event="change" partialSubmit="true" process="@this" update="signer" 
 				   	listener="#{amendmentBackingBean.contractSignerChange()}" />
 		     	</p:selectOneMenu>
