@@ -4710,6 +4710,13 @@ public class SmApplicationUtil {
 		return isAlreadyActivate;
 	}
 
+	/**
+	 * Retrieve pm state list.
+	 * 
+	 * @param countryId
+	 *            - long country id
+	 * @return the List<PmState>
+	 */
 	public static List<PmState> retrievePmStateList(long countryId) {
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(countryId);
@@ -4719,6 +4726,14 @@ public class SmApplicationUtil {
 		return resDTO.getStateList();
 	}
 
+	/**
+	 * Sets the pm state dropdown values for basic information panel.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @param countryId
+	 *            - Long countryId
+	 */
 	public static void setPmStateDropdownValuesForBasicInfo(
 			SmApplicationManagedBean managedBean, Long countryId) {
 
