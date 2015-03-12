@@ -121,6 +121,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
+	/**
+	 * sort Site visit address by site visit template
+	 */
 	private void populateSmSvAddresses(){
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
@@ -200,11 +203,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * @deprecated
+	 * set the selectedSvTemplate Address
+	 */
 	private void setSelectedSvTemplateAddresses(String templateType){
 		List<SmSvAddress> selectedAddress = getManagedBean().getSmSvAddressMap().get(templateType);
 		getManagedBean().getSmSvTask().setSmSvAddresses(selectedAddress);
 	}
 	
+	/**
+	 * set the selectedSmSvFacility by template type
+	 * @param templateType
+	 */
 	private void setSelectedSmSvFacility(String templateType){
 		log.info("*******setSelectedSmSvFacility*********");
 		SmFacility smFacility = getManagedBean().getSmSvFacilityMap().get(templateType);
@@ -251,6 +262,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * retrieve Site Visit Task info
+	 * @param viewMode
+	 */
 	public void retrieveSiteVisitInfo(String viewMode){
 		//this.getManagedBean().setAppId(1257118);
 		//this.getManagedBean().setAppId(1257442);
@@ -358,6 +373,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * Report Preview by category Type
+	 * @param catType
+	 */
 	public void rptPreview(String catType){
 		log.info("-------rpt--------" + catType);
 		this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
@@ -401,6 +420,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//log.info("---svTemplate selected ADD----------" + this.getManagedBean().getSelectedSvTemplate().getSmSvTemplateAddresses().size());
 	}
 	
+	/**
+	 * Change index to control the menu
+	 * @param index
+	 * @param catType
+	 */
 	public void changeActiveIndex(int index,String catType){
 		log.info("*******changeActiveIndex********" + index);
 		this.getManagedBean().setActiveIndex(index);
@@ -473,6 +497,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
+	/**
+	 * add interviewee to the List
+	 */
 	public void addInterviewee(){
 		log.info("*******addInterviewee**********");
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
@@ -484,6 +511,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
+	/**
+	 * remove selected Interviewee
+	 */
 	public void removeInterviewee(){
 		log.info("*******removeInterviewee**********");
 		if(this.getManagedBean().getSelectedInterviewees() != null && this.getManagedBean().getSelectedInterviewees().length > 0){
@@ -496,6 +526,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setSelectedInterviewees(null);
 	}
 	
+	/**
+	 * retrieve and populate the equipment and License/Insurance
+	 * @param svTemplate
+	 * @param catType
+	 */
 	private void prepareEquipmentLicenseInsurance(SmSvTemplate svTemplate, String catType){
 		String strLicenseIns = null;
 		if(catType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
@@ -583,6 +618,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * retrieve and populte financial doc - Manufacturing
+	 * @param svTemplate
+	 */
 	private void prepareFinancialDoc(SmSvTemplate svTemplate){
 		if(svTemplate.getFinancialDocLs() == null){
 			svTemplate.setFinancialDocLs(new ArrayList<SmSvManufacturingDoc>());
@@ -625,6 +664,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 	}	
 	
+	/**
+	 * add new worker to the List
+	 */
 	public void addWorkshopWorker(){
 		log.info("**********addWorkshopWorker*****");
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
@@ -635,6 +677,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		workshopWorkerLs.add(worker);
 	}
 	
+	/**
+	 * remove selected worker from the list
+	 */
 	public void removeWorkshopWorker(){
 		//this.getManagedBean().getSelectedInterviewees() != null && 
 		log.info("**********removeWorkshopWorker*****" + this.getManagedBean().getSelectedWorkers().length);
@@ -647,6 +692,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setSelectedWorkers(null);
 	}
 	
+	/**
+	 * add new financialDoc to the List
+	 */
 	public void addFinancialDoc(){
 		log.info("**********addFinancialDoc*****");
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
@@ -658,6 +706,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
+	/**
+	 * remove financialDoc from the List
+	 */
 	public void removeFinancialDoc(){
 		//l && 
 		log.info("**********removeFinancialDoc*****");
@@ -672,16 +723,30 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * get FacesScopes 
+	 * @return FacesScopes
+	 */
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
 	
+	/**
+	 * format equity Amount 
+	 * @param equityAmount
+	 * @return
+	 */
 	private String formatEquity(BigDecimal equityAmount) {
 		DecimalFormat formatter = new DecimalFormat("###,##0.00");
 		return formatter.format(equityAmount);
 	}
 	
+	/**
+	 * calculate Equity Percentage
+	 * @param equityAmt
+	 * @return String
+	 */
 	public String calculateEquityPercentage(String equityAmt){
 		double eqAmt =  (equityAmt == null || equityAmt == "" ? new Double(0) : new Double(equityAmt));
 		double paidUpCapital = this.getManagedBean().getSmSvTask().getSmAppl().getSmCompanyBasic().getPaidUpCapital().doubleValue();
@@ -694,12 +759,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
-	public void preRenderView(){
+	//Local testing
+	/*public void preRenderView(){
 		if(this.getManagedBean().getSmSvTask() == null){
 			retrieveSiteVisitInfo("");
 		}
-	}
+	}*/
 	
+	/**
+	 * get Total BOD, Mgmt Worker and Equity Owner
+	 */
 	public void getTotalBODMgmtWorkerEquityOwner(){
 		int ttlBOD = 0, ttlMgmt = 0, ttlWorker = 0, ttlEquityOwner = 0;
 		int dirBumi = 0, dirNonBumi = 0, dirNonMalaysian = 0;
@@ -790,6 +859,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 	}
 
+	/**
+	 * calculate percentage of Director
+	 * @param dirNo
+	 * @return BigDecimal
+	 */
 	public BigDecimal calculateDirectorPercentage(int dirNo){
 		BigDecimal convertedDirNo = new BigDecimal(dirNo);
 		BigDecimal ttlDirector = new BigDecimal(this.getManagedBean().getTotalBOD());
@@ -803,6 +877,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return percentage;
 	}
 
+	/**
+	 * calculate percentage of Management
+	 * @param mgmtNo
+	 * @return BigDecimal
+	 */
 	public BigDecimal calculateMgmtPercentage(int mgmtNo){
 		BigDecimal convertedMgmtNo = new BigDecimal(mgmtNo);
 		BigDecimal ttlMgmt= new BigDecimal(this.getManagedBean().getTotalMgmt());
@@ -817,6 +896,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return percentage;
 	}
 
+	/**
+	 * calculate Percentage of Worker
+	 * @param workerNo
+	 * @return BigDecimal
+	 */
 	public BigDecimal calculateWorkerPercentage(int workerNo){
 		BigDecimal convertedWrkNo = new BigDecimal(workerNo);
 		BigDecimal ttlWorker= new BigDecimal(this.getManagedBean().getTotalWorker());
@@ -830,6 +914,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return percentage;
 	}
 	
+	/**
+	 * calculate  Percentage of ChequeSignatory
+	 * @param chequeSignatory
+	 * @return
+	 */
 	public BigDecimal calculatChequeSignatoryPercentage(int chequeSignatory){
 		BigDecimal convertedCheqNo = new BigDecimal(chequeSignatory);
 		BigDecimal ttlCheqSign= new BigDecimal(this.getManagedBean().getTotalCheqSign());
@@ -843,6 +932,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return percentage;
 	}
 	
+	/**
+	 * @deprecated
+	 * retrieve SmRemark
+	 * @param docType
+	 * @param docNo
+	 * @return SmRemark
+	 */
 	public SmRemark retrieveSmRemark(String docType, Long docNo){
 		ISmRemarksSO reqSO = (ISmRemarksSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRemarksSO.class);
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
@@ -859,6 +955,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return rmk;
 	}
 	
+	/**
+	 * get cheque Signatory Info
+	 */
 	private void chequeSignatoryInfo(){
 		log.info("****cheque signatory**" + this.getManagedBean().getSmSvTask().getSmSvBankInfos().size());
 		int totalChequeSignatory = 0;
@@ -889,6 +988,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setCheqNonMalaysian(cheqNonMalaysian);
 	}
 	
+	/**
+	 * retrieve Printing Accessories by category lvl code
+	 * @param catLvlCode
+	 * @return List<PmParameterDesc>
+	 */
 	private List<PmParameterDesc> retrievePrintingAcc(String catLvlCode){
 		String strParam = null;
 
@@ -929,6 +1033,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return pList;
 	}
 	
+	/**
+	 * add new printing type/ work done to the List
+	 */
 	public void addPrintWork(){
 		SmSvPrintwork printWork = new SmSvPrintwork();
 		printWork.setSmSvTemplate(this.getManagedBean().getSelectedSvTemplate());
@@ -936,6 +1043,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().getSelectedSvTemplate().getSmSvPrintworks().add(printWork);
 	}
 	
+	/**
+	 * add selected printing type/ work done from  the List
+	 */
 	public void removePrintWork(){
 		log.info("---removePrintWork---");
 		if(this.getManagedBean().getSelectedPrintWorks().length > 0){
@@ -945,7 +1055,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
-	
+	/**
+	 * View Site Visit report
+	 */
 	public void viewSiteVisitReport(){
 		//this.getManagedBean().setIndexPageMap(new HashMap<Integer,String>());
 		retrieveSiteVisitInfo("V");
@@ -957,6 +1069,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}*/
 	}
 	
+	/**
+	 * control the menu in review site visit report
+	 * @param index
+	 * @param catType
+	 */
 	public void viewActiveIndex(int index,String catType){
 		this.getManagedBean().setActiveIndex(index);
 		if(catType.length() > 0){
@@ -1000,6 +1117,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * retriev Active CategoryCode
+	 * @param Long applId - application id
+	 * @return List<SmSupplierCategory>
+	 */
 	public List<SmSupplierCategory> retrieveActiveCategoryCode(Long applId){
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		ISupplierSearchSO reqSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
@@ -1010,6 +1132,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return resDTO.getSmSupplierCategoryList();
 	}
 	
+	/**
+	 * retrieve all approved Category code by applId
+	 * @param applId
+	 * @return List<SmSupplierCategory>
+	 */
 	public List<SmSupplierCategory> retrieveAllApprovedCategoryCode(Long applId){
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		ISupplierSearchSO reqSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
@@ -1020,6 +1147,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return resDTO.getSmSupplierCategoryList();
 	}
 	
+	/**
+	 * get supplier application type desc
+	 * @param applType
+	 * @return String
+	 */
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
@@ -1052,6 +1184,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
     	DocumentGenerator.getInstance().generatePdf(os4, dockyard);
 	}*/
 	
+	/**
+	 * download site visit template report in PDF
+	 * @param templateType
+	 * @throws Exception
+	 */
 	public void downloadSiteVisitTemplate(String templateType) throws Exception{
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
         
@@ -1159,6 +1296,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
         }
 	}
 	
+	/**
+	 * Generate Site Visit Template - Cover
+	 * @param svTask
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonSiteVisitCover(SmSvTask svTask) throws Exception{
 		log.info("**********commonSiteVisitCover*************");
 		VelocityContext context = new VelocityContext();
@@ -1187,6 +1330,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	}
 	
+	/**
+	 * Generate Site Visit Template - Preparation Details
+	 * @param svTask
+	 * @param templateType
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonPreparationDetails(SmSvTask svTask, String templateType) throws Exception{
 		log.info("**********commonPreparationDetails*************");
 		String vmPreDetails = "/sm/sitevisit/sv-predetails.vm";
@@ -1222,6 +1372,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 	}
 	
+	/**
+	 * Generate Site Visit Template - Company Info
+	 * @param svTask
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonSiteVisitCompanyInfo(SmSvTask svTask) throws Exception{
 		log.info("**********commonSiteVisitCompanyInfo*************");
 		VelocityContext context = new VelocityContext();
@@ -1271,6 +1427,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return file;
 	}
 	
+	/**
+	 * Generate Site Visit Template -  Section A
+	 * @param svTask
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonSiteVisitSectionA(SmSvTask svTask) throws Exception{
 		VelocityContext context = new VelocityContext();
 		String vmEquity= "/sm/sitevisit/sv-section-a.vm";
@@ -1346,6 +1508,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return file;
 	}
 	
+	/**
+	 * Generate Site Visit Template - Section B
+	 * @param svTask
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonSiteVisitSectionB(SmSvTask svTask) throws Exception{
 		VelocityContext context = new VelocityContext();
 		String vmEquity= "/sm/sitevisit/sv-section-b.vm";
@@ -1387,6 +1555,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return file;
 	}
 	
+	/**
+	 * Generate Site Visit Template - Section C
+	 * @param svTask
+	 * @param templateType
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonSiteVisitSectionC(SmSvTask svTask, String templateType) throws Exception{
 		log.info("commonSiteVisitSectionC..");
 		
@@ -1534,6 +1709,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return file;
 	}
 	
+	/**
+	 * Generate Site Visit Template - Section D
+	 * @param svTask
+	 * @param templateType
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonSiteVisitSectionD(SmSvTask svTask, String templateType) throws Exception{
 		VelocityContext context = new VelocityContext();
 		String vmSectionD = "/sm/sitevisit/sv-section-d.vm";
@@ -1579,6 +1761,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return file;
 	}
 	
+	/**
+	 * Generate Site Visit Template - Section E
+	 * @param svTask
+	 * @param templateType
+	 * @return String
+	 * @throws Exception
+	 */
 	private String commonSiteVisitSectionE(SmSvTask svTask, String templateType) throws Exception{
 		VelocityContext context = new VelocityContext();
 		String vmSectionD = "/sm/sitevisit/sv-section-e.vm";
@@ -1608,6 +1797,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return file;
 	}
 	
+	/**
+	 * Generate Site Visit Template - PDF - Preparation Details
+	 * @param svTask
+	 * @param templateType
+	 * @return String
+	 * @throws Exception
+	 */
 	private String generateToPdf(String vm, VelocityContext context, String fileName) throws Exception{
 		String filePath = tmpPath + fileName;
 		
@@ -1645,10 +1841,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
         outputStream.close();
     }
 
+	/**
+	 * get File
+	 * @return StreamedContent
+	 */
 	public StreamedContent getFile() {
 		return file;
 	}
 
+	/**
+	 * get Template name from Label.properties
+	 * @param templateType
+	 * @return String
+	 */
 	public String getTemplateNameFromLabel(String templateType){
 		Locale locale = new FacesScopes().getUserLocale();
 		
@@ -1657,7 +1862,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return templDesc;
 	}
 	
-	
+	/**
+	 * format address 
+	 * @param smAddress
+	 * @return
+	 */
 	private String getAddressLines(SmAddress smAddress) {
 		StringBuilder address = new StringBuilder();
 		if(smAddress!=null) {
@@ -1683,10 +1892,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return address.toString();
 	}
 	
+	/**
+	 * show confirmation dialog
+	 */
 	public void submitDialogShow(){
 		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show();");
 	}
 	
+	/**
+	 * add new additional machine
+	 */
 	public void addAdditionalMachine(){
 		log.info("-------addAdditionalMachine---------");
 		
@@ -1703,6 +1918,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//svTemplate.getSmSvAdtMachines().add(new SmSvAdtMachine());
 	}
 	
+	/**
+	 * remove selected additional machine from the list
+	 */
 	public void removeAdditionalMachine(){
 		log.info("---removePrintWork---");
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
@@ -1713,6 +1931,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * add Additional Machine To List
+	 */
 	public void addAdditionalMachineToList(){
 		SmSvAdtMachine adtMachine = this.getManagedBean().getSelectedAdtMachine();
 		this.getManagedBean().getSelectedSvTemplate().getSmSvAdtMachines().add(adtMachine);
@@ -1722,16 +1943,26 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setSelectedAdtMachine(new SmSvAdtMachine());
 	}
 	
+	/**
+	 * save Edited AdditionalMachine
+	 */
 	public void saveAdditionalMachine(){
 		log.info("-------saveAdditionalMachine--------");
 		this.getManagedBean().setSelectedAdtMachine(new SmSvAdtMachine());
 	}
 	
+	/**
+	 * edit Additional Machine
+	 * @param SmSvAdtMachine adtMachine
+	 */
 	public void editAdditionalMachine(SmSvAdtMachine adtMachine){
 		this.getManagedBean().setSelectedAdtMachine(adtMachine);
 		this.getManagedBean().getSelectedAdtMachine().setNewMachine(false);
 	}
 
+	/**
+	 * group category for display purpose
+	 */
 	public void groupCategoryCodeByType(){
 		if(this.getManagedBean().getSmSvTask().getSmSvCategories().size() > 0){
 			for(SmSvCategory cat : this.getManagedBean().getSmSvTask().getSmSvCategories()){
@@ -1746,6 +1977,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * retrieve printing accessories from PM
+	 * @param svTemplate
+	 */
 	private void preparePrintingAcc(SmSvTemplate svTemplate){
 		if(this.getManagedBean().getSmSvTask().getSmSvCategories().size() > 0){
 			for(SmSvCategory svCat : this.getManagedBean().getSmSvTask().getSmSvCategories()){
@@ -1797,6 +2032,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * save Site Visit Report
+	 * @param action
+	 * @return String - xhtml
+	 */
 	public String saveSiteVisitReport(String action){
 		log.info("***********saveSiteVisitReport***********");
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
@@ -1919,6 +2159,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * check wheather user has svo role
+	 * @return
+	 */
 	private String getUserRole() {	
 		FacesScopes fs = new FacesScopes();
 		if(fs.hasRoleUser(RoleCode.UPS_SVO.value()))
@@ -1927,6 +2171,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			return null;
 	}
 	
+	/**
+	 * Listener when check the site visit equipment
+	 * @param svEquipment
+	 */
 	public void svEquipmentOnChange(SmSvEquipment svEquipment){
 		//if equipment is unchecked, set the qty to null
 		if(!svEquipment.isEquipmentAvailable()){
@@ -1935,6 +2183,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * enabled otherFloor/ other Environment remarks when user check 'Other'
+	 */
 	public void preLocationFloorEnvOnChange(){
 		//SmSvFacility premiseLocation = t.managedBean.selectedSvTemplate.smSvFacility.
 		SmSvFacility premiseLocation =  this.getManagedBean().getSelectedSvTemplate().getSmSvFacility();
@@ -1948,6 +2199,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * Listener - svo check or unchecked the print machine
+	 * @param printMachine
+	 */
 	public void printMachineSelectOnChange(SmSvPrintmachine printMachine){
 		if(!printMachine.isSelected()){
 			printMachine.setBrand(null);
@@ -1959,10 +2214,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * get formatted address
+	 * @param SmAddress svAddress
+	 * @return String
+	 */
 	public String displayAddress(SmAddress svAddress){
 		return AddressUtils.getAddress(svAddress);
 	}
 
+	/**
+	 * Refresh page - recreate view
+	 */
 	private void refreshPage() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String refreshpage = fc.getViewRoot().getViewId();
@@ -1972,6 +2235,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		fc.setViewRoot(UIV);
 	}
 	
+	/**
+	 * get the Site visit template logo path 
+	 * @return String
+	 */
 	private String getLogoHeaderPath(){
 		StringBuilder path = new StringBuilder();
 		FacesScopes fs = new FacesScopes();
