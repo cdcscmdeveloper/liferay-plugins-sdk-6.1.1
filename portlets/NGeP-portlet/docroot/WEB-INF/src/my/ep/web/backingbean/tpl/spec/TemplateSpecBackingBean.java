@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
@@ -31,6 +32,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
@@ -60,6 +63,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.tpl.spec.TemplateSpecManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -284,6 +288,25 @@ public class TemplateSpecBackingBean extends
 		specMaster.setTemplateTypeCode(new PmParameter());
 		specMaster.setSpecTypeCode(new PmParameter());
 		specMaster.setOrgProfile(new PmOrgProfile());
+		
+		IUserSO userSO = null;
+		try {
+			userSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			UserResDTO resDTO = userSO
+					.retrieveUserOrgListByUserId(reqDTO);
+
+			if (resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size() > 0) {
+				specMaster.setOwnerOrgProfile(resDTO.getUserOrgList().get(0).getPmOrgProfile());
+			}
+			
+		} finally {
+			userSO = null;
+		}
 
 		templateSpecBean.setSpecMaster(specMaster);
 
@@ -1247,6 +1270,15 @@ public class TemplateSpecBackingBean extends
 
 		TemplateSpecHelper.getInstance().updateItemWeightageReq(specMaster,
 				specMaster.getTplSpecQuestions());
+	}
+	
+	/**
+	 * get record status options
+	 * @return SelectItem[] 
+	 */
+	public SelectItem[] getStatusOptions() {
+
+	    return PmCommonUtil.getStatusOptionsDefault();
 	}
 
 	/**
