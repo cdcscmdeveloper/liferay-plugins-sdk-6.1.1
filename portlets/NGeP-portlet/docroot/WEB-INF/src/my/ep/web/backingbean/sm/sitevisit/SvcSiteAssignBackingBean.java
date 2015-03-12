@@ -172,7 +172,7 @@ public class SvcSiteAssignBackingBean extends
 	
 	/**
 	 * Navigation to Acknowledgement page
-	 * @return
+	 * @return String
 	 */
 	public String navigateToAck(){
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721103,
