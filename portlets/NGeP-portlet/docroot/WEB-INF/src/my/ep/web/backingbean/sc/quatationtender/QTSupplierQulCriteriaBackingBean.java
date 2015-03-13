@@ -256,20 +256,21 @@ public class QTSupplierQulCriteriaBackingBean extends
 	/**
 	 * To add empty row to Restricted Tender Category Code data table.
 	 */
-	public void addNewRestrictedCategoryAction() {
+	public void addNewRestrictedCategoryAction(PmCategoryL3 pmCategoryL3) {
 		debugLogger("addNewRestrictedCategoryAction");
 		List<ScQtCategory> scQtCategories = this.getManagedBean()
 				.getSuppCriteriarestrictedList();
 		if (scQtCategories == null) {
 			scQtCategories = new ArrayList<ScQtCategory>();
 		}
+		
+		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
 		ScQtCategory category = new ScQtCategory();
 		//category.setScQt(this.getManagedBean().getQt());
-		category.setPmCategoryL1(new PmCategoryL1());
-		category.setPmCategoryL2(new PmCategoryL2());
-		category.setPmCategoryL3(new PmCategoryL3());
+		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
+		category.setPmCategoryL2(pmCategoryL2);
+		category.setPmCategoryL3(pmCategoryL3);
 		scQtCategories.add(category);
-		this.getManagedBean().setSuppCriteriarestrictedList(scQtCategories);
 	}
 
 	/**
