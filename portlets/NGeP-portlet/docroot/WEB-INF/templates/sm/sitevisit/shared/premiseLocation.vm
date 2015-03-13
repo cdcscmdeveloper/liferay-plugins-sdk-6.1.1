@@ -25,6 +25,10 @@
 		<td class="txtBold" width="40%">Enclosed Square Feet/Meter</td>
 	</tr>
 	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">Enclosed Capacity Feet/Meter</td>
+	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold">Floor</td>
