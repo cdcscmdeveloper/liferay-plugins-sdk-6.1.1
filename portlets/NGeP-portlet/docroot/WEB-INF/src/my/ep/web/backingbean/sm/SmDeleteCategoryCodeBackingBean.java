@@ -35,6 +35,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 
+// TODO: Auto-generated Javadoc
 @ManagedBean(name = "deleteCategoryCodeBB")
 @RequestScoped
 public class SmDeleteCategoryCodeBackingBean extends
@@ -43,6 +44,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 	public static Logger log = Logger
 			.getLogger(SmDeleteCategoryCodeBackingBean.class);
 
+	/**
+	 * Instantiates a new sm delete category code backing bean.
+	 */
 	public SmDeleteCategoryCodeBackingBean() {
 	}
 
@@ -51,6 +55,12 @@ public class SmDeleteCategoryCodeBackingBean extends
 	// log.info(" **** EXCUTE ON LOAD EVENT **********");
 	// }
 
+	/**
+	 * Gets the list of registered category codes and assigns to the managed
+	 * bean list.
+	 * 
+	 * @return String - navigation page.
+	 */
 	public String getRegCategoryCodes() {
 		SmSupplier smApplSupplier = null;
 		String retView = "";
@@ -91,6 +101,10 @@ public class SmDeleteCategoryCodeBackingBean extends
 		return retView;
 	}
 
+	/**
+	 * Filter the list of categories in the SmAppl and Assign active category
+	 * list to the managed bean.
+	 */
 	public void assignActiveCategoryList() {
 		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -107,10 +121,24 @@ public class SmDeleteCategoryCodeBackingBean extends
 		getManagedBean().setActiveCategoryList(catList);
 	}
 
+	/**
+	 * Sample test.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	@Deprecated
 	public void sampleTest(ComponentSystemEvent event) {
 		log.info(" **** EXCUTE ON LOAD EVENT **********");
 	}
 
+	/**
+	 * Ajax function called when a row selected in the data table , to manage
+	 * the selected records for enable or disable of remarks text area.
+	 * 
+	 * @param event
+	 *            - SelectEvent
+	 */
 	public void onRowSelect(SelectEvent event) {
 		log.info("*********** Enterd THE RoW SELECT METHOD ***********"
 				+ getManagedBean().getSelectedCategories().size());
@@ -118,6 +146,13 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
+	/**
+	 * Ajax function called when a toggle selection in the data table , to
+	 * manage the selected records for enable or disable of remarks text area.
+	 * 
+	 * @param event
+	 *            - SelectEvent
+	 */
 	public void onToggleSelect(ToggleSelectEvent event) {
 		log.info("*********** On Select or Unslect all ***********"
 				+ getManagedBean().getSelectedCategories().size());
@@ -125,6 +160,13 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
+	/**
+	 * Ajax function called when a row is unselected in the data table , to
+	 * manage the selected records for enable or disable of remarks text area.
+	 * 
+	 * @param event
+	 *            - SelectEvent
+	 */
 	public void onRowUnSelect(UnselectEvent event) {
 		log.info("*********** Enterd THE RoW UN SELECT METHOD ***********"
 				+ getManagedBean().getSelectedCategories().size());
@@ -132,6 +174,10 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
+	/**
+	 * Internal method called on row select/ unselect to manage list selected
+	 * records.
+	 */
 	private void manageSelectedRecords() {
 		if (getManagedBean().getSelectedCategories().size() != 0) {
 			for (int i = 0; i < getManagedBean().getSmAppl()
@@ -171,6 +217,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete selected category codes for the SmAppl object in the managed bean.
+	 */
 	public void deleteSelectedCatCodes() {
 		try {
 			int delListSize = getManagedBean().getSelectedCategories().size();
@@ -232,6 +281,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
+	/**
+	 * Update SmAppl object in the managed bean.
+	 */
 	private void updateSmAppl() {
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
@@ -251,6 +303,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
+	/**
+	 * Retrive latest SmAppl after updates.
+	 */
 	private void retriveLatestApplAfterUpdate() {
 
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -272,6 +327,11 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
+	/**
+	 * Gets the current supplier based on the logged in user details.
+	 * 
+	 * @return supplier - SmSupplier
+	 */
 	private SmSupplier getCurrentSupplier() {
 		SmSupplier smSupp = new SmSupplier();
 		try {
@@ -293,6 +353,14 @@ public class SmDeleteCategoryCodeBackingBean extends
 		return smSupp;
 	}
 
+	/**
+	 * Check if the supplier is allowed to proceed for deletion of records
+	 * (Checking on any active / draft application in progress for the
+	 * supplier).
+	 * 
+	 * @param smSupplier
+	 *            - SmSupplier
+	 */
 	private void checkIsAllowedToProceed(SmSupplier smSupplier) {
 		boolean cannotProceedAlertMsg = false;
 		// check if can proceed
