@@ -42,6 +42,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String contractNo;
 	private String contractName;
 	private String originalAccountNo;
+	private String curentAccNoBankName;
 	private String factoringBankName;
 	private String accBankName;
 	private String factoringBankAddress;
@@ -636,4 +637,20 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
+
+	/**
+	 * @return the curentAccNoBankName
+	 */
+	public String getCurentAccNoBankName() {
+		return curentAccNoBankName;
+	}
+
+	/**
+	 * @param pmDigiSign the curentAccNoBankName to set
+	 */
+	public void setCurentAccNoBankName(String curentAccNoBankName) {
+		this.curentAccNoBankName = curentAccNoBankName;
+	}
+	
+	
 }
