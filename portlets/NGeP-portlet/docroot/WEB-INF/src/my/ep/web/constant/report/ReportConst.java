@@ -717,6 +717,15 @@ public class ReportConst {
 	public static final String EXT_MEASUREMENT="Measurement";
 	public static final String EXT_COLOUR="Colour";
 	public static final String ROLE_CODE_SUP="SUP";
+	public static final String ROLE_CODE_MIN_CONTRACT_ADMIN="MIN_CONTRACT_ADMIN";
+	public static final String ROLE_CODE_BPK_CCA="BPK_CCA";
+	public static final String ROLE_CODE_BPK_PCA="BPK_PCA";
+	public static final String ROLE_CODE_REQUISITIONER="REQUISITIONER";
+	public static final String ROLE_CODE_APPROVER="APPROVER";
+	public static final String ROLE_CODE_FL_APPROVER="FL_APPROVER";
+	public static final String ROLE_CODE_CT_APPROVER="CT_APPROVER";
+	public static final String ROLE_CODE_RN_APPROVER="RN_APPROVER";
+	public static final String ROLE_CODE_RECEIVING_OFFICER="RECEIVING_OFFICER";
 	
 	//ERROR N EXCEPTIONS
 	public static final String ERR_999000_MORTHAN_TEN= "lbl.rpt.ERR_999000_MORTHAN_TEN";
