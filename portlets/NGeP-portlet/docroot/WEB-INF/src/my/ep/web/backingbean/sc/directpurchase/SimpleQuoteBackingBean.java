@@ -3586,7 +3586,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList());
 			}
-
+			// hide loader
+			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+			
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
