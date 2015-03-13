@@ -70,6 +70,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	@ManagedProperty(value="#{paymentBean}")
 	private PaymentBean paymentBean;
 	
+	/**
+	 * Construct and initialized PaymentBackingBean
+	 */
 	public PaymentBackingBean(){
 		this.getManagedBean().setCountry("MY");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -115,6 +118,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		this.vCode = vCode;
 	}
 	
+	/**
+	 * Set payment item description
+	 */
 	public void retrievePaymentItem(){
 		List<PmParameterDesc> pmParameterDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.PM_PAYMENT_ITEM, new FacesScopes().getUserLocale().getLanguage());
 		supplierPaymentItemMap = new HashMap<String, PmParameterDesc>();
@@ -128,6 +134,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 
 	}
 
+	/**
+	 * Retrieve bill by application id from task list
+	 */
 	public void retrieveBillInfo(){
 		/*
 		 * for testing Purpose
@@ -183,23 +192,41 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 	}
 	
-	public void proceedToItemList(List<SmBillDtl> smBillDtlLs){
-		for(SmBillDtl billDtl : smBillDtlLs){
-			if(billDtl.getPmParameter().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)){
+	/**
+	 * Set item list based on bill type and redirect to payment page. ie:Softcert payment, processing fee and registration fee
+	 * @param List<SmBillDtl> smBillDtlLs
+	 */
+	public void proceedToItemList(List<SmBillDtl> smBillDtlLs) {
+		getManagedBean().setSoftcertPayment(false);
+		this.getManagedBean().setDefaultCertPaymentMap(
+				new HashMap<Long, SmBillDtl>());
+		for (SmBillDtl billDtl : smBillDtlLs) {
+			if (billDtl.getPmParameter().getParameterCode()
+					.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
 				getManagedBean().setSoftcertPayment(true);
-			}else{
+				this.getManagedBean()
+						.getDefaultCertPaymentMap()
+						.put(billDtl.getSmPersonnel().getPersonnelId(), billDtl);
+			} else {
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-		
-		if(getManagedBean().isSoftcertPayment()){
+
+		if (getManagedBean().isSoftcertPayment()) {
 			setBilledSoftCertPersonnels(smBillDtlLs);
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/portletViewMode.xhtml");
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"/xhtml/sm/payment/portletViewMode.xhtml");
 	}
 	
+	/**
+	 * Set selected item to be paid and redirect to payment summary page
+	 * @return String
+	 */
 	public String proceedToPaymentSummary(){
 		log.debug("****proceedToPaymentSummary****");
 
@@ -241,6 +268,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return "paymentSummary";
 	}
 	
+	/**
+	 * Create and update payment,bill,personnel and call payment gateway
+	 * @return String
+	 */
 	public String submitPayment(){
 		log.debug("********submitPayment******");
 		if(this.getManagedBean().getSmBill() != null){
@@ -344,6 +375,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return "";
 	}
 	
+	/**
+	 * Payment gateway processing and response status
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
 	public void responsePreRender() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 			
 		PortletRequest pr = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("javax.portlet.request");
@@ -531,6 +570,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 
 	}
 	
+	/**
+	 * Redirect back from payment summary page to payment information page
+	 * @return String
+	 */
+	public String back() {
+		return "portletViewMode.xhtml";
+	}
+	
 	private void curlIPN(HttpServletRequest httpServletRequest) throws Exception{
 		Enumeration<String> resParameters = httpServletRequest.getParameterNames();
 		//List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -607,6 +654,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return result;
 	}*/
 	
+	/**
+	 * Get payment mode list for drop down
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> getPaymentModeDropDown(){
     	List<SelectItem> list = new ArrayList<SelectItem>();
 		SelectItem[] items = getDropdownCodeValues(SupplierManagementConst.PM_PAYMENT_MODE);
@@ -618,6 +669,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return list;
     }
 	
+	/**
+	 * Get payment gateway response status
+	 * @param String status
+	 * @param Long paymentId
+	 */
 	public void showPaymentResponse(String status, Long paymentId){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		boolean paymentStatus = false;
@@ -665,6 +721,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return facesScopes;
 	}
 	
+	/**
+	 * Create and update payment,bill,personnel and redirect to success page
+	 */
 	public void tempPaymentSuccess(){
 		log.info("********submitPayment******");
 		if(this.getManagedBean().getSmBill() != null){
@@ -816,6 +875,11 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return null;*/
 	}
 	
+	/**
+	 * Get bill item description
+	 * @param PmParameter pmParameter
+	 * @return String
+	 */
 	public String getBillItemDescByLanguage(PmParameter pmParameter){
 		String desc = "";
 		
@@ -836,30 +900,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return desc;
 	}
 	
+	/**
+	 * Set softcert personnel list from bill
+	 * @param List<SmBillDtl> smBillDtlLs
+	 */
 	private void setBilledSoftCertPersonnels(List<SmBillDtl> smBillDtlLs) {
-		ArrayList<SmPersonnel> billDtlLs = new ArrayList<SmPersonnel>();
-		this.getManagedBean().setDefaultCertPaymentMap(
-				new HashMap<Long, SmBillDtl>());
-		for (SmBillDtl billDtl : smBillDtlLs) {
-			if (billDtl.getPmParameter().getParameterCode()
-					.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
-				billDtlLs.add(billDtl.getSmPersonnel());
-				this.getManagedBean()
-						.getDefaultCertPaymentMap()
-						.put(billDtl.getSmPersonnel().getPersonnelId(), billDtl);
-			}
-		}
-		this.getManagedBean().setSelectedSoftCertLs(
-				billDtlLs.toArray(new SmPersonnel[billDtlLs.size()]));
-		if (this.getManagedBean().getSelectedSoftCertLs() != null
-				&& this.getManagedBean().getSelectedSoftCertLs().length > 0) {
-			this.getManagedBean().setSoftCertReqPersonnels(
-					new ArrayList<SmPersonnel>());
-			for (SmBillDtl billedPersonnel : smBillDtlLs) {
-				if (billedPersonnel.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
-					this.getManagedBean().getSoftCertReqPersonnels()
-							.add(billedPersonnel.getSmPersonnel());
-				}
+		this.getManagedBean().setSelectedSoftCertLs(new SmPersonnel[0]);
+		this.getManagedBean().setSoftCertReqPersonnels(
+				new ArrayList<SmPersonnel>());
+		for (SmBillDtl billedPersonnel : smBillDtlLs) {
+			if (billedPersonnel.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ) {
+				this.getManagedBean().getSoftCertReqPersonnels()
+						.add(billedPersonnel.getSmPersonnel());
 			}
 		}
 	}
