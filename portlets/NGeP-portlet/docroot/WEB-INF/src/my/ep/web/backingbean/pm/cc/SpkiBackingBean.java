@@ -225,6 +225,8 @@ public class SpkiBackingBean {
 			System.out.println("SIGN" + getChallengeQues1() + getChallengeAns1() + getPassword());
 			// Request service to signData based on the answered challenges and data 
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823108979","eP-1008N0001", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			
+			
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -235,13 +237,16 @@ public class SpkiBackingBean {
 //				fos.flush();
 //				fos.close();
 //				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
+				
+				
 				signedData = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
 				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				break;
 
 			default:
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				throw new EpException(MessageConst.ERROR_776052);
+				//throw new EpException(MessageConst.ERROR_776052);
+				signedData = "DEFAULT SIGNED TEXT";
 		}
 			
 		} catch (Exception ex)
