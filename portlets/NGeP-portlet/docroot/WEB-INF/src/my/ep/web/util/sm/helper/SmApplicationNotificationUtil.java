@@ -11,10 +11,20 @@ import my.ep.web.util.DateUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
 public class SmApplicationNotificationUtil {
 	private static Logger log = Logger
 			.getLogger(SmApplicationNotificationUtil.class);
 
+	/**
+	 * Sets the approval notification parameters to be set in the
+	 * ReviewApplicationDTO and pass it to the SO level.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean
+	 * @param reqDTO
+	 *            - ReviewApplicationReqDTO
+	 */
 	public static void setApprovalNotificationParameters(
 			SmApplicationManagedBean managedBean, ReviewApplicationReqDTO reqDTO) {
 		reqDTO.setBusinessRegNo(managedBean.getSmSupplier().getRegNo());
@@ -50,6 +60,15 @@ public class SmApplicationNotificationUtil {
 
 	}
 
+	/**
+	 * Sets the rejection notification parameters to be set in the
+	 * ReviewApplicationDTO and pass it to the SO level.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean
+	 * @param reqDTO
+	 *            - ReviewApplicationReqDTO
+	 */
 	public static void setRejectionNotificationParameters(
 			SmApplicationManagedBean managedBean, ReviewApplicationReqDTO reqDTO) {
 		if (managedBean.getSmAppl().getApplType()
@@ -77,6 +96,15 @@ public class SmApplicationNotificationUtil {
 
 	}
 
+	/**
+	 * Set the tabular message for cancel registration message for
+	 * notification.This will be passed as a parameter for approval notification
+	 * of Cancel Registration with MOF
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean
+	 * @return String - notification message or table content
+	 */
 	public static String retriveCancelRegistrationMessageForNotification(
 			SmApplicationManagedBean managedBean) {
 		StringBuffer sb = new StringBuffer();
@@ -146,6 +174,15 @@ public class SmApplicationNotificationUtil {
 
 	}
 
+	/**
+	 * Set the tabular message for approval of registration or maintenance
+	 * application.This will be passed as a parameter for approval notification
+	 * of registration or maintenance application.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean
+	 * @return String - notification message or table content
+	 */
 	public static String retriveCategoryMessageForNotification(
 			SmApplicationManagedBean managedBean) {
 		StringBuffer approvedCatCodes = new StringBuffer();
