@@ -101,6 +101,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */	
 	public String createBusinessNature() {
 		debugLogger("createBusinessNature");
+		getManagedBean().setNewcategory(true);
 		PmBusinessNature pmBusinessNature = new PmBusinessNature();
 		pmBusinessNature.setBusinessLevel("10");
 
@@ -494,6 +495,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 * get business nature info into maintenance page
 	 */
 	public String goToBusinessMaintaincePage(PmBusinessNature pmBusinessNature) {
+		getManagedBean().setNewcategory(false);
 		debugLogger("goToBusinessMaintaincePage");
 		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
 		try{
