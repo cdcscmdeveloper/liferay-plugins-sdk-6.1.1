@@ -347,7 +347,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void filterSearchResults(List<VFlDocument> searchResultList){
 		IFulfilmentDocumentSO flDocumentSO  = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
-		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
@@ -380,8 +380,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 							}	
 							if(isUpdate || isCancel) {
 								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
-									reqDTO.setFulfilmentNoteId(docsearchResult.getDocId());
-									resDTO = receivedNoteSO.isReceivingOfficerForDeliveryAddress(reqDTO);
+									reqDTO.setFulfilmentOrderId(orderInfo.getOrderId());
+									resDTO = fulfilmentOrderSO.isSelectedApproverForOrder(reqDTO);
 								}
 							}
 							if(isUpdate){
@@ -447,7 +447,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
 										if(isFlFulfilmentRecevingOfficer()) {
-											orderInfo.setRole( RoleCode.RECEIVING_OFFICER.value());
+											orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
+										} else if(isFlFulfilmentApprover()) {
+											orderInfo.setRole(RoleCode.FL_APPROVER.value());
 										}
 									}
 								}
