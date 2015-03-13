@@ -10,11 +10,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
@@ -25,9 +23,9 @@ import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -71,8 +69,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		reqDTO.setTaskId(taskId);
 		reqDTO.setToken(token);
 
-		BpmResponseDTO resDTO = (BpmResponseDTO) getPersonnelSO()
-				.getBPMTaskDetails(reqDTO);
+		BpmResponseDTO resDTO = (BpmResponseDTO) SmServiceLookup
+				.getPersonnelSO().getBPMTaskDetails(reqDTO);
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 		if (resDTO.getTaskName().equalsIgnoreCase("Make Payment")) {
 			Object bpmObj = new Object();
@@ -106,8 +104,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	public void getPersonnelByPmUser(PmUser usr) {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
-		PersonnelResDTO resDTO = getPersonnelSO().retrievePersonnelByUserId(
-				reqDTO);
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelByUserId(reqDTO);
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
 		this.getManagedBean().setLoginUserPersonnelInfo(smPersonnel);
 	}
@@ -188,7 +186,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					.getSoftCertBpmTask().getTaskId());
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
-			resDTO = getPersonnelSO().updatePersonnelAndRequestSoftCert(reqDTO);
+			resDTO = SmServiceLookup.getPersonnelSO()
+					.updatePersonnelAndRequestSoftCert(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				String msgKey = MessageConst.INFO_721060;
@@ -288,7 +287,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		reqDTO.setApplId(getManagedBean().getLoginUserPersonnelInfo()
 				.getSmAppl().getApplId());
 		getManagedBean().setAuthorizedPersonnels(new ArrayList<SmPersonnel>());
-		List<SmPersonnel> personnelList = getPersonnelSO()
+		List<SmPersonnel> personnelList = SmServiceLookup.getPersonnelSO()
 				.retrievePersonnelByApplIdForSoftCert(reqDTO)
 				.getSmPersonnelList();
 		if (personnelList != null && !personnelList.isEmpty()) {
@@ -340,13 +339,4 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		return finalPayPersonnels;
 	}
 
-	/**
-	 * Get IPersonnelSO
-	 * 
-	 * @return IPersonnelSO
-	 */
-	private IPersonnelSO getPersonnelSO() {
-		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-	}
 }

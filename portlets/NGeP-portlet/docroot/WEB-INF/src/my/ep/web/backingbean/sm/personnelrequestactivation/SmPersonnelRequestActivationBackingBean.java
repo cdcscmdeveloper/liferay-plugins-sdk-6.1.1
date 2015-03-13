@@ -7,18 +7,16 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.springframework.util.CollectionUtils;
 
@@ -50,20 +48,10 @@ public class SmPersonnelRequestActivationBackingBean {
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setSmPersonnelList(selectedExpiredActivationPersonnels);
-		getPersonnelSO().resendPersonnelActivationEmail(reqDTO);
+		SmServiceLookup.getPersonnelSO().resendPersonnelActivationEmail(reqDTO);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/userProfileMaintenance/outputMsg",
 				MessageConst.INFO_721028);
-	}
-
-	/**
-	 * Get IPersonnelSO
-	 * 
-	 * @return IPersonnelSO
-	 */
-	public IPersonnelSO getPersonnelSO() {
-		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 	}
 
 	/**
@@ -72,7 +60,7 @@ public class SmPersonnelRequestActivationBackingBean {
 	private void initExpiredPersonnels() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
-		PersonnelResDTO resDTO = getPersonnelSO()
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrieveExpiredPendingActivationApprovedPersonnels(reqDTO);
 		if (resDTO.getSmPersonnelList() != null
 				&& !resDTO.getSmPersonnelList().isEmpty()) {

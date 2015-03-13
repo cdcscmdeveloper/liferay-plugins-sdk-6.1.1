@@ -11,12 +11,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -31,15 +26,14 @@ import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,7 +76,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setEstDate(getManagedBean().getReactivateBasic()
 				.getEstablishDate());
 		getManagedBean().setSmSupplier(
-				getSupplierSO()
+				SmServiceLookup
+						.getSupplierSearchSO()
 						.retrieveSuppProfileAndPersonnelsByBussRegNoAndEstDate(
 								reqDTO).getSmSupplier());
 
@@ -105,8 +100,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 						.getNewIdentificationType());
 		getManagedBean().getNewAdmin().setIdentificationNo(
 				getManagedBean().getReactivateBasic().getNewIdentificationNo());
-		PersonnelResDTO resDto = getPersonnelSO().replaceAdminWithNewPersonnel(
-				getReqDTO());
+		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
+				.replaceAdminWithNewPersonnel(getReqDTO());
 		redirectToSuccessPage(resDto);
 	}
 
@@ -114,8 +109,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Replace admin with existing personnel and redirect to success page
 	 */
 	public void replaceWithExistingUser() {
-		PersonnelResDTO resDto = getPersonnelSO().reassignNewSupplierAdmin(
-				getReqDTO());
+		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
+				.reassignNewSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);
 	}
 
@@ -317,10 +312,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Initialize list of country
 	 */
 	private void initCountries() {
-		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryResDTO resDTO = countrySO.retrieveCountryList();
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryList();
 		List<SelectItem> countryList = new ArrayList<SelectItem>();
 		SelectItem si = null;
 		for (PmCountry country : resDTO.getCountryList()) {
@@ -481,34 +474,4 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
-	/**
-	 * Get IPersonnelSO
-	 * 
-	 * @return IPersonnelSO
-	 */
-	public IPersonnelSO getPersonnelSO() {
-		return (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-	}
-
-	/**
-	 * Get ISupplierSearchSO
-	 * 
-	 * @return ISupplierSearchSO
-	 */
-	public ISupplierSearchSO getSupplierSO() {
-		return (ISupplierSearchSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierSearchSO.class);
-	}
-
-	/**
-	 * Get IBpmSO
-	 * 
-	 * @return IBpmSO
-	 */
-	public IBpmSO getBpmSO() {
-		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
-				IBpmSO.class);
-	}
 }
