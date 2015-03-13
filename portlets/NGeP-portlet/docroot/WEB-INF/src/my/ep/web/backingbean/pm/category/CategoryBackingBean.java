@@ -1211,8 +1211,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			List<PmParameterDesc> listOfPmParameterDesc=new ArrayList<PmParameterDesc>();
 			reqDTO.setParameterType("ST");
 			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-			this.getManagedBean().setSupplierType(resDTO.getParameterDescList());
-			
+			resDTO.getParameterDescList().remove(2);
+			this.getManagedBean().setSupplierType(resDTO.getParameterDescList());			
 			reqDTO.setParameterType("CAT");
 			resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
 			if(reqDTO.getParameterType().equals("CAT")){
