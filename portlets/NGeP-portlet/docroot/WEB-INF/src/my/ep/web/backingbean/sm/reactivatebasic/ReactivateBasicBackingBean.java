@@ -4,17 +4,15 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 @ManagedBean(name = "reactivateBasicBackingBean")
@@ -45,12 +43,9 @@ public class ReactivateBasicBackingBean extends
 		reqDTO.setEstablishDate(reactivateBasic.getEstablishDate());
 		reqDTO.setRegNo(reactivateBasic.getRegNo());
 
-		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IRegistrationSO.class);
 		try {
-			RegistrationResDTO resDTO = reqSO.reactivateBasicAccount(reqDTO);
+			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
+					.reactivateBasicAccount(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				SmCommonUtil.redirectToPage(
