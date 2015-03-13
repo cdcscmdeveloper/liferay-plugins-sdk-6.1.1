@@ -120,6 +120,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
 				if (loiLoaList != null && loiLoaList.size() > 0) {
 					getManagedBean().setScLoiLoaList(loiLoaList);
+					getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
 				}	
 			}
 
