@@ -13,14 +13,23 @@
 				<th width="20%">
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/>
 				</th>
-				<td>
+				<td width="55%" style="white-space:nowrap;">
+					<p:selectOneMenu value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}" 
+						styleClass="ppDropDownWidthM" id="somOrgType"   
+						label="#{lbl['lbl.pm.ta.org.type.name']}">  
+						<f:selectItems value="#{profileManagementBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, profileManagementBackingBean.orgTypeSearchBean)}" />   
+				     	<p:ajax event="change"  
+				     		update=":form:opDefinedSearch"/> 
+		            </p:selectOneMenu>	
+	            
 				<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="29"
+			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 		            	update=":form:opDefinedSearch" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
 						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
-						conditionField="recordStatus^1"/>
+						conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}"/>
 				
 					</td>
 				<th>&#160;</th>
