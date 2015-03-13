@@ -87,6 +87,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.model.Role;
+
 /**
  * Backing Bean for User Profiles (Management)
  * 
@@ -208,8 +210,8 @@ public class ProfileManagementBackingBean extends
 			this.getManagedBean().getUserProfileSearchBean()
 					.setUserOrganizationName(orgName);
 			// get OrgTypeCode from selected orgProfile
-			this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
-					.getParameterId();
+//			this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
+//					.getParameterId();
 		}
 	}
 
@@ -1789,6 +1791,10 @@ public class ProfileManagementBackingBean extends
 				RoleReqDTO roleReqDTO = new RoleReqDTO();
 				roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
 						.getLanguage());
+				List<Role> roles =getFacesScopes().getUserRoleList();
+				for(Role role: roles){
+				System.out.println(".........testttttt....role.getDescription()="+role.getName());
+			}
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				IRoleSO roleSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2744,7 +2750,7 @@ public class ProfileManagementBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			reqDTO.setPmUser(user);
 			UserResDTO resDTO = userSO.saveUser(reqDTO);
-
+			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
 
 				uploadAttachments();
@@ -2780,7 +2786,9 @@ public class ProfileManagementBackingBean extends
 															new FacesScopes()
 																	.getUserLocale())));
 				}
-				return redirectToMainPage();
+//				return redirectToMainPage();
+				logger.info("befor redirecting method");
+				return NAV_TO_MAINTAIN;
 
 			}
 		} catch (Exception e) {

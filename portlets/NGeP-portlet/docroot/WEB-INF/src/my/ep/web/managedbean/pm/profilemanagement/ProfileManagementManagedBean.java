@@ -18,6 +18,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -58,6 +59,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private String additionalOrgFilter;
 	private PmRoleDesc selectedPmRoleDesc;
 	private PmOrgProfile selectedOrgProfile;
+	private PmParameter selectedOrgType;
 	private PmUserOrg activeUserOrg;
 	private List<PmUserRole> activeUserRoleFor = new ArrayList<PmUserRole>();
 
@@ -378,6 +380,15 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	public void setActiveUserRoleFor(List<PmUserRole> activeUserRoleFor) {
 		this.activeUserRoleFor = activeUserRoleFor;
+	}
+	public PmParameter getSelectedOrgType() {
+		if(this.selectedOrgType == null){
+			this.selectedOrgType = new PmParameter();
+		}
+		return selectedOrgType;
+	}
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
 	}
 
 
