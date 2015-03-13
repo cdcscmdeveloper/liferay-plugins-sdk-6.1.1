@@ -13093,7 +13093,8 @@ public class SpecificationBackingBean extends
 	 * @param savedCheckLists
 	 *            (List<ScQtCheckList> savedCheckLists).
 	 */
-	private void settemplateSpecList(List<ScQtCheckList> savedCheckLists) {
+	private void settemplateSpecList(List<ScQtCheckList> savedCheckLists,
+			String flowType) {
 
 		if (null != savedCheckLists && !savedCheckLists.isEmpty()) {
 			if (null == this.getManagedBean().getScQtCheckSt2techProposal()) {
@@ -13174,8 +13175,21 @@ public class SpecificationBackingBean extends
 
 					if (currIndex == -1) {
 						if (isNewTplSpec) {
-							finanicialCheckLists
-									.add(newTplSpecIndex, checkList);
+							if (SourcingConstants.FLOW_TYPE_BO
+									.equalsIgnoreCase(flowType)) {
+								finanicialCheckLists.add(newTplSpecIndex,
+										checkList);
+							} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
+									.equalsIgnoreCase(flowType)) {
+								if ((null != finanicialCheckLists)
+										&& (finanicialCheckLists.size() >= newTplSpecIndex)) {
+									finanicialCheckLists.add(newTplSpecIndex,
+											checkList);
+								} else {
+									finanicialCheckLists.add(checkList);
+								}
+
+							}
 						} else {
 							finanicialCheckLists.add(checkList);
 						}
@@ -13421,7 +13435,7 @@ public class SpecificationBackingBean extends
 			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
 			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
 				// retriveTechnicalSpecification();
-				settemplateSpecList(savedCheckLists);
+				settemplateSpecList(savedCheckLists, flowType);
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().setCheckListTitle("");
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
@@ -13438,9 +13452,9 @@ public class SpecificationBackingBean extends
 					if (SourcingConstants.TECHNICAL_DOCTYPE
 							.equalsIgnoreCase(specType)) {
 						// retriveTechnicalSpecification();
-						settemplateSpecList(savedCheckLists);
+						settemplateSpecList(savedCheckLists, flowType);
 					} else {
-						settemplateSpecList(savedCheckLists);
+						settemplateSpecList(savedCheckLists, flowType);
 						// retriveFinancialCheckList();
 						// settemplateSpecList(savedCheckLists);
 					}
@@ -13452,7 +13466,7 @@ public class SpecificationBackingBean extends
 										.getScQt().getEvaluationType()) && this
 								.getManagedBean().getScQt()
 								.isTechEvaluationReq())) {
-					settemplateSpecList(savedCheckLists);
+					settemplateSpecList(savedCheckLists, flowType);
 
 				}
 				this.getManagedBean().setIndex(-1);
