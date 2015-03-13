@@ -121,7 +121,7 @@
 		</p:column>
 
 		<p:column width="15%"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
 			validator="#{webappBean.checkFloatField}" validatorMessage="Value of ToValue should be a Float!">
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />			
@@ -134,7 +134,7 @@
 		</p:column>
 
 		<p:column width="15%"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
 			validator="#{webappBean.checkFloatField}" validatorMessage="Value of FromValue should be a Float!">
 			<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}

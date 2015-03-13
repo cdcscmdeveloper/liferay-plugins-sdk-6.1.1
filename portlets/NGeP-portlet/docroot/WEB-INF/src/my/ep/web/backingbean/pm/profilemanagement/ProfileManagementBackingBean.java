@@ -378,7 +378,7 @@ public class ProfileManagementBackingBean extends
 		logger.info("redirectToMainPage");
 
 		return NAV_TO_SEARCH;
-//		return NAV_TO_MAINTAIN;
+
 	}
 
 	/**
@@ -2703,11 +2703,12 @@ public class ProfileManagementBackingBean extends
 		IUserSO userSO = null;
 		PmUser user = null;
 		boolean addressEntered = false;
+		boolean isNewUser= this.getManagedBean().getSelectedUser().isBrandNew();
 
 		try {
 
 			user = this.getManagedBean().getSelectedUser();
-
+    
 			// Validation
 			validateUser(user);
 			addressEntered = validateUserAddress(this.getManagedBean()
@@ -2786,9 +2787,13 @@ public class ProfileManagementBackingBean extends
 															new FacesScopes()
 																	.getUserLocale())));
 				}
-//				return redirectToMainPage();
+//				
 				logger.info("befor redirecting method");
-				return NAV_TO_MAINTAIN;
+				if(isNewUser){
+				  return redirectToMainPage();
+				}else{
+				  return NAV_TO_MAINTAIN;
+				}
 
 			}
 		} catch (Exception e) {
