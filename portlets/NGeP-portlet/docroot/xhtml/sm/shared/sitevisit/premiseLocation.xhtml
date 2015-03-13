@@ -46,6 +46,11 @@
 		</tr>
 		
 		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.enclsd.cap.sqft']}" /></td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedCapacitySqft}" maxlength="20" disabled="#{viewFlag}" /></td>
+		</tr>
+		
+		<tr>
 			<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.floor']}" /></td>
 			<td>
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.floor']}<br />
