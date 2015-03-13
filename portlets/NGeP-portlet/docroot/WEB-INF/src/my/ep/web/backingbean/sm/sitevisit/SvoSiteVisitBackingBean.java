@@ -234,14 +234,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}*/
 			
 			if(smFacility != null){
-				NumberFormat formatter = new DecimalFormat("#0.00");
+				//NumberFormat formatter = new DecimalFormat("#0.00");
 				smSvFacility = new SmSvFacility();
 				smSvFacility.setOwnershipType(smFacility.getOwnershipType());
-				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+//				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+//				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
 				if(smFacility.getAreaSquareFeet()!=null){
-					smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
-					smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));
+					/*smSvFacility.setOverallSqft(formatter.format(smFacility.getAreaSquareFeet()));
+					smSvFacility.setEnclosedSqft(formatter.format(smFacility.getAreaSquareFeet()));*/
+					
+					smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
+					smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
 				}
 				if(smFacility.getOwnershipType().equals("R")){
 					smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
@@ -251,10 +254,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
 				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
 			}else{
-				NumberFormat formatter = new DecimalFormat("#0.00");
+				//NumberFormat formatter = new DecimalFormat("#0.00");
 				smSvFacility = new SmSvFacility();
-				smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
-				smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
+				//smSvFacility.setOverallSqft(formatter.format(BigDecimal.ZERO));
+				//smSvFacility.setEnclosedSqft(formatter.format(BigDecimal.ZERO));
 		
 				smSvFacility.setSmSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(templateType));
 				getManagedBean().getSelectedSvTemplate().setSmSvFacility(smSvFacility);
