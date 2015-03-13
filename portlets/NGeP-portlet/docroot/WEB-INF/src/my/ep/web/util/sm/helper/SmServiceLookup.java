@@ -29,14 +29,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-/**
- * @author hp
- *
- */
-/**
- * @author hp
- * 
- */
+
 public class SmServiceLookup {
 
 	/**
