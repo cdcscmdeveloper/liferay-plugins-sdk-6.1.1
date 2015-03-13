@@ -9,11 +9,17 @@
 	
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.review.application']}");
+			$('#portlet_SoftCertPayment_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.wizard.paymentLbl']}");
+			$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.wizard.paymentLbl']}");
 		</script>
 	</ui:define>
 
 	<ui:define name="contentSection">
+		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:panel header="#{lbl['lbl.sm.payment.item']}" rendered="#{paymentBackingBean.managedBean.applicationPayment != null}">
 			<p:dataTable value="#{paymentBackingBean.managedBean.applicationPayment}" var="billItem">
 				<p:column headerText="#{lbl['lbl.sm.payment.application']}">
@@ -35,6 +41,12 @@
 				selection="#{paymentBackingBean.managedBean.selectedSoftCertLs}"
 				id="softCertReqId" rowKey="#{softCertReq.personnelId}">
 				
+				<p:ajax event="rowSelect" update="@([id$=proceedBtnId])"></p:ajax>
+				<p:ajax event="rowUnselect" update="@([id$=proceedBtnId])"></p:ajax>
+				<p:ajax event="rowSelectCheckbox" update="@([id$=proceedBtnId])"></p:ajax>
+				<p:ajax event="rowUnselectCheckbox" update="@([id$=proceedBtnId])"></p:ajax>
+				<p:ajax event="rowDblselect" update="@([id$=proceedBtnId])"></p:ajax>
+				
 				<p:column selectionMode="multiple" style="width:2%" />
 				
 				<p:column headerText="#{lbl['lbl.sm.soft.cert.name']}">
@@ -48,7 +60,10 @@
 		</p:panel>
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" action="#{paymentBackingBean.proceedToPaymentSummary}"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="proceedBtnId" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			disabled="#{empty paymentBackingBean.managedBean.selectedSoftCertLs}" update="@([id$=paymentSummaryTitleId])"
+			action="#{paymentBackingBean.proceedToPaymentSummary}" />
 		</div>
 	</ui:define>
 </ui:composition>
