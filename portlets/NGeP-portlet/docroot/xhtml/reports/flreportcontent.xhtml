@@ -88,8 +88,11 @@
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRecievingOfficerView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.recievingOfficer']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText maxlength="100" value="#{reportBackingBean.flRecievingOfficer}" style="margin-top:5px;width:290px;" >									
-									</p:inputText>
+									
+									<p:selectOneMenu value="#{reportBackingBean.flRecievingOfficer}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItems value="#{reportBackingBean.rolecodeRecievingOfficerList}"></f:selectItems>					
+									</p:selectOneMenu>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDeliveryAddressView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.deliveryAddress']}"  style="margin-top:5px;width:160px;"/>
@@ -111,8 +114,11 @@
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRequisitionerView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText maxlength="100" value="#{reportBackingBean.flRequisitioner}"  style="margin-top:5px;width:290px;" >									
-					 				</p:inputText>
+									
+					 				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItems value="#{reportBackingBean.rolecodeRquisitionerList}"></f:selectItems>					
+									</p:selectOneMenu>
 									</c:if>
 									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMtoContractView}">
@@ -137,8 +143,11 @@
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flApproverNameView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.approverName']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.flApproverName}"  style="margin-top:5px;width:290px;" >									
-					 				</p:inputText>
+									
+					 				<p:selectOneMenu value="#{reportBackingBean.flApproverName}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItems value="#{reportBackingBean.rolecodeApproverList}"></f:selectItems>					
+									</p:selectOneMenu>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDocumentTypeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.documentType']}"  style="margin-top:5px;width:160px;"/>

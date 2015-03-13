@@ -136,6 +136,10 @@ public class ReportBackingBean extends
 	private List<SelectItem> smUPSSVOUserList = new ArrayList<SelectItem>();
 	private List<SelectItem> ctSubTypeList = new ArrayList<SelectItem>();
 	private List<String> paramList = new ArrayList<String>();
+	private List<String> highRoleCodeList = new ArrayList<String>();
+	private List<SelectItem> rolecodeRquisitionerList = new ArrayList<SelectItem>();
+	private List<SelectItem> rolecodeApproverList = new ArrayList<SelectItem>();
+	private List<SelectItem> rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -199,6 +203,40 @@ public class ReportBackingBean extends
 	
 
 	
+
+	public List<SelectItem> getRolecodeRquisitionerList() {
+		return rolecodeRquisitionerList;
+	}
+
+	public void setRolecodeRquisitionerList(
+			List<SelectItem> rolecodeRquisitionerList) {
+		this.rolecodeRquisitionerList = rolecodeRquisitionerList;
+	}
+
+	public List<SelectItem> getRolecodeApproverList() {
+		return rolecodeApproverList;
+	}
+
+	public void setRolecodeApproverList(List<SelectItem> rolecodeApproverList) {
+		this.rolecodeApproverList = rolecodeApproverList;
+	}
+
+	public List<SelectItem> getRolecodeRecievingOfficerList() {
+		return rolecodeRecievingOfficerList;
+	}
+
+	public void setRolecodeRecievingOfficerList(
+			List<SelectItem> rolecodeRecievingOfficerList) {
+		this.rolecodeRecievingOfficerList = rolecodeRecievingOfficerList;
+	}
+
+	public List<String> getHighRoleCodeList() {
+		return highRoleCodeList;
+	}
+
+	public void setHighRoleCodeList(List<String> highRoleCodeList) {
+		this.highRoleCodeList = highRoleCodeList;
+	}
 
 	public List<String> getParamList() {
 		return paramList;
@@ -2638,11 +2676,76 @@ public class ReportBackingBean extends
         }
 		return ctSubTypeList;
 	}
+	public List<String> retrieveHighRoleCodeByUser(){
+		highRoleCodeList = new ArrayList<String>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 227446;        	
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<String> ptLst = reportSO.retrieveHighRoleCodeByUser(lngUserId);			
+					for (int i = 0; i < ptLst.size(); i++) {
+						highRoleCodeList.add(ptLst.get(i));
+					}        	    
+        }
+		return highRoleCodeList;
+	}
+	 
+	public void  roleCodeUsersSetup(){
+		rolecodeRquisitionerList = new ArrayList<SelectItem>();
+		rolecodeApproverList = new ArrayList<SelectItem>();
+		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = (long) 227446;        	
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MIN_CONTRACT_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_CCA)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_PCA))){
+				//List<String> ptLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);			
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);			
+				for (Object[] object : rlcdLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeRquisitionerList.add(selectItem);
+				}
+			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
+				for (Object[] object : rlcdLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeRquisitionerList.add(selectItem);
+				}				
+			}
+			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_FL_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_CT_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_RN_APPROVER))){
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,highRoleCodeList.get(0));			
+				for (Object[] object : rlcdLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeApproverList.add(selectItem);
+				}
+				
+			}
+			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_RECEIVING_OFFICER))){
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER);			
+				for (Object[] object : rlcdLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeRecievingOfficerList.add(selectItem);
+				}
+			}
+		}
+	}	
 	public List<String> retrieveParamCodeByUser(){
 		paramList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-        	//lngUserId = (long) 242262;        	
+        	//lngUserId = (long) 1365;        	
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -2961,6 +3064,7 @@ public class ReportBackingBean extends
 		selectItem4.setValue(ReportConst.CT_MOD_VAL);
 		moduleList.add(selectItem4);
 		//callfunction();
+		//retrieveHighRoleCodeByUser();
 		return moduleList;
 	}
 
@@ -3709,6 +3813,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			retrieveParameterCodeType();
 			retrieveParamCodeByUser();
+			retrieveHighRoleCodeByUser();
+			roleCodeUsersSetup();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
