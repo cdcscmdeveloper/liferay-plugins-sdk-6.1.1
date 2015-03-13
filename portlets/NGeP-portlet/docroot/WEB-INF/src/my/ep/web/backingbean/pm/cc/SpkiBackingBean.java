@@ -137,13 +137,15 @@ public class SpkiBackingBean {
 
 				default:
 				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-				return;
+				throw new EpException(MessageConst.ERROR_776051);
+//				return;
 			}
 
 			if(challs.size() == 0)
 			{
 				System.err.println("No challanges found for the user! Data signing failed!");
-				return;
+				throw new EpException(MessageConst.ERROR_776051);
+//				return;
 			}
 				
 		} catch (Exception ex)
@@ -239,7 +241,7 @@ public class SpkiBackingBean {
 
 			default:
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				throw new EpException(MessageConst.ERROR_776051);
+				throw new EpException(MessageConst.ERROR_776052);
 		}
 			
 		} catch (Exception ex)
