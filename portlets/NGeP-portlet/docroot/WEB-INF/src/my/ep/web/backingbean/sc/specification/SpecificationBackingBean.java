@@ -7899,8 +7899,8 @@ public class SpecificationBackingBean extends
 				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
 
 				if (prevRangeTo != null) {
-					if (criteriaType.equalsIgnoreCase("50")
-							|| criteriaType.equalsIgnoreCase("60")) {
+					if ("50".equalsIgnoreCase(criteriaType)
+							|| "60".equalsIgnoreCase(criteriaType)) {
 						score.setRangeFrom(prevRangeTo.add(BigDecimal
 								.valueOf(0.01)));
 					} else {
