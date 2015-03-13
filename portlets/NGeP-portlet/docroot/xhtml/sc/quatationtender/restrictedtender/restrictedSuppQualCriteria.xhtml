@@ -18,58 +18,30 @@
 
 			<p:column selectionMode="multiple" style="width:1%" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
+			<p:column headerText="#{lbl['lbl.sc.category.code']}"
 				style="width:20%">
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.spec.category.code']}" />
-				</f:facet>
-				<p:inputText
-					value="#{restrcitedCateGory.pmCategoryL1.categoryL1Code}"
-					maxlength="2" size="1" style="margin-right: 3px !important;">
-					<p:ajax event="blur"
-						update=":form:restrictedtendertabView:restrictedPnlId"
-						partialSubmit="true" process="@this"
-						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL1Code(restrcitedCateGory)}" />
-				</p:inputText>
-
-				<p:inputText
-					value="#{restrcitedCateGory.pmCategoryL2.categoryL2Code}" size="1">
-					<p:ajax event="blur"
-						update=":form:restrictedtendertabView:restrictedPnlId"
-						partialSubmit="true" maxlength="2" process="@this"
-						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(restrcitedCateGory)}" />
-				</p:inputText>
-
-				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3" size="1"
-					headerText="Category Lov"
-					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3"
-					postUpdateListener="qTSupplierQulCriteriaBackingBean.restrictedCategoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList, qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3)"
-					value="#{restrcitedCateGory.pmCategoryL3.categoryL3Code}"
-					update=":form:restrictedtendertabView:restrictedPnlId">
-				</ac:lov>
-
+				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
+			<p:column headerText="#{lbl['lbl.sc.main.category']}"
 				style="width:28%; white-space: normal;">
 				<h:outputText
 					value="#{restrcitedCateGory.pmCategoryL1.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 				style="width:28%; white-space: normal;">
 				<h:outputText
 					value="#{restrcitedCateGory.pmCategoryL2.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 				style="width:28%; white-space: normal;">
 				<h:outputText
 					value="#{restrcitedCateGory.pmCategoryL3.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
+			<p:column headerText="#{lbl['lbl.sc.category.type']}">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(restrcitedCateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
@@ -82,14 +54,17 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this, restrictedPnlId" partialSubmit="true"
-				update="restrictedPnlId" 
-				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction}" />
+				process="@this, restrictedPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
+				oncomplete="catCodePopup.show();"
+				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, restrictedPnlId" 
 				action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction}"
 				update="restrictedPnlId" />
 		</div>
-		<ac:lovPopup />
+		
+		<ac:categoryCodePopup 
+			okAction="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction}"
+			update="@([id$=openPnlId])" />
 	</p:panel>
 </ui:composition>

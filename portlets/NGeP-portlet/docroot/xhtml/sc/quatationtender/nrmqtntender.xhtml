@@ -17,11 +17,8 @@
 
 			<p:column selectionMode="multiple" style="width:1%" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
+			<p:column headerText="#{lbl['lbl.sc.category.code']}"
 				style="width:20%">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.category.code']}" />
-				</f:facet>
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
 
