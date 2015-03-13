@@ -42,7 +42,7 @@
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_fromRangeTN"
 					style="text-align:right"
-					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL'}"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'TN' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FG' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'FN'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
@@ -62,6 +62,19 @@
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
 						maxIntegerDigits="14" />
+					<f:attribute name="min" value="0"></f:attribute>
+				</p:inputText>
+
+
+				<p:inputText id="#{scoringPnlId}_fromRangeFG"
+					style="text-align:right"
+					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'TN' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FG' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'FN'}"
+					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
+					value="#{checkListScoring.rangeFrom}" maxlength="18">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,#{scoringPnlId}_fromRangeFG" />
+					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 					<f:attribute name="min" value="0"></f:attribute>
 				</p:inputText>
 				<!-- 	<p:message id="#{scoringPnlId}_rangeFrom"
