@@ -62,7 +62,8 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="proceedBtnId" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			disabled="#{empty paymentBackingBean.managedBean.selectedSoftCertLs}" update="@([id$=paymentSummaryTitleId])"
+			disabled="#{empty paymentBackingBean.managedBean.selectedSoftCertLs and empty paymentBackingBean.managedBean.applicationPayment}" 
+			update="@([id$=paymentSummaryTitleId])"
 			action="#{paymentBackingBean.proceedToPaymentSummary}" />
 		</div>
 	</ui:define>
