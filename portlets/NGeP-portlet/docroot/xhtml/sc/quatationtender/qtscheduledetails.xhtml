@@ -71,6 +71,7 @@
 						<table>
 							<tr>
 								<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
+										mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
 										value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
 										id="sampleclsdate" required="true"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
