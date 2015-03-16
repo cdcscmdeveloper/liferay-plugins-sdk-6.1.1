@@ -104,8 +104,9 @@
 				<p:fileUpload style="display:inline;"
 					fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
 					mode="advanced" id="uploadattachment"
-					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-					invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
 				</p:fileUpload>
 			</c:if>
@@ -113,6 +114,7 @@
 				<p:fileUpload style="display:inline;"
 					fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
 					mode="advanced" id="uploadattachment"
+					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 					allowTypes="/(\.|\/)(pdf)$/"
 					invalidFileMessage="Only PDF files are accepted"
 					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
