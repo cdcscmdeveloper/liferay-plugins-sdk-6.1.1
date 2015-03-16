@@ -2,7 +2,9 @@ package my.ep.web.backingbean.sm.sdoreview;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -82,6 +84,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		this.getManagedBean().setSmApplInquiry(new SmApplInquiry());
 		this.getManagedBean().setSelectedInquiryResponse(new SmApplInquiry());
 		this.getManagedBean().setUnselectedSmApplSuppDocs(new ArrayList<SmApplSupportDoc>());
+		this.getManagedBean().setSupportingDocMap(new HashMap<Long,SmApplSupportDoc>());
 
 		String zoneCode = retrieveZoneByStateId(this.getManagedBean().getCompanyAdd().getPmState().getStateId());
 		log.info("***********zone code***********" + zoneCode);
@@ -101,7 +104,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 							this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDocSbhSrk);
 						}
 					}
-				}	
+				}
+				
+				this.getManagedBean().getSupportingDocMap().put(applSuppDocSbhSrk.getApplSupportDocId(), applSuppDocSbhSrk);
 			}
 		}else{
 			for(SmApplSupportDoc applSuppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
@@ -110,6 +115,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 						this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
 					}
 				}
+				
+				this.getManagedBean().getSupportingDocMap().put(applSuppDoc.getApplSupportDocId(), applSuppDoc);
 			}
 		}
 		
@@ -243,17 +250,18 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			RequestContext.getCurrentInstance().execute("submissionDlg.show()");
 			
 		}else if(action.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
-			List<SmApplSupportDoc> unselectedAplSuppDocLs = this.getManagedBean().getUnselectedSmApplSuppDocs();
-
-			if(this.getManagedBean().getUnselectedSmApplSuppDocs().size() > 0){
+			//List<SmApplSupportDoc> unselectedAplSuppDocLs = this.getManagedBean().getUnselectedSmApplSuppDocs();
+			Map<Long, SmApplSupportDoc> supportingDocMap = this.getManagedBean().getSupportingDocMap();
+			if(supportingDocMap.size() > 0){
 				StringBuilder enquiry = new StringBuilder("");
-				for(int i= 0; i < unselectedAplSuppDocLs.size(); i++){
-					int count = i + 1;
-					enquiry.append(count + ". " + unselectedAplSuppDocLs.get(i).getPmDocument().getDocName());
+				int count = 1;
+				for(Map.Entry<Long, SmApplSupportDoc> suppDoc : supportingDocMap.entrySet()){
+					enquiry.append(count + ". " + supportingDocMap.get(suppDoc.getKey()).getPmDocument().getDocName());
 					enquiry.append(System.getProperty("line.separator"));
+					count++;
 				}
-				System.out.println(">>>>Str>>>");
-				System.out.println(enquiry);
+				log.info(">>>>Str>>>");
+				log.info(enquiry);
 				this.getManagedBean().getSmApplInquiry().setInquiryText(enquiry.toString());
 			}
 			RequestContext.getCurrentInstance().execute("inquiryDlg.show()");
@@ -306,6 +314,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		
 		if(applSuppDoc.isReceived()){
 			unselectedSuppDocLs.remove(applSuppDoc);
+			this.getManagedBean().getSupportingDocMap().remove(applSuppDoc.getApplSupportDocId());
 		}else{
 			String zoneCode = this.getManagedBean().getZoneCode();
 			if(zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SABAH) 
@@ -322,7 +331,10 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					unselectedSuppDocLs.add(applSuppDoc);
 				}
 			}
+			
+			this.getManagedBean().getSupportingDocMap().put(applSuppDoc.getApplSupportDocId(), applSuppDoc);
 		}
+		
 		log.debug("-----applSuppDoc size----" + unselectedSuppDocLs.size());
 	}
 	

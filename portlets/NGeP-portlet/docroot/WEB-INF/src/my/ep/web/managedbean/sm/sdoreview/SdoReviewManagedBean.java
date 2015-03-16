@@ -1,11 +1,11 @@
 package my.ep.web.managedbean.sm.sdoreview;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -34,6 +34,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private List<PmParameterDesc> businessTypeLs;
 	private List<SmApplSupportDoc> unselectedSmApplSuppDocs;
 	private String zoneCode;
+	private Map<Long,SmApplSupportDoc> supportingDocMap;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -146,6 +147,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setZoneCode(String zoneCode) {
 		this.zoneCode = zoneCode;
+	}
+
+	public Map<Long, SmApplSupportDoc> getSupportingDocMap() {
+		return supportingDocMap;
+	}
+
+	public void setSupportingDocMap(Map<Long, SmApplSupportDoc> supportingDocMap) {
+		this.supportingDocMap = supportingDocMap;
 	}
 
 	
