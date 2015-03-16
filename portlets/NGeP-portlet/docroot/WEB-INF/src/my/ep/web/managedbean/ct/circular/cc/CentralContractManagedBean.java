@@ -748,7 +748,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = 1L;
 
 		public CircularVerPagingDataModel() {
-			super("circularVerDt");
+			super("circularVerDt", false);
 		}
 		
 		/*
