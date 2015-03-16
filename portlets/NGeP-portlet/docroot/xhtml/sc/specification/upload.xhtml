@@ -14,24 +14,10 @@
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
 			mode="advanced" id="upload"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			update="@form" oncomplete="uploadDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
-
-
-	<p:dialog id="uploadS1TechAdd" widgetVar="uploadS1TechAdd" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
-			mode="advanced" id="uploads1techAdd"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="@form" oncomplete="uploadS1TechAdd.hide()">
 		</p:fileUpload>
 	</p:dialog>
 
@@ -44,56 +30,10 @@
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
 			mode="advanced" id="uploads1fin"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			update="@form" oncomplete="uploadS1Fin.hide()">
 		</p:fileUpload>
 	</p:dialog>
-
-
-	<p:dialog id="uploadS1FinAdd" widgetVar="uploadS1FinAdd" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
-			mode="advanced" id="uploads1finAdd"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="@form" oncomplete="uploadS1FinAdd.hide()">
-		</p:fileUpload>
-	</p:dialog>
-
-
-	<p:dialog id="uploadS2TechAdd" widgetVar="uploadS2TechAdd" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
-			mode="advanced" id="uploads2techadd"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="@form" oncomplete="uploadS2TechAdd.hide()">
-		</p:fileUpload>
-	</p:dialog>
-
-
-
-	<p:dialog id="uploadS2FinAdd" widgetVar="uploadS2FinAdd" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{specificationBackingBean.checkListFileUpload}"
-			mode="advanced" id="uploads2finadd"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="@form" oncomplete="uploadS2FinAdd.hide()">
-		</p:fileUpload>
-	</p:dialog>
-
 </ui:composition>
