@@ -13,8 +13,9 @@
 			<p:fileUpload style="display:inline;"
 				fileUploadListener="#{suppFinalBiddingBackingBean.handleFileUpload}"
 				mode="advanced" id="upload"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 				update="testId" oncomplete="uploadDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
