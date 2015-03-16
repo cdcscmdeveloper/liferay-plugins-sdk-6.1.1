@@ -11,7 +11,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
-			showSummary="false" closable="true" severity="error, info" />
+			showSummary="false" closable="true" severity="error, info,warn" />
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
 			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 		<ui:fragment
@@ -81,7 +81,8 @@
 		</c:if>
 
 
-		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
+		<c:if
+			test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
 
 			<ui:include src="presentationDemoStage.xhtml" />
 		</c:if>
