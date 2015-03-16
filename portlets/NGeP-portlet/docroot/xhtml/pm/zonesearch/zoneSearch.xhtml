@@ -37,8 +37,8 @@
 
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.status']}" /><p:outputLabel value="*" styleClass="mandatory" /></th>
-				<td><p:selectOneMenu styleClass="ppDropDownWidthM" required="true" label="#{lbl['lbl.pm.status']}"
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.status']}" /></th>
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM" 
 						value="#{zoneBackingBean.managedBean.zoneSearchBean.status}">
 						<f:selectItems
 							value="#{zoneBackingBean.getStatusOptions()}" />
