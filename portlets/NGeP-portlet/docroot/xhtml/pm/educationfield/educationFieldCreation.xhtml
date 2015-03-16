@@ -29,19 +29,10 @@
 						size="30" maxlength="100" /></td>
 			</tr>
 			<tr>
-				<td><c:choose>
-						<c:when
-							test="#{educationBackingBean.managedBean.pmEduField.brandNew == true}">
-							<panelGroup style="float: right">
-							<p:outputLabel value="" />
-							<h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel></panelGroup>
-						</c:when>
-						<c:otherwise>
-							<panelGroup style="float: right">
-							<h:outputLabel
-								value="#{lbl['lbl.pm.search.status']}"></h:outputLabel><h:outputLabel value="*" styleClass="mandatory" /></panelGroup>
-						</c:otherwise>
-					</c:choose></td>
+				<td>
+				<p:outputLabel value="#{lbl['lbl.pm.search.status']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
 				 <td><p:selectOneMenu style="width:178px;margin-bottom:5px;" required="true" label="#{lbl['lbl.pm.search.status']}"
 						value="#{educationBackingBean.managedBean.pmEduField.recordStatusFlg}"
 						disabled="#{educationBackingBean.managedBean.pmEduField.brandNew}">
