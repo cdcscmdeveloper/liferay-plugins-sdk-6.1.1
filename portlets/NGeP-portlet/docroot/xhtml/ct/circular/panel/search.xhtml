@@ -44,7 +44,7 @@
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
 			<p:dataTable id="circularVerDt" value="#{panelBackingBean.managedBean.circularVerPagingDataModel}"
-				var="data" lazy="true" rowIndexVar="index" >
+				var="data" lazy="true" rowIndexVar="index" rows="10">
 				<ac:paginator for="circularVerDt" />
 				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:15%;white-space:normal;">
 					<h:outputText value="#{data.ctCircular.circularNo}" />
