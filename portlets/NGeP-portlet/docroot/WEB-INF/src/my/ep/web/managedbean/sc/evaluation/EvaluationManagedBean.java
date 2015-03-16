@@ -480,6 +480,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	// MenuModel
 	private MenuModel evaluationSpecZonalMenuModel;
 
+	/** check Qualified suppliers. */
+	private boolean checkQualifiedSuppliers = true;
+
 	/**
 	 * Gets the today.
 	 * 
@@ -3132,6 +3135,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationSpecZonalMenuModel(
 			MenuModel evaluationSpecZonalMenuModel) {
 		this.evaluationSpecZonalMenuModel = evaluationSpecZonalMenuModel;
+	}
+
+	/**
+	 * @return the checkQualifiedSuppliers
+	 */
+	public boolean isCheckQualifiedSuppliers() {
+		return checkQualifiedSuppliers;
+	}
+
+	/**
+	 * @param checkQualifiedSuppliers
+	 *            the checkQualifiedSuppliers to set
+	 */
+	public void setCheckQualifiedSuppliers(boolean checkQualifiedSuppliers) {
+		this.checkQualifiedSuppliers = checkQualifiedSuppliers;
 	}
 
 }
