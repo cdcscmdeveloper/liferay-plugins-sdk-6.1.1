@@ -2262,7 +2262,6 @@ public class EvaluationBackingBean extends
 			// Dynamically generating the tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
 			if (CollectionUtils.isNotEmpty(zoneDtls)) {
-				FacesContext facesContext = FacesContext.getCurrentInstance();
 				int zoneTabIndex = 0;
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 					specZoneDtl.setZoneTabIndex(zoneTabIndex);
@@ -2273,7 +2272,7 @@ public class EvaluationBackingBean extends
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
-					zoneItem.setOnclick("specTabChange([ {name : 'selectedZoneTabIndex', value : "
+					zoneItem.setOncomplete("specTabChange([ {name : 'selectedZoneTabIndex', value : "
 							+ zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
