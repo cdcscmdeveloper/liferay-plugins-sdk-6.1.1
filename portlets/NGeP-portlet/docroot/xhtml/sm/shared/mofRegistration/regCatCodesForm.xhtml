@@ -729,14 +729,14 @@
 						<c:when test="#{backingBean.managedBean.smAppl.applType eq 'R'}">
 							<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 								action="#{backingBean.deleteSelectedCategoryCodes}"
-								update=":form:tt:catDtR" partialSubmit="true"
+								update=":form:tt:catCodeInfPan" partialSubmit="true"
 								process=":form:tt:catCodeInfPan">
 							</p:commandButton>
 						</c:when>
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 								action="#{backingBean.deleteSelectedPendingApprovalCategoryCodes}"
-								update=":form:tt:catDt" partialSubmit="true"
+								update=":form:tt:catCodeInfPan" partialSubmit="true"
 								process=":form:tt:catCodeInfPan">
 							</p:commandButton>
 						</c:otherwise>
