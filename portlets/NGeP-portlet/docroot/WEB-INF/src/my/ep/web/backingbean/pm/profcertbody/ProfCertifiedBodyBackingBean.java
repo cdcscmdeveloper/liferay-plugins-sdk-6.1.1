@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.pm.profcertbody;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -15,12 +17,12 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -209,6 +211,16 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getProfCertifiedBodySearchBean().getStatus()));
+			}else{
+				List<String> activeAndInActiveStatus = new ArrayList<String>();
+				activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+				activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_IN.value(), 
+								activeAndInActiveStatus
+				));
+				
 			}
 
 			ICertBodySO bodySO = EpEjbBusinessDelegate.getInstance()
@@ -266,7 +278,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 */	
 	public String saveCertBodyDtls(){
 		debugLogger("saveCertBodyDtls");
-		
+		String redirectUrl = null;
 		PmCertBody certBody =  this.getManagedBean().getCertBody();
 		validationMessage(certBody);
 		
@@ -294,6 +306,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 														 },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				redirectUrl = NAV_TO_MAIN;
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -304,11 +317,12 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 												resDTO.getCertBody().getBodyCode() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				redirectUrl = null;
 			}
 
 		}
 	
-			return NAV_TO_MAIN;
+			return redirectUrl;
 	}
 
 	/**

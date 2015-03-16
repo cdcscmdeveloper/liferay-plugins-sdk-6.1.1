@@ -9,6 +9,8 @@
 	xmlns:tp="http://java.sun.com/jsf/composite/ep">
 
 	<ui:define name="contentSection">
+		<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<ui:include
 			src="/xhtml/pm/professionalCertifiedBody/professionalCertifiedSearch.xhtml" />
 		<ui:include

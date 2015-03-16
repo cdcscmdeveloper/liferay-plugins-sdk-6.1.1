@@ -18,10 +18,15 @@
 						update=":form" process="@this"
 						action="#{organisationBackingBean.backToSearch}"
 						style="float:left;" /></td>
-				<td><p:commandButton value="#{organisationBackingBean.managedBean.orgProfile.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}" 
-						action="#{organisationBackingBean.saveOrganization}" 
-						update="@([id$=Msg])"  style="float:right;" />
+				<td><p:commandButton value="#{lbl['lbl.btn.create']}" 
+						action="#{organisationBackingBean.saveOrganization('SAVE')}" 
+						update="@([id$=Msg])"  style="float:right;" 
+						rendered ="#{organisationBackingBean.managedBean.orgProfile.brandNew}"/>
 						<!-- <f:param name="disableValidation" value="true" > -->
+					<p:commandButton value="#{lbl['lbl.btn.update']}" 
+						action="#{organisationBackingBean.saveOrganization('UPDATE')}" 
+						update="@([id$=Msg])"  style="float:right;"
+						rendered ="#{!organisationBackingBean.managedBean.orgProfile.brandNew}" />
 				</td>
 			</tr>
 		</table>

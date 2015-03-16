@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -27,6 +28,7 @@ import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -195,8 +197,10 @@ public class OrganisationBackingBean extends
 	}
 	/* -- ORG PROFILE SERACH--  */
 	public void searchOrganisation() {
-
-		searchOrganisation.reloadData();
+		if(getManagedBean().getOrganisationSearchBean().getOrgTypeCode() != null){
+			searchOrganisation.reloadData();
+		}
+		
 	}
 
 	private ISearchBean<PmOrgProfile> getSearchBeanData(
@@ -235,11 +239,21 @@ public class OrganisationBackingBean extends
 			isEmpty = false;
 
 		}
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(), oSearchBean
-								.getOrgStatus()));
-
+		if(oSearchBean.getOrgStatus() != null && oSearchBean.getOrgStatus().trim().length() > 0){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(), oSearchBean
+									.getOrgStatus()));
+		}else{
+			List<String> activeAndInActiveStatus = new ArrayList<String>();
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), 
+							activeAndInActiveStatus
+			));
+		}
 		log.info("getSearchBeanData - End");
 		return searchBean;
 	}
@@ -251,7 +265,7 @@ public class OrganisationBackingBean extends
 
 		public SearchOrgPagingDataModel() {
 
-			super("searchOrganisation");
+			super("searchOrganisation", false);
 
 		}
 
@@ -472,332 +486,356 @@ public class OrganisationBackingBean extends
 
 	}
 
-	public String saveOrganization() throws Exception {
+	public String saveOrganization(String outcome) throws Exception {
 		
-		// check govSeller		
-		if (this.getManagedBean().getOrgProfile().isGovtSeller()) {
-			validateSupplierBankListAndSupplierPersonnel();			
-		}
-		// check group org
-		if (this.getManagedBean().getOrgProfile().isGroupOrg()) {
-			if (this.getManagedBean().getProfileGroup() == null
-					|| this.getManagedBean().getProfileGroup().isEmpty()) {
-				throw new EpException(MessageConst.ERROR_775103);
+		IFinancialOrgSO financialOrgSO = null;
+		IOrgProfileSO orgProfileSO = null;
+		IParameterSO parameterSO = null;
+		IRegistrationSO registrationSO = null;
+		String redirectUrl = null;
+		
+		try{
+			// check govSeller		
+			if (this.getManagedBean().getOrgProfile().isGovtSeller()) {
+				validateSupplierBankListAndSupplierPersonnel();			
 			}
-		}
+			// check group org
+			if (this.getManagedBean().getOrgProfile().isGroupOrg()) {
+				if (this.getManagedBean().getProfileGroup() == null
+						|| this.getManagedBean().getProfileGroup().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_775103);
+				}
+			}
+		
 	
-
-		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IFinancialOrgSO.class);
-
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
-		parameterReqDTO.setParameterCode(getManagedBean().getOrgType());
-		ParameterResDTO parameterResDTO = parameterSO
-				.retrieveParameterByTypeAndCode(parameterReqDTO);
-
-		PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
-		PmOrgValidity orgValidity = getManagedBean().getOrgProfile().getPmOrgValidity();		
-		List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
-		if (orgProfile.isBrandNew()) {	
-			// check BPK 
-			checkBpkOrgStatus(parameterResDTO.getPmParameter().getParameterCode());
-			orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
-			orgValidity.setEffDate(new Date());			
-			PmAddressType addressType = this.getManagedBean()
-					.getPmAddressType();
-			addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
-			List<PmAddressType> pmAddressTypes = this.getManagedBean()
-					.getOfficeAddressTypeList();
-			pmAddressTypes.add(addressType);
-			PmAddress address = this.getManagedBean().getOfficeAddress();
-			PmContact contact = this.getManagedBean().getOfficeContactPerson();
-			contact.setPmAddressType(addressType);
-			List<PmContact> contactLst = new ArrayList<PmContact>();
-			contactLst.add(contact);
-			addressType.setPmContacts(contactLst);
-			addressType.setPmAddress(address);
-			addressType.setPmOrgProfile(orgProfile);
-			orgProfile.setPmAddressTypes(pmAddressTypes);	
-			orgValidity.setPmOrgProfile(orgProfile);
-			orgProfile.setPmOrgValidity(orgValidity);
-		}
-		
-		validateOrgProfiel(orgProfile);
-		validateOrgAddress(this.getManagedBean().getOfficeAddress());
-		validateContactPerson(this.getManagedBean().getOfficeContactPerson());
-		
-		if (parameterResDTO.getPmParameter().getParameterCode().equalsIgnoreCase(
-				OrganizationType.BPK_PENDAFTARAN_HQ.value())
-		|| getManagedBean().getOrgType().equalsIgnoreCase(
-				OrganizationType.BPK_PENDAFTARAN_SABAH.value())
-				|| getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.BPK_PENDAFTARAN_SARAWAK.value())) {				
-	    orgProfile.setPmZone(getManagedBean().getOrgProfile().getPmZone());
-       }
-		// PTJ, GLC, LAT, STG and STB
-		if (getManagedBean().getOrgType().equalsIgnoreCase(
-				OrganizationType.DIVISION.value())
-				|| getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.STATE_GOVERNMENT.value())
-				|| getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.STATUTORY_BODIES.value())
-				|| getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.LOCAL_AUTHORITY.value())
-				|| getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.GOVERNMENT_LINK_COMPANIES.value())) {
-			IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
+			financialOrgSO = (IFinancialOrgSO) BusinessDelegate
 					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IRegistrationSO.class);		
-		
-		if (getManagedBean().getOrgProfile().isGovtSeller()) {
-		
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IFinancialOrgSO.class);
+	
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+	
+			orgProfileSO = (IOrgProfileSO) BusinessDelegate
 					.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierSearchSO.class);
-			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
-			suppSearchReqDTO.setSupplierId(orgProfile.getOrgProfileId());
-			SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
-			
-			// new Supplier
-			if (orgProfile.getSmSupplier() == null && suppSearchResDTO.getSmSupplier() == null) {
-				log.info("Create new Supplier");
-				RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
-				regReqDTO.setPmUsers(getManagedBean().getSupplierUsers());             
-				regReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-				if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
-	                for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
-	                	FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
-						finReqDTO.setFinancialOrgId(supplierBank.getPmFinancialOrg().getFinancialOrgId());
-						FinancialOrgResDTO finResDTO = financialOrgSO
-									.retrieveFinancialOrgById(finReqDTO);
-						PmFinancialOrg pmFinancialOrg = finResDTO
-									.getPmFinancialOrg();               
-	                	 regReqDTO.setBankAccountNo(supplierBank.getAccountNo());
-	                	 regReqDTO.setBank(pmFinancialOrg);
-	                }
-				}
-				RegistrationResDTO regResDTO = registrationSO
-						.createPTJSupplier(regReqDTO);
-				regResDTO.setSuccessful(true);
-				
-				//Fee Exemption
-				IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IFeeExemptionSO.class);
-				FeeExemptionReqDTO feeReqDTO = new FeeExemptionReqDTO();
-				PmFeeExemption feeEx = new PmFeeExemption();				
-				feeEx.setOrgProfileId(orgProfile);
-				feeReqDTO.setFeeExemption(feeEx);
-				FeeExemptionResDTO feeResDTO = exemptionSO.insertFeeExemption(feeReqDTO);
-				feeResDTO.setSuccessful(true);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+	
+			parameterSO = (IParameterSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
+			parameterReqDTO.setParameterCode(getManagedBean().getOrgType());
+			ParameterResDTO parameterResDTO = parameterSO
+					.retrieveParameterByTypeAndCode(parameterReqDTO);
+	
+			PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
+			PmOrgValidity orgValidity = getManagedBean().getOrgProfile().getPmOrgValidity();		
+			List<PmProfileGroup> profileGroup = new ArrayList<PmProfileGroup>();
+			if (orgProfile.isBrandNew()) {	
+				// check BPK 
+				checkBpkOrgStatus(parameterResDTO.getPmParameter().getParameterCode());
+				orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
+				orgValidity.setEffDate(new Date());			
+				PmAddressType addressType = this.getManagedBean()
+						.getPmAddressType();
+				addressType.setAddressType(AddressType.BILLING_ADDRESS.value());
+				List<PmAddressType> pmAddressTypes = this.getManagedBean()
+						.getOfficeAddressTypeList();
+				pmAddressTypes.add(addressType);
+				PmAddress address = this.getManagedBean().getOfficeAddress();
+				PmContact contact = this.getManagedBean().getOfficeContactPerson();
+				contact.setPmAddressType(addressType);
+				List<PmContact> contactLst = new ArrayList<PmContact>();
+				contactLst.add(contact);
+				addressType.setPmContacts(contactLst);
+				addressType.setPmAddress(address);
+				addressType.setPmOrgProfile(orgProfile);
+				orgProfile.setPmAddressTypes(pmAddressTypes);	
+				orgValidity.setPmOrgProfile(orgProfile);
+				orgProfile.setPmOrgValidity(orgValidity);
 			}
 			
-			if (orgProfile.getSmSupplier() != null) {
-				log.info("Update Supplier");				
-				reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveSupplierByProfileId(reqDTO);				
-				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();				
-				SmSupplier supplier = orgProfileSm.getSmSupplier();
-			if (supplier != null) {
+			validateOrgProfiel(orgProfile);
+			validateOrgAddress(this.getManagedBean().getOfficeAddress());
+			validateContactPerson(this.getManagedBean().getOfficeContactPerson());
+			
+			if (parameterResDTO.getPmParameter().getParameterCode().equalsIgnoreCase(
+					OrganizationType.BPK_PENDAFTARAN_HQ.value())
+			|| getManagedBean().getOrgType().equalsIgnoreCase(
+					OrganizationType.BPK_PENDAFTARAN_SABAH.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.BPK_PENDAFTARAN_SARAWAK.value())) {				
+		    orgProfile.setPmZone(getManagedBean().getOrgProfile().getPmZone());
+	       }
+			// PTJ, GLC, LAT, STG and STB
+			if (getManagedBean().getOrgType().equalsIgnoreCase(
+					OrganizationType.DIVISION.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATE_GOVERNMENT.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.STATUTORY_BODIES.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.LOCAL_AUTHORITY.value())
+					|| getManagedBean().getOrgType().equalsIgnoreCase(
+							OrganizationType.GOVERNMENT_LINK_COMPANIES.value())) {
+				registrationSO = (IRegistrationSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IRegistrationSO.class);		
+			
+			if (getManagedBean().getOrgProfile().isGovtSeller()) {
+			
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+						.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISupplierSearchSO.class);
+				SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+				suppSearchReqDTO.setSupplierId(orgProfile.getOrgProfileId());
+				SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
+				
+				// new Supplier
+				if (orgProfile.getSmSupplier() == null && suppSearchResDTO.getSmSupplier() == null) {
+					log.info("Create new Supplier");
 					RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
-					List<SmSupplierBank> smSupplierBanks = getManagedBean().getSmSupplierBanks();
-					if (!smSupplierBanks.isEmpty()) {					
-		                 for(int i = 0 ; i < smSupplierBanks.size(); i++){
-		                	 SmSupplierBank suppBank = smSupplierBanks.get(i);
-		                	 if(supplier.getSmAppl() != null && 
-		                			 supplier.getSmAppl().getSmSupplierBanks() !=null &&
-		                			 !supplier.getSmAppl().getSmSupplierBanks().isEmpty()){
-		                		for(SmSupplierBank tempSuppBank: supplier.getSmAppl().getSmSupplierBanks()){
-		                			if(tempSuppBank.getAccountNo().equals(suppBank.getAccountNo()) 
-		                					&& (tempSuppBank.getPmFinancialOrg().getFinancialOrgId().equals(suppBank.getPmFinancialOrg().getFinancialOrgId()))){
-		                				//supplier bank is existed.
-		                				Integer suppBankRecordStatus = suppBank.getRecordStatusFlg();
-		                				suppBank = tempSuppBank;
-		                				suppBank.setRecordStatusFlg(suppBankRecordStatus);
-		                				getManagedBean().getSmSupplierBanks().set(i, suppBank);
-		                			}
-		                		} 
-		                	 }		                	 
-		                 }
-		                 
-		                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
-		                	 FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
-								finReqDTO.setFinancialOrgId(supplierBank.getPmFinancialOrg().getFinancialOrgId());
-								FinancialOrgResDTO finResDTO = financialOrgSO
-										.retrieveFinancialOrgById(finReqDTO);
-								PmFinancialOrg pmFinancialOrg = finResDTO
-										.getPmFinancialOrg();								
-								if(supplierBank.isBrandNew()){									
-									supplierBank.setAccountNo(supplierBank.getAccountNo());
-									supplierBank.setPmFinancialOrg(pmFinancialOrg);
-									supplierBank.setAccountPurpose("P");
-									supplierBank.setSmAppl(supplier.getSmAppl());			
-									supplier.getSmAppl().getSmSupplierBanks().add(supplierBank);
-								}
-								if(supplierBank.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-			                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); 
-			                		 log.info("Active Supplier Bank");
-			                	}else{
-			                		 log.info("Inactive Supplier Bank");
-			                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED); 
-			                		 supplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());
-			                	}								
-								log.info("Supplier Bank Record Status------>"+supplierBank.getRecordStatusFlg()+"<-----");
-		                }
-		               
-					}
-					log.info("Sm Personel list Size"+getManagedBean().getSmPersonnels().size());					
-				
-					if(getManagedBean().getSmPersonnels()!=null && !getManagedBean().getSmPersonnels().isEmpty()){
-						log.info("SM Persnels test");
-						for(SmPersonnel personnel:getManagedBean().getSmPersonnels()){
-							if(personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-								personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-								log.info("Personal Record Status Active");
-							}
-							else{
-								log.info("Personal Record Status inactie");
-								personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-							}
-													
-							supplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
-						}
-					}					
-					regReqDTO.setSmSupp(supplier);
-					RegistrationResDTO regResDTO = registrationSO
-							.updatePTJSupplier(regReqDTO);
-					regResDTO.setSuccessful(true);
-				}			
-			}
-		}
-		else{
-			log.info("Deactvate Supplier=======");
-			if(orgProfile.getSmSupplier() != null) {
-				
-				reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveSupplierByProfileId(reqDTO);
-				
-				PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
-				
-				SmSupplier smSupplier = orgProfileSm.getSmSupplier();
-				if (smSupplier != null) {
-						RegistrationReqDTO regReqDTO = new RegistrationReqDTO();					
-					
+					regReqDTO.setPmUsers(getManagedBean().getSupplierUsers());             
+					regReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 					if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
-		                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){		                	
-								supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);									
-								smSupplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());			
+		                for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
+		                	FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
+							finReqDTO.setFinancialOrgId(supplierBank.getPmFinancialOrg().getFinancialOrgId());
+							FinancialOrgResDTO finResDTO = financialOrgSO
+										.retrieveFinancialOrgById(finReqDTO);
+							PmFinancialOrg pmFinancialOrg = finResDTO
+										.getPmFinancialOrg();               
+		                	 regReqDTO.setBankAccountNo(supplierBank.getAccountNo());
+		                	 regReqDTO.setBank(pmFinancialOrg);
 		                }
 					}
-					if(getManagedBean().getSmPersonnels()!=null && !getManagedBean().getSmPersonnels().isEmpty()){
-						for(SmPersonnel personnel:getManagedBean().getSmPersonnels()){
-							personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);							
-							smSupplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
-						}
-					}					
-					regReqDTO.setSmSupp(smSupplier);
 					RegistrationResDTO regResDTO = registrationSO
-							.updatePTJSupplier(regReqDTO);
+							.createPTJSupplier(regReqDTO);
 					regResDTO.setSuccessful(true);
+					
+					//Fee Exemption
+					IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IFeeExemptionSO.class);
+					FeeExemptionReqDTO feeReqDTO = new FeeExemptionReqDTO();
+					PmFeeExemption feeEx = new PmFeeExemption();				
+					feeEx.setOrgProfileId(orgProfile);
+					feeReqDTO.setFeeExemption(feeEx);
+					FeeExemptionResDTO feeResDTO = exemptionSO.insertFeeExemption(feeReqDTO);
+					feeResDTO.setSuccessful(true);
 				}
-				IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IFeeExemptionSO.class);
-				FeeExemptionReqDTO feeReqDTO = new FeeExemptionReqDTO();
-							
-				feeReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-				log.info("Org ProifleId--"+orgProfile.getOrgProfileId());
-				FeeExemptionResDTO feeResDTO = exemptionSO.deleteFeeExemptionByOrgProfile(feeReqDTO);				
-				feeResDTO.setSuccessful(true);
-			}
-			
-		}
-	}		
-		// PTJ
-		if (parameterResDTO.getPmParameter().getParameterCode()
-				.equalsIgnoreCase(OrganizationType.DIVISION.value())) {	
-			//Billing Address
-			for(PmAddressType addressType:getManagedBean().getOrgProfile().getPmAddressTypes()){				
-				if(addressType.getAddressType().equals(AddressType.BILLING_ADDRESS.value())&&(addressType.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) && !getManagedBean().getAddressTypesList().contains(addressType)){
-					getManagedBean().getAddressTypesList().add(addressType);
+				
+				if (orgProfile.getSmSupplier() != null) {
+					log.info("Update Supplier");				
+					reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					OrgProfileResDTO resDTO = orgProfileSO
+							.retrieveSupplierByProfileId(reqDTO);				
+					PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();				
+					SmSupplier supplier = orgProfileSm.getSmSupplier();
+				if (supplier != null) {
+						RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
+						List<SmSupplierBank> smSupplierBanks = getManagedBean().getSmSupplierBanks();
+						if (!smSupplierBanks.isEmpty()) {					
+			                 for(int i = 0 ; i < smSupplierBanks.size(); i++){
+			                	 SmSupplierBank suppBank = smSupplierBanks.get(i);
+			                	 if(supplier.getSmAppl() != null && 
+			                			 supplier.getSmAppl().getSmSupplierBanks() !=null &&
+			                			 !supplier.getSmAppl().getSmSupplierBanks().isEmpty()){
+			                		for(SmSupplierBank tempSuppBank: supplier.getSmAppl().getSmSupplierBanks()){
+			                			if(tempSuppBank.getAccountNo().equals(suppBank.getAccountNo()) 
+			                					&& (tempSuppBank.getPmFinancialOrg().getFinancialOrgId().equals(suppBank.getPmFinancialOrg().getFinancialOrgId()))){
+			                				//supplier bank is existed.
+			                				Integer suppBankRecordStatus = suppBank.getRecordStatusFlg();
+			                				suppBank = tempSuppBank;
+			                				suppBank.setRecordStatusFlg(suppBankRecordStatus);
+			                				getManagedBean().getSmSupplierBanks().set(i, suppBank);
+			                			}
+			                		} 
+			                	 }		                	 
+			                 }
+			                 
+			                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){
+			                	 FinancialOrgReqDTO finReqDTO = new FinancialOrgReqDTO();
+									finReqDTO.setFinancialOrgId(supplierBank.getPmFinancialOrg().getFinancialOrgId());
+									FinancialOrgResDTO finResDTO = financialOrgSO
+											.retrieveFinancialOrgById(finReqDTO);
+									PmFinancialOrg pmFinancialOrg = finResDTO
+											.getPmFinancialOrg();								
+									if(supplierBank.isBrandNew()){									
+										supplierBank.setAccountNo(supplierBank.getAccountNo());
+										supplierBank.setPmFinancialOrg(pmFinancialOrg);
+										supplierBank.setAccountPurpose("P");
+										supplierBank.setSmAppl(supplier.getSmAppl());			
+										supplier.getSmAppl().getSmSupplierBanks().add(supplierBank);
+									}
+									if(supplierBank.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+				                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); 
+				                		 log.info("Active Supplier Bank");
+				                	}else{
+				                		 log.info("Inactive Supplier Bank");
+				                		 supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED); 
+				                		 supplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());
+				                	}								
+									log.info("Supplier Bank Record Status------>"+supplierBank.getRecordStatusFlg()+"<-----");
+			                }
+			               
+						}
+						log.info("Sm Personel list Size"+getManagedBean().getSmPersonnels().size());					
+					
+						if(getManagedBean().getSmPersonnels()!=null && !getManagedBean().getSmPersonnels().isEmpty()){
+							log.info("SM Persnels test");
+							for(SmPersonnel personnel:getManagedBean().getSmPersonnels()){
+								if(personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+									personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+									log.info("Personal Record Status Active");
+								}
+								else{
+									log.info("Personal Record Status inactie");
+									personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+								}
+														
+								supplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
+							}
+						}					
+						regReqDTO.setSmSupp(supplier);
+						RegistrationResDTO regResDTO = registrationSO
+								.updatePTJSupplier(regReqDTO);
+						regResDTO.setSuccessful(true);
+					}			
 				}
 			}
-			//Validate the Delivery Address
-              for(PmAddressType deliveryAddress:getManagedBean().getAddressTypesList()){
+			else{
+				log.info("Deactvate Supplier=======");
+				if(orgProfile.getSmSupplier() != null) {
+					
+					reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					OrgProfileResDTO resDTO = orgProfileSO
+							.retrieveSupplierByProfileId(reqDTO);
+					
+					PmOrgProfile orgProfileSm = resDTO.getPmOrgProfile();
+					
+					SmSupplier smSupplier = orgProfileSm.getSmSupplier();
+					if (smSupplier != null) {
+							RegistrationReqDTO regReqDTO = new RegistrationReqDTO();					
+						
+						if (!getManagedBean().getSmSupplierBanks().isEmpty()) {
+			                 for(SmSupplierBank supplierBank:getManagedBean().getSmSupplierBanks()){		                	
+									supplierBank.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);									
+									smSupplier.getSmAppl().setSmSupplierBanks(getManagedBean().getSmSupplierBanks());			
+			                }
+						}
+						if(getManagedBean().getSmPersonnels()!=null && !getManagedBean().getSmPersonnels().isEmpty()){
+							for(SmPersonnel personnel:getManagedBean().getSmPersonnels()){
+								personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);							
+								smSupplier.getSmAppl().setSmPersonnels(getManagedBean().getSmPersonnels());
+							}
+						}					
+						regReqDTO.setSmSupp(smSupplier);
+						RegistrationResDTO regResDTO = registrationSO
+								.updatePTJSupplier(regReqDTO);
+						regResDTO.setSuccessful(true);
+					}
+					IFeeExemptionSO exemptionSO = (IFeeExemptionSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IFeeExemptionSO.class);
+					FeeExemptionReqDTO feeReqDTO = new FeeExemptionReqDTO();
+								
+					feeReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					log.info("Org ProifleId--"+orgProfile.getOrgProfileId());
+					FeeExemptionResDTO feeResDTO = exemptionSO.deleteFeeExemptionByOrgProfile(feeReqDTO);				
+					feeResDTO.setSuccessful(true);
+				}
 				
-				if(deliveryAddress.getAddressType().equals(AddressType.DELIVERY_ADDRESS.value())){
-					log.info("Validate Delivery Address"+deliveryAddress.getPmAddress().getAddress1());
-					validateDeliveryAddress(deliveryAddress.getPmAddress());
-				}				
 			}
-			
-			// Pm Address Types
-		 orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
-			// New OR Update Profile Groups
-			if (getManagedBean().getOrgProfile().isGroupOrg()) {
-				List<PmProfileGroup> profileGrp = getManagedBean().getProfileGroup();
-				
-				for (PmProfileGroup proGroup : profileGrp) {
-					if(proGroup.isBrandNew()){
-						proGroup.setMainOrgProfile(orgProfile);
+		}		
+			// PTJ
+			if (parameterResDTO.getPmParameter().getParameterCode()
+					.equalsIgnoreCase(OrganizationType.DIVISION.value())) {	
+				//Billing Address
+				for(PmAddressType addressType:getManagedBean().getOrgProfile().getPmAddressTypes()){				
+					if(addressType.getAddressType().equals(AddressType.BILLING_ADDRESS.value())&&(addressType.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) && !getManagedBean().getAddressTypesList().contains(addressType)){
+						getManagedBean().getAddressTypesList().add(addressType);
 					}
 				}
-				profileGroup.addAll(profileGrp);
-				orgProfile.setMainProfileGroups(profileGroup);				
-			}
-			// Suspend profileGroups
-			else{			
-				if(getManagedBean().getProfileGroup()!=null && !getManagedBean().getProfileGroup().isEmpty()){
+				//Validate the Delivery Address
+	              for(PmAddressType deliveryAddress:getManagedBean().getAddressTypesList()){
 					
-					for (PmProfileGroup proGroup : getManagedBean().getProfileGroup()) {						
-							proGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-							log.info("Profile Suspended");
-							profileGroup.add(proGroup);
-							orgProfile.setMainProfileGroups(profileGroup);
-							}
-					}							
-			}			
-		}		
-		
-		reqDTO.setPmOrgProfile(orgProfile);
-		OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
-		/*reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-		OrgProfileResDTO resDTO1 = orgProfileSO
-				.retrieveOrgDetailsByOrgId(reqDTO);
-		if (resDTO1 != null && resDTO1.getPmOrgProfile() != null) {
-			getManagedBean().setOrgProfile(resDTO1.getPmOrgProfile());
-		}*/
-
-		if (resDTO.isSuccessful()) {
-			result = resDTO.isSuccessful();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Org Name : ",
-							ResourceBundleUtils.getMessage("lbl.pm.org.created.successfully", 
-									new String[]{getManagedBean().getOrgProfile().getOrgName(),getManagedBean().getOrgProfile().getOrgCode()},ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-						));
+					if(deliveryAddress.getAddressType().equals(AddressType.DELIVERY_ADDRESS.value())){
+						log.info("Validate Delivery Address"+deliveryAddress.getPmAddress().getAddress1());
+						validateDeliveryAddress(deliveryAddress.getPmAddress());
+					}				
+				}
+				
+				// Pm Address Types
+			 orgProfile.setPmAddressTypes(getManagedBean().getAddressTypesList());
+				// New OR Update Profile Groups
+				if (getManagedBean().getOrgProfile().isGroupOrg()) {
+					List<PmProfileGroup> profileGrp = getManagedBean().getProfileGroup();
+					
+					for (PmProfileGroup proGroup : profileGrp) {
+						if(proGroup.isBrandNew()){
+							proGroup.setMainOrgProfile(orgProfile);
+						}
+					}
+					profileGroup.addAll(profileGrp);
+					orgProfile.setMainProfileGroups(profileGroup);				
+				}
+				// Suspend profileGroups
+				else{			
+					if(getManagedBean().getProfileGroup()!=null && !getManagedBean().getProfileGroup().isEmpty()){
+						
+						for (PmProfileGroup proGroup : getManagedBean().getProfileGroup()) {						
+								proGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+								log.info("Profile Suspended");
+								profileGroup.add(proGroup);
+								orgProfile.setMainProfileGroups(profileGroup);
+								}
+						}							
+				}			
+			}		
+			
+			reqDTO.setPmOrgProfile(orgProfile);
+			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
+			/*reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			OrgProfileResDTO resDTO1 = orgProfileSO
+					.retrieveOrgDetailsByOrgId(reqDTO);
+			if (resDTO1 != null && resDTO1.getPmOrgProfile() != null) {
+				getManagedBean().setOrgProfile(resDTO1.getPmOrgProfile());
+			}*/
+	
+			String message = "";
+			if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+				message = ResourceBundleUtils.getMessage("lbl.pm.org.created.successfully", 
+						new String[]{getManagedBean().getOrgProfile().getOrgName(),getManagedBean().getOrgProfile().getOrgCode()},ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				redirectUrl = NAV_TO_SEARCH;
+			}else if(BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(outcome)){
+				message = ResourceBundleUtils.getMessage("lbl.pm.org.updated.successfully", 
+						new String[]{getManagedBean().getOrgProfile().getOrgName(),getManagedBean().getOrgProfile().getOrgCode()},ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				redirectUrl = null;
+				redirectToOrganisation(getManagedBean().getOrgProfile().getOrgProfileId());
+			}
+			
+			if (resDTO.isSuccessful()) {
+				result = resDTO.isSuccessful();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Org Name : ",
+								message)
+						);
+			}
+		}finally {
+			financialOrgSO = null;
+			orgProfileSO = null;
+			parameterSO = null;
+			registrationSO = null;
 		}
 
-		return NAV_TO_SEARCH;
+		return redirectUrl;
 
 	}
 	private void validateOrgProfiel(PmOrgProfile orgProfile){

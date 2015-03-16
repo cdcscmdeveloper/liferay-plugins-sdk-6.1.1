@@ -33,8 +33,11 @@
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.profcert']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-	  	<td style="padding: 5px 0px;"><p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" /><h:outputText value="#{lbl['lbl.sm.profBody.profBody']}" />&#160;&#160;&#160;
-	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" /><h:outputText value="#{lbl['lbl.sm.cert.certBody']}" /></td>	  	
+	  	<td style="padding: 5px 0px;">
+	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" />
+	  		<h:outputText value="#{lbl['lbl.pm.pc.profBody']}" />&#160;&#160;&#160;
+	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" />
+	  		<h:outputText value="#{lbl['lbl.pm.pc.certBody']}" /></td>	  	
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="Status " /></td>
