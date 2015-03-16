@@ -33,6 +33,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodyManagedBean;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -106,11 +108,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * 
 	 */	
 	 public SelectItem[] getCertStatusList() {
-		 
-			SelectItem[] items =  new SelectItem[2];
-			items[0] = new SelectItem(1, "Active");
-			items[1] = new SelectItem(0, "Inactive");
-		    return items;//PmCommonUtil.getStatusOptionsDefault();
+//		 
+//			SelectItem[] items =  new SelectItem[2];
+//			items[0] = new SelectItem(1, "Active");
+//			items[1] = new SelectItem(0, "Inactive");
+		    return PmCommonUtil.getRecordStatusOptions();
 		}
 
 	/**
@@ -119,12 +121,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 */	
 	public SelectItem[] getBodyType() {
 
-		SelectItem[] items = null;
-			items = new SelectItem[3];
-			items[0] = new SelectItem(null, "- Select One -");
-			items[1] = new SelectItem(0, "Professional");
-			items[2] = new SelectItem(1, "Certified");
-
+		SelectItem[] items =  new SelectItem[2];
+		items[0] = new SelectItem(0, ResourceBundleUtils.getMessage(
+				"lbl.pm.pc.prof", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(1, ResourceBundleUtils.getMessage(
+				"lbl.pm.pc.cert", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
 		return items;//PmCommonUtil.getStatusOptions();
 	}
 
@@ -243,7 +246,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 	public void searchProfessionalCertBody() {
 		if(null==getManagedBean().getProfCertifiedBodySearchBean().getCertType()){
-			throw new EpException("Professional / Certified is Mandatory");
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.pm.search.profcert",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
 		}else{
 			getProfCertBodyModel().reloadData();
 		}
@@ -256,19 +263,35 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	private void validationMessage(PmCertBody certBody){
 		debugLogger("validationMessage");
 		if(StringUtils.isBlank(certBody.getBodyCode())){
-			throw new EpException("Code is Mandatory");
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.pm.search.codes",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
 		}
 		
 		if(StringUtils.isBlank(certBody.getBodyName())){
-			throw new EpException("Name is Mandatory");
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.pm.search.name",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
 		}	
 		
 		if(StringUtils.isBlank(certBody.getDescription())){
-			throw new EpException("Description is Mandatory");
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.pm.search.desc",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
 		}
 		
 		if(!certBody.isCertifiedBody()&&!certBody.isProfessionalBody()){
-			throw new EpException("Please Select Professional / Certified.");
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.pm.search.profcert",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
 		}
 	}		
 

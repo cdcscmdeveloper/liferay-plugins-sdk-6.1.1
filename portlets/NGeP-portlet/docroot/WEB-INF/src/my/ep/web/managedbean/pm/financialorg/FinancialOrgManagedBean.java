@@ -61,6 +61,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	private int selectedTabIndex;
 	private Date currentDate = new Date();
 	private boolean showFactoringBank=true;
+	
+	private boolean isLazy = false; 
 
 
 	/**
@@ -269,6 +271,14 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	 */
 	public void setShowFactoringBank(boolean showFactoringBank) {
 		this.showFactoringBank = showFactoringBank;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
 	}
 
 //	/**

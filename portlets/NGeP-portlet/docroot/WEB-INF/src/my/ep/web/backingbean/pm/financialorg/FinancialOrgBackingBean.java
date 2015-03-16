@@ -145,6 +145,7 @@ public class FinancialOrgBackingBean extends
 	 */
 	public String backToMain() {
 		log.info("backToMain");
+		getManagedBean().setLazy(true);
 		getManagedBean().setServiceTypes(null);
 		initialFinOrg();
 		return NAV_TO_SEARCH;
@@ -1452,6 +1453,7 @@ public class FinancialOrgBackingBean extends
 	 */
 	public void resetFinancialOrgSearchBean() {
 		log.info("resetFinancialOrgSearchBean");
+		getManagedBean().setLazy(false);
 		this.getManagedBean().setFinancialOrgSearchBean(
 				new FinancialOrgSearchBean());
 		searchFinancialOrg = new FinancialOrgPagingDataModel();
@@ -1523,7 +1525,7 @@ public class FinancialOrgBackingBean extends
 
 		public FinancialOrgPagingDataModel() {
 
-			super("searchFinancialOrg", false);
+			super("searchFinancialOrg", getManagedBean().isLazy());
 		}
 
 		public ISearchResultBean<PmFinancialOrg> pageChangeListener(
