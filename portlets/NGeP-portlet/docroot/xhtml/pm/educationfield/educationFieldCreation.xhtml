@@ -14,7 +14,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="text-transform:uppercase"
+				<td><p:inputText style="text-transform:uppercase" required="true" label="#{lbl['lbl.pm.ef.code']}"
 						value="#{educationBackingBean.managedBean.pmEduField.fieldCode}"
 						disabled="#{!educationBackingBean.managedBean.pmEduField.brandNew}"
 						size="30" maxlength="10">
@@ -29,12 +29,24 @@
 						size="30" maxlength="100" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
-				<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
+				<td><c:choose>
+						<c:when
+							test="#{educationBackingBean.managedBean.pmEduField.brandNew == true}">
+							<panelGroup style="float: right">
+							<p:outputLabel value="" />
+							<h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel></panelGroup>
+						</c:when>
+						<c:otherwise>
+							<panelGroup style="float: right">
+							<h:outputLabel
+								value="#{lbl['lbl.pm.search.status']}"></h:outputLabel><h:outputLabel value="*" styleClass="mandatory" /></panelGroup>
+						</c:otherwise>
+					</c:choose></td>
+				 <td><p:selectOneMenu style="width:178px;margin-bottom:5px;" required="true" label="#{lbl['lbl.pm.search.status']}"
 						value="#{educationBackingBean.managedBean.pmEduField.recordStatusFlg}"
 						disabled="#{educationBackingBean.managedBean.pmEduField.brandNew}">
 						<f:selectItems
-							value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems>
+							value="#{educationBackingBean.getPmEducationStatusList()}"></f:selectItems>
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
@@ -65,7 +77,7 @@
 					<p:selectOneMenu style="width:178px;"
 						value="#{eduFieldRes.recordStatusFlg}">
 						<f:selectItems
-							value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems>
+							value="#{educationBackingBean.getPmEducationStatusList()}"></f:selectItems>
 					</p:selectOneMenu>
 				</p:column>
 
