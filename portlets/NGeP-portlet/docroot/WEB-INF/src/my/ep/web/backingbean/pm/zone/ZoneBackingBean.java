@@ -364,7 +364,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	
 
 	public static SelectItem[] getStatusOptions() {
-		return PmCommonUtil.getStatusOptionsDefault();
+		return PmCommonUtil.getStatusOptions();
 	}
 
 	public void zoneList() {
