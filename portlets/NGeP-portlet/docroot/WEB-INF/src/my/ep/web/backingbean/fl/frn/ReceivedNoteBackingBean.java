@@ -135,7 +135,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(!getManagedBean().isValidated()){
 				validateFulfilmentNote(action);
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) 
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
@@ -154,7 +156,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(flBB.getManagedBean().getRemarkList().size()>1) {
 				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 			}
-			reqDTO.setUserRole(getUserRole());			
+			reqDTO.setUserRole(getUserRole());	
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
@@ -181,6 +183,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 						messageId = MessageConst.INFO_745003;
 						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+						messageId = MessageConst.INFO_700009;
+						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						messageId = MessageConst.INFO_700008;
+						noteNo = fulfilmentNote.getFulfilmentNoteNo();
 					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(messageId, 
@@ -197,7 +205,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					renewSesionObject();
-					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
 						Map<String, String> paramMap = new HashMap<String, String>();
 						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFulfilmentNoteNo());
 						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -283,8 +291,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				//Add noteItemList to Managed Bean List.
 				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
 				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				getManagedBean().setFrnCancellationProcess(true);//what is this for ?
-				getManagedBean().setDocMaintainRemarks(true);//kklim
+				getManagedBean().setFrnCancellationProcess(true);
+				getManagedBean().setDocMaintainRemarks(true);
 			}else{
 				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
 				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
@@ -556,6 +564,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setAutoUpdate(Boolean.FALSE);			
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}else{
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+				getManagedBean().setValidated(Boolean.TRUE);
+			}
 			submitAction(outcome);
 		}
 	}
@@ -591,12 +602,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
 		}else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
 			return RoleCode.BASIC_SUPPLIER_USER.value();
-		}else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())){
-			return RoleCode.GOVT_SELLER.value();
 		}else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
 			return RoleCode.FL_APPROVER.value();		
 		}else if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
 			return RoleCode.REQUISITIONER.value();		
+		}else if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
+			return RoleCode.RECEIVING_OFFICER.value();		
 		}
 		else 
 			return null;
