@@ -108,7 +108,7 @@
 
 		</div>		
 	</p:panel>
-	<p:dialog id="userSearch" header="USER LIST"
+	<p:dialog id="userSearch" header="#{lbl['lbl.pm.org.govseller.user.list']}"
 		widgetVar="userlistpopup" modal="true" width="600" height="300"
 		resizable="false">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
@@ -119,10 +119,10 @@
 			rowKey="#{user.userId}" rowIndexVar="index">
 			<p:column selectionMode="multiple" style="width:2%" />
 			<ac:paginator for="searchUserId"></ac:paginator>
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.loginid']}" style="width :15%" >
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.loginid']}" style="width :15%" >
 				<h:outputText value="#{user.loginId}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}" style="width :40%" >
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.username']}" style="width :40%" >
 				<h:outputText value="#{user.userName}" />
 			</p:column>
 		</p:dataTable>
