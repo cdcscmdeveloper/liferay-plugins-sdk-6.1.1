@@ -266,6 +266,36 @@ public class LOADetailBackingBean extends
 
 		return QTConstants.LOA_PAGE;
 	}
+	
+	/**
+	 * Calculate bond amount.
+	 *
+	 * @param scLoa the sc loa
+	 * @return the big decimal
+	 */
+	private BigDecimal  calcBondAmount(ScLoa scLoa){
+		BigDecimal  contractDuration = scLoa.getContractDuration();
+		//BigDecimal  bondPercentage = scLoa.getBondPercentage();
+		BigDecimal loaAmt  = scLoa.getLoaAmt();
+		BigDecimal bondAmt  = BigDecimal.ZERO; 
+
+
+		if(loaAmt != null && loaAmt.intValue() >0){
+			int loaAmount = loaAmt.intValue();
+			if(loaAmount >= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND){  // >=500000
+				// 5%
+				BigDecimal  duration = contractDuration.divide(new BigDecimal(12)); 
+				double totalAmt  = loaAmt.divide(duration).multiply(new BigDecimal(0.05)).doubleValue();
+				bondAmt = new BigDecimal(totalAmt);
+			} else{
+				// 2.5%
+				BigDecimal  duration = contractDuration.divide(new BigDecimal(12)); 
+				double totalAmt  = loaAmt.divide(duration).multiply(new BigDecimal(0.025)).doubleValue();
+				bondAmt = new BigDecimal(totalAmt);
+			}
+		}
+		return bondAmt;
+	}
 
 	/**
 	 * Edits the supplier loa action.
@@ -512,6 +542,9 @@ public class LOADetailBackingBean extends
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
 		
+		// calculate performance bond amt
+		scLoa.setBondAmt(calcBondAmount(scLoa));
+
 		// calc total award details
 		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
 			scLoa.setLoaAmt(calcTotalAmount(scLoa.getScLoiLoaItems()));
@@ -1649,7 +1682,15 @@ public class LOADetailBackingBean extends
 		context.put("icNo", icNo);
 
 		context.put("supplierName", scLoiLoa.getSupplierName());
-		context.put("mofNo", ""); // TODO
+		// show (MOF/PKK/CIDB/ROS/ROC/ROB) in declaration.
+		if(scLoiLoa.getSmSupplier() != null){
+			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+			if(smSupplier.getSmMofAccounts() != null && smSupplier.getSmMofAccounts().size()>0){
+				context.put("mofNo", smSupplier.getSmMofAccounts().get(0).getMofNo());
+			} else{
+				context.put("mofNo", smSupplier.getRegNo());
+			}
+		}
 		context.put("agency", pmOrgProfile.getOrgName());
 
 		String termsConditions = DocumentGenerator
