@@ -135,8 +135,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	
+	/**
+	 * The function constructor used for initializing the variable.
+	 * This method will initialize the button and approver list.
+	 */
 	public PanelBackingBean(){
 		 
+	    /*Execute first time retrieve from maintenance*/
 		if(getManagedBean().getOutComes()==null) {
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 				getManagedBean().setCircularVer(new CtCircularVer());
@@ -151,23 +156,33 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 				ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	    	}  
-	    	if(getManagedBean().getUserMap().size()==0) {
+	   
+		/*Setting list of approver during initialization*/
+		if(getManagedBean().getUserMap().size()==0) {
 			   initializeApproverList();
 			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-			   
-	    	} if(getManagedBean().getCircularDocType()==null) {
+			  
+	      /*Setting types of document such panel circular*/
+	     } if(getManagedBean().getCircularDocType()==null) {
 			      getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		
-	    	} if(isPanelAdmin() || isCentralContractAdmin()) {
+	      /*Setting the admin login id*/
+	     } if(isPanelAdmin() || isCentralContractAdmin()) {
 			      FacesScopes facesScopes = new FacesScopes();
 			      getManagedBean().setCircularAdmin(facesScopes.getUserSessionBean().getLoginId());
-		    }
+		  }
 	  }
 	
+	/**
+     *  Method used to retrieve login user information.
+	 */
 	  private FacesScopes getFacesScopes() {
 		     return new FacesScopes();
 	  }
 	
+	  /**
+		 * Method used to retrieve the information and render it on screen.
+		 */
 	  public void preRenderCircular() {
 		  	renewSesionObject();
 		    getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
@@ -175,6 +190,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	  }
 	
+	 /**
+		 * Method used to retrieve the information and render it on screen.
+		 */
 	public void preRenderSearch() {
 	
 		renewSesionObject();
@@ -183,6 +201,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
 	}
 	
+	/**
+	 * Method used to retrieve the information and render it on screen.
+	 */
 	public void preRenderView() {
 		ICircularSO circularSO = null;
 		try {
@@ -229,6 +250,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * The method used to set the panel circular  information while
+	 * rendering the screen.
+	 * 
+	 * @param resDTO  the response data transfer object for circular
+	 */
 	public void setPanelCircularVar(CircularResDTO resDTO){
 		
 		    getManagedBean().setCircularVer(resDTO.getCircularVer());
@@ -271,6 +298,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		     ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	    }
 	
+	/**
+	 * The method used to set the panel circular  panel circular details for cancel
+	 * Navigate the cancel page for panel circular
+	 * 
+	 */
 	    public void preRenderCancelCircular() {
 		     renewSesionObject();
 		     getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
@@ -278,6 +310,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		     fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
 	    }
 	
+	    /**
+		 * The method used to set the  panel circular details for cancel
+		 * Navigate the cancel page for panel circular
+		 * 
+		 */
 	    public void preRenderViewCancelReq() {
 		     ICircularSO circularSO = null;
 		     try {
@@ -348,6 +385,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		     }		
 	   }
 	
+	    /**
+		 * The method used to navigate to contract maintenance screen.
+		 * 
+		 * @return the navigate URL 
+		 */
 	   public String backAction() {
 		   if(getManagedBean().isChkCancelPage()) {
 			   getManagedBean().setChkCancelPage(false);
@@ -362,6 +404,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		   }
 	   }
 	
+	   /**
+		 *Method used to reset change search information
+		 */
 	   public void searchReset(){
 		    this.getManagedBean().setSearchCircularNo(null);
 		    this.getManagedBean().setSearchCircularName(null);
@@ -373,6 +418,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    this.getManagedBean().setSearchStatusId(null);
 	   }
 	
+     /**
+		 *Method used to searchCircularVer to retrieve circular information
+	 */
 	public void searchCircularVer() throws Exception {
 		try {
 			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) && 
@@ -396,6 +444,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}			
 	}
 	
+    /**
+	    *Method used to searchCircularVer to retrieve circular information
+     */
 	public void searchActiveCircularVer(ActionEvent event) {
 		ICircularSO circularSO = null;
 		try {
@@ -416,6 +467,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	  /**
+	    *Method used to save/update of newly created circular
+	    *Method call to validate panel circular details as per rule
+	    *Navigate to confirmation message page
+  */
 	public String savePanelCircular(String action) {
 		log.debug("PanelBackingBean.savePanelCircular("+action+")");
 
@@ -515,6 +571,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return "circularBase.xhtml";
 	}
 	
+	  /**
+	    *Method used to save cancel  circular details into database
+	    *Method call to validate panel circular details as per rule
+	    *Navigate to confirmation message page
+*/
 	public String saveCancelCircularReq(String action) {
 		log.debug("PanelBackingBean.saveCircularPanel("+action+")");
 
@@ -595,6 +656,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * Method used to validate panel circular details
+	 * A warning or error message will display on screen during validation as per rule
+	 * Function validate as per user action 
+	 */
 	public void validateCircular(String outcome) {		
 			getManagedBean().setAutoUpdate(true);
 			/*if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
@@ -691,6 +757,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * This  method used to initialize approver list
+	 */
 	private void initializeApproverList() {
 		if(getManagedBean().getApproverModel() == null) {
 			List<String> source = new ArrayList<String>();
@@ -699,6 +768,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used retrieve list of approver from system
+	 * Approver info fetch from system as per rule define rule
+	 */
 	private List<String> getAvailableApproverList() {
 		IUserSO userSO = null;
 		List<String> sourceList = new ArrayList<String>();
@@ -731,11 +804,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return sourceList;
 	}	
 	
+	/**
+	 * The method used for initializing the remarks of panel circular.
+	 */
 	private void initializeRemarks() {
 		initiateRemark(getManagedBean().getCircularVer().getCircularRemarks());
 		initiateRemark(getManagedBean().getCircularVer().getItemRemarks());
 	}
 	
+	/**
+	 * Method used to initializing the remarks of panel circular
+	 * This method used to check the workflow of current user for
+	 *  initialization or view remark
+	 * 
+	 * return @param remarkList 
+	 */
 	private void initiateRemark(List<CtRemark> remarks) {
 		boolean ctWorkflowStatusMatch = false;
 		if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
@@ -759,18 +842,34 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 
+	/**
+	 * Method used to initializing the remarks of panel circular
+	 * This method used to check the workflow of current user for
+	 *  initialization or view remark
+	 * 
+	 * return @param remarkList 
+	 */
 	public boolean isPanelAdmin() {
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value());
 	}
 	
+	/**
+	 * Method used to set role of central contract admin
+	 */
 	public boolean isCentralContractAdmin() {
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value());
 	}
 	
+	/**
+	 * Method used to set role of BPK approver
+	 */
 	public boolean isBPKApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
 	}
 	
+	/**
+	 * Method used to retrieve the user role on the basis of user login
+	 */
 	private String getUserRole() {
 		if(getManagedBean().getCircularDocType()!=null) { // Cancellation Request
 			if(getManagedBean().getCircularDocType()!=null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
@@ -791,6 +890,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			return null;
 	}
 	
+	/**
+	 * Method used to add list of contract person details
+	 * during panel circular creation
+	 */
 	public void addContactPerson(){
 		log.info("PanelBackingBean.addContactPerson()");
 		try {
@@ -802,6 +905,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to delete list of contract person details
+	 * from panel circular creation
+	 */
 	public void deleteContactPerson(){
 		log.info("PanelBackingBean.deleteContactPerson()");
 		try {
@@ -812,6 +919,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to add list of supplier details
+	 * during panel circular item creation
+	 */
 	public void addPanelSupplier(List<SmSupplier> supplierList){
 		log.info("PanelBackingBean.addPanelSupplier()");
 		try {
@@ -848,6 +959,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to delete list of supplier details
+	 * from panel circular item list
+	 */
 	public void deletePanelSupplier(){
 		
 		try {
@@ -863,6 +978,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to display type of circular for user selection
+	 * to cancel cancel of circular
+	 */
 	public void addCancelCircularListener() {
 		log.info("PanelBackingBean.addCancelCircularListener()");
 		CircularReqDTO reqDTO = null;
@@ -887,6 +1006,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to add list of circular for cancel
+	 */
 	public void addCancelledCircular(){
 		log.info("PanelBackingBean.addCancelledCircular()");
         try {
@@ -907,6 +1029,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to delete list of circular for circular list
+	 */
 	public void deleteCancelCircular(){
 		log.info("PanelBackingBean.deleteCancelCircular()");
 		try {
@@ -918,6 +1043,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to add item details into list of 
+	 * panel circular item details
+	 */
 	public void addPanelItem(){
 		log.info("PanelBackingBean.addPanelItem()");
         try {	
@@ -927,7 +1056,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				 panelItem.setPmUom(new PmUom());
 				 panelItem.setLocationLevelId(new PmParameter());
 				 panelItem.setCtPanelZones(null);
-				 this.getManagedBean().getCircularVer().getCtPanelItems().add(panelItem);
+				 getManagedBean().getCircularVer().getCtPanelItems().add(panelItem);
         	 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -935,23 +1064,35 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method used to delete item details from list of 
+	 *panel circular item details
+	 */
 	public void deletePanelItem(){
 			getManagedBean().getCircularVer().getCtPanelItems().remove(this.getManagedBean().getSelectedPanelItems());
 			this.getManagedBean().setSelectedPanelItems(null);
 			this.getManagedBean().setSelectionOfZone(false);
 	}
 	
+	/**
+	 * Method used to add zone into panel item details
+	 */
 	public void addPanelZone(){
 		CtPanelZone ctPanelZone = new CtPanelZone();
 		this.getManagedBean().getSelectedPanelItems().getCtPanelZones().add(ctPanelZone);
 	}
 	
+	/**
+	 * Method used to delete zone from panel item details
+	 */
 	public void deletePanelZone(){
 		this.getManagedBean().getSelectedPanelItems().getCtPanelZones().remove(getManagedBean().getSelectedPanelZone());
 		this.getManagedBean().setSelectedPanelZone(null);
 	}
 
-	
+	/**
+	 * Method used to delete zone from panel item details
+	 */
 	public void selectActiveCirculars(){
 		log.info("PanelBackingBean.selectActiveCirculars()");
         try {	
@@ -976,6 +1117,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method to remove cancel circular from circular details
+	 * */
 	public void deleteCancelReqCircular() {
 		log.info("PanelBackingBean.deleteCancelReqCircular()");
 		try {
@@ -986,6 +1130,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method to retrieve list of state as per country id
+	 * Construct drop down for user selection
+	 * Return SelectItem object
+	 * */
 	public SelectItem[] getStateDropdownValues() {
 		SelectItem[] items = null;
 		try {
@@ -1007,6 +1156,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    return items;
 	}
 	
+	/**
+	 * Method to retrieve list of circular types as per Doc
+	 * Construct drop down for user selection
+	 * Return SelectItem object
+	 * */
 	public SelectItem[] getCircularDocTypeValues() {
 		SelectItem[] items = null;
 		try {
@@ -1028,6 +1182,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    return items;
 	}
 	
+	/**
+	 * Method to retrieve list of status as per module and doc type
+	 * Construct drop down for user selection
+	 * Return SelectItem object
+	 * */
 	public SelectItem[] getStatusDropdown() {
 		IStatusSO statusSO = null;
 		SelectItem[] items = null;
@@ -1059,6 +1218,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    return items;
 	}
 	
+	/**
+	 * Method to retrieve zonal level list as per district and state
+	 * Construct drop down for user selection
+	 * Return SelectItem object
+	 * */
 	public SelectItem[] getZonalLevelDropDown() {
 		SelectItem[] items = new SelectItem[3];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
@@ -1075,6 +1239,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return items;
 	}
 	
+	/**
+	 * User need to make decision on panel circular maintenance page
+	 * Navigate to panel circular page as per user selection for update or view
+	 * */
 	public String gotoPage() {
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
@@ -1117,6 +1285,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * User need to make decision on panel circular maintenance page
+	 * Navigate to cancel panel circular page as per user selection 
+	 * */
 	public String gotoCancelPage() {
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
@@ -1166,6 +1338,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * The method used to upload  file for circular
+	 * 
+	 * @param  event      the upload event for file upload from screen
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */	
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
@@ -1182,6 +1361,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 	
+	/**
+	 * The method used to download the attached file.
+	 * 
+	 * @param  filePath	    will be download file path
+	 * @param  fileName     will be download filename
+	 * @throws IOException  if an input or output exception occurred
+	 * @see    IOException
+	 */
 	public void downloadFile() throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -1216,6 +1403,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
 	
+	/**
+	 * Method to retrieve types of item
+	 * @param pass paramterId for item details
+	 * Return string type parameter code
+	 * */
 	public String getItemGeneralCode(Long parameterId){
 		if(parameterId == null || parameterId.intValue() == 0)
 			return ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC;
@@ -1240,6 +1432,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		 return null;
 	}
 	
+	/**
+	 * Method to set selected types item as per zone or 
+	 * without zone
+	 * Set boolean type variable
+	 * **/
 	public void setPanelListner(){
 		
 		 String panelCoverageICode = getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getZoneAllParamterId());
@@ -1256,6 +1453,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		 }
 	}
 	
+	/**
+	 * Method to set selected item object for zone and without zone
+	 * @param need to pass ctPanelItem Object
+	 * return void statement
+	  **/
 	public void setCtPanelZoneListner(CtPanelItem panelItem){
 		
 		   String panelCoverageICode = getItemGeneralCode(panelItem.getZoneAllParamterId());
@@ -1282,6 +1484,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method to retrieve parameter id as per code
+	 * @param need to pass location level and state level
+	 * return object long
+	  **/
 	public Long retrieveParameterByTypeAndCode()  {
 		     IParameterSO parameterSO = null;
 		     ParameterReqDTO reqDTO  = null;
@@ -1300,6 +1507,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		     return null;   
 	}
 	
+	/**
+	 * Method to retrieve country id  as per code
+	 * @param need to pass country code
+	 * return object long
+	  **/
 	public Long getCountryId(){
 		
 		CountryReqDTO reqDTO= new CountryReqDTO();
@@ -1317,6 +1529,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	         return null;
 	}
 	
+	/**
+	 * Method to construct zone tree map as location
+	 * @param need to pass parameter id 
+	 * Construct tree pop up for location
+	  **/
 	public void showGeneralZoneLocationPopup() {
 
 		try{
@@ -1336,6 +1553,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	}
 	
+	/**
+	 * Method to construct drop down for location 
+	 * @param need to pass state level and district level code
+	 * Return SelectItem object
+	  **/
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
 
 		List<String> types = new ArrayList<String>();
@@ -1363,6 +1585,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return items;
 	}
 	
+	/**
+	 * Method to retrieve list of zone details for tree node
+	 * @param need to pass TreeNode head
+	 * Return  list of CtPanelZoneDtl object
+	  **/
 	private List<CtPanelZoneDtl> getZoneLocations(TreeNode zoneLocation) {
 
 		List<CtPanelZoneDtl> results = new ArrayList<CtPanelZoneDtl>();
@@ -1378,6 +1605,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return results;
 	}
 	
+	/**
+	 * Method to update tree node for zones
+	 * Construct a tree node structure for zone details
+	 * @throws warning message if zone name is null
+	  **/
 	public void updateZoneGeneralLocation() {
 		
 		if(getManagedBean().getZoneName() == null || getManagedBean().getZoneName() == ""){
@@ -1431,6 +1663,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method to edit tree map zone details
+	 * @param pass CtPanelZone object and int index
+	 * Construct the tree on basis of location zone district and state 
+	 * **/
 	public void editPanelZoneLocation(CtPanelZone zoneLocation,int index) {
 
 		List<PmState> states = PanelLocationHelper.getStateFromLocationDTO(zoneLocation.getPanelZoneDtls());
@@ -1457,11 +1694,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 	}
 	
+	/**
+	   *   Method to set zone status active
+	   *   Return string vaule 1
+	  **/
 	public String getZoneStatus(){
 		
 			return "1";
 	}
 	
+	/**
+	   *   Method to delete selected items from list of items
+	  **/
 	public void removeAddRow(){
 		try {
 			if(this.getManagedBean().getCircularVer().getCtPanelItems() != null){
@@ -1482,6 +1726,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	  /**
+	   *   Method to bulk update of item category and zone of 
+	   *    panel circular item details
+	   *    Set boolean value zones false
+	  **/
 	  public void bulkUpdateRow(){
 		   try {
 			       if(getManagedBean().getCircularVer().getCtPanelItems() != null) {
@@ -1507,6 +1756,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	  /**
+		 * Method used to set new effective  and end date 
+		 *  for panel circular during update 
+		 */
 	public void extendStartEndDate(){
 		
 		if(getManagedBean().isAutoUpdate()){
@@ -1517,6 +1770,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	 /**
+     * Method to set boolean value for checkbox 
+     * @param pass ajax event type
+     * Set boolean value for user action 
+     * */
     public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
 		if((boolean) e.getComponent().getAttributes().get("value")){
@@ -1526,6 +1784,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}	
 	}
 	
+    /**
+     * Method to fetch supplier address from supplier management
+     * @param pass ctPanelSupplier Object
+     * Return String type supplier address
+     * */
 	public String getSupAddress(CtPanelSupplier panelSupplier){
 	
 		ICircularSO circularSO = null;
@@ -1549,11 +1812,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return "";
 	}
 
+	/**
+	 * Method to retrieve description of parameter
+	 * @param String type parameter types
+	 * Return String type of description
+	 * */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
 
+	/**
+	 * Method to set location for supplier item
+	 * */
 	public void selectLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes().get("value");
 		getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(location);
@@ -1564,6 +1835,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	      	getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().clear();
 	}
 	
+	/**
+	 * Method to update bulk of item details of panel circular
+	 * @throws exception if item not selected
+	 * Show pop up dialog box
+	 * */
 	public void bulkUpdateItem(){
 		getManagedBean().setPanelCoverageId(null);
 		getManagedBean().setItemCategoryId(null);
@@ -1580,6 +1856,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		RequestContext.getCurrentInstance().execute("bulkUpdateDlg.show()");
 	}
 	
+	/**
+	 * The method used to supplier account mof details
+	 * @param  smSupplier object
+	 * @return String type mof no
+     */
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
@@ -1591,6 +1872,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * The method used to set value for pre check panel 
+	 * circular security and authentication
+	 * @param  pmDigiSign  an object of digital sign
+	 * @return result of the savePanelCircular
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
+     */
 	public String preSubmitPanelCircular(
 			PmDigiSign pmDigiSign) {
 		if (pmDigiSign != null) {
@@ -1599,6 +1888,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return savePanelCircular(getManagedBean().getAction());
 	}
 	
+	/**
+	 * Method to retrieve current status of circular details
+	 * Return string type variable
+	 */
 	public String getStatusDesc(CtCircularVer circularVer) {
 		if(circularVer.getCtCircular() != null && circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
 			return getStatusDescById(ContractStatusConst.CR_APPROVED);
@@ -1608,6 +1901,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+	 * Method to set @param and show dialog box
+	 */
 	public void setPanelDetailsValue(){
 		if(getManagedBean().getCircularVer().getCircularNo() == null || getManagedBean().getCircularVer().getName() == null
 				 ||getManagedBean().getCircularVer().getStartDate() == null || getManagedBean().getCircularVer().getEndDate() == null) {
@@ -1617,21 +1913,40 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			   }
 	}
 	
+	/**
+	 * Method to retrieve portal name
+	 */
 	public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.panel.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
 	
+	/**
+	 * Method to retrieve portal details title for cancel
+	 */
 	public String getCancelPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cancel.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
 	
+	/**
+	 * Method to retrieve portal details title
+	 */
 	public String getMaintenancePortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.panel.circular.contract.maintenance", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
 	
+	/**
+	 * Method used to authenticate user during panel circular creation
+	 * Method will invoke a confirmation dialog for user authentication
+	 * Method check pre validation and call save method
+	 * 
+	 * @param  need to pass user action such as outcome 
+	 * @return result of the saveCircuar process
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
+     */
 	public String gpkiSignAction(String outcome) throws Exception{
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
 				|| BpmOutcomeConst.BPM_REJECT.equals(outcome)
@@ -1659,11 +1974,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	/**
+   	 * Method used to auto update of request
+   	 */
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
 	
+	/**
+	 * Common method to all module that need to access panel circular
+	 * Navigate on panel circular view page
+	 * Retrieve panel circular details
+	 * @param need to pass circularVer Id
+	 */
 	public String gotoCommonViewPage(Long circularVerId) {
 		
 		ICircularSO circularSO = null;
@@ -1690,6 +2014,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * Method used to set new effective date  for panel circular
+	 * during update 
+	 */
 	public void chkCircularExtension(){
 		if(getManagedBean().isCircularExtension()) {
 				Calendar c = Calendar.getInstance();
