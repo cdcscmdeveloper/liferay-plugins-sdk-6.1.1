@@ -69,12 +69,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().setSearchBidTitle(null);
 		getManagedBean().setSearchBiddingDateFrom(null);
 		getManagedBean().setSearchBiddingDateTo(null);
-		if (getManagedBean().getSelectedStatusDescList() != null) {
-			getManagedBean().getSelectedStatusDescList().clear();
-		}
-		getManagedBean().setSelectedStatusDescList(null);
+		getManagedBean().setSelectedStatusDesc(null);
 		getManagedBean().setMindate(null);
-
 		getManagedBean().searchForScheduledBids();
 
 	}
