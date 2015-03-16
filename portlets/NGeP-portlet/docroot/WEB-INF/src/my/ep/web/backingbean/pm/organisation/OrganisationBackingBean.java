@@ -148,6 +148,7 @@ public class OrganisationBackingBean extends
 	}
 
 	public String backToSearch() {
+		getManagedBean().setIslazy(true);
 		initialOrganisation();
 		return NAV_TO_SEARCH;
 	}
@@ -265,7 +266,7 @@ public class OrganisationBackingBean extends
 
 		public SearchOrgPagingDataModel() {
 
-			super("searchOrganisation", false);
+			super("searchOrganisation", getManagedBean().isIslazy());
 
 		}
 
@@ -316,6 +317,7 @@ public class OrganisationBackingBean extends
 	public void resetOrganisationSearchBean() {
 		log.info("resetOrgSearchBean");
 		this.getManagedBean().setOrganisationSearchBean(null);
+		getManagedBean().setIslazy(false);
 		searchOrganisation = new SearchOrgPagingDataModel();
 	}
 	
