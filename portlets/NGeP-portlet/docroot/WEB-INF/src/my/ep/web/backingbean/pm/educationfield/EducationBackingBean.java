@@ -115,6 +115,19 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		items[1] = new SelectItem(0, "Inactive");
 		return items;
 	}
+	
+	/**
+	 * get Education status item dropdown
+	 * 
+	 */
+	public SelectItem[] getPmEducationStatusList() {
+
+		SelectItem[] items = new SelectItem[3];
+		items[0] = new SelectItem("", "- Select One -");
+		items[1] = new SelectItem(1, "Active");
+		items[2] = new SelectItem(0, "Inactive");
+		return items;
+	}
 
 	/**
 	 * search education field info based on education field names and codes
