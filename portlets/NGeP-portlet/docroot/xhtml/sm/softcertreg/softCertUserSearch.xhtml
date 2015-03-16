@@ -52,6 +52,9 @@
 				<p:ajax event="rowDblselect"
 					listener="#{softCertBackingBean.unSelectPersonnel}"
 					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
+				<p:ajax event="toggleSelect"
+					listener="#{softCertBackingBean.unSelectPersonnel}"
+					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 					
 				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{personnel.disableRowSelection}"/>
 
