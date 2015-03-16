@@ -17,56 +17,25 @@
 
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 
-			<p:column style="width:23%">
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.spec.category.code']}" />
-				</f:facet>
-				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
-					maxlength="2"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					style="margin-right: 3px !important;" size="1">
-					<p:ajax event="blur"
-						update=":form:restrictedtabView:restrictedPnlId"
-						partialSubmit="true" process="@this"
-						listener="#{specificationBackingBean.updatedQtCategoryL1Code(cateGory)}"></p:ajax>
-				</p:inputText>
-				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
-					maxlength="2" size="1"
-					disabled="#{specificationBackingBean.managedBean.readOnly}">
-					<p:ajax event="blur"
-						update=":form:restrictedtabView:restrictedPnlId"
-						partialSubmit="true" process="@this"
-						listener="#{specificationBackingBean.updatedQtCategoryL2Code(cateGory)}"></p:ajax>
-				</p:inputText>
-				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3" size="1"
-					headerText="Category Lov"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
-					postUpdateListener="specificationBackingBean.categoryCodesUpdate(#{index},specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
-					value="#{cateGory.pmCategoryL3.categoryL3Code}"
-					update=":form:restrictedtabView:restrictedPnlId">
-
-				</ac:lov>
-
-
+			<p:column headerText="#{lbl['lbl.sc.category.code']}">
+				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
-				style="width:28%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.main.category']}"
+				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
-				style="width:26%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
-				style="width:25%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+				style="white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
+			<p:column headerText="#{lbl['lbl.sc.category.type']}">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
@@ -82,12 +51,12 @@
 
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this,restrictedPnlId" partialSubmit="true"
-				update="restrictedPnlId" 
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this,restrictedPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
-				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				oncomplete="catCodePopup.show();"
+				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this,restrictedPnlId"
 				partialSubmit="true"
 				action="#{specificationBackingBean.deleteCategoryCodes}"
@@ -95,6 +64,10 @@
 				disabled="#{specificationBackingBean.managedBean.readOnly}" />
 
 		</div>
+		
+		<ac:categoryCodePopup 
+			okAction="specificationBackingBean.addNewCategoryAction"
+			update="@([id$=restrictedPnlId])" />
 	</p:panel>
 
 </ui:composition>
