@@ -248,7 +248,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		
 		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
 		ScQtCategory category = new ScQtCategory();
-		// category.setScQt(scQt);
+		category.setScQt(this.getManagedBean().getQt());
 		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
 		category.setPmCategoryL2(pmCategoryL2);
 		category.setPmCategoryL3(pmCategoryL3);
@@ -274,7 +274,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		
 		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
 		ScQtCategory category = new ScQtCategory();
-		//category.setScQt(this.getManagedBean().getQt());
+		category.setScQt(this.getManagedBean().getQt());
 		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
 		category.setPmCategoryL2(pmCategoryL2);
 		category.setPmCategoryL3(pmCategoryL3);
