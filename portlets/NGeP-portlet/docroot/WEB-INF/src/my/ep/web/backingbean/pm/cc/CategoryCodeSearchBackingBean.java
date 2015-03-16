@@ -125,6 +125,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				}
 			} else {
 				selectedCategoryL3 = getManagedBean().getSelectedCategoryL3();
+				
+				if (selectedCategoryL3 == null) {
+					throw new EpException(MessageConst.ERROR_760249);
+				}
 			}
 			
 			methodExp.invoke(
