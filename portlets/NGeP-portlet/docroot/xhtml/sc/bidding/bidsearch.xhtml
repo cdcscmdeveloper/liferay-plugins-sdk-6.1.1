@@ -27,13 +27,16 @@
 					<td style="width: 20%"></td>
 					<td style="width: 15%"><p:outputLabel id="pickedStatusLbl"
 							value="#{lbl['lbl.sc.status']}" /></td>
-					<td style="width: 20%" rowspan="4"><p:selectManyMenu
-							id="pickedStatus" style="height:155px;width: 200px;"
-							value="#{biddingBB.managedBean.selectedStatusDescList}">
+					<td style="width: 20%">
+						<p:selectOneMenu id="pickedStatus"
+							value="#{biddingBB.managedBean.selectedStatusDesc}"
+							style="width:42%;margin-bottom: 5px;" 
+							label="#{lbl['lbl.sc.sp.credit.type']}">
 							<f:selectItems value="#{biddingBB.managedBean.statusDescs}"
 								var="status" itemLabel="#{status.statusName}"
 								itemValue="#{status.pmStatus.statusId}" />
-						</p:selectManyMenu></td>
+							<p:ajax event="change" process="@this" partialSubmit="true" />
+						</p:selectOneMenu></td>
 				</tr>
 
 				<tr>

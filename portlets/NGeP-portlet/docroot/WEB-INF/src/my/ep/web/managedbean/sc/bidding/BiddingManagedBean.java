@@ -47,7 +47,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 
 	private String searchBiddingNo;
 	private List<PmStatusDesc> statusDescs;
-	private List<Long> selectedStatusDescList;
+	private Long selectedStatusDesc;
 	private String searchDocumentNo;
 	private String searchBidTitle;
 	private Date searchBiddingDateFrom;
@@ -393,8 +393,8 @@ public class BiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @return the selectedStatusDescList
 	 */
-	public List<Long> getSelectedStatusDescList() {
-		return selectedStatusDescList;
+	public Long getSelectedStatusDesc() {
+		return selectedStatusDesc;
 	}
 
 
@@ -402,8 +402,8 @@ public class BiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @param selectedStatusDescList the selectedStatusDescList to set
 	 */
-	public void setSelectedStatusDescList(List<Long> selectedStatusDescList) {
-		this.selectedStatusDescList = selectedStatusDescList;
+	public void setSelectedStatusDesc(Long selectedStatusDesc) {
+		this.selectedStatusDesc = selectedStatusDesc;
 	}
 
 
@@ -925,14 +925,11 @@ public class BiddingManagedBean extends BaseManagedBean {
 					bidSchSearchBean.getDataFilterBeans().add(bean);
 				}
 
-				if (selectedStatusDescList != null
-						&& selectedStatusDescList.size() > 0) {
-					
-
+				if (selectedStatusDesc != null) {
 					bidSchSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean("pmStatus.statusId",
-									SearchOperator.OPERATOR_IN.value(),
-									getSelectedStatusDescList()));
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getSelectedStatusDesc()));
 				}
 
 				// Order by created date
