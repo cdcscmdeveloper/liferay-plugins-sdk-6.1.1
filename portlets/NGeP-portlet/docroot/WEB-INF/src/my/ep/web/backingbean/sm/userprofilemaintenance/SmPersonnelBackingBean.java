@@ -71,6 +71,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -98,10 +99,8 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setSmSupplier(smSupplier);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(
 				resDTO.getPmCountry().getCountryId());
 
@@ -116,10 +115,8 @@ public class SmPersonnelBackingBean extends
 	public void preRenderUpdateOwnProfilePage() {
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(
 				resDTO.getPmCountry().getCountryId());
 		initUserPersonnelInfo();
@@ -152,12 +149,8 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
 		reqDTO.setApplId(smSupplier.getSmAppl().getApplId());
 		reqDTO.setHasActiveAppl(false);
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
 
-		PersonnelResDTO resDTO = smPersonnelSO
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrieveAuthorizedPersonnelsBySuppIdAndApplId(reqDTO);
 
 		getManagedBean().setSmPersonnelList(new ArrayList<SmPersonnel>());
@@ -305,17 +298,16 @@ public class SmPersonnelBackingBean extends
 
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryId(getManagedBean().getDefaultCountryId());
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
+
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryById(reqDTO);
 
 		// getManagedBean().setDisableRole(false);
 		SmPersonnel smPersonnel = new SmPersonnel();
 		getManagedBean().setAccountStatus(1);
 		smPersonnel.setPmCountry(resDTO.getPmCountry());
 
-		resDTO = reqSO.retrieveCountryById(reqDTO);
+		resDTO = SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO);
 		SmAddress mailAddress = new SmAddress();
 		mailAddress.setPmCountry(resDTO.getPmCountry());
 		mailAddress.setPmState(new PmState());
@@ -327,7 +319,7 @@ public class SmPersonnelBackingBean extends
 		mailPersonnelAddress.setSmAddress(mailAddress);
 		mailPersonnelAddress.setSmPersonnel(smPersonnel);
 
-		resDTO = reqSO.retrieveCountryById(reqDTO);
+		resDTO = SmServiceLookup.getCountrySO().retrieveCountryById(reqDTO);
 		SmAddress permAddress = new SmAddress();
 		permAddress.setPmCountry(resDTO.getPmCountry());
 		permAddress.setPmState(new PmState());
@@ -378,11 +370,7 @@ public class SmPersonnelBackingBean extends
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
 
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
-		int countActiveAppl = smPersonnelSO
+		int countActiveAppl = SmServiceLookup.getPersonnelSO()
 				.countSupplierWithActiveApplBySupplierId(reqDTO);
 		PersonnelResDTO resDTO = null;
 		if (countActiveAppl != 0) {
@@ -401,7 +389,7 @@ public class SmPersonnelBackingBean extends
 		// set basic SmAppl
 		getManagedBean().setBasicSmAppl(smSupplier.getSmAppl());
 
-		resDTO = smPersonnelSO
+		resDTO = SmServiceLookup.getPersonnelSO()
 				.retrieveAuthorizedPersonnelsForLatestActiveAppl(reqDTO);
 		if (resDTO.getSmPersonnelList() != null
 				&& !resDTO.getSmPersonnelList().isEmpty()) {
@@ -483,12 +471,9 @@ public class SmPersonnelBackingBean extends
 			SmAddress s1 = new SmAddress();
 
 			/* Construct Mailing Address Object */
-			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
-			CountryResDTO resCountryDTO = countrySO
+			CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 					.retrieveCountryById(reqCountryDTO);
 			s1.setPmCountry(resCountryDTO.getPmCountry());
 			s1.setPmState(new PmState());
@@ -524,12 +509,9 @@ public class SmPersonnelBackingBean extends
 			SmAddress s1 = new SmAddress();
 
 			/* Construct Permanent Address Object */
-			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
-			CountryResDTO resCountryDTO = countrySO
+			CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 					.retrieveCountryById(reqCountryDTO);
 			s1.setPmCountry(resCountryDTO.getPmCountry());
 			s1.setPmState(new PmState());
@@ -576,14 +558,10 @@ public class SmPersonnelBackingBean extends
 				SmAddress s1 = new SmAddress();
 
 				/* Construct Mailing Address Object */
-				ICountrySO countrySO = (ICountrySO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICountrySO.class);
 				CountryReqDTO reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
 						.getDefaultCountryId());
-				CountryResDTO resCountryDTO = countrySO
+				CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 						.retrieveCountryById(reqCountryDTO);
 				s1.setPmCountry(resCountryDTO.getPmCountry());
 				s1.setPmState(new PmState());
@@ -619,14 +597,10 @@ public class SmPersonnelBackingBean extends
 				SmAddress s1 = new SmAddress();
 
 				/* Construct Permanent Address Object */
-				ICountrySO countrySO = (ICountrySO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICountrySO.class);
 				CountryReqDTO reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
 						.getDefaultCountryId());
-				CountryResDTO resCountryDTO = countrySO
+				CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 						.retrieveCountryById(reqCountryDTO);
 				s1.setPmCountry(resCountryDTO.getPmCountry());
 				s1.setPmState(new PmState());
@@ -657,12 +631,8 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void getCountryList() {
 
-		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryReqDTO reqDTO = new CountryReqDTO();
-
-		CountryResDTO resDTO = countrySO.retrieveCountryList();
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryList();
 
 		List<SelectItem> countryList1 = new ArrayList<SelectItem>();
 		List<SelectItem> countryList2 = new ArrayList<SelectItem>();
@@ -827,10 +797,8 @@ public class SmPersonnelBackingBean extends
 		PmCountry cntry = new PmCountry();
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryByCode(reqDTO);
 		cntry = resDTO.getPmCountry();
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
@@ -847,20 +815,12 @@ public class SmPersonnelBackingBean extends
 	 *            personnelId
 	 */
 	public void getPersonnelInfoById(String personnelId) {
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-
 		reqDTO.setPersonnelId(Long.valueOf(personnelId));
-
-		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelById(reqDTO);
-
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelById(reqDTO);
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
-
 		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
-
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
 
 		if (getManagedBean().isViewOnlyPersonnel()) {
@@ -928,14 +888,10 @@ public class SmPersonnelBackingBean extends
 				SmAddress s2 = new SmAddress();
 
 				/* Construct Mailing Address Object */
-				ICountrySO countrySO = (ICountrySO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICountrySO.class);
 				CountryReqDTO reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
 						.getDefaultCountryId());
-				CountryResDTO resCountryDTO = countrySO
+				CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 						.retrieveCountryById(reqCountryDTO);
 				s1.setPmCountry(resCountryDTO.getPmCountry());
 				s1.setPmState(new PmState());
@@ -946,7 +902,8 @@ public class SmPersonnelBackingBean extends
 				reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
 						.getDefaultCountryId());
-				resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+				resCountryDTO = SmServiceLookup.getCountrySO()
+						.retrieveCountryById(reqCountryDTO);
 				s2.setPmCountry(resCountryDTO.getPmCountry());
 				s2.setPmState(new PmState());
 				s2.setPmDistrict(new PmDistrict());
@@ -978,7 +935,8 @@ public class SmPersonnelBackingBean extends
 				reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
 						.getDefaultCountryId());
-				resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+				resCountryDTO = SmServiceLookup.getCountrySO()
+						.retrieveCountryById(reqCountryDTO);
 				smPersonnel.setPmCountry(resCountryDTO.getPmCountry());
 			}
 		}
@@ -992,13 +950,9 @@ public class SmPersonnelBackingBean extends
 	 *            usr
 	 */
 	public void getPersonnelByPmUser(PmUser usr) {
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
-		PersonnelResDTO resDTO = smPersonnelSO
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrievePersonnelByUserId(reqDTO);
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
 		this.getManagedBean().setUpdateSmPersonnel(smPersonnel);
@@ -1072,12 +1026,9 @@ public class SmPersonnelBackingBean extends
 			SmAddress s2 = new SmAddress();
 
 			/* Construct Mailing Address Object */
-			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
-			CountryResDTO resCountryDTO = countrySO
+			CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 					.retrieveCountryById(reqCountryDTO);
 			s1.setPmCountry(resCountryDTO.getPmCountry());
 			s1.setPmState(new PmState());
@@ -1087,7 +1038,8 @@ public class SmPersonnelBackingBean extends
 			/* Construct Permanent Address Object */
 			reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
-			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+			resCountryDTO = SmServiceLookup.getCountrySO().retrieveCountryById(
+					reqCountryDTO);
 			s2.setPmCountry(resCountryDTO.getPmCountry());
 			s2.setPmState(new PmState());
 			s2.setPmDistrict(new PmDistrict());
@@ -1118,7 +1070,8 @@ public class SmPersonnelBackingBean extends
 
 			reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
-			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+			resCountryDTO = SmServiceLookup.getCountrySO().retrieveCountryById(
+					reqCountryDTO);
 			smPersonnel.setPmCountry(resCountryDTO.getPmCountry());
 
 			updatePermAddLists(getManagedBean()
@@ -1226,20 +1179,13 @@ public class SmPersonnelBackingBean extends
 			myIdentityVerification(smPersonnel);
 		}
 
-		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
 		CountryReqDTO reqCountryDTO = new CountryReqDTO();
 		reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
-		CountryResDTO resCountryDTO = countrySO
+		CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 				.retrieveCountryById(reqCountryDTO);
 		PmCountry country = resCountryDTO.getPmCountry();
 		smPersonnel.setPmCountry(country);
 
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 
 		FacesScopes fs = new FacesScopes();
@@ -1255,7 +1201,8 @@ public class SmPersonnelBackingBean extends
 			reqDTO.setDraftApplId(null);
 		}
 
-		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
+				.savePersonnelRecord(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
@@ -1282,10 +1229,6 @@ public class SmPersonnelBackingBean extends
 			this.getManagedBean().getBasicSmPersonnelMailingAddress()
 					.setSmAddress(address);
 		}
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		FacesScopes fs = new FacesScopes();
 		reqDTO.setServerName(fs.getRequest().getServerName());
@@ -1300,7 +1243,8 @@ public class SmPersonnelBackingBean extends
 		} else {
 			reqDTO.setDraftApplId(null);
 		}
-		return smPersonnelSO.updatePersonnelAccountStatusOrEpRole(reqDTO);
+		return SmServiceLookup.getPersonnelSO()
+				.updatePersonnelAccountStatusOrEpRole(reqDTO);
 	}
 
 	/**
@@ -1326,44 +1270,34 @@ public class SmPersonnelBackingBean extends
 		Long stateId = state.getStateId();
 		Long countryId = country.getCountryId();
 
-		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
 		CountryReqDTO reqCountryDTO = new CountryReqDTO();
 		reqCountryDTO.setCountryId(countryId);
-		CountryResDTO resCountryDTO = countrySO
+		CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
 				.retrieveCountryById(reqCountryDTO);
 		PmCountry newCountry = resCountryDTO.getPmCountry();
 
 		s1.setPmCountry(newCountry);
 
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
 		StateReqDTO reqStateDTO = new StateReqDTO();
 		reqStateDTO.setStateId(stateId);
-		StateResDTO resStateDTO = stateSO.retriveStateByID(reqStateDTO);
+		StateResDTO resStateDTO = SmServiceLookup.getStateSO()
+				.retriveStateByID(reqStateDTO);
 		PmState newState = resStateDTO.getPmState();
 
 		s1.setPmState(newState);
 
-		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDistrictSO.class);
 		DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
 		reqDistrictDTO.setDistrictId(districtId);
-		DistrictResDTO resDistrictDTO = districtSO
+		DistrictResDTO resDistrictDTO = SmServiceLookup.getDistrictSO()
 				.retriveDistrictByID(reqDistrictDTO);
 		PmDistrict newDistrict = resDistrictDTO.getPmDistrict();
 
 		s1.setPmDistrict(newDistrict);
 
-		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICitySO.class);
 		CityReqDTO reqCityDTO = new CityReqDTO();
 		reqCityDTO.setCityId(cityId);
-		CityResDTO resCityDTO = citySO.retriveCityById(reqCityDTO);
+		CityResDTO resCityDTO = SmServiceLookup.getCitySO().retriveCityById(
+				reqCityDTO);
 		PmCity newCity = resCityDTO.getPmCity();
 
 		s1.setPmCity(newCity);
@@ -1391,28 +1325,32 @@ public class SmPersonnelBackingBean extends
 
 			reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(countryId);
-			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+			resCountryDTO = SmServiceLookup.getCountrySO().retrieveCountryById(
+					reqCountryDTO);
 			newCountry = resCountryDTO.getPmCountry();
 
 			s2.setPmCountry(newCountry);
 
 			reqStateDTO = new StateReqDTO();
 			reqStateDTO.setStateId(stateId);
-			resStateDTO = stateSO.retriveStateByID(reqStateDTO);
+			resStateDTO = SmServiceLookup.getStateSO().retriveStateByID(
+					reqStateDTO);
 			newState = resStateDTO.getPmState();
 
 			s2.setPmState(newState);
 
 			reqDistrictDTO = new DistrictReqDTO();
 			reqDistrictDTO.setDistrictId(districtId);
-			resDistrictDTO = districtSO.retriveDistrictByID(reqDistrictDTO);
+			resDistrictDTO = SmServiceLookup.getDistrictSO()
+					.retriveDistrictByID(reqDistrictDTO);
 			newDistrict = resDistrictDTO.getPmDistrict();
 
 			s2.setPmDistrict(newDistrict);
 
 			reqCityDTO = new CityReqDTO();
 			reqCityDTO.setCityId(cityId);
-			resCityDTO = citySO.retriveCityById(reqCityDTO);
+			resCityDTO = SmServiceLookup.getCitySO()
+					.retriveCityById(reqCityDTO);
 			newCity = resCityDTO.getPmCity();
 
 			s2.setPmCity(newCity);
@@ -1456,17 +1394,14 @@ public class SmPersonnelBackingBean extends
 		}
 
 		if (getManagedBean().isUpgradeMofDraftAppl()) {
-			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier()
 					.getSupplierId());
 
-			PersonnelResDTO resDTO = smPersonnelSO
-					.retrieveDraftPersonnelByIdentificationNoAndSupplierId(reqDTO);
+			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
+					.retrieveDraftPersonnelByIdentificationNoAndSupplierId(
+							reqDTO);
 			if (resDTO.getSmPersonnel() != null) {
 				throw new EpException(MessageConst.ERROR_722589);
 			}
@@ -1490,10 +1425,6 @@ public class SmPersonnelBackingBean extends
 				postCode = addr.getSmAddress().getPostcode();
 			}
 		}
-		IMyIdentitySO myIdentitySO = (IMyIdentitySO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IMyIdentitySO.class);
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		reqDTO.setName(per.getName());
 		reqDTO.setNewIcNo(per.getIdentificationNo());
@@ -1505,15 +1436,14 @@ public class SmPersonnelBackingBean extends
 		sb.append("MessageConst.ERROR_MYIDENTITY_");
 
 		try {
-			resDTO = myIdentitySO.myIdentityVerification(reqDTO);
-			// StringBuffer sb = new StringBuffer();
+			resDTO = SmServiceLookup.getMyIdentitySO().myIdentityVerification(
+					reqDTO);
 			if (!resDTO.getStatusCode().equalsIgnoreCase(
 					SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
 				sb.append(resDTO.getStatusCode());
 				throw new EpException(sb.toString());
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			throw new EpException(e.getMessage());
 		}
 
@@ -1537,13 +1467,11 @@ public class SmPersonnelBackingBean extends
 	 * @return boolean
 	 */
 	public boolean isExistEmailInPmUser(String email) {
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setEmail(email);
 
-		UserResDTO resDTO = userSO.retrieveUserByEmail(reqDTO);
+		UserResDTO resDTO = SmServiceLookup.getUserSO().retrieveUserByEmail(
+				reqDTO);
 
 		if (resDTO.getUserList().size() > 0) {
 			return true;
@@ -1560,12 +1488,10 @@ public class SmPersonnelBackingBean extends
 	 * @return boolean
 	 */
 	public boolean isExistUserByIdentificationNo(String idNo) {
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setLoginId(idNo);
-		UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+		UserResDTO resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(
+				reqDTO);
 
 		if (resDTO.getPmUser() != null) {
 			return true;
@@ -1582,21 +1508,11 @@ public class SmPersonnelBackingBean extends
 	 * @return
 	 */
 	public String update(SmPersonnel smPersonnel) {
-
 		setUpdateMailingAddrSameAsPerm();
-		// boolean valid = true;
 		try {
-			// if(valid){
-
-			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IPersonnelSO.class);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-
 			reqDTO.setSmPersonnel(smPersonnel);
-
-			PersonnelResDTO resDTO = smPersonnelSO
+			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 					.updatePersonnelRecord(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -1611,11 +1527,8 @@ public class SmPersonnelBackingBean extends
 
 			} else
 				return null;
-			// } else {
-			// return null;
-			// }
 		} finally {
-			// do nothing
+
 		}
 	}
 
@@ -1679,12 +1592,10 @@ public class SmPersonnelBackingBean extends
 	 * @return PmParameter
 	 */
 	private PmParameter retrievePmParameterById(Long paramId) {
-		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(paramId);
-		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
+		ParameterResDTO resDTO = SmServiceLookup.getParameterSO()
+				.retrieveParameterById(reqDTO);
 
 		return resDTO.getPmParameter();
 	}
@@ -1777,10 +1688,6 @@ public class SmPersonnelBackingBean extends
 	 * Process deactivate old admin and replace with new admin
 	 */
 	public void deactivateAdmin() {
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setAdminPersonnel(getManagedBean().getUpdateSmPersonnel());
@@ -1790,7 +1697,8 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
-		resDTO = smPersonnelSO.reassignNewSupplierAdmin(reqDTO);
+		resDTO = SmServiceLookup.getPersonnelSO().reassignNewSupplierAdmin(
+				reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1824,12 +1732,8 @@ public class SmPersonnelBackingBean extends
 		if (getManagedBean().isUpgradeMofDraftAppl()) {
 			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
 			mofRegistrationReqDTO.setSupplierId(smSupplier.getSupplierId());
-
-			IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IMofRegistrationSO.class);
-			return reqSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
+			return SmServiceLookup.getMofRegistrationSO()
+					.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
 					.getSmAppl();
 		} else {
 			return smSupplier.getSmAppl();
