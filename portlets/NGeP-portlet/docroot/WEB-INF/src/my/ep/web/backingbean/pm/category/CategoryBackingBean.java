@@ -595,6 +595,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/search.xhtml";
 	}
 	
+	 public SelectItem[] getRecordStatusList() {		 
+		SelectItem[] items =  new SelectItem[3];
+		items[0] = new SelectItem(null, "- Select One -");
+		items[1] = new SelectItem(1, "Active");
+		items[2] = new SelectItem(0, "Inactive");
+	    return items;
+	}
+	
 	public String saveSubCategory() {
 		ICategoryCodeSO categoryCodeSO;
 		try{
