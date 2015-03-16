@@ -20,7 +20,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}"
 				style="width:20%">
-				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
+				#{restrcitedCateGory.pmCategoryL1.categoryL1Code}#{restrcitedCateGory.pmCategoryL2.categoryL2Code}#{restrcitedCateGory.pmCategoryL3.categoryL3Code}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.main.category']}"
@@ -64,7 +64,7 @@
 		</div>
 		
 		<ac:categoryCodePopup 
-			okAction="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction}"
-			update="@([id$=openPnlId])" />
+			okAction="qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction"
+			update="@([id$=restrictedPnlId])" />
 	</p:panel>
 </ui:composition>
