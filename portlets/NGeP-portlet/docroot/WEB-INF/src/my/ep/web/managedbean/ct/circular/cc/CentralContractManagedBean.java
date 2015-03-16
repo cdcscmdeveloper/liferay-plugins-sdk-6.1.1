@@ -735,7 +735,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param updateAction the updateAction to set
+	 * @param fromCircularNotice the fromCircularNotice to set
 	 */
 	public void setFromCircularNotice(boolean fromCircularNotice) {
 		this.fromCircularNotice = fromCircularNotice;
