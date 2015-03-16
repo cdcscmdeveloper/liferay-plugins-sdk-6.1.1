@@ -230,6 +230,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	/**
 	 * To add empty row to category open code data table.
+	 * 
+	 * @param pmCategoryL3 the pmCategoryL3 instance
 	 */
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		debugLogger("addNewCategoryAction");
@@ -255,6 +257,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	/**
 	 * To add empty row to Restricted Tender Category Code data table.
+	 * 
+	 * @param pmCategoryL3 the pmCategoryL3 instance
 	 */
 	public void addNewRestrictedCategoryAction(PmCategoryL3 pmCategoryL3) {
 		debugLogger("addNewRestrictedCategoryAction");
