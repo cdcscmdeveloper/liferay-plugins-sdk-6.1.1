@@ -22,6 +22,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -60,6 +61,7 @@ import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.financialorg.FinancialOrgManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -847,8 +849,9 @@ public class FinancialOrgBackingBean extends
 	 * @return
 	 * @throws Exception
 	 */
-	public String saveFinancialOrg() throws Exception{
+	public String saveFinancialOrg(String outcome) throws Exception{
 		log.info("saveFinancialOrg");
+		String redirectUrl = null;
 		IFinancialOrgSO financialOrgSO = null;
 		try{
 			
@@ -879,13 +882,25 @@ public class FinancialOrgBackingBean extends
 //										+ this.getManagedBean().getFinancialOrg()
 //												.getFinOrgName()));
 				
+				String message = "";
+				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+					message = MessageUtils.getMessage(MessageConst.INFO_780093, new String[]{resDTO.getPmFinancialOrg().getFinOrgName()}, 
+				    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+				    		new FacesScopes().getUserLocale());
+					redirectUrl = NAV_TO_SEARCH;
+				}else if(BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(outcome)){
+					message = MessageUtils.getMessage(MessageConst.INFO_780096, new String[]{resDTO.getPmFinancialOrg().getFinOrgName()}, 
+				    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+				    		new FacesScopes().getUserLocale());
+					redirectUrl = null;
+					redirectToFinOrg(resDTO.getPmFinancialOrg().getFinancialOrgId());
+				}
+				
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(
 						    FacesMessage.SEVERITY_INFO,
 						    null,
-				    		MessageUtils.getMessage(MessageConst.INFO_780093, new String[]{resDTO.getPmFinancialOrg().getFinOrgName()}, 
-					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
-					    		new FacesScopes().getUserLocale())
+						    message
 				    		));
 	
 			}
@@ -896,7 +911,7 @@ public class FinancialOrgBackingBean extends
 		}finally{
 			financialOrgSO = null;
 		}
-		return NAV_TO_SEARCH;
+		return redirectUrl;
 	}
 	
 	/**
@@ -1445,7 +1460,7 @@ public class FinancialOrgBackingBean extends
 	private ISearchBean<PmFinancialOrg> getSearchBeanData(
 			ISearchBean<PmFinancialOrg> searchBean) {
 		log.info("getSearchBeanData - Start");
-		FinancialOrgSearchBean fSearchBean = this.getManagedBean()
+		FinancialOrgSearchBean fSearchBean = getManagedBean()
 				.getFinancialOrgSearchBean();
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
@@ -1468,12 +1483,24 @@ public class FinancialOrgBackingBean extends
 							getManagedBean().getFinancialOrgSearchBean()
 									.getServiceType()));
 			isEmpty = false;
-		}		
+		}	
+		
+		if(fSearchBean.getOrgStatus() != null && fSearchBean.getOrgStatus().trim().length() > 0){
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getFinancialOrgSearchBean()
 									.getOrgStatus()));
+		}else{
+			List<String> activeAndInActiveStatus = new ArrayList<String>();
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), 
+							activeAndInActiveStatus
+			));
+		}
 		
 		if (fSearchBean.getRegNumber() != null
 				&& fSearchBean.getRegNumber().trim().length() > 0) {
@@ -1496,7 +1523,7 @@ public class FinancialOrgBackingBean extends
 
 		public FinancialOrgPagingDataModel() {
 
-			super("searchFinancialOrg");
+			super("searchFinancialOrg", false);
 		}
 
 		public ISearchResultBean<PmFinancialOrg> pageChangeListener(

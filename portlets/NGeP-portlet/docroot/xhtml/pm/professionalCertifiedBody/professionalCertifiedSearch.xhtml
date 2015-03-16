@@ -37,6 +37,8 @@
 				<td><p:selectOneMenu style="width:205px;margin-bottom:5px;"
 						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.status}"
 						disabled="false">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems style="width:189px;"
 							value="#{profcertifiedbodyBackingBean.getCertStatusList()}" />
 					</p:selectOneMenu></td>

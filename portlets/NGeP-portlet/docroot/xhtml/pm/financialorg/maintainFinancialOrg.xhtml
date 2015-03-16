@@ -19,9 +19,16 @@
 					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						 update=":form" process="@this"
 						action="#{financialOrgBackingBean.backToMain}" style="float:left;" /></td>
-				<td><p:commandButton value="#{financialOrgBackingBean.managedBean.financialOrg.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
-						action="#{financialOrgBackingBean.saveFinancialOrg}"
-						update="@([id$=Msg])" style="float:right;" >
+				<td><p:commandButton value="#{lbl['lbl.btn.create']}"
+						action="#{financialOrgBackingBean.saveFinancialOrg('SAVE')}"
+						update="@([id$=Msg])" style="float:right;" 
+						rendered="#{financialOrgBackingBean.managedBean.financialOrg.brandNew}">
+						<f:param name="disableValidation" value="true" />   
+					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.update']}"
+						action="#{financialOrgBackingBean.saveFinancialOrg('UPDATE')}"
+						update="@([id$=Msg])" style="float:right;" 
+						rendered="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">
 						<f:param name="disableValidation" value="true" />   
 					</p:commandButton>
 				</td>

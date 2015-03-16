@@ -11,5 +11,6 @@
 	<p:commandButton
 		value="#{profcertifiedbodyBackingBean.managedBean.certBody.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 		style="float:right;"
-		action="#{profcertifiedbodyBackingBean.saveCertBodyDtls}" />
+		action="#{profcertifiedbodyBackingBean.saveCertBodyDtls}" 
+		update="@([id$=Msg])"/>
 </ui:composition>

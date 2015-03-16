@@ -45,6 +45,8 @@
 						value="#{lbl['lbl.pm.organisation.status']}" /></th>
 				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
 						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgStatus}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems
 							value="#{organisationBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td>
