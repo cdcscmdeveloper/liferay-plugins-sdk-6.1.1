@@ -24,8 +24,6 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
@@ -149,23 +147,17 @@ public class AuthorizedSignatoryBackingBean extends
 	 * delete selected signatory list 
 	 * 
 	 */		
-	public void deleteAuthorizedSignatory() {
-		debugLogger("deleteAuthorizedSignatory");
-		
-		if(this.getManagedBean().getDeletedCertSignatories()!=null && !this.getManagedBean().getDeletedCertSignatories().isEmpty()){
-			if(this.getManagedBean().getCertSignatories()==null){
-				this.getManagedBean().setCertSignatories(new ArrayList<PmCertSignatory>());
+	
+	public void deleteAuthorizedSignatory(PmCertSignatory pmCertSignatory) {
+
+		if (pmCertSignatory != null && pmCertSignatory.isBrandNew()) {
+			if (this.getManagedBean().getCertSignatories() == null) {
+				this.getManagedBean().setCertSignatories(
+						new ArrayList<PmCertSignatory>());
 			}
-			for (PmCertSignatory pmCertSignatory : this.getManagedBean().getDeletedCertSignatories()) {
-				if(pmCertSignatory.isBrandNew()){
-					this.getManagedBean().getCertSignatories().remove(pmCertSignatory);
-				}
-			}
-			this.getManagedBean().getDeletedCertSignatories().clear();
-		}else{
-			throw new EpException(MessageConst.ERROR_770139);
+			this.getManagedBean().getCertSignatories().remove(pmCertSignatory);
 		}
-	}	
+	}
 	
 	/**
 	 * Basic validation for mandatory fields
