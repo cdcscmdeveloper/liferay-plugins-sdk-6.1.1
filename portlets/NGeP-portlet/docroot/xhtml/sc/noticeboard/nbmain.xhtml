@@ -24,11 +24,23 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.category.code']}" /></td>
-				<td><ac:lov id="category" lovId="PM_CATEGORY_L3"
-						headerText="Category Lov"
-						saveObject="noticeBoardBackingBean.managedBean.categoryL3"
-						value="#{noticeBoardBackingBean.managedBean.categoryL3.categoryName}"
-						size="25" readonly="true" /></td>
+				<td>						
+					<p:inputText id="catCodeTxt" 
+						value="#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.categoryL2Code}#{noticeBoardBackingBean.managedBean.categoryL3.categoryL3Code}"
+						size="25"
+						disabled="true" />
+					&#160;
+					<p:commandLink id="catCodeImg"
+						process="@this" partialSubmit="true" update="@([id$=catCodePopup])"
+						oncomplete="catCodePopup.show();"
+						action="#{categoryCodeSearchBackingBean.renewSesionObject}">
+						<p:graphicImage library="ep/images/design" name="magnifier_zoom_in.png" />								
+					</p:commandLink>
+					
+					<ac:categoryCodePopup 
+						okAction="noticeBoardBackingBean.selectCategoryAction"
+						update="@([id$=catCodeTxt])" />
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel

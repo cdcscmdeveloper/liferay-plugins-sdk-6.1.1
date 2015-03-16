@@ -1898,4 +1898,14 @@ public class NoticeBoardBackingBean extends
 		return biddinSO;
 	}
 	
+	/**
+	 * Category Selection Action
+	 * 
+	 * @param pmCategoryL3
+	 * 		the PmCategoryL3 instance
+	 */
+	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
+		this.getManagedBean().setCategoryL3(pmCategoryL3);
+	}
+	
 }
