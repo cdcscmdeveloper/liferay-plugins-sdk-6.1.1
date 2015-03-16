@@ -413,7 +413,7 @@ public class ApprovalBackingBean extends
 				committeItem.setProcess("@this");
 				committeItem.setUpdate("@this");
 				//committeItem.setUpdate("@form");
-				committeItem.setOnclick("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
+				committeItem.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
 				menuModel.addMenuItem(committeItem);
 				zoneTabIndex++;
 			}

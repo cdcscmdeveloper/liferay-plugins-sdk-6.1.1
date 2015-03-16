@@ -1515,7 +1515,7 @@ public class QTDetailBackingBean extends
 						committeItem.setIcon("ui-icon-endorse");
 					}
 				}
-				committeItem.setOnclick("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
+				committeItem.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
 				menuModel.addMenuItem(committeItem);
 				zoneTabIndex++;
 			}
@@ -1989,7 +1989,7 @@ public class QTDetailBackingBean extends
 				approvalItem.setUpdate("@this");
 				approvalItem.setPartialSubmit(true);
 				approvalItem.setProcess("@this");
-				approvalItem.setOnclick("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : " + approvalTabIndex + "}]);");
+				approvalItem.setOncomplete("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : " + approvalTabIndex + "}]);");
 				menuModel.addMenuItem(approvalItem);
 				approvalTabIndex++;
 			}

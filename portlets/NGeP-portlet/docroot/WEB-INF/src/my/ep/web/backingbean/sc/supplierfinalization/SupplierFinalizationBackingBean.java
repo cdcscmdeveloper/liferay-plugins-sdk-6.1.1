@@ -3238,7 +3238,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			// Dynamically generating the tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
 			if (CollectionUtils.isNotEmpty(zoneDtls)) {
-				FacesContext facesContext = FacesContext.getCurrentInstance();
 				int zoneTabIndex = 0;
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 					specZoneDtl.setZoneTabIndex(zoneTabIndex);
@@ -3249,7 +3248,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
-					zoneItem.setOnclick("onZoneTabChangeAction([ {name : 'selectedZoneTabIndex', value : " + zoneTabIndex + "}]);");
+					zoneItem.setOncomplete("onZoneTabChangeAction([ {name : 'selectedZoneTabIndex', value : " + zoneTabIndex + "}]);");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
 				}
