@@ -13,7 +13,6 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +50,14 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	/**
+	 * Validate ROS
+	 * 
+	 * @param String
+	 *            businessType
+	 * @param String
+	 *            value
+	 */
 	private void validateRos(String businessType, Object value) {
 		if (businessType.equals("K")) {
 			validateRosPertubuhan(value.toString());
@@ -59,6 +66,12 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	/**
+	 * Validate ROC
+	 * 
+	 * @param String
+	 *            rocNo
+	 */
 	private void validateRoc(String rocNo) {
 		String[] splitRoc = rocNo.split("-");
 		String splitRoc1 = "";
@@ -78,6 +91,12 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	/**
+	 * Validate ROB
+	 * 
+	 * @param String
+	 *            robNo
+	 */
 	private void validateRob(String robNo) {
 		String[] splitRob = robNo.split("-");
 		String splitRob1 = "";
@@ -97,6 +116,12 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	/**
+	 * Validate LLP
+	 * 
+	 * @param String
+	 *            llpNo
+	 */
 	private void validateLlp(String llpNo) {
 		String[] splitLlp = llpNo.split("-");
 		String splitLlp1 = "";
@@ -125,6 +150,12 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	/**
+	 * Validate ROS Koperasi
+	 * 
+	 * @param String
+	 *            rosNo
+	 */
 	private void validateRosKoperasi(String rosNo) {
 		String[] splitRos = rosNo.split("-");
 		String splitRos1 = "";
@@ -149,6 +180,12 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	/**
+	 * Validate ROS Pertubuhan
+	 * 
+	 * @param String
+	 *            rosNo
+	 */
 	private void validateRosPertubuhan(String rosNo) {
 		String[] splitRos = rosNo.split("-");
 		String splitRos1 = "";
@@ -178,12 +215,25 @@ public class BusinessRegNoValidator implements Validator {
 		}
 	}
 
+	/**
+	 * Show validation message
+	 * 
+	 * @param String
+	 *            key
+	 */
 	private void throwErrorMsg(String key) {
 		throw new ValidatorException(new FacesMessage(
 				FacesMessage.SEVERITY_ERROR, "Business Reg No Error",
 				SmCommonUtil.getMessage(key, null)));
 	}
 
+	/**
+	 * Check if date entered is valid
+	 * 
+	 * @param String
+	 *            argValue
+	 * @return boolean
+	 */
 	private boolean isValidDate(String argValue) {
 		boolean retVal = true;
 		if (argValue.length() != 8) {
