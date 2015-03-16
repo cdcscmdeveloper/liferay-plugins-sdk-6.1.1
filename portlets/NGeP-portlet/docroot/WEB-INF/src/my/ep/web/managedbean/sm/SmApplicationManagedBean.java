@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -54,6 +55,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -341,6 +343,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Long prevBasicStateId;
 	private SmApplStatusInfoVO applStatusInfo;
 	private PmDigiSign pmDigiSign;
+	/** The spki backing bean. */
+	@ManagedProperty(value = "#{spkiBackingBean}")
+	private SpkiBackingBean spkiBackingBean;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2563,7 +2568,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return prevApprovedPersonnels;
 	}
 
-	public void setPrevApprovedPersonnels(List<SmPersonnel> prevApprovedPersonnels) {
+	public void setPrevApprovedPersonnels(
+			List<SmPersonnel> prevApprovedPersonnels) {
 		this.prevApprovedPersonnels = prevApprovedPersonnels;
 	}
 
@@ -2614,5 +2620,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setApplStatusInfo(SmApplStatusInfoVO applStatusInfo) {
 		this.applStatusInfo = applStatusInfo;
 	}
-	
+
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
+	}
+
 }

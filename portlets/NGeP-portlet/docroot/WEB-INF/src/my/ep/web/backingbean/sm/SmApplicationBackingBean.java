@@ -887,9 +887,26 @@ public class SmApplicationBackingBean extends
 			throw new EpException(sb.toString());
 		} else {
 			// RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
-			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
-			spkiBackingBean.getChallengeQuestions();
+			// SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		}
+	}
+
+	public void onDisplaySpkiPopForSubmitAppl() {
+		boolean valid = false;
+		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
+				&& getManagedBean().getSmAppl().getSupportingDocMode()
+						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			valid = validateSupportingDocs();
+		} else {
+			valid = true;
+		}
+		if (valid) {
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		} else {
+			log.info("*** Invalid Online supporting docs validataion **** ");
 		}
 	}
 
@@ -1554,12 +1571,13 @@ public class SmApplicationBackingBean extends
 					catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
 				}
 			}
-			
-			// temp fix to reduce the number of supporting documents retrieve for update & bumi.
-			if(catL3Ids.size() == 0) {
+
+			// temp fix to reduce the number of supporting documents retrieve
+			// for update & bumi.
+			if (catL3Ids.size() == 0) {
 				catL3Ids.add(0L);
 			}
-			
+
 			rqDto.setCategoryL3Ids(catL3Ids);
 			log.info(" **** Total categories sent to Doc So ***"
 					+ rqDto.getCategoryL3Ids().size());
@@ -1601,14 +1619,19 @@ public class SmApplicationBackingBean extends
 					log.info(" ******* Existing doc list without change in state id  *****");
 					docs.addAll(getManagedBean().getSmAppl()
 							.getSmApplSupportDocs());
-					System.out.println("getManagedBean().getSmAppl().getSmApplSupportDocs(): " + getManagedBean().getSmAppl().getSmApplSupportDocs());
+					System.out
+							.println("getManagedBean().getSmAppl().getSmApplSupportDocs(): "
+									+ getManagedBean().getSmAppl()
+											.getSmApplSupportDocs());
 					for (PmDocument doc : rsDTO.getDocumentList()) {
 						boolean recordExists = false;
 						for (SmApplSupportDoc smDocu : getManagedBean()
 								.getSmAppl().getSmApplSupportDocs()) {
 
-							System.out.println("smDocu: " + smDocu + " " + smDocu.getApplSupportDocId());
-							System.out.println("smDocu.getPmDocument(): " + smDocu.getPmDocument());
+							System.out.println("smDocu: " + smDocu + " "
+									+ smDocu.getApplSupportDocId());
+							System.out.println("smDocu.getPmDocument(): "
+									+ smDocu.getPmDocument());
 							if (smDocu.getPmDocument().getDocumentId()
 									.equals(doc.getDocumentId())) {
 								// docs.add(smDocu);
@@ -5617,10 +5640,11 @@ public class SmApplicationBackingBean extends
 			updateSpkiDigiSignData(pmDigiSign, "SR", this.getManagedBean()
 					.getSmAppl().getApplId(), this.getManagedBean().getSmAppl()
 					.getApplNo(), prepareOriginalText());
-			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
-			log.info("spkiBackingBean: " + spkiBackingBean);
-			String signedData = spkiBackingBean
+			// SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+			// log.info("spkiBackingBean: " + spkiBackingBean);
+			String signedData = getManagedBean().getSpkiBackingBean()
 					.spkiSignTransaction(prepareOriginalText());
+
 			log.info("signedData: " + signedData);
 
 			pmDigiSign.setSignedData(signedData);

@@ -29,10 +29,13 @@
 							</c:when>
 							<c:otherwise>
 								<p:commandButton value="#{lbl['lbl.sm.declare']}"
-									action="#{spkiBackingBean.getChallengeQuestions}"
-									update="spkiOutPanel" oncomplete="spki_dlg.show();" />
+									action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
+									update="spkiOutPanel,@([id$=Msg])" />
 								<p:outputPanel id="spkiOutPanel">
 									<ac:spkiPopup id="spkiPopup"
+										password="#{backingBean.managedBean.spkiBackingBean.password}"
+										challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
+										challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
 										postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, backingBean.managedBean.smAppl.applType)}" />
 								</p:outputPanel>
 							</c:otherwise>

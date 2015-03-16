@@ -10,24 +10,15 @@
 
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="messages" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" escape="false" />
 		<p:panel
 			header="#{lbl['lbl.sm.mof.reg.cancel']} - #{backingBean.managedBean.smAppl.applNo}">
-
-			<!-- 	<div>
-
-				<h4
-					style="color: blue; text-decoration: underline; text-align: center;">
-					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
-					<h:outputText value="Cancel Registration With Mof" />
-					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
-
-				</h4>
-			</div> -->
 			<br />
 			<table style="width: 100%; float: center">
-
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /> <p:outputLabel
@@ -56,13 +47,16 @@
 							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" /></td>
 				</tr>
 			</table>
-			<div align="center">
+			<div align="center" style="width: 99%" class="button-wrapper">
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{backingBean.onDisplayConfirmCanceMofRegistration}"
 					update="spkiOutPanel,@([id$=Msg])" />
 				<p:outputPanel id="spkiOutPanel">
 					<ac:spkiPopup id="spkiPopup"
-						postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForCancel)}" />
+						password="#{backingBean.managedBean.spkiBackingBean.password}"
+						challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
+						challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
+						postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, backingBean.managedBean.smAppl.applType)}" />
 				</p:outputPanel>
 			</div>
 		</p:panel>
@@ -78,17 +72,5 @@
 				update="@form" oncomplete="excelDialog.hide();" />
 		</p:dialog>
 		<p:message id="uploadMsg" for="upload" display="icon" />
-		<p:confirmDialog id="canRegConfirm" width="350px" closable="false"
-			message="#{lbl['lbl.sm.mof.reg.cancel.confirm']}"
-			header="#{lbl['lbl.sm.mof.reg.cancel']}" severity="alert"
-			widgetVar="canRegConfirm">
-			<div align="center">
-				<p:commandButton id="confCanDel" value="#{lbl['lbl.btn.yes']}"
-					onclick="canRegConfirm.hide()" partialSubmit="true" process="@form"
-					action="#{backingBean.submitCancelMofApplToBpm}" />
-				<p:commandButton id="declineCancDel" value="#{lbl['lbl.btn.no']}"
-					onclick="canRegConfirm.hide()" type="button" />
-			</div>
-		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
