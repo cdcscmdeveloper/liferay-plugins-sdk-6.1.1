@@ -123,8 +123,9 @@
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
 			mode="advanced" id="dialoguploadidsss"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			update="uploadsfileids" oncomplete="committeeAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
