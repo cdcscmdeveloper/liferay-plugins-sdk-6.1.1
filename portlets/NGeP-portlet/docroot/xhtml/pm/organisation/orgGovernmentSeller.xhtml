@@ -43,7 +43,7 @@
 				</p:selectOneMenu>
 
 			</p:column>
-	        <p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+	        <p:column width="5%" headerText="#{lbl['lbl.pm.financialorg.action']}">
              <p:commandLink partialSubmit="true" disabled="#{!supplierBank.brandNew}"
 				process="@this" action="#{organisationBackingBean.deleteSupplierBank(rowIndex)}"
 				update="govorgid" >
@@ -52,7 +52,7 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,govorgid" partialSubmit="true"
 				action="#{organisationBackingBean.addSupplierBank}" 
 				oncomplete="supplierBankWidget.paginator.endLink.click();"
@@ -76,10 +76,10 @@
 			>
 			<ac:paginator for="supplierUsers"></ac:paginator>
 
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.loginid']}" style="width :15%">
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.loginid']}" style="width :15%">
 				<h:outputText value="#{personnel.pmUser.loginId}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}" style="width :40%">
+			<p:column headerText="#{lbl['lbl.pm.org.govseller.userdetails.username']}" style="width :40%">
 				<h:outputText value="#{personnel.pmUser.userName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
