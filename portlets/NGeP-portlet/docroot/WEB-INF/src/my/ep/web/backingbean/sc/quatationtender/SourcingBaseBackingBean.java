@@ -68,6 +68,7 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScWorkFlowStatus;
@@ -1069,6 +1070,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (int i = 0; i < toBeRemovedList.size(); i++) {
 				list.remove(toBeRemovedList.get(i).intValue());
 			}
+		}
+	}
+	
+	/**
+	 * Validate Duplicate Category code.
+	 *
+	 * @param pmCategoryL3 the category l3
+	 * @param categoryList the category list
+	 */
+	public void validateDuplicateCategoryCode(PmCategoryL3 pmCategoryL3, List<ScQtCategory> categoryList) {
+		boolean isDuplicate = false;
+		for (int i = 0; i < categoryList.size(); i++) {
+			ScQtCategory scQtCategory = categoryList.get(i);
+			
+			if (scQtCategory.getPmCategoryL3().getCategoryL3Code().equals(pmCategoryL3.getCategoryL3Code()) && 
+					scQtCategory.getPmCategoryL2().getCategoryL2Code().equals(pmCategoryL3.getPmCategoryL2().getCategoryL2Code()) && 
+					scQtCategory.getPmCategoryL1().getCategoryL1Code().equals(pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code())) {
+				isDuplicate = true;
+				
+				break;
+			}
+		}
+		
+		if (isDuplicate) {
+			throw new EpException(MessageConst.ERROR_760111);
 		}
 	}
 }

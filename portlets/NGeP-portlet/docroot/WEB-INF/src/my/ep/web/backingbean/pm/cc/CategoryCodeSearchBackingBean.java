@@ -5,6 +5,7 @@ package my.ep.web.backingbean.pm.cc;
 
 import java.util.List;
 
+import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -37,10 +38,9 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-
-import com.sun.faces.facelets.el.ContextualCompositeMethodExpression;
 
 /**
  * Common Category Code Search Backing Bean
@@ -75,57 +75,64 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		getCategoryDescrDataModel().resetData();
 	}
 	
-	public void okAction(ContextualCompositeMethodExpression methodExp) {
+	public void okAction(String methodActionStr) {
 		debugLogger("okAction");
 		
-		String searchBy = getManagedBean().getSearchBy();
-		PmCategoryL3 selectedCategoryL3 = null;
-		
-		if (ParameterConst.CATEGORY_CODE_SEARCH_BY_CODE.equals(searchBy)) {
-			if (getManagedBean().getCategoryCodeIdLvl1() == null) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage(
-								"lbl.sc.main.category", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())});
-			} else if (getManagedBean().getCategoryCodeIdLvl2() == null) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage(
-								"lbl.sc.sub.category", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())});
-			} else if (getManagedBean().getCategoryCodeIdLvl3() == null) {
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage(
-								"lbl.sc.sub.category.division", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())});
-			} else {
-				ICategoryCodeSO categoryCodeSO = null;
-				try {
-					categoryCodeSO = BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-									ICategoryCodeSO.class);
+		if (StringUtils.isNotBlank(methodActionStr)) {
+			MethodExpression methodExp = FacesScopes
+	                .createMethodExpression(FacesContext.getCurrentInstance(),
+	                		methodActionStr, null,
+	                        new Class[] { PmCategoryL3.class });
+			
+			String searchBy = getManagedBean().getSearchBy();
+			PmCategoryL3 selectedCategoryL3 = null;
+			
+			if (ParameterConst.CATEGORY_CODE_SEARCH_BY_CODE.equals(searchBy)) {
+				if (getManagedBean().getCategoryCodeIdLvl1() == null) {
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage(
+									"lbl.sc.main.category", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+				} else if (getManagedBean().getCategoryCodeIdLvl2() == null) {
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage(
+									"lbl.sc.sub.category", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+				} else if (getManagedBean().getCategoryCodeIdLvl3() == null) {
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage(
+									"lbl.sc.sub.category.division", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+				} else {
+					ICategoryCodeSO categoryCodeSO = null;
+					try {
+						categoryCodeSO = BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										ICategoryCodeSO.class);
 
-					CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-					reqDTO.setCategoryL3Id(getManagedBean().getCategoryCodeIdLvl3());
-					CategoryCodeResDTO resDTO = categoryCodeSO
-							.retrieveCategoryL3DtlById(reqDTO);
+						CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+						reqDTO.setCategoryL3Id(getManagedBean().getCategoryCodeIdLvl3());
+						CategoryCodeResDTO resDTO = categoryCodeSO
+								.retrieveCategoryL3DtlById(reqDTO);
 
-					selectedCategoryL3 = resDTO.getCategoryL3();
-				} finally {
-					categoryCodeSO = null;
+						selectedCategoryL3 = resDTO.getCategoryL3();
+					} finally {
+						categoryCodeSO = null;
+					}
 				}
+			} else {
+				selectedCategoryL3 = getManagedBean().getSelectedCategoryL3();
 			}
-		} else {
-			selectedCategoryL3 = getManagedBean().getSelectedCategoryL3();
+			
+			methodExp.invoke(
+					FacesContext.getCurrentInstance().getELContext(), 
+					new Object[]{selectedCategoryL3});
+			
+			RequestContext.getCurrentInstance().execute("catCodePopup.hide()");
 		}
-		
-		methodExp.invoke(
-				FacesContext.getCurrentInstance().getELContext(), 
-				new Object[]{selectedCategoryL3});
-		
-		RequestContext.getCurrentInstance().execute("catCodePopup.hide()");
 	}
 	
 	public void cancelAction() {
