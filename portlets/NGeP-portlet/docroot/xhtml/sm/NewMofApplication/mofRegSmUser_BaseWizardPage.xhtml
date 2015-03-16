@@ -198,7 +198,7 @@
 					</tr>
 				</table>
 				<ui:include
-							src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
+					src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
 				<c:choose>
 					<c:when
 						test="#{(backingBean.managedBean.smAppl.applCategoryType eq 'S' and backingBean.managedBean.tabActiveIndex lt 9)}">
@@ -221,10 +221,13 @@
 													<c:when
 														test="#{backingBean.managedBean.overLappedCategoryExists}">
 														<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
-															action="#{spkiBackingBean.getChallengeQuestions}"
-															update="spkiOutPanel" oncomplete="spki_dlg.show();" />
+															action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
+															update="spkiOutPanel,@([id$=Msg])" />
 														<p:outputPanel id="spkiOutPanel">
 															<ac:spkiPopup id="spkiPopup"
+																password="#{backingBean.managedBean.spkiBackingBean.password}"
+																challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
+																challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
 																postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
 														</p:outputPanel>
 													</c:when>
@@ -268,10 +271,13 @@
 														<c:when
 															test="#{backingBean.managedBean.overLappedCategoryExists}">
 															<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
-																action="#{spkiBackingBean.getChallengeQuestions}"
-																update="spkiOutPanel" oncomplete="spki_dlg.show();" />
+																action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
+																update="spkiOutPanel,@([id$=Msg])" />
 															<p:outputPanel id="spkiOutPanel">
 																<ac:spkiPopup id="spkiPopup"
+																	password="#{backingBean.managedBean.spkiBackingBean.password}"
+																	challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
+																	challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
 																	postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
 															</p:outputPanel>
 														</c:when>
