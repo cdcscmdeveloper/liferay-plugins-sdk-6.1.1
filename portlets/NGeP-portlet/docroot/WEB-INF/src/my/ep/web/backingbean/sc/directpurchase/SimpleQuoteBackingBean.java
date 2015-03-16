@@ -759,11 +759,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// zone details
-			if(getManagedBean().getZoneTrees() == null && getManagedBean().getZoneTrees().isEmpty()){
-				quote.setQuoteZone(null);
-			} else{
-				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-			}
+	        quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 			
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// panel item zone 
@@ -1225,14 +1221,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getBusinessNatureCriterias() != null && getManagedBean().getBusinessNatureCriterias().size() >0){
 				quote.setBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias());
 			}
-			
+
 			// zone details
-			if(getManagedBean().getZoneTrees() == null || getManagedBean().getZoneTrees().isEmpty()){
-				quote.setQuoteZone(null);
-			} else{
-				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-			}
-			
+			quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// panel item zone 
 			if(quote.getPanelItem() != null){
@@ -3507,7 +3499,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(scQuoteZone!=null){
 			List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
 			List<TplSpecZoneDtl> tplSpecDtls = new ArrayList<TplSpecZoneDtl>();
-
+			
 			for (TreeNode rootNode : treeNodes) {
 				results = new ArrayList<TplSpecZoneLoc>();
 
@@ -3546,9 +3538,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(tplSpecZoneDtl != null){
 					tplSpecZoneDtl.setTplSpecZoneLocs(results);
 					tplSpecDtls.add(tplSpecZoneDtl);
-					scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
+					//scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
 				}
 			}
+			scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
 		}
 		return scQuoteZone;
 	}
@@ -3745,7 +3738,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			quote.setZonal(Boolean.FALSE);
 			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
-			this.getManagedBean().getZoneTrees().clear();
+
+			if(getManagedBean().getZoneTrees() != null){
+				this.getManagedBean().getZoneTrees().clear();
+			}
+			if(getManagedBean().getBeans() != null){
+				getManagedBean().getBeans().clear();
+			}
 			getManagedBean().setLocationLevel(null);
 		}
 		
