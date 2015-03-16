@@ -15,7 +15,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -114,6 +113,10 @@ public class OrganisationBackingBean extends
 	public static final String NAV_TO_SEARCH = "organisationMain";
 	public static final String NAV_TO_MAINTAIN = "maintainOrganisation";
 
+	/**
+	 *  The constructor used for save user logging.
+	 *  	 
+	 **/	
 	public OrganisationBackingBean() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
@@ -126,6 +129,11 @@ public class OrganisationBackingBean extends
 
 	}
 
+	/**
+	 *  This method used for reset the search bean field and
+	 *  navigate to the search main page. 
+	 * 
+	 **/
 	public void preLoadingOrg() {
 		log.info("preLodingOrg");
 		this.resetOrganisationSearchBean();
@@ -134,24 +142,55 @@ public class OrganisationBackingBean extends
 				.handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
 
-
+	/**
+	 * 
+	 *  This method used to get the tab index for Profile Detail.
+	 * 
+	 **/
 	public int getProfileDetails() {
 		return PROFILE_DETAIL;
 	}
-
+	
+	/**
+	 * 
+	 *  This method used to get the tab index for Government Seller.
+	 * 	  
+	 **/
 	public int getGovernmentSeller() {
 		return GOV_SELLER;
 	}
 
+	/**
+	 *  This method used to get the tab index for Jabatan.
+	 * 
+	 **/
 	public int getResponsibleProfile() {
 		return RESPONSIBLE_PROFILE;
 	}
 
+	/**
+	 * 	This method used to set the data table lazy loading to true,
+	 * 	initial the organisation variables and 
+	 * 	redirect to the search main page. 
+	 * 
+	 **/
 	public String backToSearch() {
 		getManagedBean().setIslazy(true);
 		initialOrganisation();
 		return NAV_TO_SEARCH;
 	}
+	
+	/**
+	 *  This method used for redirect the organisation page
+	 *  Reset the Organisation variables and set the variables.
+	 * 	Used for new record and existing record.
+	 * 
+	 * @param Long id - organisation Id (optional)
+	 * @return the navigate URL 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 * 
+	 **/
 	public String redirectToOrganisation(Long id) throws Exception {
 		log.info("..............redirectToOrganisation.......id=" + id);
 		resetInitialOrg();
@@ -170,6 +209,10 @@ public class OrganisationBackingBean extends
 		return NAV_TO_MAINTAIN;
 	}
 
+	/**
+	 *	This method used for initialize organisation variables.
+	 * 
+	 **/
 	public void initialOrganisation() {
 		
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);	
@@ -197,6 +240,11 @@ public class OrganisationBackingBean extends
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 	}
 	/* -- ORG PROFILE SERACH--  */
+	
+	/**
+	 * 	This method used for cater search action.
+	 * 
+	 **/
 	public void searchOrganisation() {
 		if(getManagedBean().getOrganisationSearchBean().getOrgTypeCode() != null){
 			searchOrganisation.reloadData();
@@ -209,7 +257,6 @@ public class OrganisationBackingBean extends
 		log.info("getSearchBeanData - Start");
 		OrganisationSearchBean oSearchBean = this.getManagedBean()
 				.getOrganisationSearchBean();
-		boolean isEmpty = true;
 
 		if (oSearchBean.getOrgTypeCode() != null
 				&& oSearchBean.getOrgTypeCode().trim().length() > 0) {
@@ -217,8 +264,7 @@ public class OrganisationBackingBean extends
 					new SearchFilterBean("orgTypeCode.parameterId",
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getOrganisationSearchBean()
-									.getOrgTypeCode()));
-			isEmpty = false;
+									.getOrgTypeCode()));		
 		}
 
 		if (oSearchBean.getOrgCode() != null
@@ -227,8 +273,7 @@ public class OrganisationBackingBean extends
 					new SearchFilterBean("pmOrgValidity.orgCode",
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getOrganisationSearchBean()
-									.getOrgCode(), true));
-			isEmpty = false;
+									.getOrgCode(), true));		
 		}
 		if (oSearchBean.getOrgName() != null
 				&& oSearchBean.getOrgName().trim().length() > 0) {
@@ -236,8 +281,7 @@ public class OrganisationBackingBean extends
 					new SearchFilterBean("pmOrgValidity.orgName",
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getOrganisationSearchBean()
-									.getOrgName(), true));
-			isEmpty = false;
+									.getOrgName(), true));			
 
 		}
 		if(oSearchBean.getOrgStatus() != null && oSearchBean.getOrgStatus().trim().length() > 0){
@@ -265,9 +309,7 @@ public class OrganisationBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public SearchOrgPagingDataModel() {
-
 			super("searchOrganisation", getManagedBean().isIslazy());
-
 		}
 
 		public ISearchResultBean<PmOrgProfile> pageChangeListener(
@@ -324,6 +366,12 @@ public class OrganisationBackingBean extends
 	
 	/* -- END ORG PROFILE SERACH--  */
 
+	/**
+	 * 	This method used to initialize variables for existing organisation
+	 *  
+	 *  @param Long id - organisation Id (mandatory)
+	 *  @return the navigate URL
+	 **/
 	public String maintainOrganisation(Long id) {
 		log.info(".......maintainOrganisation......");
 		// clear list's previous value
@@ -488,6 +536,12 @@ public class OrganisationBackingBean extends
 
 	}
 
+	/**
+	 *	This method used to save organisation data.
+	 * 
+	 * 	@param String outcome - button action trigged by user (mandatory)
+	 * 	@return the navigate URL
+	 **/
 	public String saveOrganization(String outcome) throws Exception {
 		
 		IFinancialOrgSO financialOrgSO = null;
@@ -952,7 +1006,11 @@ public class OrganisationBackingBean extends
 		
 		return addressEntered;
 	}
-
+    /**
+     * 	This medhod used for reset the org profile page based on the type
+     * 	if trigger change in organisation type selection list.
+     * 
+     **/
 	public void resetOrgProfile() {
 		getManagedBean().setOrgProfile(new PmOrgProfile());	
 		getManagedBean().getOrgProfile().setPmOrgValidity(new PmOrgValidity());		
@@ -975,7 +1033,8 @@ public class OrganisationBackingBean extends
 		}
 		checkBpkOrgStatus(resDTO.getPmParameter().getParameterCode());
 	}
-	public void checkBpkOrgStatus(String orgCode){
+	
+	private void checkBpkOrgStatus(String orgCode){
 		
 		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
 		orgReqDTO.setOrgType(orgCode);
@@ -1004,11 +1063,24 @@ public class OrganisationBackingBean extends
 		}
 	}
 
+	/**
+	 * 
+	 * This method used to pop up/show the contact person dialog and 
+	 * set show parent error message to false.
+	 * 
+	 **/
 	public void addContacePerson() {
 		RequestContext.getCurrentInstance()
 				.execute("contactPersonPopup.show()");
 		getManagedBean().setShowParentMsg(false);
 	}
+	
+	/**
+	 * 
+	 * This method used to hide the contact person dialog and 
+	 * set show parent error message to true.
+	 * 
+	 **/
 	public void okContacePerson() {
 
 		RequestContext.getCurrentInstance()
@@ -1016,6 +1088,12 @@ public class OrganisationBackingBean extends
 		getManagedBean().setShowParentMsg(true);
 	}
 
+	/**
+	 * 
+	 * This method used to hide the contact person dialog and 
+	 * set show parent error message to true.
+	 * 
+	 **/
 	public void closeContacePerson() {
 
 		RequestContext.getCurrentInstance()
@@ -1031,6 +1109,11 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
 	}	
 	
+	/**
+	 * 
+	 * This method used to add new delivery address  
+	 *
+	 **/
 	public void addDeliveryAddr() {
 	log.info("Add Delivery Address");
 				
@@ -1044,6 +1127,13 @@ public class OrganisationBackingBean extends
 		addressType.setPmContacts(contactList);*/	
 		getManagedBean().setDeliveryAddress(addressType);
 	}
+	
+	/**
+	 * 
+	 * This method used to update the delivery address in pop up dialog  
+	 * and hide the dialog after that.
+	 * 
+	 **/
 	public void updateDeliveryAddrDt() {	
 		
 		PmAddressType deliveryAddr = getManagedBean().getDeliveryAddress();
@@ -1102,6 +1192,10 @@ public class OrganisationBackingBean extends
 				
 	}
 	
+	 /**
+	  * This method used to edit delivery address.
+	  * 
+	  **/
      public void editDeliveryAddress(PmAddressType address) { 
 
 		boolean addrExist = false;
@@ -1151,6 +1245,13 @@ public class OrganisationBackingBean extends
 		 }
 		 address.setEditable(true);
 	}
+     
+     /**
+      * 
+      * This method used to delete the selected delivery address in managed bean 
+      * if the address is new record.
+      * 
+      **/
      public void deleteSelectedAdddress() {
  		if (getManagedBean().getSelectedAddressTypes().size() > 0) {
  			for (PmAddressType address : getManagedBean()
@@ -1165,6 +1266,13 @@ public class OrganisationBackingBean extends
  			log.info("Error");
  		}
  	}
+     
+ 	/**
+ 	 * The method used for generating a list of available display type
+ 	 * of org type as selection.
+ 	 * 
+ 	 * @return the selection list of display type
+ 	 */
    public SelectItem[] getOrgTypeDropdownValues(String itemType) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -1185,6 +1293,12 @@ public class OrganisationBackingBean extends
 		return items;
 	}
 
+	/**
+	 * The method used for generating a list of available display type
+	 * of new org type as selection.
+	 * 
+	 * @return the selection list of display type
+	 */
 	public SelectItem[] getNewOrgTypeDropdownValues(String itemType) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -1206,6 +1320,12 @@ public class OrganisationBackingBean extends
 		return items;
 	}
 
+	/**
+	 * The method used for generating a list of available display type
+	 * of all org type as selection.
+	 * 
+	 * @return the selection list of display type
+	 */
 	public SelectItem[] getAllOrgTypeDropdownValues(String itemType) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -1230,10 +1350,12 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setFinancialBanks(resDTO.getFinancialOrgList());
 	}
 
+	/**
+	 * The method used for add supplier bank in government seller tab.
+	 *
+	 */
 	public void addSupplierBank() {
-
 		try {
-
 			if (this.getManagedBean().getSmSupplierBanks() == null) {
 				this.getManagedBean().setSmSupplierBanks(
 						new ArrayList<SmSupplierBank>());
@@ -1248,6 +1370,10 @@ public class OrganisationBackingBean extends
 		}
 	}
 
+	/**
+	 * The method used for delete supplier bank in government seller tab.
+	 *
+	 */
 	public void deleteSupplierBank(int index) {
 		SmSupplierBank smSupplierBank = this.getManagedBean()
 				.getSmSupplierBanks().get(index);
@@ -1269,12 +1395,23 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setOrgProfileList(resDTO.getOrgProfileList());
 	}
 	
-	
-
+	/**
+	 * The method used for generating a list of available display type
+	 * of status as selection.
+	 * 
+	 * @return the selection list of display type
+	 */
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getRecordStatusOptions();
 	}
 
+	/**
+	 * This method used for update organisation code in Jabatan tab.
+	 * 
+	 * @param pmOrgProfile(mandatory)
+	 * @param index (mandatory)
+	 *
+	 **/
 	public void updateOrgCode(PmOrgProfile pmOrgProfile, int index) {
 
 		boolean isValid = true;
@@ -1304,6 +1441,11 @@ public class OrganisationBackingBean extends
 		}
 	}
 
+	/**
+	 * This method used for add organisation unit in Jabatan tab.
+	 * 
+	 *
+	 **/
 	public void addOrgUnit() {
      try {
 			List<PmProfileGroup> ptjList = this.getManagedBean()
@@ -1318,6 +1460,11 @@ public class OrganisationBackingBean extends
 
 	}
 
+	/**
+	 * This method used for delete organisation unit in Jabatan tab.
+	 * 
+	 *
+	 **/
 	public void deleteOrgUnit(PmProfileGroup pmProfileGroup) {
 
 		if (pmProfileGroup != null && pmProfileGroup.isBrandNew()) {
@@ -1341,6 +1488,10 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setSupplierUserList(resDTO.getUserList());
 	}
 
+	/**
+	 * This method used to add new personnel in government seller tab.
+	 * 
+	 **/
 	public void addPersonnel() {
 
 		if (this.getManagedBean().getSmPersonnels() == null) {
@@ -1355,6 +1506,10 @@ public class OrganisationBackingBean extends
 
 	}
 
+	/**
+	 * This method used to delete personnel in government seller tab.
+	 * 
+	 **/
 	public void deletePersonnel(int index) {
 
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnels()
@@ -1366,6 +1521,11 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().getSmPersonnels().remove(smPersonnel);
 	}
 
+	/**
+	 * 	This method used to check whether the user is redundant and existed.
+	 * 	If the user is existed, grab the data from db instead of create new user.
+	 * 
+	 **/
 	public void conformUsers() {
 
 		List<PmUser> selectedUserList = getManagedBean()
@@ -1414,8 +1574,7 @@ public class OrganisationBackingBean extends
 				}				
 			}
 		}
-		this.getManagedBean().getSmPersonnels().addAll(addedPersonnelList);
-		
+		this.getManagedBean().getSmPersonnels().addAll(addedPersonnelList);		
 		this.getManagedBean().setSupplierUsers(selectedUserList);
 
 	}
@@ -1482,6 +1641,9 @@ public class OrganisationBackingBean extends
 		}
 	}	
 	
+	/**
+	 * 	This method used for construct condition fields for LOV (Lov Id : PM_ORG_PROFILE)
+	 **/
 	public String constuctConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("parentOrgProfile.orgProfileId^");
@@ -1512,6 +1674,11 @@ public class OrganisationBackingBean extends
 		return sb.toString();
 	}
 	
+	/**
+	 * 	This method used for check whether the org profile is added in group org table.
+	 * 
+	 * 	@return isGroupOrg
+	 **/
 	public boolean isGroupOrg(){
 		IOrgProfileSO orgProfileSO = null;
 		boolean isGroupOrg = false;
@@ -1535,6 +1702,10 @@ public class OrganisationBackingBean extends
 		return isGroupOrg;		
 	}
 	
+	/**
+	 * 	This method used for reset the profile group in Jabatan Tab 
+	 * 	if any changes in parent org profile
+	 **/
 	public void resetProfileGroup(){
 		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());	
 	}
