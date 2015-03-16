@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -166,7 +167,7 @@ public class QTDetailBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailBackingBean.class);
 
-	private FacesContext facesContext = FacesContext.getCurrentInstance();
+	// private FacesContext facesContext = FacesContext.getCurrentInstance();
 
 	public QTDetailBackingBean() {
 		log.info("inside constructor");
@@ -3715,15 +3716,22 @@ public class QTDetailBackingBean extends
 	}
 
 	private Date getLatestBsvDate(List<ScQtBsvDtl> bsvDetails) {
+		List<Date> dates = new ArrayList<Date>();
 		Date latestBsvDate = null;
 		for (ScQtBsvDtl bsvDtl : bsvDetails) {
-			if (null == latestBsvDate) {
+			dates.add(bsvDtl.getBsvDate());
+			/*if (null == latestBsvDate) {
+				latestBsvDate = bsvDtl.getBsvDate();
+			} else {
 				latestBsvDate = bsvDtl.getBsvDate();
 			}
 			if (DateUtils.isDateGreaterOrEqual(latestBsvDate,
 					bsvDtl.getBsvDate())) {
 				latestBsvDate = bsvDtl.getBsvDate();
-			}
+			}*/
+		}
+		if (null != dates && !dates.isEmpty()) {
+			latestBsvDate = Collections.max(dates);
 		}
 		return latestBsvDate;
 	}
