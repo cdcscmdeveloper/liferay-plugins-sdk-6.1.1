@@ -536,6 +536,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				String token = getFacesScopes().getBPMAuthenticationCtxToken();
 				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 				
+				List<SmPersonnel> paidPersonnels = new ArrayList<SmPersonnel>();
+				paidPersonnels = Arrays.asList(getManagedBean().getSelectedSoftCertLs());
+				pymtReqDTO.setPaidPersonnels(paidPersonnels);
+				
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setSmPayment(smPayment);
 				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
