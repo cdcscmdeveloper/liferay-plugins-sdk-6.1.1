@@ -59,8 +59,9 @@
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
 			mode="advanced" id="doupload" fileLimit="2"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			update="doMaintain">
 		</p:fileUpload>
 	</p:dialog>

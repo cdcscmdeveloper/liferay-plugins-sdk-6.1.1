@@ -58,9 +58,10 @@
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
-			mode="advanced" multiple="true" id="upload" fileLimit="2" sizeLimit="15000000"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV, DOCX files are accepted"
+			mode="advanced" multiple="true" id="upload" fileLimit="2" 
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			widgetVar="fileUplaod"
 			update="lampiran,uploadDlg">
 		</p:fileUpload>
