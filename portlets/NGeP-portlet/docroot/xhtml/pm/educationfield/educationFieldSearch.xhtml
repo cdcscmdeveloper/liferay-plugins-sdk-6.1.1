@@ -27,12 +27,13 @@
 				<td>&#160;</td>
 			</tr>
 			<tr>
-				<th width="20%"><h:outputLabel
-						value="#{lbl['lbl.pm.search.status']}"></h:outputLabel></th>
-				<td><p:selectOneMenu style="width:205px"
+				<th width="20%"><panelGroup style="float: right"><h:outputLabel
+						value="#{lbl['lbl.pm.search.status']}"></h:outputLabel><h:outputLabel value="*" styleClass="mandatory" /></panelGroup></th>
+				<td><p:selectOneMenu style="width:205px" required="true"
+						label="lbl.pm.search.status"
 						value="#{educationBackingBean.managedBean.status}">
 						<f:selectItems
-							value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems>
+							value="#{educationBackingBean.getPmEducationStatusList()}"></f:selectItems>
 					</p:selectOneMenu></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
