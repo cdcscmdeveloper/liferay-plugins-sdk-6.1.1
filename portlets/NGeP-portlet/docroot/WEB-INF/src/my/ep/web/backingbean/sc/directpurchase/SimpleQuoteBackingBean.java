@@ -758,14 +758,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.setBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias());
 			}
 			
+			// zone details
+			if(getManagedBean().getZoneTrees() == null && getManagedBean().getZoneTrees().isEmpty()){
+				quote.setQuoteZone(null);
+			} else{
+				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+			}
+			
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// panel item zone 
 			if(quote.getPanelItem() != null){
-				// zone details
-				if(!getManagedBean().getZoneTrees().isEmpty()){
-					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-				}
-				
 				validatePanelItem(quote.getPanelItem());
 
 				// panel item
@@ -1224,13 +1226,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.setBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias());
 			}
 			
+			// zone details
+			if(getManagedBean().getZoneTrees() == null || getManagedBean().getZoneTrees().isEmpty()){
+				quote.setQuoteZone(null);
+			} else{
+				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+			}
+			
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// panel item zone 
 			if(quote.getPanelItem() != null){
-				// zone details
-				if(!getManagedBean().getZoneTrees().isEmpty()){
-					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-				}
 				validatePanelItem(quote.getPanelItem());
 				
 				// panel item
