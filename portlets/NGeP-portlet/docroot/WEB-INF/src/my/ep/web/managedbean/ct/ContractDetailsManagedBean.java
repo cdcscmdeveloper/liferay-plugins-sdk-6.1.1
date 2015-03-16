@@ -1460,7 +1460,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = 1L;
 
 		public ContractPagingDataModel() {
-			super("contractTbl");
+			super("contractTbl", false);
 		}
 		
 		/*
