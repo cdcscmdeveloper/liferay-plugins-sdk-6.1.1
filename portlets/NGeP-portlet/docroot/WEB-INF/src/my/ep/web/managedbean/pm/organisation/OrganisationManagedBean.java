@@ -81,6 +81,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private PmUser user;	
 	private boolean showParentMsg;
 	private boolean emptyMinistry;
+	
+	private boolean islazy = false;
 
 	public OrganisationManagedBean() {
 
@@ -674,6 +676,14 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 	public void setEmptyMinistry(boolean emptyMinistry) {
 		this.emptyMinistry = emptyMinistry;
+	}
+
+	public boolean isIslazy() {
+		return islazy;
+	}
+
+	public void setIslazy(boolean islazy) {
+		this.islazy = islazy;
 	}
 
 	

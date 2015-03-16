@@ -16,6 +16,8 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width:205px;margin-bottom:5px;"
 						value="#{profcertifiedbodyBackingBean.managedBean.profCertifiedBodySearchBean.certType}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems
 							value="#{profcertifiedbodyBackingBean.getBodyType()}" />
 					</p:selectOneMenu></td>
