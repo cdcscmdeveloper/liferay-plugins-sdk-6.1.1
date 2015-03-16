@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -824,7 +825,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			smPaymentRes.setPaidAmt(txAmount);
 			paymentOrder.getSmPaymentResponses().add(smPaymentRes);
 			
-			pymtReqDTO.setPaidPersonnels(getManagedBean().getSoftCertReqPersonnels());
+			List<SmPersonnel> paidPersonnels = new ArrayList<SmPersonnel>();
+			paidPersonnels = Arrays.asList(getManagedBean().getSelectedSoftCertLs());
+			pymtReqDTO.setPaidPersonnels(paidPersonnels);
 			pymtReqDTO.setValidPayment(validPayment);
 			pymtReqDTO.setSmPayment(smPayment);
 			pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
