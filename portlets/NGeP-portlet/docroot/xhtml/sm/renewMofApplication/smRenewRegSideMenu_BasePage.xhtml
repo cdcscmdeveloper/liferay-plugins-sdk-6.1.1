@@ -8,11 +8,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="resourceSection">
-		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
+		<h:panelGroup
+			rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 			<script>
 				$('#portlet_MOFApplication_WAR_NGePportlet').find(
 						'.portlet-title-text').html(
 						"#{lbl['lbl.sm.renew.mof.account']}");
+			</script>
+		</h:panelGroup>
+		<h:panelGroup
+			rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+			<script>
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.appli.new.categories']}");
 			</script>
 		</h:panelGroup>
 		<h:panelGroup
@@ -46,10 +55,10 @@
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
-		<p:outputPanel
-			rendered="#{backingBean.managedBean.supplierUser}"
+		<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}"
 			id="addApplInfoHdr">
-			<ui:include src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
+			<ui:include
+				src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
 			<p:messages id="messages" showDetail="true"
