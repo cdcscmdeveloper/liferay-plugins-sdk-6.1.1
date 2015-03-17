@@ -36,7 +36,7 @@
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 												<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
-												<p:ajax event="change" listener="#{reportBackingBean.retriveReportListBymoduleName}" process="@this"
+												<p:ajax event="change" listener="#{reportBackingBean.retrieveReportListByAuthorization}" process="@this"
 												 partialSubmit="true"  update="@all"/>
 											</p:selectOneMenu></td>
 										<td><p:message id="moduleNameMsg" for="moduleName"
