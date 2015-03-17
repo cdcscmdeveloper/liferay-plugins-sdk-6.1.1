@@ -2800,24 +2800,27 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return items;
     }
 	
-	private void retrieveCommitteeSecretary(String commType){
+	/**
+	 * Get list of secretary users by committee type
+	 * 
+	 * @param commType
+	 * 		the committee type
+	 * @return	the list of PmUser instance
+	 */
+	public List<PmUser> retrieveCommitteeSecretary(String commType){
 		ICommitteSO committeSO = null;
 		try{
 			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			
 			Long qtId = getManagedBean().getScQt().getQtId();
-			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setCommitteeType(commType);
 				
 			CommitteResDTO resDTO = committeSO.retrieveFcSecretaryUsersByCommType(reqDTO);
-			List<PmUser> userList = resDTO.getUserList();
 			
-			if (userList != null && userList.size() > 0) {
-				scQtFinalization.setHigherSecretary(userList.get(0));
-			}
+			return resDTO.getUserList();
 			
 		}finally{
 			committeSO = null;
@@ -3535,7 +3538,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(paramId);
 		scQtFinalization.setHigherCommitte(parameter);
 		scQtFinalization.setHigherCommitteStr(parameter.getParameterCode());
-		retrieveCommitteeSecretary(parameter.getParameterCode());
+		scQtFinalization.setHigherSecretary(new PmUser());
 	}
 	
 	/**
