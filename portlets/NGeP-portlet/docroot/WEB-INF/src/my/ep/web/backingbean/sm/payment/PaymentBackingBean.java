@@ -536,9 +536,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				String token = getFacesScopes().getBPMAuthenticationCtxToken();
 				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 				
-				List<SmPersonnel> paidPersonnels = new ArrayList<SmPersonnel>();
-				paidPersonnels = Arrays.asList(getManagedBean().getSelectedSoftCertLs());
-				pymtReqDTO.setPaidPersonnels(paidPersonnels);
+				pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 				
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setSmPayment(smPayment);
@@ -829,9 +827,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			smPaymentRes.setPaidAmt(txAmount);
 			paymentOrder.getSmPaymentResponses().add(smPaymentRes);
 			
-			List<SmPersonnel> paidPersonnels = new ArrayList<SmPersonnel>();
-			paidPersonnels = Arrays.asList(getManagedBean().getSelectedSoftCertLs());
-			pymtReqDTO.setPaidPersonnels(paidPersonnels);
+			pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 			pymtReqDTO.setValidPayment(validPayment);
 			pymtReqDTO.setSmPayment(smPayment);
 			pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
@@ -921,6 +917,21 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 						.add(billedPersonnel.getSmPersonnel());
 			}
 		}
+	}
+	
+	/**
+	 * Get paid personnel for soft certificate in payment summary
+	 * 
+	 * @return List<SmPersonnel>
+	 */
+	private List<SmPersonnel> getPaidPersonnelBeforeProceed() {
+		List<SmPersonnel> paidPersonnels = new ArrayList<SmPersonnel>();
+		if (getManagedBean().getSelectedSoftCertLs() != null
+				&& getManagedBean().getSelectedSoftCertLs().length > 0) {
+			paidPersonnels = Arrays.asList(getManagedBean()
+					.getSelectedSoftCertLs());
+		}
+		return paidPersonnels;
 	}
 
 	public PaymentBean getPaymentBean() {
