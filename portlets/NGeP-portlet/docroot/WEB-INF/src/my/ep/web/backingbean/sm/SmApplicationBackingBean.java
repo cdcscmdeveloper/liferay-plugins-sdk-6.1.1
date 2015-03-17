@@ -642,20 +642,26 @@ public class SmApplicationBackingBean extends
 				// getManagedBean().getSmAppl().getSmCompanyBasic().setWithFederal(true);
 				// }
 			} else {
-				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(smAppl
-						.getApplId());
-				if (sts != null && sts.getPmStatus() != null
-						&& sts.getPmStatus().getStatusId() != null) {
-					log.info("** PM Status retrived from work flow *******");
-					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
-					log.info("*** Status ******* "
+				if (!StringUtils.isEmpty(getManagedBean().getCurrentStatus())) {
+					log.info("*** Current Status Value Retrieved from BPM (set in common appl backing bean)****** "
 							+ getManagedBean().getCurrentStatus());
 				} else {
-					log.info("** PM Status retrived from SM appl only *******");
-					setPmStatusDesc(smAppl.getPmStatus().getStatusId()
-							.toString());
-					log.info("*** SM appl  Status ******* "
-							+ getManagedBean().getCurrentStatus());
+					SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(smAppl
+							.getApplId());
+					if (sts != null && sts.getPmStatus() != null
+							&& sts.getPmStatus().getStatusId() != null) {
+						log.info("** PM Status retrived from work flow *******");
+						setPmStatusDesc(sts.getPmStatus().getStatusId()
+								.toString());
+						log.info("*** Status ******* "
+								+ getManagedBean().getCurrentStatus());
+					} else {
+						log.info("** PM Status retrived from SM appl only *******");
+						setPmStatusDesc(smAppl.getPmStatus().getStatusId()
+								.toString());
+						log.info("*** SM appl  Status ******* "
+								+ getManagedBean().getCurrentStatus());
+					}
 				}
 			}
 			if (fromBpm
