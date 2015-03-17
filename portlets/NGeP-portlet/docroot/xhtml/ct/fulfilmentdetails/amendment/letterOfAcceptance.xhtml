@@ -67,8 +67,9 @@
 		      height="350" modal="false" resizable="false"  styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 			  <p:ajax event="close" />
 			  <p:fileUpload mode="advanced" fileUploadListener="#{amendmentBackingBean.contentLetterUpload}"
-				  allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"  style="display:inline;"
-				  invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" update=":form:loaContentDt">
+			      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				 allowTypes="/(\.|\/)(PDF|pdf)$/"  style="display:inline;"
+				  invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"   update=":form:loaContentDt">
 			 </p:fileUpload>
 		 </p:dialog>
 		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="330"

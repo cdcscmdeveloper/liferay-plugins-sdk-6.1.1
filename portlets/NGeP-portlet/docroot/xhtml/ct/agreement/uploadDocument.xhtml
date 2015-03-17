@@ -71,8 +71,9 @@
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" 
 			fileUploadListener="#{agreementBackingBean.uploadSignedPage}" 
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upAgrSignedPagePg">
 		</p:fileUpload> 
 	 </p:dialog>
@@ -80,9 +81,10 @@
 	    width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" 
+		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			fileUploadListener="#{agreementBackingBean.uploadStampedPage}" 
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
 			update="upStampedPagePg">
 		</p:fileUpload> 
 	 </p:dialog>
