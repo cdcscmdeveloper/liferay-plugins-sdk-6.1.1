@@ -3057,54 +3057,17 @@ public class QTDetailBackingBean extends
 		return items;
 	}
 
-	public void retrieveSecretaryNameByCommType(AjaxBehaviorEvent event) {
-		debugLogger("retrieveSecretaryNameByCommType");
+	public void changeSecretaryCommType(AjaxBehaviorEvent event) {
+		debugLogger("changeSecretaryCommType");
 		Long id = (Long) event.getComponent().getAttributes().get("value");
 		if (id != null) {
-			List<PmParameter> list = this.getManagedBean()
-					.getFinalizationSecratary();
-			if (list != null) {
-				for (PmParameter parameter : list) {
-					if (parameter.getParameterId().equals(id)) {
-						PmParameter pmParameter = new PmParameter();
-						pmParameter.setParameterCode(parameter
-								.getParameterCode());
-						pmParameter.setParameterId(parameter.getParameterId());
-						pmParameter.setBrandNew(false);
-						this.getManagedBean().getQt()
-								.setFinalizationCommitte(pmParameter);
-					}
-				}
-			}
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setParameterId(id);
 			ParameterResDTO parameterResDTO = getParameterSO()
 					.retrieveParameterById(parameterReqDTO);
-			String commType = parameterResDTO.getPmParameter()
-					.getParameterCode();
-
-			if (!commType
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					&& !commType
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-
-				List<PmUser> userList = retrievePmUserSecratryDtl(commType);
-				if (userList != null && userList.size() > 0) {
-					getManagedBean().getQt().setFinalizationSecratery(
-							userList.get(0));
-				}
-			}
-		} else {
-			this.getManagedBean().getQt().setFinalizationSecratery(null);
-			if (null == this.getManagedBean().getQt()
-					.getFinalizationSecratery()) {
-				this.getManagedBean().getQt()
-						.setFinalizationSecratery(new PmUser());
-			}
-			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(getManagedBean()
-					.getQt().getQtId());
-			log.info("Finalization Secratory Size : " + finalizeList.size());
-			this.getManagedBean().setFinalizationSecratary(finalizeList);
+			
+			getManagedBean().getQt().setFinalizationCommitte(parameterResDTO.getPmParameter());
+			getManagedBean().getQt().setFinalizationSecratery(new PmUser());
 		}
 	}
 
@@ -3676,30 +3639,13 @@ public class QTDetailBackingBean extends
 		return finalizationSecreatry;
 	}
 
-	public void retrieveFinalizationCommitteeSecretaryName(
+	public void changePbSecretaryCommType(
 			AjaxBehaviorEvent event) {
-		debugLogger("retrieveFinalizationCommitteeSecretaryName");
+		debugLogger("changePbSecretaryCommType");
 		String commType = (String) event.getComponent().getAttributes()
 				.get("value");
 		if (null != commType) {
-			if (!commType
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					&& !commType
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-
-				List<PmUser> userList = retrievePmUserSecratryDtl(commType);
-				if (userList != null && userList.size() > 0) {
-					getManagedBean().getSelectedApprovalTabBean()
-							.getScQtApproval().getApproverSettings().get(0)
-							.setApprover(userList.get(0));
-				}
-			}
-		} else {
-			this.getManagedBean().getQt().setFinalizationSecratery(null);
-			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(getManagedBean()
-					.getQt().getQtId());
-			log.info("Finalization Secratory Size : " + finalizeList.size());
-			this.getManagedBean().setFinalizationSecratary(finalizeList);
+			getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getApproverSettings().get(0).setApprover(new PmUser());
 		}
 	}
 
