@@ -10,7 +10,7 @@
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialacc" />
-			<p:column style ="width:30%;word-wrap: break-word" >
+			<p:column style ="width:30%;" >
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.paymentbankname']}" />
@@ -19,7 +19,7 @@
 					rendered="#{!financialacc.brandNew}"/>
 				<p:selectOneMenu value="#{financialacc.pmPaymentBankOrg.financialOrgId}" id="finorgn"
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
-					rendered="#{financialacc.brandNew}"
+					rendered="#{financialacc.brandNew}" style="margin-bottom: 5px;"
 					styleClass="ppDropDownWidthL" required="true">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
@@ -85,7 +85,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" style ="width:10%">
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
-					disabled="#{financialacc.brandNew}"
+					disabled="#{financialacc.brandNew}" styleClass="ppDropDownWidthS" style="margin-bottom: 5px;"
 					 required="true">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
@@ -102,7 +102,7 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this,financialaccid" partialSubmit="true"
+				process="@this"
 				action="#{financialOrgBackingBean.addFinancialAcc}"
 				update="financialaccid" />
 
