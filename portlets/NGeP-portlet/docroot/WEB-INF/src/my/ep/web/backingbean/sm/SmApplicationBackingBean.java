@@ -6831,7 +6831,8 @@ public class SmApplicationBackingBean extends
 		DocumentResDTO resDto = new DocumentResDTO();
 		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDocumentSO.class);
-		resDto = reqSO.retrieveSupportingDocumentList(reqDTO);
+//		resDto = reqSO.retrieveSupportingDocumentList(reqDTO);
+		resDto = reqSO.retrieveSupportingDocuments(reqDTO);
 		return resDto;
 
 	}
