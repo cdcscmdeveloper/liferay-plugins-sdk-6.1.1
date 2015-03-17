@@ -32,13 +32,13 @@
 				<h:outputText value="#{certBody.bodyCode}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.pc.acname']}" style="width:50%">
+			<p:column headerText="#{lbl['lbl.pm.pc.acname']}" style="width:65%">
 				<h:outputText value="#{certBody.bodyName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.pc.type']}" style="width:35%">
-				<h:outputText value="#{certBody.description}"></h:outputText>
-			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.status']}" style="width:20%">  
+	            #{(certBody.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+	         </p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%">
 				<p:commandLink
