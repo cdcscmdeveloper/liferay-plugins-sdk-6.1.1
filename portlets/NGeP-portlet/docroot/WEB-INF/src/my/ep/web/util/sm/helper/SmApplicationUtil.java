@@ -808,7 +808,7 @@ public class SmApplicationUtil {
 	 * @return int - max review count number
 	 */
 	public static int assignMaxReviewCount(String appType, String applCatType,
-			String supplierType, String businessType) {
+			String supplierType, String businessType,SmApplicationManagedBean managedBean) {
 		int i = 0;
 		switch (appType) {
 
@@ -842,9 +842,9 @@ public class SmApplicationUtil {
 			break;
 		case "R":
 			if (applCatType != null && applCatType.equalsIgnoreCase("S")) {
-				i = SupplierManagementConst.RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT;
-			} else {
 				i = SupplierManagementConst.RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT;
+			} else {
+				i = SupplierManagementConst.RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT;
 			}
 			break;
 		default:
@@ -860,6 +860,9 @@ public class SmApplicationUtil {
 				|| businessType
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
 			i = i - 1;
+		}
+		if(managedBean.isReviewSiteVisit()){
+			i=i+1;
 		}
 		return i;
 	}
@@ -4644,7 +4647,7 @@ public class SmApplicationUtil {
 			assignMaxReviewCount(managedBean.getSmAppl().getApplType(),
 					managedBean.getSmAppl().getApplCategoryType(), managedBean
 							.getSmAppl().getSupplierType(),
-					managedBean.getBusinessTypeVal());
+					managedBean.getBusinessTypeVal(),managedBean);
 		}
 
 		// added to custom confirm dialog title and msg

@@ -7113,7 +7113,7 @@ public class SmApplicationBackingBean extends
 	private int assignMaxReviewCount(String appType, String applCatType,
 			String supplierType, String businessType) {
 		return SmApplicationUtil.assignMaxReviewCount(appType, applCatType,
-				supplierType, businessType);
+				supplierType, businessType,getManagedBean());
 	}
 
 	/**
