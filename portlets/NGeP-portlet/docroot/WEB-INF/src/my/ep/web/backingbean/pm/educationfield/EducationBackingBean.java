@@ -33,6 +33,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.educationfield.EducationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -45,7 +46,8 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> {
 
-	private String NAV_TO_MAIN = "educationFieldMain";
+	private static final String NAV_TO_MAIN = "educationFieldMain";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/educationfield/educationFieldMaintenance";
 
 	private static final Logger log = EpLogger
 			.getLogger(EducationBackingBean.class);
@@ -114,19 +116,10 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		items[0] = new SelectItem(1, "Active");
 		items[1] = new SelectItem(0, "Inactive");
 		return items;
-	}
+	}	
 	
-	/**
-	 * get Education status item dropdown
-	 * 
-	 */
-	public SelectItem[] getPmEducationStatusList() {
-
-		SelectItem[] items = new SelectItem[3];
-		items[0] = new SelectItem("", "- Select One -");
-		items[1] = new SelectItem(1, "Active");
-		items[2] = new SelectItem(0, "Inactive");
-		return items;
+	public static SelectItem[] getPmEducationStatusList() {
+		return PmCommonUtil.getStatusOptions();
 	}
 
 	/**
@@ -320,8 +313,12 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 										new FacesScopes().getUserLocale())));
 			}
 
-		}
+		}if(getManagedBean().getPmEduField().isBrandNew()){
 		return NAV_TO_MAIN;
+		}
+		else{
+		return NAV_TO_MAINTAIN;
+		}
 
 	}
 
