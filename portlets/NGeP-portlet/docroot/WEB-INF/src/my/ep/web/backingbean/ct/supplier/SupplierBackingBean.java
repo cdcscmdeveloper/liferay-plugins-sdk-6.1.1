@@ -610,14 +610,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			throw new EpException(MessageConst.ERROR_100022, 
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.agreement", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}		
-		if (getManagedBean().getFactoring().getFactoringPayFileName() == null 
-				|| getManagedBean().getFactoring().getFactoringPayFileName().isEmpty()) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			throw new EpException(MessageConst.ERROR_100022, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.form.fee", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}	
+		}
+//		SIR#4106: Removed
+//		if (getManagedBean().getFactoring().getFactoringPayFileName() == null 
+//				|| getManagedBean().getFactoring().getFactoringPayFileName().isEmpty()) {
+//			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+//			throw new EpException(MessageConst.ERROR_100022, 
+//					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.form.fee", 
+//							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//		}	
 		if (getManagedBean().isRemoveFactoring()){
 		    if (getManagedBean().getFactoring().getRemoveFileName() == null 
 		    		|| getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
