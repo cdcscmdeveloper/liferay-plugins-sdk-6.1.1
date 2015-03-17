@@ -2884,12 +2884,12 @@ public class ReportBackingBean extends
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
-					lngUserId = new FacesScopes().getUserSessionBean().getUserId();				
-					//lngUserId = (long) 220152;
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();				
+					lngUserId = (long)213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue(),"REP");
+					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
 					for (Object[] object : reportModList) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
@@ -3133,13 +3133,13 @@ public class ReportBackingBean extends
 				} else {
 					label = pmReport.getReportTitle();
 				}
-				if (!(pmReport.getReportId()
+				if (!(pmReport.getReportCode()
 						.equals(ReportConst.SC_S1_RCNT_PRICE_RPT_VAL))
-						&& !(pmReport.getReportId()
+						&& !(pmReport.getReportCode()
 								.equals(ReportConst.SC_ITEM_PRICING_SUM_RPT_VAL))
-						&& !(pmReport.getReportId()
+						&& !(pmReport.getReportCode()
 								.equals(ReportConst.SC_S1_REQUEST_NOTE_FINAL_RPT_VAL))) {
-					selectItem.setValue(pmReport.getReportId());
+					selectItem.setValue(pmReport.getReportCode());
 					selectItem.setLabel(label);
 					reportList.add(selectItem);
 				}
@@ -3794,7 +3794,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 			PMReportReqDTO reqDTO = new PMReportReqDTO();
-			reqDTO.setReportId(getManagedBean().getReportValue());
+			reqDTO.setReportCode(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
 			PMReport pmReport = rptResDTO.getPmReportDtls();
 			if (null != pmReport) {
