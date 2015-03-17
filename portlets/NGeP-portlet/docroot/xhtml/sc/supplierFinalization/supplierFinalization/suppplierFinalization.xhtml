@@ -105,9 +105,19 @@
 							<p:ajax event="change" update="@([id$=committeeSecretary])" 
 								listener="#{suppFinalizationBackingBean.finalizationCommitteeEvent}" process="@this" />
 			   			</p:selectOneMenu>
-			   			<p:spacer width="5px" />
-			   			<p:inputText id="committeeSecretary" 
-			   				value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userName}" disabled="true"/>
+			   			<p:selectOneMenu id="committeeSecretary"
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
+							style="width: 178px;"
+							required="true" label="#{lbl['lbl.sc.finalization.committee']}" >
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems var="usersSecretary"
+								value="#{suppFinalizationBackingBean.retrieveCommitteeSecretary(suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterCode)}"
+								itemLabel="#{usersSecretary.userName}"
+								itemValue="#{usersSecretary.userId}" />
+						</p:selectOneMenu>
+						<p:message id="finalizationCommitteeMsg" for="finalizationCommittee" display="icon" />
+						<p:message id="committeeSecretaryMsg" for="committeeSecretary" display="icon" />
 					</h:column>
 					
 					<h:column>
@@ -125,6 +135,8 @@
 			   			
 			   			<h:outputText style="text-align: left;" value="#{lbl['lbl.sc.notes.forward.to.bpk']}" 
 			   				rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}"/>
+			   			
+			   			<p:message id="reasonMsg" for="reason" display="icon" />
 					</h:column>
 				</h:panelGrid>
 			</p:outputPanel>
