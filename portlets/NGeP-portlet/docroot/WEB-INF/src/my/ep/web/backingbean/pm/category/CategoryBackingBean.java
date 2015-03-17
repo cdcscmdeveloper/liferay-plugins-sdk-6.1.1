@@ -592,7 +592,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = null;
 		}
 
-		return "/xhtml/pm/category/search.xhtml";
+		return "/xhtml/pm/category/categoryl1.xhtml";
 	}
 	
 	 public SelectItem[] getRecordStatusList() {		 
@@ -660,10 +660,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			//return editCategory(this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
 			this.getManagedBean().setNewCategory(false);
 			//return "/xhtml/pm/category/categoryl1.xhtml"; 
-			return "/xhtml/pm/category/search.xhtml";
+			return "/xhtml/pm/category/categoryl2.xhtml";
 		}else
 			//preRenderSearch();
-			return "/xhtml/pm/category/search.xhtml";
+			return "/xhtml/pm/category/categoryl2.xhtml";
 		
 	}
 	
@@ -781,9 +781,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			//return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
 			this.getManagedBean().setNewCategory(false);
 			//return "/xhtml/pm/category/categoryl2.xhtml";
-			return "/xhtml/pm/category/search.xhtml";
+			return "/xhtml/pm/category/categoryl3.xhtml";
 		}else
-			return "/xhtml/pm/category/search.xhtml";
+			return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
 	public void deleteBasicCategory() {
