@@ -4241,8 +4241,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Control Officer</title>
-			<short-title>Control Officer</short-title>
+			<title>Controlling Officer List</title>
+			<short-title>Controlling Officer List</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
