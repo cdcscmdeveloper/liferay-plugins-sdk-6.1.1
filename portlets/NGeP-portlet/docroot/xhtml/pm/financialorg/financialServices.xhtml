@@ -8,10 +8,7 @@
 		<br />
 		<p:dataTable id="financialsrvid" var="financialsrv"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialSvcs}"
-			rowKey="#{financialsrv}" rowIndexVar="rowIndex"
-			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialSvc}">
-			<p:column selectionMode="multiple"
-				disabledSelection="#{!financialsrv.brandNew}" style="width:2%" />
+			rowKey="#{financialsrv}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialsrv" />
 
 			<p:column>
@@ -74,18 +71,20 @@
 				</p:selectOneMenu>
 
 			</p:column>
+			
+			<p:column width="5%" headerText="#{lbl['lbl.pm.financialorg.action']}">
+	             <p:commandLink partialSubmit="true" disabled="#{!financialsrv.brandNew}"
+					process="@this" action="#{financialOrgBackingBean.deleteFinancialService(rowIndex)}"
+					update="financialsrvid" >
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,financialsrvid" partialSubmit="true"
 				action="#{financialOrgBackingBean.addFinancialService}"
 				update="financialsrvid" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				update="financialsrvid, @form" partialSubmit="true"
-				process="@this,financialsrvid"
-				action="#{financialOrgBackingBean.deleteFinancialService}" />
-
 		</div>
 
 
