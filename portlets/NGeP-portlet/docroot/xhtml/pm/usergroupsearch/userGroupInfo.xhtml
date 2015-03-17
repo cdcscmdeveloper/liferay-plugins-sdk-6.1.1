@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:panel id="groupInfo" header="GROUP INFORMATION" toggleable="true">
+	<p:panel id="groupInfo" header="#{lbl['lbl.pm.ug.result.title']}" toggleable="true">
 		<p:spacer height="10"></p:spacer>
 
 		<table>
@@ -36,8 +36,8 @@
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 							size="10" readonly="true" />&#160;&#160;
       	                   <ac:lov id="uomLovId"
-							lovId="PM_ORG_PROFILE_FPJ" size="60"
-							update=":form:orgCodeUpdate,@form" headerText="Org Profile Lov"
+							lovId="PM_ORG_PROFILE_FPJ" size="60" 
+							update=":form:orgCodeUpdate,:form:userPanelId" headerText="Org Profile Lov" 
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}"
 							saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
@@ -61,7 +61,7 @@
 	</p:panel>
 	<p:spacer height="20"></p:spacer>
 
-	<p:panel header="GROUP USER" toggleable="true">
+	<p:panel header="#{lbl['lbl.pm.ug.result.title1']}" toggleable="true" id="userPanelId">
 		<ac:lovPopup />
 		<p:dataTable id="groupUser"
 			value="#{usergroupBackingBean.managedBean.userGroups}"
