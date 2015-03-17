@@ -31,6 +31,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
@@ -253,6 +254,12 @@ public class CommonApplBackingBean extends
 						+ this.getManagedBean().getTaskName());
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				smApplBB.getManagedBean();
+				// TODO get the status from BPM for the header part
+				BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
+				String currentStatus = bpmBean.applicationStatus(resDTO
+						.getDocStatus());
+				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
+				//
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SupplierManagementConst.BPM_TASK_REVIEW_APPL)
 						|| resDTO
@@ -319,6 +326,11 @@ public class CommonApplBackingBean extends
 						+ this.getManagedBean().getTaskName());
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				smApplBB.getManagedBean();
+				// TODO get the status from BPM for the header part
+				BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
+				String currentStatus = bpmBean.applicationStatus(resDTO
+						.getDocStatus());
+				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SupplierManagementConst.BPM_TASK_REVIEW_APPL)
 						|| resDTO
