@@ -2884,8 +2884,8 @@ public class ReportBackingBean extends
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
-			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();				
-					lngUserId = (long)213972;// 220152;
+			lngUserId = new FacesScopes().getUserSessionBean().getUserId();				
+			//lngUserId = (long)213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
