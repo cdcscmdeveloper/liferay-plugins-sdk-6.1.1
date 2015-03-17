@@ -29,7 +29,11 @@
 				<f:facet name="header">
 					#{lbl['lbl.sm.sitevisit.printing.workval.rm']}
 				</f:facet>
-				<p:inputText value="#{pWork.printAmt}" maxlength="18" id="txtWorkValueId" disabled="#{viewFlag}"/>
+				<p:inputText value="#{pWork.printAmt}" maxlength="14"
+					id="txtWorkValueId" disabled="#{viewFlag}">
+					<f:validateLength maximum="14" />
+				</p:inputText>
+
 			</p:column>
 		</p:dataTable>
 		
