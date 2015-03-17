@@ -42,6 +42,7 @@ import my.ep.web.managedbean.pm.category.CategoryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 
@@ -592,15 +593,26 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = null;
 		}
 
-		return "/xhtml/pm/category/categoryl1.xhtml";
+		if (this.getManagedBean().isNewCategory()){
+			//return editCategory(this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
+			this.getManagedBean().setNewCategory(false);
+			//return "/xhtml/pm/category/categoryl1.xhtml"; 
+			return "/xhtml/pm/category/search.xhtml";
+		}else
+			//preRenderSearch();
+			return "/xhtml/pm/category/categoryl1.xhtml";		
 	}
 	
-	 public SelectItem[] getRecordStatusList() {		 
+	/* public SelectItem[] getRecordStatusList() {		 
 		SelectItem[] items =  new SelectItem[3];
 		items[0] = new SelectItem(null, "- Select One -");
 		items[1] = new SelectItem(1, "Active");
 		items[2] = new SelectItem(0, "Inactive");
 	    return items;
+	}*/
+	
+	public static SelectItem[] getRecordStatusList() {
+		return PmCommonUtil.getStatusOptions();
 	}
 	
 	public String saveSubCategory() {
@@ -660,7 +672,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			//return editCategory(this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
 			this.getManagedBean().setNewCategory(false);
 			//return "/xhtml/pm/category/categoryl1.xhtml"; 
-			return "/xhtml/pm/category/categoryl2.xhtml";
+			return "/xhtml/pm/category/search.xhtml";
 		}else
 			//preRenderSearch();
 			return "/xhtml/pm/category/categoryl2.xhtml";
@@ -781,7 +793,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			//return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
 			this.getManagedBean().setNewCategory(false);
 			//return "/xhtml/pm/category/categoryl2.xhtml";
-			return "/xhtml/pm/category/categoryl3.xhtml";
+			return "/xhtml/pm/category/search.xhtml";
 		}else
 			return "/xhtml/pm/category/categoryl3.xhtml";
 	}
