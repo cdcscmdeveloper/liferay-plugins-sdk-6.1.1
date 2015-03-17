@@ -29,15 +29,9 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 	private static final long serialVersionUID = 1L;
 	// Financial Search
 	private FinancialOrgSearchBean financialOrgSearchBean;
-
-	// Financial Svc
-	private List<PmFinancialSvc> selectedPmFinancialSvc;
 	
 	// Financial Org
 	private PmFinancialOrg financialOrg = new PmFinancialOrg();
-
-	// Financial Acc
-	private List<PmFinancialAcc> selectedPmFinancialAcc;
 
 	// Financial Org address
 	private PmAddress pmAddress;
@@ -117,23 +111,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements Serializ
 		this.pmAddress = pmAddress;
 	}
 
-	public List<PmFinancialSvc> getSelectedPmFinancialSvc() {
-		return selectedPmFinancialSvc;
-	}
-
-	public void setSelectedPmFinancialSvc(
-			List<PmFinancialSvc> selectedPmFinancialSvc) {
-		this.selectedPmFinancialSvc = selectedPmFinancialSvc;
-	}
-	
-	public List<PmFinancialAcc> getSelectedPmFinancialAcc() {
-		return selectedPmFinancialAcc;
-	}
-
-	public void setSelectedPmFinancialAcc(
-			List<PmFinancialAcc> selectedPmFinancialAcc) {
-		this.selectedPmFinancialAcc = selectedPmFinancialAcc;
-	}
 
 	/**
 	 * @return the financialOrg

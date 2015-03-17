@@ -61,7 +61,6 @@ import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.financialorg.FinancialOrgManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -181,9 +180,6 @@ public class FinancialOrgBackingBean extends
 		log.info("resetBeans");
 		//reset managedBean
 		this.getManagedBean().setFinancialOrg(null);
-//		this.getManagedBean().setSelectedPmFinancialBranch(null);
-		this.getManagedBean().setSelectedPmFinancialSvc(null); 
-		this.getManagedBean().setSelectedPmFinancialAcc(null);
 //		this.getManagedBean().setBranchAddress(null);
 //		this.getManagedBean().setBranchContactPerson(null);
 		this.getManagedBean().setContactPerson(null);
@@ -1058,30 +1054,14 @@ public class FinancialOrgBackingBean extends
 	/**
 	 * delete financial service from list
 	 */
-	public void deleteFinancialService() {
-
-		List<PmFinancialSvc> cashOnHandList = this.getManagedBean().getFinancialOrg().getPmFinancialSvcs();
-		List<PmFinancialSvc> selectedFinancialSvcList = this.getManagedBean().getSelectedPmFinancialSvc();
-		if(selectedFinancialSvcList==null || selectedFinancialSvcList.isEmpty()){
-			throw new EpException("At least one Financial Service must be selected.");
-		}
-		if (cashOnHandList.size() == selectedFinancialSvcList.size()) {
-			cashOnHandList.clear();
-			getManagedBean().getServiceTypes().clear();
-			
-		} else {
-			for (PmFinancialSvc financialSvc : selectedFinancialSvcList) {
-				cashOnHandList.remove(financialSvc);
-				if(getManagedBean().getServiceTypes()!=null){
-						getManagedBean().getServiceTypes().remove(financialSvc.getServiceTypeCode().getParameterCode());
-				}
-			}
-		}
-
-		if(selectedFinancialSvcList!=null && !selectedFinancialSvcList.isEmpty()){
-			selectedFinancialSvcList.clear();
-		}
+	public void deleteFinancialService(int index) {
+		PmFinancialSvc pmFinancialSvc = getManagedBean().getFinancialOrg()
+				.getPmFinancialSvcs().get(index);
+		pmFinancialSvc.setDeleted(true);
+		getManagedBean().getFinancialOrg()
+		.getPmFinancialSvcs().remove(pmFinancialSvc);
 	}
+
 	
 	/**
 	 * update service type list based on selected value
@@ -1149,21 +1129,14 @@ public class FinancialOrgBackingBean extends
 	/**
 	 * delete financial acc from list
 	 */
-	public void deleteFinancialAcc() {
-		log.info("deleteFinancialAcc");
-		List<PmFinancialAcc> financialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
-		List<PmFinancialAcc> selectedFinancialActList = this.getManagedBean()
-				.getSelectedPmFinancialAcc();
-		if (financialAccList.size() == selectedFinancialActList.size()) {
-			financialAccList.clear();
-		} else {
-			for (PmFinancialAcc financialAcc : selectedFinancialActList) {
-				financialAccList.remove(financialAcc);
-			}
-		}
-		if(selectedFinancialActList!=null && !selectedFinancialActList.isEmpty()){
-			selectedFinancialActList.clear();
-		}
+	public void deleteFinancialAcc(int index) {
+		log.info("deleteFinancialAcc");	
+		
+		PmFinancialAcc pmFinancialAcc = getManagedBean().getFinancialOrg()
+				.getPmFinancialAccs().get(index);
+		pmFinancialAcc.setDeleted(true);
+		getManagedBean().getFinancialOrg()
+		.getPmFinancialAccs().remove(pmFinancialAcc);
 	}
 	
 	/**
