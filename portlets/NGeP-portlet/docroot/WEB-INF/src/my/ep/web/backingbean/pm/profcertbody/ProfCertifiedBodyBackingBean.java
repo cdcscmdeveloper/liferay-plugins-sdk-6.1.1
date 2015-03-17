@@ -84,7 +84,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * 
 	 */
 	public String redirectProfSearch() {
-		this.getManagedBean().setIslazy(true);
 		debugLogger("redirectProfSearch");
 
 		return NAV_TO_MAIN;
@@ -252,6 +251,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
 		}else{
+			getManagedBean().setIslazy(true);
 			getProfCertBodyModel().reloadData();
 		}
 	}

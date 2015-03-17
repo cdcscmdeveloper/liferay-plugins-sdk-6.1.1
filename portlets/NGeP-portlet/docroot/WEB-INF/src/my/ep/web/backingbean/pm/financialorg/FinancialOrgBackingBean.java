@@ -144,8 +144,7 @@ public class FinancialOrgBackingBean extends
 	 * @return search page
 	 */
 	public String backToMain() {
-		log.info("backToMain");
-		getManagedBean().setLazy(true);
+		log.info("backToMain");		
 		getManagedBean().setServiceTypes(null);
 		initialFinOrg();
 		return NAV_TO_SEARCH;
@@ -1558,6 +1557,7 @@ public class FinancialOrgBackingBean extends
 	}
 
 	public void searchFinancialOrg() {
+		getManagedBean().setLazy(true);
 		searchFinancialOrg.reloadData();
 	}	
 	
