@@ -28,10 +28,6 @@
 					rendered="#{!empty scLoiReport.pmDocument}" />
 			</p:column>
 
-			<p:column style="width:20%;" headerText="#{lbl['lbl.sc.type']}">
-				#{lOIDetailBackingBean.getParameterDesc(scLoiReport.definationType)}
-			</p:column>
-
 			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment
 					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
