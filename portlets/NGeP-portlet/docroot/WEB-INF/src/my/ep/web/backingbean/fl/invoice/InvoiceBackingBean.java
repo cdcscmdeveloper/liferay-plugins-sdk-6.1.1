@@ -21,7 +21,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
@@ -96,7 +95,6 @@ import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -1195,7 +1193,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 		IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
@@ -1228,7 +1225,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setInvoice(getManagedBean().getInvoice());
 			FulfilmentReqDTO reqDTO2 = invoiceSO.validationCheck(reqDTO);
 			getManagedBean().setInvoice(reqDTO2.getInvoice());
-			spkiBackingBean.getChallengeQuestions();
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1372,8 +1369,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			pmDigiSign.setCreatedDate(date);
 			pmDigiSign.setOrginalData(textBeforeSign);
 			// spki 
-			SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-			String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+			String signedData =  getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign);
 			pmDigiSign.setSignedData(signedData);
 		}
 		

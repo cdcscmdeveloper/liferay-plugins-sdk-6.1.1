@@ -66,7 +66,6 @@ import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -762,7 +761,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -782,7 +780,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			spkiBackingBean.getChallengeQuestions();
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
 		}else{
@@ -1030,8 +1028,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOrginalData(textBeforeSign);
 		// spki 
-		SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-		String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+		String signedData =  getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign);
 		pmDigiSign.setSignedData(signedData);
 	}
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
@@ -20,6 +21,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -195,6 +197,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	/** The button action. */
 	private String buttonAction;
+	
+	/** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+	
 	
 	/* (non-Javadoc)
 	 * @see my.ep.web.managedbean.BaseManagedBean#getTaskName()
@@ -1130,6 +1137,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setBackToPrevious(String backToPrevious) {
 		this.backToPrevious = backToPrevious;
+	}
+
+	/**
+	 * @return the spkiBackingBean
+	 */
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	/**
+	 * @param spkiBackingBean the spkiBackingBean to set
+	 */
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
 	}
 
 }
