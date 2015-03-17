@@ -29,6 +29,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.salutation.SalutationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -43,6 +44,7 @@ public class SalutationBackingBean extends
 		BaseBackingBean<SalutationManagedBean> { 
 	
 	private String NAV_TO_MAIN =  "salutationMain";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/salutation/salutationMaintenance";
 	
 	private static final Logger log = EpLogger
 			.getLogger(SalutationManagedBean.class);	
@@ -102,13 +104,11 @@ public class SalutationBackingBean extends
 	 * get status item dropdown
 	 * 
 	 */	
-	 public SelectItem[] getStatusList() {
-		 
-			SelectItem[] items =  new SelectItem[2];
-			items[0] = new SelectItem(1, "Active");
-			items[1] = new SelectItem(0, "Inactive");
-		    return items;
+	 
+	 public static SelectItem[] getStatusList() {
+			return PmCommonUtil.getStatusOptions();
 		}
+
 
 		/**
 		 * search salutation info based 
@@ -273,7 +273,7 @@ public class SalutationBackingBean extends
 				}
 			}
 		
-		  return NAV_TO_MAIN;
+		  return NAV_TO_MAINTAIN;
 	 }
 	 
 	 public void preLoadSalutation(){
