@@ -27,7 +27,11 @@
 		<ac:gpkiPopup 
 			textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
 			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(gpkiBackingBean.pmDigiSign)}"/>
-		<ac:spkiPopup textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
+		<ac:spkiPopup id="spkiPopUp"
+			password="#{flOrderBB.managedBean.spkiBackingBean.password}"
+   		 	challengeAns1="#{flOrderBB.managedBean.spkiBackingBean.challengeAns1}"
+  		 	challengeQues1="#{flOrderBB.managedBean.spkiBackingBean.challengeQues1}"
+		 textBeforeSign="#{flOrderBB.managedBean.textBeforeSign}"
 			postSignAction="#{flOrderBB.preSubmitFulfillmentOrder(spkiBackingBean.pmDigiSign)}"/>
 		<table style="width: 100%;">
 			<tr>

@@ -28,7 +28,7 @@
 			textBeforeSign="#{createDOBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{createDOBackingBean.preSubmitDeliveryOrder(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
-		<ac:spkiPopup 
+		<ac:spkiPopup id="spkiPopUp"
 		 password="#{createDOBackingBean.managedBean.spkiBackingBean.password}"
    		 challengeAns1="#{createDOBackingBean.managedBean.spkiBackingBean.challengeAns1}"
   		 challengeQues1="#{createDOBackingBean.managedBean.spkiBackingBean.challengeQues1}"
@@ -41,11 +41,13 @@
 						action="#{createDOBackingBean.backAction}" /></td>
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
-					<td colspan="4" style="text-align: right"><p:commandButton
+					<td colspan="4" style="text-align: right">
+						<p:commandButton
 							styleClass="ui-button"  value="#{lbl['lbl.btn.save']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form"  
-							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> <p:commandButton
+							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> 
+						<p:commandButton update="spkiPopUp"
 							styleClass="ui-button"  value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.signingAction('SUBMIT')}" />
