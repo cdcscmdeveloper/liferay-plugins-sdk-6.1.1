@@ -153,7 +153,12 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 							+ " is Successfully saved"));
 
 		}
+		if(getManagedBean().getPmZone().isBrandNew()){
 		return NAV_TO_MAIN;
+		}
+		else{
+	   return NAV_TO_MAINTAIN;
+		}
 	}
 
 	public void maintainZone(Long zoneId) {
