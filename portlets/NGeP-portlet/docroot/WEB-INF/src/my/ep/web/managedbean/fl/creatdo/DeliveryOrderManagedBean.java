@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -22,6 +23,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -196,6 +198,10 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	/** The reason desc. */
 	private String reasonDesc;
 
+	/** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+    
 	/**
 	 * Gets the item selected for cal.
 	 *
@@ -1098,6 +1104,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setReasonDesc(String reasonDesc) {
 		this.reasonDesc = reasonDesc;
+	}
+
+	/**
+	 * @return the spkiBackingBean
+	 */
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	/**
+	 * @param spkiBackingBean the spkiBackingBean to set
+	 */
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
 	}
 
 	

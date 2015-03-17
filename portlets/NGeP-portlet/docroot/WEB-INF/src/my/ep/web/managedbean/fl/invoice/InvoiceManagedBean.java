@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.payment.FlInvoice;
@@ -19,6 +20,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
@@ -173,6 +175,10 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	/** The back to document. */
 	private String backToDocument;
+	
+	/** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
 	
 	/**
 	 * Gets the doc type.
@@ -970,6 +976,20 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setBackToDocument(String backToDocument) {
 		this.backToDocument = backToDocument;
+	}
+
+	/**
+	 * @return the spkiBackingBean
+	 */
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	/**
+	 * @param spkiBackingBean the spkiBackingBean to set
+	 */
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
 	}
 
 
