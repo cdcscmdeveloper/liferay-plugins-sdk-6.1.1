@@ -29,7 +29,7 @@
 			textBeforeSign="#{invoiceBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{invoiceBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{invoiceBackingBean.enableAutoUpdate()}" />
-		<ac:spkiPopup 
+		<ac:spkiPopup id="spkiPopUp"
 			password="#{invoiceBackingBean.managedBean.spkiBackingBean.password}"
    		 	challengeAns1="#{invoiceBackingBean.managedBean.spkiBackingBean.challengeAns1}"
   		 	challengeQues1="#{invoiceBackingBean.managedBean.spkiBackingBean.challengeQues1}"

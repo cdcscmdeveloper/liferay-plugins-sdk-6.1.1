@@ -76,7 +76,6 @@ import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -945,7 +944,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 * @throws Exception the exception
 		 */
 		public String signingAction(String outcome) throws Exception{
-			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				// Temp setTextBeforeSign : DocNo+SAP
 				StringBuilder sb = new StringBuilder();
@@ -967,7 +965,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 //				|| getUserRole().equalsIgnoreCase(RoleCode.GOVT_SELLER.value())
 				
 				validateFulfillmentOrder(outcome);
-				spkiBackingBean.getChallengeQuestions();
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 				// set action
 				getManagedBean().setButtonAction(outcome);
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1058,8 +1056,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOrginalData(textBeforeSign);
 	     // spki 
-	     	SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-	     	String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+	     	String signedData =  getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign);
 	        pmDigiSign.setSignedData(signedData);
 		}
 		
