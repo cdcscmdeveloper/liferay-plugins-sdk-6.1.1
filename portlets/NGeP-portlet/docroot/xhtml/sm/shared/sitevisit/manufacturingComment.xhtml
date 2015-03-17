@@ -8,19 +8,19 @@
 	
 	<p:panel header="#{lbl['lbl.sm.officeloc.operation.stage']}" toggleable="true">
 		<p:inputTextarea  rows="8"  disabled="#{viewFlag}" autoResize="false" style="width:80%;"  maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.operationStage}">
-		
+		 <f:validateLength maximum="4000" />	   
 		</p:inputTextarea>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sm.officeloc.prod.capability']}" toggleable="true">
 		<p:inputTextarea  rows="8"   disabled="#{viewFlag}" autoResize="false" style="width:80%;" maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.productionCapacity}">
-		
+		 <f:validateLength maximum="4000" />
 		</p:inputTextarea>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sm.manufacturing.factrymchne.ownrshp.method']}" toggleable="true">
 		<p:inputTextarea rows="8"   disabled="#{viewFlag}" autoResize="false" style="width:80%;" maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.fmOwnershipMethod}">
-		
+		 <f:validateLength maximum="4000" />
 		</p:inputTextarea>
 	</p:panel>
 </ui:composition>
