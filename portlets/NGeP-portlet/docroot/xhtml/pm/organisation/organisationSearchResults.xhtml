@@ -20,10 +20,10 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}"
-				style="width :40%">
+				style="width :60%">
 				<h:outputText value="#{organisation.pmOrgValidity.orgName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.status']}">  
+			<p:column headerText="#{lbl['lbl.pm.status']}" style="width :20%">  
 	            #{(organisation.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	         </p:column>
 			<p:column headerText="#{lbl['lbl.pm.organisation.action']}"

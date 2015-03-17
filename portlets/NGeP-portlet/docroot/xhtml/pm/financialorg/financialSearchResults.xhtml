@@ -15,16 +15,16 @@
 			<ac:paginator for="searchFinancialOrg"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.name']}"
-				style="width :15%">
+				style="width :50%">
 				<h:outputText value="#{finorg.finOrgName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.buzregno']}"
-				style="width :40%">
+				style="width :30%">
 				<h:outputText value="#{finorg.bizRegNumber}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.status']}">  
+			<p:column headerText="#{lbl['lbl.pm.status']}" style="width :15%">  
 	            #{(finorg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	         </p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.action']}"
