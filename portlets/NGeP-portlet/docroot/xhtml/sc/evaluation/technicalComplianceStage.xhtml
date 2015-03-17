@@ -12,101 +12,105 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages id="technicalCompliance" showDetail="true"
-			autoUpdate="true" closable="true" severity="error,info"
-			showSummary="false" />
+		<h:panelGroup>
+			<p:messages id="technicalCompliance" showDetail="true"
+				autoUpdate="true" closable="true" severity="error,info"
+				showSummary="false" />
 
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				action="#{evaluationBackingBean.evaluationBackaction}" />
+			<div>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+					action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-				style="float:right;" update="@all"
-				action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
-		</div>
-		<p:spacer height="25" />
-		<br />
-		<br />
+				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+					style="float:right;" update="@all"
+					action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
+			</div>
+			<p:spacer height="25" />
+			<br />
+			<br />
 
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea style="width:100%"
-						value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
-						rows="2" cols="150" disabled="true"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-
-
-		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
-
-			<p:dataTable var="complianceTechnicalSupplier" rows="10"
-				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
-				id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
-				style="width:100%" rowKey="#{complianceTechnicalSupplier}">
-				<ac:paginator for="complianceTechnicalSupplier" />
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea style="width:100%"
+							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
+							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
+				</tr>
+			</table>
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
-					style="width:20%">
+			<h:panelGroup>
+				<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}"
+					toggleable="true">
 
-					<h:outputText
-						value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
-
-
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
-					style="width:10%">
-					<ui:fragment
-						rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
-						<p:commandLink ajax="false"
-							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-							actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
-							process="@this" partialSubmit="true">
-							<p:graphicImage library="ep/images/design"
-								value="/resources/ep/images/design/icon_txt.png" />
-
-						</p:commandLink>
-					</ui:fragment>
-
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
-					style="width:20%">
-					<h:outputText
-						value="#{complianceTechnicalSupplier.scQtProposal.submitted ? 'Submitted' : 'Not Submitted'}"></h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
-					style="width:15%">
-					<p:selectOneMenu
-						disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-						value="#{complianceTechnicalSupplier.compliance}">
-
-						<f:selectItems
-							value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
-
-					</p:selectOneMenu>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
-					style="width:35%;white-space: normal;">
-					<ui:fragment
-						rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
-						<p:inputTextarea rows="2" cols="40" maxlength="200"
-							disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-							id="complianceRemarksid"
-							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
-						<p:message id="complianceRemarksidEvaluation"
-							for="complianceRemarksid" display="icon"></p:message>
+					<p:dataTable var="complianceTechnicalSupplier" rows="10"
+						value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
+						id="complianceTechnicalSupplier" editable="true"
+						rowIndexVar="index" style="width:100%"
+						rowKey="#{complianceTechnicalSupplier}">
+						<ac:paginator for="complianceTechnicalSupplier" />
 
 
-					</ui:fragment>
-				</p:column>
-			</p:dataTable>
-		</p:panel>
+						<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
+							style="width:20%">
 
+							<h:outputText
+								value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
+
+
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+							style="width:10%">
+							<ui:fragment
+								rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
+								<p:commandLink ajax="false"
+									disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+									actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
+									process="@this" partialSubmit="true">
+									<p:graphicImage library="ep/images/design"
+										value="/resources/ep/images/design/icon_txt.png" />
+
+								</p:commandLink>
+							</ui:fragment>
+
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
+							style="width:20%">
+							<h:outputText
+								value="#{complianceTechnicalSupplier.scQtProposal.submitted ? 'Submitted' : 'Not Submitted'}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
+							style="width:15%">
+							<p:selectOneMenu
+								disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+								value="#{complianceTechnicalSupplier.compliance}">
+
+								<f:selectItems
+									value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+
+							</p:selectOneMenu>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+							style="width:35%;white-space: normal;">
+							<ui:fragment
+								rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
+								<p:inputTextarea rows="2" cols="40" maxlength="200"
+									disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
+									id="complianceRemarksid"
+									value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
+								<p:message id="complianceRemarksidEvaluation"
+									for="complianceRemarksid" display="icon"></p:message>
+
+
+							</ui:fragment>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:panelGroup>
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>
