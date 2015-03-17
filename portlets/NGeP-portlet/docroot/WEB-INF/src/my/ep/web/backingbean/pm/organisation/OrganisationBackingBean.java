@@ -174,8 +174,7 @@ public class OrganisationBackingBean extends
 	 * 	redirect to the search main page. 
 	 * 
 	 **/
-	public String backToSearch() {
-		getManagedBean().setIslazy(true);
+	public String backToSearch() {	
 		initialOrganisation();
 		return NAV_TO_SEARCH;
 	}
@@ -247,6 +246,7 @@ public class OrganisationBackingBean extends
 	 **/
 	public void searchOrganisation() {
 		if(getManagedBean().getOrganisationSearchBean().getOrgTypeCode() != null){
+			getManagedBean().setIslazy(true);
 			searchOrganisation.reloadData();
 		}
 		
