@@ -549,13 +549,21 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * Navigate to supplier qualification criteria screen
+	 * 
+	 * @param qtId
+	 * @return path
+	 */
 	public String gotoSupplierQualificationCriteria(Long qtId) {
 
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
-
-		ScQt scQt = new ScQt();
-		scQt.setQtId(qtId);
-		this.getManagedBean().setScQt(scQt);
+		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+		reqDTO.setQtId(qtId);
+		NoticeBoardResDTO resDTO = getNBResDTO(reqDTO);
+		/*ScQt scQt = new ScQt();
+		scQt.setQtId(qtId);*/
+		this.getManagedBean().setScQt(resDTO.getScQt());
 
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
 	}
@@ -1913,4 +1921,21 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setCategoryL3(pmCategoryL3);
 	}
 	
+	/**
+	 * Get notice board QT info through retrieveQtNoticeDtl 
+	 * method of IQTNoticeBoardSO
+	 * 
+	 * @param reqDTO
+	 * @return qtNoticeBoardSO
+	 */
+	public NoticeBoardResDTO getNBResDTO(NoticeBoardReqDTO reqDTO) {
+		IQTNoticeBoardSO qtNoticeBoardSO = null;
+		try {
+			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			return qtNoticeBoardSO.retrieveQtNoticeDtl(reqDTO);
+		} finally {
+			qtNoticeBoardSO = null;
+		}
+	}
 }
