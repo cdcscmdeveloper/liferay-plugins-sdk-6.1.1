@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -24,6 +25,7 @@ import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -78,6 +80,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private PmUser supplierPmUser;
 	private PmDigiSign pmDigiSign;
 	
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+    
 	/**
 	 * @return the action
 	 */
@@ -650,6 +655,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 	 */
 	public void setCurentAccNoBankName(String curentAccNoBankName) {
 		this.curentAccNoBankName = curentAccNoBankName;
+	}
+
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
 	}
 	
 	
