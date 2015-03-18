@@ -11,6 +11,23 @@
 		widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
+	
+	<p:panel
+			header="#{lbl['lbl.sc.notice.board.tender.details']}" toggleable="true">
+			<h:panelGrid border="0" width="100%" columns="3"
+				columnClasses="columnWidth20,columnWidth50,columnWidth30">
+				<h:outputLabel value="#{lbl['lbl.qt.nb.title']}" />
+				<h:outputText style="white-space: normal;word-wrap: break-word;"
+					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
+				<h:outputLabel value="" />
+
+				<h:outputLabel value="#{lbl['lbl.so.qtnno']}" />
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}" />
+				<h:outputLabel value="" />
+			</h:panelGrid>
+	</p:panel>
+	
 	<p:panel header="Check Supplier Qualification" toggleable="true">
 		<div class="clear"></div>
 		<table style="margin: 0 auto;">
