@@ -1,0 +1,40 @@
+<html>
+<head>
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+		.underline {
+			text-decoration: underline;
+		}
+		
+	</style>
+</head>
+<body>
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td align="center">
+            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>SURAT AKUAN PEMBIDA Bagi $title</span>
+            <br/> <br/>
+        </td>
+    </tr>
+    <tr>
+		<td>
+			<span>Saya, <span class="underline">$userName</span> nombor K.P. <span class="underline">$icNo</span> yang mewakili <span class="underline">$supplierName</span> nombor Pendaftaran <span class="underline">$mofNo</span> dengan ini mengisytiharkan bahawa saya atau mana-mana individu yang mewakili syarikat ini tidak akan menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline">$agency</span> atau mana-mana individu lain, sebagai sogokan untuk dipilih dalam $title seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini.</span><br/><br/>
+			<span>
+				2. Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam <span class="underline">$agency</span> atau mana-mana individu lain sebagai sogokan untuk dipilih dalam $title, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil:<br /><br />
+				2.1 penarikan balik tawaran kontrak bagi $title; atau<br />
+				2.2 penamatan kontrak bagi $title; dan<br />
+				2.3 lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan.<br/><br/>
+			</span>
+			<span>3. Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai sogokan untuk dipilih dalam $title, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Perkhidmatan Rasuah Malaysia (SPRM) atau balai polis yang berhampiran.</span>
+		</td>
+	</tr>
+	</table>
+</body>
+</html>
