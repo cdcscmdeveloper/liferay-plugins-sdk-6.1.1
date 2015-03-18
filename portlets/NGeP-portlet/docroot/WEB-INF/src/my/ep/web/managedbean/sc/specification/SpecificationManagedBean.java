@@ -740,6 +740,10 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	/** The supplier location list. */
 	private List<ScQtLocCriteria> supplierLocationList;
 	
+	
+	/** The financial checklist action. */
+	private List<SelectItem> financialChecklistAction;
+	
 	/**
 	 * Checks if is spec complete.
 	 * 
@@ -4926,6 +4930,21 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierLocationList(List<ScQtLocCriteria> supplierLocationList) {
 		this.supplierLocationList = supplierLocationList;
+	}
+
+	/**
+	 * @return the financialChecklistAction
+	 */
+	public List<SelectItem> getFinancialChecklistAction() {
+		return financialChecklistAction;
+	}
+
+	/**
+	 * @param financialChecklistAction the financialChecklistAction to set
+	 */
+	public void setFinancialChecklistAction(
+			List<SelectItem> financialChecklistAction) {
+		this.financialChecklistAction = financialChecklistAction;
 	}
 
 }
