@@ -68,7 +68,7 @@
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-						rendered="#{personnel.epRole eq 'MOF_SUPPLIER_ADMIN' or personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+						rendered="#{personnel.epRole eq 'MOF_SUPPLIER_ADMIN' or personnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or personnel.epRole eq 'SUPPLIER_TEMP'}" />
 					<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
 						rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER' or personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
 					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
