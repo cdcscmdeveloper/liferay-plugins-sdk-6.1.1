@@ -1014,6 +1014,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	public void viewMarketResearch(ScPurchaseInDefault scPurchaseInDefault) throws IOException {
 		debugLogger("viewMarketResearch");
 		ScRequestItem requestItem = null;
+		 String  itemCode = "";
 
 		if (scPurchaseInDefault != null) {
 			FacesScopes facesScopes = new FacesScopes();	
@@ -1021,10 +1022,31 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			String reportName = ReportConst.SC_MARKET_RESEARCH_RPT_JSP;
 
 			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
+			
+			if(scPurchaseInDefault.isBrandNew()) {
+				if(getManagedBean().getvCmSupplierItem() != null){
+					itemCode   = getManagedBean().getvCmSupplierItem().getItemCode();
+				}
+
+			} else{
+				if(scPurchaseInDefault.getPanelItem() != null){
+					requestItem =	scPurchaseInDefault.getPanelItem().getScRequestItem();
+					if(requestItem.getCmItem() != null){
+						itemCode = requestItem.getCmItem().getExtensionCode();
+					}
+
+				} else if(scPurchaseInDefault.getContractedItem() != null){
+					requestItem = scPurchaseInDefault.getContractedItem().getScRequestItem();
+					if(requestItem.getCmItem() != null){
+						itemCode = requestItem.getCmItem().getExtensionCode();
+					}
+				}
+			}
+			
+			paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);	
 
 			//if(scPurchaseInDefault.isBrandNew()) {
-			
-				 VCmSupplierItem vCmSupplierItem = getManagedBean().getvCmSupplierItem();
+			/* VCmSupplierItem vCmSupplierItem = getManagedBean().getvCmSupplierItem();
 				 //long  uomId = vCmSupplierItem.getUomId();
 				 String  itemCode   = vCmSupplierItem.getItemCode();
 				 String conditionField = getManagedBean().getConditionField();
@@ -1062,7 +1084,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				}
 				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 0 + "");
 
-			/*}
+			}
 			else {
 				if(scPurchaseInDefault.getPanelItem() != null){
 				  requestItem =	scPurchaseInDefault.getPanelItem().getScRequestItem();
@@ -1073,7 +1095,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				paramMap.put(ReportConst.PARAM_REQUEST_ITEM_ID, requestItem.getRequestNoteItemId() + "");
 				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 1 + "");
 			}
-*/
+			 */
 			generateReport(reportName, paramMap);
 		}
 	} 
