@@ -77,8 +77,11 @@
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText maxlength="100" value="#{reportBackingBean.flStatus}"  style="margin-top:5px;width:290px;" >									
-					 				</p:inputText>
+									
+					 				<p:selectOneMenu value="#{reportBackingBean.flStatus}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItems value="#{reportBackingBean.docTypeStatusItemsList}"></f:selectItems>					
+									</p:selectOneMenu>
 									</c:if>
 									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDurationView}">
