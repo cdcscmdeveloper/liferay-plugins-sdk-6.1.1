@@ -30,7 +30,7 @@
 					style="float:left;" 
 				/>
 				</td>
-				<td><p:commandButton value="#{lbl['lbl.btn.save']}"
+				<td>    <p:commandButton value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveSubDivision}"
 						update="@([id$=Msg])" style="float:right;" /></td>
 			</tr>
