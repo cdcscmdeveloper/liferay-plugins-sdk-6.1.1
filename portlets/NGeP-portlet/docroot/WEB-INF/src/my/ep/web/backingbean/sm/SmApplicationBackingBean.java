@@ -467,6 +467,10 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setDiploma(
 					SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
 							"4"));
+			getManagedBean().setGlpCert(
+					SmApplicationUtil.retrievePmParameterByTypeAndCode(
+							SupplierManagementConst.SM_SUPPLIER_PARAM_TYPE_CRT,
+							SupplierManagementConst.SM_SUPPLIER_CERT_TYPE_GLP));
 			getManagedBean().setAcadQualifications(
 					SmApplicationUtil.getAcademicQualifications());
 
@@ -1587,6 +1591,26 @@ public class SmApplicationBackingBean extends
 			rqDto.setCategoryL3Ids(catL3Ids);
 			log.info(" **** Total categories sent to Doc So ***"
 					+ rqDto.getCategoryL3Ids().size());
+		}
+		System.out.println("*** The certs size ********* "
+				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
+		if (!getManagedBean().getSmAppl().getSmSupplierCerts().isEmpty()) {
+			List<Long> certIds = new ArrayList<>();
+			for (SmSupplierCert cert : getManagedBean().getSmAppl()
+					.getSmSupplierCerts()) {
+				if (getManagedBean().getGlpCert() != null
+						&& cert.getCertTypeId() != null
+						&& cert.getCertTypeId().compareTo(
+								new BigDecimal(getManagedBean().getGlpCert()
+										.getParameterId())) == 0) {
+					if (cert.getPmCertBody() != null
+							&& cert.getPmCertBody().getCertBodyId() != null)
+						certIds.add(cert.getPmCertBody().getCertBodyId());
+				}
+			}
+			rqDto.setCertBodyIds(certIds);
+			System.out.println("GLP List size sent ******** "
+					+ rqDto.getCertBodyIds().size());
 		}
 
 		rqDto.setSupplierTypeCode(getManagedBean().getSmAppl()
@@ -6831,7 +6855,7 @@ public class SmApplicationBackingBean extends
 		DocumentResDTO resDto = new DocumentResDTO();
 		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDocumentSO.class);
-//		resDto = reqSO.retrieveSupportingDocumentList(reqDTO);
+		// resDto = reqSO.retrieveSupportingDocumentList(reqDTO);
 		resDto = reqSO.retrieveSupportingDocuments(reqDTO);
 		return resDto;
 
@@ -7113,7 +7137,7 @@ public class SmApplicationBackingBean extends
 	private int assignMaxReviewCount(String appType, String applCatType,
 			String supplierType, String businessType) {
 		return SmApplicationUtil.assignMaxReviewCount(appType, applCatType,
-				supplierType, businessType,getManagedBean());
+				supplierType, businessType, getManagedBean());
 	}
 
 	/**
