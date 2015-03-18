@@ -726,7 +726,20 @@ public class ReportConst {
 	public static final String ROLE_CODE_CT_APPROVER="CT_APPROVER";
 	public static final String ROLE_CODE_RN_APPROVER="RN_APPROVER";
 	public static final String ROLE_CODE_RECEIVING_OFFICER="RECEIVING_OFFICER";
-	
+	public static final String DOC_TYPE_CR="CR";
+	public static final String DOC_TYPE_CO="CO";
+	public static final String DOC_TYPE_DO="DO";
+	public static final String DOC_TYPE_FN="FN";
+	public static final String DOC_TYPE_IN="IN";
+	public static final String DOC_TYPE_PA="PA";
+	public static final String DOC_TYPE_DN="DN";
+	public static final String DOC_TYPE_PO="PO";
+	public static final String DOC_TYPE_PR="PR";
+	public static final String MINISTRY_CONTRACT_ADMIN="Minsitry Contract Admin";
+	public static final String MIN_CONTRACT_ADMIN="MIN_CONTRACT_ADMIN";
+	public static final String APPROVER_LBL="Approver";
+	public static final String PARAM_CODE_TYPE_FPJ="FPJ";
+	public static final String PARAM_CODE_TYPE_FMI="FMI";
 	//ERROR N EXCEPTIONS
 	public static final String ERR_999000_MORTHAN_TEN= "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";

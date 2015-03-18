@@ -72,6 +72,7 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
@@ -190,6 +191,9 @@ public class ReportBackingBean extends
 		return selectCatDeletionList;
 	}
 	SelectItem[] items = null;
+	SelectItem[] docTypeStatusItems = null;
+	List<SelectItem> docTypeStatusItemsList=new ArrayList<SelectItem>();
+	
 	public void setSelectCatDeletionList(
 			List<SmSupplierCategory> selectCatDeletionList) {
 		this.selectCatDeletionList = selectCatDeletionList;
@@ -203,6 +207,22 @@ public class ReportBackingBean extends
 	
 
 	
+
+	public List<SelectItem> getDocTypeStatusItemsList() {
+		return docTypeStatusItemsList;
+	}
+
+	public void setDocTypeStatusItemsList(List<SelectItem> docTypeStatusItemsList) {
+		this.docTypeStatusItemsList = docTypeStatusItemsList;
+	}
+
+	public SelectItem[] getDocTypeStatusItems() {
+		return docTypeStatusItems;
+	}
+
+	public void setDocTypeStatusItems(SelectItem[] docTypeStatusItems) {
+		this.docTypeStatusItems = docTypeStatusItems;
+	}
 
 	public List<SelectItem> getRolecodeRquisitionerList() {
 		return rolecodeRquisitionerList;
@@ -2627,7 +2647,50 @@ public class ReportBackingBean extends
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
 	}
-	
+	public SelectItem[] getDocTypeStatusDropDown(){
+		docTypeStatusItems = null;
+		String doctype = null;
+		SelectItem[] tempOneStatusItems = null;
+		SelectItem[] tempTwoStatusItems = null;
+		docTypeStatusItemsList=new ArrayList<SelectItem>();
+		if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL))){
+			doctype =ReportConst.DOC_TYPE_CR;
+		} else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL))){
+			doctype =ReportConst.DOC_TYPE_CO;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.DEL_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.DEL_ORD_RPT_CEN_PEN_VAL))){
+			doctype =ReportConst.DOC_TYPE_DO;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL))){
+			doctype =ReportConst.DOC_TYPE_FN;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_SUPL_PO_VAL)||this.getReportValue().equals(ReportConst.INV_RPT_VIEW_PTJ_PO_VAL))){
+			doctype =ReportConst.DOC_TYPE_IN;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PYMT_MATCH_RPT_PO_VAL))){
+			doctype =ReportConst.DOC_TYPE_PA;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL))){
+			doctype =ReportConst.DOC_TYPE_DN;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SUMM_RPT_PAN_ITM_VAL))){
+			doctype =ReportConst.DOC_TYPE_PO;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL))){
+			doctype =ReportConst.DOC_TYPE_PR;
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){			
+			tempOneStatusItems = getStatusDropdownValues(this.getModuleValue(),ReportConst.DOC_TYPE_PO);
+			tempTwoStatusItems = getStatusDropdownValues(this.getModuleValue(),ReportConst.DOC_TYPE_PR);
+			for(SelectItem item1:tempOneStatusItems){
+				docTypeStatusItemsList.add(item1);
+			}
+			for(SelectItem item2:tempTwoStatusItems){
+				docTypeStatusItemsList.add(item2);
+			}
+		}		
+		if(null!=doctype){
+			docTypeStatusItems = null;
+			docTypeStatusItemsList=new ArrayList<SelectItem>();
+			docTypeStatusItems = getStatusDropdownValues(this.getModuleValue(),doctype);
+			for(SelectItem itemCommon:docTypeStatusItems){
+				docTypeStatusItemsList.add(itemCommon);
+			}
+		}
+		return docTypeStatusItems;
+    }
 	public List<SelectItem> retrieveSubTypeList(){
 		ctSubTypeList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2635,10 +2698,10 @@ public class ReportBackingBean extends
         	//lngUserId = (long) 240500;
         	if (null != this.getCtUserType()) {
         		String userTypeRoleCode = null;
-        		if (this.getCtUserType().equals("Minsitry Contract Admin")) {
-        			userTypeRoleCode="MIN_CONTRACT_ADMIN";
-        		}else if(this.getCtUserType().equals("Approver")) {
-        			userTypeRoleCode="CT_APPROVER";
+        		if (this.getCtUserType().equals(ReportConst.MINISTRY_CONTRACT_ADMIN)) {
+        			userTypeRoleCode=ReportConst.MIN_CONTRACT_ADMIN;
+        		}else if(this.getCtUserType().equals(ReportConst.APPROVER_LBL)) {
+        			userTypeRoleCode=ReportConst.ROLE_CODE_CT_APPROVER;
         		}
         		if (null != userTypeRoleCode) {
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -2749,12 +2812,19 @@ public class ReportBackingBean extends
 				
 			}
 			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_RECEIVING_OFFICER))){
-				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER);			
-				for (Object[] object : rlcdLst) {
+				List<Object[]> recoffLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER);			
+				for (Object[] object : recoffLst) {
 					SelectItem selectItem = new SelectItem();
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeRecievingOfficerList.add(selectItem);
+				}
+				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
+				for (Object[] object : rlcdLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					rolecodeRquisitionerList.add(selectItem);
 				}
 			}
 		}
@@ -2770,8 +2840,7 @@ public class ReportBackingBean extends
 					List<String> ptLst = reportSO.retrieveParamCodeByUser(lngUserId);			
 					for (int i = 0; i < ptLst.size(); i++) {
 						paramList.add(ptLst.get(i));
-					}
-        	    
+					}        	    
         }
 		return paramList;
 	}
@@ -2810,7 +2879,7 @@ public class ReportBackingBean extends
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage() {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();		
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ, ICategoryCodeSO.class);
 		CategoryCodeResDTO catCodeResDTO = reqSO.retrieveCategoryL1List();
 		if (catCodeResDTO != null) {
 			return catCodeResDTO.getCategoryL1List();
@@ -2818,7 +2887,6 @@ public class ReportBackingBean extends
 			return null;
 		}
 	}
-
 	public void selectAll() {
 
 		if (this.isSelectedAll()) {
@@ -2829,11 +2897,8 @@ public class ReportBackingBean extends
 			this.setSelectedCatList(null);
 		}
 	}
-
 	public void selected(int index) {
-
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
-
 		if (this.isSelected()) {
 			if (selectedCatsList == null) {
 				selectedCatsList = new ArrayList<SmSupplierCategory>();
@@ -2848,9 +2913,7 @@ public class ReportBackingBean extends
 		}
 		this.setSelectedCatList(selectedCatsList);
 	}
-
 	public void selectAllCompanyExperinceCategories() {
-
 		if (this.isSelectedAll()) {
 			this.setSelected(true);
 			this.setSelectedCatList(this.getSelectedCatList());
@@ -2859,7 +2922,6 @@ public class ReportBackingBean extends
 			this.setSelectedCatList(null);
 		}
 	}
-
 	public void selectedCompanyExperinceCategory(int index) {
 		List<SmSupplierCategory> selectedCatsList = this.getSelectedCatList();
 		if (this.isSelected()) {
@@ -2890,7 +2952,7 @@ public class ReportBackingBean extends
 	public static List<PmCategoryL2> retrieveExperienceChildCategoryList(
 			long categoryL1Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
@@ -2936,7 +2998,7 @@ public class ReportBackingBean extends
 		Map<String,List<SelectItem>> localModuleItemMap=new HashMap<String,List<SelectItem>>();
 		if(null!=items){
 			for(SelectItem item:items){
-				String[] moduleItemArr= (String[])((String)item.getValue()).split("_");
+				String[] moduleItemArr= (String[])((String)item.getValue()).split(ReportConst.UNDERSCORE);
 				if(localModuleItemMap.keySet().contains(moduleItemArr[0])){
 					//code for contains
 					localModuleItemMap.get(moduleItemArr[0]).add(item);
@@ -2974,7 +3036,7 @@ public class ReportBackingBean extends
 	public static List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
 			long categoryL2Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
@@ -3103,10 +3165,7 @@ public class ReportBackingBean extends
 		reportList = new ArrayList<SelectItem>();
 		rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
-		/*
-		 * getManagedBean().setReportName(null);
-		 * getManagedBean().setReportValue(null);
-		 */
+		
 		this.setReportName(null);
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
@@ -3340,66 +3399,7 @@ public class ReportBackingBean extends
 		return authoriztionList;
 	}
 
-	/*public void retrieveMinistryByOrgtype() {
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			userId = new FacesScopes().getUserSessionBean().getUserId()
-					.toString();
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			// if (null != this.getCtMinistry()) {
-			reqDTO.setUserId(lngUserId);
-			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-			// reqDTO.setParentOrgProfileId(Long.parseLong(this.getCtMinistry()));
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-			List<PmOrgProfile> list = resDTO.getOrgProfileList();
-			for (PmOrgProfile user : list) {
-				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(user.getOrgName());
-				selectItem.setValue(user.getOrgProfileId());
-				ministryList.add(selectItem);
-			}
-			// }
-		}
-	}
-
-	public void retrievePTJByOrgProfileId() {
-		// OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		IOrgProfileSO orgProfileSO = null;
-		try {
-
-			if (null != this.getFlMinistry() || null != this.getCtMinistry()) {
-				Long ministryId = null;
-				if (null != this.getFlMinistry()) {
-					ministryId = Long.parseLong(this.getFlMinistry());
-				} else if (null != this.getCtMinistry()) {
-					ministryId = Long.parseLong(this.getFlMinistry());
-				}
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-				reqDTO.setParentOrgProfileId(ministryId);
-				orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
-				List<PmOrgProfile> list = resDTO.getOrgProfileList();
-				for (PmOrgProfile user : list) {
-					SelectItem selectItem = new SelectItem();
-					selectItem.setLabel(user.getOrgName());
-					selectItem.setValue(user.getOrgProfileId());
-					ptjList.add(selectItem);
-				}
-				// this.setPtjList(resDTO.getOrgProfileList());
-			}
-
-		} finally {
-			orgProfileSO = null;
-		}
-	}*/
+	
 	public void  retrieveParameterCodeType() {
 		ptjList = new ArrayList<String>();
 		ministryList = new ArrayList<SelectItem>();
@@ -3415,10 +3415,10 @@ public class ReportBackingBean extends
 			for (Object[] object : paramcodeLst) {
 				parameterCodeType = object[0].toString();
 			}
-			if((parameterCodeType!=null)&&(parameterCodeType.equals("FPJ"))){
+			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ))){
 				retrieveFPJPTJList();
 				retrieveFPJMinistryList();
-			}else if((parameterCodeType!=null)&&(parameterCodeType.equals("FMI"))){
+			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))){
 				retrieveFMIMinistryList();
 			}
 		}		
@@ -3441,7 +3441,7 @@ public class ReportBackingBean extends
 	}
 	public List<String>  retrieveFMIPTJList() {
 		
-		if ((null !=this.getCommonMinistry())&&((parameterCodeType!=null)&&(parameterCodeType.equals("FMI")))) {
+		if ((null !=this.getCommonMinistry())&&((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))) {
 			ptjList = new ArrayList<String>();
 			Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
 			
@@ -3771,17 +3771,17 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		getManagedBean().getRptGenBean().setSmMandatoryFromDateView(false);
 		getManagedBean().getRptGenBean().setSmActivationDateView(false);
 		getManagedBean().getRptGenBean().setSmSubmissionDateView(false);
-		if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals("Basic"))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
+		if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_BASIC))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
 			getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
 			getManagedBean().getRptGenBean().setSmActivationDateView(true);
-		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals("MOF"))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
+		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_MOF))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
 			getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
 			getManagedBean().getRptGenBean().setSmSubmissionDateView(true);
 		}
 	}
 	public void enableCriteriaMenu() {
 		getManagedBean().getRptGenBean().setEnableCriteriaMenuView(false);
-		if((this.getReportValue()!=null)&&(!this.getReportValue().equals(""))){
+		if((this.getReportValue()!=null)&&(!this.getReportValue().equals(ReportConst.EMPTY_VAL))){
 			getManagedBean().getRptGenBean().setEnableCriteriaMenuView(true);
 		}
 		
@@ -3847,7 +3847,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						rptGenBean, authoriztionList,approverNayakTarafList);
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))) {
-				 
+				getDocTypeStatusDropDown();
 				flReportBackingBean.enableCriteriaVariablesByReportByFL(
 						rptGenBean, authoriztionList);
 			} else if ((this.getModuleValue()
@@ -3875,16 +3875,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
-	/*
-	 * public void retriveSVOfficerUser(){ IPMReportSO reportSO =
-	 * EpEjbBusinessDelegate
-	 * .getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-	 * IPMReportSO.class); List<String> svoUser=
-	 * reportSO.retriveSVOfficerUser(lngUserId); stateLst = new
-	 * ArrayList<SelectItem>(); if (svoUser.size()>0) { for (int i = 0; i <
-	 * svoUser.size(); i++) {
-	 * log.info("SVOUSER LIST #########################"+svoUser.get(i)); } } }
-	 */
+	
 	public void retrieveDates() {
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
@@ -3905,24 +3896,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			this.setSmCreatedToYear(outputDateFormat.format(currentDate)
 					.substring(6, 10));
 		}		
-		/*
-		 * if((getManagedBean().getModuleValue()!=null)&&((getManagedBean().
-		 * getReportValue()!=null))){
-		 * if((getManagedBean().getModuleValue().equalsIgnoreCase
-		 * (ModuleCodeConst
-		 * .SUPPLIER_MANAGEMENT))&&((getManagedBean().getReportValue
-		 * ().equalsIgnoreCase
-		 * (ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL
-		 * ))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.
-		 * SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL
-		 * ))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.
-		 * SM_LST_PRE_EXP_COMP_RPT_VAL)))){ this.setToDate(currentDate);
-		 * this.setSmExpiryToDate(currentDate);
-		 * this.setScSoneCrtdToDate(currentDate); Date newDate= new Date();
-		 * newDate.setMonth(0); newDate.setDate(1); this.setFromDate(newDate);
-		 * this.setSmExpiryFromDate(newDate);
-		 * this.setScSoneCrtdFromDate(newDate); } }
-		 */
+		
 		if ((this.getModuleValue() != null) && (this.getSubModule() != null)) {
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))
@@ -4017,7 +3991,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				.retrieveCategoryL1List();
 		for (PmCategoryL1 catOne : catCodeResDTO.getCategoryL1List()) {
 			SelectItem selectItem = new SelectItem();
-			selectItem.setLabel(catOne.getCategoryL1Code() + " - "
+			selectItem.setLabel(catOne.getCategoryL1Code() + ReportConst.RPT_EIFON
 					+ catOne.getCategoryName());
 			selectItem.setValue(catOne.getCategoryL1Id());
 			levOneCatLst.add(selectItem);
@@ -4039,7 +4013,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					.retrieveCategoryL2ListByL1Id(catCodeReqDTO);
 			for (PmCategoryL2 catTwo : catCodeResDTO.getCategoryL2List()) {
 				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(catTwo.getCategoryL2Code() + " - "
+				selectItem.setLabel(catTwo.getCategoryL2Code() + ReportConst.RPT_EIFON
 						+ catTwo.getCategoryName());
 				selectItem.setValue(catTwo.getCategoryL2Id());
 				levTwoCatLst.add(selectItem);
@@ -4062,7 +4036,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					.retrieveCategoryL3ListByL2Id(catCodeReqDTO);
 			for (PmCategoryL3 catThree : catCodeResDTO.getCategoryL3List()) {
 				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(catThree.getCategoryL3Code() + " - "
+				selectItem.setLabel(catThree.getCategoryL3Code() + ReportConst.RPT_EIFON
 						+ catThree.getCategoryName());
 				selectItem.setValue(catThree.getCategoryL3Id());
 				levThreeCatLst.add(selectItem);
@@ -4078,10 +4052,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCmIcNumber(null);
 		this.setCmBusinessRegNo(null);
 		this.setCmMofNumber(null);
-		/*
-		 * this.setSmEpNumber(null); this.setSmIcNumber(null);
-		 * this.setSmBusinessRegNo(null); this.setSmMofNumber(null);
-		 */
+		
 		getManagedBean().getRptGenBean().setCmMofRegView(false);
 		getManagedBean().getRptGenBean().setCmBasicRegView(false);
 		getManagedBean().getRptGenBean().setSmMofRegView(false);
@@ -4111,18 +4082,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					ReportConst.RPT_REG_BASIC)) {
 				getManagedBean().getRptGenBean().setSmBasicRegView(true);
 				getManagedBean().getRptGenBean().setSmMofRegView(false);
-				/*
-				 * this.setSmMofNumber(null); this.setSmEpNumber(null);
-				 * this.setSmIcNumber(null); this.setSmBusinessRegNo(null);
-				 */
+				
 			} else if (this.getSmRegistrationType().equalsIgnoreCase(
 					ReportConst.RPT_REG_MOF)) {
 				getManagedBean().getRptGenBean().setSmMofRegView(true);
-				getManagedBean().getRptGenBean().setSmBasicRegView(false);
-				/*
-				 * this.setSmMofNumber(null); this.setSmEpNumber(null);
-				 * this.setSmIcNumber(null); this.setSmBusinessRegNo(null);
-				 */
+				getManagedBean().getRptGenBean().setSmBasicRegView(false);				
 			}
 		}
 	}
@@ -4205,30 +4169,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					checkYearDefference();
 				}
 			}
-			/*
-			 * if((this.getSmApplicationFromDate()!=null)&&(this.
-			 * getSmApplicationToDate()!=null)){
-			 * if(this.getSmApplicationFromDate
-			 * ().after(this.getSmApplicationToDate())){ throw new
-			 * EpException(CommonMethod
-			 * .getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT)); } }
-			 * if((this
-			 * .getSmReceiveFromDate()!=null)&&(this.getSmReceiveToDate()
-			 * !=null)){
-			 * if(this.getSmReceiveFromDate().after(this.getSmReceiveToDate())){
-			 * throw new EpException(CommonMethod.getMessageCommon(ReportConst.
-			 * TO_DT_GTR_THN_FRM_DT)); } }
-			 * if((this.getSmPrintedFromDate()!=null)
-			 * &&(this.getSmPrintedToDate()!=null)){
-			 * if(this.getSmPrintedFromDate().after(this.getSmPrintedToDate())){
-			 * throw new EpException(CommonMethod.getMessageCommon(ReportConst.
-			 * TO_DT_GTR_THN_FRM_DT)); } }
-			 * if((this.getSmExpiryFromDate()!=null)&&
-			 * (this.getSmExpiryToDate()!=null)){
-			 * if(this.getSmExpiryFromDate().after(this.getSmExpiryToDate())){
-			 * throw new EpException(CommonMethod.getMessageCommon(ReportConst.
-			 * TO_DT_GTR_THN_FRM_DT)); } }
-			 */
+			
 			if ((this.getScSoneCrtdFromDate() != null)
 					&& (this.getScSoneCrtdToDate() != null)) {
 				if (this.getScSoneCrtdFromDate().after(
@@ -4805,10 +4746,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getZoneTotVar()
 						+ rptGenBean.getSupplierTypeTotVar()
 						+ rptGenBean.getMofRegNoTotVar()
-						+ rptGenBean.getRegistrationStatusTotVar()
-						/*+ rptGenBean.getMainCategoryTotVar()
-						+ rptGenBean.getSubCategoryTotVar()
-						+ rptGenBean.getSubCategoryDivisionTotVar()*/
+						+ rptGenBean.getRegistrationStatusTotVar()						
 						+maincategory
 						+subcategory
 						+subcategorydivision
@@ -5344,12 +5282,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setMofNumberTotVar(ReportConst.CM_AMP_MOF_NO_EQ
 						+ this.getCmMofNumber());
 			}
-			/*
-			 * if((this.getCmSupplOrAdmin()!=null)&&(this.getCmSupplOrAdmin()!=
-			 * ReportConst.EMPTY_VAL)){
-			 * rptGenBean.setCmSupplOrAdminVar(ReportConst
-			 * .CM_AMP_SUPPOR_ADMIN_EQ+this.getCmSupplOrAdmin()); }
-			 */
+			
 			if ((this.getCmExtention() != null)
 					&& (this.getCmExtention() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCmExtentionVar(ReportConst.CM_AMP_EXTENSION_EQ
@@ -5595,14 +5528,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getFromDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setFromDateVar(ReportConst.FL_AMP_FROM_DATE_EQ
 						+ outputDateFormat.format(this.getFromDate()));
-			}
-			// SimpleDateFormat outputDateFormat2 = new
-			// SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			}			
 			if ((this.getToDate() != null)
 					&& (this.getToDate().toString() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setToDateVar(ReportConst.FL_AMP_TO_DATE_EQ
 						+ outputDateFormat.format(this.getToDate()));
-
 			}
 			if ((this.getFlContractOrder() != null)
 					&& (this.getFlContractOrder() != ReportConst.EMPTY_VAL)) {
@@ -5846,10 +5776,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 * Clear report criteria
 	 */
 	public void resetReportForm() {
-		// retriveModuleList();
-		// retriveReportListBymoduleName();
-		// getManagedBean().setReportValue(null);
-		// this.setModuleValue(null);
+		
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
 		this.setFromDate(null);
 		this.setToDate(null);
@@ -5883,8 +5810,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		brandList = new ArrayList<SelectItem>();
 		extTypeList = new ArrayList<SelectItem>();
 		measurmentList = new ArrayList<SelectItem>();
-		colorList = new ArrayList<SelectItem>();
-		
+		colorList = new ArrayList<SelectItem>();		
 		this.setFlItmType(null);
 		this.setCommonPtj(null);
 		this.setFlContractNo(null);
@@ -5986,8 +5912,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCtLoanNo(null);
 		this.setCtLOAPhysicalNo(null);
 		this.setCtSubType(null);
-		this.setCtUserType(null);
-		
+		this.setCtUserType(null);		
 		this.setCtProcurementMode(null);
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
