@@ -6,11 +6,11 @@
 
 	<p:outputPanel id="opFacBankDet">
 		<br/>
-		<p:dataTable id="financialaccid" var="financialacc"
+		<p:dataTable id="financialaccid" var="financialacc" resizableColumns="true" style="width: 100% !important;"
 			value="#{financialOrgBackingBean.managedBean.financialOrg.pmFinancialAccs}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex">
 			<ac:paginator for="financialacc" />
-			<p:column style ="width:30%;" >
+			<p:column style="width: 25% !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.paymentbankname']}" />
@@ -19,7 +19,7 @@
 					rendered="#{!financialacc.brandNew}"/>
 				<p:selectOneMenu value="#{financialacc.pmPaymentBankOrg.financialOrgId}" id="finorgn"
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
-					rendered="#{financialacc.brandNew}" style="margin-bottom: 5px;"
+					rendered="#{financialacc.brandNew}" style="margin-bottom: 5px;width:210px !important"
 					styleClass="ppDropDownWidthL" required="true">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
@@ -33,16 +33,16 @@
 				</p:selectOneMenu>
 				<p:message id="finorgnMsg" for="finorgn" display="icon" />
 			</p:column>
-			<p:column style ="width:10%">
+			<p:column style="width: 11% !important">
 				<f:facet name="header">					
 					<h:outputText value="#{lbl['lbl.pm.financialorg.bankcode']}" />
 				</f:facet>
 				<p:inputText id="bankCode" value="#{financialacc.bankCode}" disabled="true"
-					  styleClass="ppDisplayTextS"  
+					 size="10" 
 					/>
 				
 			</p:column> 
-			<p:column style ="width:15%">
+			<p:column style="width: 11% !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.acnumber']}" />
@@ -50,12 +50,12 @@
 
 				<p:inputText id="accountNo" value="#{financialacc.accountNo}"
 					 label="#{lbl['lbl.pm.financialorg.acnumber']}" required="true"
-					size="15" styleClass="ppDisplayTextS" maxlength="20" 
+					size="10" styleClass="ppDisplayTextS" maxlength="20" 
 					disabled="#{!financialacc.brandNew}"/>
 				<p:message for="accountNo" id="accountNoMsg" display="icon" />
 			</p:column>
 
-			<p:column style ="width:15%">
+			<p:column style="width: 17% !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.effdate']}" />
@@ -73,7 +73,7 @@
 				<p:message for="effDte" id="effDteMsg" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.financialorg.expdate']}" style ="width:15%">
+			<p:column style="width: 17% !important" headerText="#{lbl['lbl.pm.financialorg.expdate']}" >
 				<p:calendar id="expDate" value="#{financialacc.expDate}"
 					showOn="button" size="10" mindate="#{financialOrgBackingBean.managedBean.currentDate}"
 					readonlyInput="true"
@@ -83,9 +83,9 @@
 				</p:calendar>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}" style ="width:10%">
-				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
-					disabled="#{financialacc.brandNew}" styleClass="ppDropDownWidthS" style="margin-bottom: 5px;"
+			<p:column width="14%" headerText="#{lbl['lbl.pm.financialorg.status']}" >
+				<p:selectOneMenu value="#{financialacc.recordStatusFlg}" style="width: 110px !important;"
+					disabled="#{financialacc.brandNew}" styleClass="ppDropDownWidthS" 
 					 required="true">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
@@ -102,7 +102,7 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this"
+				process="@this,financialaccid"
 				action="#{financialOrgBackingBean.addFinancialAcc}"
 				update="financialaccid" />
 
