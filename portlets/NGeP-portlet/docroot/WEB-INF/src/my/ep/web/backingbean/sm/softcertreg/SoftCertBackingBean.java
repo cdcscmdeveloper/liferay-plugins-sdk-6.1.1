@@ -18,10 +18,12 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -151,7 +153,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Create bill, update personnel and call softcert payment BPM
+	 * Create bill, update personnel and call soft certificate payment BPM
 	 */
 	public void makePayment() {
 		if ((getManagedBean().getSoftCertPayList() != null && getManagedBean()
@@ -226,7 +228,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Get personnel softcert price (free for first request)
+	 * Get personnel soft certificate price (free for first request)
 	 * 
 	 * @param SmPersonnel
 	 *            smPersonnel
@@ -244,6 +246,36 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
+	 * Get personnel soft certificate expiration date inside data table for
+	 * request soft certificate screen
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @return String
+	 */
+	public String getSoftcertExpiryDate(SmPersonnel smPersonnel) {
+		String expiryDate = SmCommonUtil
+				.getMessage("lbl.sm.no.available", null);
+
+		if (smPersonnel.getPmUser() != null) {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
+					.getSmAppl().getSmSupplier().getSupplierId());
+			SmSoftcertRequest softcertRequest = SmServiceLookup
+					.getPersonnelSO()
+					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
+							reqDTO).getSoftcertRequest();
+			if (softcertRequest != null
+					&& softcertRequest.getPmDigiCert() != null
+					&& softcertRequest.getPmDigiCert().getValidTo() != null) {
+				expiryDate = DateUtils.dateToString("dd/MM/yyyy",
+						softcertRequest.getPmDigiCert().getValidTo());
+			}
+		}
+		return expiryDate;
+	}
+
+	/**
 	 * Set payment button label
 	 */
 	private void setPaymentBtnLbl() {
@@ -257,7 +289,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Get if already got softcert payment in task list for the login user
+	 * Get if already got soft certificate payment in task list for the login
+	 * user
 	 */
 	private void setSoftCertPaymentBpmTask() {
 		getManagedBean().setSoftCertBpmTask(null);

@@ -101,7 +101,7 @@
 
 				<p:column disabledSelection="#{personnel.disableRowSelection}"
 					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
-					<h:outputText />
+					<h:outputText value="#{softCertBackingBean.getSoftcertExpiryDate(personnel)}" />
 				</p:column>
 
 			</p:dataTable>
