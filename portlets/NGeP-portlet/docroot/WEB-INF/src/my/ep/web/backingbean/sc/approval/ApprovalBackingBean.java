@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.backingbean.sc.approval;
 
 import java.io.FileNotFoundException;
@@ -83,6 +83,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
@@ -92,7 +93,7 @@ import org.primefaces.model.MenuModel;
 
 /**
  * Backing Bean for Approvals.
- *
+ * 
  * @author Viswanath
  */
 @ManagedBean(name = "approvalBackingBean")
@@ -103,13 +104,13 @@ public class ApprovalBackingBean extends
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(ProfileManagementBackingBean.class);
-	
+
 	/** The faces context. */
 	private FacesContext facesContext = FacesContext.getCurrentInstance();
 
 	/** The text before sign. */
 	private String textBeforeSign;
-	
+
 	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
 
@@ -140,7 +141,7 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Gets the approval categories list.
-	 *
+	 * 
 	 * @return List<String>
 	 */
 	public List<String> getAppCatList() {
@@ -156,7 +157,7 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Gets the approval categories.
-	 *
+	 * 
 	 * @return the approval categories
 	 */
 	public SelectItem[] getApprovalCategories() {
@@ -219,7 +220,8 @@ public class ApprovalBackingBean extends
 	 * @throws FileNotFoundException the file not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void handleOtherFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleOtherFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
 		logger.info("handleOtherFileUpload - START");
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
@@ -281,8 +283,9 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Determine icon.set icon for all uploaded files in Approvals.
-	 *
-	 * @param attachment the attachment
+	 * 
+	 * @param attachment
+	 *            the attachment
 	 * @return the string
 	 */
 	public String determineIcon(ScQtApprovalAttachment attachment) {
@@ -313,13 +316,13 @@ public class ApprovalBackingBean extends
 
 	/*
 	 * 
-	 * preRenderView(). user click on task list it will Render Approvals
-	 * screens for(Committee/BPK/Finalization/Publication).
+	 * preRenderView(). user click on task list it will Render Approvals screens
+	 * for(Committee/BPK/Finalization/Publication).
 	 */
 	public void preRenderView() {
 		Object obj = getBpmTaskDetails(SCAwardSupplierDataType.class);
 		String taskName = getManagedBean().getTaskName();
-		
+
 		Long qtId = null;
 		if (obj instanceof SCCommitteeDataType) {
 			qtId = ((SCCommitteeDataType) obj).getQtId().longValue();
@@ -339,7 +342,9 @@ public class ApprovalBackingBean extends
 					ParameterConst.APPROVAL_CATEGORY_BUDGET,
 					ParameterConst.DOCTYPE_BGT_APPROVAL);
 
-		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)) {
+		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.APPROVE_QT_CHANGE
+						.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
@@ -376,6 +381,10 @@ public class ApprovalBackingBean extends
 					ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL);
 
+			List<Long> cmtStatus = new ArrayList<Long>(3);
+			cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
+			cmtStatus.add(QTStatusConst.CMT_COMPLETED);
+			cmtStatus.add(QTStatusConst.CMT_PENDING_REVISION);
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
@@ -389,8 +398,7 @@ public class ApprovalBackingBean extends
 							SearchOperator.OPERATOR_EQUALS.value(), true));
 			commSearchBean.getDataFilterBeans().add(
 					new SearchFilterBean("scCommittee.committeStatus.statusId",
-							SearchOperator.OPERATOR_NOT_EQUALS.value(),
-							QTStatusConst.CMT_COMPLETED));
+							SearchOperator.OPERATOR_NOT_IN.value(), cmtStatus));
 
 			committeReqDTO.setCommSearchBean(commSearchBean);
 			CommitteResDTO resDTO = committeSO
@@ -412,7 +420,7 @@ public class ApprovalBackingBean extends
 				committeItem.setPartialSubmit(true);
 				committeItem.setProcess("@this");
 				committeItem.setUpdate("@this");
-				//committeItem.setUpdate("@form");
+				// committeItem.setUpdate("@form");
 				committeItem.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
 				menuModel.addMenuItem(committeItem);
 				zoneTabIndex++;
@@ -424,7 +432,8 @@ public class ApprovalBackingBean extends
 		} else if (SCProcessNameConst.APPROVE_PUBLICATION
 				.equalsIgnoreCase(taskName)) {
 
-			this.getManagedBean().setApprovalType(QTConstants.PUBLICATION_APPROVAL);
+			this.getManagedBean().setApprovalType(
+					QTConstants.PUBLICATION_APPROVAL);
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION);
@@ -506,14 +515,14 @@ public class ApprovalBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"reviceApprovalDlg.show()");
 		} else {
-			if (QTConstants.PUBLICATION_APPROVAL.equalsIgnoreCase(this.getManagedBean()
-					.getApprovalType())) {
+			if (QTConstants.PUBLICATION_APPROVAL.equalsIgnoreCase(this
+					.getManagedBean().getApprovalType())) {
 
 				this.setDefaultDateTime(reqDTO.getQtdetail());
 				detailSO.validateScheduleDetails(reqDTO);
 			}
-			if (SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME.equalsIgnoreCase(this.getManagedBean()
-					.getApprovalType())) {
+			if (SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
+					.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
 				List<ScQtApprovalRemark> remarks = this.getManagedBean()
 						.getScQtApproval().getScQtApprovalRemarks();
 				if (null != remarks) {
@@ -532,8 +541,9 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Sets the default date time.
-	 *
-	 * @param scQt the new default date time
+	 * 
+	 * @param scQt
+	 *            the new default date time
 	 */
 	private void setDefaultDateTime(ScQt scQt) {
 		// Publish/Closing/sample Date
@@ -675,11 +685,13 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setPayLoad(this.getManagedBean()
 						.getQuotationTenderDataType());
 				committeReqDTO.setOutcome(outcome);
-				committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				committeReqDTO
+						.setPmUser(new FacesScopes().getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
 				finalizeRemarks(this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
+				committeReqDTO.setSaveFlow(true);
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
 
@@ -754,7 +766,7 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Update Approval Revice from bpm.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String updateReviceBpmTask() {
@@ -789,8 +801,9 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Construct committee tab bean.
-	 *
-	 * @param qtCommittees the qt committees
+	 * 
+	 * @param qtCommittees
+	 *            the qt committees
 	 * @return the List<TabBean>
 	 */
 	public List<TabBean> constructCommitteTabBean(
@@ -813,9 +826,11 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Gets the ScQtCommittee Details.
-	 *
-	 * @param type the type
-	 * @param id the id
+	 * 
+	 * @param type
+	 *            the type
+	 * @param id
+	 *            the id
 	 * @return ScQtCommittee
 	 */
 	private ScQtCommittee getQtCommitteeTypeDtl(String type, Long id) {
@@ -857,10 +872,13 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Gets the ScQtApproval Details.
-	 *
-	 * @param qtId the qt id
-	 * @param approvalType the approval type
-	 * @param docType the doc type
+	 * 
+	 * @param qtId
+	 *            the qt id
+	 * @param approvalType
+	 *            the approval type
+	 * @param docType
+	 *            the doc type
 	 * @return the ScQtApproval
 	 */
 	private ScQtApproval getApproval(Long qtId, String approvalType,
@@ -881,7 +899,7 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * View approval action.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String viewApprovalAction() {
@@ -890,8 +908,9 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Role change listner.
-	 *
-	 * @param member the member
+	 * 
+	 * @param member
+	 *            the member
 	 */
 	public void roleChangeListner(ScCommitteeMember member) {
 		List<ScCommitteeMember> members = this.getManagedBean()
@@ -914,9 +933,11 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Constuct out come.
-	 *
-	 * @param approvalRequests the approval requests
-	 * @param scQt the sc qt
+	 * 
+	 * @param approvalRequests
+	 *            the approval requests
+	 * @param scQt
+	 *            the sc qt
 	 * @return the string
 	 */
 	private String constuctOutCome(List<ScQtApprovalRequest> approvalRequests,
@@ -973,8 +994,10 @@ public class ApprovalBackingBean extends
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
-						//scQt.setOpenFor(approvalRequest.getOriginalValue());
-						if (QTConstants.QT_OPEN.equalsIgnoreCase(approvalRequest.getOriginalValue())) {
+						// scQt.setOpenFor(approvalRequest.getOriginalValue());
+						if (QTConstants.QT_OPEN
+								.equalsIgnoreCase(approvalRequest
+										.getOriginalValue())) {
 							scQt.setOpenFor(QTConstants.QT_ALL);
 						} else {
 							scQt.setOpenFor(QTConstants.QT_BUMIPUTRA);
@@ -996,8 +1019,9 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Update pm parameter.
-	 *
-	 * @param requestdetails the requestdetails
+	 * 
+	 * @param requestdetails
+	 *            the requestdetails
 	 */
 	public void updatePmParameter(ScQtApprovalRequest requestdetails) {
 		if (null != requestdetails) {
@@ -1015,7 +1039,7 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Gets the Status Details.
-	 *
+	 * 
 	 * @return List<PmParameterDesc>
 	 */
 	public List<PmParameterDesc> getStatusDropdownValues() {
@@ -1031,7 +1055,7 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Gets the text before sign.
-	 *
+	 * 
 	 * @return the text before sign
 	 */
 	public String getTextBeforeSign() {
@@ -1040,8 +1064,9 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Sets the text before sign.
-	 *
-	 * @param textBeforeSign the new text before sign
+	 * 
+	 * @param textBeforeSign
+	 *            the new text before sign
 	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		StringBuilder sb = new StringBuilder();
@@ -1052,7 +1077,7 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Gets the pm digi sign.
-	 *
+	 * 
 	 * @return the pm digi sign
 	 */
 	public PmDigiSign getPmDigiSign() {
@@ -1061,8 +1086,9 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Sets the pm digi sign.
-	 *
-	 * @param pmDigiSign the new pm digi sign
+	 * 
+	 * @param pmDigiSign
+	 *            the new pm digi sign
 	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
@@ -1070,9 +1096,11 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Update approval request.
-	 *
-	 * @param approvalRequests the approval requests
-	 * @param outCome the out come
+	 * 
+	 * @param approvalRequests
+	 *            the approval requests
+	 * @param outCome
+	 *            the out come
 	 */
 	private void updateApprovalRequest(
 			List<ScQtApprovalRequest> approvalRequests, String outCome) {
@@ -1083,7 +1111,7 @@ public class ApprovalBackingBean extends
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, ApprovalStatus
 							.valueOf(outCome).getApprovalStatus());
 		}
-		if (null != approvalRequests && !approvalRequests.isEmpty()) {
+		if (CollectionUtils.isNotEmpty(approvalRequests)) {
 			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 				if (null != parameter) {
 					approvalRequest.setApproverAction(parameter);
