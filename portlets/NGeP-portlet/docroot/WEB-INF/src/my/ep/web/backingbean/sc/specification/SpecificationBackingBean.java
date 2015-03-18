@@ -1017,19 +1017,20 @@ public class SpecificationBackingBean extends
 	 * Adds the new category action.added empty row for category codes
 	 * datatable.
 	 * 
-	 * @param pmCategoryL3 the pmCategoryL3 instance
+	 * @param pmCategoryL3
+	 *            the pmCategoryL3 instance
 	 */
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
-				.getSuppCriteriaopenList();	
-		
+				.getSuppCriteriaopenList();
+
 		if (qtCategoryList == null) {
 			qtCategoryList = new ArrayList<ScQtCategory>();
 			this.getManagedBean().setSuppCriteriaopenList(qtCategoryList);
 		}
-		
-		validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);	
-		
+
+		validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);
+
 		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
 		ScQtCategory category = new ScQtCategory();
 		category.setScQt(this.getManagedBean().getScQt());
@@ -5097,8 +5098,13 @@ public class SpecificationBackingBean extends
 	public void technicalCheckListTypeChange(int index,
 			List<ScQtCheckList> checkList) {
 		// Long type = (Long) event.getComponent().getAttributes().get("value");
-		ScQtCheckList list = checkList.get(index);
 
+		ScQtCheckList list = checkList.get(index);
+		IParameterSO parameterSo = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
@@ -5115,30 +5121,28 @@ public class SpecificationBackingBean extends
 		}
 
 		try {
-
+			this.getManagedBean().setTechnicalChecklistAction(null);
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 					.equalsIgnoreCase(parameterCode)) {
 				list.setScoringReq(true);
-				this.getManagedBean().setTechnicalChecklistAction(null);
 
-				List<String> recommendList = new ArrayList<String>();
-				recommendList
-						.add(ParameterConst.CHECKLIST_ACTION_MANUAL_SUBMISSION);
+				ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+				docDefTypeReqDTO
+						.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+				docDefTypeReqDTO
+						.setParameterCode(ParameterConst.CHECKLIST_ACTION_MANUAL_SUBMISSION);
+				ParameterResDTO docDefTypeResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+				StatusReqDTO statusreq = new StatusReqDTO();
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				StatusResDTO statusres = statussO
+						.retrieveStatusByStatusId(statusreq);
+				list.setPmStatus(statusres.getPmStatus());
+				list.setAction(docDefTypeResDTO.getPmParameter());
 
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_IN.value(),
-								recommendList));
-				SelectItem[] uploaditems = getDropdownValuesBySearchBean(
-						ParameterTypeConst.SC_SUPPLIER_ACTION, searchBean);
-
-				this.getManagedBean().setTechnicalChecklistAction(
-						Arrays.asList(uploaditems));
-
-			}
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(parameterCode)) {
 
 				List<String> recommendList = new ArrayList<String>();
@@ -5156,13 +5160,97 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechnicalChecklistAction(
 						Arrays.asList(uploaditems));
 
-			}
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
+			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
 					.equalsIgnoreCase(parameterCode)) {
 				list.setScoringReq(true);
+
+				ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+				docDefTypeReqDTO
+						.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+				docDefTypeReqDTO
+						.setParameterCode(ParameterConst.CHECKLIST_ACTION_PRESENTATION_DEMO);
+				ParameterResDTO docDefTypeResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+				StatusReqDTO statusreq = new StatusReqDTO();
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				StatusResDTO statusres = statussO
+						.retrieveStatusByStatusId(statusreq);
+				list.setPmStatus(statusres.getPmStatus());
+				list.setAction(docDefTypeResDTO.getPmParameter());
+			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+					.equalsIgnoreCase(parameterCode)) {
+
+				ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+				docDefTypeReqDTO
+						.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+				docDefTypeReqDTO
+						.setParameterCode(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+				ParameterResDTO docDefTypeResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+				StatusReqDTO statusreq = new StatusReqDTO();
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				StatusResDTO statusres = statussO
+						.retrieveStatusByStatusId(statusreq);
+				list.setPmStatus(statusres.getPmStatus());
+
+				list.setAction(docDefTypeResDTO.getPmParameter());
+
+			}
+			this.getManagedBean().getScQtCheckSt2techProposal()
+					.set(index, list);
+		} finally {
+			parameterSo = null;
+			statussO = null;
+			;
+		}
+
+	}
+
+	/**
+	 * financial check list type change.change financial Checilist Type Dropdown
+	 * in specification committee based on type you will get action values in
+	 * financial checklist
+	 * 
+	 * @param index
+	 *            (int index)
+	 * @param checkList
+	 *            (List<ScQtCheckList> checkList).
+	 */
+	public void financialCheckListTypeChange(int index,
+			List<ScQtCheckList> checkList) {
+		// Long type = (Long) event.getComponent().getAttributes().get("value");
+		ScQtCheckList list = checkList.get(index);
+		IParameterSO parameterSo = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+		String parameterCode = null;
+		for (PmParameterDesc paramDesc : localParamDesc) {
+
+			if (paramDesc
+					.getPmParameter()
+					.getParameterId()
+					.equals(Long.valueOf(list.getDefinationType()
+							.getParameterId()))) {
+				parameterCode = paramDesc.getPmParameter().getParameterCode();
+				list.setDefinationType(paramDesc.getPmParameter());
+				break;
+			}
+		}
+
+		try {
+			this.getManagedBean().setFinancialChecklistAction(null);
+			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+					.equalsIgnoreCase(parameterCode)) {
+
 				List<String> recommendList = new ArrayList<String>();
+				recommendList.add(ParameterConst.CHECKLIST_ACTION_VIEW);
 				recommendList
-						.add(ParameterConst.CHECKLIST_ACTION_PRESENTATION_DEMO);
+						.add(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
 
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmParameter.parameterCode",
@@ -5171,15 +5259,57 @@ public class SpecificationBackingBean extends
 				SelectItem[] uploaditems = getDropdownValuesBySearchBean(
 						ParameterTypeConst.SC_SUPPLIER_ACTION, searchBean);
 
-				this.getManagedBean().setTechnicalChecklistAction(
+				this.getManagedBean().setFinancialChecklistAction(
 						Arrays.asList(uploaditems));
+
 			}
-			this.getManagedBean().getScQtCheckSt2techProposal()
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+					.equalsIgnoreCase(parameterCode)) {
+				ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+				docDefTypeReqDTO
+						.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+				docDefTypeReqDTO
+						.setParameterCode(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+				ParameterResDTO docDefTypeResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+				StatusReqDTO statusreq = new StatusReqDTO();
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				StatusResDTO statusres = statussO
+						.retrieveStatusByStatusId(statusreq);
+				list.setPmStatus(statusres.getPmStatus());
+
+				list.setAction(docDefTypeResDTO.getPmParameter());
+			}
+			this.getManagedBean().getScQtCheckSt2financeProposalList()
 					.set(index, list);
 		} finally {
-
+			parameterSo = null;
+			statussO = null;
 		}
 
+	}
+
+	/**
+	 * Gets the financial checklist def type values.display Financial Checklist
+	 * Type Dropdown values.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @return SelectItem[].
+	 */
+	public SelectItem[] getFinancialChecklistDefTypeValues(String type) {
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), recommendList));
+
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
+		return items;
 	}
 
 	/**
@@ -5220,6 +5350,7 @@ public class SpecificationBackingBean extends
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
 		if (null != this.getManagedBean().getScQt()
 				&& QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 						.getManagedBean().getScQt().getEvaluationType())) {
@@ -5308,6 +5439,10 @@ public class SpecificationBackingBean extends
 			if (paramDesc.getPmParameter().getParameterId()
 					.equals(Long.valueOf(list.getAction().getParameterId()))) {
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
+				if (ParameterConst.CHECKLIST_ACTION_VIEW
+						.equalsIgnoreCase(parameterCode)) {
+					list.setScoringReq(false);
+				}
 				StatusReqDTO statusreq = new StatusReqDTO();
 				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
 				StatusResDTO statusres = statussO
@@ -5345,16 +5480,16 @@ public class SpecificationBackingBean extends
 			if (paramDesc.getPmParameter().getParameterId()
 					.equals(Long.valueOf(list.getAction().getParameterId()))) {
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
-				if (null != list.getDefinationType()
-						&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-								.equalsIgnoreCase(list.getDefinationType()
-										.getParameterCode())) {
-					StatusReqDTO statusreq = new StatusReqDTO();
-					statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
-					StatusResDTO statusres = statussO
-							.retrieveStatusByStatusId(statusreq);
-					list.setPmStatus(statusres.getPmStatus());
+				if (ParameterConst.CHECKLIST_ACTION_VIEW
+						.equalsIgnoreCase(parameterCode)) {
+					list.setScoringReq(false);
 				}
+				StatusReqDTO statusreq = new StatusReqDTO();
+				statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+				StatusResDTO statusres = statussO
+						.retrieveStatusByStatusId(statusreq);
+				list.setPmStatus(statusres.getPmStatus());
+
 				list.setAction(paramDesc.getPmParameter());
 				break;
 			}
@@ -7110,15 +7245,16 @@ public class SpecificationBackingBean extends
 
 			st2financeproposalList2.setScQt(this.getManagedBean().getScQt());
 
-			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
-			docDefTypeReqDTO
-					.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
-			docDefTypeReqDTO
-					.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
-			ParameterResDTO docDefTypeResDTO = parameterSo
-					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
-			st2financeproposalList2.setDefinationType(docDefTypeResDTO
-					.getPmParameter());
+			/*
+			 * ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+			 * docDefTypeReqDTO
+			 * .setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			 * docDefTypeReqDTO
+			 * .setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+			 * ); ParameterResDTO docDefTypeResDTO = parameterSo
+			 * .retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+			 */
+			st2financeproposalList2.setDefinationType(new PmParameter());
 			st2financeproposalList2.setAction(new PmParameter());
 
 			setUserDetails(st2financeproposalList2);
@@ -14279,6 +14415,9 @@ public class SpecificationBackingBean extends
 				.equalsIgnoreCase(list.getDefinationType().getParameterCode())
 				&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(list.getDefinationType()
+								.getParameterCode())
+				&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+						.equalsIgnoreCase(list.getDefinationType()
 								.getParameterCode()) && !ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO
 					.equalsIgnoreCase(list.getDefinationType()
 							.getParameterCode())))) {
@@ -14313,10 +14452,12 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		ScQtCheckList list = checklist.get(index);
 
-		if (null != list.getDefinationType()
-				&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+		if ((null != list.getDefinationType())
+				&& (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 						.equalsIgnoreCase(list.getDefinationType()
-								.getParameterCode())) {
+								.getParameterCode()) && !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+						.equalsIgnoreCase(list.getDefinationType()
+								.getParameterCode()))) {
 			StatusReqDTO statusreq = new StatusReqDTO();
 			if (list.isScoringReq()) {
 				statusreq.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
