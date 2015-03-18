@@ -11,7 +11,7 @@
 		<p:dataTable id="techDeailsId" var="techList"
 			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
-			rowKey="#{techList}" rowIndexVar="rowIndex" 
+			rowKey="#{techList}" rowIndexVar="rowIndex"
 			first="#{supplierProposalDetailBackingBean.managedBean.technicalTableRow}">
 
 			<p:columnGroup type="header">
@@ -35,7 +35,8 @@
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)
-						or techList.scQtCheckList.definationType.parameterCode eq 'UP'}" />
+						or techList.scQtCheckList.definationType.parameterCode eq 'UP'
+						or techList.scQtCheckList.definationType.parameterCode eq 'NA'}" />
 			</p:column>
 
 			<p:column style="white-space : normal">
@@ -44,7 +45,7 @@
 
 			<p:column style="white-space : normal">
 				<h:outputText
-					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP'}"
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' or techList.scQtCheckList.definationType.parameterCode eq 'NA'}"
 					value="#{lbl['lbl.sc.attachment']}" />
 				<h:outputText
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
@@ -64,7 +65,7 @@
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
-						value="Prepare" style="width:101px;"/>
+						value="Prepare" style="width:101px;" />
 				</ui:fragment>
 
 				<ui:fragment
@@ -72,17 +73,18 @@
 						(techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
-						value="#{lbl['lbl.txt.view']}" style="width:101px;"/>
+						value="#{lbl['lbl.txt.view']}" style="width:101px;" />
 				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP'}">
-					<p:commandButton oncomplete="attachmentDlg.show();return false;" 
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' or techList.scQtCheckList.definationType.parameterCode eq 'NA'}">
+					<p:commandButton oncomplete="attachmentDlg.show();return false;"
 						rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 						value="#{lbl['lbl.txt.attachment']}" style="width:101px;">
-						<f:setPropertyActionListener value="#{techList}" target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
+						<f:setPropertyActionListener value="#{techList}"
+							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
 					</p:commandButton>
-					<h:commandLink 
+					<h:commandLink
 						value="#{techList.scQtProposalChecklistAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
 						action="#{supplierProposalDetailBackingBean.downloadEncryptedFile(techList.scQtProposalChecklistAttachment)}"
