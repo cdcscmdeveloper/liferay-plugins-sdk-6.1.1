@@ -313,11 +313,13 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 										new FacesScopes().getUserLocale())));
 			}
 
-		}if(getManagedBean().getPmEduField().isBrandNew()){
-		return NAV_TO_MAIN;
+		}
+		
+		if(!eduField.isBrandNew()){
+			return NAV_TO_MAINTAIN;
 		}
 		else{
-		return NAV_TO_MAINTAIN;
+			return NAV_TO_MAIN;
 		}
 
 	}
