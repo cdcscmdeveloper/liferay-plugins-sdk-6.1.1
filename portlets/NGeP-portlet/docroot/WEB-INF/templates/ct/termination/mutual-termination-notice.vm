@@ -26,7 +26,7 @@
                                        <td>$ptjName</td>
                                     </tr>
                                     <tr>
-                                       <td>$jabatanName / $ministryName</td>
+                                       <td>$ministryJabatanName</td>
                                     </tr>
                                     <tr>
                                        <td>$ptjAddress</td>
@@ -50,7 +50,7 @@
       <br/>
       <div style="font-weight: normal; text-align: center;"><strong><u>NOTIS PEMBERITAHUAN</u></strong></div>
       <div style="font-weight: normal; text-align: center;"><strong><u><br/></u></strong></div>
-      <div style="font-weight: normal; text-align: right;"><span style="font-size: 10pt;">Tarikh: $currentDate</span></div>
+      <div style="font-weight: normal; text-align: right;"><span style="font-size: 10pt;">Tarikh: $noticeDate</span></div>
       <div style="font-weight: normal; text-align: right;"><br/></div>
       <div style="font-weight: normal; text-align: left;">Kepada:&nbsp;</div>
       <div style="text-align: left;"><strong>$supplierName</strong></div>
@@ -62,7 +62,8 @@
       <div style="text-align: left;"><strong>Kontrak:<span class="Apple-tab-span" style="white-space: pre;">			</span>$contractTitle</strong></div>
       <div style="text-align: left;"><strong>No. Kontrak:<span class="Apple-tab-span" style="white-space:pre">		</span>$contractPhysicalNo</strong></div>
       <div style="text-align: left;"><strong>Had Nilai Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span>RM&nbsp;$contractAmount</strong></div>
-      <div style="text-align: left;"><strong>Tempoh Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$effDate sehingga $expDate</strong></div>
+      <div style="text-align: left;"><strong>Tempoh Kontrak Date:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$effDate sehingga $expDate</strong></div>
+       <div style="text-align: left;"><strong>Tarikh Penamatan Bersama:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$decisionDate </strong></div>
       <div style="font-weight: normal; text-align: left;">
          <hr/>
       </div>
@@ -80,7 +81,7 @@
       <div style="font-weight: normal; text-align: left;">------------------------------------------------------</div>
       <div style="font-weight: normal; text-align: left;">$approverName</div>
       <div style="font-weight: normal; text-align: left;">$approverDesignation</div>
-      <div style="font-weight: normal; text-align: left;">b.p. Ketua Setiausaha</div>
+      <div style="font-weight: normal; text-align: left;">$jabatanName</div>
       <div style="font-weight: normal; text-align: left;">$ministryName</div>
    </body>
 </html>
