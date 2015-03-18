@@ -413,26 +413,31 @@
 							listener="#{backingBean.unSelectAdmin}"
 							update=":form:tt:persInfPan"></p:ajax>
 						<p:column selectionMode="multiple" width="5%"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}" />
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}" />
 
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}" >
 							<h:outputText value="#{person.name}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"
 								rendered="#{person.equityOwner}" />
 							<h:outputText value="#{lbl['lbl.txt.no']}"
 								rendered="#{!person.equityOwner}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"
 								rendered="#{person.authorizedFlg eq '1'}" />
 							<h:outputText value="#{lbl['lbl.txt.no']}"
@@ -440,7 +445,8 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.pending.request']}"
 								rendered="#{person.softcertFlg eq '4' and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
@@ -458,15 +464,17 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}"
 							style="white-space: normal;"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<h:outputText value="#{person.roleName}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}"
 							style="white-space: normal;"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
-								rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+								rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'SUPPLIER_TEMP'}" />
 							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.suppUser']}"
 								rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
@@ -476,7 +484,8 @@
 								rendered="#{person.contractSignerFlg eq 1 and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}"
-							disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
+							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
+							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<p:commandLink onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignSelShareHolder(person)}"
