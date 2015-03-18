@@ -37,20 +37,10 @@
 			</tr>
 		</table>
 	</p:panel>
-
-
+	
 	<p:panel header="#{lbl['lbl.sc.loiloa.loi.req.for.approval']}"
 		id="approvalId" toggleable="true">
 		<table style="width: 100%">
-			<tr>
-				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
-				<td width="82%" colspan="3"><p:selectOneRadio  disabled="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
-						<f:selectItems
-							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="approvalId" />
-					</p:selectOneRadio></td>
-			</tr>
 			<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 			<tr>
 				<td><p:outputLabel
