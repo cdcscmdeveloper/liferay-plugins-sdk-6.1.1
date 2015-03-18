@@ -89,9 +89,16 @@
 					<f:selectItems
 						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.creditType)}" />
 					<p:ajax event="change" process="@this" partialSubmit="true"
-						update="@this,creditTypeMsg"
+						update="@this,creditTypeMsg,creditfaciitiesid"
 						listener="#{supplierProposalDetailBackingBean.creditTypeChange(creditfacilities)}" />
 				</p:selectOneMenu>
+				<br></br>
+				<p:inputText style="width : 90%" id="otherCreditType" value="#{creditfacilities.otherCreditType}"
+					rendered="#{creditfacilities.creditType.parameterCode eq 'KKL'}">
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this" />
+				</p:inputText>
+				
 				<p:message id="creditTypeMsg" for="creditType" display="icon" />
 			</p:column>
 
@@ -210,7 +217,7 @@
 							value="#{noOfContracts.userScore}" maxlength="18"
 							disabled="#{pageDisable}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '2'}">
-								<ac:validateNumber
+							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="14" integerOnly="true" />
 							<f:attribute name="min" value="0" />
