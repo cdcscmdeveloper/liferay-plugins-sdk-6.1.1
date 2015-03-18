@@ -41,7 +41,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	public static Logger log = Logger.getLogger(SoftCertBackingBean.class);
 
 	public SoftCertBackingBean() {
-
+		SmCommonUtil.setMDCUserId();
 	}
 
 	/**
