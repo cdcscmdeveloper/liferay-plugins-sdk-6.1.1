@@ -7,6 +7,16 @@
 	<p:panel>
 		<table class="ppOneTable">
 			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneRadio id="orgCatergoryId" value="#{organisationBackingBean.managedBean.orgCategory}" disabled="#{!organisationBackingBean.managedBean.orgProfile.brandNew}">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="0"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="1"/>
+						<p:ajax process="@this" event="change" partialSubmit="true" update="orgtypeId" />
+					</p:selectOneRadio></td>			
+			</tr>
+			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -27,7 +37,7 @@
 								value="#{organisationBackingBean.managedBean.orgTypeId}"
 								style="width: 275px;margin-bottom: 5px;" required="true">
 								<f:selectItems
-									value="#{organisationBackingBean.getNewOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
+									value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
 								<p:ajax event="change" update="@form"
 									listener="#{organisationBackingBean.resetOrgProfile}" />
 							</p:selectOneMenu>

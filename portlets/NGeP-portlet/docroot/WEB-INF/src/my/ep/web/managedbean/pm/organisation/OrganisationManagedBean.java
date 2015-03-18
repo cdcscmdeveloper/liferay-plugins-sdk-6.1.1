@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
@@ -32,9 +33,10 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private int selectedTabIndex;
 	// Organization Search
 	private OrganisationSearchBean organisationSearchBean;
-
+	private int orgCategory = 0;
 	private String orgType;
 	private Long orgTypeId;
+	private SelectItem[] orgTypeList;
 	// Org Details
 	private PmOrgProfile orgProfile;	
 	private Date currentDate = new Date();
@@ -684,6 +686,23 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 	public void setIslazy(boolean islazy) {
 		this.islazy = islazy;
+	}
+
+	
+	public SelectItem[] getOrgTypeList() {
+		return orgTypeList;
+	}
+
+	public void setOrgTypeList(SelectItem[] orgTypeList) {
+		this.orgTypeList = orgTypeList;
+	}
+
+	public int getOrgCategory() {
+		return orgCategory;
+	}
+
+	public void setOrgCategory(int orgCategory) {
+		this.orgCategory = orgCategory;
 	}
 
 	
