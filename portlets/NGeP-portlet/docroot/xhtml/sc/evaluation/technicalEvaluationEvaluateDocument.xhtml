@@ -85,9 +85,9 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}"
-						style="width:10%">
+						style="width:15%">
 						<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
-							style="text-align:right;" size="20" maxlength="18"
+							style="text-align:right;" size="40" maxlength="18"
 							disabled="#{evaluationBackingBean.managedBean.readOnly}">
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -102,7 +102,7 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
-						style="width:30%">
+						style="width:25%">
 						<ui:fragment
 							rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 							<p:inputTextarea rows="2" cols="40" maxlength="200"
