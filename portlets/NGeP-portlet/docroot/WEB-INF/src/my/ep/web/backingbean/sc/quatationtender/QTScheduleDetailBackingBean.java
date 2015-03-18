@@ -166,8 +166,12 @@ public class QTScheduleDetailBackingBean extends
 		debugLogger("retrievePmDistrictList");
 		if (null != this.getManagedBean().getScQtSampleSubmission()) {
 			this.getManagedBean().setDistricts(null);
-			Long divisionId = this.getManagedBean().getScQtSampleSubmission()
-					.getAddress().getPmDivision().getDivisionId();
+			Long divisionId = null;
+			if (null != this.getManagedBean().getScQtSampleSubmission()
+					.getAddress().getPmDivision()) {
+				divisionId = this.getManagedBean().getScQtSampleSubmission()
+						.getAddress().getPmDivision().getDivisionId();
+			}
 			Long stateId = this.getManagedBean().getScQtSampleSubmission()
 					.getAddress().getPmState().getStateId();
 			if (!this.getManagedBean().isStateCode() && divisionId == null) {
@@ -427,7 +431,7 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void handlePublishClosingDate() {
 		ScQt scQt = this.getManagedBean().getQt();
-		Long statusId = scQt.getCurrentWorkFlowStatus().getPmStatus()
+		Long statusId = scQt.getQtStatus()
 				.getStatusId();
 		if (statusId >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
 			Date clsDate = null;

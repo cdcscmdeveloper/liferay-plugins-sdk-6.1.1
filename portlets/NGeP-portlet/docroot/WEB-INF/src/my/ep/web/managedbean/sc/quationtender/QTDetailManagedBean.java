@@ -19,6 +19,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
@@ -993,6 +994,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// newly Added.
 	/** The state codes. */
 	private String stateCodes;
+	
+	/**
+	 * Added to know whether it is maintance flow or not
+	 */
+	private boolean maintanceFlow;
+	
+	/**
+	 * TO update details for modifed qtfileds
+	 */
+	private QtAmendMentBean amendMentBean;
 	
 	private List<ScQtLocCriteria> supplierLocationList;
 	
@@ -6301,6 +6312,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierLocationList(List<ScQtLocCriteria> supplierLocationList) {
 		this.supplierLocationList = supplierLocationList;
+	}
+
+	public boolean isMaintanceFlow() {
+		return maintanceFlow;
+	}
+
+	public void setMaintanceFlow(boolean maintanceFlow) {
+		this.maintanceFlow = maintanceFlow;
+	}
+
+	public QtAmendMentBean getAmendMentBean() {
+		return amendMentBean;
+	}
+
+	public void setAmendMentBean(QtAmendMentBean amendMentBean) {
+		this.amendMentBean = amendMentBean;
 	}
 
 }

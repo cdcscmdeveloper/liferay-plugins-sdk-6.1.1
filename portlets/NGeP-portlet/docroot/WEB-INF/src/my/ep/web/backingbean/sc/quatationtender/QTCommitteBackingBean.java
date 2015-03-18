@@ -79,6 +79,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.TabView;
@@ -1253,16 +1254,17 @@ public class QTCommitteBackingBean extends
 		if (null == selectedList || selectedList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
-		// List<ScCommitteeMember> members = new ArrayList<ScCommitteeMember>();
+
 		bean.getScQtCommittee().getScCommittee().getScCommitteeMembers()
 				.removeAll(selectedList);
+		if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+				.equalsIgnoreCase(bean.getScQtCommittee().getScCommittee()
+						.getCommitteeType().getParameterCode())
+				&& CollectionUtils.isEmpty(bean.getScQtCommittee()
+						.getScCommittee().getScCommitteeMembers())) {
+			bean.getScQtCommittee().getScCommittee().setApprovalReq(false);
+		}
 
-		/*
-		 * for (int i = 0; i < selectedList.size(); i++) { if (null !=
-		 * selectedList.get(i).getCommitteeMemberId()) {
-		 * selectedList.get(i).setDeleted(true);
-		 * members.add(selectedList.get(i)); } } bean.setMembers(members);
-		 */
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
@@ -1317,5 +1319,69 @@ public class QTCommitteBackingBean extends
 			event.getTreeNode().setSelected(false);
 		}
 
+	}
+
+	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
+		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
+				.getStatusId();
+		List<String> commTypes = new ArrayList<String>();
+		if (currentQtStatus >= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
+			commTypes
+					.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		}
+		if (currentQtStatus >= QTStatusConst.QT_EVALUATION_PROPOSAL) {
+			commTypes.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+			commTypes.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+			commTypes
+					.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+			commTypes
+					.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+		}
+
+		if (this.getManagedBean().isMaintanceFlow()) {
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
+					.getManagedBean().getQt().getQtStatus().getStatusId())
+					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
+							.equals(this.getManagedBean().getQt().getQtStatus()
+									.getStatusId())) {
+				return true;
+
+			} else {
+				if (!commTypes.contains(commType)) {
+					if (QTStatusConst.CMT_PENDING_APPROVAL
+							.equals(committeStatus)
+							|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
+									.equals(committeStatus)) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return true;
+				}
+			}
+		} else {
+			if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
+					|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
+							.equals(committeStatus)
+					|| QTStatusConst.CMT_COMPLETED.equals(committeStatus)) {
+				return true;
+			}
+
+		}
+
+		return false;
+
+	}
+
+	public boolean isFCEditable() {
+		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
+				.getStatusId();
+
+		if (currentQtStatus >= QTStatusConst.QT_SUPPLIER_FINALIZATION) {
+			return true;
+		}
+
+		return false;
 	}
 }
