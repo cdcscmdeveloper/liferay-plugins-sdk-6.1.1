@@ -63,7 +63,7 @@
       <div style="text-align: left;"><strong>No. Kontrak:<span class="Apple-tab-span" style="white-space:pre">		</span>$contractPhysicalNo</strong></div>
       <div style="text-align: left;"><strong>Had Nilai Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span>RM&nbsp;$contractAmount</strong></div>
       <div style="text-align: left;"><strong>Tempoh Kontrak Date:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$effDate sehingga $expDate</strong></div>
-       <div style="text-align: left;"><strong>Tarikh Penamatan Bersama:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$decisionDate </strong></div>
+       <div style="text-align: left;"><strong>Tarikh Penamatan Bersama:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$noticeDate </strong></div>
       <div style="font-weight: normal; text-align: left;">
          <hr/>
       </div>
