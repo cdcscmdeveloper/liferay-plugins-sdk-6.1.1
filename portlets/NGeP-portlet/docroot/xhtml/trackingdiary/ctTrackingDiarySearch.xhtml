@@ -20,7 +20,7 @@
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<table>
 				<tr>
-					<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /></td>
+					<td width="35%"><p:outputLabel value="#{lbl['lbl.td.transaction.type']}" /></td>
 					<td width="35%"><p:selectOneMenu
 							value="#{ctTrackingDiaryBackingBean.managedBean.searchTrasactionType}"
 							style="width: 314px;">
@@ -101,45 +101,45 @@
 
 				<p:column width="15%">
 					<f:facet name="header">
-					Creation Date
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
+					</f:facet>
 				#{ctDocument.createdDate}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Document No.
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.doc.no']}"/>
+					</f:facet>
 				#{ctDocument.docNo}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Document Title
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.doc.title']}"/>
+					</f:facet>
 				#{ctDocument.title}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Document Type
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.doc.type']}"/>
+					</f:facet>
 				#{ctTrackingDiaryBackingBean.getParameterDesc("DT",ctDocument.docType)}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Status
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.status']}"/>
+					</f:facet>
 				#{ctTrackingDiaryBackingBean.getStatusDescById(ctDocument.statusId)}
 				</p:column>				
 				<p:column width="5%">
 					<f:facet name="header">
-					Action
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.action']}"/>
+					</f:facet>
 					<p:commandLink
 						action="#{ctTrackingDiaryBackingBean.goToTrackingDiarySearch(ctDocument)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png" />
 						</p:commandLink>
 
-			</p:column>
+				</p:column>
 			</p:dataTable>
 
 		</p:panel>

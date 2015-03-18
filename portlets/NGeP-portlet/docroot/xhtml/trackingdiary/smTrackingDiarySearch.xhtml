@@ -25,11 +25,11 @@
 
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
-								<td width="25%"><p:outputLabel value="MOF Account No." /></td>
+								<td width="25%"><p:outputLabel value="#{lbl['lbl.sm.mofno']}" /></td>
 								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.MOFAccountNo}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
+								<td width="35%"><p:outputLabel value="#{lbl['lbl.sm.suppname']}"  /></td>
 								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.supplierName}"></p:inputText></td>
 							</tr>
 							<tr>
@@ -37,7 +37,7 @@
 								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.managedBean.applicationNo}"></p:inputText></td>
 							</tr>
 							<tr>
-								<td width="35%"><p:outputLabel value="Application Type" /></td>
+								<td width="35%"><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}"/></td>
 								<td width="35%">					
 									<p:selectOneMenu size="50" value="#{smTrackingDiaryBackingBean.managedBean.applicationType}">
 										<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues('AT')}" />
@@ -66,19 +66,19 @@
 
 				<p:column width="15%">
 					<f:facet name="header">
-					Creation Date
+					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
 				#{smSupplier.createdDate}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Application No
+					<h:outputText value="#{lbl['lbl.sm.application.no']}"/>
 					</f:facet>
-				#{smSupplier.smAppl.applNo}
+					#{smSupplier.smAppl.applNo}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Application Type
+					<h:outputText value="#{lbl['lbl.sm.applicationtype']}"/>
 					</f:facet>
 				#{smTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.supplierApplicationTypes,smSupplier.smAppl.applType)}
 				</p:column>
@@ -90,13 +90,13 @@
 <!-- 				</p:column> -->
 				<p:column>
 					<f:facet name="header">
-					Company Name
+					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}"/>
 					</f:facet>
 				#{smSupplier.companyName}
 				</p:column>
 				<p:column width="5%">
 					<f:facet name="header">
-						Action
+					<h:outputText value="#{lbl['lbl.td.action']}"/>
 					</f:facet>
 						<p:commandLink
 							action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
