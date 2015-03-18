@@ -225,12 +225,13 @@
     	</h:panelGrid>
 	</h:panelGrid>
  </p:panel>
+  
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.panel.termination']}" toggleable="true"  toggleSpeed="500">
        <h:panelGrid columns="4" style="width:1050px;" styleClass="top-aligned-columns"
           columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
           <h:panelGrid columns="2" style="float:right;">
-			<p:outputLabel value="*" styleClass="mandatory" />
-            <p:outputLabel value="#{lbl['lbl.ct.termination.decision']}" />
+			    <p:outputLabel value="*" styleClass="mandatory" />
+                <p:outputLabel value="#{lbl['lbl.ct.termination.decision']}" />
          </h:panelGrid>
           <h:panelGrid columns="4">
 	          <p:selectOneMenu id="menuSelectionId" required="true"  style="width:180px;" label="#{lbl['lbl.ct.termination.decision']}"
@@ -260,30 +261,23 @@
 		      <p:message for="calItem1" display="icon"/>
 		   </h:panelGrid>
 		  
-		<h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
-			<p:outputLabel value="*" styleClass="mandatory" />
-		    <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
+		<h:panelGrid columns="2" style="float:right;" 
+		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
+			  <p:outputLabel value="*" styleClass="mandatory" />
+		      <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 		</h:panelGrid> 
-		 <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
+		 <h:panelGrid columns="2" 
+		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
 		    <p:inputText id="fileRefNum" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
-		      disabled="#{terminationBackingBean.managedBean.viewContract}"
-		      style="width:170px;" maxlength="100"  required="true" label="#{lbl['lbl.ct.file.ref.no']}">
+		           disabled="#{terminationBackingBean.managedBean.viewContract}"
+		           style="width:170px;" maxlength="100"  required="true" label="#{lbl['lbl.ct.file.ref.no']}">
 		     </p:inputText>
 		     <p:message for="fileRefNum" display="icon"/>
 		 </h:panelGrid>
 		 
-		 <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.remedy}">
-			<p:outputLabel value="*" styleClass="mandatory" />
-		    <p:outputLabel value="#{lbl['lbl.ct.termination.effective.date']}" />
-		 </h:panelGrid>
-		   <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.remedy}">
-             <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.terminationEffDate}"
-          		disabled="#{terminationBackingBean.managedBean.viewContract}"
-          		readonlyInput="true" required="true" label="#{lbl['lbl.ct.termination.effective.date']}" navigator="true"
-                id="calItem2" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
-		      <p:message for="calItem2" display="icon"/>
-		   </h:panelGrid>
-		   
+		   <p:spacer rendered="#{terminationBackingBean.managedBean.remedy}" />
+		  <p:spacer rendered="#{terminationBackingBean.managedBean.remedy}" />       	
+	     
 		   <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.remedy}">
 			   <p:outputLabel value="*" styleClass="mandatory" />
 		       <p:outputLabel value="#{lbl['lbl.ct.remedy.start.date']}" />
