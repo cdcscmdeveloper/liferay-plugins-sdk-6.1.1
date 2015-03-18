@@ -25,7 +25,7 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.save']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
-						update="@([id$=Msg])" style="float:right;width: auto;" /> <p:commandButton
+						update=":form" style="float:right;width: auto;" /> <p:commandButton
 						value="#{lbl['lbl.btn.create']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
