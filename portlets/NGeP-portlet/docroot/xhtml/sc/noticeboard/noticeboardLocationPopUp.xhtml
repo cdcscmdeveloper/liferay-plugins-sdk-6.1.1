@@ -22,6 +22,35 @@
 				readonly="true" cols="50" rows="2" />
 		</h:panelGrid>
 
-
 	</p:dialog>
+	
+	<p:dialog header="#{zones.tplSpecZoneDtl.zoneName}"
+		widgetVar="popupZonedtl" modal="true" styleClass="zonedtls"
+		dynamic="true">
+			<p:dataTable
+				value="#{noticeBoardBackingBean.managedBean.locationNodes}"
+				var="locTree" style="width:100%">
+				<p:column headerText="#{lbl['lbl.so.location']}">
+					<p:tree value="#{locTree}" var="location">
+						<p:treeNode type="zone">
+							<h:outputText value="#{location.zoneName}" />
+						</p:treeNode>
+						<p:treeNode type="state">
+							<h:outputText value="#{location.pmState.stateName}" />
+						</p:treeNode>
+						<p:treeNode type="division">
+							<h:outputText value="#{location.pmDivision.divisionName}" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{location.pmDistrict.districtName}" />
+						</p:treeNode>
+						<p:treeNode type="city">
+							<h:outputText value="#{location.pmCity.cityName}" />
+						</p:treeNode>
+					</p:tree>
+				</p:column>
+			</p:dataTable>
+		<p:spacer height="7px"></p:spacer>
+	</p:dialog>
+	
 </ui:composition>
