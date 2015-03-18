@@ -27,6 +27,7 @@
 		<p:spacer height="3" />
 		<div style="width: 100%">
 			<p:pickList id="ptjapproverid" value="#{ptjList}"
+				disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}"
 				var="ptjapproverUser" showTargetControls="true"
 				itemLabel="#{ptjapproverUser.approver.userName}"
 				itemValue="#{ptjapproverUser}" converter="approverPickListConverter">
@@ -60,10 +61,12 @@
 							<tr>
 								<td></td>
 								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
-										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" />
+									<h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
+										style="display: inline-block; width:220px;word-wrap: break-word;"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" /></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>
@@ -76,7 +79,7 @@
 							<td colspan="2"><p:commandButton
 									oncomplete="attachDlg.show();return false;"
 									icon="iconAttachment" update="uploadfileid"
-									value="Attach Files">
+									value="Attach Files" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" >
 								</p:commandButton></td>
 						</tr>
 						<tr>
@@ -100,9 +103,12 @@
 										</tr>
 										<tr>
 											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" /> <p:commandLink
+													styleClass="blue_font"
+													disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" />
+												<p:commandLink
 													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="attachmentId">
+													immediate="true" update="attachmentId"
+													disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}">
 													<h:graphicImage library="ep/images/design"
 														name="icon_trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
