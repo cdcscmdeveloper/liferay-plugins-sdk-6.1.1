@@ -39,8 +39,11 @@
 			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(gpkiBackingBean.pmDigiSign)}" />
 		<ac:spkiPopup
-			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
-			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(spkiBackingBean.pmDigiSign)}" />
+			password="#{supplierBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(spkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
 		<p:panel id="bankHeader">
 			<f:event listener="#{supplierBackingBean.preRenderView}"
 				type="preRenderView" />
