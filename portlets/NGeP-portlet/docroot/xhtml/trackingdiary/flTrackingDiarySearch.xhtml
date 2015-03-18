@@ -21,7 +21,7 @@
 <!-- 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/> -->
 			<table>
 			<tr>
-				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" /><p:outputLabel
+				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.td.transaction.type']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
 						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderType}"
@@ -31,12 +31,12 @@
 						<p:ajax event="change" update="searchPanel"
 							listener="#{flTrackingDiaryBackingBean.selectedOrderType}" />
 					</p:selectOneMenu></td>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
+				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.td.order.no']}" /></td>
 				<td><p:inputText size="28" maxlength="17" 
 						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
 			</tr>
 			<tr>
-			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/></td>
+			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.td.doc.type']}"	/></td>
 			<td><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
 						value="#{flTrackingDiaryBackingBean.managedBean.searchDocType}">
 						<f:selectItems
@@ -45,14 +45,14 @@
 							update="docStatusSearch"
 							listener="#{flTrackingDiaryBackingBean.selectedDoctype}" />
 					</p:selectOneMenu></td>
-			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.td.doc.no']}" /></td>
 			<td><p:inputText size="28"
 						value="#{flTrackingDiaryBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
 						</tr>
 			</table>
 			<h:panelGroup id="docStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+					<p:outputLabel value="#{lbl['lbl.td.doc.status']}" />
 					<p:selectOneMenu id="statusId"
 						value="#{flTrackingDiaryBackingBean.managedBean.statusDescId}"
 						style="width: 314px;">
@@ -100,38 +100,39 @@
 
 				<p:column width="15%">
 					<f:facet name="header">
-					Creation Date
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					#{flDocument.createdDate}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Document No.
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.doc.no']}"/>
+					</f:facet>
 				#{flDocument.docNo}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Document Title
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.doc.title']}"/>
+					</f:facet>
 				#{flDocument.title}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Document Type
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.doc.type']}"/>
+					</f:facet>
 				#{scTrackingDiaryBackingBean.getParameterDesc("DT",flDocument.docType)}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Status
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.status']}"/>
+					</f:facet>
 				#{flTrackingDiaryBackingBean.getStatusDescById(flDocument.statusId)}
 				</p:column>				
 				<p:column width="5%">
 					<f:facet name="header">
-					Action
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.td.action']}"/>
+					</f:facet>
 					<p:commandLink
 						action="#{flTrackingDiaryBackingBean.goToTrackingDiarySearch(flDocument)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
