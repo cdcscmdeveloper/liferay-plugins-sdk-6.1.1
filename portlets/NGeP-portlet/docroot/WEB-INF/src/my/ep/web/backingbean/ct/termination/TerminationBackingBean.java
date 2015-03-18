@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -497,6 +498,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		VelocityContext context = null;
 		String vmFile = null;
 		String content = null;
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = new Date();
+		StringBuffer  ministryJabatan = new StringBuffer();
 		
 		try {
 			addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
@@ -528,10 +532,22 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				   context.put("imgUrl",imgUrl);
 				}
 				context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-//				context.put("JABATAN_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+				ministryJabatan.append(getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup().getGroupName());
+				ministryJabatan.append(" / ");
+			
 				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()!=null) {
-					context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+					ministryJabatan.append(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
 				}
+				context.put("ministryJabatanName", ministryJabatan );
+				
+				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()!=null) {
+				      context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+				}
+				
+				context.put("decisionDate", getManagedBean().getContractVer().getCtTermination().getDecisionDate());
+				
+				context.put("jabatanName",getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup().getGroupName());
+				
 				if(pmAddressType!=null) {
 					context.put("ptjAddress", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 					context.put("telNo", pmAddressType.getPmAddress().getPhoneNo());
@@ -543,7 +559,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				}
 				if(getManagedBean().getContractVer().getCtTermination().getNoticeDate()!=null) {
 					context.put("noticeDate", df.format(getManagedBean().getContractVer().getCtTermination().getNoticeDate()));
-				}			
+				}	else {
+							getManagedBean().getContractVer().getCtTermination().setNoticeDate(new Date());
+							context.put("noticeDate",dateFormat.format(date));
+				}
 				context.put("supplierName",getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
 				context.put("supplierAddress",formAddress(smAddress.getAddress1(), smAddress.getAddress2(), smAddress.getAddress3(), smAddress.getAddress4()));
@@ -554,13 +573,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					context.put("contractPhysicalNo",getManagedBean().getContractVer().getContractPhysicalNo());
 				}
 				context.put("contractNo",getManagedBean().getCtContract().getContractNo());
-				context.put("reasonDescMap",reasonDescMap );
+			//	context.put("currentDate",dateFormat.format(date));
+			//	context.put("reasonDescMap",reasonDescMap );
 				context.put("reasonList", getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons());
-				if(getManagedBean().isRemedy()) {
-					if(getManagedBean().getContractVer().getCtTermination().getTerminationEffDate()!=null) {
-						context.put("terminateEffDate",df.format(getManagedBean().getContractVer().getCtTermination().getTerminationEffDate()));
-					}
-				}
+				
 				if(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()!=null) {
 					context.put("remedyStartDate",df.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
 				}
