@@ -257,7 +257,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		String expiryDate = SmCommonUtil
 				.getMessage("lbl.sm.no.available", null);
 
-		if (smPersonnel.getPmUser() != null) {
+		if (smPersonnel.getPmUser() != null
+				&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
 					.getSmAppl().getSmSupplier().getSupplierId());
