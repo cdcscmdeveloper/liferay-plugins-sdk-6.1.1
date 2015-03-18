@@ -425,6 +425,10 @@ public class SupplierManagementConst {
 	public static final String SM_STATE_NAME_SABAH = "SABAH";
 	public static final String SM_STATE_NAME_SARAWAK = "SARAWAK";
 	public static final String SM_STATE_NAME_SEMENANJUNG = "SEMENANJUNG";
+	
+	public static final String SM_SUPPLIER_CERT_TYPE_GLP = "GLP";
+	public static final String SM_SUPPLIER_PARAM_TYPE_CRT = "CRT";
+	
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
 
