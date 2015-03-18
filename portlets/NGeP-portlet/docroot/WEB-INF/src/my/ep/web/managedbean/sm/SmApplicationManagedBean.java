@@ -339,6 +339,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String poToSvcRmrk;
 	private PmParameter certificate;
 	private PmParameter diploma;
+	private PmParameter glpCert;
 	private List<SelectItem> acadQualifications;
 	private Long prevBasicStateId;
 	private SmApplStatusInfoVO applStatusInfo;
@@ -2627,6 +2628,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
+	}
+
+	public PmParameter getGlpCert() {
+		return glpCert;
+	}
+
+	public void setGlpCert(PmParameter glpCert) {
+		this.glpCert = glpCert;
 	}
 
 }
