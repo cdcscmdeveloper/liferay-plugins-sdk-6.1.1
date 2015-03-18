@@ -56,7 +56,7 @@
 					<h:outputText value="#{finance.qtScoreWeightage.score}" />
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{finance.definationType.parameterCode eq 'UP' and finance.scoringReq }">
+					rendered="#{((finance.definationType.parameterCode eq 'UP' or finance.definationType.parameterCode eq 'NA') and finance.scoringReq)}">
 					<p:inputText value="#{finance.qtScoreWeightage.score}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						maxlength="18" required="true"

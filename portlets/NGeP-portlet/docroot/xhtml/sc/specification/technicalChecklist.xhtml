@@ -125,7 +125,8 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
 							<p:ajax event="change" process="@this"
-								update="technicalChecklistsupplier" partialSubmit="true"
+								update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
+								partialSubmit="true"
 								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="techChecklistTitlenullType1"
@@ -145,7 +146,8 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
 							<p:ajax event="change" process="@this"
-								update="technicalChecklistsupplier" partialSubmit="true"
+								update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
+								partialSubmit="true"
 								listener="#{specificationBackingBean.technicalCheckListTypeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="techChecklistTitlenotnullType1"
@@ -159,6 +161,7 @@
 					<ui:fragment
 						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
 						<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
+							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
 							required="true" id="actionTitlenullType"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
 							value="#{stageTwoTechnical.action.parameterId}">
@@ -170,11 +173,17 @@
 						</p:selectOneMenu>
 						<p:message id="actionTitlenullType1" for="actionTitlenullType"
 							display="icon"></p:message>
+						<h:outputText
+							rendered="#{stageTwoTechnical.definationType.parameterCode ne 'UP'}"
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+
+
 					</ui:fragment>
 
 					<ui:fragment
 						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and stageTwoTechnical.qtChecklistId eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
 						<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
+							rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
 							required="true" id="actionTitlenotnullType"
 							label="#{lbl['lbl.sc.spec.supplier.action']}"
 							value="#{stageTwoTechnical.action.parameterId}">
@@ -187,6 +196,11 @@
 
 						<p:message id="actionTitlenotnullType1"
 							for="actionTitlenotnullType" display="icon"></p:message>
+
+						<h:outputText
+							rendered="#{stageTwoTechnical.definationType.parameterCode ne 'UP'}"
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+
 					</ui:fragment>
 
 
