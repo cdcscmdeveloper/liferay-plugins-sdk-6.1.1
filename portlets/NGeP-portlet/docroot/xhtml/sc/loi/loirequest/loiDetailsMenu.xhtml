@@ -8,7 +8,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td>
+			<td width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
 			<td colspan="3">
@@ -125,9 +125,9 @@
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputText
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
-							size="125" maxlength="100" />
+							size="70" maxlength="100" />
 					</c:if> <c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
-						<p:inputText size="69" readonly="true" disabled="true"
+						<p:inputText size="70" readonly="true" disabled="true"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}" />
 					</c:if></td>
 			</tr>
@@ -160,6 +160,37 @@
 						value="#{!empty lOIDetailBackingBean.managedBean.scLoi.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOIDetailBackingBean.managedBean.scLoi.ackDueDate) : ''}"
 						disabled="true" size="8" readonly="true" /> #{lbl['lbl.sc.days']}</td>
 			</tr>
+			<tr>
+				<td width="18%"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" />
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" /></td>
+				<td><p:selectOneRadio
+						disabled="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
+						<f:selectItems
+							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.signer']}" />
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td><p:inputText disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSigner}"
+						size="30">
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.signer.desig']}" />
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
+				<td><p:inputText disabled="#{!isPendingSubmissionStatus or !isPendingRevisionStatus}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
+						size="30">
+					</p:inputText></td>
+			</tr>
+			
+			
 		</table>
 	</p:panel>
 </ui:composition>
