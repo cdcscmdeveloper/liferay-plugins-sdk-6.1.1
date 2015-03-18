@@ -361,6 +361,25 @@ public class PmCommonUtil {
 	}
 	
 	/**
+	 * get record status options //TODO: to load dynamically
+	 * @return SelectItem[] 
+	 */
+	public static SelectItem[] getCommonStatusOptions() {
+		SelectItem[] items =  new SelectItem[3];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage(
+				"lbl.pm.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[2] = new SelectItem(DbValueConst.RECORD_STATUS_SUSPENDED, ResourceBundleUtils.getMessage(
+				"lbl.pm.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+	    return items;
+	}
+	
+	
+	/**
 	 * retrieve the default PmCountry as per configured
 	 * @param countryCode
 	 * @return PmCountry

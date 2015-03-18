@@ -612,7 +612,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}*/
 	
 	public static SelectItem[] getRecordStatusList() {
-		return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 	
 	public String saveSubCategory() {
