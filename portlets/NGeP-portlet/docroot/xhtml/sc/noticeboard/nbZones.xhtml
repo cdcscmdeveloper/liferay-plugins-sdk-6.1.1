@@ -10,6 +10,13 @@
 		<p:ajax event="tabChange" listener="#{noticeBoardBackingBean.bsvZoneTabChange}"
 			></p:ajax>
 		<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
+		<p:spacer height="10px"></p:spacer>
+			<div align="right">
+				<p:commandLink style="margin-right:10px;font-size:14px;"
+					oncomplete="popupZonedtl.show()" update="@(.zonedtls)">
+					<h:outputText value="#{lbl['lbl.qt.nb.view.zone.details']}" />
+				</p:commandLink>
+			</div>
 			<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="/xhtml/sc/noticeboard/qtlocationbriefingdtls.xhtml"></ui:include>
 			<ui:include
