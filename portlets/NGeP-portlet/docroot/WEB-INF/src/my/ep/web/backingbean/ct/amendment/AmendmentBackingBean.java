@@ -1177,12 +1177,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
-		// Validation for supporting document
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750018, new String[]{"Contract amendment"});
-		}
-		
+				
 		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
 				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
 				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
