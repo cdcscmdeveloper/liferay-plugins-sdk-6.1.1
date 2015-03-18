@@ -142,4 +142,11 @@
 		<managed-bean-class>my.ep.constant.sc.QTAmendFieldConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	
+	<managed-bean>
+		<description>QT Enable Constants</description>
+		<managed-bean-name>QTFieldConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.sc.QTFieldConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
