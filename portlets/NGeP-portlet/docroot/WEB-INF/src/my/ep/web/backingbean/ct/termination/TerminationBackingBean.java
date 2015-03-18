@@ -424,10 +424,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
-		
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-			throw new EpException(MessageConst.ERROR_750018, new String[]{"contract termination"});
-		}
 	}
 	 
 	/**
