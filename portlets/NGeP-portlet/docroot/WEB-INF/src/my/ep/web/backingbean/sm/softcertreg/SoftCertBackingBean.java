@@ -262,6 +262,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
 					.getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setUserId(smPersonnel.getPmUser().getUserId());
 			SmSoftcertRequest softcertRequest = SmServiceLookup
 					.getPersonnelSO()
 					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
