@@ -53,10 +53,12 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 				action="#{qTDeductionPaymentBackingBean.addDeductionPaymentAction}"
 				oncomplete="deductPaymentTblWidget.paginator.endLink.click();"
 				update="deductPaymentTblId" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				action="#{qTDeductionPaymentBackingBean.deleteDeductionPaymentAction}"
 				update="deductPaymentTblId,deductClauseTblId" />
@@ -71,7 +73,8 @@
 
 				<ac:paginator for="deductClauseTbl" />
 
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column selectionMode="multiple" style="width:2%"
+					disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}" />
 
 				<p:column style="white-space:normal">
 					<ui:fragment
@@ -91,11 +94,13 @@
 				<h:panelGroup
 					rendered="#{!empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction and qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 						process="@this, deductClauseTblId" partialSubmit="true"
 						action="#{qTDeductionPaymentBackingBean.addDeductionClauseAction}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTblId" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}"
 						process="@this, deductClauseTblId" partialSubmit="true"
 						action="#{qTDeductionPaymentBackingBean.deleteRowsAction}"
 						update="deductClauseTblId" />

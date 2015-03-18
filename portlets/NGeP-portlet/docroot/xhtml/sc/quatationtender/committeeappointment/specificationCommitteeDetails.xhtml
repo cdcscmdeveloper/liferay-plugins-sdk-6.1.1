@@ -28,7 +28,7 @@
 			selection="#{selectedCommittee}">
 
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable}" />
+				disabledSelection="#{qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}" />
 
 
 
@@ -75,7 +75,7 @@
 						<p:selectOneMenu  label="#{lbl['lbl.so.role']}" rendered="#{specificationcommittee.memberRole.parameterCode ne 'C'}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;"
-						disabled="#{qTDetailBB.managedBean.selectedTabBean.editable}">
+						disabled="#{qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}">
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{qTCommitteBackingBean.roleChangeListner(specificationcommittee)}" />
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -89,7 +89,7 @@
 					<p:selectOneMenu id="roleid" label="#{lbl['lbl.so.role']}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;"
-						disabled="#{qTDetailBB.managedBean.selectedTabBean.editable}">
+						disabled="#{qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}">
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{qTCommitteBackingBean.roleChangeListner(specificationcommittee)}" />
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />

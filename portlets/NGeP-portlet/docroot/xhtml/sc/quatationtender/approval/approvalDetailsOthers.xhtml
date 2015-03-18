@@ -38,6 +38,7 @@
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
 					value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 					partialSubmit="true" process="otherreqdtlsid"
+					disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}"
 					update="otherreqdtlsid">
 					<f:setPropertyActionListener
 						value="#{otherrequestdetails.approvalRequestAttachement}"
@@ -49,11 +50,13 @@
 							<td style="border: none !important;"><h:commandLink
 									value="#{otherrequestdetails.approvalRequestAttachement.fileName}"
 									styleClass="blue_font" immediate="true"
-									action="#{approvalBackingBean.downloadFile(otherrequestdetails.approvalRequestAttachement)}" />
+									action="#{approvalBackingBean.downloadFile(otherrequestdetails.approvalRequestAttachement)}"
+									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" />
 								<p:commandLink
 									rendered="#{otherrequestdetails.approvalRequestAttachement ne null}"
 									action="#{approvalBackingBean.deleteOthersApprovalFile}"
-									immediate="true" update="otheruploadId">
+									immediate="true" update="otheruploadId"
+									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}">
 									<h:graphicImage library="ep/images/design" name="trash.png"
 										styleClass="tasklist_title1" />
 								</p:commandLink></td>

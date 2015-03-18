@@ -14,8 +14,10 @@
 						styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea id="title1"
 						label="#{lbl['lbl.so.title']}" required="true"
-						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="110" rows="2"
-						style=" margin-bottom:5px; width: 100%; " maxlength="1000" /> <p:message
+						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="110" rows="2" valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"
+						style=" margin-bottom:5px; width: 100%; " maxlength="1000" > 
+						<f:ajax></f:ajax>
+						</p:inputTextarea><p:message
 						id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
 			<tr>
@@ -25,8 +27,8 @@
 						<tr>
 							<td><p:inputText id="fileno" label="#{lbl['lbl.so.fileno']}"
 									required="true" value="#{qTDetailBB.managedBean.qt.fileNo}"
-									size="30"
-									maxlength="50" /></td>
+									size="30" maxlength="50"
+									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO)}" /></td>
 							<td><p:message id="filenoMsg" for="fileno" display="icon" />
 							</td>
 						</tr>
@@ -52,9 +54,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.so.estimated']}" /></td>
 				<td><p:inputText id="estprice" style="text-align:right"
 						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
-						disabled="true" readonly="true">
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ESTMT_AMT)}"
+						 valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}">
+						 <f:ajax></f:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							
 					</p:inputText></td>
 				<td />
 				<td />
@@ -79,7 +84,8 @@
 			selection="#{qTDetailBB.managedBean.selectedGosodoBudgets}"
 			rowKey="#{gosodo}" rowIndexVar="rowIndex" style="width : 100%">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}" />
 
 			<ac:paginator for="gosodoList" />
 
@@ -137,12 +143,12 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
-				rendered="#{qTDetailBB.managedBean.editable}">
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				actionListener="#{qTDetailBB.deleteGoSoDoAction}"
-				update="gosodoList" 
-				rendered="#{qTDetailBB.managedBean.editable}" />
+			 	update="gosodoList"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}" />
 		</div>
 	</p:panel>
 </ui:composition>
