@@ -20,6 +20,7 @@
 										id="noticePublish" required="true" readonlyInput="true"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 										showOn="button"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_DATE)}"
 										maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}">
 										<p:ajax event="dateSelect" process="@this"
 											listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate()}"
@@ -75,6 +76,7 @@
 										value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
 										id="sampleclsdate" required="true"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										showOn="button" /> <h:inputText value="12:00 PM"
 										disabled="true" size="4" style="width: 52px" /></td>
 								<td><p:message id="sampledate" for="sampleclsdate"
@@ -108,7 +110,8 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						readonlyInput="true" showOn="button" /></td>
+						readonlyInput="true" showOn="button"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -124,7 +127,8 @@
 				selection="#{qTScheduleDetailBackingBean.managedBean.selectedSubmissionList}"
 				styleClass="submissionlist">
 
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column selectionMode="multiple" style="width:2%"
+					disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 
 				<p:column headerText="#{lbl['lbl.so.zone.location']}">
 					<h:outputText
@@ -145,6 +149,7 @@
 			</p:dataTable>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.apply']}"
+					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 					process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
 					update="@(.sampleSubmitionUpdate)" />
@@ -162,6 +167,7 @@
 							<tr>
 								<td><p:inputText id="sampleaddress1" required="true"
 										label="#{lbl['lbl.so.add1']}"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
 										style="margin-top:5px;" size="30" maxlength="255" /></td>
 								<td><p:message id="sampleaddress1Msg" for="sampleaddress1"
@@ -176,6 +182,7 @@
 						<table>
 							<tr>
 								<td><p:selectOneMenu id="samplestate1"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.so.state']}" required="true"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmState.stateId}"
 										style="width: 218px;margin-bottom: 5px;">
@@ -197,13 +204,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
 					<td><p:inputText
+							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address2}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 					<td><p:selectOneMenu id="sampleDivison1"
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDivision.divisionId}"
 							style="width: 218px;margin-bottom: 5px;"
-							disabled="#{!qTScheduleDetailBackingBean.managedBean.stateCode}">
+							disabled="#{!qTScheduleDetailBackingBean.managedBean.stateCode or qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
 								value="#{qTScheduleDetailBackingBean.managedBean.divisionList}"
@@ -217,6 +225,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
 					<td><p:inputText
+							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address3}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /> <p:outputLabel
@@ -225,6 +234,7 @@
 						<table>
 							<tr>
 								<td><p:selectOneMenu styleClass="samplestate"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 218px;margin-bottom: 5px;" id="sampledistrict1"
 										required="true" label="#{lbl['lbl.so.district']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
@@ -247,6 +257,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add4']}" /></td>
 					<td><p:inputText
+							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address4}"
 							size="30" maxlength="255" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /> <p:outputLabel
@@ -255,6 +266,7 @@
 						<table>
 							<tr>
 								<td><p:selectOneMenu styleClass="sampledistrictCity"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 218px;margin-bottom: 5px;" id="samplecity1"
 										required="true" label="#{lbl['lbl.so.city']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
@@ -279,6 +291,7 @@
 						<table>
 							<tr>
 								<td><p:inputText id="samplepost1" required="true"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.so.postcode']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"
 										size="30" maxlength="10" /></td>
@@ -298,7 +311,8 @@
 			styleClass="contactdetails" rowKey="#{contactpersondetails}"
 			rowIndexVar="rowIndex" rows="10">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 
 			<ac:paginator for="cpersondetailsid" />
 
@@ -324,10 +338,12 @@
 		<p:spacer height="1" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				process="@this,cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
 				update="cpersondetailsid" />
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				action="#{qTScheduleDetailBackingBean.deleteContactPerson}"
 				update="cpersondetailsid" />
 		</div>
@@ -338,7 +354,8 @@
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
 			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex" rows="10">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 
 			<ac:paginator for="doaaid" />
 
@@ -357,10 +374,12 @@
 		<p:spacer height="1" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				process="@this, doaaid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
 				update="doaaid" />
 			<p:commandButton value="#{lbl['lbl.so.delete']}" update="doaaid"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				action="#{qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant}" />
 		</div>
 	</p:panel>

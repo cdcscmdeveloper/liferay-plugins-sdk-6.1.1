@@ -10,7 +10,8 @@
 		toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
-			<p:pickList id="publicationapproverid" disabled="#{isClosedStatus}"
+			<p:pickList id="publicationapproverid"
+				disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUB_APPROVAL)}"
 				value="#{qTDetailBB.managedBean.publicationApprovals}"
 				var="publicationUser" showTargetControls="true"
 				itemLabel="#{publicationUser.approver.userName}"
@@ -41,11 +42,13 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}" 
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
-										value="#{remarkVar.remark}"
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUB_APPROVAL)}" />
+									<h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
-										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
+										style="display: inline-block; width:220px;word-wrap: break-word;"
+										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUB_APPROVAL)}" /></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>
@@ -53,5 +56,5 @@
 		</table>
 	</p:panel>
 
-	
+
 </ui:composition>

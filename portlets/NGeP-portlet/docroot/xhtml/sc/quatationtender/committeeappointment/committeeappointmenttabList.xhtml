@@ -31,7 +31,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton id="specificationcommitteeadd"
 					value="#{lbl['lbl.so.addbtn']}" process="@this"
-					rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}"
+					rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}"
 					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
 					oncomplete="newspecificationcommittee.show();" update="@(.scAddMember)"/>
 
@@ -39,12 +39,12 @@
 					process="@this, specificationcommitteeid"
 					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
 					update="@(.scMemberDtl)" 
-					rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}" />
+					rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}" />
 
 				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 					process="@this, specificationcommitteeid"
 					update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
+					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
 					actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}" />
 			</div>
 		</ui:fragment>

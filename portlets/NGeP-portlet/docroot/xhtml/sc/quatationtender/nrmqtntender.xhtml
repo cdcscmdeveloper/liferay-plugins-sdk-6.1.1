@@ -15,7 +15,7 @@
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			rowKey="#{cateGory}">
 
-			<p:column selectionMode="multiple" style="width:1%" />
+			<p:column selectionMode="multiple" style="width:1%" disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"/>
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
@@ -55,7 +55,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, openPnlId" partialSubmit="true"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
-				update="openPnlId" />
+				update="openPnlId"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 		</div>
 		
 		<ac:categoryCodePopup 
@@ -94,7 +94,7 @@
 						<td style="width: 187px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
-						<td><p:inputText size="30" maxlength="18"
+						<td><p:inputText size="30" maxlength="18" disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">

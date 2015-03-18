@@ -72,7 +72,7 @@
 				<td><p:inputMask id="publishperiod" mask="9?99" maxlength="3"
 						placeHolder="" label="#{lbl['lbl.so.publishing.period']}"
 						required="true" value="#{qTDetailBB.managedBean.qt.publishPeriod}"
-						disabled="#{qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
 						size="30" style="text-align:right">
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
@@ -85,9 +85,12 @@
 						maxlength="5" placeHolder=""
 						label="#{lbl['lbl.so.publishing.period']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
-						disabled="#{qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"
-						style="text-align:right" /> <p:message id="proposalvalidityMsg"
-						for="proposalvalidity" display="icon" /></td>
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
+						valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"
+						style="text-align:right">
+						<f:ajax></f:ajax>
+					</p:inputMask> <p:message id="proposalvalidityMsg" for="proposalvalidity"
+						display="icon" /></td>
 			</tr>
 			<ui:fragment rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
 				<tr>
