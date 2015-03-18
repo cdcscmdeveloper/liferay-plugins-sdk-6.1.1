@@ -203,14 +203,14 @@
 						size="4"
 						disabled="#{!contractRequestBackingBean.managedBean.projectLov}" 
 						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
-						conditionField="recordStatusFlg^1|pmSetia.pmProject.pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
-						value="#{contractRequestBackingBean.managedBean.pmSubSetia.pmSetia.pmProject.projectCode}"	>
+						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
+						value="#{contractRequestBackingBean.managedBean.pmSubSetia.projectCode}"	>
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td> 
 					<td><h:panelGroup styleClass="setiaLov" id="setiaLov">
 						<p:inputText size="2" id="setiaCode"
 						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.pmSubSetia.pmSetia.setiaCode}" /><p:inputText size="2" id="subSetiaCode"
+						value="#{contractRequestBackingBean.managedBean.pmSubSetia.setiaCode}" /><p:inputText size="2" id="subSetiaCode"
 						readonly="true"
 						value="#{contractRequestBackingBean.managedBean.pmSubSetia.subSetiaCode}" /></h:panelGroup>
 					</td>
