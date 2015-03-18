@@ -21,20 +21,20 @@
 						<table style="margin-top: 10px; width: 100%;">
 							<tr>
 								<td width="15%"><p:outputLabel
-										value="Plan Title" /></td>
+										value="#{lbl['lbl.td.plan.title']}" /></td>
 								<td width="35%"><p:inputText size="50"
 										value="#{ctTrackingDiaryBackingBean.managedBean.searchLoaNo}"></p:inputText></td>
 							</tr>
 
 							<tr>
 								<td width="35%"><p:outputLabel
-										value="Plan Type" /></td>
+										value="#{lbl['lbl.td.plan.type']}" /></td>
 								<td width="65%"><p:inputText size="50"
 										value="#{ctTrackingDiaryBackingBean.managedBean.searchLoaNo}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel
-										value="Ministry" /></td>
+										value="#{lbl['lbl.td.ministry']}" /></td>
 								<td width="35%">					
 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
 										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.yesNoFlag)}" />
@@ -43,7 +43,7 @@
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel
-										value="PTJ" /></td>
+										value="#{lbl['lbl.td.ptj']}" /></td>
 								<td width="35%">					
 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
 										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.yesNoFlag)}" />
@@ -52,7 +52,7 @@
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel
-										value="Status" /></td>
+										value="#{lbl['lbl.td.status']}" /></td>
 								<td width="35%">					
 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
 										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
@@ -77,50 +77,50 @@
 
 				<p:column width="15%">
 					<f:facet name="header">
-					Creation Date
+					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Plan No
+					<h:outputText value="#{lbl['lbl.td.plan.number']}"/>
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Plan Title
+					<h:outputText value="#{lbl['lbl.td.plan.title']}"/>
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
 
 				<p:column width="15%">
 					<f:facet name="header">
-					Plan Type
+					<h:outputText value="#{lbl['lbl.td.plan.type']}"/>
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					Ministry
+					<h:outputText value="#{lbl['lbl.td.ministry']}"/>
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
-					PTJ
+					<h:outputText value="#{lbl['lbl.td.ptj']}"/>
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-					Status
+					<h:outputText value="#{lbl['lbl.td.status']}"/>
 					</f:facet>
 				#{smSupplier.regNo}
 				</p:column>
 				<p:column width="5%">
 					<f:facet name="header">
-					Action
+					<h:outputText value="#{lbl['lbl.td.action']}"/>
 					</f:facet>
 					<p:commandLink action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
 						#{smSupplier.regNo}
