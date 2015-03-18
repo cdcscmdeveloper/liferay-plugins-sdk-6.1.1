@@ -82,8 +82,6 @@ import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
-import my.ep.persistence.entity.pm.common.PmProject;
-import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -131,8 +129,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
 	private static Map<Long, PmGlAccount> glAccountCodeMap = new HashMap<Long, PmGlAccount>();
 	private static Map<Long, PmPrgActivity> progmActivityCodeMap = new HashMap<Long, PmPrgActivity>();
-	private static Map<Long, PmProject> projectCodeMap = new HashMap<Long, PmProject>();
-	private static Map<Long, PmSetia> setiaCodeMap = new HashMap<Long, PmSetia>();
 	private static Map<Long, PmSubSetia> subSetiaCodeMap = new HashMap<Long, PmSubSetia>();
 	private static final String NAV_ORDERNO = "/xhtml/fl/shared/hyperlinkView/orderNoPage/orderNoHyperlink.xhtml";
 	private static final String NAV_ADJ = "/xhtml/fl/shared/hyperlinkView/adjustmentPage/adjustmentHyperlink.xhtml";
@@ -838,16 +834,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				if(childData.getPmSubSetia()!=null) {
 					String subSetiaCode = childData.getPmSubSetia().getSubSetiaCode();
 					getManagedBean().setSubSetiaCode((subSetiaCode));
-					
-					if(childData.getPmSubSetia().getPmSetia()!=null) {
-						getManagedBean().setSetiaCode(childData.getPmSubSetia().getPmSetia().getSetiaCode());
-						
-						if(childData.getPmSubSetia().getPmSetia().getPmProject()!=null) {
-							getManagedBean().setProjectCode(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
-						}
-					}
+					getManagedBean().setSetiaCode(childData.getPmSubSetia().getSetiaCode());
+					getManagedBean().setProjectCode(childData.getPmSubSetia().getProjectCode());
 					getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingType().getParameterCode());
-							
 				}
 			}
 		}
@@ -920,42 +909,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	public static void setProgmActivityCodeMap(
 			Map<Long, PmPrgActivity> progmActivityCodeMap) {
 		PaymentMatchBackingBean.progmActivityCodeMap = progmActivityCodeMap;
-	}
-	
-	/**
-	 * Gets the project code map.
-	 *
-	 * @return the projectCodeMap
-	 */
-	public static Map<Long, PmProject> getProjectCodeMap() {
-		return projectCodeMap;
-	}
-	
-	/**
-	 * Sets the project code map.
-	 *
-	 * @param projectCodeMap the projectCodeMap to set
-	 */
-	public static void setProjectCodeMap(Map<Long, PmProject> projectCodeMap) {
-		PaymentMatchBackingBean.projectCodeMap = projectCodeMap;
-	}
-	
-	/**
-	 * Gets the setia code map.
-	 *
-	 * @return the setiaCodeMap
-	 */
-	public static Map<Long, PmSetia> getSetiaCodeMap() {
-		return setiaCodeMap;
-	}
-	
-	/**
-	 * Sets the setia code map.
-	 *
-	 * @param setiaCodeMap the setiaCodeMap to set
-	 */
-	public static void setSetiaCodeMap(Map<Long, PmSetia> setiaCodeMap) {
-		PaymentMatchBackingBean.setiaCodeMap = setiaCodeMap;
 	}
 	
 	/**
