@@ -2773,7 +2773,17 @@ public class SPDetailBackingBean extends
 		if (pmOrgProfile != null) {
 			context.put("agency", pmOrgProfile.getOrgName());
 		}
-		context.put("mofNo", ""); // TODO
+
+		if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
+				&& !smSupplier.getSmMofAccounts().get(0).getMofNo().isEmpty()) {
+			context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
+					.getMofNo());
+		}else if (smSupplier.getRegNo() != null){
+			context.put("mofNo",smSupplier.getRegNo());
+		}else{
+			context.put("mofNo",smSupplier.getEpNo());
+		}
+		// TODO
 
 		String integrityPact = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
