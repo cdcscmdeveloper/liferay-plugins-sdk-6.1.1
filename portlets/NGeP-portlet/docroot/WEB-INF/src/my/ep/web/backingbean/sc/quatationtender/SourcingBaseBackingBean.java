@@ -47,6 +47,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -98,7 +99,9 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.QTFiledMapper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.docx4j.jaxb.Context;
@@ -984,7 +987,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return isDate;
 	}
-	
+
 	public String getUserRoleCode() {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -1007,18 +1010,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		roleCodes.add(RoleCode.SC_SECRETARY.toString());
 		roleCodes.add(RoleCode.SC_MEMBER.toString());
 		roleCodes.add(RoleCode.SC_CHAIRPERSON.toString());
-		
+
 		String roleCode = null;
-		
+
 		List<String> pmRoleCodes = new ArrayList<String>();
-		
+
 		if (null != roleDesc) {
 			for (PmRoleDesc pmRoleDesc : roleDesc) {
 				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
 			}
-			
-			for(String role : roleCodes) {
-				if(pmRoleCodes.contains(role)) {
+
+			for (String role : roleCodes) {
+				if (pmRoleCodes.contains(role)) {
 					roleCode = role;
 					break;
 				}
@@ -1043,7 +1046,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						entity.setDeleted(true);
 						markDeletedList.add(entity);
 						if (entity.getIndex() != -1) {
-							toBeRemoveIndx.add(Integer.valueOf(entity.getIndex()));
+							toBeRemoveIndx.add(Integer.valueOf(entity
+									.getIndex()));
 						}
 					}
 				}
@@ -1072,27 +1076,59 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
-	
+
+	public boolean enableFieldByStatusNFiledName(String fieldName,
+			Long statusId, boolean isMaintance) {
+
+		List<Long> statusIds = new ArrayList<Long>(1);
+
+		statusIds.add(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING);
+
+		if (!statusIds.contains(statusId)) {
+			List<String> values = QTFiledMapper.getEnableFieldsByStatus(
+					statusId, isMaintance);
+			if (CollectionUtils.isNotEmpty(values)) {
+				if (values.contains(fieldName)) {
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
+
 	/**
 	 * Validate Duplicate Category code.
-	 *
-	 * @param pmCategoryL3 the category l3
-	 * @param categoryList the category list
+	 * 
+	 * @param pmCategoryL3
+	 *            the category l3
+	 * @param categoryList
+	 *            the category list
 	 */
-	public void validateDuplicateCategoryCode(PmCategoryL3 pmCategoryL3, List<ScQtCategory> categoryList) {
+	public void validateDuplicateCategoryCode(PmCategoryL3 pmCategoryL3,
+			List<ScQtCategory> categoryList) {
 		boolean isDuplicate = false;
 		for (int i = 0; i < categoryList.size(); i++) {
 			ScQtCategory scQtCategory = categoryList.get(i);
-			
-			if (scQtCategory.getPmCategoryL3().getCategoryL3Code().equals(pmCategoryL3.getCategoryL3Code()) && 
-					scQtCategory.getPmCategoryL2().getCategoryL2Code().equals(pmCategoryL3.getPmCategoryL2().getCategoryL2Code()) && 
-					scQtCategory.getPmCategoryL1().getCategoryL1Code().equals(pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code())) {
+
+			if (scQtCategory.getPmCategoryL3().getCategoryL3Code()
+					.equals(pmCategoryL3.getCategoryL3Code())
+					&& scQtCategory
+							.getPmCategoryL2()
+							.getCategoryL2Code()
+							.equals(pmCategoryL3.getPmCategoryL2()
+									.getCategoryL2Code())
+					&& scQtCategory
+							.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equals(pmCategoryL3.getPmCategoryL2()
+									.getPmCategoryL1().getCategoryL1Code())) {
 				isDuplicate = true;
-				
+
 				break;
 			}
 		}
-		
+
 		if (isDuplicate) {
 			throw new EpException(MessageConst.ERROR_760111);
 		}

@@ -1,0 +1,178 @@
+/**
+ * 
+ */
+package my.ep.web.util.sc.helper;
+
+import java.util.Arrays;
+import java.util.List;
+
+import my.ep.constant.sc.QTFieldConst;
+import my.ep.constant.sc.QTStatusConst;
+import my.ep.type.IEnumType;
+
+/**
+ * @author VidyasagarReddy
+ * 
+ */
+public class QTFiledMapper {
+
+	public static List<String> getEnableFieldsByStatus(Long statusId,
+			boolean isMaintanceFlow) {
+		List<String> updatedFiledsList = null;
+		String[] fileds = null;
+		if (isMaintanceFlow) {
+			fileds = QTMaintanaceEnableFields.getValuesByStatusId(statusId);
+		} else {
+			fileds = QTTaskListEnableFields.getValuesByStatusId(statusId);
+		}
+		if (null != fileds) {
+			updatedFiledsList = Arrays.asList(fileds);
+		}
+		return updatedFiledsList;
+
+	}
+
+	enum QTMaintanaceEnableFields implements IEnumType {
+
+		QT_PENDING_QT_SUBMISSION(QTStatusConst.QT_PENDING_QT_SUBMISSION,
+				
+				new String[] { QTFieldConst.FILED_QT_FILE_NO,
+				QTFieldConst.FILED_QT_TITLE,
+						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW }), QT_PENDING_SCHEDULE_DOCUMENT(
+				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
+						QTFieldConst.FILED_QT_ESTMT_AMT,
+						 QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION }), QT_PENDING_PUBLICATION_APPROVAL(
+				QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL, new String[] {
+						 QTFieldConst.FILED_QT_FILE_NO,
+				QTFieldConst.FILED_QT_DOCUMENTS }),
+				
+				
+
+		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
+				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+						QTFieldConst.FILED_QT_BSVDETAILS,
+						QTFieldConst.FILED_QT_PUBLISH_DATE,
+
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_PUB_APPROVAL }), QT_PROPOSAL_PREPARATION(
+				QTStatusConst.QT_PROPOSAL_PREPARATION, new String[] {
+						QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
+
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS }),
+
+		QT_BRIEFING_SITE_VISIT(QTStatusConst.QT_BRIEFING_SITE_VISIT,
+				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
+
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_PUB_APPROVAL }),
+
+		QT_CLOSED(QTStatusConst.QT_CLOSED, new String[] {
+				QTFieldConst.FILED_QT_ESTMT_AMT,
+				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
+
+		QT_EVALUATION_PROPOSAL(QTStatusConst.QT_EVALUATION_PROPOSAL,
+				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
+
+		QT_RE_EVALUATION(QTStatusConst.QT_RE_EVALUATION, new String[] {
+				QTFieldConst.FILED_QT_ESTMT_AMT,
+				QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
+
+		QT_SUPPLIER_FINALIZATION(QTStatusConst.QT_SUPPLIER_FINALIZATION,
+				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD });
+
+		private Long statusId;
+		private String[] toBeEnableFields;
+
+		private QTMaintanaceEnableFields(Long statusId,
+				String[] tobeEnableFileds) {
+			this.statusId = statusId;
+			this.toBeEnableFields = tobeEnableFileds;
+
+		}
+
+		@Override
+		public String[] value() {
+
+			return toBeEnableFields;
+		}
+
+		public static String[] getValuesByStatusId(Long statusId) {
+			for (QTMaintanaceEnableFields filedMapper : QTMaintanaceEnableFields
+					.values()) {
+				if (filedMapper.statusId.equals(statusId)) {
+					return filedMapper.value();
+				}
+			}
+			return null;
+		}
+
+	}
+
+	enum QTTaskListEnableFields implements IEnumType {
+
+		QT_PENDING_QT_SUBMISSION(QTStatusConst.QT_PENDING_QT_SUBMISSION,
+				new String[] { QTFieldConst.FILED_QT_TITLE,
+						QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_GOSODO,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW }), QT_PENDING_SCHEDULE_DOCUMENT(
+				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
+						QTFieldConst.FILED_QT_BSVDETAILS,
+						QTFieldConst.FILED_QT_PUBLISH_DATE,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+						QTFieldConst.FILED_QT_SCHDETAILS,
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS });
+
+		private Long statusId;
+		private String[] toBeEnableFields;
+
+		private QTTaskListEnableFields(Long statusId, String[] tobeEnableFileds) {
+			this.statusId = statusId;
+			this.toBeEnableFields = tobeEnableFileds;
+
+		}
+
+		@Override
+		public String[] value() {
+
+			return toBeEnableFields;
+		}
+
+		public static String[] getValuesByStatusId(Long statusId) {
+			for (QTTaskListEnableFields filedMapper : QTTaskListEnableFields
+					.values()) {
+				if (filedMapper.statusId.equals(statusId)) {
+					return filedMapper.value();
+				}
+			}
+			return null;
+		}
+
+	}
+
+}

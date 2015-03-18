@@ -20,11 +20,11 @@ public class TabBean {
 	private List<ScQtApproverSettings> selectedApproverList;
 	private List<ScQtApproval> scQtApprovalList;
 	private ScQtCommittee scQtCommittee;
-	private boolean isEditable;
+
 	private List<PmParameter> approverCommittes;
 
 	private List<ScCommitteeMember> members;
-	
+
 	public TabBean(String titleName) {
 		this.titleName = titleName;
 	}
@@ -42,10 +42,10 @@ public class TabBean {
 		this.scQtApproval = scQtApproval;
 	}
 
-	public TabBean(String titleName, ScCommittee scCommittee,boolean editable) {
+	public TabBean(String titleName, ScCommittee scCommittee) {
 		this.titleName = titleName;
 		this.scCommittee = scCommittee;
-		this.isEditable=editable;
+
 	}
 
 	public TabBean(String titleName, List<ScQtApproval> scQtApprovalList) {
@@ -57,7 +57,7 @@ public class TabBean {
 		this.titleName = titleName;
 		this.scQtCommittee = scQtCommittee;
 	}
-	
+
 	public TabBean(String titleName, ScQtApproval scQtApproval,
 			List<PmParameter> approverSetting) {
 		this.titleName = titleName;
@@ -140,20 +140,6 @@ public class TabBean {
 		this.members = members;
 	}
 
-	public boolean isEditable() {
-		return isEditable;
-	}
-
-	public void setEditable(boolean isEditable) {
-		this.isEditable = isEditable;
-	}
-	
-	public TabBean(String titleName, ScQtCommittee scQtCommittee,boolean editable) {
-		this.titleName = titleName;
-		this.scQtCommittee = scQtCommittee;
-		this.setEditable(editable);
-	}
-
 	public List<PmParameter> getApproverCommittes() {
 		return approverCommittes;
 	}
@@ -161,7 +147,5 @@ public class TabBean {
 	public void setApproverCommittes(List<PmParameter> approverCommittes) {
 		this.approverCommittes = approverCommittes;
 	}
-
-	
 
 }
