@@ -46,7 +46,6 @@ import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.CtActiveContractVO;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -59,7 +58,6 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "crMB")
 @SessionScoped
 public class ContractRequestManagedBean extends BaseManagedBean {
-	private static Logger log = Logger.getLogger(ContractRequestManagedBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private FlFulfilmentRequest flRequest;
@@ -171,8 +169,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long votFundId;
 	private Long assetIndId;
 	private Long glAccountId;
-	private Long projectId;
-	private Long setiaId;
 	private Long subSetiaId;
 	private Long prgActivityId;
 	private String financingTypeCode;
@@ -1208,37 +1204,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.votFundId = votFundId;
 	}
 
-
-	/**
-	 * @return the projectId
-	 */
-	public Long getProjectId() {
-		return projectId;
-	}
-
-
-	/**
-	 * @param projectId the projectId to set
-	 */
-	public void setProjectId(Long projectId) {
-		this.projectId = projectId;
-	}
-
-
-	/**
-	 * @return the setiaId
-	 */
-	public Long getSetiaId() {
-		return setiaId;
-	}
-
-
-	/**
-	 * @param setiaId the setiaId to set
-	 */
-	public void setSetiaId(Long setiaId) {
-		this.setiaId = setiaId;
-	}
 
 
 	/**

@@ -21,7 +21,6 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -48,11 +47,9 @@ import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.web.backingbean.fl.pr.FLSupplierItemVO;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * Managed Bean for Create Purchase Order.
  *
@@ -62,9 +59,6 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "prMB")
 @SessionScoped
 public class PurchaseRequestManagedBean extends BaseManagedBean {
-	
-	/** The log. */
-	private static Logger log = Logger.getLogger(PurchaseRequestManagedBean.class);
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -106,14 +100,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The selected pm del addr list. */
 	private List<PmAddressType> selectedPmDelAddrList;
 	
-	/** The del addr list. */
-	private List<PmOrgAddress> delAddrList;
-	
 	/** The address types list. */
 	private List<PmAddressType> addressTypesList;
-	
-	/** The selected addr type list. */
-	private List<PmOrgAddress> selectedAddrTypeList;
 	
 	/** The request note list. */
 	private List<ScRequestNote> requestNoteList;
@@ -193,7 +181,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The tier map. */
 	private HashMap<Long, List<FlFulfilmentItemAddr>> tierMap;
 	
-	//getcontract
 	/** The ct contract. */
 	private CtContract ctContract = new CtContract();
 	
@@ -221,7 +208,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	/** The request note items. */
 	public List<ScRequestItem> requestNoteItems;
-	//ScRequestNoteDtl
 	
 	//get GOSODO
 	/** The go id. */
@@ -373,12 +359,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	/** The gl account id. */
 	private Long glAccountId;
-	
-	/** The project id. */
-	private Long projectId;
-	
-	/** The setia id. */
-	private Long setiaId;
 	
 	/** The sub setia id. */
 	private Long subSetiaId;
@@ -640,24 +620,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the del addr list.
-	 *
-	 * @return the delAddrList
-	 */
-	public List<PmOrgAddress> getDelAddrList() {
-		return delAddrList;
-	}
-
-	/**
-	 * Sets the del addr list.
-	 *
-	 * @param delAddrList the delAddrList to set
-	 */
-	public void setDelAddrList(List<PmOrgAddress> delAddrList) {
-		this.delAddrList = delAddrList;
-	}
-
-	/**
 	 * Gets the selected del addr.
 	 *
 	 * @return the selectedDelAddr
@@ -894,24 +856,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
 		this.addressTypesList = addressTypesList;
-	}
-
-	/**
-	 * Gets the selected addr type list.
-	 *
-	 * @return the selectedAddrTypeList
-	 */
-	public List<PmOrgAddress> getSelectedAddrTypeList() {
-		return selectedAddrTypeList;
-	}
-
-	/**
-	 * Sets the selected addr type list.
-	 *
-	 * @param selectedAddrTypeList the selectedAddrTypeList to set
-	 */
-	public void setSelectedAddrTypeList(List<PmOrgAddress> selectedAddrTypeList) {
-		this.selectedAddrTypeList = selectedAddrTypeList;
 	}
 
 	/**
@@ -2125,42 +2069,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setVotFundId(Long votFundId) {
 		this.votFundId = votFundId;
-	}
-
-	/**
-	 * Gets the project id.
-	 *
-	 * @return the projectId
-	 */
-	public Long getProjectId() {
-		return projectId;
-	}
-
-	/**
-	 * Sets the project id.
-	 *
-	 * @param projectId the projectId to set
-	 */
-	public void setProjectId(Long projectId) {
-		this.projectId = projectId;
-	}
-
-	/**
-	 * Gets the setia id.
-	 *
-	 * @return the setiaId
-	 */
-	public Long getSetiaId() {
-		return setiaId;
-	}
-
-	/**
-	 * Sets the setia id.
-	 *
-	 * @param setiaId the setiaId to set
-	 */
-	public void setSetiaId(Long setiaId) {
-		this.setiaId = setiaId;
 	}
 
 	/**
