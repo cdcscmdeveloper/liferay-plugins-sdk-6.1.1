@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.pm.salutation;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -14,6 +16,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.exception.EpException;
@@ -151,7 +154,17 @@ public class SalutationBackingBean extends
 				codesSearchBean.setSearchValue(getManagedBean()
 						.getStatus());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
-			}			
+			}
+			else{
+				List<String> activeAndInActiveStatus = new ArrayList<String>();
+				activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+				activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_IN.value(), 
+								activeAndInActiveStatus
+				));
+			}
 
 			return searchBean;
 		}	 
@@ -272,8 +285,11 @@ public class SalutationBackingBean extends
 											new FacesScopes().getUserLocale())));
 				}
 			}
-		
+		if(this.getManagedBean().getPmSalutation().isBrandNew()){
+			return NAV_TO_MAIN;
+		}else{
 		  return NAV_TO_MAINTAIN;
+		}
 	 }
 	 
 	 public void preLoadSalutation(){

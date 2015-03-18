@@ -45,7 +45,7 @@
 			    	<h:outputText value="#{lbl['lbl.pm.as.name']}" />
 			    </f:facet>
 				<p:inputText id="asName" value="#{certSignatory.sinnatoryName}" label="#{lbl['lbl.pm.as.name']}"
-				maxlength="20" required="true" disabled="#{!certSignatory.brandNew}"  />
+				maxlength="80" required="true" disabled="#{!certSignatory.brandNew}" styleClass="ppDisplayTextL" />
 			<p:message id="asNameMsg" for="asName" display="icon" />
 			</p:column>
 
