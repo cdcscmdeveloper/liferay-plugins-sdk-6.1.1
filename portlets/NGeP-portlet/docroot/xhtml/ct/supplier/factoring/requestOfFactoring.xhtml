@@ -36,7 +36,9 @@
 			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(gpkiBackingBean.pmDigiSign)}" />
 		<ac:spkiPopup
-			textBeforeSign="#{supplierBackingBean.managedBean.textBeforeSign}"
+			password="#{supplierBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 			postSignAction="#{supplierBackingBean.preSubmitFactoringRequest(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
 		<p:panel id="headerDetails">

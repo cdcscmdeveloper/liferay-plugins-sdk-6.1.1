@@ -33,13 +33,11 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -89,7 +87,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -603,54 +600,55 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-		}		
-		if (getManagedBean().getFactoring().getFileName() == null 
-				|| getManagedBean().getFactoring().getFileName().isEmpty()) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-			throw new EpException(MessageConst.ERROR_100022, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.agreement", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}
-//		SIR#4106: Removed
-//		if (getManagedBean().getFactoring().getFactoringPayFileName() == null 
-//				|| getManagedBean().getFactoring().getFactoringPayFileName().isEmpty()) {
-//			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-//			throw new EpException(MessageConst.ERROR_100022, 
-//					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.form.fee", 
-//							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//		}	
-		if (getManagedBean().isRemoveFactoring()){
-		    if (getManagedBean().getFactoring().getRemoveFileName() == null 
-		    		|| getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
-		    	RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-		    	throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.removal", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		  }
-		}		
-		if (!getManagedBean().isAgreeFactoringClause()) {
-			if (!isApproverRole() && !getManagedBean().isRemoveFactoring()) {
+		} else {		
+			if (getManagedBean().getFactoring().getFileName() == null 
+					|| getManagedBean().getFactoring().getFileName().isEmpty()) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
-				throw new EpException(MessageConst.ERROR_750001);
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.agreement", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-		}		
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) 
-				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
-			RequestContext.getCurrentInstance().addCallbackParam("epException", true);
-			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+	//		SIR#4106: Removed
+	//		if (getManagedBean().getFactoring().getFactoringPayFileName() == null 
+	//				|| getManagedBean().getFactoring().getFactoringPayFileName().isEmpty()) {
+	//			RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+	//			throw new EpException(MessageConst.ERROR_100022, 
+	//					new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.form.fee", 
+	//							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	//		}	
+			if (getManagedBean().isRemoveFactoring()){
+			    if (getManagedBean().getFactoring().getRemoveFileName() == null 
+			    		|| getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
+			    	RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+			    	throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.factoring.removal", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			  }
+			}		
+			if (!getManagedBean().isAgreeFactoringClause()) {
+				if (!isApproverRole() && !getManagedBean().isRemoveFactoring()) {
+					RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+					throw new EpException(MessageConst.ERROR_750001);
+				}
+			}		
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) 
+					&& getManagedBean().getApproverModel().getTarget().size() == 0) {
+				RequestContext.getCurrentInstance().addCallbackParam("epException", true);
+				throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
+			}
+			
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
+				StringBuilder sb = new StringBuilder();
+				sb.append(getManagedBean().getContractNo());
+				sb.append(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+				sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
+				sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));			
+				sb.append(action);			
+				getManagedBean().setTextBeforeSign(sb.toString());	
+				getManagedBean().setButtonAction(action);
+			}	
 		}
-		
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
-			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getContractNo());
-			sb.append(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-			sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
-			sb.append(df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));			
-			sb.append(action);			
-			getManagedBean().setTextBeforeSign(sb.toString());	
-			getManagedBean().setButtonAction(action);
-		}	
 	}
 	
 	/**
@@ -703,14 +701,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public String preSubmitChangeBankRequest(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null && isSupplierRole()) {
 			FacesScopes facesScope = new FacesScopes();
-			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			Long userId = facesScope.getUserSessionBean().getUserId();
 			Timestamp date = new Timestamp(System.currentTimeMillis());
 			String originalText = prepareSupplierOriginalText();
 			pmDigiSign.setCreatedBy(userId);
 		    pmDigiSign.setCreatedDate(date);
 		    pmDigiSign.setOrginalData(originalText);
-		    pmDigiSign.setSignedData(spkiBackingBean.spkiSignTransaction(originalText));
+		    pmDigiSign.setSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
 			getManagedBean().setPmDigiSign(pmDigiSign);			
 		} else if(pmDigiSign != null) {
 			getManagedBean().setPmDigiSign(pmDigiSign);		
@@ -765,14 +762,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public String preSubmitFactoringRequest(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null && isSupplierRole()) {
 			FacesScopes facesScope = new FacesScopes();
-			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			Long userId = facesScope.getUserSessionBean().getUserId();
 			Timestamp date = new Timestamp(System.currentTimeMillis());
 			String originalText = prepareSupplierOriginalText();
 			pmDigiSign.setCreatedBy(userId);
 		    pmDigiSign.setCreatedDate(date);
 		    pmDigiSign.setOrginalData(originalText);
-		    pmDigiSign.setSignedData(spkiBackingBean.spkiSignTransaction(originalText));
+		    pmDigiSign.setSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
 			getManagedBean().setPmDigiSign(pmDigiSign);			
 		} else if (pmDigiSign != null) {
 			getManagedBean().setPmDigiSign(pmDigiSign);		
