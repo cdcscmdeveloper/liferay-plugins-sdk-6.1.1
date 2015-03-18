@@ -39,22 +39,20 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:95%"
 			      		disabled="#{panelBackingBean.managedBean.viewContract}">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
-			           <p:ajax event="change" update="spec" process="@this"/> 
+			           <p:ajax event="change" update="spec" process="@this" listener="#{panelBackingBean.changeItemCategoryListner(panelItemsVar)}" /> 
 			      </p:selectOneMenu>
 			  </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:10%;">
-                  <p:inputText value="#{panelItemsVar.itemName}" style="width:95%;" maxlength="100" 
+              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:20%;">
+                  <p:inputText value="#{panelItemsVar.itemName}" style="width:85%;" maxlength="100" 
                   	disabled="#{panelBackingBean.managedBean.viewContract}"/>
+                  	<p:spacer width="5" />
+                  	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
+                  		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
+						<p:graphicImage library="ep/images/design" name="edit.png" title="#{lbl['lbl.ct.specification']}" />
+					</p:commandLink>
               </p:column>
-              
-			  <p:column headerText="#{lbl['lbl.ct.specification']}" style="width:11%;">
-			     <p:inputText id="spec" value="#{panelItemsVar.specification}"   style="width:95%;" maxlength="200"
-			     	      disabled="#{panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral
-			     	      	or panelBackingBean.managedBean.viewContract}"/>
-			  </p:column>
-			
-			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width: 11%;">
+			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width: 10%;">
 			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8" headerText="UOM Lov" readonly="true" 
 				         value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom"
@@ -143,7 +141,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bulkUpdateDlg.hide();" type="button" />
 		   </div>
-        </p:dialog>  	
+        </p:dialog>
 		<p:dialog id="delItemDlg" resizable="false"
 		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
@@ -156,7 +154,46 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		       process="@all" actionListener="#{panelBackingBean.removeAddRow()}" onclick="delItemDlg.hide();"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delItemDlg.hide();" type="button" />
 		   </div>
-        </p:dialog>  		
+        </p:dialog>
+        <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
+	   		styleClass="screen-title" modal="true" width="700" height="450" resizable="false" position="top">
+	   		<h:panelGrid columns="1">
+	    		<p:outputLabel value="#{lbl['lbl.ct.item.name']}" >: #{panelBackingBean.managedBean.selectedItemForSpec.itemName}</p:outputLabel>
+	     	</h:panelGrid>
+	     	<p:spacer  height="5"/>
+	     	<p:dataTable id="itemSpecDt" var="data" value="#{panelBackingBean.managedBean.selectedItemForSpec.ctPanelItemSpecs}"
+				rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedPanelItemSpecs}" widgetVar="panelItemSpecObj">
+				<ac:paginator for="itemSpecDt" />
+				<p:column selectionMode="multiple" style="width:3%" 
+					rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:80%;">
+					<p:inputTextarea value="#{data.specification}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+						disabled="#{panelBackingBean.managedBean.viewContract}" />
+			</p:column>
+			</p:dataTable>
+			<p:spacer height="2" />
+			<div class="ppRightBtn"> 
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
+					action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" 
+					oncomplete="panelItemSpecObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true"
+				    onsuccess="delPanelItemSpecDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"  onclick="itemSpecDlg.hide();" />
+			</div>
+   		</p:dialog>
+   		<p:dialog id="delPanelItemSpecDlg" resizable="false"
+		    styleClass="screen-title" widgetVar="delPanelItemSpecDlg"  modal="true" width="330">  
+            <h:panelGrid columns="3">
+              <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			  <p:spacer width="10"/>
+              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=itemSpecDt])"
+		       process="@all" actionListener="#{panelBackingBean.deletePanelItemSpec()}" onclick="delPanelItemSpecDlg.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delPanelItemSpecDlg.hide();" type="button" />
+		   </div>
+        </p:dialog>  	
 		<p:spacer height="40" />
 		<p:outputPanel id="itemZone">
 		    <h:panelGroup rendered="#{panelBackingBean.managedBean.selectionOfZone}">
@@ -164,7 +201,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <div style="clear:both" />
 			 <table style="width: 100%">
 				<tr>
-					<td style="width: 120px;"><p:outputLabel value="Location Level" /></td>
+					<td style="width: 120px;"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
 					<td><p:selectOneMenu id="locationLevels" style="width: 178px;" disabled="#{panelBackingBean.managedBean.viewContract}"
 							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
 							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />

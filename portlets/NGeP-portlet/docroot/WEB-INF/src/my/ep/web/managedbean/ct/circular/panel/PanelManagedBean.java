@@ -34,6 +34,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -105,9 +106,11 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtCancelCircular selectedCancelCircular;
 	private CtCancelCircularReq cancelCircularReq;
 	private CtPanelItem selectedPanelItems;
+	private CtPanelItem selectedItemForSpec;
 	private CtPanelZone selectedPanelZone;
 	private List <CtPanelSupplier> selectedPanelSuppliers;
 	private List<CtContactPerson> selectedContactPersons;
+	private List<CtPanelItemSpec> selectedPanelItemSpecs;
 	private List<CtCancelCircular> selectedCancelCirculars;
 	private List<CtCancelCircular> cancelledCircularList;
 	private List<CtCircularVer> circularVerList;
@@ -196,6 +199,20 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedPanelItems(CtPanelItem selectedPanelItems) {
 		this.selectedPanelItems = selectedPanelItems;
+	}
+	
+	/**
+	 * @return the selectedItemForSpec
+	 */
+	public CtPanelItem getSelectedItemForSpec() {
+		return selectedItemForSpec;
+	}
+
+	/**
+	 * @param selectedItemForSpec the selectedItemForSpec to set
+	 */
+	public void setSelectedItemForSpec(CtPanelItem selectedItemForSpec) {
+		this.selectedItemForSpec = selectedItemForSpec;
 	}
 
 	/**
@@ -557,6 +574,14 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setSelectedPanelSuppliers(
 			List<CtPanelSupplier> selectedPanelSuppliers) {
 		this.selectedPanelSuppliers = selectedPanelSuppliers;
+	}
+	
+	public List<CtPanelItemSpec> getSelectedPanelItemSpecs() {
+		return selectedPanelItemSpecs;
+	}
+
+	public void setSelectedPanelItemSpecs(List<CtPanelItemSpec> selectedPanelItemSpecs) {
+		this.selectedPanelItemSpecs = selectedPanelItemSpecs;
 	}
 
 	/**
