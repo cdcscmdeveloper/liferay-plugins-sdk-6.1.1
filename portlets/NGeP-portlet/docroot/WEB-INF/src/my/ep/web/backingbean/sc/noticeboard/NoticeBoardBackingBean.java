@@ -1763,6 +1763,11 @@ public class NoticeBoardBackingBean extends
 	public void bsvZoneTabChange(TabChangeEvent event) {
 		BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
 		this.getManagedBean().setNormalBsvBean(zoneBean);
+		TplSpecZoneDtl tplZoneDetails = this.getManagedBean()
+											.getNormalBsvBean().getTplSpecZoneDtl();
+		this.getManagedBean().setLocationNodes(
+				LocationSingleton.getInstance().constuctTreeNode(
+						tplZoneDetails.getTplSpecZoneLocs()));
 
 	}
 
