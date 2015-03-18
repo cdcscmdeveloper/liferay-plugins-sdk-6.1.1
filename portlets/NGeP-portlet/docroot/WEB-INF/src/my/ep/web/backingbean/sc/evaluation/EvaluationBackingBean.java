@@ -1893,9 +1893,15 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 				reqDTO.setCompliance(true);
-			} else {
+			}
+
+			else {
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -1922,7 +1928,11 @@ public class EvaluationBackingBean extends
 			}
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 
 				return "technicalEvaluationStgView.xhtml";
 			}
@@ -1976,7 +1986,11 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 				reqDTO.setCompliance(true);
 			} else {
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -2005,7 +2019,11 @@ public class EvaluationBackingBean extends
 			}
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 				this.getManagedBean().setUserScores(
 						checklist.getQtScoreWeightage().getScore().toString());
 				return "technicalEvaluationEvaluateDocument.xhtml";
@@ -2062,9 +2080,15 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 				reqDTO.setCompliance(true);
-			} else {
+			}
+
+			else {
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -2090,7 +2114,11 @@ public class EvaluationBackingBean extends
 			}
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 				return "technicalEvaluationStgView.xhtml";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
@@ -2350,9 +2378,15 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 				reqDTO.setCompliance(true);
-			} else {
+			}
+
+			else {
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -2380,7 +2414,11 @@ public class EvaluationBackingBean extends
 			// this.getManagedBean().setQtProposalChecklist(checklist);
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
-							.getDefinationType().getParameterCode())) {
+							.getDefinationType().getParameterCode())
+					|| ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getScQtChecklist().getDefinationType()
+									.getParameterCode())) {
 				this.getManagedBean().setUserScores(
 						this.getManagedBean().getScQtChecklist()
 								.getQtScoreWeightage().getScore().toString());
@@ -4411,14 +4449,20 @@ public class EvaluationBackingBean extends
 				.getComplianceTechnicalCheckList();
 		if (null != technicalcheckList && !technicalcheckList.isEmpty()) {
 			for (ScQtCheckList techCheckList : technicalcheckList) {
-				if (null != techCheckList.getPmEvalStatus()
-						&& techCheckList
+				if (((null != techCheckList.getPmEvalStatus())
+						&& (techCheckList
 								.getDefinationType()
 								.getParameterCode()
 								.equalsIgnoreCase(
-										ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
-						&& techCheckList.getPmEvalStatus().getStatusId()
-								.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+										ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD) && techCheckList
+								.getPmEvalStatus().getStatusId()
+								.equals(QTStatusConst.TS_PENDING_SUBMISSION)) || (techCheckList
+						.getDefinationType()
+						.getParameterCode()
+						.equalsIgnoreCase(
+								ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION) && techCheckList
+						.getPmEvalStatus().getStatusId()
+						.equals(QTStatusConst.TS_PENDING_SUBMISSION)))) {
 					this.getManagedBean().setComplianceActiveIndex(0);
 					throw new EpException(MessageConst.ERROR_760238);
 				}
@@ -4433,16 +4477,21 @@ public class EvaluationBackingBean extends
 							.isEmpty()) {
 				for (ScQtCheckList techCheckList : this.getManagedBean()
 						.getCompliancefinancialCheckList()) {
-					if (null != techCheckList.getPmEvalStatus()
-							&& techCheckList
+					if (((null != techCheckList.getPmEvalStatus())
+							&& (techCheckList
 									.getDefinationType()
 									.getParameterCode()
 									.equalsIgnoreCase(
-											ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
-							&& techCheckList
+											ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD) && techCheckList
 									.getPmEvalStatus()
 									.getStatusId()
-									.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+									.equals(QTStatusConst.TS_PENDING_SUBMISSION)) || (techCheckList
+							.getDefinationType()
+							.getParameterCode()
+							.equalsIgnoreCase(
+									ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION) && techCheckList
+							.getPmEvalStatus().getStatusId()
+							.equals(QTStatusConst.TS_PENDING_SUBMISSION)))) {
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
 							this.getManagedBean().setComplianceActiveIndex(1);
 						} else {
@@ -4455,14 +4504,20 @@ public class EvaluationBackingBean extends
 		} else {
 			for (ScQtCheckList techCheckList : this.getManagedBean()
 					.getCompliancefinancialCheckList()) {
-				if (null != techCheckList.getPmEvalStatus()
-						&& techCheckList
+				if (((null != techCheckList.getPmEvalStatus())
+						&& (techCheckList
 								.getDefinationType()
 								.getParameterCode()
 								.equalsIgnoreCase(
-										ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
-						&& techCheckList.getPmEvalStatus().getStatusId()
-								.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+										ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD) && techCheckList
+								.getPmEvalStatus().getStatusId()
+								.equals(QTStatusConst.TS_PENDING_SUBMISSION)) || (techCheckList
+						.getDefinationType()
+						.getParameterCode()
+						.equalsIgnoreCase(
+								ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION) && techCheckList
+						.getPmEvalStatus().getStatusId()
+						.equals(QTStatusConst.TS_PENDING_SUBMISSION)))) {
 					if (!this.getManagedBean().getScQt().isSampleReq()) {
 						this.getManagedBean().setComplianceActiveIndex(1);
 					} else {
