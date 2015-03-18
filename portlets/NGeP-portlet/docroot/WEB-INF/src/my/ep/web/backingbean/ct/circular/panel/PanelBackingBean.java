@@ -78,6 +78,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
@@ -692,8 +693,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 					else {
 						if(getItemGeneralCode(panelItem.getCategoryParameterId()).equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
-							if(panelItem.getSpecification().length()==0) {
-								throw new EpException(MessageConst.ERROR_100022, new String[]{"Specification"});
+							if(panelItem.getCtPanelItemSpecs() == null || panelItem.getCtPanelItemSpecs().isEmpty()) {
+								throw new EpException(MessageConst.ERROR_750029, new String[]{panelItem.getItemName()});
+							}
+							else {
+								for (CtPanelItemSpec ctPanelItemSpec: panelItem.getCtPanelItemSpecs()) {
+									if (ctPanelItemSpec.getSpecification() == null || ctPanelItemSpec.getSpecification().length() == 0) {
+										throw new EpException(MessageConst.ERROR_750030, new String[]{panelItem.getItemName()});
+									}
+								}
 							}
 						}
 					}
@@ -916,6 +924,55 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
+	/**
+	 * Method to clear the item specification list when general item category is selected
+	 * @param need to pass ctPanelItem Object
+	 * return void statement
+	  **/
+	public void changeItemCategoryListner(CtPanelItem panelItem) {
+		if(getItemGeneralCode(panelItem.getCategoryParameterId()).equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL)) {
+			panelItem.setCtPanelItemSpecs(null);
+		}			
+	}	
+	
+	/**
+	 * The method used to invoke and initiate the panel item specification dialog.
+	 */
+	public void panelItemSpecDlg(CtPanelItem panelItem) {
+		getManagedBean().setSelectedItemForSpec(panelItem);
+		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
+	}
+	
+	/**
+	 * Method used to add list of panel item specification
+	 * during panel circular creation
+	 */
+	public void addPanelItemSpec(){
+		log.info("PanelBackingBean.addPanelItemSpec()");
+		try {
+			CtPanelItemSpec itemSpec = new CtPanelItemSpec();
+			itemSpec.setCtPanelItem(getManagedBean().getSelectedItemForSpec());
+	        getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().add(itemSpec);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+	}
+	
+	/**
+	 * Method used to delete list of panel item specification
+	 * from panel circular creation
+	 */
+	public void deletePanelItemSpec(){
+		log.info("PanelBackingBean.deletePanelitemSpec()");
+		try {
+			getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().removeAll(getManagedBean().getSelectedPanelItemSpecs());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 	
