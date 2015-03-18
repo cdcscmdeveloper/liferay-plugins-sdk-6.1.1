@@ -302,12 +302,9 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia()) {
 				getManagedBean().setSubSetiaCode((getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getSubSetiaCode()));
 				
-				if( getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia()!=null) {
-					getManagedBean().setSetiaCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getSetiaCode());
-					
-					if(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getPmProject()!=null) {
-						getManagedBean().setProjectCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
-					}
+				if( getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia()!=null) {
+					getManagedBean().setSetiaCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getSetiaCode());
+					getManagedBean().setProjectCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getProjectCode());
 				}
 				getManagedBean().setFinancingTypeCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getFinancingType().getParameterCode());
 			}

@@ -147,8 +147,6 @@ import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
-import my.ep.persistence.entity.pm.common.PmProject;
-import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -2380,8 +2378,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setVotFundId(0L);
 		getManagedBean().setPmVoteFund(new PmVotFund());
 		getManagedBean().setPmSubSetia(new PmSubSetia());
-		getManagedBean().getPmSubSetia().setPmSetia(new PmSetia());
-		getManagedBean().getPmSubSetia().getPmSetia().setPmProject(new PmProject());
 		getManagedBean().setPmPrgActivity(new PmPrgActivity());
 		getManagedBean().setGosodo(new PmGlAccount());
 		getManagedBean().setAssetIndCode("");
@@ -2413,8 +2409,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			if(null != getManagedBean().getPmSubSetia()){
 				getManagedBean().setSubSetiaId(getManagedBean().getPmSubSetia().getSubSetiaId());
-				getManagedBean().setSetiaId(getManagedBean().getPmSubSetia().getPmSetia().getSetiaId());
-				getManagedBean().setProjectId(getManagedBean().getPmSubSetia().getPmSetia().getPmProject().getProjectId());
 			}
 			
 			chargeLineValidation();
@@ -2604,7 +2598,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund);
 		}
 		
-		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(votFundRes.getVotFundList());
 	
@@ -3121,8 +3114,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setVotFundId(0L);
 			if(getManagedBean().getPmSubSetia()!=null) {
 				getManagedBean().getPmSubSetia().setSubSetiaCode("");
-				getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
-				getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
+				getManagedBean().getPmSubSetia().setSetiaCode("");
+				getManagedBean().getPmSubSetia().setProjectCode("");
 				getManagedBean().getPmSubSetia().setFinancingType(null);
 			}
 			getManagedBean().setPmPrgActivity(null);

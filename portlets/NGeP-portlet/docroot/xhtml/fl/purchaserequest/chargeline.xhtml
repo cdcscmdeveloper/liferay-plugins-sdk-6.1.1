@@ -208,15 +208,15 @@
 						size="4"
 						disabled="#{!purchaseRequestBackingBean.managedBean.projectLov}" 
 						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
-						conditionField="recordStatusFlg^1|pmSetia.pmProject.pmVotFund.votFundId^#{purchaseRequestBackingBean.managedBean.votFundId}" 
-						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.pmSetia.pmProject.projectCode}"	>
+						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{purchaseRequestBackingBean.managedBean.votFundId}" 
+						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.projectCode}"	>
 					</ac:lov>
 					</h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td> 
 					<td><h:panelGroup styleClass="setiaLov" id="setiaLov">
 						<p:inputText size="2" id="setiaCode"
 						readonly="true"
-						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.pmSetia.setiaCode}" /><p:inputText size="2" id="subSetiaCode"
+						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.setiaCode}" /><p:inputText size="2" id="subSetiaCode"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.subSetiaCode}" /></h:panelGroup>
 					</td>
