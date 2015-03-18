@@ -808,7 +808,8 @@ public class SmApplicationUtil {
 	 * @return int - max review count number
 	 */
 	public static int assignMaxReviewCount(String appType, String applCatType,
-			String supplierType, String businessType,SmApplicationManagedBean managedBean) {
+			String supplierType, String businessType,
+			SmApplicationManagedBean managedBean) {
 		int i = 0;
 		switch (appType) {
 
@@ -861,8 +862,8 @@ public class SmApplicationUtil {
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
 			i = i - 1;
 		}
-		if(managedBean.isReviewSiteVisit()){
-			i=i+1;
+		if (managedBean.isReviewSiteVisit()) {
+			i = i + 1;
 		}
 		return i;
 	}
@@ -3983,8 +3984,12 @@ public class SmApplicationUtil {
 		if (smPersonnels != null) {
 			for (SmPersonnel smPersonnel : smPersonnels) {
 				if (smPersonnel.getEpRole() != null
-						&& (smPersonnel.getEpRole().equalsIgnoreCase(
-								SupplierManagementConst.BASIC_SUPPLIER_ADMIN) || smPersonnel
+						&& (smPersonnel.getEpRole().equals(
+								RoleCode.SUPPLIER_TEMP.value())
+								|| smPersonnel
+										.getEpRole()
+										.equalsIgnoreCase(
+												SupplierManagementConst.BASIC_SUPPLIER_ADMIN) || smPersonnel
 								.getEpRole()
 								.equalsIgnoreCase(
 										SupplierManagementConst.MOF_SUPPLIER_ADMIN))) {
@@ -4647,7 +4652,7 @@ public class SmApplicationUtil {
 			assignMaxReviewCount(managedBean.getSmAppl().getApplType(),
 					managedBean.getSmAppl().getApplCategoryType(), managedBean
 							.getSmAppl().getSupplierType(),
-					managedBean.getBusinessTypeVal(),managedBean);
+					managedBean.getBusinessTypeVal(), managedBean);
 		}
 
 		// added to custom confirm dialog title and msg
