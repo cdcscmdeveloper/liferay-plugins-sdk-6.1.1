@@ -29,24 +29,22 @@
     		<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" action="#{terminationBackingBean.backAction}" /></td>
     	</tr>
   	</table>
-  	<table style="width: 99%; margin-left: 0px;" class="header-info">
-  	<tr>
-			<td style="width: 15%">
-				<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
-			</td>
-			<td style="width: 15%" class="header-info-text">
-				#{terminationBackingBean.managedBean.ctContract.contractNo}
-			</td>
-			<td style="width: 20%">
-				<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
-			</td>
-			<td style="width: 25%" class="header-info-text">
-				#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
-			</td>
-			<td style="width: 5%"></td>
-			<td style="width: 20%" class="header-info-text"></td>
-		</tr>
-	</table>
+  	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 15%"><h:outputLabel
+						value="#{lbl['lbl.ct.contract.no']}" /></td>
+				<td style="width: 15%" class="header-info-text">
+					#{terminationBackingBean.managedBean.ctContract.contractNo}</td>
+				<td style="width: 20%"><h:outputLabel
+						value="#{lbl['lbl.ct.ptj.name']}" /></td>
+				<td style="width: 25%" class="header-info-text">
+					#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br/>
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 	<f:facet name="header">
 		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
