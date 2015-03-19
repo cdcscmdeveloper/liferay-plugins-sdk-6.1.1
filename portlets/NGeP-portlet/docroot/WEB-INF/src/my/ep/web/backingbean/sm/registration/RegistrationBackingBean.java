@@ -341,6 +341,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String submitRegistration() {
+		setAdminSameAsOwner();
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		SmAppl smAppl = this.getManagedBean().getSmAppl();
 		SmSupplierOwner smSuppOwner = this.getManagedBean().getSmSuppOwner();
@@ -1937,6 +1938,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(suppBusiness);
 			}
 		
+		}
+	}
+	
+	/**
+	 * Set admin related information same as owner after ticked checkbox
+	 */
+	private void setAdminSameAsOwner() {
+		if (getManagedBean().isSameAsOwner()) {
+			getManagedBean().getSmPersonnel().setName(
+					getManagedBean().getSmSuppOwner().getOwnerName());
+			getManagedBean().getSmPersonnel().setPmCountry(
+					getManagedBean().getSmBusinessAdd().getPmCountry());
+			getManagedBean().getSmPersonnel()
+					.setIdentificationTypeId(
+							getManagedBean().getSmSuppOwner()
+									.getIdentificationTypeId());
+			getManagedBean().getSmPersonnel().setIdentificationNo(
+					getManagedBean().getSmSuppOwner().getIdentificationNo());
 		}
 	}
 }
