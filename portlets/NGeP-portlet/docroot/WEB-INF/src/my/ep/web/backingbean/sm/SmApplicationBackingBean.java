@@ -5928,6 +5928,7 @@ public class SmApplicationBackingBean extends
 		boolean valid = false;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
 
 			if (bpmAppl.getSupportingDocMode() == null) {
 				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
