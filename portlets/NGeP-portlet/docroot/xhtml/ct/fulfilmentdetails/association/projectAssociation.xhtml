@@ -19,12 +19,12 @@
 			padding: 10px;
          }
     </style>
-    <p:panel id="messageId">
-      	<p:messages id="messages" showDetail="true" 
-      	   showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" >
-      	</p:messages>
-    </p:panel>
-    
+    <p:blockUI widgetVar="blkAssoSearchTable"  block=":form" trigger="searchButtonId">  
+		<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+	</p:blockUI> 
+  	<p:messages id="messages" showDetail="true" 
+ 		showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" >
+  	</p:messages>
     <p:panel id="associatePanelId" header="#{lbl['lbl.ct.project.association']}"   toggleable="true"  toggleSpeed="500">
          <h:panelGrid columns="4" style="width:100%;">
                
@@ -61,7 +61,8 @@
            
           <div class="ppRightBtn"> 
              <p:commandButton value="#{lbl['lbl.btn.search']}" process="@form" action="#{associationBackingBean.searchAssociation}" 
-                 icon="ui-icon-search" onstart="blkAssoSearchTable.show();" oncomplete="blkAssoSearchTable.hide();"  update=":form"/>
+                 icon="ui-icon-search" onstart="blkAssoSearchTable.show();" oncomplete="blkAssoSearchTable.hide();"  update=":form"
+                 id="searchButtonId" />
             
              <p:commandButton value="#{lbl['lbl.ct.reset']}"  process="@form"
               action="#{associationBackingBean.searchReset}" icon="ui-icon-reset"   update=":form"/>
@@ -94,13 +95,8 @@
 			         <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
 			         <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 		        </p:commandLink> 
-		  </p:column> 
-	   
-	   </p:dataTable>
-	   <p:blockUI widgetVar="blkAssoSearchTable"  block="associateSearch">  
-			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
-		</p:blockUI> 
-		
+		  </p:column> 	   
+	   </p:dataTable>		
 		<p:spacer height="10"/>
 		    <div class="ppRightBtn">
 		         <p:commandButton value="#{lbl['lbl.btn.create']}" process="@this"  
