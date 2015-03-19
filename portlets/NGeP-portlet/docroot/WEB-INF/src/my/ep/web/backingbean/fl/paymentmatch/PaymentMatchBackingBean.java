@@ -1061,7 +1061,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	public void validateDuplicateDeduction(String outcome){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		List<String> deductionList = new ArrayList<>();
+		List<String> deductionList = new ArrayList<String>();
 		deductionList.clear();
 		
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){

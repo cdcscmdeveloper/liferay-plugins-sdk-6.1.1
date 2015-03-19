@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 //import my.ep.persistence.entity.pm.common.PmMaksud;
 
 /**
- * Managed Bean for Create Purchase Order.
+ * Managed Bean for Create Delivery Order.
  *
  * @author Giribabu
  * @since 7/10/2013
