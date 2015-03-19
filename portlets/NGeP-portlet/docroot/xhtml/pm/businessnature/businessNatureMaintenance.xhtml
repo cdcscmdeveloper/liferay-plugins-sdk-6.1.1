@@ -254,7 +254,7 @@
 
 		</p:panel>
 		<c:if test="#{!businessNatureBackingBean.managedBean.newcategory}">
-			<p:panel header="DETAIL CATEGORY" id="detailCategory"
+			<p:panel header="#{lbl['lbl.pm.detail.category']}" id="detailCategory"
 				toggleable="true"
 				rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel != '50'}">
 				<p:dataTable id="detailCatId" var="detailCategory" rows="10"

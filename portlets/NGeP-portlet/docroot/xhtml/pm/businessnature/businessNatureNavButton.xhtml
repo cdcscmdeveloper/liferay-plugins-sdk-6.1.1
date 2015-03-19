@@ -8,7 +8,8 @@
 	<p:commandButton value="#{lbl['lbl.btn.back']}"
 		action="#{businessNatureBackingBean.redirectBusinessSearch()}"
 		style="float:left;" immediate="true" />
-	<p:commandButton value="#{lbl['lbl.btn.save']}"
+	<p:commandButton
+		value="#{businessNatureBackingBean.managedBean.brandNew? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 		style="float:right;width:80px;"
 		action="#{businessNatureBackingBean.saveBusinessNatureDtls}" />
 </ui:composition>
