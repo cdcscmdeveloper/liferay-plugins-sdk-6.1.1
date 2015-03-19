@@ -17,7 +17,8 @@
 			<p:dataTable var="catBean" id="delCatDT"
 				value="#{deleteCategoryCodeBB.managedBean.activeCategoryList}"
 				selection="#{deleteCategoryCodeBB.managedBean.selectedCategories}"
-				rowKey="#{catBean}" rowIndexVar="index">
+				rowKey="#{catBean}" rowIndexVar="index"
+				sortBy="#{catBean.approvedDate}">
 				<p:ajax event="toggleSelect"
 					listener="#{deleteCategoryCodeBB.onToggleSelect}"
 					update=":form:catDelPan,:form:catDelConfirm" />
