@@ -35,22 +35,20 @@ public class QTFiledMapper {
 	enum QTMaintanaceEnableFields implements IEnumType {
 
 		QT_PENDING_QT_SUBMISSION(QTStatusConst.QT_PENDING_QT_SUBMISSION,
-				
-				new String[] { QTFieldConst.FILED_QT_FILE_NO,
+
+		new String[] { QTFieldConst.FILED_QT_FILE_NO,
 				QTFieldConst.FILED_QT_TITLE,
-						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW }), QT_PENDING_SCHEDULE_DOCUMENT(
+				QTFieldConst.FILED_QT_APPROVAL_WORKFLOW }), QT_PENDING_SCHEDULE_DOCUMENT(
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
-						 QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_FILE_NO,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION }), QT_PENDING_PUBLICATION_APPROVAL(
 				QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL, new String[] {
-						 QTFieldConst.FILED_QT_FILE_NO,
-				QTFieldConst.FILED_QT_DOCUMENTS }),
-				
-				
+						QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_DOCUMENTS }),
 
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
@@ -62,8 +60,7 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
 
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
-						QTFieldConst.FILED_QT_DOCUMENTS,
-						QTFieldConst.FILED_QT_PUB_APPROVAL }), QT_PROPOSAL_PREPARATION(
+						QTFieldConst.FILED_QT_DOCUMENTS, }), QT_PROPOSAL_PREPARATION(
 				QTStatusConst.QT_PROPOSAL_PREPARATION, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
