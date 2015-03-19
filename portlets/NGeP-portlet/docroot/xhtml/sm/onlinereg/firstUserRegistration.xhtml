@@ -82,13 +82,26 @@
 			<table class="customTbl">
 				<tr>
 					<td class="tdTitle">
+						&#160;
+					</td>
+					<td class="tdContent"><p:selectBooleanCheckbox
+							value="#{registrationBackingBean.managedBean.sameAsOwner}">
+							<p:ajax event="change" update="@([id$=pnlUsrInfo])"
+								partialSubmit="true"
+								process="@this" />
+						</p:selectBooleanCheckbox><h:outputText value="#{lbl['lbl.sm.userreg.admin.same.as.owner']}"></h:outputText></td>
+				</tr>
+				<tr>
+					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.fullname']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent" colspan="3">
 						<p:inputText size="40" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.fullname']}"
-							id="fullName" maxlength="80"
+							id="fullName" maxlength="80" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
+						<p:inputText readonly="true" disabled="true" value="" size="35" 
+							rendered="#{registrationBackingBean.managedBean.sameAsOwner}"/>
 						&#160;
 						<p:graphicImage id="fNmti" library="ep/images/design" name="tooltips.png" />
 						<p:tooltip id="fNmtt" for="fNmti">
@@ -104,13 +117,18 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent">
-						<p:selectOneMenu id="nationalityId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.nationality']}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}" style="width:60%">
+						<p:selectOneMenu id="nationalityId" required="#{!empty param['disableValidation']}" 
+							label="#{lbl['lbl.sm.nationality']}" value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}" 
+							rendered="#{!registrationBackingBean.managedBean.sameAsOwner}" style="width:60%">
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu disabled="true" value="" rendered="#{registrationBackingBean.managedBean.sameAsOwner}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						</p:selectOneMenu>
 						<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
 				
@@ -120,9 +138,9 @@
 					</td>
 					<td class="tdContent">
 						<p:calendar id="dobCalId"
-							navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.userprofile.dob']}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" 
+							navigator="true" required="#{!empty param['disableValidation']}" 
+							label="#{lbl['lbl.sm.userprofile.dob']}" value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}">
 						</p:calendar>
 					</td>
@@ -165,13 +183,18 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent">
-					<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.identificationtype']}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
-							<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
-							<p:ajax event="change" update="txtIdNumber"
-								listener="#{registrationBackingBean.personnelIdTypeChange}" />
+						<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
+								label="#{lbl['lbl.sm.identificationtype']}" value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
+								<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
+								<p:ajax event="change" update="txtIdNumber"
+									listener="#{registrationBackingBean.personnelIdTypeChange}" />
 						</p:selectOneMenu>
-						<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" /></td>
+						<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" />
+						<p:selectOneMenu disabled="true" value="" rendered="#{registrationBackingBean.managedBean.sameAsOwner}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						</p:selectOneMenu>
+					</td>
 
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.identificationno']}" />
@@ -181,7 +204,7 @@
 						<c:choose>
 						<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.identificationno']}"
+								label="#{lbl['lbl.sm.identificationno']}" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
 								<f:validateRegex pattern="[0-9]+" />
@@ -191,13 +214,14 @@
 						
 						<c:otherwise>
 							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
-								label="#{lbl['lbl.sm.identificationno']}"
+								label="#{lbl['lbl.sm.identificationno']}" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="15">
 								<p:ajax process="@this" partialSubmit="true" update="@this" listener="#{registrationBackingBean.trimPersonnelPassportValue}"/>
 							</p:inputText>
 						</c:otherwise>
 					</c:choose>
+						<p:inputText readonly="true" disabled="true" value="" size="35" rendered="#{registrationBackingBean.managedBean.sameAsOwner}"/>
 						&#160;
 						<p:graphicImage id="uidti" library="ep/images/design" name="tooltips.png" />
 						<p:tooltip id="uidtt" for="uidti">

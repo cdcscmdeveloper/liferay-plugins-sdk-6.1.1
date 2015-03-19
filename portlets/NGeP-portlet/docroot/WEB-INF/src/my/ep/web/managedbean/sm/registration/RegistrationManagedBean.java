@@ -94,6 +94,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private Integer userBumiFlg;
 	private Integer userMuslimFlg;
 	
+	private boolean sameAsOwner;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -515,6 +517,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setBizNatures(List<PmBusinessNature> bizNatures) {
 		this.bizNatures = bizNatures;
+	}
+
+	public boolean isSameAsOwner() {
+		return sameAsOwner;
+	}
+
+	public void setSameAsOwner(boolean sameAsOwner) {
+		this.sameAsOwner = sameAsOwner;
 	}
 	
 }
