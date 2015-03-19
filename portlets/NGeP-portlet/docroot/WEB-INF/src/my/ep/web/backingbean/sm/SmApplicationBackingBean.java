@@ -759,6 +759,11 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setApplStatusInfo(
 					SmApplicationUtil.getSmApplStatusInfoVO(smAppl));
 
+			// set whether allowed to edit company name
+			getManagedBean().setDisabledCompanyName(
+					SmApplicationUtil.isDisableCompanyNameInAppl(getManagedBean()
+							.getSmSupplier(), getManagedBean().getSmAppl()));
+
 			getManagedBean()
 					.setSupplierParentCatList(
 							SmApplicationUtil

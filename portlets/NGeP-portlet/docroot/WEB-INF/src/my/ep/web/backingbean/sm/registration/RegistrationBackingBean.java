@@ -26,6 +26,7 @@ import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -1180,6 +1181,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			retrieveIdentityTypeMap();
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
+			setDisableCompanyNameInMaintenance();
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
@@ -1957,6 +1959,54 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmPersonnel().setIdentificationNo(
 					getManagedBean().getSmSuppOwner().getIdentificationNo());
 		}
+	}
+	
+	/**
+	 * Set whether to disable company name field from editing
+	 */
+	private void setDisableCompanyNameInMaintenance() {
+		getManagedBean().setDisabledCompanyName(false);
+		if (isHasPendingTaskList()) {
+			getManagedBean().setDisabledCompanyName(true);
+		}
+		if (getManagedBean()
+				.getSmSupp()
+				.getBusinessType()
+				.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+				|| getManagedBean()
+						.getSmSupp()
+						.getBusinessType()
+						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
+			getManagedBean().setDisabledCompanyName(true);
+		}
+		if (SmApplicationUtil
+				.isApplHasSoftcertProcessingNotComplete(getManagedBean()
+						.getSmSupp().getSmAppl())) {
+			getManagedBean().setDisabledCompanyName(true);
+		}
+	}
+	
+	/**
+	 * Check whether the login user have pending task in task list
+	 * 
+	 * @return boolean
+	 */
+	private boolean isHasPendingTaskList() {
+		boolean retVal = false;
+		if (getManagedBean().getToken() == null
+				|| StringUtils.isBlank(getManagedBean().getToken())) {
+			FacesScopes face = new FacesScopes();
+			getManagedBean().setToken(face.getBPMAuthenticationCtxToken());
+		}
+		List<WorklistItemVO> taskList = SmCommonUtil
+				.getBpmTaskListByAuthToken(getManagedBean().getToken());
+
+		if (taskList == null || taskList.isEmpty()) {
+			retVal = false;
+		} else {
+			retVal = true;
+		}
+		return retVal;
 	}
 }
 
