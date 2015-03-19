@@ -71,11 +71,11 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 				if(bidPrice.getNewBidPrice() != null && bidPrice.getNewBidPrice().getBidPrice() != null){
 					
 					newBidPriceTotal += (bidPrice.getNewBidPrice().getBidPrice().doubleValue() * bidPrice
-							.getScBidSupplierItem().getScBidItem().getQty());
+							.getScBidSupplierItem().getScBidItem().getQty().doubleValue());
 				}else {
 					
 					newBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
-							.getScBidSupplierItem().getScBidItem().getQty());
+							.getScBidSupplierItem().getScBidItem().getQty().doubleValue());
 				}
 				
 				
@@ -150,7 +150,7 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 			
 			for (ScBidPrice bidPrice : this.getBidPrices()) {
 				lastBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
-						.getScBidSupplierItem().getScBidItem().getQty());
+						.getScBidSupplierItem().getScBidItem().getQty().doubleValue());
 			}
 		}
 		this.setItemLastBidPriceTotal(nf.format(lastBidPriceTotal));
