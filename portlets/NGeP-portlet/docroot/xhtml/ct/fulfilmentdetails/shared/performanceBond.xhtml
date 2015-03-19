@@ -73,14 +73,14 @@
 			</p:column>
 			
 			<p:column styleClass="column-align-center" style="width:32%;" headerText="#{lbl['lbl.txt.attachment']}" >
-				<h:panelGroup id="uploadBondPg">
+				<h:panelGroup id="uploadBondPg" columns="2">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
 					     style="float:left;" icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
 						value="#{varBond.fileName}"
-						style="float:right;" styleClass="blue_font"
+						style="float:left;margin-top:10px;" styleClass="blue_font"
 						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup>
 			</p:column>

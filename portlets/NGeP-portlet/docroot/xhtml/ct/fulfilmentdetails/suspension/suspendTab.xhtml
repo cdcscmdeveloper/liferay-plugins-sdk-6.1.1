@@ -37,7 +37,6 @@
 		<ac:gpkiPopup textBeforeSign="#{suspensionBackingBean.managedBean.textBeforeSign}"  
 						postSignAction="#{suspensionBackingBean.preSubmitContractSuspension(gpkiBackingBean.pmDigiSign)}" 
 						enableAutoUpdate="#{suspensionBackingBean.enableAutoUpdate()}" />
-		<p:panel>
 			<f:event listener="#{suspensionBackingBean.preRenderView}" type="preRenderView" />
 			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{suspensionBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
 			
@@ -89,7 +88,6 @@
 			</tr>
 	      </table>
 	    </div>
-		</p:panel>
 		<ui:include src="suspendDetails.xhtml" />
 		<ui:include src="suspendItem.xhtml" />
 		<ui:include src="suspendAgency.xhtml" />
