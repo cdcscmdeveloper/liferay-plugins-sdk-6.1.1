@@ -6758,12 +6758,14 @@ public class SmApplicationBackingBean extends
 			sec = getManagedBean().getPoSecReview();
 			getManagedBean().setPoSecReview(
 					SmApplicationUtil.setVerificationValues(sec, isVerifiedAll,
-							getManagedBean().getMaxReviewCount()));
+							getManagedBean().getMaxReviewCount(),
+							getManagedBean()));
 		} else if (getManagedBean().isApproverUser()) {
 			sec = getManagedBean().getApprvrSecReview();
 			getManagedBean().setApprvrSecReview(
 					SmApplicationUtil.setVerificationValues(sec, isVerifiedAll,
-							getManagedBean().getMaxReviewCount()));
+							getManagedBean().getMaxReviewCount(),
+							getManagedBean()));
 		}
 
 	}
@@ -7793,6 +7795,11 @@ public class SmApplicationBackingBean extends
 					getManagedBean().setPoSecReview(rev);
 				}
 			}
+			if (getManagedBean().isReviewSiteVisit()
+					&& !getManagedBean().getApprvrSecReview()
+							.isSitevisitVerified()) {
+				getManagedBean().getApprvrSecReview().setVerifiedAll(false);
+			}
 		}
 		if (!containsAppRev) {
 			SmApplSectionReview appRev = new SmApplSectionReview();
@@ -7820,6 +7827,10 @@ public class SmApplicationBackingBean extends
 					getManagedBean().setPoSecReview(rev);
 					containsPORev = true;
 				}
+			}
+			if (getManagedBean().isReviewSiteVisit()
+					&& !getManagedBean().getPoSecReview().isSitevisitVerified()) {
+				getManagedBean().getPoSecReview().setVerifiedAll(false);
 			}
 		}
 		if (!containsPORev) {
