@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.location;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -34,7 +35,6 @@ import my.ep.dto.pm.common.location.LocationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
-
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -42,12 +42,14 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.VPmLocation;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -98,6 +100,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public String backToSearch() {
 		getManagedBean().setSelectedType(null);
+		getManagedBean().setLazy(true);
 
 		return NAV_TO_SEARCH;
 	}
@@ -144,7 +147,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			ISearchBean<VPmLocation> searchBean) {
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
-		log.info("getSearchBeanData - Start");
 
 		LocationSearchBean lSearchBean = this.getManagedBean()
 				.getLocationSearchBean();
@@ -160,7 +162,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		if (lSearchBean.getLocationCode() != null
 				&& lSearchBean.getLocationCode().trim().length() > 0) {
-			log.info("+ locationCode " + lSearchBean.getLocationCode());
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationCode",
 							SearchOperator.OPERATOR_LIKE.value(),
@@ -170,7 +171,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		}
 		if (lSearchBean.getLocationName() != null
 				&& lSearchBean.getLocationName().trim().length() > 0) {
-			log.info("+ locationName " + lSearchBean.getLocationName());
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationName",
@@ -180,15 +180,19 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			isEmpty = false;
 		}
 
-		// if (isEmpty && !isSearchable) {
-		log.info("+ status " + lSearchBean.getRecordStatus());
+		if (lSearchBean.getRecordStatus() != null
+				&& lSearchBean.getRecordStatus().trim().length() > 0) {
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS
 						.value(), getManagedBean().getLocationSearchBean()
 						.getRecordStatus()));
-		// }
+		 }else{
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("status", SearchOperator.OPERATOR_IN
+								.value(), new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE))));
+			 
+		 }
 
-		log.info("getSearchBeanData - End");
 		return searchBean;
 	}
 
@@ -217,18 +221,26 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					result = resDTO.isSuccessful();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"State", this.getManagedBean().getState()
-											.getStateName()
-											+ " is Successfully saved"));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_700004, new String[] {"State :",
+													this.getManagedBean().getState()
+													.getStateName()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 
 				}
 				} catch (Exception e) {
 					e.printStackTrace();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-									.toString(), "Save Location failed."));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.ERR_900013, new String[] {
+													this.getManagedBean().getState()
+													.getStateName()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 					throw e;
 				}
 
@@ -252,20 +264,26 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						result = resDTO.isSuccessful();
 						FacesContext.getCurrentInstance().addMessage(
 								null,
-								new FacesMessage(FacesMessage.SEVERITY_INFO,
-										"Division :", "Division :"
-												+ this.getManagedBean()
-														.getDivision()
-														.getDivisionName()
-												+ " is Successfully saved"));
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+										MessageUtils.getMessage(
+												MessageConst.INFO_700004, new String[] {"Division :",
+														this.getManagedBean().getDivision()
+														.getDivisionName()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
 
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-									.toString(), "Save Location failed."));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.ERR_900013, new String[] {
+													this.getManagedBean().getDivision()
+													.getDivisionName()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 					throw e;
 				}
 
@@ -283,7 +301,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				district.setDistrictCode(district.getDistrictCode().toUpperCase());
 				if(!this.getManagedBean().getDivisionBox()){
 					if(district.getPmDivision().getDivisionId()== null){
-						throw new EpException("Please select division.");
+						throw new EpException(MessageConst.ERR_900014);
 					}
 				}else{
 					district.setPmDivision(null);
@@ -296,19 +314,26 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						result = resDTO.isSuccessful();
 						FacesContext.getCurrentInstance().addMessage(
 								null,
-								new FacesMessage(FacesMessage.SEVERITY_INFO,
-										"District: ", this.getManagedBean()
-												.getDistrict()
-												.getDistrictName()
-												+ " is Successfully saved"));
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+										MessageUtils.getMessage(
+												MessageConst.INFO_700004, new String[] {"District :",
+														this.getManagedBean().getDistrict()
+														.getDistrictName()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
 
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-									.toString(), "Save Location failed."));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.ERR_900013, new String[] {
+													this.getManagedBean().getDistrict()
+													.getDistrictName()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 					throw e;
 				}
 
@@ -331,18 +356,28 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					result = resDTO.isSuccessful();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"City :", this.getManagedBean().getCity()
-											.getCityName()
-											+ " is Successfully saved"));
-
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_700004, new String[] {"City :",
+													this.getManagedBean().getCity()
+													.getCityName()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					
 				}
 				} catch (Exception e) {
 					e.printStackTrace();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-									.toString(), "Save Location failed."));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.ERR_900013, new String[] {
+													this.getManagedBean().getCity()
+													.getCityName()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					
+					
 					throw e;
 				}
 				
@@ -350,7 +385,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			}
 
 		this.getManagedBean().setSelectedType(null);
-		return NAV_TO_SEARCH;
+		if(getManagedBean().isDisabledVal())
+			return NAV_TO_MAINTAIN;
+		else
+			return NAV_TO_SEARCH;
 
 	}
 
@@ -391,16 +429,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					.retriveStatesListByCountryID(stateReqDTO);
 			getManagedBean().setStates(stateResDTO.getStateList());
 			this.getManagedBean().setDivision(resDTO.getPmDivision());
-			this.getManagedBean()
-					.getState()
-					.setStateId(
+			this.getManagedBean().getState().setStateId(
 							resDTO.getPmDivision().getPmState().getStateId());
-			this.getManagedBean()
-					.getState()
-					.getPmCountry()
-					.setCountryId(
-							resDTO.getPmDivision().getPmState().getPmCountry()
-									.getCountryId());
+			this.getManagedBean().getState().getPmCountry()
+					.setCountryId(resDTO.getPmDivision().getPmState().getPmCountry().getCountryId());
 
 		}
 		if (locationType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
@@ -424,17 +456,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			getManagedBean().setStates(stateResDTO.getStateList());
 			this.getManagedBean().setState(resDTO.getPmDistrict().getPmState());
 			this.getManagedBean().setDistrict(resDTO.getPmDistrict());
+			getManagedBean().getState().getPmCountry()
+					.setCountryId(resDTO.getPmDistrict().getPmState().getPmCountry().getCountryId());
 			getManagedBean()
-					.getState()
-					.getPmCountry()
-					.setCountryId(
-							resDTO.getPmDistrict().getPmState().getPmCountry()
-									.getCountryId());
-			getManagedBean()
-					.getDistrict()
-					.getPmState()
-					.setStateId(
-							resDTO.getPmDistrict().getPmState().getStateId());			
+					.getDistrict().getPmState().setStateId(resDTO.getPmDistrict().getPmState().getStateId());			
 
 			if (resDTO.getPmDistrict().getPmDivision() != null) {
 				getManagedBean()
@@ -496,7 +521,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		public SearchLocatonPagingDataModel() {
 
-			super("searchLocation");
+			super("searchLocation",getManagedBean().isLazy());
 
 		}
 
@@ -617,7 +642,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public SelectItem[] getStatusOptions() {
 
-		return PmCommonUtil.getStatusOptionsDefault();
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 
 	/**
@@ -625,6 +650,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	 */
 	public void resetLocationSearchBean() {
 		log.info("resetLocationSearchBean");
+		getManagedBean().setLazy(false);
 		this.getManagedBean().setLocationSearchBean(new LocationSearchBean());
 		searchLocation = new SearchLocatonPagingDataModel();
 		getManagedBean().setSelectedType(null);
