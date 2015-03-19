@@ -3842,6 +3842,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			retrieveParamCodeByUser();
 			retrieveHighRoleCodeByUser();
 			roleCodeUsersSetup();
+			retrieveApprovarNaikTaraf();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
@@ -3877,7 +3878,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			madatoryIndicator();
 			retrieveSupplierCompName();
 			enableCriteriaMenu();
-			retrieveApprovarNaikTaraf();
+			
 			retrievePTJ();
 			retrieveRequisitioner();
 			retrieveDescOfficer();
