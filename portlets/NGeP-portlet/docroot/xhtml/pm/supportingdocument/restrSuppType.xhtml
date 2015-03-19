@@ -22,9 +22,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     	<h:outputText value="* " styleClass="mandatory" />
 		     	<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
 		    </f:facet> 
+		    <h:outputText value="#{supportDocBackingBean.getParameterDesc(restrict.supplierTypeCode)}"  rendered="#{!restrict.brandNew}"/>
 	    	<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthL"
 	    		required="true" label="#{lbl['lbl.pm.supplier.type']}"
-				value="#{restrict.supplierTypeCode.parameterId}">
+				value="#{restrict.supplierTypeCode.parameterId}"
+				rendered="#{restrict.brandNew}">
 				<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
 				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
 					supportDocBackingBean.restrSupp)}"/>
