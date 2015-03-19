@@ -38,9 +38,15 @@ public class QTFiledMapper {
 
 		new String[] { QTFieldConst.FILED_QT_FILE_NO,
 				QTFieldConst.FILED_QT_TITLE,
-				QTFieldConst.FILED_QT_APPROVAL_WORKFLOW }), QT_PENDING_SCHEDULE_DOCUMENT(
+				QTFieldConst.FILED_QT_APPROVAL_WORKFLOW }), QT_PENDING_APPROVALS_CHECKLIST_SCORING(
+				QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+
+				new String[] { QTFieldConst.FILED_QT_TITLE }),
+
+		QT_PENDING_SCHEDULE_DOCUMENT(
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_FILE_NO,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
@@ -48,10 +54,12 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION }), QT_PENDING_PUBLICATION_APPROVAL(
 				QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL, new String[] {
 						QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_DOCUMENTS }),
 
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
@@ -73,6 +81,7 @@ public class QTFiledMapper {
 		QT_BRIEFING_SITE_VISIT(QTStatusConst.QT_BRIEFING_SITE_VISIT,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_TITLE,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
 
@@ -82,22 +91,23 @@ public class QTFiledMapper {
 
 		QT_CLOSED(QTStatusConst.QT_CLOSED, new String[] {
 				QTFieldConst.FILED_QT_ESTMT_AMT,
+				QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
 
 		QT_EVALUATION_PROPOSAL(QTStatusConst.QT_EVALUATION_PROPOSAL,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
+
+				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
 
 		QT_RE_EVALUATION(QTStatusConst.QT_RE_EVALUATION, new String[] {
 				QTFieldConst.FILED_QT_ESTMT_AMT,
-				QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+
 				QTFieldConst.FILED_QT_VALIDITY_PERIOD }),
 
 		QT_SUPPLIER_FINALIZATION(QTStatusConst.QT_SUPPLIER_FINALIZATION,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_VALIDITY_PERIOD });
+
+				QTFieldConst.FILED_QT_VALIDITY_PERIOD });
 
 		private Long statusId;
 		private String[] toBeEnableFields;

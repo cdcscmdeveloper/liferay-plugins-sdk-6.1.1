@@ -1339,7 +1339,10 @@ public class QTCommitteBackingBean extends
 		}
 
 		if (this.getManagedBean().isMaintanceFlow()) {
-			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
+
+			if (QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus)) {
+				return true;
+			} else if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
 					.getManagedBean().getQt().getQtStatus().getStatusId())
 					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
 							.equals(this.getManagedBean().getQt().getQtStatus()
