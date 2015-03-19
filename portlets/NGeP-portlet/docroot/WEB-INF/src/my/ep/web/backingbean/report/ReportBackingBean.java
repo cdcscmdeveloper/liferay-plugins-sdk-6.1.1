@@ -2960,6 +2960,15 @@ public class ReportBackingBean extends
 	}
 	
 	public List<SelectItem>  retrieveReportListByAuthorization() {
+		reportList = new ArrayList<SelectItem>();
+		rptGenBean = new ReportsGenerateBean();
+		this.setReportValue(null);
+		
+		this.setReportName(null);
+		setRoleCode(null);
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		getManagedBean().setRptGenBean(null);
+		resetReportForm();
 		rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
