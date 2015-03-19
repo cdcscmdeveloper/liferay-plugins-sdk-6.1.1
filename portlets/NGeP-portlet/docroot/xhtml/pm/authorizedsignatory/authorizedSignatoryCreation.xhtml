@@ -39,17 +39,18 @@
 			<ac:paginator for="searchSignatoryResults" />
 			<p:ajax event="toggleSelect" update="@this" process="@this" />
 			<p:ajax event="rowSelectCheckbox" update="@this" />
-			<p:column>
+			<p:column style="width :30%">
 			<f:facet name="header">
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.as.name']}" />
 			    </f:facet>
-				<p:inputText id="asName" value="#{certSignatory.sinnatoryName}" label="#{lbl['lbl.pm.as.name']}"
-				maxlength="80" required="true" disabled="#{!certSignatory.brandNew}" styleClass="ppDisplayTextL" />
-			<p:message id="asNameMsg" for="asName" display="icon" />
+				<p:inputText id="asName" value="#{certSignatory.sinnatoryName}"
+					label="#{lbl['lbl.pm.as.name']}" maxlength="80" required="true"
+					disabled="#{!certSignatory.brandNew}" styleClass="ppDisplayTextL" />
+				<p:message id="asNameMsg" for="asName" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.as.effdate']}">
+			<p:column headerText="#{lbl['lbl.pm.as.effdate']}" style="width :20%">
 				<p:calendar id="effDateId" value="#{certSignatory.effDate}"
 					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
 					disabled="#{!certSignatory.brandNew}"
@@ -60,7 +61,7 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.as.expdate']}">
+			<p:column headerText="#{lbl['lbl.pm.as.expdate']}" style="width :20%">
 				<p:calendar id="expDateId" value="#{certSignatory.expDate}"
 					disabled="#{!certSignatory.brandNew}" navigator="true"
 					maxdate="#{ProfileManagementConst.maxDate}"
@@ -71,14 +72,14 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.search.status']}">
+			<p:column headerText="#{lbl['lbl.pm.search.status']}" style="width :20%">
 				<p:selectOneMenu value="#{certSignatory.recordStatusFlg}"
 					disabled="#{certSignatory.brandNew || certSignatory.recordStatusFlg ==9}">
 					<f:selectItems
 						value="#{authorizedsignatoryBackingBean.getSignatoryStatusList()}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">  
+			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}" style="width :5%">  
       		    <p:commandLink action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory(certSignatory)}" disabled="#{!certSignatory.brandNew}"
       		    	partialSubmit="true" process="@this" update="searchSignatoryResults">					
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
