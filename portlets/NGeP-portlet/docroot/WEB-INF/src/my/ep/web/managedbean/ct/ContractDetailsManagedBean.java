@@ -17,6 +17,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.ModuleCodeConst;
@@ -44,6 +45,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1532,8 +1534,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
 				if (getCtStatus() > 0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
-					getCtStatus()));					
+					if (getCtStatus() == ContractConst.STATUS_ALL) {
+						searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
+								new SearchFilterBean(
+										"status",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										ContractConst.STATUS_COMPLETE),
+								new SearchFilterBean(
+										"status",
+										SearchOperator.OPERATOR_EQUALS.value(), 
+										ContractConst.STATUS_INCOMPLETE,
+								SearchCondition.CONDITION_OR.value())));
+						
+					} else {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("status", 
+								SearchOperator.OPERATOR_EQUALS.value(), getCtStatus()));
+					}
 				}
 				if (getTerminationTypeId() != null) {
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
