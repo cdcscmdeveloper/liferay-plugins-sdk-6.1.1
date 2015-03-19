@@ -273,20 +273,21 @@
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierMobileNo}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
-				<h:panelGrid columns="3">
-					<p:inputText disabled="true" style="width:310px;"
-						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
-					<p:spacer width="1" />
-					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
-				</h:panelGrid>
+				<p:inputText disabled="true" style="width:310px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
+					
 				<p:outputLabel value="#{lbl['lbl.ct.tel']}" />
 				<p:inputText disabled="true" style="width:200px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
-				<p:inputText disabled="true" style="width:310px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
-
+				<h:panelGrid columns="3">
+					<p:inputText disabled="true" style="width:310px;"
+						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
+					<p:spacer width="1" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
+				</h:panelGrid>
+				
 				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 				<p:inputText disabled="true" style="width:200px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" />
