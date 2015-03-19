@@ -210,8 +210,8 @@ public class ProfileManagementBackingBean extends
 			this.getManagedBean().getUserProfileSearchBean()
 					.setUserOrganizationName(orgName);
 			// get OrgTypeCode from selected orgProfile
-//			this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
-//					.getParameterId();
+			// this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
+			// .getParameterId();
 		}
 	}
 
@@ -307,6 +307,7 @@ public class ProfileManagementBackingBean extends
 		this.getManagedBean().setUserProfileSearchBean(
 				new UserProfilesSearchBean());
 		this.getManagedBean().setSelectedOrgProfile(null);
+		this.getManagedBean().setSelectedOrgType(null);
 		this.getManagedBean().setSelectedPmRoleDesc(null);
 		userProfileDataModel = new UserProfilePagingDataModel();
 	}
@@ -948,8 +949,10 @@ public class ProfileManagementBackingBean extends
 					userRoleStatusChange(pmUserRoles);
 				}
 			}
-			for(PmAddressType addressType : this.getManagedBean().getSelectedReceivingAddrTypes()){
-				addressType.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+			for (PmAddressType addressType : this.getManagedBean()
+					.getSelectedReceivingAddrTypes()) {
+				addressType
+						.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 			}
 		}
 	}
@@ -971,8 +974,10 @@ public class ProfileManagementBackingBean extends
 							userRoleStatusChange(pmUserRole);
 						}
 					}
-					for(PmAddressType addressType : this.getManagedBean().getSelectedReceivingAddrTypes()){
-						addressType.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+					for (PmAddressType addressType : this.getManagedBean()
+							.getSelectedReceivingAddrTypes()) {
+						addressType
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 					}
 				}
 			}
@@ -1791,10 +1796,12 @@ public class ProfileManagementBackingBean extends
 				RoleReqDTO roleReqDTO = new RoleReqDTO();
 				roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
 						.getLanguage());
-				List<Role> roles =getFacesScopes().getUserRoleList();
-				for(Role role: roles){
-				System.out.println(".........testttttt....role.getDescription()="+role.getName());
-			}
+				List<Role> roles = getFacesScopes().getUserRoleList();
+				for (Role role : roles) {
+					System.out
+							.println(".........testttttt....role.getDescription()="
+									+ role.getName());
+				}
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				IRoleSO roleSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1867,12 +1874,13 @@ public class ProfileManagementBackingBean extends
 	 * search user profiles
 	 */
 	public void searchUserProfile() {
-//		if(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId()== null){
-//			// hit error and return
-//			throw new EpException(MessageConst.ERROR_775116,
-//					new String[] {});
-//		
-//		}
+		// if(this.getManagedBean().getSelectedOrgProfile().getOrgProfileId()==
+		// null){
+		// // hit error and return
+		// throw new EpException(MessageConst.ERROR_775116,
+		// new String[] {});
+		//
+		// }
 		logger.info("searchUserProfile");
 		userProfileDataModel.reloadData();
 	}
@@ -1931,6 +1939,18 @@ public class ProfileManagementBackingBean extends
 						.getCurrentActiveOrg().getOrgProfileId());
 				searchBean.getDataFilterBeans().add(orgSearchBean);
 			}
+		}
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("orgTypeCode.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(),
+						ParameterConst.ORG_TYPE_SUPPLIER));
+		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("orgTypeCode.parameterId",
+							SearchOperator.OPERATOR_EQUALS.value(), this
+									.getManagedBean().getSelectedOrgType()
+									.getParameterId()));
 		}
 
 		// Login Id
@@ -2050,10 +2070,6 @@ public class ProfileManagementBackingBean extends
 			try {
 				ISearchBean<PmUser> searchBeanData = getSearchBeanData(searchBean);
 
-				searchBeanData.getDataFilterBeans().add(
-						new SearchFilterBean("orgTypeCode.parameterCode",
-								SearchOperator.OPERATOR_NOT_EQUALS.value(),
-								ParameterConst.ORG_TYPE_SUPPLIER));
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserSearchBean(searchBeanData);
 				IUserSO userSO = BusinessDelegate.getInstance()
@@ -2703,12 +2719,13 @@ public class ProfileManagementBackingBean extends
 		IUserSO userSO = null;
 		PmUser user = null;
 		boolean addressEntered = false;
-		boolean isNewUser= this.getManagedBean().getSelectedUser().isBrandNew();
+		boolean isNewUser = this.getManagedBean().getSelectedUser()
+				.isBrandNew();
 
 		try {
 
 			user = this.getManagedBean().getSelectedUser();
-    
+
 			// Validation
 			validateUser(user);
 			addressEntered = validateUserAddress(this.getManagedBean()
@@ -2770,29 +2787,48 @@ public class ProfileManagementBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, resDTO
 									.getRemarks(), resDTO.getRemarks()));
 				} else {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_770049,
-															new String[] { resDTO
-																	.getPmUser()
-																	.getLoginId() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					if (isNewUser) {
+						FacesContext
+								.getCurrentInstance()
+								.addMessage(
+										null,
+										new FacesMessage(
+												FacesMessage.SEVERITY_INFO,
+												null,
+												MessageUtils
+														.getMessage(
+																MessageConst.INFO_770049,
+																new String[] { resDTO
+																		.getPmUser()
+																		.getLoginId() },
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes()
+																		.getUserLocale())));
+					} else {
+						FacesContext
+								.getCurrentInstance()
+								.addMessage(
+										null,
+										new FacesMessage(
+												FacesMessage.SEVERITY_INFO,
+												null,
+												MessageUtils
+														.getMessage(
+																MessageConst.INFO_770050,
+																new String[] { resDTO
+																		.getPmUser()
+																		.getLoginId() },
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes()
+																		.getUserLocale())));
+					}
 				}
-//				
+				//
 				logger.info("befor redirecting method");
-				if(isNewUser){
-				  return redirectToMainPage();
-				}else{
-				  return NAV_TO_MAINTAIN;
+				if (isNewUser) {
+					return redirectToMainPage();
+				} else {
+					return NAV_TO_MAINTAIN;
 				}
 
 			}
