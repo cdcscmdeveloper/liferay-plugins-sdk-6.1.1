@@ -11,7 +11,7 @@
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgtype']}"/>
 				</th>
 				<td width="55%" style="white-space:nowrap;">
 					<p:selectOneMenu value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}" 
@@ -22,7 +22,13 @@
 				     		update=":form:opDefinedSearch"/> 
 		            </p:selectOneMenu>	
 	            
-				<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="29"
+						</td>
+					
+					</tr>
+					<tr>
+					
+				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/></th>
+				<td><ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="29"
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 		            	update=":form:opDefinedSearch" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
@@ -30,10 +36,7 @@
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
 						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
 						conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}"/>
-				
-					</td>
-				<th>&#160;</th>
-				<td>&#160;</td>
+			</td>
 			</tr>
 			<tr>
 				<th width="20%">
