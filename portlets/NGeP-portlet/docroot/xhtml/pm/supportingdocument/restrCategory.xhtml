@@ -10,8 +10,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	<br/>
 	<p:dataTable id="dtCat" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		selection="#{supportDocBackingBean.managedBean.deleteCategoryRestrictions}" rowKey="#{restrict}"
-		value="#{supportDocBackingBean.managedBean.categoryRestrictions}" var="restrict"
-		>
+		value="#{supportDocBackingBean.managedBean.categoryRestrictions}" var="restrict">
 		<ac:paginator for="dtCat" />
 		<p:ajax event="toggleSelect" update="@this" process="@this" />
 		<p:ajax event="rowSelectCheckbox" update="@this" />
