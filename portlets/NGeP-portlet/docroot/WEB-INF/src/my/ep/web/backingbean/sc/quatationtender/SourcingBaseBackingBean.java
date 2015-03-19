@@ -1080,18 +1080,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean enableFieldByStatusNFiledName(String fieldName,
 			Long statusId, boolean isMaintance) {
 
-		List<Long> statusIds = new ArrayList<Long>(1);
-
-		statusIds.add(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING);
-
-		if (!statusIds.contains(statusId)) {
-			List<String> values = QTFiledMapper.getEnableFieldsByStatus(
-					statusId, isMaintance);
-			if (CollectionUtils.isNotEmpty(values)) {
-				if (values.contains(fieldName)) {
-					return false;
-				}
+		List<String> values = QTFiledMapper.getEnableFieldsByStatus(statusId,
+				isMaintance);
+		if (CollectionUtils.isNotEmpty(values)) {
+			if (values.contains(fieldName)) {
+				return false;
 			}
+
 		}
 		return true;
 

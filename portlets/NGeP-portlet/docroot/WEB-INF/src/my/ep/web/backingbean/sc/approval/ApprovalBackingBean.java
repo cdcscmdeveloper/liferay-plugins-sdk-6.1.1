@@ -691,7 +691,7 @@ public class ApprovalBackingBean extends
 				finalizeRemarks(this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
-				committeReqDTO.setSaveFlow(true);
+				//committeReqDTO.setSaveFlow(true);
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
 
@@ -702,6 +702,7 @@ public class ApprovalBackingBean extends
 				}
 				committeReqDTO.setDigiSignData(digiSign);
 				committeReqDTO.setSpecApprovalReq(true);
+				committeReqDTO.setApprovalFlow(true);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
