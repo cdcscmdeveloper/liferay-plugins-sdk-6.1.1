@@ -19,18 +19,18 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * unit of measurement 
-	 * search variable
+	 * unit of measurement search variable
 	 */
 	private PmUom pmUom;
-	
+
 	private String measurementCodes;
-	
+
 	private String measurementNames;
-	
+
 	private Long status;
-	
-	
+
+	private boolean isLazy = false;
+
 	/**
 	 * @return the pmUom
 	 */
@@ -39,7 +39,8 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmUom the pmUom to set
+	 * @param pmUom
+	 *            the pmUom to set
 	 */
 	public void setPmUom(PmUom pmUom) {
 		this.pmUom = pmUom;
@@ -53,7 +54,8 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param measurementCodes the measurementCodes to set
+	 * @param measurementCodes
+	 *            the measurementCodes to set
 	 */
 	public void setMeasurementCodes(String measurementCodes) {
 		this.measurementCodes = measurementCodes;
@@ -67,7 +69,8 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param getMeasurementNames the getMeasurementNames to set
+	 * @param getMeasurementNames
+	 *            the getMeasurementNames to set
 	 */
 	public void setMeasurementNames(String measurementNames) {
 		this.measurementNames = measurementNames;
@@ -81,12 +84,19 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(Long status) {
 		this.status = status;
 	}
-	
-	
-	
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
+	}
+
 }
