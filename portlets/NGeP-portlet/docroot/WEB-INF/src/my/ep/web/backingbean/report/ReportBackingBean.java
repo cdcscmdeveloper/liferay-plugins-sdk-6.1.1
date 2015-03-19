@@ -3844,6 +3844,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			retrieveHighRoleCodeByUser();
 			roleCodeUsersSetup();
 			retrieveApprovarNaikTaraf();
+			retrievePTJ();
+			retrieveRequisitioner();
+			retrieveDescOfficer();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
@@ -3880,9 +3883,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			retrieveSupplierCompName();
 			enableCriteriaMenu();
 			
-			retrievePTJ();
-			retrieveRequisitioner();
-			retrieveDescOfficer();
+			
 		}
 	}
 
