@@ -3121,6 +3121,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void initializeRemarks() {
 		initiateRemark(getManagedBean().getContractVer().getItemRemarks());
 		initiateRemark(getManagedBean().getContractVer().getAp201Remark());
+		initiateRemark(getManagedBean().getContractVer().getSupplierRemarks());
 	}
 	
 	/**
