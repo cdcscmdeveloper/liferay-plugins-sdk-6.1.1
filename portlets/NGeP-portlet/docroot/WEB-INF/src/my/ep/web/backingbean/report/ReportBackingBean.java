@@ -3838,6 +3838,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				reportFileNameJSP = pmReport.getReportFilename();
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 			}
+			retriveUserrloeByUserId(this.getModuleValue());
 			retrieveParameterCodeType();
 			retrieveParamCodeByUser();
 			retrieveHighRoleCodeByUser();
@@ -3872,7 +3873,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						rptGenBean, authoriztionList);
 			}
 			resetReportForm();
-			retriveUserrloeByUserId(this.getModuleValue());
+			
 			retrieveDates();
 			getManagedBean().setRptGenBean(rptGenBean);
 			madatoryIndicator();
