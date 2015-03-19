@@ -321,6 +321,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				this.getManagedBean().setSmSvTemplateMap(new HashMap<String, SmSvTemplate>());
 				for(SmSvTemplate svTemp : smSvTask.getSmSvTemplates()){
 					this.getManagedBean().getSmSvTemplateMap().put(svTemp.getPmParameter().getParameterCode(),svTemp);
+					prepareEquipmentLicenseInsurance(svTemp, svTemp.getPmParameter().getParameterCode());
+					
+					if(svTemp.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+						prepareFinancialDoc(svTemp);
+					}
 				}
 			}
 
@@ -763,7 +768,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	//Local testing
-	/*public void preRenderView(){
+/*	public void preRenderView(){
 		if(this.getManagedBean().getSmSvTask() == null){
 			retrieveSiteVisitInfo("");
 		}
