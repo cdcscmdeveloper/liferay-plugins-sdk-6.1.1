@@ -6,26 +6,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:remove>
-		<p:panel id="measurementSearch" header="#{lbl['lbl.pm.uom.search']}"
-			toggleable="true">
-
-			<ui:include
-				src="/xhtml/pm/unitofmeasurement/unitOfMeasurementSearch.xhtml" />
-
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{unitOfMeasurementBackingBean.retrieveMeasurement}"
-					update="measurementSR" process="measurementSearch" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{unitOfMeasurementBackingBean.resetMeasurementSearch}"
-					process="@this" update="measurementSearch, measurementSR" />
-			</div>
-			<br />
-			<br />
-			<br />
-		</p:panel>
-	</ui:remove>
 	<p:panel id="measurementResult" header="#{lbl['lbl.pm.uom.result']}"
 		toggleable="true">
 		<p:dataTable id="measurementSR"
