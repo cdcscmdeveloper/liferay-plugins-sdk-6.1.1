@@ -2131,10 +2131,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		SelectItem[] items = null;
 		
 		try {
-			items = new SelectItem[3];
+			items = new SelectItem[4];
 			int i = 0;
 			items[i++] = new SelectItem(0, ResourceBundleUtils.getMessage("lbl.txt.select", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[i++] = new SelectItem(ContractConst.STATUS_ALL,
+					ResourceBundleUtils.getMessage("lbl.bpm.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			items[i++] = new SelectItem(ContractConst.STATUS_COMPLETE,  
 					ResourceBundleUtils.getMessage("lbl.ct.complete", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			items[i++] = new SelectItem(ContractConst.STATUS_INCOMPLETE,  
