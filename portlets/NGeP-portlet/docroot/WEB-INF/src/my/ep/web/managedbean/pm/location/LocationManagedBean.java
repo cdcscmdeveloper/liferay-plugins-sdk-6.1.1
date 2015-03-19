@@ -56,6 +56,8 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private boolean divisionBox = false;
 
+	private boolean isLazy = false;
+
 	public LocationManagedBean() {
 		state = new PmState();
 		division = new PmDivision();
@@ -263,6 +265,14 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
 	}
 
 }
