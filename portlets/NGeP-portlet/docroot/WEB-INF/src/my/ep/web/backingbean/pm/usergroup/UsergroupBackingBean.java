@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.usergroup;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
@@ -45,6 +47,7 @@ import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
 import my.ep.web.managedbean.pm.usergroup.UsergroupSearchBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -95,10 +98,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public SelectItem[] getUserGroupStatus() {
 
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		return items;
+		return PmCommonUtil.getStatusOptions();
 	}
 
 	/**
@@ -194,6 +194,12 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				codesSearchBean.setSearchField("recordStatusFlg");
 				codesSearchBean.setSearchValue(getManagedBean().getStatus());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
+			}else{
+				SearchFilterBean codesSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_IN.value());
+				codesSearchBean.setSearchField("recordStatusFlg");
+				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 			SearchFilterBean codesSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
@@ -244,7 +250,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	}
 
 	public void searchUserGroupAction() {
-		getUserGroupList().reloadData();
+			getUserGroupList().reloadData();
 	}
 
 	public void setUserGroupList(IPagingDataModel<PmUserGroup> userGroupList) {
@@ -262,8 +268,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				for (PmUserGroupUser userGroupUser : groupUsers) {
 					if (userGroupUser.getPmUser().getIdentificationNo()
 							.equalsIgnoreCase(pmUser.getIdentificationNo()))
-						throw new EpException(
-								"User already exists in the group ");
+						throw new EpException(MessageConst.ERR_900002);
 				}
 
 				groupUser.setPmUser(pmUser);
@@ -361,10 +366,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				.getSelectedUsrGrps();
 
 		if (selectedUsrGrp.isEmpty()) {
-			throw new EpException("Please select atleast one record to delete.");
+			throw new EpException(MessageConst.ERR_900003);
 		}
 		if (grpUsers.size() == selectedUsrGrp.size()) {
-			throw new EpException("Group must contain atleast one record.");
+			throw new EpException(MessageConst.ERR_900004);
 		}
 
 		for (PmUserGroupUser pmUserGroupUser : selectedUsrGrp) {
@@ -409,20 +414,25 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		debugLogger("userGroupValidationMsg");
 
 		if (StringUtils.isBlank(userGroup.getGroupCode())) {
-			throw new EpException("Group Code is Mandatory");
+			throw new EpException(MessageConst.ERR_900006);
 		}
 
 		if (StringUtils.isBlank(userGroup.getGroupName())) {
-			throw new EpException("Group Name is Mandatory");
+			throw new EpException(MessageConst.ERR_900007);
 		}
 
 		if (userGroup.getPmOrgProfile() == null) {
-			throw new EpException("PTJ Code and Name is Mandatory");
+			throw new EpException(MessageConst.ERR_900008);
 		}
 
 		if (this.getManagedBean().getUserGroups().size() == 0) {
-			throw new EpException("Please select atleast one record.");
+			throw new EpException(MessageConst.ERR_900005);
 		}
+		
+		if (null == userGroup.getRecordStatusFlg()) {
+			throw new EpException(MessageConst.ERR_900009);
+		}
+		
 	}
 
 	/**
@@ -484,7 +494,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 										new FacesScopes().getUserLocale())));
 			}
 		}
-		return NAV_TO_MAIN;
+		if(userGroup.isBrandNew())
+			return NAV_TO_MAIN;
+		else
+			return "userGroupMaintenance";
 	}
 
 	public String constuctConditionFields() {
@@ -506,7 +519,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						IUserGroupSO.class);
 		boolean response = groupSO.checkDuplicateGroup(reqDTO);
 		if (response) {
-			throw new EpException("Duplicate group name please use another.");
+			throw new EpException(MessageConst.ERR_900001);
 		}
 	}
 

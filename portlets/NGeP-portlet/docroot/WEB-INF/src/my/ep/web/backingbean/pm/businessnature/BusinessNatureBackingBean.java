@@ -29,6 +29,7 @@ import my.ep.web.managedbean.pm.businessnature.BusinessNatureManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 /**
  * @author DK
@@ -149,11 +150,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */
 	public SelectItem[] getBusinessNatureStatus(){
 		
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		
-		return items;
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 	
 	/**

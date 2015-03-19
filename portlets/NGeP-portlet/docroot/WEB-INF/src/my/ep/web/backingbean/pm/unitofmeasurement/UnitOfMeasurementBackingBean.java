@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.pm.unitofmeasurement;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -13,6 +16,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
@@ -27,6 +31,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.unitofmeasurement.UnitOfMeasurementManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -78,6 +83,7 @@ public class UnitOfMeasurementBackingBean extends
 	 */		
 	public String redirectMeasurementSearch() {
 		debugLogger("redirectMeasurementSearch");
+		this.getManagedBean().setLazy(true);
 
 		return NAV_TO_SEARCH;
 
@@ -88,6 +94,7 @@ public class UnitOfMeasurementBackingBean extends
 	 */
 	public void resetMeasurementSearch() {
 		debugLogger("resetMeasurementSearch");
+		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setMeasurementCodes(new String());
 		this.getManagedBean().setMeasurementCodes(new String());
@@ -105,10 +112,7 @@ public class UnitOfMeasurementBackingBean extends
 	 */	
 	 public SelectItem[] getMeasurementStatusList() {
 		 
-			SelectItem[] items =  new SelectItem[2];
-			items[0] = new SelectItem(1, "Active");
-			items[1] = new SelectItem(0, "Inactive");
-		    return items;
+		 	return PmCommonUtil.getCommonStatusOptions();
 		}	
 	 
 		/**
@@ -177,23 +181,18 @@ public class UnitOfMeasurementBackingBean extends
 		}	
 		
 		if(getManagedBean().getStatus() != null) {
-			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			codesSearchBean
-					.setSearchField("recordStatusFlg");
-			codesSearchBean.setSearchValue(getManagedBean()
-					.getStatus());
+			SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+			codesSearchBean	.setSearchField("recordStatusFlg");
+			codesSearchBean.setSearchValue(getManagedBean()	.getStatus());
 			searchBean.getDataFilterBeans().add(codesSearchBean);
-		}			
-		
-		if(isEmpty && !isSearchable && getManagedBean().getStatus()==null){
-			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			codesSearchBean
-					.setSearchField("recordStatusFlg");
-			codesSearchBean.setSearchValue(null);
+		}else{
+			SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+			codesSearchBean	.setSearchField("recordStatusFlg");
+			codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 			searchBean.getDataFilterBeans().add(codesSearchBean);
+			
 		}
+		
 		return searchBean;
 	}		
 	
@@ -217,7 +216,7 @@ public class UnitOfMeasurementBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public UnitOfMeasurementPagingDataModel() {
-			super("measurementSR");
+			super("measurementSR",getManagedBean().isLazy());
 		}
 
 		@Override
@@ -261,11 +260,11 @@ public class UnitOfMeasurementBackingBean extends
 	private void validationMessage(PmUom uom){
 		debugLogger("validationMessage");
 		if(StringUtils.isBlank(uom.getUomCode())){
-			throw new EpException("UOM Code is Mandatory");
+			throw new EpException(MessageConst.ERR_900010);
 		}
 		
 		if(StringUtils.isBlank(uom.getUomName())){
-			throw new EpException("UOM Name is Mandatory");
+			throw new EpException(MessageConst.ERR_900011);
 		}
 		
 //		if(uom.isBrandNew()){
@@ -304,7 +303,7 @@ public class UnitOfMeasurementBackingBean extends
 		if (resDTO.isSuccessful()) {
 			if(resDTO.getMeasurementSearchResultBean()!=null && resDTO.getMeasurementSearchResultBean().getResultList()!=null 
 					&& !resDTO.getMeasurementSearchResultBean().getResultList().isEmpty()){
-				throw new EpException("UOM Code is existing.");
+				throw new EpException(MessageConst.ERR_900012);
 			}
 		}
 	}
@@ -322,15 +321,12 @@ public class UnitOfMeasurementBackingBean extends
 		UomReqDTO reqDTO = new UomReqDTO();
 		reqDTO.setPmUom(uom);
 
-		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().
-				getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
 	
 		UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
-				this.getManagedBean().setPmUom(resDTO.getPmUom());
+//				this.getManagedBean().setPmUom(resDTO.getPmUom());
 		 
 		 if(resDTO.isSuccessful()){
-//			 FacesContext.getCurrentInstance().addMessage(null,
-//				new FacesMessage(FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			 if(uom.isBrandNew()){
 			 FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(
@@ -354,7 +350,10 @@ public class UnitOfMeasurementBackingBean extends
 			 
 			}
 	
-		  return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+		 if(uom.isBrandNew())
+			 return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+		 else
+			 return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";
 	}	
 
 }
