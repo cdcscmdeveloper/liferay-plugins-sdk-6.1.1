@@ -90,50 +90,49 @@
 		       	</p:columnGroup>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.supplierNo}" />
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 				</p:column>
 				
 				<p:column>
 					<p:commandLink update=":form:suppDtlPopUp" action="#{suppFinalizationBackingBean.showSupplierDetails(null, null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
+						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
 					</p:commandLink>
 				</p:column>
 	
 				<p:column>
-					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
 				</p:column>
 				
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}" rendered="#{shortlistedSupp.scQtProposal.proposalAmount ne null}">
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt}" rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.proposalAmount ne null}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
 	
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}">
+					<h:outputText value="#{shortlistedSupp.totalScore}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
 	
-				<p:column>
-					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}">
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.evalRank}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
 				
-				<p:column rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
-								  	 								ne DbValueConst.recordStatusExpired}">
-					<h:outputText value="#{suppFinalizationBackingBean
-											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>							  	 
+				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.recordStatusFlg
+								  	 								eq DbValueConst.recordStatusActive}">
+					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
 				</p:column>
+				
 				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
-								  	 								eq DbValueConst.recordStatusExpired}">
-					<h:outputText value="#{suppFinalizationBackingBean
-											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>
-				</p:column>				
+						  rendered="#{empty shortlistedSupp.smMofAccount}">
+					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
+				</p:column>
+						
 				<p:column>
 					<h:outputText value="" />
 				</p:column>
@@ -144,7 +143,7 @@
 				
 				<p:column>
 					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
-											 shortlistedSupp.scQtProposal.scQtSupplier.smSupplier)}" 
+											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"
@@ -153,7 +152,7 @@
 				</p:column>
 				
 				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
-					disabledSelection="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/> 
+					disabledSelection="#{!suppFinalizationBackingBean.managedBean.secretaryUser or shortlistedSupp.suppSelectionDisabled}"/> 
 			</p:dataTable>
 			
 			<p:dataTable id="supplierListTblMultiple"
@@ -163,26 +162,9 @@
 					selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplierList}"
 					editable="true" rowIndexVar="index" style="width:100%"
 					rowKey="#{shortlistedSupp}"
-					rendered="#{!suppFinalizationBackingBean.managedBean.itemize
-								and suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
+					rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
 								
 				<ac:paginator for="supplierListTblMultiple" />
-				
-				<p:ajax event="rowSelect"
-					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this" partialSubmit="true"/>
-				
-				<p:ajax event="rowSelectCheckbox"
-					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
-					
-				<p:ajax event="rowUnselect"
-					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
-					
-				<p:ajax event="rowUnselectCheckbox"
-					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" process="@this"  partialSubmit="true"/>
 				
 				<p:columnGroup type="header">
 		        	<p:row>
@@ -204,7 +186,7 @@
 		       	</p:columnGroup>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.supplierNo}" />
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 				</p:column>
 				
 				<p:column>
@@ -212,41 +194,43 @@
 						action="#{suppFinalizationBackingBean.showSupplierDetails(null,null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
+						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
 					</p:commandLink>
 				</p:column>
 	
 				<p:column>
-					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
 				</p:column>
 				
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.scQtProposal.proposalAmount.proposalAmt}">
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.proposalAmount.proposalAmt}"
+						rendered="#{!suppFinalizationBackingBean.managedBean.itemize}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+					<h:outputText value="#{shortlistedSupp.qtEvaluationResult.offeredPrice}"
+						rendered="#{suppFinalizationBackingBean.managedBean.itemize}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
 	
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}" rendered="#{shortlistedSupp.evaluationResultDtls ne null}">
+					<h:outputText value="#{shortlistedSupp.totalScore}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
 	
-				<p:column>
-					<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].evalRank}" rendered="#{shortlistedSupp.evaluationResultDtls ne null}"/>
+				<p:column style="text-align:right;">
+					<h:outputText value="#{shortlistedSupp.evalRank}" />
 				</p:column>
 				
-				<p:column rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
-								  	 								ne DbValueConst.recordStatusExpired}">
-					<h:outputText value="#{suppFinalizationBackingBean
-											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>							  	 
+				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.recordStatusFlg
+								  	 								eq DbValueConst.recordStatusActive}">
+					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
 				</p:column>
 				
 				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
-								  	 								eq DbValueConst.recordStatusExpired}">
-					<h:outputText value="#{suppFinalizationBackingBean
-											.getMofAccountStatus(shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>
+						  rendered="#{empty shortlistedSupp.smMofAccount}">
+					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
 				</p:column>	
 				
 				<p:column>
@@ -259,7 +243,7 @@
 				
 				<p:column>
 					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
-											 shortlistedSupp.scQtProposal.scQtSupplier.smSupplier)}" 
+											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"
@@ -267,126 +251,24 @@
 	         		</p:commandLink> 
 				</p:column>
 				
-				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}" 
-						  disabledSelection="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>  
-			</p:dataTable>
-			
-			<p:dataTable id="itemSupplierListTblMultiple"
-					var="shortlistedItemSupp" 
-					widgetVar="shortlistedSuppDtls"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedItemSupplierList}"
-					selection="#{suppFinalizationBackingBean.managedBean.recommendedItemSupplierList}"
-					editable="true" rowIndexVar="index" style="width:100%;"
-					rowKey="#{shortlistedItemSupp}"
-					rendered="#{suppFinalizationBackingBean.managedBean.itemize
-									and suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
-									
-				<ac:paginator for="itemSupplierListTblMultiple" />
-				
-				<p:ajax event="rowSelect" 
-					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this" partialSubmit="true"/>
-				
-				<p:ajax event="rowSelectCheckbox"
-					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this"  partialSubmit="true"/>
+				<p:column style="text-align: center;">
+					<p:selectBooleanCheckbox id="selectAwardSupplier" 
+						value="#{shortlistedSupp.awareded}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or shortlistedSupp.suppSelectionDisabled}"
+						rendered="#{suppFinalizationBackingBean.managedBean.recommendBy != ParameterConst.recommendByOnlineBidding and suppFinalizationBackingBean.managedBean.recommendBy != ParameterConst.recommendByMultipleLoi}">
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
+								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, true)}"/>
+					</p:selectBooleanCheckbox>
 					
-				<p:ajax event="rowUnselect"
-					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this"  partialSubmit="true"/>
-					
-				<p:ajax event="rowUnselectCheckbox"
-					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
-					update="@([id$=itemListTbl],[id$=itemSupplierListTblMultiple])" process="@this"  partialSubmit="true"/>
-				
-				<p:columnGroup type="header">
-		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumi.status']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" />
-		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.supplier.status']}" style="text-align: center;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" />
-		           	</p:row>
-		           	<p:row>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" />
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" />
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" />
-		           	</p:row>
-		       	</p:columnGroup>
-				
-				<p:column>
-					<h:outputText value="#{shortlistedItemSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
-				</p:column>
-				
-				<p:column>
-					<p:commandLink update=":form:suppDtlPopUp"
-						action="#{suppFinalizationBackingBean.showSupplierDetails(null,null)}"
-						oncomplete="suppDtlWidgetVar.show();">
-						<f:setPropertyActionListener value="#{shortlistedItemSupp.qtEvaluationResult}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
-					</p:commandLink>
-				</p:column>
-	
-				<p:column>
-					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-											fn:toUpperCase(shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
-				</p:column>
-				
-				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedItemSupp.qtEvaluationResult.offeredPrice}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</p:column>
-	
-				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedItemSupp.totalScore}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-					</h:outputText>
-				</p:column>
-	
-				<p:column>
-					<h:outputText value="#{shortlistedItemSupp.evalRank}" />
-				</p:column>
-				
-				<p:column rendered="#{shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
-								  	 								ne DbValueConst.recordStatusExpired}">
-					<h:outputText value="#{suppFinalizationBackingBean
-											.getMofAccountStatus(shortlistedItemSupp.qtEvaluationResult
-											.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>							  	 
-				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].recordStatusFlg
-								  	 								eq DbValueConst.recordStatusExpired}">
-					<h:outputText value="#{suppFinalizationBackingBean
-											.getMofAccountStatus(shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0])}"/>
-				</p:column>	
-				
-				<p:column>
-					<h:outputText value="" />
-				</p:column>
-				
-				<p:column>
-					<h:outputText value="" />
-				</p:column>
-				
-				<p:column>
-					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
-											 shortlistedItemSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
-						<p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png"
-							title="#{lbl['lbl.sc.sf.view.bod']}"/>
-	         		</p:commandLink> 
-				</p:column>
-				
-				<p:column style="text-align: center;" selectionMode="#{suppFinalizationBackingBean.managedBean.selectionMode}"
-					disabledSelection="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>  
-			</p:dataTable>			
+					<p:selectBooleanCheckbox id="selectShortlistSupplier" 
+						value="#{shortlistedSupp.shortListed}" 
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or shortlistedSupp.suppSelectionDisabled}"
+						rendered="#{suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByOnlineBidding or suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByMultipleLoi}">
+						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
+								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}"/>
+					</p:selectBooleanCheckbox>
+				</p:column> 
+			</p:dataTable>	
 		</p:outputPanel>
 		<p:spacer height="20px" />
 	</p:panel>
