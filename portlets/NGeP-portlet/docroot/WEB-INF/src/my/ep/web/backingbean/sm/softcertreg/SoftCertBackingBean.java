@@ -113,7 +113,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Navigate to Softcert payment page
+	 * Navigate to Soft Certificate payment page
 	 * 
 	 * @return String
 	 */
@@ -122,7 +122,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				this.getManagedBean().getSoftCertSelectList());
 		updateAmount();
 		setSoftCertPaymentBpmTask();
-		SmCommonUtil.closeBlockUI();
 		return "softCertPaymentPage.xhtml";
 	}
 
