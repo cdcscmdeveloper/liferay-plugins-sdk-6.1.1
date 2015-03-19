@@ -284,8 +284,6 @@ public class CommonApplBackingBean extends
 							smObj.isSiteVisitComplete());
 
 				}
-				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
-						appl, mofResDto.getSmSupplier());
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SupplierManagementConst.BPM_TASK_VERIFY_APPL)
 						|| resDTO
@@ -299,6 +297,9 @@ public class CommonApplBackingBean extends
 					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
+				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+						appl, mofResDto.getSmSupplier());
+
 				if (smObj.getSupplierList() != null) {
 					smApplBB.getManagedBean().setSupplierToPOList(
 							smObj.getSupplierList());
@@ -354,8 +355,6 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setReviewSiteVisit(
 							smObj.isSiteVisitComplete());
 				}
-				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
-						appl, mofResDto.getSmSupplier());
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SupplierManagementConst.BPM_TASK_VERIFY_APPL)
 						|| resDTO
@@ -369,6 +368,9 @@ public class CommonApplBackingBean extends
 					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
+				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+						appl, mofResDto.getSmSupplier());
+
 				smApplBB.getManagedBean().setBpmTaskName(resDTO.getTaskName());
 				if (smObj.getSupplierList() != null) {
 					smApplBB.getManagedBean().setSupplierToPOList(

@@ -1912,7 +1912,8 @@ public class SmApplicationUtil {
 	 * @return the SmApplSectionReview object
 	 */
 	public static SmApplSectionReview setVerificationValues(
-			SmApplSectionReview sec, Boolean isVerifiedAll, int maxReviewCout) {
+			SmApplSectionReview sec, Boolean isVerifiedAll, int maxReviewCout,
+			SmApplicationManagedBean managedBean) {
 
 		if (isVerifiedAll) {
 			sec.setCheckCount(maxReviewCout);
@@ -1939,7 +1940,9 @@ public class SmApplicationUtil {
 
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
-		sec.setSitevisitVerified(isVerifiedAll);
+		if (managedBean.isReviewSiteVisit()) {
+			sec.setSitevisitVerified(isVerifiedAll);
+		}
 		sec.setFactoryVerify(isVerifiedAll);
 		sec.setManufacturingVerified(isVerifiedAll);
 		sec.setMachineryVerified(isVerifiedAll);
