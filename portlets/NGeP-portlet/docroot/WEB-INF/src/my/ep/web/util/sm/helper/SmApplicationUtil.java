@@ -4916,4 +4916,61 @@ public class SmApplicationUtil {
 		}
 		return applStatusInfo;
 	}
+
+	/**
+	 * Check if need to disable company name field from editing. Only can be
+	 * edited for draft New MOF Application
+	 * 
+	 * @param SmSupplier
+	 *            smSupplier
+	 * @param SmAppl
+	 *            smAppl
+	 * @return boolean
+	 */
+	public static boolean isDisableCompanyNameInAppl(SmSupplier smSupplier,
+			SmAppl smAppl) {
+		boolean retVal = false;
+
+		if (!smAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			retVal = true;
+		} else {
+			if (smAppl.getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+					&& smAppl.isActiveAppl()) {
+				if (smSupplier
+						.getBusinessType()
+						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+						|| smSupplier
+								.getBusinessType()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
+					retVal = true;
+				}
+				if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
+					retVal = true;
+				}
+			}else{
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Check if personnel in application got soft certificate that still
+	 * processing
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return boolean
+	 */
+	public static boolean isApplHasSoftcertProcessingNotComplete(SmAppl smAppl) {
+		boolean retVal = false;
+		for (SmPersonnel smPersonnel : smAppl.getSmPersonnels()) {
+			if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	}
 }

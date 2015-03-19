@@ -329,7 +329,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showWorkShopPanel;
 	private boolean showPersonnelViewOnly;
 	private boolean disabledShareholderPersonnelNameAndNationality;
-	private boolean malaysianPostCode;
 	private String selectedShareholderIdentificationType;
 	private String revisionApplType;
 	private Long myCountryId;
@@ -344,6 +343,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private Long prevBasicStateId;
 	private SmApplStatusInfoVO applStatusInfo;
 	private PmDigiSign pmDigiSign;
+	private boolean disabledCompanyName;
+	
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -547,8 +548,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		currDate = new Date();
 		currYear = Calendar.getInstance().get(Calendar.YEAR);
 		System.out.println("*** Date String *** " + df.format(new Date()));
-
-		malaysianPostCode = true;
 		myCountryId = SmCommonUtil.getMyCountryId();
 	}
 
@@ -2636,6 +2635,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setGlpCert(PmParameter glpCert) {
 		this.glpCert = glpCert;
+	}
+
+	public boolean isDisabledCompanyName() {
+		return disabledCompanyName;
+	}
+
+	public void setDisabledCompanyName(boolean disabledCompanyName) {
+		this.disabledCompanyName = disabledCompanyName;
 	}
 
 }
