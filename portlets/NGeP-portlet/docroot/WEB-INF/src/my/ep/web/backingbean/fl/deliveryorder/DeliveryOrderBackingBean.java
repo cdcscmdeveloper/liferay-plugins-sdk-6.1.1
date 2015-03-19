@@ -83,7 +83,7 @@ import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 /**
- * Backing Bean for Create Purchase Order.
+ * Backing Bean for Create Delivery Order.
  *
  * @author Giribabu
  * @since 7/10/2013

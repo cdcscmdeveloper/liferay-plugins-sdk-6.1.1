@@ -19,7 +19,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import org.apache.log4j.Logger;
 
 /**
- * Managed Bean for Create Purchase Order
+ * Managed Bean for Create Received Note
  * 
  * @author Giribabu
  * @since 7/10/2013

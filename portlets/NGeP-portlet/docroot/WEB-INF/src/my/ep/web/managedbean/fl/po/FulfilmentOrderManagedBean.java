@@ -28,7 +28,10 @@ import org.primefaces.model.DualListModel;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class FulfilmentOrderManagedBean.
+ * Managed Bean for Fulfillment Order.
+ *
+ * @author Giribabu
+ * @since 2/11/2013
  */
 @ManagedBean(name = "flOrderManagedBean")
 @SessionScoped
