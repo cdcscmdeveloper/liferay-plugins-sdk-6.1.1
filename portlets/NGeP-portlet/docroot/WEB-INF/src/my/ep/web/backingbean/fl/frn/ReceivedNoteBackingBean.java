@@ -381,8 +381,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			item.setReceivedQty(BigDecimal.ZERO);
 			item.setReceivedAmt(BigDecimal.ZERO);
 			throw new EpException(MessageConst.ERROR_100032, new String[]{
-					ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
-					ResourceBundleUtils.getMessage("lbl.fl.do.remaining.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});	
+					ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+					ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});	
 		}
 		if(null != item.getReceivedQty()){
 			BigDecimal formattedReceivedQty = item.getReceivedQty().setScale(
