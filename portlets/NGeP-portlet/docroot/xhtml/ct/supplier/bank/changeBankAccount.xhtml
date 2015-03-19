@@ -44,62 +44,60 @@
 			challengeQues1="#{supplierBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 			postSignAction="#{supplierBackingBean.preSubmitChangeBankRequest(spkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{supplierBackingBean.enableAutoUpdate()}" />
-		<p:panel id="bankHeader">
-			<f:event listener="#{supplierBackingBean.preRenderView}"
-				type="preRenderView" />
-			<p:messages id="messages" showSummary="false" showDetail="true"
-				autoUpdate="#{supplierBackingBean.managedBean.autoUpdate}"
-				closable="true" severity="error, info" />
-			<table style="width: 100%;">
+		<f:event listener="#{supplierBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showSummary="false" showDetail="true"
+			autoUpdate="#{supplierBackingBean.managedBean.autoUpdate}"
+			closable="true" severity="error, info" />
+		<table style="width: 100%;">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true" onstart="blockWidget.show();"
+						oncomplete="window.history.back();blockWidget.hide();" rendered="false" /></td>
+				<td class="ppRightBtn"><ui:repeat var="outcome"
+						value="#{supplierBackingBean.managedBean.action}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
+							styleClass="ui-button" process="@form"
+							onstart="blockWidget.show();"		
+							oncomplete="blockWidget.hide();" 						
+							action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
+							actionListener="#{spkiBackingBean.getChallengeQuestions}"
+							rendered="#{supplierBackingBean.isSupplierRole()}"/>
+						<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
+							styleClass="ui-button" process="@form"
+							onstart="blockWidget.show();"		
+							oncomplete="blockWidget.hide();" 	
+							action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
+							rendered="#{not supplierBackingBean.isSupplierRole()}"
+						/>
+					</ui:repeat></td>
+			</tr>
+		</table>
+
+		<div align="left" class="header-info">
+			<table style="width: 100%">
 				<tr>
-					<td><p:commandButton value="#{lbl['lbl.btn.back']}"
-							immediate="true" onstart="blockWidget.show();"
-							oncomplete="window.history.back();blockWidget.hide();" rendered="false" /></td>
-					<td class="ppRightBtn"><ui:repeat var="outcome"
-							value="#{supplierBackingBean.managedBean.action}">
-							<ui:param name="buttonLabel"
-								value="lbl.btn.#{fn:toLowerCase(outcome)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
-								styleClass="ui-button" process="@form"
-								onstart="blockWidget.show();"		
-								oncomplete="blockWidget.hide();" 						
-								action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
-								actionListener="#{spkiBackingBean.getChallengeQuestions}"
-								rendered="#{supplierBackingBean.isSupplierRole()}"/>
-							<p:commandButton value="#{lbl[buttonLabel]}"  update="@form,@([id$=messages])"
-								styleClass="ui-button" process="@form"
-								onstart="blockWidget.show();"		
-								oncomplete="blockWidget.hide();" 	
-								action="#{supplierBackingBean.changeBankRequestSignAction(outcome)}" 
-								rendered="#{not supplierBackingBean.isSupplierRole()}"
-							/>
-						</ui:repeat></td>
+					<td style="width: 20%"><h:outputLabel
+							value="#{lbl['lbl.ct.loa.no']}" /></td>
+					<td style="width: 13%" class="header-info-text">
+						#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.ct.contract.no']}" /></td>
+					<td style="width: 10%" class="header-info-text">
+						#{supplierBackingBean.managedBean.ctContract.contractNo}</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.ct.supplier.name']}" /></td>
+					<td style="width: 15%" class="header-info-text">
+						#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.ct.status']}" /></td>
+					<td style="width: 12%" class="header-info-text">
+						#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}</td>
 				</tr>
 			</table>
-
-			<div align="left" class="header-info">
-				<table style="width: 100%">
-					<tr>
-						<td style="width: 20%"><h:outputLabel
-								value="#{lbl['lbl.ct.loa.no']}" /></td>
-						<td style="width: 13%" class="header-info-text">
-							#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
-						<td style="width: 10%"><h:outputLabel
-								value="#{lbl['lbl.ct.contract.no']}" /></td>
-						<td style="width: 10%" class="header-info-text">
-							#{supplierBackingBean.managedBean.ctContract.contractNo}</td>
-						<td style="width: 10%"><h:outputLabel
-								value="#{lbl['lbl.ct.supplier.name']}" /></td>
-						<td style="width: 15%" class="header-info-text">
-							#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>
-						<td style="width: 10%"><h:outputLabel
-								value="#{lbl['lbl.ct.status']}" /></td>
-						<td style="width: 12%" class="header-info-text">
-							#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}</td>
-					</tr>
-				</table>
-			</div>
-		</p:panel>
+		</div>
 
 		<p:panel id="fulfilmentDetail"
 			header="#{lbl['lbl.ct.panel.contract']}" toggleable="true"

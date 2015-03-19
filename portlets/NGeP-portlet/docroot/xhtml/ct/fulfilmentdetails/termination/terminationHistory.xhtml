@@ -16,34 +16,37 @@
 		</script>
 	<style>
       .top-aligned-columns td{ vertical-align: top;}
+      .columnWidth200 {
+			width: 200px;
+			vertical-align: top;
+			text-align: right;
+		}
       </style>
-    <p:panel>
-    	<f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
-	   	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	   	<table style="width: 100%;">
-	    	<tr>
-	    		<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" action="#{terminationBackingBean.backAction}" /></td>
-	    	</tr>
-	  	</table>
-	  	<table style="width: 99%; margin-left: 0px;" class="header-info">
-	  	<tr>
-				<td style="width: 15%">
-					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{terminationBackingBean.managedBean.ctContract.contractNo}
-				</td>
-				<td style="width: 20%">
-					<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
-				</td>
-				<td style="width: 25%" class="header-info-text">
-					#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
-				</td>
-				<td style="width: 5%"></td>
-				<td style="width: 20%" class="header-info-text"></td>
-			</tr>
-	</table>	 
-	</p:panel>
+   	<f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
+   	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+   	<table style="width: 100%;">
+    	<tr>
+    		<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" action="#{terminationBackingBean.backAction}" /></td>
+    	</tr>
+  	</table>
+  	<table style="width: 99%; margin-left: 0px;" class="header-info">
+  	<tr>
+			<td style="width: 15%">
+				<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
+			</td>
+			<td style="width: 15%" class="header-info-text">
+				#{terminationBackingBean.managedBean.ctContract.contractNo}
+			</td>
+			<td style="width: 20%">
+				<h:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
+			</td>
+			<td style="width: 25%" class="header-info-text">
+				#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
+			</td>
+			<td style="width: 5%"></td>
+			<td style="width: 20%" class="header-info-text"></td>
+		</tr>
+	</table>
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 	<f:facet name="header">
 		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
@@ -248,7 +251,7 @@
 	       	terminationBackingBean.managedBean.contractVer.ctContractValue.concession}">	   		
 	   		<p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" style="width:173px;" />
 			<p:inputTextarea id="justificationLbl" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.justification}"
-  				rows="3" style="width:600px;" maxlength="200" autoResize="false" disabled="true" />		         		
+  				rows="3" style="width:570px;" maxlength="200" autoResize="false" disabled="true" />		         		
     	</h:panelGrid>
 	</h:panelGrid>
  	</p:panel>

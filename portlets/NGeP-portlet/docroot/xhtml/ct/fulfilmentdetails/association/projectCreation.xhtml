@@ -18,19 +18,17 @@
 			cursor: default;
 			padding: 10px;
          }
-   </style> 
-    <p:panel id="panelHeader">
-    	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
-    	<table style="width: 100%;">
-    		<tr>
-    			<td><p:commandButton value="#{lbl['lbl.btn.back']}"  ajax="false" immediate="true" action="#{associationBackingBean.goToCancelPage}"/></td>
-    			<td class="ppRightBtn">
-			    	<p:commandButton value="#{lbl['lbl.btn.save']}" ajax="false" validateClient="true" process="@form"
-			       		action="#{associationBackingBean.createAssociation}" style="margin-right:0px;" />  			
-    			</td>
-    		</tr>
-    	</table>    	
-	 </p:panel>
+   </style>
+   	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
+   	<table style="width: 100%;">
+   		<tr>
+   			<td><p:commandButton value="#{lbl['lbl.btn.back']}"  ajax="false" immediate="true" action="#{associationBackingBean.goToCancelPage}"/></td>
+   			<td class="ppRightBtn">
+		    	<p:commandButton value="#{lbl['lbl.btn.save']}" ajax="false" validateClient="true" process="@form"
+		       		action="#{associationBackingBean.createAssociation}" style="margin-right:0px;" />  			
+   			</td>
+   		</tr>
+   	</table>
      <p:panel id="projectId" header="#{lbl['lbl.ct.panel.project.assoc.creation']}" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
 	       	<h:panelGrid columns="2" style="float:right;">
