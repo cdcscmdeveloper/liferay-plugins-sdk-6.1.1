@@ -41,14 +41,17 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.machine.value']}
 					</f:facet>
-					<h:outputText value="#{machine.smMachineDtl.value}" style="float: left;white-space: normal;"></h:outputText>			
+					<h:outputText value="#{machine.smMachineDtl.value}" style="float: left;white-space: normal;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>				
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
 						#{lbl['lbl.sm.machine.purMthd']}
 					</f:facet>
-					<h:outputText value="#{machine.smMachineDtl.purchaseMethod}" style="float: left;white-space: normal;"></h:outputText>			
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.purchasingMethod,machine.smMachineDtl.purchaseMethod)}" 
+					style="float: left;white-space: normal;"></h:outputText>			
 			</p:column>
 			
 			<p:column>
