@@ -62,9 +62,9 @@
 					<h:outputText  value="#{addMachineDtl.guarantorName}"  style="float: left;white-space: normal;" />		
 			</p:column>
 			
-			<p:column>
+			<p:column rendered="#{!viewFlag}">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.action']}" rendered="#{!viewFlag}"/>
+					<h:outputText value="#{lbl['lbl.sm.action']}" />
 				</f:facet>
 				<p:commandLink id="btnAdtMacEdit" oncomplete="adtMacDlg.show();" update=":#{p:component('adtMachineDlg')}" rendered="#{!viewFlag}"
 					action="#{svoSiteVisitBackingBean.editAdditionalMachine(addMachineDtl)}" process="@this">
