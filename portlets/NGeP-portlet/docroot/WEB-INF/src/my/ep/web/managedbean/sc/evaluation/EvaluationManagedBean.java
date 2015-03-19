@@ -482,6 +482,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** check Qualified suppliers. */
 	private boolean checkQualifiedSuppliers = true;
+	
+	/** report download filename. */
+	private String reportDownloadFileName;
 
 	/**
 	 * Gets the today.
@@ -3150,6 +3153,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckQualifiedSuppliers(boolean checkQualifiedSuppliers) {
 		this.checkQualifiedSuppliers = checkQualifiedSuppliers;
+	}
+
+	/**
+	 * @return the reportDownloadFileName
+	 */
+	public String getReportDownloadFileName() {
+		return reportDownloadFileName;
+	}
+
+	/**
+	 * @param reportDownloadFileName the reportDownloadFileName to set
+	 */
+	public void setReportDownloadFileName(String reportDownloadFileName) {
+		this.reportDownloadFileName = reportDownloadFileName;
 	}
 
 }
