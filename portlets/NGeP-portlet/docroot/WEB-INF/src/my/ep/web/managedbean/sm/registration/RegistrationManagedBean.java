@@ -95,6 +95,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private Integer userMuslimFlg;
 	
 	private boolean sameAsOwner;
+	private boolean disabledCompanyName;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -525,6 +526,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSameAsOwner(boolean sameAsOwner) {
 		this.sameAsOwner = sameAsOwner;
+	}
+
+	public boolean isDisabledCompanyName() {
+		return disabledCompanyName;
+	}
+
+	public void setDisabledCompanyName(boolean disabledCompanyName) {
+		this.disabledCompanyName = disabledCompanyName;
 	}
 	
 }
