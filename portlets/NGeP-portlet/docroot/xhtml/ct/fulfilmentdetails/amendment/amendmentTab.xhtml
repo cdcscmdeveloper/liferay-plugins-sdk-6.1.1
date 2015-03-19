@@ -134,6 +134,11 @@
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SDEC')}" update=":form" />
 	
+	        <p:menuitem value="#{lbl['lbl.ct.menu.remark']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq 'Ack'}"
+			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'SREM')}" update=":form" />
+	
 	       <p:menuitem value="#{lbl['lbl.ct.menu.meeting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
@@ -203,6 +208,10 @@
 	
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.declaration'] }">
 					<ui:include src="supplier/supplierDeclaration.xhtml" />
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.remark'] }">
+					<ui:include src="supplier/remark.xhtml" />
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.meeting'] }">
