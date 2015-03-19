@@ -95,7 +95,8 @@ public class AmendTabSideMenus {
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
-					ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+					ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
+			        ResourceBundleUtils.getMessage("lbl.ct.menu.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 	}
 }

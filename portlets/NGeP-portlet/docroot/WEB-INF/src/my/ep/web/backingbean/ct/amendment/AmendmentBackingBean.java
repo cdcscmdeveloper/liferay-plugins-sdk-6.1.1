@@ -943,14 +943,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void validateContractAmendment(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);	
 		// Validation for remark
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-				|| (isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(
-						CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)||
+				(isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
 			String ap201Remark = getManagedBean().getContractVer().getAp201Remark().get(0).getRemark();
+			String supplierRemark = getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
+		
 			if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
-					&& (ap201Remark == null || ap201Remark.length() == 0)) {
+					&& (ap201Remark == null || ap201Remark.length() == 0) && (supplierRemark == null || supplierRemark.length() == 0)) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
@@ -1382,6 +1383,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			}
 			if (outputValue.equalsIgnoreCase("SDEC")) {
 				getManagedBean().setSelectedTabIndex(3);
+			} if (outputValue.equalsIgnoreCase("SREM")) {
+				getManagedBean().setSelectedTabIndex(4);
 			}	    		 
 		}
 	}
