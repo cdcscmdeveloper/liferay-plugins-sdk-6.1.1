@@ -40,9 +40,10 @@
 					rendered="#{!empty scQtDocReport.pmDocument}" />
 			</p:column>
 
+			<!-- commented type column as part of Enchancement 
 			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.type']}">
 				#{qTDocumentsBackingBean.getParameterDesc(scQtDocReport.definationType)}
-			</p:column>
+			</p:column> 
 			
 			<p:column style="width:20%;" headerText="#{lbl['lbl.so.attachment']}">
 				<ui:fragment rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
@@ -54,7 +55,7 @@
 					</p:commandButton>
 				</ui:fragment>
 			</p:column>
-			
+			-->
 			<p:column style="width:10%;" headerText="#{lbl['lbl.so.action']}">
 				<p:commandLink
 					action="#{qTDocumentsBackingBean.showTemplateAction(rowIndex,scQtDocReport)}">
@@ -65,7 +66,20 @@
 				<p:commandButton id="download" style="background-color:transparent !important; border:0px none;"
 					ajax="false" icon="ui-icon-download"
 					action="#{qTDocumentsBackingBean.downloadReport(scQtDocReport)}"
-					rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scQtDocReport.scQtDocReportAttachment.fileName : true}" />
+					rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? false : true}" />
+					
+				<ui:fragment rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
+					<p:commandButton oncomplete="attachDlg1.show();"
+						value="#{lbl['lbl.txt.attachment']}" icon="iconAttachment"
+						partialSubmit="true" process="doctbl" update="@([id$=attach])">
+						<f:setPropertyActionListener target="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReport}" value="#{scQtDocReport}" />
+					</p:commandButton> <br/>
+					<p:commandLink ajax="false" style="margin-left:10px;"
+						value="#{scQtDocReport.scQtDocReportAttachment.fileName}"
+						action="#{qTDocumentsBackingBean.downloadReport(scQtDocReport)}"
+						rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scQtDocReport.scQtDocReportAttachment.fileName :false}">
+					</p:commandLink>
+				</ui:fragment>
 			</p:column>
 		</p:dataTable>
 	
