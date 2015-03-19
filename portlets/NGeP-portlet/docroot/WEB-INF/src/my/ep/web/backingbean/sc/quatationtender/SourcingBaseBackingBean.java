@@ -1133,4 +1133,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			throw new EpException(MessageConst.ERROR_760111);
 		}
 	}
+
+	protected void SaveEvaluationAttachment(String fileName,
+			ScAttachment attachment) throws FileNotFoundException, IOException {
+
+		attachment.setFileName(fileName);
+		attachment.setFileDesc("File uploded");
+
+		populateAttachmentDetails(attachment);
+
+		// FileOutputStream fos;
+		// fos = new FileOutputStream(getActualFilePath(attachment));
+		// fos.write(fileBytes);
+		// fos.close();
+
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+		 * "The file was uploaded successfully.", null);
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
+	}
+
 }
