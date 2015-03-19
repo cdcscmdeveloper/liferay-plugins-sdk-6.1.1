@@ -27,7 +27,7 @@
 					<h:outputLabel value="#{lbl['lbl.sc.status']}" />
 				</td>
 				<td style="width:22%;" class="header-info-text">
-					#{suppFinalizationBackingBean.getStatusDescById(suppFinalizationBackingBean.managedBean.currentStatusId)}
+					#{suppFinalizationBackingBean.getStatusDescById(suppFinalizationBackingBean.managedBean.scQt.currentWorkFlowStatus.pmStatus.statusId)}
 				</td>
 			</tr>
 		</table>

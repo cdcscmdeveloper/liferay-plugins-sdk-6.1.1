@@ -3514,7 +3514,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				this.getManagedBean().setShortlistedSupplierList(new ArrayList<ScQtEvaluationResultDtl>());
 				this.getManagedBean().getShortlistedSupplierList().addAll(
 							this.getManagedBean().getShortlistedPackageList());
-				this.getManagedBean().setRecommendedSupplier(null);
+				if (triggeredFromEvent) {
+					this.getManagedBean().setRecommendedSupplier(null);	
+				}
 			}
 		}
 		this.getManagedBean().setItemize(itemize);
