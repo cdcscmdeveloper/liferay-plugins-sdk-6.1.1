@@ -211,7 +211,7 @@ public class SmApplicationNotificationUtil {
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				approvedCatCodes.append("2.1.").append(++i + ".) ")
+				approvedCatCodes.append("2.1.").append(++i + ") ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
 						.append(cat.getPmCategoryL3().getCategoryL3Code())
@@ -224,7 +224,7 @@ public class SmApplicationNotificationUtil {
 				rejectedCatCodes.append("<tr>");
 				rejectedCatCodes
 						.append("<td style=\"border: 1px solid black;\">")
-						.append("2.2.").append(++j + ".) ")
+						.append("2.2.").append(++j + ") ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
 						.append(cat.getPmCategoryL3().getCategoryL3Code())
