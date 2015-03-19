@@ -9,7 +9,12 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
-
+/**
+ * Managed Bean for Create Pending Delivery order List Order.
+ *
+ * @author Giribabu
+ * @since 30/10/2013
+ */
 @ManagedBean
 @SessionScoped
 public class PendingDoListManagedBean extends BaseManagedBean {

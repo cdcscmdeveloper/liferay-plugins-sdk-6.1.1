@@ -92,7 +92,10 @@ import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class FulfilmentOrderBackingBean.
+ * Backing Bean for Fulfillment Order.
+ *
+ * @author Giribabu
+ * @since 2/11/2013
  */
 @ManagedBean(name="flOrderBB")
 @ViewScoped

@@ -26,9 +26,10 @@ import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class PaymentMatchManagedBean.
+ * Payment Match Managed Bean.
  *
- * @author admin
+ * @author KK LIM
+ * @since 30/10/2013
  */
 @ManagedBean(name = "pmMB")
 @SessionScoped
