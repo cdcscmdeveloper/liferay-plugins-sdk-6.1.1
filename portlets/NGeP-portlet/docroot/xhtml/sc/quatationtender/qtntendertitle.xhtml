@@ -12,7 +12,7 @@
 				<td style="width: 190px;" valign="top"><p:outputLabel
 						value="#{lbl['lbl.so.title']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputTextarea id="title1"
+				<td colspan="3"><p:inputTextarea id="title1" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_TITLE)}" 
 						label="#{lbl['lbl.so.title']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="110" rows="2" valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"
 						style=" margin-bottom:5px; width: 100%; " maxlength="1000" > 
