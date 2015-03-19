@@ -10,8 +10,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	<br/>
 	<p:dataTable id="dtComType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		selection="#{supportDocBackingBean.managedBean.deleteComTypeRestrictions}" rowKey="#{restrict}"
-		value="#{supportDocBackingBean.managedBean.comTypeRestrictions}" var="restrict" 
-		>
+		value="#{supportDocBackingBean.managedBean.comTypeRestrictions}" var="restrict" >
 		<ac:paginator for="dtComType" />
 		<p:ajax event="toggleSelect" update="@this" process="@this" />
 		<p:ajax event="rowSelectCheckbox" update="@this" />
@@ -22,9 +21,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     	<h:outputText value="* " styleClass="mandatory" />
 		     	<h:outputText value="#{lbl['lbl.pm.company.type']}" />
 		    </f:facet>
+		    <h:outputText value="#{supportDocBackingBean.getParameterDesc(restrict.companyTypeCode)}"  
+		    	rendered="#{!restrict.brandNew}"/>
 	    	<p:selectOneMenu id="somCompType" styleClass="ppDropDownWidthL"
 	    		required="true" label="#{lbl['lbl.pm.company.type']}"
-				value="#{restrict.companyTypeCode.parameterId}">
+				value="#{restrict.companyTypeCode.parameterId}"
+				rendered="#{restrict.brandNew}">
 				<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
 				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
 					supportDocBackingBean.restrComp)}"/>

@@ -12,8 +12,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedDocument.byAppType}">
 		<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 			 selection="#{supportDocBackingBean.managedBean.deleteAppTypeRestrictions}" rowKey="#{restrict}"
-			 value="#{supportDocBackingBean.managedBean.appTypeRestrictions}" var="restrict" 
-			>
+			 value="#{supportDocBackingBean.managedBean.appTypeRestrictions}" var="restrict" >
 			<ac:paginator for="dtAppType" />
 			<p:ajax event="toggleSelect" update="@this" process="@this" />
 			<p:ajax event="rowSelectCheckbox" update="@this" />
@@ -23,9 +22,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			     	<h:outputText value="* " styleClass="mandatory" />
 			     	<h:outputText value="#{lbl['lbl.pm.application.type']}" />
 			    </f:facet>
+			    <h:outputText value="#{supportDocBackingBean.getParameterDesc(restrict.appTypeCode)}" 
+			    	rendered="#{!restrict.brandNew}" />
 		    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthL"
 		    		required="true" label="#{lbl['lbl.pm.application.type']}"
-					value="#{restrict.appTypeCode.parameterId}">
+					value="#{restrict.appTypeCode.parameterId}"
+					rendered="#{restrict.brandNew}">
 					<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 					<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
 						supportDocBackingBean.restrApp)}"/>
