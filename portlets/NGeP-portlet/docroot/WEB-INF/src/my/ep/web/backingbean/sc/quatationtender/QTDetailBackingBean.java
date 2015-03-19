@@ -3508,7 +3508,8 @@ public class QTDetailBackingBean extends
 									tabBean.getBudgetApprovalUsers()
 											.getTarget());
 						}
-						
+						finalizeRemarks(tabBean.getScQtApproval()
+								.getScQtApprovalRemarks());
 						approvalList.add(tabBean.getScQtApproval());
 					}
 				}
