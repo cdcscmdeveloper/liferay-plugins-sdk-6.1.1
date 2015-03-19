@@ -4892,6 +4892,8 @@ public class SmApplicationUtil {
 			long dayBal = DateUtils.getDaysDifference(new Date(),
 					smAppl.getDraftExpiryDate()) + 1;
 			String[] dayLeftParam = { dayBal + "" };
+			Date saveDate = smAppl.getApplSaveDate() == null ? smAppl
+					.getChangedDate() : smAppl.getApplSaveDate();
 			applStatusInfo.setSubmissionDate(DateUtils.dateToString(
 					"dd-MMM-yyyy", smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
@@ -4907,7 +4909,7 @@ public class SmApplicationUtil {
 							: userModified.getUserName())
 							+ " ("
 							+ DateUtils.dateToString("dd-MMM-yyyy hh:mm a",
-									smAppl.getChangedDate()) + ")");
+									saveDate) + ")");
 		}
 		return applStatusInfo;
 	}
