@@ -1620,4 +1620,47 @@ public class RuleCatalogueBackingBean extends
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * clone Rule Type Value.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
+	public void cloneRuleTypeValue(int index) {
+
+		PmConfigRuleValue ruleValue = new PmConfigRuleValue();
+		ruleValue.setEffDate(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index).getEffDate());
+		ruleValue.setExpDate(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index).getExpDate());
+		ruleValue.setShowFlag(false);
+		
+		ruleValue.setGroupValueId(this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues().get(index).getGroupValueId());
+
+		int markIndex = getLastIndexToClone(this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues(), this.getManagedBean().getSelectedRuleType()
+			.getConfigRuleValues().get(index).getGroupValueId());
+	
+		if(this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues().get(markIndex).getToValue() != null){
+			ruleValue.setFromValue(this.getManagedBean().getSelectedRuleType()
+					.getConfigRuleValues().get(markIndex).getToValue() + 1);
+			ruleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
+			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			.add(markIndex + 1, ruleValue);
+		} else {
+			throw new EpException(MessageConst.ERROR_715010);
+		}
+		
+	}
+	
+	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues, Integer GroupId){
+		int addIndex = 0;
+		for(PmConfigRuleValue ruleValue : pmConfigValues){
+			if(ruleValue.getGroupValueId() == GroupId){
+				addIndex = pmConfigValues.indexOf(ruleValue);
+			}
+		}
+		return addIndex;
+	}
 }
