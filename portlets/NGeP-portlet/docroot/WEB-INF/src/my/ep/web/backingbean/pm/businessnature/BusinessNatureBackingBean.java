@@ -618,7 +618,10 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 			iBusinessNatureSO = null;
 		}
 		
-		return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
+		if (this.getManagedBean().isBrandNew())
+			return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
+		else
+			return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 	 }
 	
 	public void updateCategoryLevel(){
