@@ -55,7 +55,7 @@
 		</p:dataTable>
 		<br />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtSuppType"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtSuppType" process="@this"
 				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrSupp)}"
 				immediate="true" />	
 		</div>

@@ -13,8 +13,8 @@
 						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneRadio value="#{organisationBackingBean.managedBean.orgCategory}">
-						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="0"/>
-						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="1"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{organisationBackingBean.federalGovt}"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{organisationBackingBean.others}"/>
 						<p:ajax process="@this" event="change" partialSubmit="true" update="orgSearchPanel,:form:searchOrganisation" listener ="#{organisationBackingBean.resetOrganisationSearchBean()}"/>
 					</p:selectOneRadio></td>
 				<th>&#160;</th>
@@ -27,7 +27,7 @@
 				<td><p:selectOneMenu id="orgTypeSelectList" styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
 						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgTypeCode}">
 						<f:selectItems
-					value="#{organisationBackingBean.managedBean.orgTypeList}" />
+					value="#{organisationBackingBean.getOrgTypeDropdownValues()}" />
 					</p:selectOneMenu></td>
 				<th>&#160;</th>
 				<td>&#160;</td>
