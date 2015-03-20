@@ -4918,8 +4918,8 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Check if need to disable company name field from editing. Only can be
-	 * edited for draft New MOF Application
+	 * Check whether need to disable company name field from editing. Only can
+	 * be edited for draft New MOF Application
 	 * 
 	 * @param SmSupplier
 	 *            smSupplier
@@ -4937,20 +4937,37 @@ public class SmApplicationUtil {
 			if (smAppl.getApplType()
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 					&& smAppl.isActiveAppl()) {
-				if (smSupplier
-						.getBusinessType()
-						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-						|| smSupplier
-								.getBusinessType()
-								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
+				if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
+						.contains(smSupplier.getBusinessType())) {
+					retVal = true;
+				} else if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
 					retVal = true;
 				}
-				if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
-					retVal = true;
-				}
-			}else{
+			} else {
 				retVal = true;
 			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Check whether need to disable business type field from editing. Can be
+	 * edited for all application type.
+	 * 
+	 * @param SmSupplier
+	 *            smSupplier
+	 * @param SmAppl
+	 *            smAppl
+	 * @return boolean
+	 */
+	public static boolean isDisableBusinessTypeInAppl(SmSupplier smSupplier,
+			SmAppl smAppl) {
+		boolean retVal = false;
+		if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED
+				.contains(smSupplier.getBusinessType())) {
+			retVal = true;
+		} else if (isApplHasSoftcertProcessingNotComplete(smAppl)) {
+			retVal = true;
 		}
 		return retVal;
 	}
