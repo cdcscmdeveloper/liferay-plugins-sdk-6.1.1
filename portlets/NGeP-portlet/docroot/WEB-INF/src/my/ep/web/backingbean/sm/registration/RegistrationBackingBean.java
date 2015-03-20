@@ -1966,10 +1966,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void setDisableCompanyNameInMaintenance() {
 		getManagedBean().setDisabledCompanyName(false);
-		if (isHasPendingTaskList()) {
+		if (SmApplicationUtil.hasActiveTransactions(this.getManagedBean()
+				.getSmSupp())) {
 			getManagedBean().setDisabledCompanyName(true);
-		}
-		if (getManagedBean()
+		} else if (getManagedBean()
 				.getSmSupp()
 				.getBusinessType()
 				.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
@@ -1978,36 +1978,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						.getBusinessType()
 						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
 			getManagedBean().setDisabledCompanyName(true);
-		}
-		if (SmApplicationUtil
+		} else if (SmApplicationUtil
 				.isApplHasSoftcertProcessingNotComplete(getManagedBean()
 						.getSmSupp().getSmAppl())) {
 			getManagedBean().setDisabledCompanyName(true);
 		}
 	}
 	
-	/**
-	 * Check whether the login user have pending task in task list
-	 * 
-	 * @return boolean
-	 */
-	private boolean isHasPendingTaskList() {
-		boolean retVal = false;
-		if (getManagedBean().getToken() == null
-				|| StringUtils.isBlank(getManagedBean().getToken())) {
-			FacesScopes face = new FacesScopes();
-			getManagedBean().setToken(face.getBPMAuthenticationCtxToken());
-		}
-		List<WorklistItemVO> taskList = SmCommonUtil
-				.getBpmTaskListByAuthToken(getManagedBean().getToken());
-
-		if (taskList == null || taskList.isEmpty()) {
-			retVal = false;
-		} else {
-			retVal = true;
-		}
-		return retVal;
-	}
 }
 
 
