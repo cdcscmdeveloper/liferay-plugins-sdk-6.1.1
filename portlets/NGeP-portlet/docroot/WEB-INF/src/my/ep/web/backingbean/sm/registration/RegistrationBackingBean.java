@@ -26,7 +26,6 @@ import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -1181,7 +1180,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			retrieveIdentityTypeMap();
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
-			setDisableCompanyNameInMaintenance();
+			setDisableCompanyNameBusinessTypeInMaintenance();
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
@@ -1944,7 +1943,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	/**
-	 * Set admin related information same as owner after ticked checkbox
+	 * Set admin related information same as owner after ticked check box
 	 */
 	private void setAdminSameAsOwner() {
 		if (getManagedBean().isSameAsOwner()) {
@@ -1960,28 +1959,31 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					getManagedBean().getSmSuppOwner().getIdentificationNo());
 		}
 	}
-	
+
 	/**
-	 * Set whether to disable company name field from editing
+	 * Set whether to disable company name and business type field from editing
+	 * in maintenance
 	 */
-	private void setDisableCompanyNameInMaintenance() {
-		getManagedBean().setDisabledCompanyName(false);
+	private void setDisableCompanyNameBusinessTypeInMaintenance() {
+		getManagedBean().setDisabledCompanyNameInMaintenance(false);
 		if (SmApplicationUtil.hasActiveTransactions(this.getManagedBean()
 				.getSmSupp())) {
-			getManagedBean().setDisabledCompanyName(true);
-		} else if (getManagedBean()
-				.getSmSupp()
-				.getBusinessType()
-				.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-				|| getManagedBean()
-						.getSmSupp()
-						.getBusinessType()
-						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)) {
-			getManagedBean().setDisabledCompanyName(true);
-		} else if (SmApplicationUtil
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
+		}
+		if (SupplierManagementConst.LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME
+				.contains(getManagedBean().getSmSupp().getBusinessType())) {
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+		}
+		if (!SupplierManagementConst.LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED
+				.contains(getManagedBean().getSmSupp().getBusinessType())) {
+			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
+		}
+		if (SmApplicationUtil
 				.isApplHasSoftcertProcessingNotComplete(getManagedBean()
 						.getSmSupp().getSmAppl())) {
-			getManagedBean().setDisabledCompanyName(true);
+			getManagedBean().setDisabledCompanyNameInMaintenance(true);
+			getManagedBean().setDisabledBusinessTypeInMaintenance(true);
 		}
 	}
 	
