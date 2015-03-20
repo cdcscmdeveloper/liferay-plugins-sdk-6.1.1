@@ -52,7 +52,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
-import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -375,7 +374,6 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 		if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
 			if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740026);
@@ -404,7 +402,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 								|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
-			spkiBackingBean.getChallengeQuestions();
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -497,8 +495,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOrginalData(textBeforeSign);
 		// spki 
-		SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-		String signedData =  spkiBackingBean.spkiSignTransaction(textBeforeSign);
+		String signedData =  getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign);
 		pmDigiSign.setSignedData(signedData);
 	}
 	
