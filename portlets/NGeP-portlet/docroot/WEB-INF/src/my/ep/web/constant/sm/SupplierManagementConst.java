@@ -3,6 +3,9 @@
  */
 package my.ep.web.constant.sm;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SupplierManagementConst {
 
 	// Navigation
@@ -285,6 +288,15 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN = "K";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI = "L";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = "M";
+	
+	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
+			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK);
+	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_EDIT_COMPANY_NAME = Arrays
+			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG);
 
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT = "ROS";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT = "ROB_I";
