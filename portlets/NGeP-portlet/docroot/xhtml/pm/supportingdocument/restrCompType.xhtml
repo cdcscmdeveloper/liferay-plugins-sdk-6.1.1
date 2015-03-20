@@ -54,7 +54,7 @@
 		</p:dataTable>
 		<br />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtComType"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtComType" process="@this"
 				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrComp)}"
 				immediate="true" />			
 		</div>

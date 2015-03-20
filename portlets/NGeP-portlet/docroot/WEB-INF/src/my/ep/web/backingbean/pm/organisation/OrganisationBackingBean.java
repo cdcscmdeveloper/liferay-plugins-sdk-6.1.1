@@ -114,6 +114,10 @@ public class OrganisationBackingBean extends
 	// Navigation Details
 	public static final String NAV_TO_SEARCH = "organisationMain";
 	public static final String NAV_TO_MAINTAIN = "maintainOrganisation";
+	
+	// Org Category values
+	public static final int FEDERAL_GOVT = 0;
+	public static final int OTHERS = 1;
 
 	/**
 	 *  The constructor used for save user logging.
@@ -226,6 +230,8 @@ public class OrganisationBackingBean extends
 		getManagedBean().setPmFinancialAcc(new ArrayList<PmFinancialAcc>());
 		getManagedBean().setProfileGroup(new ArrayList<PmProfileGroup>());
 		getManagedBean().setOrgProfile(orgProifle);
+		// set org category to others
+		getManagedBean().setOrgCategory(OTHERS);
 		//getManagedBean().setAddressTypesList(null);
 	}
 	private void resetInitialOrg(){
@@ -362,7 +368,6 @@ public class OrganisationBackingBean extends
 		log.info("resetOrgSearchBean");
 		this.getManagedBean().setOrganisationSearchBean(null);
 		getManagedBean().setIslazy(false);
-		getOrgTypeDropdownValues();
 		searchOrganisation = new SearchOrgPagingDataModel();
 	}
 	
@@ -408,9 +413,9 @@ public class OrganisationBackingBean extends
 		
 		//set org category
 		if(Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT).contains(getManagedBean().getOrgType())){
-			getManagedBean().setOrgCategory(0);
+			getManagedBean().setOrgCategory(FEDERAL_GOVT);
 		}else if(Arrays.asList(ProfileManagementConst.ORG_CATEGORY_OTHERS).contains(getManagedBean().getOrgType())){
-			getManagedBean().setOrgCategory(1);
+			getManagedBean().setOrgCategory(OTHERS);
 		}
 		
 		
@@ -1070,7 +1075,9 @@ public class OrganisationBackingBean extends
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
 						OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
 				||getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
+						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())
+				||getManagedBean().getOrgType().equalsIgnoreCase(
+						OrganizationType.JABATAN_AUDIT_NEGARA.value())) {
 			throw new EpException(MessageConst.ERROR_775104);
 			
 		}
@@ -1285,7 +1292,7 @@ public class OrganisationBackingBean extends
  	 * of org type as selection.
  	 * 
  	 */
-   public void getOrgTypeDropdownValues() {
+   public SelectItem[] getOrgTypeDropdownValues() {
 	    
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
@@ -1295,7 +1302,7 @@ public class OrganisationBackingBean extends
 		recommendList.add(OrganizationType.SUPPLIER.value());
 		recommendList.add(OrganizationType.OTHERS.value());
 		
-		if(getManagedBean().getOrgCategory() == 0){
+		if(getManagedBean().getOrgCategory() == FEDERAL_GOVT){
 			recommendList.add(OrganizationType.JABATAN_AUDIT_NEGARA.value());
 			recommendList.add(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
 			recommendList.add(OrganizationType.LOCAL_AUTHORITY.value());
@@ -1303,7 +1310,7 @@ public class OrganisationBackingBean extends
 			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
 			recommendList.add(OrganizationType.SUPPORT.value());
 		//	recommendList.add(OrganizationType.OTHERS.value());
-		}else if(getManagedBean().getOrgCategory() == 1){
+		}else if(getManagedBean().getOrgCategory() == OTHERS){
 			recommendList.add(OrganizationType.MINISTRY.value());
 			recommendList.add(OrganizationType.DIVISION.value());
 			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN.value());
@@ -1323,7 +1330,7 @@ public class OrganisationBackingBean extends
 		SelectItem[] items = getDropdownValuesBySearchBean(
 				ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 		
-		getManagedBean().setOrgTypeList(items);
+		return items;
 	}
 
 	/**
@@ -1344,13 +1351,13 @@ public class OrganisationBackingBean extends
 		recommendList.add(OrganizationType.DIVISION.value());
 		recommendList.add(OrganizationType.SUPPORT.value());
 		
-		if(getManagedBean().getOrgCategory() == 0){
+		if(getManagedBean().getOrgCategory() == FEDERAL_GOVT){
 			recommendList.add(OrganizationType.JABATAN_AUDIT_NEGARA.value());
 			recommendList.add(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
 			recommendList.add(OrganizationType.LOCAL_AUTHORITY.value());
 			recommendList.add(OrganizationType.STATUTORY_BODIES.value());
 			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
-		}else if(getManagedBean().getOrgCategory() == 1){
+		}else if(getManagedBean().getOrgCategory() == OTHERS){
 			recommendList.add(OrganizationType.MINISTRY.value());
 			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN.value());
 			recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
@@ -1819,6 +1826,20 @@ public class OrganisationBackingBean extends
 		if(!isUnique){
 			throw new EpException(MessageConst.ERROR_775115);
 		}
+	}
+
+	/**
+	 * @return the federalGovt
+	 */
+	public int getFederalGovt() {
+		return FEDERAL_GOVT;
+	}
+
+	/**
+	 * @return the others
+	 */
+	public int getOthers() {
+		return OTHERS;
 	}
 
 }
