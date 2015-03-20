@@ -2,6 +2,8 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -678,5 +680,18 @@ public class QTBriefingSiteVisitBackingBean extends
 
 		// this.getManagedBean().setBsvZoneindx(1);
 		this.getManagedBean().setBsvDtlBean(zoneBean);
+	}
+	
+	public void validatePostcode() {
+		debugLogger("validatePostcode");
+		String postcode = getManagedBean().getQtBriefing().getAddress().getPostcode();
+		Pattern pattern = Pattern.compile("\\d{5}");
+		Matcher matcher = pattern.matcher(postcode);
+		if (matcher.matches()) {
+			// throw new EpException("Postcode is Valid");
+		} else {
+			throw new EpException("Postcode is not valid, Postcode Should be limited to 5 digits.");
+		}
+
 	}
 }
