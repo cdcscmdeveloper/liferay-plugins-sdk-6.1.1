@@ -3086,12 +3086,18 @@ public class SmApplicationUtil {
 	 * 
 	 * @return the list if PmStatusDesc of type education field
 	 */
-	public static List<PmStatusDesc> retrieveRegistrationStatusList() {
+	public static List<PmStatusDesc> retrieveRegistrationStatusList(
+			String applType) {
 		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		StatusResDTO resDTO = reqSO.retrieveRegStatusList(reqDTO);
+		StatusResDTO resDTO = null;
+		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			resDTO = reqSO.retrieveRegStatusListForBumi(reqDTO);
+		} else {
+			resDTO = reqSO.retrieveRegStatusList(reqDTO);
+		}
 		if (resDTO != null) {
 			return resDTO.getStatusDescList();
 		} else {
