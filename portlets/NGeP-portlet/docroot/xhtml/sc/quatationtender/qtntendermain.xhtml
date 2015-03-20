@@ -29,7 +29,7 @@
 					<td><h:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
 					<td><p:selectOneMenu id="procurementid"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
-							style="width: 178px;margin-bottom: 5px;">
+							style="width:210px;margin-bottom: 5px;">
 							<f:selectItems
 								value="#{qTDetailBB.getProcurementModeDropdownValues()}" />
 						</p:selectOneMenu></td>
@@ -39,7 +39,7 @@
 					<td><p:calendar
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}"
 							id="crdateFrom" showOn="button" size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 							<p:ajax event="dateSelect" update="crdateTo" />
 						</p:calendar></td>
 					<td><h:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
@@ -48,7 +48,7 @@
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toCreatedDate}"
 							mindate="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}"
 							size="29" readonlyInput="true" required="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate ne null or !qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate eq ''}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 							<f:attribute name="startDate"
 								value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}" />
 						</p:calendar></td>
@@ -59,14 +59,14 @@
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromPublishDate}"
 							id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-							<p:ajax event="dateSelect" update="pbdateTo" />
+							<p:ajax event="dateSelect" update="pbdateTo" style="width:180px;"/>
 						</p:calendar></td>
 					<td><h:outputLabel value="#{lbl['lbl.so.pbldtto']}" /></td>
 					<td><p:calendar id="pbdateTo" showOn="button"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toPublishDate}"
 							mindate="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromPublishDate}"
 							size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 							<f:attribute name="startDate"
 								value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromPublishDate}" />
 							<f:validator validatorId="dateRangeValidator" />
@@ -77,7 +77,7 @@
 					<td><p:calendar
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromClosingDate}"
 							id="cldateFrom" showOn="button" size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 							<p:ajax event="dateSelect" update="cldateTo" />
 						</p:calendar></td>
 					<td><h:outputLabel value="#{lbl['lbl.so.clsdtto']}" /></td>
@@ -85,7 +85,7 @@
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toClosingDate}"
 							mindate="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromClosingDate}"
 							size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 							<f:attribute name="startDate"
 								value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromClosingDate}" />
 							<f:validator validatorId="dateRangeValidator" />
@@ -95,7 +95,7 @@
 					<td><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 					<td><p:selectOneMenu
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
-							style="width: 178px;margin-bottom: 5px;">
+							style="width: 210px;margin-bottom: 5px;">
 							<f:selectItems
 								value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
 						</p:selectOneMenu></td>
