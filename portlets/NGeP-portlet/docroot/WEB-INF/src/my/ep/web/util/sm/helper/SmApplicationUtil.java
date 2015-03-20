@@ -4454,18 +4454,15 @@ public class SmApplicationUtil {
 				&& !smAppl.getApplType().equalsIgnoreCase(
 						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IPersonnelSO.class);
 			String prevApplNo = smAppl.getApprovedSerFile() == null ? ""
 					: smAppl.getApprovedSerFile().substring(
 							smAppl.getApprovedSerFile().lastIndexOf('/') + 1,
 							smAppl.getApprovedSerFile().indexOf("_APP"));
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setApplNo(prevApplNo);
-			List<SmPersonnel> prevApprovedPersonnels = personnelSO
-					.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
+			List<SmPersonnel> prevApprovedPersonnels = SmServiceLookup
+					.getPersonnelSO().retrievePersonnelsByApplNo(reqDTO)
+					.getSmPersonnelList();
 			if (prevApprovedPersonnels != null
 					&& !prevApprovedPersonnels.isEmpty()) {
 				for (SmPersonnel prevPersonnel : prevApprovedPersonnels) {
