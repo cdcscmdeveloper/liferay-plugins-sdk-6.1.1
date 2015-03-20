@@ -1,57 +1,63 @@
-<ui:composition
-xmlns="http://www.w3.org/1999/xhtml"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:p="http://primefaces.org/ui"
-xmlns:c="http://java.sun.com/jsp/jstl/core"
-xmlns:ac="http://ac.my/jsf/composite/cc"
->
-	<br/>
-	<p:dataTable id="dtSuppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-		selection="#{supportDocBackingBean.managedBean.deleteSuppTypeRestrictions}" rowKey="#{restrict}"
-		value="#{supportDocBackingBean.managedBean.suppTypeRestrictions}" var="restrict" 
-		>
-		<ac:paginator for="dtSuppType" />
-		<p:ajax event="toggleSelect" update="@this" process="@this" />
-		<p:ajax event="rowSelectCheckbox" update="@this" />
-		<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<br />
+	<p:outputPanel
+		rendered="#{supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
+		<p:dataTable id="dtSuppType"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			rowKey="#{restrict}" rowIndexVar="rowIndex" 
+			value="#{supportDocBackingBean.managedBean.suppTypeRestrictions}"
+			var="restrict">
+			<ac:paginator for="dtSuppType" />
 
-        <p:column> 
-        	<f:facet name="header">
-		     	<h:outputText value="* " styleClass="mandatory" />
-		     	<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
-		    </f:facet> 
-		    <h:outputText value="#{supportDocBackingBean.getParameterDesc(restrict.supplierTypeCode)}"  rendered="#{!restrict.brandNew}"/>
-	    	<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthL"
-	    		required="true" label="#{lbl['lbl.pm.supplier.type']}"
-				value="#{restrict.supplierTypeCode.parameterId}"
-				rendered="#{restrict.brandNew}">
-				<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
-				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
-					supportDocBackingBean.restrSupp)}"/>
-			</p:selectOneMenu>
-			<p:message id="somSuppTypeMsg" for="somSuppType" display="icon" />
-        </p:column>  
-        <p:column>  
-        	<f:facet name="header">
-		     	<h:outputText value="* " styleClass="mandatory" />
-		     	<h:outputText value="#{lbl['lbl.pm.status']}" />
-		    </f:facet>
-	        <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
-				<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
-			</p:selectOneMenu>
-        </p:column>  
-   	</p:dataTable>
-   	<br/>
-	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.add']}"   update="dtSuppType"
-			action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrSupp)}"
-			immediate="true"/>
-		&#160;
-		<p:commandButton id="cbSuppDelete" value="#{lbl['lbl.btn.delete']}"  update="dtSuppType"
-			action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrSupp)}"
-			immediate="true" />
-	</div>
-
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
+				</f:facet>
+				<h:outputText
+					value="#{supportDocBackingBean.getParameterDesc(restrict.supplierTypeCode)}"
+					rendered="#{!restrict.brandNew}" />
+				<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthL"
+					required="true" label="#{lbl['lbl.pm.supplier.type']}"
+					value="#{restrict.supplierTypeCode.parameterId}"
+					rendered="#{restrict.brandNew}">
+					<f:selectItems
+						value="#{supportDocBackingBean.supplierTypeOptions()}" />
+					<p:ajax event="change"
+						listener="#{supportDocBackingBean.validateUniqueRestrType(
+					supportDocBackingBean.restrSupp)}" />
+				</p:selectOneMenu>
+				<p:message id="somSuppTypeMsg" for="somSuppType" display="icon" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.status']}" />
+				</f:facet>
+				<p:selectOneMenu styleClass="ppDropDownWidthS"
+					value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
+					<f:selectItems value="#{supportDocBackingBean.getStatusOptions()}" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+	           <p:commandLink partialSubmit="true" disabled="#{!restrict.brandNew}"
+					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrSupp,rowIndex)}"
+					update="dtSuppType" >
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		<br />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtSuppType"
+				action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrSupp)}"
+				immediate="true" />	
+		</div>
+	</p:outputPanel>
 </ui:composition>
