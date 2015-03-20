@@ -8,31 +8,31 @@
 	<br />
 	<p:outputPanel
 		rendered="#{supportDocBackingBean.managedBean.selectedDocument.byCategory}">
-		<p:dataTable id="dtCat"
+		<p:dataTable id="dtCat" resizableColumns="true" style="width: 100% !important;"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			rowKey="#{restrict}" rowIndexVar="rowIndex" 
 			value="#{supportDocBackingBean.managedBean.categoryRestrictions}"
 			var="restrict">
 			<ac:paginator for="dtCat" />
-		<p:column headerText="#{lbl['lbl.pm.category.code']}">  
+		<p:column  width="8%" headerText="#{lbl['lbl.pm.category.code']}">  
 	    	#{(restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code).concat(restrict.pmCategoryL3.pmCategoryL2.categoryL2Code).concat(restrict.pmCategoryL3.categoryL3Code)}
 	    	
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l1']}">  
+			<p:column headerText="#{lbl['lbl.pm.category.l1']}" style="width: 24% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l2']}">  
+			<p:column headerText="#{lbl['lbl.pm.category.l2']}" style="width: 24% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.pmCategoryL2.categoryName}
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l3']}">  
+			<p:column headerText="#{lbl['lbl.pm.category.l3']}" style="width: 24% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.categoryName}
         </p:column>
-			<p:column>
+			<p:column  width="15%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.status']}" />
 				</f:facet>
-				<p:selectOneMenu styleClass="ppDropDownWidthS"
+				<p:selectOneMenu styleClass="ppDropDownWidthS" style="width: 110px !important;"
 					value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
 					<f:selectItems value="#{supportDocBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
