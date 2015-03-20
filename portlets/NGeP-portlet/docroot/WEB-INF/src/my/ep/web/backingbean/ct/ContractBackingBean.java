@@ -74,8 +74,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	/**
-	 * @deprecated  As of 23/10/2014, replaced by
-	 *              {@link #initializeRemarkAndAttachement(CtWorkflowStatus,List<CtRemark>,List<CtAttachment>)}
+	 * @deprecated  As of 23/10/2014, replaced by initializeRemarkAndAttachement(CtWorkflowStatus,List<CtRemark>,List<CtAttachment>)
 	 */
 	@Deprecated
 	public void initializeRemarkAndAttachement(List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
