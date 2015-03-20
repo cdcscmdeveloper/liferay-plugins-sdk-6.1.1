@@ -455,7 +455,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setReasonDescList(
 					SmApplicationUtil.retrieveRejectReasonList());
 			getManagedBean().setRegStatusDescList(
-					SmApplicationUtil.retrieveRegistrationStatusList(applicationType));
+					SmApplicationUtil
+							.retrieveRegistrationStatusList(applicationType));
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
@@ -475,6 +476,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.getAcademicQualifications());
 
 		}
+
 		getManagedBean()
 				.setDefPmCountry(
 						SmCommonUtil
@@ -570,8 +572,15 @@ public class SmApplicationBackingBean extends
 				smApplSupplier = supp;
 				smAppl = appl;
 			}
-
 			getManagedBean().setSmSupplier(smApplSupplier);
+			if (applicationType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				getManagedBean()
+						.setDisableWithFedralTransaction(
+								SmApplicationUtil
+										.isTransactWithBasicAccountApprovedSoftCert(getManagedBean()
+												.getSmSupplier().getSmAppl()));
+			}
 			if (!applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 					&& !applicationType
