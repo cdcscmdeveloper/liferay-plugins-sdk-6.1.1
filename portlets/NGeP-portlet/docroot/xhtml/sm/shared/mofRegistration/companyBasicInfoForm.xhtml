@@ -64,9 +64,19 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
-					<td style="word-wrap: break-word"><p:outputLabel
+					<td style="word-wrap: break-word">
+						<p:outputLabel rendered="#{backingBean.managedBean.disabledBusinessType}" 
 							styleClass="outputLabel-view"
-							value="#{backingBean.getBusinessType(backingBean.managedBean.smSupplier.businessType)}" /></td>
+							value="#{backingBean.getBusinessType(backingBean.managedBean.smSupplier.businessType)}" />
+						<p:selectOneMenu id="smBusTypeId" required="true" label="#{lbl['lbl.sm.regtype']}"
+							value="#{backingBean.managedBean.smSupplier.businessType}" 
+							rendered="#{!backingBean.managedBean.disabledBusinessType}" 
+							style="width:310px">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}"/>
+						</p:selectOneMenu>
+						<p:message id="smBusTypeIdMsg" for="smBusTypeId" showSummary="true" showDetail="false" display="icon" />
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.regNo}"
