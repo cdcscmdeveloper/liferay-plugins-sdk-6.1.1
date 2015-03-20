@@ -455,7 +455,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setReasonDescList(
 					SmApplicationUtil.retrieveRejectReasonList());
 			getManagedBean().setRegStatusDescList(
-					SmApplicationUtil.retrieveRegistrationStatusList());
+					SmApplicationUtil.retrieveRegistrationStatusList(applicationType));
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
