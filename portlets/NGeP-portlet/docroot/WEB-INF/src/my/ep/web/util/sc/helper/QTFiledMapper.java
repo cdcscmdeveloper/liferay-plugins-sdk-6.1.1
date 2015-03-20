@@ -153,7 +153,8 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
-						QTFieldConst.FILED_QT_DOCUMENTS });
+						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_PUB_APPROVAL});
 
 		private Long statusId;
 		private String[] toBeEnableFields;
