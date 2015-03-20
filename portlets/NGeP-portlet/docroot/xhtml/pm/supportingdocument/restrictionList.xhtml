@@ -33,6 +33,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:tab id="tCatType" title="#{lbl['lbl.pm.category']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCategory}">
 					<ui:include src="/xhtml/pm/supportingdocument/restrCategory.xhtml" /> 
 				</p:tab>
+				
+				<!-- Cert Body -->	
+				<p:tab id="tCertBody" title="#{lbl['lbl.pm.suppdoc.certified.body']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCertBody}">
+					<ui:include src="/xhtml/pm/supportingdocument/restrCertBody.xhtml" /> 
+				</p:tab>
 			</p:tabView>
 	
 		</p:panel>
