@@ -18,52 +18,85 @@
 					<tr>
 						<td valign="top"><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-						<td colspan="3"><p:inputTextarea cols="100" rows="2"
-								maxlength="100" style=" margin-bottom:5px; width : 100%"
-								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtTitle}" /></td>
+						<td colspan="3"><p:inputText
+								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtTitle}"
+								size="110" maxlength="100" /></td>
 					</tr>
+					
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
-						<td><p:inputText size="32" maxlength="21"
+						<td><p:inputText size="29" maxlength="21"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtNo}" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel
+								<td><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
-						<td><p:selectOneMenu style="width: 192px;margin-bottom: 5px;"
+						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.procurementMode}">
 								<f:selectItems
 									value="#{qTDocumentsBackingBean.getProcurementModeDropdownValues()}" />
 							</p:selectOneMenu></td>
-						<td />
-						<td />
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
 						<td><p:calendar id="crdateFrm" showOn="button"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
-								size="30" readonlyInput="true"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 								<p:ajax event="dateSelect" update="createdtTo" />
 							</p:calendar></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
 						<td><p:calendar id="createdtTo" showOn="button"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toCreatedDate}"
 								mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
-								size="30" readonlyInput="true"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 								<f:attribute name="startDate"
 									value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}" />
 								<f:validator validatorId="dateRangeValidator" />
 							</p:calendar></td>
 					</tr>
 					<tr>
+					<td><h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" /></td>
+					<td><p:calendar
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromPublishDate}"
+							id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<p:ajax event="dateSelect" update="pbdateTo" />
+						</p:calendar></td>
+					<td><h:outputLabel value="#{lbl['lbl.so.pbldtto']}" /></td>
+					<td><p:calendar id="pbdateTo" showOn="button"
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toPublishDate}"
+							mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromPublishDate}"
+							size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<f:attribute name="startDate"
+								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromPublishDate}" />
+							<f:validator validatorId="dateRangeValidator" />
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" /></td>
+					<td><p:calendar
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromClosingDate}"
+							id="cldateFrom" showOn="button" size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<p:ajax event="dateSelect" update="cldateTo" />
+						</p:calendar></td>
+					<td><h:outputLabel value="#{lbl['lbl.so.clsdtto']}" /></td>
+					<td><p:calendar id="cldateTo" showOn="button"
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toClosingDate}"
+							mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromClosingDate}"
+							size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<f:attribute name="startDate"
+								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromClosingDate}" />
+							<f:validator validatorId="dateRangeValidator" />
+						</p:calendar></td>
+				</tr>
+					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
-						<td><p:selectOneMenu style="width: 192px;margin-bottom: 5px;"
+						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtStatus}">
 								<f:selectItems
 									value="#{qTDocumentsBackingBean.getStatusDropdownValues('SC', 'QT')}" />
@@ -103,10 +136,24 @@
 
 					<p:column headerText="#{lbl['lbl.so.crtdt']}">
 						<h:outputText value="#{scQt.createdDate}">
-							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.so.pbdt']}">
+						<h:outputText value="#{scQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
+					<p:column headerText="#{lbl['lbl.so.clsdt']}">
+						<h:outputText value="#{scQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					
 					<p:column headerText="#{lbl['lbl.so.bo.status']}">
 						<h:outputText
 							value="#{qTDocumentsBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
