@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
@@ -60,6 +62,10 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	
 	/** The back to document. */
 	private String backToDocument;
+	
+	/** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
 	
 	/**
 	 * Gets the reason descs.
@@ -242,5 +248,19 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setBackToDocument(String backToDocument) {
 		this.backToDocument = backToDocument;
+	}
+
+	/**
+	 * @return the spkiBackingBean
+	 */
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	/**
+	 * @param spkiBackingBean the spkiBackingBean to set
+	 */
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
 	}
 }

@@ -21,7 +21,11 @@
 			postSignAction="#{stopInstrBB.preSubmitStopInstruction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{stopInstrBB.enableAutoUpdate()}" />
 		<f:event listener="#{stopInstrBB.preRenderView}" type="preRenderView" />
-		<ac:spkiPopup textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
+		<ac:spkiPopup id="spkiPopUp"
+			password="#{stopInstrBB.managedBean.spkiBackingBean.password}"
+   		 	challengeAns1="#{stopInstrBB.managedBean.spkiBackingBean.challengeAns1}"
+  		 	challengeQues1="#{stopInstrBB.managedBean.spkiBackingBean.challengeQues1}"
+			textBeforeSign="#{stopInstrBB.managedBean.textBeforeSign}"
 			postSignAction="#{stopInstrBB.preSubmitStopInstruction(spkiBackingBean.pmDigiSign)}"/>
 		<p:messages id="messages" showDetail="true" autoUpdate="#{stopInstrBB.managedBean.autoUpdate}" showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
