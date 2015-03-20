@@ -3786,7 +3786,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(productTplSpec != null){
 				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
 				for (TplSpecQuestion TplSpecQuestion : productTplSpec.getTplSpecQuestions()) {
-					templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+					TemplateSpecHelper.getInstance().resetPriceTypeDtl(TplSpecQuestion);
 				}
 			}
 
@@ -3794,7 +3794,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(serviceTplSpec != null){
 				getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
 				for (TplSpecQuestion TplSpecQuestion : serviceTplSpec.getTplSpecQuestions()) {
-					templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+					TemplateSpecHelper.getInstance().resetPriceTypeDtl(TplSpecQuestion);
 				}
 			}
 		} else{

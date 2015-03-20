@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+ */
 package my.ep.web.bean.tpl;
 
 import java.util.List;
@@ -9,6 +19,12 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 
+/**
+ * Bean Object for template specification.
+ * 
+ * @author VidyaSagarReddy
+ * @since 19.03.2015
+ */
 public class TemplateSpecBean {
 	private boolean selectAll;
 	private TplSpecMaster specMaster;
@@ -20,10 +36,20 @@ public class TemplateSpecBean {
 	private TplSpecQuestion oriSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
 	private TplSpecZoneDtl tplSpecZoneDtl;
+	
+	/**
+	 * Constructor for template specification bean
+	 */
 	public TemplateSpecBean() {
 		this(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 	}
 
+	/**
+	 * Constructor for template specification bean
+	 * 
+	 * @param contentType
+	 * 		the content type
+	 */
 	public TemplateSpecBean(String contentType) {
 		this.contentType = contentType;
 	}
