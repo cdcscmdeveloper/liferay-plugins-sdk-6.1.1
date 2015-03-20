@@ -344,6 +344,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplStatusInfoVO applStatusInfo;
 	private PmDigiSign pmDigiSign;
 	private boolean disabledCompanyName;
+	private boolean disabledBusinessType;
 	
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -2643,6 +2644,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisabledCompanyName(boolean disabledCompanyName) {
 		this.disabledCompanyName = disabledCompanyName;
+	}
+
+	public boolean isDisabledBusinessType() {
+		return disabledBusinessType;
+	}
+
+	public void setDisabledBusinessType(boolean disabledBusinessType) {
+		this.disabledBusinessType = disabledBusinessType;
 	}
 
 }
