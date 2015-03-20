@@ -259,7 +259,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> briefingDetails = briefingBean.getBriefingList();
 			if (null == briefingDetails) {
-				briefingDetails = new ArrayList<>();
+				briefingDetails = new ArrayList<ScQtBsvDtl>();
 			}
 			if (!briefingDetails.contains(bsvDetail)) {
 				briefingDetails.add(bsvDetail);
@@ -269,7 +269,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> siteVisitDetails = briefingBean.getSitevisitList();
 			if (null == siteVisitDetails) {
-				siteVisitDetails = new ArrayList<>();
+				siteVisitDetails = new ArrayList<ScQtBsvDtl>();
 			}
 			if (!siteVisitDetails.contains(bsvDetail)) {
 				siteVisitDetails.add(bsvDetail);

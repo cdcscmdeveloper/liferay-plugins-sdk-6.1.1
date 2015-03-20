@@ -3909,7 +3909,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 						scQtRecommend.getAwardSupplierList().add(recomendedSupplier);
 						List<ScQtRecommendDtl> removedList = scQtRecommend.getRemoveSupplierList();
 						if (removedList == null) {
-							removedList = new ArrayList<>();
+							removedList = new ArrayList<ScQtRecommendDtl>();
 							scQtRecommend.setRemoveSupplierList(removedList);
 						}
 						for (ScQtRecommendDtl detail : scQtRecommend.getRecommendDtls()) {

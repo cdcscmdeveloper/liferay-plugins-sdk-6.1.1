@@ -3139,7 +3139,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		context.put("rightImgUrl", rightImgUrl);
 		context.put("desc", scRequestItem.getItemDesc() != null ? scRequestItem.getItemDesc() : "" );
 		context.put("uom", scRequestItem.getUom() != null ? scRequestItem.getUom() .getUomName() : "");
-		List<MarketSummaryAndPIBean> requestNoteVOList = new ArrayList<>();
+		List<MarketSummaryAndPIBean> requestNoteVOList = new ArrayList<MarketSummaryAndPIBean>();
 		MarketSummaryAndPIBean marketSummaryAndPIBean = null;
 		ScSupplierItemPrice supplierItemPrice= null;
 		List<ScRequestSupplierItem> supplierItems = null;
@@ -3250,7 +3250,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		
 		VelocityContext context = new VelocityContext();
-		List<MarketSummaryAndPIBean> requestNoteVOList = new ArrayList<>();
+		List<MarketSummaryAndPIBean> requestNoteVOList = new ArrayList<MarketSummaryAndPIBean>();
 		MarketSummaryAndPIBean marketSummaryAndPIBean = null;
 		ScSupplierItemPrice supplierItemPrice= null;
 		ScRequestSupplierItem supplierItem = null;	
