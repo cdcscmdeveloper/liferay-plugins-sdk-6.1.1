@@ -676,6 +676,24 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="PM_CERT_BODY" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="certBodyId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.certbody.CertBodyDAO" />
+		<property name="searchMethod" value="retrieveAllCertBodyList" /> 
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="bodyName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.suppdoc.certified.body" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
 	<bean id="PM_OBJECTS" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="doId" />
 		<property name="daoClass"
