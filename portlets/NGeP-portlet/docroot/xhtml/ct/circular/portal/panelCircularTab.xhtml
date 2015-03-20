@@ -47,18 +47,16 @@
 	        vertical-align: top;
          }
       </style>
-      
-      <table style="width: 100%;">
+      	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>	
+      	<table style="width: 100%;">
 		<tr>
 			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 					immediate="true" action="#{panelBackingBean.backAction}"/></td>
 			</tr>
-			</table>
-			
-			  <p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif" />
-		</p:blockUI>	
-			
+		</table>			  
+		<br/>
        <table border="0" cellspacing="0" cellpadding="0" width="100%">
 		  <tr>
 			<td width="20%" valign="top" class="sidemenutd">
