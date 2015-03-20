@@ -235,10 +235,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		this.getManagedBean().setSuppTypeRestrictions(null);
 		this.getManagedBean().setCategoryRestrictions(null);
 		this.getManagedBean().setCheckListRestrictions(null);
+		this.getManagedBean().setCertBodyRestrictions(null);
 		this.getManagedBean().setDeleteAppTypeRestrictions(null);
 		this.getManagedBean().setDeleteComTypeRestrictions(null);
 		this.getManagedBean().setDeleteSuppTypeRestrictions(null);
 		this.getManagedBean().setDeleteCategoryRestrictions(null);
+		this.getManagedBean().setDeleteCertBodyRestrictions(null);
 		this.getManagedBean().setDeleteCheckListRestrictions(null);
 		this.getManagedBean().setSelectedDocument(pmDocument);
 		this.getManagedBean().setCheckList(false);
