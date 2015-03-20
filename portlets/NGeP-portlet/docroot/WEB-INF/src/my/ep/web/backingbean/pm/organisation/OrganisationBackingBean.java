@@ -1302,7 +1302,7 @@ public class OrganisationBackingBean extends
 		recommendList.add(OrganizationType.SUPPLIER.value());
 		recommendList.add(OrganizationType.OTHERS.value());
 		
-		if(getManagedBean().getOrgCategory() == FEDERAL_GOVT){
+		if(getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT){
 			recommendList.add(OrganizationType.JABATAN_AUDIT_NEGARA.value());
 			recommendList.add(OrganizationType.GOVERNMENT_LINK_COMPANIES.value());
 			recommendList.add(OrganizationType.LOCAL_AUTHORITY.value());
@@ -1310,7 +1310,7 @@ public class OrganisationBackingBean extends
 			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
 			recommendList.add(OrganizationType.SUPPORT.value());
 		//	recommendList.add(OrganizationType.OTHERS.value());
-		}else if(getManagedBean().getOrgCategory() == OTHERS){
+		}else if(getManagedBean().getSearchOrgCategory() == OTHERS){
 			recommendList.add(OrganizationType.MINISTRY.value());
 			recommendList.add(OrganizationType.DIVISION.value());
 			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN.value());
