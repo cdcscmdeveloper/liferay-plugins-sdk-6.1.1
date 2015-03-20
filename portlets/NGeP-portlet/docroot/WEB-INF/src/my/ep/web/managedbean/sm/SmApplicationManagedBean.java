@@ -345,6 +345,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private boolean disabledCompanyName;
 	private boolean disabledBusinessType;
+	private boolean disableWithFedralTransaction;
 	
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -2652,6 +2653,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisabledBusinessType(boolean disabledBusinessType) {
 		this.disabledBusinessType = disabledBusinessType;
+	}
+
+	public boolean isDisableWithFedralTransaction() {
+		return disableWithFedralTransaction;
+	}
+
+	public void setDisableWithFedralTransaction(boolean disableWithFedralTransaction) {
+		this.disableWithFedralTransaction = disableWithFedralTransaction;
 	}
 
 }
