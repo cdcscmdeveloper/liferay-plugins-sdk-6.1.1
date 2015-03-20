@@ -57,6 +57,8 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
@@ -608,11 +610,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 				
 				SimpleQuoteBackingBean simpleQuoteBackingBean =  new SimpleQuoteBackingBean();
-
 				if(simpleQuoteBackingBean.getManagedBean() != null){
 					if(simpleQuoteBackingBean.getManagedBean().getScQuote() != null){
-						if(simpleQuoteBackingBean.getManagedBean().getScQuote().getPanelItem() != null){
+						ScQuote scQuote = simpleQuoteBackingBean.getManagedBean().getScQuote();
+						if(scQuote.getPanelItem() != null){
 							setSimpleQuoteFlag(false);
+						} else{
+							if(scQuote.getQuoteDocs() != null && scQuote.getQuoteDocs().size()>0){
+								for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
+									if(scQuoteDoc.getSpecMaster() != null && scQuoteDoc.getSpecMaster().getTplSpecQuestions() != null 
+											&& scQuoteDoc.getSpecMaster().getTplSpecQuestions().size()>0){
+										setSimpleQuoteFlag(false);
+									}
+								}
+							}
 						}
 					}
 				} 
