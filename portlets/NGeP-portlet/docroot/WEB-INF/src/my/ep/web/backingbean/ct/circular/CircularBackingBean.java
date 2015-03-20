@@ -32,15 +32,23 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * Circular Backingbean
+ * Backing Bean for Circular
  * 
  * @author kieyun
- * @Created 23/12/2014
+ * @since 23/12/2014
  */
 @ManagedBean
 @ViewScoped
 public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	
+	/**
+	 * The method used for searching the circular list.
+	 * A warning message will display on screen when searching
+	 * with empty search criteria.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
 	public void searchCircularListing() throws Exception {
 		try {
 			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) && 
@@ -60,6 +68,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		}			
 	}
 
+	/**
+	 * The method used for generating a list of available circular document
+	 * type.
+	 * 
+	 * @return the selection list of circular document type
+	 */
 	public SelectItem[] getCircularDocTypeValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> circularDocTypes = new ArrayList<String>();
@@ -69,6 +83,11 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return getDropdownCodeValuesBySearchBean(ParameterTypeConst.DOCUMENT_TYPES, searchBean);
 	}
 	
+	/**
+	 * The method used for generating a list of available circular status.
+	 * 
+	 * @return the selection list of circular status
+	 */
 	public SelectItem[] getCircularStatusValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> statusList = new ArrayList<String>();
@@ -78,6 +97,9 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return getDropdownCodeValuesBySearchBean(ParameterTypeConst.RECORD_STATUS, searchBean);
 	}
 	
+	/**
+	 * The method used to reset the search criteria for circular.
+	 */
 	public void searchReset(){
 		this.getManagedBean().setSearchCircularNo(null);
 		this.getManagedBean().setSearchCircularName(null);
@@ -87,6 +109,13 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		getManagedBean().getCircularListingPagingDataModel().reloadData();
 	}
 	
+	/**
+	 * The method used to navigate to circular details screen.
+	 * 
+	 * @param circularVerId  the circular version id
+	 * @param docType  the document type
+	 * @return the navigate URL 
+	 */
 	public String gotoPage(Long circularVerId, String docType) {
 		ICircularSO circularSO = null;
 		try {
@@ -130,6 +159,14 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * The method used to navigate to circular details screen
+	 * for view purpose.
+	 * 
+	 * @param circularVerId  the circular version id
+	 * @param docType  the document type
+	 * @return the navigate URL
+	 */
 	public String gotoViewPage(Long circularVerId, String docType) {
 		ICircularSO circularSO = null;
 		try {

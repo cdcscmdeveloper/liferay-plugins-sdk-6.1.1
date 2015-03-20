@@ -120,7 +120,7 @@ import com.liferay.portal.util.PortalUtil;
  * Central Contract Circular Backingbean
  * 
  * @author alam
- * @Created 9/10/2013
+ * @since 9/10/2013
  */
 @ManagedBean
 @RequestScoped

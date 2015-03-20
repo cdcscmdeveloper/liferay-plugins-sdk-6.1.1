@@ -55,7 +55,7 @@ import org.primefaces.model.TreeNode;
  * Circular Panel Managed Bean
  * 
  * @author alam
- * @Created 9/10/2013
+ * @since 9/10/2013
  */
 @ManagedBean
 @SessionScoped

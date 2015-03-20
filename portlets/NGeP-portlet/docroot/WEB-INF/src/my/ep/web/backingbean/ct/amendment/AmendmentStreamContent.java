@@ -18,11 +18,25 @@ import org.primefaces.model.StreamedContent;
 import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 
+/**
+ * Stream Content for Amendment
+ * 
+ * @author Ken
+ * @since 09/01/2015
+ */
 @ManagedBean(name = "amendmentStreamContent")
 @RequestScoped
 public class AmendmentStreamContent {
 
 	private StreamedContent loaStreamContent = null;
+	
+	/**
+	 * The method used to generate the pdf file and display on screen.
+	 * 
+	 * @return the stream content
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
 	public StreamedContent populateLoaStreamContent() throws Exception {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
