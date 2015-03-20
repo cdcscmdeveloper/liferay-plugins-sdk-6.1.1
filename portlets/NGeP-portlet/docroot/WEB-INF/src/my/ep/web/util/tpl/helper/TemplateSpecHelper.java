@@ -1,5 +1,12 @@
-/**
- *  Copyright © 2013 Archisoft. All rights reserved.
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
  */
 package my.ep.web.util.tpl.helper;
 
@@ -359,6 +366,14 @@ public class TemplateSpecHelper {
 		return newSpecEstimations;
 	}
 	
+	/**
+	 * Update Item Weightage Required
+	 * 
+	 * @param specMaster
+	 * 		the TplSpecMaster instance
+	 * @param specQuestions
+	 * 		the list of TplSpecQuestion instance
+	 */
 	public void updateItemWeightageReq(TplSpecMaster specMaster, List<TplSpecQuestion> specQuestions) {
 		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode());
 		boolean isWeightageReq = specMaster.isWeightageReq();
@@ -374,16 +389,37 @@ public class TemplateSpecHelper {
 		}
 	}
 	
+	/**
+	 * Check price type is standard
+	 * 
+	 * @param priceType
+	 * 		the price type
+	 * @return	the indicator price type is standard
+	 */
 	public boolean isPriceTypeStandard(String priceType) {
 		return ParameterConst.PRICE_TYPE_STANDARD.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_PROMOTION.equals(priceType);
 	}
 	
+	/**
+	 * Check price type is zonal standard
+	 * 
+	 * @param priceType
+	 * 		the price type
+	 * @return	the indicator price type is zonal standard
+	 */
 	public boolean isPriceTypeZonalStandard(String priceType) {
 		return ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION.equals(priceType);
 	}
 	
+	/**
+	 * Check price type is tier
+	 * 
+	 * @param priceType
+	 * 		the price type
+	 * @return	the indicator price type is tier
+	 */
 	public boolean isPriceTypeTier(String priceType) {
 		return ParameterConst.PRICE_TYPE_TIER.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_PROMOTION_TIER.equals(priceType)
@@ -392,25 +428,24 @@ public class TemplateSpecHelper {
 				|| isPriceTypeTariff(priceType);
 	}
 	
+	/**
+	 * Check price type is tariff
+	 * 
+	 * @param priceType
+	 * 		the price type
+	 * @return	the indicator price type is tariff
+	 */
 	public boolean isPriceTypeTariff(String priceType) {
 		return ParameterConst.PRICE_TYPE_TARIFF.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(priceType);
 	}
 	
-	public boolean isTierPriceMatched(TplSpecTierQty specTierQty, BigDecimal orderQuantity) {
-		
-		if (specTierQty.getFromQty() != null && specTierQty.getToQty() != null) {
-			if (specTierQty.getFromQty().compareTo(orderQuantity) <= 0
-					&& orderQuantity.compareTo(specTierQty.getToQty()) <= 0) {
-				return true;
-			}
-		} else {
-			log.warn("Invalid from and to qty.");
-		}
-
-		return false;
-	}
-	
+	/**
+	 * Reset Estimation Details
+	 * 
+	 * @param specQuestion
+	 * 		the TplSpecQuestion instance 
+	 */
 	public void resetEstimations(TplSpecQuestion specQuestion) {
 		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
 		List<TplSpecEstimation> specEstimations = null;
@@ -428,6 +463,14 @@ public class TemplateSpecHelper {
 		specQuestion.setTplSpecEstimations(specEstimations);
 	}
 	
+	/**
+	 * Update Zone Details
+	 * 
+	 * @param specMaster
+	 * 		the TplSpecMaster instance
+	 * @param specZone
+	 * 		the TplSpecZone instance
+	 */
 	public void updateZoneDtl(TplSpecMaster specMaster, TplSpecZone specZone) {
 		specMaster.setTplSpecZone(specZone);
 		
@@ -436,6 +479,14 @@ public class TemplateSpecHelper {
 		}
 	}
 	
+	/**
+	 * Reset Price Type Details
+	 * 
+	 * @param specMaster
+	 * 		the TplSpecMaster instance
+	 * @param specQuestion
+	 * 		the TplSpecQuestion instance 
+	 */
 	public void resetPriceType(TplSpecMaster specMaster, TplSpecQuestion specQuestion) {
 		boolean isZonal = specMaster.getTplSpecZone() != null;
 		PmParameter clPriceTypeCode = specQuestion.getClPriceTypeCode();
@@ -504,6 +555,17 @@ public class TemplateSpecHelper {
 		baseObject.setChangedDate(null);
 	}
 	
+	/**
+	 * Calculate total amount per item
+	 * 
+	 * @param specQuestion
+	 * 		the TplSpecQuestion instance 
+	 * @param unitPrice
+	 * 		the unit price
+	 * @param quantity
+	 * 		the quantity
+	 * @return the total amount per item
+	 */
 	public BigDecimal calcTotalAmount(TplSpecQuestion specQuestion, BigDecimal unitPrice, BigDecimal quantity) {
 		BigDecimal totalPrice = null;
 		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
@@ -547,5 +609,17 @@ public class TemplateSpecHelper {
 		}
 		
 		return totalPrice;
+	}
+	
+	/**
+	 * Reset Price Type Details
+	 * 
+	 * @param specQuestion
+	 * 		the TplSpecQuestion instance 
+	 */
+	public void resetPriceTypeDtl(TplSpecQuestion specQuestion) {
+		specQuestion.setTplSpecTierQties(null);
+
+		resetEstimations(specQuestion);
 	}
 }
