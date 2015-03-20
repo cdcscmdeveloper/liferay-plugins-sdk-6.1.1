@@ -115,7 +115,7 @@ import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 
-/*
+/**
  * Backing Bean For Agreement
  * 
  * @author Alam
