@@ -4993,4 +4993,29 @@ public class SmApplicationUtil {
 		}
 		return retVal;
 	}
+
+	/**
+	 * Check if, application has already transacted before with basic
+	 * account.Verify if application has a personnel with role
+	 * Basic_Supplier_Admin and got soft certificate issued
+	 * 
+	 * @param SmAppl
+	 *            smAppl
+	 * @return boolean
+	 */
+	public static boolean isTransactWithBasicAccountApprovedSoftCert(
+			SmAppl smAppl) {
+		boolean retVal = false;
+		for (SmPersonnel smPersonnel : smAppl.getSmPersonnels()) {
+			if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
+					&& smPersonnel.getEpRole() != null
+					&& smPersonnel.getEpRole().equalsIgnoreCase(
+							RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
+	}
 }
