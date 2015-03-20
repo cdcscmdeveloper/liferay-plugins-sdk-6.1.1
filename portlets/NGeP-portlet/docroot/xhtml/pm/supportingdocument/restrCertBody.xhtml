@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<br />
+	<p:outputPanel
+		rendered="#{supportDocBackingBean.managedBean.selectedDocument.byCertBody}">
+		<p:dataTable id="dtCertBody"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			rowKey="#{restrict}" rowIndexVar="rowIndex"
+			value="#{supportDocBackingBean.managedBean.certBodyRestrictions}"
+			var="restrict">
+			<ac:paginator for="dtCertBody" />			
+		<p:column headerText="#{lbl['lbl.pm.suppdoc.certified.body']}">  
+	    	#{restrict.pmCertBody.bodyName}
+        </p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.pm.status']}" />
+				</f:facet>
+				<p:selectOneMenu styleClass="ppDropDownWidthS"
+					value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
+					<f:selectItems value="#{supportDocBackingBean.getStatusOptions()}" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+	           <p:commandLink partialSubmit="true" disabled="#{!restrict.brandNew}"
+					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCertbody,rowIndex)}"
+					update="dtCertBody" >
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		<br />
+		<div class="ppRightBtn">
+			<table style="float: right;">
+				<tr>
+					<td>
+						<!--  Popup Cert Body --> <ac:lov id="lovCertBody"
+							lovId="PM_CERT_BODY" styleClass="ppDisplayCalS"
+							readonly="true" selectionMode="multiple"
+							buttonLabel="#{lbl['lbl.btn.add']}"
+							headerText="#{lbl['lbl.pm.suppdoc.certbody.search']}"
+							update=":form:tvDocRestriction:dtCertBody"
+							saveObject="supportDocBackingBean.managedBean.selectedCertBodies"
+							postUpdateListener="supportDocBackingBean.updateCertBody(supportDocBackingBean.managedBean.selectedCertBodies)"
+							conditionField="recordStatus^1|isCertifiedBody^1" />
+					</td>
+				</tr>
+			</table>
+		</div>
+	</p:outputPanel>
+</ui:composition>

@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
@@ -33,14 +34,17 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> comTypeRestrictions;
 	private List <PmDocumentRestr> suppTypeRestrictions;
 	private List <PmDocumentRestr> categoryRestrictions;
+	private List <PmDocumentRestr> certBodyRestrictions;
 	private List <PmDocumentRestr> checkListRestrictions;
 	private List <PmDocumentRestr> deleteAppTypeRestrictions;
 	private List <PmDocumentRestr> deleteComTypeRestrictions;
 	private List <PmDocumentRestr> deleteSuppTypeRestrictions;
 	private List <PmDocumentRestr> deleteCategoryRestrictions;
+	private List <PmDocumentRestr> deleteCertBodyRestrictions;
 	private List <PmDocumentRestr> deleteCheckListRestrictions;
 	
 	private List <PmCategoryL3> selectedCategoryL3s;
+	private List <PmCertBody> selectedCertBodies;
 	private int selectedTabIndex;
 	
 	
@@ -260,6 +264,31 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedCategoryL3s(List<PmCategoryL3> selectedCategoryL3s) {
 		this.selectedCategoryL3s = selectedCategoryL3s;
+	}
+
+	public List <PmDocumentRestr> getCertBodyRestrictions() {
+		return certBodyRestrictions;
+	}
+
+	public void setCertBodyRestrictions(List <PmDocumentRestr> certBodyRestrictions) {
+		this.certBodyRestrictions = certBodyRestrictions;
+	}
+
+	public List <PmDocumentRestr> getDeleteCertBodyRestrictions() {
+		return deleteCertBodyRestrictions;
+	}
+
+	public void setDeleteCertBodyRestrictions(
+			List <PmDocumentRestr> deleteCertBodyRestrictions) {
+		this.deleteCertBodyRestrictions = deleteCertBodyRestrictions;
+	}
+
+	public List <PmCertBody> getSelectedCertBodies() {
+		return selectedCertBodies;
+	}
+
+	public void setSelectedCertBodies(List <PmCertBody> selectedCertBodies) {
+		this.selectedCertBodies = selectedCertBodies;
 	}
 	
 	

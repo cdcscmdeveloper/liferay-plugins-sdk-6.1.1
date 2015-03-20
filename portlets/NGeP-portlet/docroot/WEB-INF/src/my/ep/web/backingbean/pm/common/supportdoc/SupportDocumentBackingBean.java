@@ -34,8 +34,10 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -75,7 +77,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public static final int RESTR_COMP = 2;
 	public static final int RESTR_SUPP = 3;
 	public static final int RESTR_CATEGORY = 4;
-	public static final int CHECKLIST = 5;
+	public static final int RESTR_CERTBODY = 5;
+	public static final int CHECKLIST = 6;
 	
 	
 	
@@ -278,6 +281,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			this.getManagedBean().setSelectedTabIndex(RESTR_SUPP-1);
 		}else if(pmDocument.isByCategory()){
 			this.getManagedBean().setSelectedTabIndex(RESTR_CATEGORY-1);
+		}else if(pmDocument.isByCertBody()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_CERTBODY-1);
 		}
 	}
 	/**
@@ -296,6 +301,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				List <PmDocumentRestr> comTypeRestrictions = new ArrayList<PmDocumentRestr>();
 				List <PmDocumentRestr> suppTypeRestrictions = new ArrayList<PmDocumentRestr>();
 				List <PmDocumentRestr> categoryRestrictions = new ArrayList<PmDocumentRestr>();
+				List <PmDocumentRestr> certBodyRestrictions = new ArrayList<PmDocumentRestr>();
 				for(PmDocumentRestr pmDocumentRestr:pmDocument.getPmDocumentRestrs()){
 					if(pmDocument.isByAppType() && pmDocumentRestr.getAppTypeCode()!=null){
 						appTypeRestrictions.add(pmDocumentRestr);
@@ -310,12 +316,16 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 						pmDocumentRestr.setPmCategoryL3(retrieveCategoryL3DtlById(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id()));
 						categoryRestrictions.add(pmDocumentRestr);
 					}
+					if(pmDocument.isByCertBody() && pmDocumentRestr.getPmCertBody()!=null){						
+						certBodyRestrictions.add(pmDocumentRestr);
+					}
 				}
 
 				this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
 				this.getManagedBean().setComTypeRestrictions(comTypeRestrictions);
 				this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
 				this.getManagedBean().setCategoryRestrictions(categoryRestrictions);
+				this.getManagedBean().setCertBodyRestrictions(certBodyRestrictions);
 				
 				defaultTab(pmDocument);
 			}else if(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(pmDocument.getDocCategoryCode().getParameterCode())
@@ -474,6 +484,62 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}else{
 				throw new EpException(MessageConst.ERROR_770063);
 			}
+		}else if(restrictionType == RESTR_CERTBODY){
+			if(this.getManagedBean().getDeleteCertBodyRestrictions()!=null && !this.getManagedBean().getDeleteCertBodyRestrictions().isEmpty()){
+				if(this.getManagedBean().getCertBodyRestrictions()==null){
+					this.getManagedBean().setCertBodyRestrictions(new ArrayList<PmDocumentRestr>());
+				}
+				for(PmDocumentRestr pmDocumentRestr: this.getManagedBean().getDeleteCertBodyRestrictions()){
+					this.getManagedBean().getCertBodyRestrictions().remove(pmDocumentRestr);
+				}
+				this.getManagedBean().getDeleteCertBodyRestrictions().clear();
+
+			}else{
+				throw new EpException(MessageConst.ERROR_770063);
+			}
+			
+		}
+	}
+	
+	
+	public void deleteRestrictions(int restrictionType,int rowIndex){
+		log.info("deleteRestrictions");
+		PmDocumentRestr pmDocRestr = null;
+		if(restrictionType == RESTR_APP){
+			pmDocRestr = getManagedBean().getAppTypeRestrictions()
+					.get(rowIndex);
+			pmDocRestr.setDeleted(true);
+			getManagedBean().getAppTypeRestrictions().remove(pmDocRestr);
+		}else if(restrictionType == RESTR_COMP){
+			pmDocRestr = getManagedBean().getComTypeRestrictions()
+					.get(rowIndex);
+			pmDocRestr.setDeleted(true);
+			getManagedBean().getComTypeRestrictions().remove(pmDocRestr);	
+			
+		}else if(restrictionType == RESTR_SUPP){
+			pmDocRestr = getManagedBean().getSuppTypeRestrictions()
+					.get(rowIndex);
+			pmDocRestr.setDeleted(true);
+			getManagedBean().getSuppTypeRestrictions().remove(pmDocRestr);
+			
+		}else if(restrictionType == RESTR_CATEGORY){
+			pmDocRestr = getManagedBean().getCategoryRestrictions()
+					.get(rowIndex);
+			pmDocRestr.setDeleted(true);
+			getManagedBean().getCategoryRestrictions().remove(pmDocRestr);	
+			
+		}else if(restrictionType == CHECKLIST){
+			pmDocRestr = getManagedBean().getCheckListRestrictions()
+					.get(rowIndex);
+			pmDocRestr.setDeleted(true);
+			getManagedBean().getCheckListRestrictions().remove(pmDocRestr);	
+			
+		}else if(restrictionType == RESTR_CERTBODY){
+			pmDocRestr = getManagedBean().getCertBodyRestrictions()
+					.get(rowIndex);
+			pmDocRestr.setDeleted(true);
+			getManagedBean().getCertBodyRestrictions().remove(pmDocRestr);
+			
 		}
 	}
 
@@ -822,6 +888,16 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 							}
 						}
 					}
+				}else if(RESTR_CERTBODY == restrictType && pmDocument.isByCertBody()){
+					if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
+						isNotEmpty = false;
+					}else{
+						for(PmDocumentRestr pmDocumentRestr: restrictList){
+							if(pmDocumentRestr.getPmCertBody().getCertBodyId()==null){
+								isSelected = false;
+							}
+						}
+					}
 				}
 			}else{
 				if(CHECKLIST == restrictType){
@@ -846,6 +922,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					throw new EpException(MessageConst.ERROR_770069);
 				}else if(RESTR_CATEGORY == restrictType){
 					throw new EpException(MessageConst.ERROR_770070);
+				}else if(RESTR_CERTBODY == restrictType){
+					throw new EpException(MessageConst.ERROR_770157);
 				}else if(CHECKLIST == restrictType){
 					throw new EpException(MessageConst.ERROR_770071);
 				}
@@ -858,6 +936,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					throw new EpException(MessageConst.ERROR_770074);
 				}else if(RESTR_CATEGORY == restrictType){
 					throw new EpException(MessageConst.ERROR_770075);
+				}else if(RESTR_CERTBODY == restrictType){
+					throw new EpException(MessageConst.ERROR_770158);
 				}else if(CHECKLIST == restrictType){
 					throw new EpException(MessageConst.ERROR_770076);
 				}
@@ -982,6 +1062,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		validateRestriction(pmDocument, this.getManagedBean().getComTypeRestrictions(), RESTR_COMP);
 		validateRestriction(pmDocument, this.getManagedBean().getSuppTypeRestrictions(), RESTR_SUPP);
 		validateRestriction(pmDocument, this.getManagedBean().getCategoryRestrictions(), RESTR_CATEGORY);
+		validateRestriction(pmDocument, this.getManagedBean().getCertBodyRestrictions(), RESTR_CERTBODY);
 		validateRestriction(pmDocument, this.getManagedBean().getCheckListRestrictions(), CHECKLIST);
 		
 		//validate unique field
@@ -989,6 +1070,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		validateUniqueRestrType(RESTR_COMP);
 		validateUniqueRestrType(RESTR_SUPP);
 		validateUniqueRestrType(RESTR_CATEGORY);
+		validateUniqueRestrType(RESTR_CERTBODY);
 		validateUniqueRestrType(CHECKLIST);
 	}
 	
@@ -1001,6 +1083,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			addDocRestrToDocument(pmDocument, this.getManagedBean().getComTypeRestrictions());
 			addDocRestrToDocument(pmDocument, this.getManagedBean().getSuppTypeRestrictions());
 			addDocRestrToDocument(pmDocument, this.getManagedBean().getCategoryRestrictions());
+			addDocRestrToDocument(pmDocument, this.getManagedBean().getCertBodyRestrictions());
 			addDocRestrToDocument(pmDocument, this.getManagedBean().getCheckListRestrictions());
 			
 			
@@ -1410,6 +1493,70 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		}
 	}
 	
+	
+	public void updateTabSelectedIndex(int index){
+		defaultTab(getManagedBean().getSelectedDocument());
+		
+		int tabIndex = index - 1;
+		if(tabIndex == 0 && getManagedBean().getSelectedDocument().isByAppType()){
+			getManagedBean().setSelectedTabIndex(tabIndex);			
+		}else if(tabIndex == 1 && getManagedBean().getSelectedDocument().isByCompType()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}else if(tabIndex == 2 && getManagedBean().getSelectedDocument().isBySupplierType()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}else if(tabIndex == 3 && getManagedBean().getSelectedDocument().isByCategory()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}else if(tabIndex == 4 && getManagedBean().getSelectedDocument().isByCertBody()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}
+		
+	}
+	
+	public void updateCertBody(List<PmCertBody> pmCertBodies){
+		log.info("updateCertBody");
+		if(pmCertBodies!=null){
+			if(this.getManagedBean().getCertBodyRestrictions()==null){
+				this.getManagedBean().setCertBodyRestrictions(new ArrayList<PmDocumentRestr>());
+			}
+			if(isUniqueCertBody()){
+				PmDocumentRestr certBodyRestr = null;
+				for(PmCertBody pmCertBody: pmCertBodies){
+					certBodyRestr = new PmDocumentRestr();
+					certBodyRestr.setPmCertBody(pmCertBody);
+					this.getManagedBean().getCertBodyRestrictions().add(certBodyRestr);
+				}
+				this.getManagedBean().getSelectedCertBodies().clear();
+			}else{
+				throw new EpException(MessageConst.ERROR_770159);
+			}
+		}
+	}
+	
+	private boolean isUniqueCertBody(){
+		log.info("isUniqueCertBody");
+		boolean isUnique = true;
+		if(this.getManagedBean().getSelectedCertBodies()!=null 
+				&& !this.getManagedBean().getSelectedCertBodies().isEmpty()){
+			if(this.getManagedBean().getCertBodyRestrictions()!=null && !this.getManagedBean().getCertBodyRestrictions().isEmpty()){
+				List <Long> certBodyId = new ArrayList<Long>();
+				
+				for(PmDocumentRestr pmDocumentRestr: this.getManagedBean().getCertBodyRestrictions()){
+					if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){
+						certBodyId.add(pmDocumentRestr.getPmCertBody().getCertBodyId());
+					}
+				}	
+			
+				for(PmCertBody pmCertBody: this.getManagedBean().getSelectedCertBodies()){
+					if(certBodyId.contains(pmCertBody.getCertBodyId())){
+						isUnique = false;
+						break;
+					}
+				}
+			}
+		}
+		return isUnique;
+	}
+	
 	/**
 	 * End
 	 */
@@ -1450,5 +1597,11 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		return CHECKLIST;
 	}
 	
+	/**
+	 * @return the restrCertbody
+	 */
+	public int getRestrCertbody() {
+		return RESTR_CERTBODY;
+	}
 
 }
