@@ -33,6 +33,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private int selectedTabIndex;
 	// Organization Search
 	private OrganisationSearchBean organisationSearchBean;
+	private int searchOrgCategory = 0;
 	private int orgCategory = 0;
 	private String orgType;
 	private Long orgTypeId;
@@ -703,6 +704,14 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 	public void setOrgCategory(int orgCategory) {
 		this.orgCategory = orgCategory;
+	}
+
+	public int getSearchOrgCategory() {
+		return searchOrgCategory;
+	}
+
+	public void setSearchOrgCategory(int searchOrgCategory) {
+		this.searchOrgCategory = searchOrgCategory;
 	}
 
 	
