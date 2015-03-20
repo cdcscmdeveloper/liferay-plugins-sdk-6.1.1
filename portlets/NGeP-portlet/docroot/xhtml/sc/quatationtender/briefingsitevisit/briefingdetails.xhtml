@@ -73,8 +73,8 @@
 							</p:selectOneMenu> <p:message id="briefstateMsg" for="briefstate" display="icon" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.so.add1']}" />
-							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.so.add1']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="add1"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.so.add1']}"
@@ -149,8 +149,10 @@
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.so.postcode']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.postcode}"
-								size="38" maxlength="10" /> <p:message id="briefpostMsg"
-								for="briefpost" display="icon" /></td>
+								size="38" >
+								<p:ajax event="blur" partialSubmit="true" process="@this"
+									listener="#{qTBriefingSiteVisitBackingBean.validatePostcode}" />
+							</p:inputText> <p:message id="briefpostMsg" for="briefpost" display="icon" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" />
