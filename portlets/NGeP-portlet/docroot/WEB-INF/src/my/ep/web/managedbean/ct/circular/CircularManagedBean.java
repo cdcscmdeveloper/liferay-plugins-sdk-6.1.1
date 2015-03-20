@@ -26,7 +26,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  * Circular Managed Bean
  * 
  * @author kieyun
- * @Created 23/12/2014
+ * @since 23/12/2014
  */
 @ManagedBean
 @SessionScoped

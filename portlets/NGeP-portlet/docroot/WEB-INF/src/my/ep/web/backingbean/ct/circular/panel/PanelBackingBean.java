@@ -127,7 +127,7 @@ import com.liferay.portal.util.PortalUtil;
  * Circular Panel Backingbean
  * 
  * @author alam
- * @Created 9/10/2013
+ * @since 9/10/2013
  */
 @ManagedBean
 @RequestScoped

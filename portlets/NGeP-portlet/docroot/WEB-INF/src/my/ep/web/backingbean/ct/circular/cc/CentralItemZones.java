@@ -6,11 +6,13 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 
+/**
+ * Serializable For Central Item Zone
+ * 
+ * @author Alam
+ * @since 2/6/2014
+ */
 public class CentralItemZones implements Serializable{
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8954854049553749821L;
 	private	String zone;
 	private	PmState	state;
