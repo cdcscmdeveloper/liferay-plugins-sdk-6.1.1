@@ -14,6 +14,10 @@
 			value="#{supportDocBackingBean.managedBean.categoryRestrictions}"
 			var="restrict">
 			<ac:paginator for="dtCat" />
+		<p:column headerText="#{lbl['lbl.pm.category.code']}">  
+	    	#{(restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code).concat(restrict.pmCategoryL3.pmCategoryL2.categoryL2Code).concat(restrict.pmCategoryL3.categoryL3Code)}
+	    	
+        </p:column>
 			<p:column headerText="#{lbl['lbl.pm.category.l1']}">  
 	    	#{restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
         </p:column>
