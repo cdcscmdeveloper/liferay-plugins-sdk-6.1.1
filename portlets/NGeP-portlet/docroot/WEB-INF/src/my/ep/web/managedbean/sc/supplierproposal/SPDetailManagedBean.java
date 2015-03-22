@@ -10,8 +10,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
