@@ -12,11 +12,11 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 
+import my.ep.constants.CommonConstants;
+import my.ep.persistence.entity.sc.common.ScAttachment;
+
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-
-import my.ep.constants.CommonConstants;
-import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 
 /**
  * Stream Content for Amendment

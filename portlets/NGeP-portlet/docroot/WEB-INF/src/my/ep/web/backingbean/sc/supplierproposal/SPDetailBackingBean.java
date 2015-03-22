@@ -62,8 +62,8 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
@@ -218,7 +218,7 @@ public class SPDetailBackingBean extends
 				// hide the save/submit,add and delete buttons when QT is closed
 				Date closingDate = getManagedBean().getQt().getClosingDate();
 				if (new Date(System.currentTimeMillis()).after(closingDate)) {
-					getManagedBean().setClosed(true);
+					//getManagedBean().setClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
 					Date today = new Date();
