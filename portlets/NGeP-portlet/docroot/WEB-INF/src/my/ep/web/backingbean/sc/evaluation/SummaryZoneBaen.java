@@ -5,8 +5,7 @@ package my.ep.web.backingbean.sc.evaluation;
 
 import java.util.List;
 
-import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
