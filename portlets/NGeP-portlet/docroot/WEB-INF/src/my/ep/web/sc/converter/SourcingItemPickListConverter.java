@@ -5,7 +5,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 
 import org.primefaces.component.picklist.PickList;
 import org.primefaces.model.DualListModel;

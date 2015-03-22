@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sc.directpurchase.ScApprovalUser;
+import my.ep.persistence.entity.sc.common.ScApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 
 public class ApprovalUserHelper {

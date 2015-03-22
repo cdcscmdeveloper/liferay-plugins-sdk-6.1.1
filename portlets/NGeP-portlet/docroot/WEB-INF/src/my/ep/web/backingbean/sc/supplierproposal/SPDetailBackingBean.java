@@ -218,7 +218,7 @@ public class SPDetailBackingBean extends
 				// hide the save/submit,add and delete buttons when QT is closed
 				Date closingDate = getManagedBean().getQt().getClosingDate();
 				if (new Date(System.currentTimeMillis()).after(closingDate)) {
-					//getManagedBean().setClosed(true);
+					getManagedBean().setClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
 					Date today = new Date();
