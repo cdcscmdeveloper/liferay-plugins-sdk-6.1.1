@@ -39,9 +39,12 @@
 		<p:dataTable id="loiItemListId" var="loiloaItem"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
-
+             <ac:paginator for="loiItemListId" />
 			<p:columnGroup type="header">
 				<p:row>
+				 <p:column  rowspan="3" style="width:8%;white-space:normal;"  rendered="#{isZonal}"
+						headerText="#{lbl['lbl.sc.zone']}" />
+				
 					<p:column rowspan="3" style="width:15%;white-space:normal;"
 						headerText="#{lbl['lbl.sc.loiloa.loi.item']}" />
 
@@ -83,6 +86,16 @@
 				</p:row>
 			</p:columnGroup>
 
+            <p:column style="width:15%;white-space:normal;" rendered="#{isZonal}">
+                <p:commandLink id="zoneName"
+					oncomplete="zoneLocPopup.show();"
+					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
+					
+					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{loiLoaItem.tplSpecZoneDtl}" />
+					
+					<h:outputText value="#{loiLoaItem.tplSpecZoneDtl.zoneName}" />
+			 </p:commandLink>
+           </p:column>
 			<p:column style="width:15%;white-space:normal;">
                    #{loiloaItem.scRequestItem.itemName}
              </p:column>
