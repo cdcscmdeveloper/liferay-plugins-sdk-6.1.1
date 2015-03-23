@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.category;
 
 import java.sql.Timestamp;
@@ -46,22 +56,44 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * The Class CategoryBackingBean.
+ * @author hktan
+ */
 @ManagedBean(name = "categoryBackingBean")
 @ViewScoped
 //@RequestScoped
 public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(CategoryBackingBean.class);
 
+	/** The search category. */
 	private IPagingDataModel<Object[]> searchCategory = new SearchCategoryPagingDataModel();
+	
+	/** The search lov paging data model. */
 	private IPagingDataModel<PmCategoryL3> searchLOVPagingDataModel = new SearchLOVPagingDataModel();
+	
+	/** The search lov machine paging data model. */
 	private IPagingDataModel<PmMachine> searchLOVMachinePagingDataModel = new SearchLOVMachinePagingDataModel();
+	
+	/** The flag. */
 	private boolean flag;
+	
+	/** The result. */
 	boolean result = false;
 
+	/**
+	 * Instantiates a new category backing bean.
+	 */
 	public CategoryBackingBean() {
 		
 	}
 	
+	/**
+	 * Search category.
+	 */
 	public void SearchCategory() {
 		boolean hasSearchValue = false;
 		
@@ -82,14 +114,22 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		searchCategory.reloadData();
 	}
 	
+	/**
+	 * The Class SearchCategoryPagingDataModel.
+	 */
 	private class SearchCategoryPagingDataModel extends PagingDataModel<Object[]> {
 
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search category paging data model.
+		 */
 		public SearchCategoryPagingDataModel() {
 			super("searchCategory");
 		}
 
+		
 		public ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
 			ICategoryCodeSO categoryCodeSO;
 			try {
@@ -146,14 +186,24 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	/**
+	 * The Class SearchLOVPagingDataModel.
+	 */
 	private class SearchLOVPagingDataModel extends PagingDataModel<PmCategoryL3> {
 
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search lov paging data model.
+		 */
 		public SearchLOVPagingDataModel() {
 			super("searchLOVPagingDataModel");
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		public ISearchResultBean<PmCategoryL3> pageChangeListener(ISearchBean<PmCategoryL3> searchBean) {
 			ICategoryCodeSO categoryCodeSO;
 			try {
@@ -223,14 +273,22 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	/**
+	 * The Class SearchLOVMachinePagingDataModel.
+	 */
 	private class SearchLOVMachinePagingDataModel extends PagingDataModel<PmMachine> {
 
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search lov machine paging data model.
+		 */
 		public SearchLOVMachinePagingDataModel() {
 			super("searchLOVMachinePagingDataModel");
 		}
 
+		
 		public ISearchResultBean<PmMachine> pageChangeListener(ISearchBean<PmMachine> searchBean) {
 			ICategoryCodeSO categoryCodeSO;
 			try {
@@ -280,6 +338,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	/**
+	 * Adds the category.
+	 * 
+	 * @return the string
+	 */
 	public String addCategory() {
 		this.getManagedBean().setPmCategoryL1(new PmCategoryL1());
 		this.getManagedBean().setCatLevel("1");
@@ -287,6 +350,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true";
 	}
 	
+	/**
+	 * Adds the sub category.
+	 * 
+	 * @return the string
+	 */
 	public String addSubCategory() {
 		PmCategoryL2 pmCategoryL2 = new PmCategoryL2();
 		pmCategoryL2.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
@@ -297,6 +365,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl2.xhtml";
 	}
 	
+	/**
+	 * Adds the sub category.
+	 * 
+	 * @param id
+	 *            (Long id(mandatory))
+	 * @return String(/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true)
+	 */
 	public String addSubCategory(Long id) {
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		try{
@@ -325,6 +400,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true";
 	}
 	
+	/**
+	 * Adds the sub division.
+	 * 
+	 * @return string(/xhtml/pm/category/categoryl3.xhtml)
+	 */
 	public String addSubDivision() {
 		PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
 		pmCategoryL3.setPmCategoryL2(this.getManagedBean().getPmCategoryL2());
@@ -342,6 +422,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
+	/**
+	 * Adds the sub division.
+	 * 
+	 * @param id
+	 *            (Long id(Mandatory))
+	 * @return string(/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true)
+	 */
 	public String addSubDivision(Long id) {
 		ICategoryCodeSO categoryCodeSO;
 		try{
@@ -377,6 +464,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
 	
+	/**
+	 * Adds the basic category.
+	 */
 	public void addBasicCategory() {
 		
 		List<SelectItem> searchField = new ArrayList<SelectItem>();
@@ -404,6 +494,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().getPmCategoryL3();
 	}
 	
+	/**
+	 * Adds the pm machine.
+	 */
 	public void addPmMachine() {
 		
 		List<SelectItem> searchField = new ArrayList<SelectItem>();
@@ -425,6 +518,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 	}
 	
+	/**
+	 * Edits the category.
+	 * 
+	 * @param id
+	 *            (Long id(mandatory))
+	 * @return string(/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true)
+	 */
 	public String editCategory(Long id) {
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		try{
@@ -450,6 +550,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true";
 	}
 	
+	/**
+	 * Pre render pm categoryl1.
+	 */
 	public void preRenderPmCategoryl1() {
 		log.info("In preRenderPmCategoryl1");
 		ICategoryCodeSO categoryCodeSO;
@@ -482,6 +585,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				.handleNavigation(fc, null, "/xhtml/pm/category/categoryl1.xhtml");
 	}
 	
+	/**
+	 * Edits the sub category.
+	 * 
+	 * @param id
+	 *            (Long id(mandatory))
+	 * @return string(/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true)
+	 */
 	public String editSubCategory(Long id) {
 		ICategoryCodeSO categoryCodeSO;
 		try{
@@ -504,6 +614,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true";
 	}
 	
+	/**
+	 * Edits the sub division.
+	 * 
+	 * @param id
+	 *            Long id(mandatory))
+	 * @return string(/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true)
+	 */
 	public String editSubDivision(Long id) {
 		log.info("***editSubDivision id***" + id);
 		ICategoryCodeSO categoryCodeSO;
@@ -522,6 +639,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				resDTO.getCategoryL3().setHomeOperatedValue(resDTO.getCategoryL3().getHomeOperated()==1?true:false);
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
 				this.getManagedBean().setNewCategory(false);
+				
 				reloadSelectionPmCategoryL3();				
 				updateSpecialCategory();
 				for(PmBasicCategory pmBasicCategory: this.getManagedBean().getPmCategoryL3().getPmBasicCategory()){
@@ -548,6 +666,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
 	
+	/**
+	 * Save category.
+	 * 
+	 * @return string
+	 */
 	public String saveCategory() {
 		ICategoryCodeSO categoryCodeSO;
 		try{
@@ -611,10 +734,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	    return items;
 	}*/
 	
+	/**
+	 * Gets the record status list.
+	 * 
+	 * @return the record status list
+	 */
 	public static SelectItem[] getRecordStatusList() {
 		return PmCommonUtil.getCommonStatusOptions();
 	}
 	
+	/**
+	 * Save sub category.
+	 * 
+	 * @return the string
+	 */
 	public String saveSubCategory() {
 		ICategoryCodeSO categoryCodeSO;
 		try{
@@ -679,12 +812,20 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 	}
 	
+	/**
+	 * Pre render search.
+	 */
 	private void preRenderSearch() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/pm/category/search.xhtml");
 	}
 
+	/**
+	 * Save sub division.
+	 * 
+	 * @return the string
+	 */
 	public String saveSubDivision() {
 		ICategoryCodeSO categoryCodeSO;
 		IParameterSO parameterSO;
@@ -798,6 +939,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
+	/**
+	 * Delete basic category.
+	 */
 	public void deleteBasicCategory() {
 		log.info("In deleteBasicCategory");
 		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
@@ -819,6 +963,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		//log.info("deleteBasicCategory this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
 	}
 	
+	/**
+	 * Delete pm machine.
+	 */
 	public void deletePmMachine() {
 		log.info("In deletePmMachine");
 		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
@@ -841,6 +988,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		log.info("deletePmMachine this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
 	}
 	
+	/**
+	 * Validate pm category l1.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean validatePmCategoryL1(){
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		try{
@@ -900,6 +1052,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return true;
 	}
 	
+	/**
+	 * Validate pm category l2.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean validatePmCategoryL2(){
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		try{
@@ -960,6 +1117,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return true;
 	}
 
+	/**
+	 * Validate pm category l3.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean validatePmCategoryL3(){
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		try{
@@ -1123,6 +1285,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 	*/
 	
+	/**
+	 * Populate to save lov.
+	 */
 	public void populateToSaveLOV() {
 		log.info("In populateToSaveLOV");
 		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
@@ -1167,6 +1332,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 	}
 	
+	/**
+	 * Populate to save pm machine lov.
+	 */
 	public void populateToSavePmMachineLOV() {
 		log.info("In populateToSavePmMachineLOV");
 		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
@@ -1222,6 +1390,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 	}
 	
+	/**
+	 * Reload selection pm category l3.
+	 */
 	public void reloadSelectionPmCategoryL3() {
 		IParameterSO parameterSO;
 		try{
@@ -1276,6 +1447,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	/**
+	 * Reset category.
+	 */
 	public void resetCategory() {
 		this.getManagedBean().setMainCatCode(null);
 		this.getManagedBean().setMainCatDesc(null);
@@ -1287,6 +1461,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		searchCategory.reloadData();
 	}
 	
+	/**
+	 * Reset lov.
+	 */
 	public void resetLOV() {
 		getManagedBean().setSearchValue(new String[3]);
 		getManagedBean().setSearchFieldValue(new String[3]);
@@ -1295,6 +1472,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setSelectedLOV(new ArrayList<PmCategoryL3>());
 	}
 	
+	/**
+	 * Reset pm machine lov.
+	 */
 	public void resetPmMachineLOV() {
 		getManagedBean().setSearchValue(new String[3]);
 		getManagedBean().setSearchFieldValue(new String[3]);
@@ -1303,10 +1483,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setSelectedpmMachine(new ArrayList<PmMachine>());
 	}
 	
+	/**
+	 * Update category level.
+	 */
 	public void updateCategoryLevel(){
 		log.info("getManagedBean().getPmCategoryLevel() "+getManagedBean().getPmCategoryLevel());
 	}
 	
+	/**
+	 * Update special group.
+	 */
 	public void updateSpecialGroup(){
 		log.info("getManagedBean().updateSpecialGroup() ");
 		if(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue()){
@@ -1316,6 +1502,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 			
 	}
+	
+	/**
+	 * Update special category.
+	 */
 	public void updateSpecialCategory(){
 
 		if(this.getManagedBean().getSpecialCategory()!=null && !this.getManagedBean().getSpecialCategory().isEmpty()){
@@ -1337,6 +1527,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	/**
+	 * Update machine.
+	 */
 	public void updateMachine(){
 		if(this.getManagedBean().getPmMachine()!=null){
 			log.info("this.getManagedBean().getPmMachine().size() = "+this.getManagedBean().getPmMachine().size());
@@ -1367,46 +1560,90 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	/**
+	 * Search.
+	 */
 	public void search() {
 		searchCategory.reloadData();
 	}
 	
+	/**
+	 * Search lov.
+	 */
 	public void searchLOV() {
 		searchLOVPagingDataModel.reloadData();
 	}
 	
+	/**
+	 * Search pm machine lov.
+	 */
 	public void searchPmMachineLOV() {
 		searchLOVMachinePagingDataModel.reloadData();
 	}
 	
+	/**
+	 * Back to search.
+	 * 
+	 * @return the string
+	 */
 	public String backToSearch() {
 		//resetCategory();
 		return "/xhtml/pm/category/search.xhtml?faces-redirect=true";
 	}
 
+	/**
+	 * Gets the search category.
+	 * 
+	 * @return the search category
+	 */
 	public IPagingDataModel<Object[]> getSearchCategory() {
 		return searchCategory;
 	}
 
+	/**
+	 * Sets the search category paging data model.
+	 * 
+	 * @param searchCategory
+	 *            the new search category paging data model
+	 */
 	public void setSearchCategoryPagingDataModel(
 			IPagingDataModel<Object[]> searchCategory) {
 		this.searchCategory = searchCategory;
 	}
 	
+	/**
+	 * Gets the search lov paging data model.
+	 * 
+	 * @return the search lov paging data model
+	 */
 	public IPagingDataModel<PmCategoryL3> getSearchLOVPagingDataModel() {
 		return searchLOVPagingDataModel;
 	}
 
+	/**
+	 * Sets the search lov paging data model.
+	 * 
+	 * @param searchLOVPagingDataModel
+	 *            the new search lov paging data model
+	 */
 	public void setSearchLOVPagingDataModel(
 			IPagingDataModel<PmCategoryL3> searchLOVPagingDataModel) {
 		this.searchLOVPagingDataModel = searchLOVPagingDataModel;
 	}
 	
 
+	/**
+	 * Reset.
+	 */
 	public void reset() {
 		
 	}
 	
+	/**
+	 * Gets the faces scopes.
+	 * 
+	 * @return the faces scopes
+	 */
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -1414,6 +1651,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 
 	/**
+	 * Checks if is flag.
+	 * 
 	 * @return the flag
 	 */
 	public boolean isFlag() {
@@ -1421,6 +1660,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 
 	/**
+	 * Sets the flag.
+	 * 
 	 * @param flag
 	 *            the flag to set
 	 */
@@ -1428,36 +1669,70 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.flag = flag;
 	}
 
+	/**
+	 * Gets the search lov machine paging data model.
+	 * 
+	 * @return the search lov machine paging data model
+	 */
 	public IPagingDataModel<PmMachine> getSearchLOVMachinePagingDataModel() {
 		return searchLOVMachinePagingDataModel;
 	}
 
+	/**
+	 * Sets the search lov machine paging data model.
+	 * 
+	 * @param searchLOVMachinePagingDataModel
+	 *            the new search lov machine paging data model
+	 */
 	public void setSearchLOVMachinePagingDataModel(
 			IPagingDataModel<PmMachine> searchLOVMachinePagingDataModel) {
 		this.searchLOVMachinePagingDataModel = searchLOVMachinePagingDataModel;
 	}
 	
+	/**
+	 * Adds the category restr.
+	 */
 	public void addCategoryRestr(){
 		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs() == null){
 			this.getManagedBean().getPmCategoryL3().setPmCategoryRestrs(new ArrayList<PmCategoryRestr>());
+						
 		}
 		
 		PmCategoryRestr restr = new PmCategoryRestr();
+		
 		restr.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 		restr.setCompanyTypeId(new PmParameter());
 		
+		
+		
 		this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().add(restr);
+		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null)
+		{
+			this.getManagedBean().setCategoryForCompanyType(false);
+		}
 		
 	}
 	
-	public void deleteCategoryRestr(){
-		if(this.getManagedBean().getSelectedPmCategoryRestr().size() > 0){
-			for(PmCategoryRestr restrc : this.getManagedBean().getSelectedPmCategoryRestr()){
-				this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(restrc);
-			}
-		}
+	/**
+	 * Delete category restr.
+	 * 
+	 * @param pmCategoryRestr
+	 *            the pm category restr
+	 */
+	public void deleteCategoryRestr(PmCategoryRestr pmCategoryRestr){
+		/*if(this.getManagedBean().getSelectedPmCategoryRestr()!=null && this.getManagedBean().getSelectedPmCategoryRestr().size() > 0){*/
+			//for(PmCategoryRestr restrc : this.getManagedBean().getSelectedPmCategoryRestr()){
+				this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(pmCategoryRestr);
+				
+			//}
+		//}
 	}
 
+	/**
+	 * Gets the populate company type list.
+	 * 
+	 * @return List<PmParameterDesc>
+	 */
 	public List<PmParameterDesc> getPopulateCompanyTypeList() {
 		if(this.getManagedBean().getCompanyTypeList()==null || this.getManagedBean().getCompanyTypeList().size() < 1){
 			//List<SelectItem> populateCompanyTypeList = new ArrayList<SelectItem>();
@@ -1477,6 +1752,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return this.getManagedBean().getCompanyTypeList();
 	}
 	
+	/**
+	 * Check category restr duplicate company type.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean checkCategoryRestrDuplicateCompanyType(){
 		
 		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs() != null && this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size() > 0){

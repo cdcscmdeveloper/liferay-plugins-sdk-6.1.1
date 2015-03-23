@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.educationfield;
 
 import java.sql.Timestamp;
@@ -38,27 +48,43 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+
 /**
- * @author DK
+ * The Class EducationBackingBean.
  * 
+ * @author DK
  */
 @ManagedBean(name = "educationBackingBean")
 @ViewScoped
 public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> {
 
+	/** The Constant NAV_TO_MAIN. */
 	private static final String NAV_TO_MAIN = "educationFieldMain";
+	
+	/** The Constant NAV_TO_MAINTAIN. */
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/educationfield/educationFieldMaintenance";
 
+	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(EducationBackingBean.class);
 
+	/** The education field data model. */
 	private IPagingDataModel<PmEduField> educationFieldDataModel = new EducationFieldPagingDataModel();
 
+	/**
+	 * Instantiates a new education backing bean.
+	 */
 	public EducationBackingBean() {
 		log.info("inside constructor");
 
 	}
 
+	/**
+	 * Debug logger.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -67,8 +93,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * reload to education field search page
+	 * reload to education field search page.
 	 * 
+	 * @return the string
 	 */
 	public String redirectEduSearch() {
 		debugLogger("redirectEduSearch");
@@ -78,8 +105,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * reset search for education field
-	 * 
+	 * reset search for education field.
 	 */
 	public void resetSearchEdu() {
 		debugLogger("resetSearchEdu");
@@ -92,8 +118,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * reload to education field creation page
+	 * reload to education field creation page.
 	 * 
+	 * @return (/xhtml/pm/educationfield/educationFieldMaintenance.xhtml)
 	 */
 	public String createEducation() {
 		debugLogger("createEducation");
@@ -107,8 +134,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * get status item dropdown
+	 * get status item dropdown.
 	 * 
+	 * @return the education status list
 	 */
 	public SelectItem[] getEducationStatusList() {
 
@@ -118,13 +146,22 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		return items;
 	}	
 	
+	/**
+	 * Gets the pm education status list.
+	 * 
+	 * @return SelectItem[]
+	 */
 	public static SelectItem[] getPmEducationStatusList() {
 		return PmCommonUtil.getStatusOptions();
 	}
 
 	/**
 	 * search education field info based on education field names and codes
-	 * search
+	 * search.
+	 * 
+	 * @param searchBean
+	 *            (ISearchBean<PmEduField> searchBean)
+	 * @return ISearchBean<PmEduField> searchBean
 	 */
 	private ISearchBean<PmEduField> getEducationSearchBeanData(
 			ISearchBean<PmEduField> searchBean) {
@@ -161,6 +198,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		return searchBean;
 	}
 
+	/**
+	 * Retrieve education field.
+	 */
 	public void retrieveEducationField() {
 		debugLogger("retrieveEducationField");
 
@@ -168,19 +208,38 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 
 	}
 
+	/**
+	 * Gets the education field data model.
+	 * 
+	 * @return the education field data model
+	 */
 	public IPagingDataModel<PmEduField> getEducationFieldDataModel() {
 		return educationFieldDataModel;
 	}
 
+	/**
+	 * Sets the education field data model.
+	 * 
+	 * @param educationFieldDataModel
+	 *            the new education field data model
+	 */
 	public void setEducationFieldDataModel(
 			IPagingDataModel<PmEduField> educationFieldDataModel) {
 		this.educationFieldDataModel = educationFieldDataModel;
 	}
 
+	/**
+	 * The Class EducationFieldPagingDataModel.
+	 */
 	private class EducationFieldPagingDataModel extends
 			PagingDataModel<PmEduField> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new education field paging data model.
+		 */
 		public EducationFieldPagingDataModel() {
 			super("educationSR", getManagedBean().isLazy());
 		}
@@ -213,7 +272,11 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * get pmEduField object info into maintenance page
+	 * get pmEduField object info into maintenance page.
+	 * 
+	 * @param pmEduField
+	 *            (PmEduField pmEduField)
+	 * @return (/xhtml/pm/educationfield/educationFieldMaintenance.xhtml)
 	 */
 	public String goToMaintaincePage(PmEduField pmEduField) {
 		debugLogger("goToMaintaincePage");
@@ -225,8 +288,10 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * Validation message for pmEdufield details
+	 * Validation message for pmEdufield details.
 	 * 
+	 * @param eduField
+	 *            (PmEduField eduField)
 	 */
 	private void validationMessage(PmEduField eduField) {
 		debugLogger("validationMessage");
@@ -246,8 +311,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * save and update education field details
+	 * save and update education field details.
 	 * 
+	 * @return the string
 	 */
 	public String saveEducationDtls() {
 		debugLogger("saveEducationDtls");
@@ -325,8 +391,10 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * add list of category into PmEduFieldRestr
+	 * add list of category into PmEduFieldRestr.
 	 * 
+	 * @param pmCategoryL3s
+	 *            (List<PmCategoryL3> pmCategoryL3s)
 	 */
 	public void addEducationList(List<PmCategoryL3> pmCategoryL3s) {
 		debugLogger("addEducationList");
@@ -348,7 +416,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	}
 
 	/**
-	 * delete list of category into PmEduFieldRestr by selection
+	 * delete list of category into PmEduFieldRestr by selection.
 	 */
 	public void deleteEducationList() {
 		debugLogger("deleteEducationList");
@@ -375,6 +443,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 
 	}
 
+	/**
+	 * Pre load education filed.
+	 */
 	public void preLoadEducationFiled() {
 		System.out.println("preLoadgroupSearch ....");
 		renewSesionObject();
@@ -383,6 +454,12 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 				.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
+	/**
+	 * Sets the user details.
+	 * 
+	 * @param baseObject
+	 *            (BaseEntity baseObject)
+	 */
 	public void setUserDetails(BaseEntity baseObject) {
 		if (baseObject.isBrandNew()) {
 			baseObject.setCreatedBy(1L);
