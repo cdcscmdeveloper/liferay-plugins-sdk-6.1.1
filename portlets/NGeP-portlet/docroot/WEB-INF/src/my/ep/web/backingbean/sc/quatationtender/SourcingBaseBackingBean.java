@@ -712,8 +712,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	protected File generatePdfFromOracle(String reportName,
-			Map<String, String> paramMap, ScAttachment attachment)
-			throws IOException {
+			Map<String, String> paramMap, ScAttachment attachment,
+			boolean checkDownloadstatus) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
@@ -736,17 +736,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
-
+		OutputStream out = null;
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename="
-				+ attachment.getFileName());
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
+		if (!checkDownloadstatus) {
+			res.setHeader("Content-Disposition", "attachment; filename="
+					+ attachment.getFileName());
+			res.setHeader("Content-Transfer-Encoding", "binary");
+			res.setContentType("application/octet-stream");
+			res.flushBuffer();
+			out = res.getOutputStream();
+		}
+
 		File localFile = new File(getActualFilePath(attachment));
 
 		if (reportUrl.toString() != null) {
@@ -774,8 +777,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			fos.close();
 			input.close();
 		}
-		out.flush();
-		out.close();
+		if (!checkDownloadstatus) {
+			out.flush();
+			out.close();
+		}
 		return localFile;
 	}
 
