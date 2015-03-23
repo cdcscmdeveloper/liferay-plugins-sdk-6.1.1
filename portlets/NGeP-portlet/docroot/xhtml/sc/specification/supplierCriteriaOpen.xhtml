@@ -164,6 +164,9 @@
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index"
 						rowKey="#{zoneTree}">
+						
+						<ac:paginator for="zoneLocationDataTable" />
+						
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -202,6 +205,11 @@
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right">
+					<p:selectBooleanCheckbox id="checkAll" style="float:left;margin-top: 13px;margin-right: -4px;">
+						<p:ajax event="change" partialSubmit="true" process="@all" update="zoneLocationDataTable" listener="#{specificationBackingBean.checkAllConditions}" />
+					</p:selectBooleanCheckbox>
+					<p:spacer width="1" />
+					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -257,6 +265,9 @@
 					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
+						
+						<ac:paginator for="zoneyesDataTable" />
+						
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -301,6 +312,11 @@
 
 				</h:panelGrid>
 				<div align="right" style="width: 100%">
+					<p:selectBooleanCheckbox id="checkAllZones" style="float:left;margin-top: 13px;margin-right: -4px;">
+						<p:ajax event="change" partialSubmit="true" process="@all" update="zoneyesDataTable" listener="#{specificationBackingBean.checkAllConditions}" />
+					</p:selectBooleanCheckbox>
+					<p:spacer width="1" />
+					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -315,7 +331,7 @@
 			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
 				widgetVar="ZoneLocation" modal="true" width="490" position="top"
 				height="410">
-				<h:panelGroup id="zonePopupPanel">
+				<p:panel id="zonePopupPanel">
 					<table border="0">
 						<TR>
 							<TD width="80%">
@@ -341,23 +357,30 @@
 								</div>
 							</TD>
 						</TR>
-
+						<tr>
+							<td><p:spacer height="1" /></td>
+						</tr>
+						<tr>
+							<td>
+								<div class="ppRightBtn">
+									<p:selectBooleanCheckbox id="popupCheckAll"  style="float:left;margin-top: 13px;margin-right: -4px;">
+										<p:ajax event="change" partialSubmit="true" process="@all" update=":form:treeZoneLocationPopup" listener="#{specificationBackingBean.checkAllPopUpConditions}" />
+									</p:selectBooleanCheckbox>
+									<p:spacer width="1" />
+									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
+									<p:commandButton value="#{lbl['lbl.btn.ok']}"
+										onclick="ZoneLocation.hide();" process="@all"
+										update="@this, zoneLocationDataTable, zonePopupPanel, zoneyesDataTable"
+										action="#{specificationBackingBean.updateSupplierLocations}">
+									</p:commandButton>
+									<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+										onclick="ZoneLocation.hide();" />
+								</div>
+							</td>
+						</tr>
 					</table>
-				</h:panelGroup>
-				<p:commandButton
-					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-					style="float:right;" onclick="ZoneLocation.hide();" />
-					&#160;&#160;
-				<p:commandButton
-					value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-					style="float:right;" onclick="ZoneLocation.hide();" process="@all"
-					update="@this, zoneLocationDataTable, zonePopupPanel, zoneyesDataTable"
-					action="#{specificationBackingBean.updateSupplierLocations}">
-				</p:commandButton>
-
+				</p:panel>
 			</p:dialog>
-
-
 		</h:panelGroup>
 	</h:panelGroup>
 
