@@ -1,7 +1,7 @@
 /**
  * Copyright © 2013 Archisoft. All rights reserved.
  */
-package my.ep.web.backingbean.sc.directpurchase;
+package my.ep.web.backingbean.sc.requestnote;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -123,9 +123,11 @@ import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
+import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
