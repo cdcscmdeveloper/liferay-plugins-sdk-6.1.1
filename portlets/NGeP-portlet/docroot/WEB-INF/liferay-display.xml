@@ -72,7 +72,6 @@
 		<category name="category.ep.sc">
 			<portlet id="scProcurementList" />
 			<portlet id="scProcurementPlanList" />
-			<portlet id="scDirectPurchase" />
 			<portlet id="simpleQuoteSupplier" />
 			<portlet id="scDirectPurchaseTask" />
 			<portlet id="scSupplierReview" />
