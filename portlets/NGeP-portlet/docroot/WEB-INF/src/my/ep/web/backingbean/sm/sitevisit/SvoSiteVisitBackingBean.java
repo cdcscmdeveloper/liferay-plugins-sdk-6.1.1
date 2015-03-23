@@ -270,12 +270,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param viewMode
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
-		//this.getManagedBean().setAppId(1257118);
-		//this.getManagedBean().setAppId(1257442);
-		//this.getManagedBean().setAppId(1257676); //FT
-		//this.getManagedBean().setAppId(1257345);//FT
-		//this.getManagedBean().setAppId(1257944);//FT
-		
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
@@ -390,33 +384,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
 		
 		SmSvTemplate svTemplate = this.getManagedBean().getSelectedSvTemplate();
-		//svTemplate.setSmSvTemplateAddresses(new ArrayList<SmSvTemplateAddress>());
-		
-		/*if(svTemplate.getSelectedAddresses() != null && svTemplate.getSelectedAddresses().length > 0){
-			log.info("selected Address is not null>>>>>");
-			for(SmSvAddress selectedAdd : svTemplate.getSelectedAddresses()){
-				SmSvTemplateAddress svTempAdd = new SmSvTemplateAddress();
-				svTempAdd.setSmSvTemplate(svTemplate);
-				svTempAdd.setSmSvAddress(selectedAdd);
-				svTemplate.getSmSvTemplateAddresses().add(svTempAdd);
-			}
-		}*/
-		
-		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING) || 
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
-			svTemplate.setSmSvMachines(new ArrayList<SmSvMachine>());
-			if(svTemplate.getSelectedSmMachine() != null && svTemplate.getSelectedSmMachine().length > 0){
-				log.info("selected Machine is not null>>>>>");
-				for(SmMachineDtl smMachineDtl : svTemplate.getSelectedSmMachine()){
-					SmSvMachine svMachine = new SmSvMachine();
-					svMachine.setSmSvTemplate(svTemplate);
-					svMachine.setSmMachineDtl(smMachineDtl);
-					svTemplate.getSmSvMachines().add(svMachine);
-				}
-			}
-		}
 		
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
@@ -2083,6 +2050,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 			
+			//Add/ Remove SmSvMachine
+			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
+					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
+					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING) || 
+					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+				setSelectedMachineToSmSvMachineLs(svTemplate);
+			}
+			
 			//to add/ remove svTemplateAddress based on the selectedAddress
 			if(svTemplate.getSmSvTemplateAddresses().size() > 0){
 				if(svTemplate.getSelectedAddresses().length < 1){
@@ -2262,5 +2237,56 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("********HOST URL*********" +  path.toString());
 		
 		return path.toString();
+	}
+	
+	/**
+	 * set the selectedMachine to SmSvMachine
+	 */
+	private void setSelectedMachineToSmSvMachineLs(SmSvTemplate svTemplate){
+		if(svTemplate.getSmSvMachines().size() > 0){
+			log.info("====Start Size=====" + svTemplate.getSmSvMachines().size());
+			// put existing smSvMachine to Map
+			Map<Long, SmSvMachine> svMachineMap = new HashMap<Long, SmSvMachine>();
+			Map<Long, SmMachineDtl> selectedMachineMap = new HashMap<Long, SmMachineDtl>();
+			List<SmSvMachine> machineRemoveLs = new ArrayList<SmSvMachine>();
+
+			for(SmSvMachine machine : svTemplate.getSmSvMachines()){
+				svMachineMap.put(machine.getSmMachineDtl().getMachineDtlId(), machine);
+			}
+
+			for(SmMachineDtl selectedMachine : svTemplate.getSelectedSmMachine()){
+				if(!svMachineMap.containsKey(selectedMachine.getMachineDtlId())){
+					SmSvMachine svMachine = new SmSvMachine();
+					svMachine.setSmSvTemplate(svTemplate);
+					svMachine.setSmMachineDtl(selectedMachine);
+					svTemplate.getSmSvMachines().add(svMachine);
+				}
+
+				selectedMachineMap.put(selectedMachine.getMachineDtlId(), selectedMachine);
+			}
+
+			//remove the unselected Machine from List
+			for(SmSvMachine svMachine : svTemplate.getSmSvMachines()){
+				if(!selectedMachineMap.containsKey(svMachine.getSmMachineDtl().getMachineDtlId())){
+					machineRemoveLs.add(svMachine);
+					log.info("remove machine - template ID ====" + svTemplate.getSvTemplateId());
+					log.info("remove machine - SmMachineDt ID ====" + svMachine.getSmMachineDtl().getMachineDtlId());
+					log.info("remove machine - SmSvMachine ID ====" + svMachine.getSvMachineId());
+				}
+			}
+
+			svTemplate.getSmSvMachines().removeAll(machineRemoveLs);
+			log.info("====end Size=====" + svTemplate.getSmSvMachines().size());
+		}else{
+			if(svTemplate.getSelectedSmMachine() != null && svTemplate.getSelectedSmMachine().length > 0){
+				log.info("selected Machine is not null>>>>>");
+				for(SmMachineDtl smMachineDtl : svTemplate.getSelectedSmMachine()){
+					SmSvMachine svMachine = new SmSvMachine();
+					svMachine.setSmSvTemplate(svTemplate);
+					svMachine.setSmMachineDtl(smMachineDtl);
+					svTemplate.getSmSvMachines().add(svMachine);
+				}
+			}
+		}
 	}
 }
