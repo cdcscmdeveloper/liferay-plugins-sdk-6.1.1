@@ -59,6 +59,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -85,6 +86,8 @@ import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -121,6 +124,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtOpeningCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
@@ -142,8 +146,8 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.BouncyCastleProvider_AES_CBC;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -6464,6 +6468,27 @@ public class EvaluationBackingBean extends
 				generateAnalisisKeputusanPenilaianTeknikalPdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_TECH_SPECIFICATION
+					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
+				generateTeknikalSpecificationPdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_OVERALL_SUMMARY
+					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
+				generateOverallSummaryPdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_TEC_REPORT
+					.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
+				generateTechnicalEvaluationPdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
 			}
 			scQtEvaluationReport
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
@@ -6592,6 +6617,146 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
+	 * @param scQtEvaluationReportAttachment
+	 * @param scQt
+	 */
+	private void generateTechnicalEvaluationPdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
+		debugLogger("generateOverallSummaryPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportId = "";
+		String reportName = "";
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
+
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+
+			reportName = ReportConst.SC_TEC_OTHER_CRITERIA;
+			reportId = ReportConst.PSDABK_TEC_RPT_VAL; // SC_010
+
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+
+		}
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, this
+				.getManagedBean().isCheckReportDownload());
+	}
+
+	/**
+	 * @param scQtEvaluationReportAttachment
+	 * @param scQt
+	 */
+	private void generateOverallSummaryPdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
+		debugLogger("generateOverallSummaryPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportId = "";
+		String reportName = "";
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
+
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+
+			reportName = ReportConst.SC_TEC_OVERALL_WITH_WEI_2F;
+			reportId = ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_VAL; // SC_012
+
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+
+		}
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, this
+				.getManagedBean().isCheckReportDownload());
+	}
+
+	/**
+	 * @param scQtEvaluationReportAttachment
+	 * @param scQt
+	 */
+	private void generateTeknikalSpecificationPdf(ScAttachment attachment,
+			ScQt qt) throws Exception {
+		debugLogger("generateTeknikalSpecificationPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportId = "";
+		String reportName = "";
+
+		IQTSpecSO specSo = null;
+
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		SpecificationResDTO resDTO = null;
+		List<Integer> settinglist = new ArrayList<Integer>();
+		settinglist.add(1);
+		reqDTO.setSettingTypes(settinglist);
+
+		specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
+
+		List<ScQtScoreSetting> list = resDTO.getScoreSettingResultBean()
+				.getResultList();
+
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
+
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+
+			for (ScQtScoreSetting qtScoreSetting : list) {
+				qtScoreSetting.isWeightageReq();
+				if (qtScoreSetting.getSettingType() == 1) {
+					if (qtScoreSetting.isWeightageReq()) {
+						// with weightage
+						reportName = ReportConst.SC_TEC_TECH_SPEC_WEI;
+						reportId = ReportConst.PSDAK_TEC_RPT_VAL; // SC_009
+					} else {
+						// without weightage
+						reportName = ReportConst.SC_TEC_TECH_SPEC;
+						reportId = ReportConst.TECSPEC_TEC_RPT_VAL; // SC_008
+					}
+				}
+			}
+
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+
+		}
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, this
+				.getManagedBean().isCheckReportDownload());
+	}
+	
+	/**
 	 * Generate analisis keputusan penilaian teknikal pdf.
 	 * 
 	 * @param attachment
@@ -6613,15 +6778,15 @@ public class EvaluationBackingBean extends
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPTPH_EC_RPT_JSP;
-			reportId = "SC_026";
+			reportId = ReportConst.AKPTPH_EC_RPT_VAL; // SC_026
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPT_TEC_RPT_JSP;
-			reportId = "SC_007";
+			reportId = ReportConst.AKPT_TEC_RPT_VAL; // SC_007
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPT_FEC_RPT_JSP;
-			reportId = "SC_015";
+			reportId = ReportConst.AKPT_FEC_RPT_VAL; // SC_015
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
@@ -6656,15 +6821,15 @@ public class EvaluationBackingBean extends
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP;
-			reportId = "SC_025";
+			reportId = ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_VAL; // SC_025
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP;
-			reportId = "SC_006";
+			reportId = ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL; // SC_006
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP;
-			reportId = "SC_014";
+			reportId = ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_VAL; // SC_014
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
@@ -6699,15 +6864,15 @@ public class EvaluationBackingBean extends
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_EC_RPT_JSP;
-			reportId = "SC_024";
+			reportId = ReportConst.SPPSAP2_EC_RPT_VAL; // SC_024
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_TEC_RPT_JSP;
-			reportId = "SC_005";
+			reportId = ReportConst.SPPSAP2_TEC_RPT_VAL; // SC_005
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_FEC_RPT_JSP;
-			reportId = "SC_013";
+			reportId = ReportConst.SPPSAP2_FEC_RPT_VAL; // SC_013
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
@@ -6742,11 +6907,11 @@ public class EvaluationBackingBean extends
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP;
-			reportId = "SC_022";
+			reportId = ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL; // SC_022
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP;
-			reportId = "SC_002";
+			reportId = ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL; // SC_002
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
@@ -6781,11 +6946,11 @@ public class EvaluationBackingBean extends
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPP1_PEMATUHAN_EC_RPT_JSP;
-			reportId = "SC_021";
+			reportId = ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL; // SC_021
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPPP_PEMATUHAN_OC_RPT_JSP;
-			reportId = "SC_001";
+			reportId = ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL; // SC_001
 		}
 
 		Map<String, String> paramMap = new HashMap<String, String>();
