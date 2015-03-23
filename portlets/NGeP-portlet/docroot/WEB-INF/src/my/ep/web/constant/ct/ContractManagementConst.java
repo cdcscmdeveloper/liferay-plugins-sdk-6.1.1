@@ -1,5 +1,11 @@
 package my.ep.web.constant.ct;
 
+/**
+ * Constant For Contract management
+ * 
+ * @author Alam
+ * @since 05/12/2013
+ */
 public class ContractManagementConst {
 
 	public static final String NAV_TO_CONTRACT_DETAILS = "fulfilment-details";
