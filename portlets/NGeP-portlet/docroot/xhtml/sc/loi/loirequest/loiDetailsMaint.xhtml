@@ -48,7 +48,7 @@
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-							rendered="#{!isPendingNegotiation}" update="@form">
+						   update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
@@ -65,28 +65,28 @@
 							update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="#{!isPendingNegotiation ? 3 : 1}" />
+								value="#{!isPendingNegotiation ? 3 : 2}" />
 						</p:menuitem>
 						
 						<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
 							update="@form" 	rendered="#{isPendingNegotiation}" >
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="2" />
+								value="3" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
 							update="@form" 	rendered="#{isPendingNegotiation}" >
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="3" />
+								value="4" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 							update="@form" 	rendered="#{isPendingNegotiation}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="4"  />
+								value="5"  />
 						</p:menuitem>
 					</p:tabMenu>			
 					</td>
@@ -101,25 +101,29 @@
 							<ui:include src="loiAwardDetailsMenu.xhtml" />
 						</c:if>
 
+                         <c:if
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '1' and isPendingNegotiation}">
+							<ui:include src="loiAfterNegoAwardDetails.xhtml" />
+						</c:if>
 						<c:if
 							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '2' and not isPendingNegotiation}">
 							<ui:include src="loiNegotiationDetailsMenu.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == (isPendingNegotiation ? 1 : 3)}">
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == (isPendingNegotiation ? 2 : 3)}">
 							<ui:include src="loiApprovalMenu.xhtml" />
 						</c:if>
 						
-						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 2 and isPendingNegotiation}">
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3 and isPendingNegotiation}">
 							<ui:include src="loiAfterNegoMenu.xhtml"/>
 						</c:if>
 						
-						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3 and isPendingNegotiation}">
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 4 and isPendingNegotiation}">
 							<ui:include src="loiDeductionPaymentMenu.xhtml" />
 						</c:if>
 						
-						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 4 and isPendingNegotiation}">
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 5 and isPendingNegotiation and sss}">
 							<ui:include src="loiFulfilmentSchedule.xhtml" />
 						</c:if>
 					</h:panelGroup></td>
