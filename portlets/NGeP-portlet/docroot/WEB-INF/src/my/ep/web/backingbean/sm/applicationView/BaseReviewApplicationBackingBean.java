@@ -20,6 +20,7 @@ import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -75,6 +76,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1358,6 +1360,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 		return accStatus;
+	}
+
+	public String getParamDescByParameterId(Long parameterId) {
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(parameterId);
+		PmParameter pmParameter = SmServiceLookup.getParameterSO()
+				.retrieveParameterById(reqDTO).getPmParameter();
+		return pmParameter == null ? "" : SmCommonUtil
+				.getParamDescriptionByLanguageAndPmParameter(pmParameter);
 	}
 
 	/**
