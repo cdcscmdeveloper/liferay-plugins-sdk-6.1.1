@@ -102,6 +102,10 @@ public class ReportConst {
 		public static final String SC_SPPSAP2_TEC_RPT_JSP = "SC_TEC_SHLISTTECH_EVAL_2A.jsp";
 		public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "SC_TEC_TECHASSES_2B.jsp";
 		public static final String SC_AKPT_TEC_RPT_JSP = "SC_TEC_EVAL_TECH_2C.jsp";
+		public static final String SC_TEC_TECH_SPEC_WEI = "SC_TEC_TECH_SPEC_WEI.jsp";
+		public static final String SC_TEC_TECH_SPEC = "SC_TEC_TECH_SPEC.jsp";
+		public static final String SC_TEC_OVERALL_WITH_WEI_2F = "SC_TEC_OVERALL_WITH_WEI_2F.jsp";
+		public static final String SC_TEC_OTHER_CRITERIA = "SC_TEC_OTHER_CRITERIA.jsp";
 		// EC
 		public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_SHORTLIST_ASSES_4A.jsp";
 		public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_METHOD_OF_ASSES_4B.jsp";
