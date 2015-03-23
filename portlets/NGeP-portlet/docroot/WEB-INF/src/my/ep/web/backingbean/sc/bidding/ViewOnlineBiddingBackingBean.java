@@ -8,7 +8,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.constant.sc.QTConstants;
 
 /**
  * Online Bidding View Backing Bean

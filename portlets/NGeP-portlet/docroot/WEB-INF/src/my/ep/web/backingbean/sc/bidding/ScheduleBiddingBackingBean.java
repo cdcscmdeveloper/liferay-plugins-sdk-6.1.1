@@ -35,8 +35,8 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.bidding.ScheduleBiddingManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 

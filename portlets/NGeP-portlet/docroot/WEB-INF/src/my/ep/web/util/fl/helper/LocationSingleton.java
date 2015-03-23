@@ -26,7 +26,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
-import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.DefaultTreeNode;
