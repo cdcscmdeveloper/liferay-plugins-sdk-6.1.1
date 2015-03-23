@@ -32,7 +32,7 @@
 				</td>
 				<td>    <p:commandButton value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
 						action="#{categoryBackingBean.saveSubDivision}"
-						update="@([id$=Msg])" style="float:right;" /></td>
+						update=":form" style="float:right;" /></td>
 			</tr>
 
 
@@ -187,13 +187,11 @@
 		<p:panel id="groupdetails" header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
 		<p:dataTable id="groupdetailsId" 
 			rowKey="#{pmBasicCategory.createdDate}"
-			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
-			selection="#{categoryBackingBean.managedBean.selectedBasicCategory}"
+			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"			
 			width="100%" var="pmBasicCategory">
 			
-			<ac:paginator for="groupdetailsId"></ac:paginator>
+			<ac:paginator for="groupdetailsId"></ac:paginator>			
 			
-			<p:column selectionMode="multiple" style="width:2%" />
 			
 			<p:column>
 				<f:facet name="header">
@@ -219,6 +217,14 @@
 				</f:facet>
 				<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" />
 			</p:column>
+			
+			<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+	             <p:commandLink partialSubmit="true" disabled="#{!pmBasicCategory.brandNew }"
+					process="@this" action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
+					update="groupdetailsId" >
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+			</p:column>
 
 		</p:dataTable>
 		<p>&nbsp;</p>
@@ -226,10 +232,7 @@
 			<p:commandButton 
 				value="#{lbl['lbl.btn.add']}" 
 				action="#{categoryBackingBean.addBasicCategory()}" oncomplete="lovPopupCategory.show();" update="lovPopupCategory"/>
-			<p:commandButton 
-				value="#{lbl['lbl.btn.delete']}" 
-				update="groupdetails"
-				action="#{categoryBackingBean.deleteBasicCategory()}" />
+		
 		</div>
 
 		</p:panel>
@@ -237,16 +240,12 @@
 		
 		<p:panel header="#{lbl['lbl.pm.special.equipment']}" id="machineDetails" rendered="#{!categoryBackingBean.managedBean.checkSpecialCategory}" toggleable="true">
 		<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
-			rowKey="#{pmMachineCategory.createdDate}"
-			selection="#{categoryBackingBean.managedBean.selectedpmMachineCategory}"
-			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmMachineCategory}"
-			
+			rowKey="#{pmMachineCategory.createdDate}"			
+			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmMachineCategory}"			
 			width="100%" var="pmMachineCategory">
 
-			<ac:paginator for="machineDetailsId"></ac:paginator>
-			
-			<p:column selectionMode="multiple" style="width:2%" />
-			
+			<ac:paginator for="machineDetailsId"></ac:paginator>			
+		
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.machine.code']}
@@ -259,7 +258,13 @@
 				</f:facet>
 				<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
             </p:column>
-			
+			<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+	             <p:commandLink partialSubmit="true" disabled="#{!pmMachineCategory.brandNew }"
+					process="@this" action="#{categoryBackingBean.deletePmMachine(pmMachineCategory)}"
+					update="machineDetailsId" >
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+			</p:column>			
 
 		</p:dataTable>
 		<p>&nbsp;</p>
@@ -288,10 +293,7 @@
 			<p:commandButton 
 				value="#{lbl['lbl.btn.add']}" 
 				action="#{categoryBackingBean.addPmMachine()}" oncomplete="lovPopupPmMachine.show();" update="lovPopupPmMachine"/>
-			<p:commandButton 
-				value="#{lbl['lbl.btn.delete']}" 
-				update="machineDetails"
-				action="#{categoryBackingBean.deletePmMachine()}" />
+			
 		</div>
 		
 		</p:panel>
@@ -499,25 +501,32 @@
 				<p:tab title="Company" rendered="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 					<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex" 
 						rowKey="#{pmCategoryRestr}"
-						value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryRestrs}"
-						selection="#{categoryBackingBean.managedBean.selectedPmCategoryRestr}"
+						value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryRestrs}"						
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						width="100%" var="pmCategoryRestr">
 						
-						<ac:paginator for="dtlCategoryRestrId"></ac:paginator>
-						<p:column selectionMode="multiple" style="width:2%" />
-						<p:column headerText="#{lbl['lbl.pm.company.type']}">
-							<p:selectOneMenu  value="#{pmCategoryRestr.companyTypeId.parameterId}" required="true" label="#{lbl['lbl.pm.company.type']}">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<ac:paginator for="dtlCategoryRestrId"></ac:paginator>						
+						<p:column headerText="#{lbl['lbl.pm.company.type']}" width="50%" >
+							<p:selectOneMenu  value="#{pmCategoryRestr.companyTypeId.parameterId}" required="true" label="#{lbl['lbl.pm.company.type']}" disabled="#{!pmCategoryRestr.brandNew }" >
+								   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						           <f:selectItems value="#{categoryBackingBean.getPopulateCompanyTypeList()}" var="compType" itemValue="#{compType.pmParameter.parameterId}" itemLabel="#{compType.codeName}"/>
 						      </p:selectOneMenu>
 							</p:column>
-					</p:dataTable>
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.btn.add']}" action="#{categoryBackingBean.addCategoryRestr}" update="dtlCategoryRestrId" />
-						<p:commandButton value="#{lbl['lbl.btn.delete']}"  action="#{categoryBackingBean.deleteCategoryRestr}" update="dtlCategoryRestrId" />
-					</div>
-				</p:tab>
+							
+				<p:column width="2%" headerText="#{lbl['lbl.pm.action']}">
+	             <p:commandLink partialSubmit="true" disabled="#{!pmCategoryRestr.brandNew }"
+					process="@this" action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
+					update="dtlCategoryRestrId" >
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+			</p:column>			
+			</p:dataTable>
+			<p>&nbsp;</p>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.add']}" action="#{categoryBackingBean.addCategoryRestr()}" update="dtlCategoryRestrId" />
+						
+				</div>
+			</p:tab>
 			</p:tabView>
 		</p:panel>
 		</p:outputPanel>

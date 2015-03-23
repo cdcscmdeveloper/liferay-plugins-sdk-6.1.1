@@ -492,6 +492,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		
 		this.getManagedBean().getPmCategoryL3();
+		
+		if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory()!=null
+				&& this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()>0 ){
+			for(PmBasicCategory pmBasicCategory:this.getManagedBean().getPmCategoryL3().getPmBasicCategory())
+			{
+				pmBasicCategory.setBrandNew(false);
+			}
+		}
 	}
 	
 	/**
@@ -515,7 +523,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setSearchField(searchField);
 		this.getManagedBean().setSearchOperator(searchOperator);
 		
-		
+		if(this.getManagedBean().getPmCategoryL3().getPmMachineCategory()!=null 
+				&& this.getManagedBean().getPmCategoryL3().getPmMachineCategory().size()>0){
+			for(PmMachineCategory pmMachineCategory:this.getManagedBean().getPmCategoryL3().getPmMachineCategory())
+			{
+				pmMachineCategory.setBrandNew(false);
+			}
+		}
 	}
 	
 	/**
@@ -851,6 +865,29 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
 				this.getManagedBean().getPmCategoryL3().setCategoryTypeCode(parameterResDTO.getPmParameter());
 			}
+			if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null 
+					&& this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size()>0){ 
+				for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs())
+				{
+					pmCategoryRestr.setBrandNew(false);
+				}
+			}
+			
+			if(this.getManagedBean().getPmCategoryL3().getPmMachineCategory()!=null 
+					&& this.getManagedBean().getPmCategoryL3().getPmMachineCategory().size()>0){
+				for(PmMachineCategory pmMachineCategory:this.getManagedBean().getPmCategoryL3().getPmMachineCategory())
+				{
+					pmMachineCategory.setBrandNew(false);
+				}
+			}
+			
+			if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory()!=null
+					&& this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()>0 ){
+				for(PmBasicCategory pmBasicCategory:this.getManagedBean().getPmCategoryL3().getPmBasicCategory())
+				{
+					pmBasicCategory.setBrandNew(false);
+				}
+			}
 			
 			if (!validatePmCategoryL3()){
 				return "/xhtml/pm/category/categoryl3.xhtml"; 
@@ -942,14 +979,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	/**
 	 * Delete basic category.
 	 */
-	public void deleteBasicCategory() {
+	public void deleteBasicCategory(PmBasicCategory pmBasicCategory) {
 		log.info("In deleteBasicCategory");
 		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		
-		if(this.getManagedBean().getSelectedBasicCategory() != null && !this.getManagedBean().getSelectedBasicCategory().isEmpty()) {
+		/*if(this.getManagedBean().getSelectedBasicCategory() != null && !this.getManagedBean().getSelectedBasicCategory().isEmpty()) {
 			log.info("before this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
 			//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			for(PmBasicCategory pmBasicCategory: this.getManagedBean().getSelectedBasicCategory()) {
+			for(PmBasicCategory pmBasicCategory: this.getManagedBean().getSelectedBasicCategory()) {*/
 				
 				//reqDTO.setPmBasicCategory(pmBasicCategory);
 				//categoryCodeSO.deleteBasicCategory(reqDTO);
@@ -958,22 +995,23 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				//reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				//categoryCodeSO.saveSubDivision(reqDTO);
-			}
 		}
+	//}
 		//log.info("deleteBasicCategory this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
-	}
+	//}
+	
 	
 	/**
 	 * Delete pm machine.
 	 */
-	public void deletePmMachine() {
+	public void deletePmMachine(PmMachineCategory pmMachineCategory) {
 		log.info("In deletePmMachine");
 		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		
-		if(this.getManagedBean().getSelectedpmMachineCategory() != null && !this.getManagedBean().getSelectedpmMachineCategory().isEmpty()) {
+		/*if(this.getManagedBean().getSelectedpmMachineCategory() != null && !this.getManagedBean().getSelectedpmMachineCategory().isEmpty()) {
 			log.info("before this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
 			//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			for(PmMachineCategory pmMachineCategory: this.getManagedBean().getSelectedpmMachineCategory()) {
+			for(PmMachineCategory pmMachineCategory: this.getManagedBean().getSelectedpmMachineCategory()) {*/
 				
 				//reqDTO.setPmBasicCategory(pmBasicCategory);
 				//categoryCodeSO.deleteBasicCategory(reqDTO);
@@ -983,8 +1021,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				//reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				//categoryCodeSO.saveSubDivision(reqDTO);
-			}
-		}
+			//}
+		//}
 		log.info("deletePmMachine this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
 	}
 	
@@ -1386,6 +1424,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(pmBasicCategory);*/
 			}
 		}
+		
 		resetPmMachineLOV();
 		
 	}
@@ -1435,6 +1474,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}else{
 				this.getManagedBean().setDisplayCategoryGrouping(false);
 			}
+			
 			
 			this.getManagedBean().setSelectedBasicCategory(new ArrayList<PmBasicCategory>() );
 			this.getManagedBean().setSelectedpmMachineCategory(new ArrayList<PmMachineCategory>() );
@@ -1703,13 +1743,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		restr.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 		restr.setCompanyTypeId(new PmParameter());
 		
-		
-		
-		this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().add(restr);
-		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null)
+		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null
+				&& this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size()>0)
 		{
-			this.getManagedBean().setCategoryForCompanyType(false);
+			for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs())
+			{
+				pmCategoryRestr.setBrandNew(false);
+			}
 		}
+		restr.setBrandNew(true);
+		this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().add(restr);
+		
+		
+		
 		
 	}
 	
@@ -1719,12 +1765,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @param pmCategoryRestr
 	 *            the pm category restr
 	 */
-	public void deleteCategoryRestr(){
-		if(this.getManagedBean().getSelectedPmCategoryRestr().size() > 0){
-			for(PmCategoryRestr restrc : this.getManagedBean().getSelectedPmCategoryRestr()){
-				this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(restrc);
-			}
-		}
+	public void deleteCategoryRestr(PmCategoryRestr pmCategoryRestr){
+		/*if(this.getManagedBean().getSelectedPmCategoryRestr().size() > 0){
+			for(PmCategoryRestr restrc : this.getManagedBean().getSelectedPmCategoryRestr()){*/
+				this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(pmCategoryRestr);
+			/*}
+		}*/
 	}
 
 	/**
