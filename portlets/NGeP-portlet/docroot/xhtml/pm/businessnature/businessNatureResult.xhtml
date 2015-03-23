@@ -6,24 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:remove>
-		<p:panel id="businessNatureSearch" header="#{lbl['lbl.pm.search']}" toggleable="true">
-
-			<ui:include src="/xhtml/pm/businessnature/businessNatureSearch.xhtml" />
-
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{businessNatureBackingBean.retrieveBusinessNature}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					update="businessNatureDataModel" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{businessNatureBackingBean.resetBusinessNatureSearch}"
-					process="@this"
-					update="businessNatureSearch,businessNatureDataModel" />
-			</div>
-		</p:panel>
-	</ui:remove>
-	<p:panel header="#{lbl['lbl.pm.user.result']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.pm.organisation.result']}" toggleable="true">
 		<p:dataTable id="businessNatureDataModel"
 			value="#{businessNatureBackingBean.businessNatureDataModel}"
 			var="businessNature" rows="10" rowIndexVar="index" lazy="true">

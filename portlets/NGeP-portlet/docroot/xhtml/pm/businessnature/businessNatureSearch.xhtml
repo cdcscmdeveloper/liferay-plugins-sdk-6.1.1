@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="businessNatureSearch" header="#{lbl['lbl.pm.search']}" toggleable="true">
+	<p:panel id="businessNatureSearch" header="#{lbl['lbl.pm.search.category']}" toggleable="true">
 		
 		<h:panelGrid columns="2">
 			<h:panelGroup style="float: right">
@@ -15,7 +15,6 @@
 			</h:panelGroup>
 			<p:selectOneMenu style="width:205px;margin-bottom:5px;" required="true" label="#{lbl['lbl.pm.category.level']}"
 				value="#{businessNatureBackingBean.managedBean.categoryLvl}">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 				<f:selectItems
 					value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}" />
 				<p:ajax event="change"
