@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.zone;
 
 import java.util.ArrayList;
@@ -37,23 +47,42 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ZoneBackingBean.
+ */
 @ManagedBean(name = "zoneBackingBean")
 @ViewScoped
 public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger.getLogger(ZoneBackingBean.class);
+	
+	/** The Constant NAV_TO_MAINTAIN. */
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/zonesearch/zoneMaintenance";
+	
+	/** The Constant NAV_TO_MAIN. */
 	public static final String NAV_TO_MAIN = "/xhtml/pm/zonesearch/zoneSearchMain";
 
+	/** The search zone. */
 	private IPagingDataModel<PmZone> searchZone = new SearchZonePagingDataModel();
 
+	/** The result. */
 	boolean result = false;
 	// Default value
+	/** The Constant SEARCH_DEFAULT. */
 	public static final boolean SEARCH_DEFAULT = false;
 
+	/**
+	 * Instantiates a new zone backing bean.
+	 */
 	public ZoneBackingBean() {
 
 	}
 
+	/**
+	 * Pre loading zone.
+	 */
 	public void preLoadingZone() {	
 		log.info("preLoading Zone method");
 		this.resetZoneSearchBean();
@@ -63,7 +92,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	/**
-	 * reset search bean fields
+	 * reset search bean fields.
 	 */
 	public void resetZoneSearchBean() {
 		log.info("ZoneSearchBeanLoading ----");
@@ -71,21 +100,41 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		searchZone = new SearchZonePagingDataModel();
 	}
 
+	/**
+	 * Search zone.
+	 */
 	public void searchZone() {
 		searchZone.reloadData();
 	}
 
+	/**
+	 * Back to search.
+	 * 
+	 * @return the string
+	 */
 	public String backToSearch() {
 
 		return NAV_TO_MAIN;
 	}
 
+	/**
+	 * Initial zone.
+	 */
 	public void initialZone() {
 		getManagedBean().setPmZone(new PmZone());
 		getManagedBean().setZoneStateList(new ArrayList<PmZoneState>());
 		
 	}
 	
+	/**
+	 * Redirect to zone.
+	 * 
+	 * @param id
+	 *            (Long id(mandatory))
+	 * @return NAV_TO_MAINTAIN
+	 * @throws Exception
+	 *             the exception
+	 */
 	public String redirectToZone(Long id)
 			throws Exception {
 
@@ -100,6 +149,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		return NAV_TO_MAINTAIN;
 	}
 
+	/**
+	 * Save zone.
+	 * 
+	 * @return the string
+	 */
 	public String saveZone() {
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
@@ -161,6 +215,12 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 	}
 
+	/**
+	 * Maintain zone.
+	 * 
+	 * @param zoneId
+	 *            (Long zone id(mandatory))
+	 */
 	public void maintainZone(Long zoneId) {
 		zoneList();
 		ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
@@ -200,6 +260,13 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	}
 
+	/**
+	 * Gets the search bean data.
+	 * 
+	 * @param searchBean
+	 *            (ISearchBean<PmZone> searchBean)
+	 * @return ISearchBean<PmZone> searchBean
+	 */
 	private ISearchBean<PmZone> getSearchBeanData(ISearchBean<PmZone> searchBean) {
 
 		ZoneSearchBean zSearchBean = this.getManagedBean().getZoneSearchBean();
@@ -238,13 +305,22 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		return searchBean;
 	}
 
+	/**
+	 * The Class SearchZonePagingDataModel.
+	 */
 	private class SearchZonePagingDataModel extends PagingDataModel<PmZone> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search zone paging data model.
+		 */
 		public SearchZonePagingDataModel() {
 			super("searchZone");
 		}
 
+		
 		@Override
 		public ISearchResultBean<PmZone> pageChangeListener(
 				ISearchBean<PmZone> searchBean) {
@@ -274,6 +350,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 	}
 
+	/**
+	 * Adds the state.
+	 */
 	public void addState() {
 		zoneList();
 		if (getManagedBean().getPmState() == null) {
@@ -292,6 +371,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	}
 
+	/**
+	 * Delete state.
+	 */
 	public void deleteState() {
 
 		List<PmZoneState> zoneList = getManagedBean().getZoneStateList();
@@ -310,6 +392,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 	}
 
+	/**
+	 * Ok zone action.
+	 */
 	public void okZoneAction() {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -333,6 +418,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		getManagedBean().setShowParentMsg(true);
 		
 	}
+	
+	/**
+	 * Cancle zone.
+	 */
 	public void cancleZone(){
 		RequestContext.getCurrentInstance()
 		.execute("statelistpopup.hide()");
@@ -340,6 +429,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		
 	}
 
+	/**
+	 * Retrieve pm state list.
+	 */
 	private void retrievePmStateList() {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -368,10 +460,18 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	
 
+	/**
+	 * Gets the status options.
+	 * 
+	 * @return the status options
+	 */
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getStatusOptions();
 	}
 
+	/**
+	 * Zone list.
+	 */
 	public void zoneList() {
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -383,14 +483,32 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 
+	/**
+	 * Gets the search zone.
+	 * 
+	 * @return the search zone
+	 */
 	public IPagingDataModel<PmZone> getSearchZone() {
 		return searchZone;
 	}
 
+	/**
+	 * Sets the search zone.
+	 * 
+	 * @param searchZone
+	 *            the new search zone
+	 */
 	public void setSearchZone(IPagingDataModel<PmZone> searchZone) {
 		this.searchZone = searchZone;
 	}
 
+	/**
+	 * Checks if is exist zone code.
+	 * 
+	 * @param zoneCode
+	 *            (String zonecode(mandatory))
+	 * @return true, if is exist zone code
+	 */
 	public boolean isExistZoneCode(String zoneCode) {
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IZoneSO.class);
@@ -405,6 +523,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 	}
 
+	/**
+	 * Removes the disabled states.
+	 */
 	public void removeDisabledStates() {
 		Iterator<PmState> stIterator = getManagedBean().getSelectedStates()
 				.iterator();
@@ -416,6 +537,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 	}
 	
+	/**
+	 * Check zone state availability.
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean checkZoneStateAvailability(){
 		log.info(".................checkZoneStateAvailability..............");
 		zoneList();

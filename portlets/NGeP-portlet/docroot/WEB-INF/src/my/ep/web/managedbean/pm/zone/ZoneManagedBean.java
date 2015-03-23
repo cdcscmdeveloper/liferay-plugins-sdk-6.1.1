@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.managedbean.pm.zone;
 
 import java.util.ArrayList;
@@ -13,26 +23,50 @@ import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ZoneManagedBean.
+ */
 @ManagedBean(name = "zoneManagedBean")
 @SessionScoped
 public class ZoneManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The zone search bean. */
 	private ZoneSearchBean zoneSearchBean;
+	
+	/** The pm zone. */
 	private PmZone pmZone;
+	
+	/** The states. */
 	private List<PmState> states = new ArrayList<PmState>();
+	
+	/** The selected states. */
 	private List<PmState> selectedStates = new ArrayList<PmState>();
+	
+	/** The pm state. */
 	private PmState pmState;
+	
+	/** The zone state list. */
 	private List<PmZoneState> zoneStateList = new ArrayList<PmZoneState>();
+	
+	/** The selected zones. */
 	private List<PmZoneState> selectedZones = new ArrayList<PmZoneState>();
+	
+	/** The selected zone. */
 	private PmZoneState selectedZone;
+	
+	/** The selections. */
 	private List<SelectItem> selections;
+	
+	/** The show parent msg. */
 	private boolean showParentMsg;
 
 	/**
+	 * Checks if is show parent msg.
+	 * 
 	 * @return the showParentMsg
 	 */
 	public boolean isShowParentMsg() {
@@ -40,21 +74,34 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param showParentMsg the showParentMsg to set
+	 * Sets the show parent msg.
+	 * 
+	 * @param showParentMsg
+	 *            the showParentMsg to set
 	 */
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
 	}
 
+	/** The state list. */
 	private List<PmState> stateList;
+	
+	/** The select state. */
 	private PmState selectState;
+	
+	/** The pm zones list. */
 	private List<PmZone> pmZonesList;
 
+	/**
+	 * Instantiates a new zone managed bean.
+	 */
 	public ZoneManagedBean() {
 		pmZone = new PmZone();
 	}
 
 	/**
+	 * Gets the pm zone.
+	 * 
 	 * @return the pmZone
 	 */
 	public PmZone getPmZone() {
@@ -62,6 +109,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm zone.
+	 * 
 	 * @param pmZone
 	 *            the pmZone to set
 	 */
@@ -70,6 +119,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the state list.
+	 * 
 	 * @return the stateList
 	 */
 	public List<PmState> getStateList() {
@@ -77,6 +128,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the state list.
+	 * 
 	 * @param stateList
 	 *            the stateList to set
 	 */
@@ -85,6 +138,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the select state.
+	 * 
 	 * @return the selectState
 	 */
 	public PmState getSelectState() {
@@ -92,6 +147,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the select state.
+	 * 
 	 * @param selectState
 	 *            the selectState to set
 	 */
@@ -100,6 +157,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the states.
+	 * 
 	 * @return the states
 	 */
 	public List<PmState> getStates() {
@@ -107,6 +166,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the states.
+	 * 
 	 * @param states
 	 *            the states to set
 	 */
@@ -115,6 +176,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected states.
+	 * 
 	 * @return the selectedStates
 	 */
 	public List<PmState> getSelectedStates() {
@@ -122,6 +185,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected states.
+	 * 
 	 * @param selectedStates
 	 *            the selectedStates to set
 	 */
@@ -130,6 +195,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selections.
+	 * 
 	 * @return the selections
 	 */
 	public List<SelectItem> getSelections() {
@@ -137,6 +204,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selections.
+	 * 
 	 * @param selections
 	 *            the selections to set
 	 */
@@ -145,6 +214,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected zone.
+	 * 
 	 * @return the selectedZone
 	 */
 	public PmZoneState getSelectedZone() {
@@ -152,6 +223,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected zone.
+	 * 
 	 * @param selectedZone
 	 *            the selectedZone to set
 	 */
@@ -160,6 +233,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the zone state list.
+	 * 
 	 * @return the zoneStateList
 	 */
 	public List<PmZoneState> getZoneStateList() {
@@ -167,6 +242,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the zone state list.
+	 * 
 	 * @param zoneStateList
 	 *            the zoneStateList to set
 	 */
@@ -175,6 +252,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm state.
+	 * 
 	 * @return the pmState
 	 */
 	public PmState getPmState() {
@@ -182,6 +261,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the pm state.
+	 * 
 	 * @param pmState
 	 *            the pmState to set
 	 */
@@ -190,6 +271,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the selected zones.
+	 * 
 	 * @return the selectedZones
 	 */
 	public List<PmZoneState> getSelectedZones() {
@@ -197,6 +280,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the selected zones.
+	 * 
 	 * @param selectedZones
 	 *            the selectedZones to set
 	 */
@@ -205,6 +290,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the zone search bean.
+	 * 
 	 * @return the zoneSearchBean
 	 */
 	public ZoneSearchBean getZoneSearchBean() {
@@ -214,6 +301,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Sets the zone search bean.
+	 * 
 	 * @param zoneSearchBean
 	 *            the zoneSearchBean to set
 	 */
@@ -222,6 +311,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * Gets the pm zones list.
+	 * 
 	 * @return the pmZonesList
 	 */
 	public List<PmZone> getPmZonesList() {
@@ -229,7 +320,10 @@ public class ZoneManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmZonesList the pmZonesList to set
+	 * Sets the pm zones list.
+	 * 
+	 * @param pmZonesList
+	 *            the pmZonesList to set
 	 */
 	public void setPmZonesList(List<PmZone> pmZonesList) {
 		this.pmZonesList = pmZonesList;
