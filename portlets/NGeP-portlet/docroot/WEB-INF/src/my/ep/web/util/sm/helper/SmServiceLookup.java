@@ -22,13 +22,13 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
 
 public class SmServiceLookup {
 
@@ -290,5 +290,15 @@ public class SmServiceLookup {
 		return (ISupplierUserActivationSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierUserActivationSO.class);
+	}
+
+	/**
+	 * Get ISiteVisitSO
+	 * 
+	 * @return ISiteVisitSO
+	 */
+	public static ISiteVisitSO getSiteVisitSO() {
+		return (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 	}
 }
