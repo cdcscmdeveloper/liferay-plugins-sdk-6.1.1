@@ -40,11 +40,18 @@
 				<td class="TableFieldLeft"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.supp.doc']}" /></td>
 				<td class="TableFieldRight">
-					<table style="width: 150px;">
+					<table style="width: 220px;">
+						<tr>
+							<td colspan="2"><p:commandButton
+									oncomplete="supportAttachDlg.show();return false;"
+									icon="iconAttachment" update="bpkremarksupDtls"
+									value="Attach Files">
+								</p:commandButton></td>
+						</tr>
 						<tr>
 							<td />
 							<td><p:dataGrid id="attachedIds"
-									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachment}"
+									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
 									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
 									style="width:100%">
 									<table>
@@ -75,5 +82,17 @@
 			</tr>
 		</table>
 	</p:panel>
-
+	<p:dialog id="supportAttachDlgids" widgetVar="supportAttachDlg"
+		modal="true" dynamic="true" hideEffect="explode" resizable="false"
+		width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
+			mode="advanced" id="dlgsuploadids"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="bpkremarksupDtls" oncomplete="supportAttachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 </ui:composition>
