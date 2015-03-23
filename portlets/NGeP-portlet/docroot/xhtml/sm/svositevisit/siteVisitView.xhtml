@@ -30,6 +30,8 @@
 				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 				:
 				#{cat.pmCategoryL3.categoryName}
+				&#160;<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.pmCategoryL3.categoryL3Code eq '99' or 
+				(cat.pmCategoryL1.categoryL1Code eq '22' and cat.pmCategoryL2.categoryL2Code eq '07' and cat.pmCategoryL3.categoryL3Code eq '01')}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.category.remarks']}">
