@@ -182,12 +182,16 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Add attachment to list.
-	 *
-	 * @param event 		File upload event instance
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param event
+	 *            File upload event instance
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
 		logger.info("handleFileUpload - START");
 		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
@@ -215,10 +219,13 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Add attachment to list.
-	 *
-	 * @param event the event
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void handleOtherFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
@@ -421,7 +428,9 @@ public class ApprovalBackingBean extends
 				committeItem.setProcess("@this");
 				committeItem.setUpdate("@this");
 				// committeItem.setUpdate("@form");
-				committeItem.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : " + zoneTabIndex + "}]);");
+				committeItem
+						.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : "
+								+ zoneTabIndex + "}]);");
 				menuModel.addMenuItem(committeItem);
 				zoneTabIndex++;
 			}
@@ -691,7 +700,7 @@ public class ApprovalBackingBean extends
 				finalizeRemarks(this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
-				//committeReqDTO.setSaveFlow(true);
+				// committeReqDTO.setSaveFlow(true);
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
 
@@ -732,6 +741,18 @@ public class ApprovalBackingBean extends
 							((SCQuotationTenderDataType) this.getManagedBean()
 									.getQuotationTenderDataType())
 									.setBpkRevise(true);
+						}
+					} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
+							.equalsIgnoreCase(approval.getApprovalCategory()
+									.getParameterCode())) {
+						approvalDocType = ParameterConst.DOCTYPE_BPK_APPROVAL;
+
+						if (BpmOutcomeConst.BPM_REVISE
+								.equalsIgnoreCase(outcome)) {
+							List<ScQtApprovalRequest> approvalRequests = approval
+									.getScQtApprovalDtls();
+
+							revertToOldValues(approvalRequests, qt);
 						}
 					}
 					updateApprovalRequest(approval.getScQtApprovalDtls(),
@@ -1121,6 +1142,39 @@ public class ApprovalBackingBean extends
 				approvalRequest.setApproverId(new FacesScopes()
 						.getUserSessionBean());
 			}
+		}
+
+	}
+
+	private void revertToOldValues(List<ScQtApprovalRequest> approvalRequests,
+			ScQt scQt) {
+		if (CollectionUtils.isNotEmpty(approvalRequests)) {
+
+			for (int i = 0; i < approvalRequests.size(); i++) {
+				ScQtApprovalRequest approvalRequest = approvalRequests.get(i);
+				String approvalType = approvalRequest.getApprovalType()
+						.getParameterCode();
+				if (ParameterConst.APPROVAL_REQUEST_RESTRICTED_TENDER
+						.equalsIgnoreCase(approvalType)) {
+
+					scQt.setQtType(SourcingConstants.QT_TYPE_OPEN);
+					scQt.setScQtSuppliers(null);
+				} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD
+						.equalsIgnoreCase(approvalType)) {
+
+					scQt.setQtValidityPeriod(Integer.parseInt(approvalRequest
+							.getOriginalValue()));
+					approvalRequest.setChangedValue(approvalRequest
+							.getOriginalValue());
+				} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE
+						.equalsIgnoreCase(approvalType)) {
+
+					scQt.setPublishPeriod(Integer.parseInt(approvalRequest
+							.getOriginalValue()));
+				}
+
+			}
+
 		}
 
 	}
