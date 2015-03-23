@@ -1,12 +1,12 @@
-package my.ep.web.sc.converter;
+package my.ep.web.converter.sc;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@FacesConverter(value = "procurementTypeConverter")
-public class ProcumentTypeConverter implements Converter {
+@FacesConverter(value = "justificationTypeConverter")
+public class JustificationTypeConverter implements Converter{
 	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
 		String result = s;
 		if (result != null) {

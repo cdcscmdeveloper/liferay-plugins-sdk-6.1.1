@@ -23,8 +23,8 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 

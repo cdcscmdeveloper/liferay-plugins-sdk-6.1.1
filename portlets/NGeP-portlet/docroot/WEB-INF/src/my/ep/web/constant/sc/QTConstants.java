@@ -1,7 +1,7 @@
 /**
  * 
  */
-package my.ep.web.sc.quationtender.common;
+package my.ep.web.constant.sc;
 
 /**
  * @author VidyasagarReddy

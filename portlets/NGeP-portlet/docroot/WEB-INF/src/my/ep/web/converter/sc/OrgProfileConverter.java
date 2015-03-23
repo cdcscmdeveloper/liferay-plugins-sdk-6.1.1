@@ -1,28 +1,28 @@
-package my.ep.web.sc.converter;
+package my.ep.web.converter.sc;
+
+import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import org.apache.commons.lang.StringUtils;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 
-@FacesConverter(value = "LongConverter")
-public class LongConverter implements Converter {
+import org.primefaces.component.selectonemenu.SelectOneMenu;
+
+@FacesConverter(value = "OrgProfileConverter")
+public class OrgProfileConverter implements Converter {
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
-		Object ret = null;
-		if(StringUtils.isNotBlank(arg2)){
-			ret	=	Long.valueOf(arg2);
-		}
-		return ret;
+		return arg2;
 	}
 
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 		String str = "";
 		if (arg2 != null) {
-			str = "" + ((Long) arg2).toString();
+			str = "" + ((PmOrgProfile) arg2).getOrgProfileId();
 			return str;
 		}else{
 			return null;

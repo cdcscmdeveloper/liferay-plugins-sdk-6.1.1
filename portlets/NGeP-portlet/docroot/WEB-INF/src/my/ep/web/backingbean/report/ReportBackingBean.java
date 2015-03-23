@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -37,8 +37,6 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -51,7 +49,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -64,7 +61,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -72,12 +68,13 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
