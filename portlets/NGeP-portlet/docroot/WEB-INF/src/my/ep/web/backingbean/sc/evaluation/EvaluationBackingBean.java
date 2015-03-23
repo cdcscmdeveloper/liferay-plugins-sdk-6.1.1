@@ -4953,10 +4953,7 @@ public class EvaluationBackingBean extends
 						.getScEvaluationCommitteeReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
 						"NGeP-QT-Evaluation-Committee-Report");
-				if (null != attachment) {
-					System.out.println("========attachment id EC======"
-							+ attachment.getAttachmentId());
-				}
+
 				this.getManagedBean().setScAttachment(attachment);
 			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
@@ -4964,10 +4961,7 @@ public class EvaluationBackingBean extends
 						.getScOpenCommitteeReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
 						"NGeP-QT-Opening-Committee-Report");
-				if (null != attachment) {
-					System.out.println("========attachment id OC======"
-							+ attachment.getAttachmentId());
-				}
+
 				this.getManagedBean().setScAttachment(attachment);
 
 			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -4976,10 +4970,7 @@ public class EvaluationBackingBean extends
 						.getScTechnicalEvaluationReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
 						"NGeP-QT-TechnicalEvaluation-Committee-Report");
-				if (null != attachment) {
-					System.out.println("========attachment id TEC======"
-							+ attachment.getAttachmentId());
-				}
+
 				this.getManagedBean().setScAttachment(attachment);
 
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
@@ -4988,10 +4979,7 @@ public class EvaluationBackingBean extends
 						.getScFinancialEvaluationReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
 						"NGeP-QT-FinacialEvaluation-Committee-Report");
-				if (null != attachment) {
-					System.out.println("========attachment id FEC======"
-							+ attachment.getAttachmentId());
-				}
+
 				this.getManagedBean().setScAttachment(attachment);
 
 			}
