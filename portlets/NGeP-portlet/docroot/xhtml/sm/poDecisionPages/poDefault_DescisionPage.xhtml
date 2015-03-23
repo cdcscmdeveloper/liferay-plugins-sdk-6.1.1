@@ -201,8 +201,28 @@
 
 					<p:separator />
 					<div>
-						<h:outputText value="#{lbl['lbl.sm.po.splNotes']}"
-							style="float :left;" escape="false" />
+						<c:choose>
+							<c:when
+								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
+								<h:outputText value="#{lbl['lbl.sm.po.splNotes1']}"
+									style="float :left;" escape="false" />
+
+							</c:when>
+							<c:when
+								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
+								<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
+									style="float :left;" escape="false" />
+							</c:when>
+							<c:when
+								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+								<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
+									style="float :left;" escape="false" />
+							</c:when>
+							<c:otherwise>
+								<h:outputText value="#{lbl['lbl.sm.po.splNotes']}"
+									style="float :left;" escape="false" />
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<!-- <div align="center">
 			<p:splitButton value=" Select Decision ">
