@@ -86,14 +86,8 @@
 						<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.annualRev']}" />
 					</td>
 					<td>
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.annualRev.less.than.100k']}" 
-							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '1'}"/>
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.annualRev.less.than.500k']}" 
-							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '2'}"/>
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.annualRev.less.than.1m']}" 
-							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '3'}"/>
-						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.annualRev.more.than.1m']}" 
-							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '4'}"/>
+						<p:outputLabel styleClass="outputLabel-view" 
+							value="#{viewSmApplBackingBean.getParamDescByParameterId(viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue)}" />
 					</td>
 				</tr>
 				<tr>
