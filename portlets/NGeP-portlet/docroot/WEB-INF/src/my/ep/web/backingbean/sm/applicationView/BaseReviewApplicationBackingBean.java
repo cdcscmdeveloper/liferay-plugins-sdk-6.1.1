@@ -1362,6 +1362,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return accStatus;
 	}
 
+	/**
+	 * Get description of the parameter by parameter id
+	 * 
+	 * @param Long
+	 *            parameterId
+	 * @return String
+	 */
 	public String getParamDescByParameterId(Long parameterId) {
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(parameterId);
