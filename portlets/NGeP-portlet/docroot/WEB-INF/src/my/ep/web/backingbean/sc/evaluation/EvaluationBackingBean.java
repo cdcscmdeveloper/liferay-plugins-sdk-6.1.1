@@ -334,7 +334,7 @@ public class EvaluationBackingBean extends
 			// award = QTConstants.AWARD_TYPE_PACKAGE;
 			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 			summaryReqDTO.setResultStages(resultStg);
-			this.getManagedBean().setSummaryZoneBean(null);
+			//this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE
 				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
 				&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -342,7 +342,7 @@ public class EvaluationBackingBean extends
 								.getCommitteeType())) {
 			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 			summaryReqDTO.setResultStages(resultStg);
-			this.getManagedBean().setSummaryZoneBean(null);
+			//this.getManagedBean().setSummaryZoneBean(null);
 
 		} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
@@ -355,7 +355,7 @@ public class EvaluationBackingBean extends
 			if (!this.getManagedBean().getScQt().isZonal()) {
 				award = SourcingConstants.AWARD_BY_ITEM;
 			}
-			this.getManagedBean().setSummaryZoneBean(null);
+			//this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
 				&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -366,14 +366,14 @@ public class EvaluationBackingBean extends
 			if (!this.getManagedBean().getScQt().isZonal()) {
 				award = SourcingConstants.AWARD_BY_ITEM;
 			}
-			this.getManagedBean().setSummaryZoneBean(null);
+			//this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.PREFERENCE_MARGIN.equalsIgnoreCase(this
 				.getManagedBean().getSummaryViewBy())) {
 
 			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 
 			summaryReqDTO.setResultStages(resultStg);
-			this.getManagedBean().setSummaryZoneBean(null);
+			//this.getManagedBean().setSummaryZoneBean(null);
 		}
 
 		summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -2188,10 +2188,9 @@ public class EvaluationBackingBean extends
 		try {
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			if (null == this.getManagedBean().getFinSpecZoneBean()) {
+			//if (null == this.getManagedBean().getFinSpecZoneBean()) {
 				this.getManagedBean().setSpecZoneDtls(speczone.getZones());
-				this.getManagedBean().setFinSpecZoneBean(
-						new ArrayList<SummaryZoneBaen>());
+				
 				populateFinancialSpecDetailsByZone();
 				for (int i = 0; i < speczone.getZones().size(); i++) {
 
@@ -2275,7 +2274,7 @@ public class EvaluationBackingBean extends
 					// this.getManagedBean().getFinSpecZoneBean().add(finSpecZone);
 
 				}
-			}
+			//}
 		} finally {
 			evaluationSo = null;
 		}
