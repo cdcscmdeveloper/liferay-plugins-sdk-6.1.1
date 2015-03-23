@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.committee;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,7 +62,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -76,8 +85,8 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.committee.CommitteManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.MemberType;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
@@ -91,21 +100,32 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class CommitteBackingBean.
+ *
  * @author VidyasagarReddy
- * 
  */
 @ManagedBean(name = "committeBackingBean")
 @RequestScoped
 public class CommitteBackingBean extends
 		SourcingBaseBackingBean<CommitteManagedBean> {
 
+	/** The Constant NAV_TO_COMMITTEE_MAINTENANACE. */
 	private static final String NAV_TO_COMMITTEE_MAINTENANACE = "/xhtml/sc/committe/committeemaintanancepage.xhtml";
+	
+	/** The Constant NAV_TO_VIEW_HISTORY. */
 	private static final String NAV_TO_VIEW_HISTORY = "/xhtml/sc/committe/viewHistory.xhtml";
 
+	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(CommitteBackingBean.class);
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
@@ -113,6 +133,9 @@ public class CommitteBackingBean extends
 		logger.info(message);
 	}
 
+	/**
+	 * Instantiates a new committe backing bean.
+	 */
 	public CommitteBackingBean() {
 		getManagedBean().setRoleTypes(getRoleTypeDropdownValues());
 
@@ -137,17 +160,32 @@ public class CommitteBackingBean extends
 		 */
 	}
 
+	/**
+	 * The Class UserQCPagingDataModel.
+	 */
 	private class UserQCPagingDataModel extends PagingDataModel<PmUser> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/** The user qc search bean. */
 		private UserCommitteeSearchBean userQCSearchBean;
 
+		/**
+		 * Instantiates a new user qc paging data model.
+		 *
+		 * @param componentId the component id
+		 * @param userQCSearchBean the user qc search bean
+		 */
 		public UserQCPagingDataModel(String componentId,
 				UserCommitteeSearchBean userQCSearchBean) {
 			super(componentId);
 			this.userQCSearchBean = userQCSearchBean;
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		protected ISearchResultBean<PmUser> pageChangeListener(
 				ISearchBean<PmUser> searchBean) {
@@ -181,6 +219,12 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * Populate user search criteria.
+	 *
+	 * @param userQCSearchBean the user qc search bean
+	 * @param userSearchBean the user search bean
+	 */
 	private void populateUserSearchCriteria(
 			UserCommitteeSearchBean userQCSearchBean,
 			ISearchBean<PmUser> userSearchBean) {
@@ -223,14 +267,17 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * Search user action.
+	 */
 	public void searchUserAction() {
 		this.getManagedBean().getUserSearchQCDataModel().reloadData();
 	}
 
 	/**
-	 * @param committeeRole
-	 * @param types
-	 * @return
+	 * Gets the role type dropdown values.
+	 *
+	 * @return the role type dropdown values
 	 */
 	public SelectItem[] getRoleTypeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -244,6 +291,9 @@ public class CommitteBackingBean extends
 		return items;
 	}
 
+	/**
+	 * Inits the.
+	 */
 	@PostConstruct
 	private void init() {
 		IPagingDataModel<ScQtCommittee> searchQTDataModel = getManagedBean()
@@ -272,17 +322,32 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * The Class QTPagingDataModel.
+	 */
 	private class QTPagingDataModel extends PagingDataModel<ScQtCommittee> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/** The qtn tender search bean. */
 		private QtnTenderSearchBean qtnTenderSearchBean;
 
+		/**
+		 * Instantiates a new QT paging data model.
+		 *
+		 * @param componentId the component id
+		 * @param qtnTenderSearchBean the qtn tender search bean
+		 */
 		public QTPagingDataModel(String componentId,
 				QtnTenderSearchBean qtnTenderSearchBean) {
 			super(componentId);
 			this.qtnTenderSearchBean = qtnTenderSearchBean;
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<ScQtCommittee> pageChangeListener(
 				ISearchBean<ScQtCommittee> searchBean) {
@@ -305,6 +370,12 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * Populate qt search criteria.
+	 *
+	 * @param qtnTenderSearchBean the qtn tender search bean
+	 * @param qtSearchBean the qt search bean
+	 */
 	private void populateQTSearchCriteria(
 			QtnTenderSearchBean qtnTenderSearchBean,
 			ISearchBean<ScQtCommittee> qtSearchBean) {
@@ -397,7 +468,10 @@ public class CommitteBackingBean extends
 	 */
 
 	/**
-	 * Method to save and submit the data to BPM
+	 * Method to save and submit the data to BPM.
+	 *
+	 * @param outCome the out come
+	 * @return the string
 	 */
 	public String updateCommitteDetails(String outCome) {
 		debugLogger("submitCommitteDetails");
@@ -459,6 +533,11 @@ public class CommitteBackingBean extends
 		return null;
 	}
 
+	/**
+	 * Construct save committe.
+	 *
+	 * @return the committe req dto
+	 */
 	private CommitteReqDTO constructSaveCommitte() {
 
 		// ScQtcommitte date setting
@@ -490,15 +569,16 @@ public class CommitteBackingBean extends
 	}
 
 	/**
-	 * Method to search the quationtenders based on serach date
+	 * Method to search the quationtenders based on serach date.
 	 */
 	public void searchQTAction() {
 		getManagedBean().getSearchQTDataModel().reloadData();
 	}
 
 	/**
-	 * Method to return the maintance page
-	 * 
+	 * Method to return the maintance page.
+	 *
+	 * @param scQtCommittee the sc qt committee
 	 * @return maintanacepage
 	 */
 	public String editAction(ScQtCommittee scQtCommittee) {
@@ -679,6 +759,12 @@ public class CommitteBackingBean extends
 		return null;
 	}
 
+	/**
+	 * View history action.
+	 *
+	 * @param scQtCommittee the sc qt committee
+	 * @return the string
+	 */
 	public String viewHistoryAction(ScQtCommittee scQtCommittee) {
 		debugLogger("viewHistoryAction");
 		String committeeType = scQtCommittee.getScCommittee()
@@ -687,23 +773,42 @@ public class CommitteBackingBean extends
 		return NAV_TO_VIEW_HISTORY + "?faces-redirect=true";
 	}
 
+	/**
+	 * View history back action.
+	 *
+	 * @return the string
+	 */
 	public String viewHistoryBackAction() {
 		debugLogger("viewHistoryBackAction");
 		return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
 	}
 
+	/**
+	 * The Class CloneQTPagingDataModel.
+	 */
 	private class CloneQTPagingDataModel extends PagingDataModel<ScQt> {
 
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/** The clone qtn tender search bean. */
 		private QtnTenderSearchBean cloneQtnTenderSearchBean;
 
+		/**
+		 * Instantiates a new clone qt paging data model.
+		 *
+		 * @param componentId the component id
+		 * @param cloneQtnTenderSearchBean the clone qtn tender search bean
+		 */
 		public CloneQTPagingDataModel(String componentId,
 				QtnTenderSearchBean cloneQtnTenderSearchBean) {
 			super(componentId);
 			this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<ScQt> pageChangeListener(
 				ISearchBean<ScQt> searchBean) {
@@ -733,8 +838,10 @@ public class CommitteBackingBean extends
 	}
 
 	/**
-	 * @param cloneQtnTenderSearchBean
-	 * @param searchBean
+	 * Populate clone qt search criteria.
+	 *
+	 * @param cloneQtnTenderSearchBean the clone qtn tender search bean
+	 * @param qtSearchBean the qt search bean
 	 */
 	private void populateCloneQTSearchCriteria(
 			QtnTenderSearchBean cloneQtnTenderSearchBean,
@@ -802,10 +909,18 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * Clone search qt action.
+	 */
 	public void cloneSearchQtAction() {
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 	}
 
+	/**
+	 * On row clone action.
+	 *
+	 * @param event the event
+	 */
 	public void onRowCloneAction(SelectEvent event) {
 		ScQt scQt = (ScQt) event.getObject();
 		System.out.println("Committee Type1 : "
@@ -856,9 +971,9 @@ public class CommitteBackingBean extends
 	}
 
 	/**
-	 * Method to show the qtdetails
-	 * 
-	 * @param qtId
+	 * Method to show the qtdetails.
+	 *
+	 * @param qtId the qt id
 	 */
 	public void showQtDetailAction(Long qtId) {
 
@@ -882,7 +997,7 @@ public class CommitteBackingBean extends
 	}
 
 	/**
-	 * Method to provide nessasary info to commitperson
+	 * Method to provide nessasary info to commitperson.
 	 */
 	public void showCommitteMember() {
 		this.getManagedBean().setCommitteMember(null);
@@ -911,6 +1026,11 @@ public class CommitteBackingBean extends
 	 * getManagedBean().setScCommitteeMemberList(committeMemebersList); }
 	 */
 
+	/**
+	 * Adds the committe member.
+	 *
+	 * @param titleName the title name
+	 */
 	public void addCommitteMember(String titleName) {
 		debugLogger("addCommitteMember");
 		// getManagedBean().getUserSearchQCDataModel().reloadData();
@@ -937,7 +1057,9 @@ public class CommitteBackingBean extends
 	}
 
 	/**
-	 * User selection types gov external new
+	 * User selection types gov external new.
+	 *
+	 * @return the selection types
 	 */
 	private void getSelectionTypes() {
 		SelectionType[] type = SelectionType.values();
@@ -950,6 +1072,11 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setSelections(selectionTypes);
 	}
 
+	/**
+	 * User selcetion action.
+	 *
+	 * @param event the event
+	 */
 	public void userSelcetionAction(AjaxBehaviorEvent event) {
 		String userSelection = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -973,6 +1100,9 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete committee action.
+	 */
 	public void deleteCommitteeAction() {
 		debugLogger("deleteCommitteeAction");
 		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
@@ -990,6 +1120,9 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setSelectedCommitteMemebers(null);
 	}
 
+	/**
+	 * Existing committee search action.
+	 */
 	public void existingCommitteeSearchAction() {
 		debugLogger("existingCommitteeSearchAction");
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -1032,6 +1165,9 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * Reset.
+	 */
 	public void reset() {
 		debugLogger("reset");
 		this.getManagedBean().getUserQCSearchBean().setName(null);
@@ -1039,6 +1175,9 @@ public class CommitteBackingBean extends
 		this.getManagedBean().getUserQCSearchBean().setIdentificationNo(null);
 	}
 
+	/**
+	 * Ok committee action.
+	 */
 	public void okCommitteeAction() {
 		debugLogger("okCommitteeAction");
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -1205,6 +1344,13 @@ public class CommitteBackingBean extends
 		this.getManagedBean().getQtCommittee().setScCommittee(scCommittee);
 	}
 
+	/**
+	 * Checks if is member exists.
+	 *
+	 * @param existingMembers the existing members
+	 * @param newMembers the new members
+	 * @return true, if is member exists
+	 */
 	private boolean isMemberExists(List<ScCommitteeMember> existingMembers,
 			List<ScCommitteeMember> newMembers) {
 		if (!existingMembers.isEmpty()) {
@@ -1217,6 +1363,11 @@ public class CommitteBackingBean extends
 		return false;
 	}
 
+	/**
+	 * Sort member list.
+	 *
+	 * @param memberList the member list
+	 */
 	public void sortMemberList(List<ScCommitteeMember> memberList) {
 		Comparator<ScCommitteeMember> comparator = new Comparator<ScCommitteeMember>() {
 			@Override
@@ -1260,6 +1411,9 @@ public class CommitteBackingBean extends
 		Collections.sort(memberList, comparator);
 	}
 
+	/**
+	 * Ok qc committee action.
+	 */
 	public void okQCCommitteeAction() {
 		debugLogger("okCommitteeAction");
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -1421,7 +1575,9 @@ public class CommitteBackingBean extends
 	}
 
 	/**
-	 * User type lie gov or non gov users
+	 * User type lie gov or non gov users.
+	 *
+	 * @return the user types
 	 */
 	private void getUserTypes() {
 		MemberType[] type = MemberType.values();
@@ -1433,6 +1589,11 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setUserTypes(userTypes);
 	}
 
+	/**
+	 * Clone committe members acition.
+	 *
+	 * @param titleName the title name
+	 */
 	public void cloneCommitteMembersAcition(String titleName) {
 		debugLogger("cloneCommitteMembersAcition");
 		this.getManagedBean().setHeaderTitle(titleName);
@@ -1440,6 +1601,9 @@ public class CommitteBackingBean extends
 				+ this.getManagedBean().getHeaderTitle());
 	}
 
+	/**
+	 * Ok clone committee members action.
+	 */
 	public void okCloneCommitteeMembersAction() {
 		debugLogger("okCloneCommitteeMembersAction");
 		ScCommittee scCommittee = this.getManagedBean().getQtCommittee()
@@ -1500,6 +1664,11 @@ public class CommitteBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrive user details.
+	 *
+	 * @param userid the userid
+	 */
 	public void retriveUserDetails(Long userid) {
 
 		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1608,6 +1777,9 @@ public class CommitteBackingBean extends
 				.setOrgProfileId(null);
 	}
 
+	/**
+	 * Retrive all minstrys.
+	 */
 	public void retriveAllMinstrys() {
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -1623,16 +1795,27 @@ public class CommitteBackingBean extends
 
 	}
 
+	/**
+	 * Reset committe details.
+	 */
 	public void resetCommitteDetails() {
 		resetCommitte();
 	}
 
+	/**
+	 * Reset committe.
+	 */
 	private void resetCommitte() {
 		getManagedBean().setCloneCommitteMemebers(null);
 		getManagedBean().setCloneSearchCommittes(null);
 		getManagedBean().setCommitteMembers(null);
 	}
 
+	/**
+	 * On row edit action.
+	 *
+	 * @param event the event
+	 */
 	public void onRowEditAction(RowEditEvent event) {
 		ScCommitteeMember committeeMember = (ScCommitteeMember) event
 				.getObject();
@@ -1640,11 +1823,19 @@ public class CommitteBackingBean extends
 
 	}
 
+	/**
+	 * On row cancel.
+	 *
+	 * @param event the event
+	 */
 	public void onRowCancel(RowEditEvent event) {
 		ScCommitteeMember member = (ScCommitteeMember) event.getObject();
 		this.getManagedBean().getCommitteMembers().remove(member);
 	}
 
+	/**
+	 * Cancel committe action.
+	 */
 	public void cancelCommitteAction() {
 		this.getManagedBean().getCommitteMembers()
 				.remove(this.getManagedBean().getCommitteMember());
@@ -1681,6 +1872,9 @@ public class CommitteBackingBean extends
 	 * }
 	 */
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	 */
 	public void preRenderView() {
 		Object payLoad = getBpmTaskDetails(Object.class);
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
@@ -1732,6 +1926,9 @@ public class CommitteBackingBean extends
 						NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true");
 	}
 
+	/**
+	 * Reset search details.
+	 */
 	public void resetSearchDetails() {
 		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
@@ -1740,6 +1937,9 @@ public class CommitteBackingBean extends
 		this.getManagedBean().getQtnTenderSearchBean().setCommitteeType(null);
 	}
 
+	/**
+	 * Reset clone.
+	 */
 	public void resetClone() {
 		debugLogger("resetClone");
 		this.getManagedBean().setTitle(null);
@@ -1750,21 +1950,41 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setStatus(null);
 	}
 
+	/**
+	 * Gets the user so.
+	 *
+	 * @return the user so
+	 */
 	private IUserSO getUserSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 
+	/**
+	 * Gets the parameter so.
+	 *
+	 * @return the parameter so
+	 */
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
+	/**
+	 * Gets the org profile so.
+	 *
+	 * @return the org profile so
+	 */
 	private IOrgProfileSO getOrgProfileSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
 
+	/**
+	 * Representive type change.
+	 *
+	 * @param member the member
+	 */
 	public void representiveTypeChange(ScCommitteeMember member) {
 		Long paramId = member.getRepresentativeType().getParameterId();
 		if (null != paramId) {
