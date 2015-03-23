@@ -22,7 +22,9 @@ import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -53,9 +55,20 @@ public class SalutationBackingBean extends
 			.getLogger(SalutationManagedBean.class);	
 	
 	private IPagingDataModel<PmSalutation> salutationDataModel = new SalutationPagingDataModel();	
-
+	/**
+	 *  The constructor used for save user logging.
+	 *  	 
+	 **/
 	public SalutationBackingBean() {
 		log.info("inside constructor");
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			System.out.println("***userId: " + pmUser.getUserId());
+
+			new LogKey(pmUser.getUserId()); 
+		}else{
+			new LogKey(1L); 
+		}
 
 	}
 
@@ -109,7 +122,7 @@ public class SalutationBackingBean extends
 	 */	
 	 
 	 public static SelectItem[] getStatusList() {
-			return PmCommonUtil.getStatusOptions();
+			return PmCommonUtil.getCommonStatusOptions();
 		}
 
 
@@ -291,7 +304,11 @@ public class SalutationBackingBean extends
 		  return NAV_TO_MAINTAIN;
 		}
 	 }
-	 
+	 /**
+		 *  This method used for reset the search bean field and
+		 *  navigate to the search main page. 
+		 * 
+		 **/
 	 public void preLoadSalutation(){
 			System.out.println("preLoadgroupSearch ....");
 			renewSesionObject();
