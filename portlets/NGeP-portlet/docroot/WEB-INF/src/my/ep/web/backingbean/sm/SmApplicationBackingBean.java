@@ -559,7 +559,7 @@ public class SmApplicationBackingBean extends
 						// smAppl.setSmSupplierBanks(new
 						// ArrayList<SmSupplierBank>());
 						if (smAppl.getSmCompanyBasic() != null) {
-							smAppl.getSmCompanyBasic().setAnnualRevenue(0);
+							smAppl.getSmCompanyBasic().setAnnualRevenue(null);
 						}
 					}
 					log.info("****** After retrieve the appl is ********"
