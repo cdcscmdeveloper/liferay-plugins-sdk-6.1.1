@@ -211,13 +211,13 @@ public class SmApplicationNotificationUtil {
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				approvedCatCodes.append("<br/>");
 				approvedCatCodes.append("2.1.").append(++i + ") ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
 						.append(cat.getPmCategoryL3().getCategoryL3Code())
 						.append("-")
-						.append(cat.getPmCategoryL3().getCategoryName())
-						.append("<br/>");
+						.append(cat.getPmCategoryL3().getCategoryName());
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.RECORD_STATUS_SUSPENDED) == 0) {
 				existsRejectedCodes = true;
