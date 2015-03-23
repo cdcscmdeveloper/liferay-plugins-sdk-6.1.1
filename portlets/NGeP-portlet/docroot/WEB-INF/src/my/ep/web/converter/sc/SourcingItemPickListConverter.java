@@ -1,4 +1,4 @@
-package my.ep.web.sc.converter;
+package my.ep.web.converter.sc;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

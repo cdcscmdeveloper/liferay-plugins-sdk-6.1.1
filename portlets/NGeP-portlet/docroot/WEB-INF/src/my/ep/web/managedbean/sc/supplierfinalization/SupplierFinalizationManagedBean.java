@@ -24,8 +24,8 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
