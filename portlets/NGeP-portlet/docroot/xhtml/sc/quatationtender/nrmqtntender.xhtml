@@ -147,6 +147,9 @@
 					<p:dataTable id="zoneLocationDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
+						
+						<ac:paginator for="zoneLocationDataTable" />
+						
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -237,6 +240,9 @@
 					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
+						
+						<ac:paginator for="zoneyesDataTable" />
+						
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -321,6 +327,11 @@
 						<tr>
 							<td>
 								<div class="ppRightBtn">
+									<p:selectBooleanCheckbox id="popupCheckAll"  style="float:left;margin-top: 13px;margin-right: -4px;">
+										<p:ajax event="change" partialSubmit="true" process="@all" update=":form:treeZoneLocationPopup" listener="#{qTSupplierQulCriteriaBackingBean.checkAllPopUpConditions}" />
+									</p:selectBooleanCheckbox>
+									<p:spacer width="1" />
+									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
 									<p:commandButton value="#{lbl['lbl.btn.ok']}"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 										onclick="ZoneLocation.hide();" process="@all"
 										update="@this, zoneLocationDataTable, zonePopupPanel, zoneyesDataTable"
