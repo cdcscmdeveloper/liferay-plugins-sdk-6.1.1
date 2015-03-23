@@ -1,7 +1,7 @@
 /**
  * Copyright © 2013 Archisoft. All rights reserved.
  */
-package my.ep.web.managedbean.sc.directpurchase;
+package my.ep.web.managedbean.sc.purchaseindefault;
 
 import java.util.ArrayList;
 import java.util.List;

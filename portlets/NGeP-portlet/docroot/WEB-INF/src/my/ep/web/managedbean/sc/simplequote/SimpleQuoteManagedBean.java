@@ -1,7 +1,7 @@
 /**
  * Copyright © 2013 Archisoft. All rights reserved.
  */
-package my.ep.web.managedbean.sc.directpurchase;
+package my.ep.web.managedbean.sc.simplequote;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,9 +39,9 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
-import my.ep.web.backingbean.sc.directpurchase.ZonesBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;

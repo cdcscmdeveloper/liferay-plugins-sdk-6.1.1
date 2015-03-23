@@ -1,4 +1,4 @@
-package my.ep.web.backingbean.sc.directpurchase;
+package my.ep.web.backingbean.sc.requestnote;
 
 import java.io.Serializable;
 
