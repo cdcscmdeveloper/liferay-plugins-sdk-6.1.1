@@ -14,15 +14,6 @@
 			src="/xhtml/pm/businessnature/businessNatureNavButton.xhtml" />
 		<br />
 		<br />
-		<ui:remove>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				action="#{businessNatureBackingBean.redirectBusinessSearch()}"
-				style="float:left;" immediate="true" />
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				style="float:right;width:80px;"
-				action="#{businessNatureBackingBean.saveBusinessNatureDtls}" />
-		</ui:remove>
-
 		<p:panel header="#{lbl['lbl.pm.category.level']}" id="categoryLevel"
 			toggleable="true">
 			<table style="width: 100%;">
