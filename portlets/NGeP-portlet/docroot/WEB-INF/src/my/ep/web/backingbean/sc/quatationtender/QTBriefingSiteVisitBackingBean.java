@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
@@ -54,21 +64,30 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 
 /**
+ * The Class QTBriefingSiteVisitBackingBean.
+ *
  * @author Viswanath
- * 
  */
 @ManagedBean(name = "qTBriefingSiteVisitBackingBean")
 @RequestScoped
 public class QTBriefingSiteVisitBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/** The Constant NAV_TO_BSV_ATTENDANCE_PAGE. */
 	private static final String NAV_TO_BSV_ATTENDANCE_PAGE = "/xhtml/sc/quatationtender/briefingsitevisit/briefingAttendance.xhtml";
 
+	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTBriefingSiteVisitBackingBean.class);
 
+	/** The index. */
 	private int index;
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -76,11 +95,15 @@ public class QTBriefingSiteVisitBackingBean extends
 		log.info(message);
 	}
 
+	/**
+	 * Instantiates a new QT briefing site visit backing bean.
+	 */
 	public QTBriefingSiteVisitBackingBean() {
 
 	}
 
 	/**
+	 * Retrieve state list by country id
 	 * 
 	 */
 	public void retrievePmStateList() {
@@ -101,6 +124,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		retrievePmDivisions();
 	}
 
+	/**
+	 * Retrieve district list by state id.
+	 */
 	public void retrievePmDistrictList() {
 		debugLogger("retrievePmDistrictList");
 		if (null != this.getManagedBean().getQtBriefing()) {
@@ -139,6 +165,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		retrievePmCityList();
 	}
 
+	/**
+	 * Retrieve city list by district id.
+	 */
 	public void retrievePmCityList() {
 		this.getManagedBean().setCitys(null);
 		if (null != this.getManagedBean().getQtBriefing()) {
@@ -157,6 +186,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve division list by state id (only applicable for sarawak).
+	 */
 	public void retrievePmDivisions() {
 		debugLogger("retrievePmDistrictList");
 		this.getManagedBean().setStateCode(false);
@@ -197,6 +229,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		retrievePmDistrictList();
 	}
 
+	/**
+	 * Process checked.
+	 *
+	 * @param e the e
+	 */
 	public void processChecked(AjaxBehaviorEvent e) {
 		Boolean selectedValue = (Boolean) e.getComponent().getAttributes()
 				.get("value");
@@ -209,6 +246,11 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	}
 
+	/**
+	 * Add new bsv details to list.
+	 *
+	 * @param bsvType the bsv type
+	 */
 	public void addBsvDetails(String bsvType) {
 		debugLogger("addBriefingDetails");
 		this.getManagedBean().setRequired(true);
@@ -228,9 +270,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		bsvDtl.setBsvStatus(pmStatus);
 		this.getManagedBean().setQtBriefing(bsvDtl);
 		retrievePmStateList();
-
 	}
 
+	/**
+	 * Add details to briefing list.
+	 */
 	public void addToBriefingList() {
 		debugLogger("addToBriefingList");
 		this.getManagedBean().setRequired(false);
@@ -300,6 +344,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setRequired(Boolean.FALSE);
 	}
 
+	/**
+	 * Delete bsv details from list.
+	 *
+	 * @param bsvType the bsv type
+	 */
 	public void deleteBsvDetails(String bsvType) {
 		debugLogger("deleteBriefingDetails");
 		BriefingZoneBean briefingDtlBean = this.getManagedBean()
@@ -329,6 +378,12 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvDtlBean(briefingDtlBean);
 	}
 
+	/**
+	 * Goto attandance dtl.
+	 *
+	 * @param scQtBriefing the sc qt briefing
+	 * @return the string
+	 */
 	public String gotoAttandanceDtl(ScQtBsvDtl scQtBriefing) {
 		
 		BSVAttendanceBackingBean attendanceBackingBean= new BSVAttendanceBackingBean();
@@ -337,6 +392,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		return NAV_TO_BSV_ATTENDANCE_PAGE + "?faces-redirect=true";
 	}
 
+	/**
+	 * On row select.
+	 *
+	 * @param event the event
+	 */
 	public void onRowSelect(SelectEvent event) {
 		debugLogger("onRowSelect");
 		this.getManagedBean().setBriefingAttendanceList(null);
@@ -346,6 +406,12 @@ public class QTBriefingSiteVisitBackingBean extends
 		getAttandanceDtlsBySelectedRegistartion(briefingRegistration);
 	}
 	
+	/**
+	 * Gets the attandance dtls by selected registartion.
+	 *
+	 * @param briefingRegistration the briefing registration
+	 * @return the attandance dtls by selected registartion
+	 */
 	private void getAttandanceDtlsBySelectedRegistartion(
 			ScQtBsvRegistration briefingRegistration) {
 		debugLogger("getAttandanceDtlsBySelectedRegistartion");
@@ -406,7 +472,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 
 	/**
-	 * To add the attandance user click add button
+	 * To add the attandance user click add button.
 	 */
 	public void addAttendanceForBSV() {
 		debugLogger("addAttendanceForBSV");
@@ -432,6 +498,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 	}
 
+	/**
+	 * Bsv registation listner.
+	 *
+	 * @param mofAccounts the mof accounts
+	 */
 	public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
 		debugLogger("bsvRegistationListner");
 		if (getManagedBean().getBriefingRegistrationList() == null
@@ -463,7 +534,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 
 	/**
-	 * Method to delete the registrations
+	 * Method to delete the registrations.
 	 */
 	public void deleteBsvAttandances() {
 		debugLogger("deleteBsvAttandances");
@@ -493,6 +564,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 	}
 
+	/**
+	 * Adds the supplier details.
+	 */
 	public void addSupplierDetails() {
 		debugLogger("addSupplierDetails");
 		try {
@@ -525,7 +599,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	}
 
 	/**
-	 * Method to delete the registrations
+	 * Method to delete the registrations.
 	 */
 	public void deleteSupplierDetails() {
 		debugLogger("deleteSupplierDetails");
@@ -558,6 +632,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBriefingAttendanceList(null);
 	}
 
+	/**
+	 * Briefing back action.
+	 *
+	 * @return the string
+	 */
 	public String briefingBackAction() {
 		debugLogger("briefingBackAction");
 		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
@@ -619,6 +698,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 	}
 
+	/**
+	 * Cancel briefing list.
+	 */
 	public void cancelBriefingList() {
 		debugLogger("cancelBriefingList");
 		this.getManagedBean().setQtBriefing(null);
@@ -626,6 +708,11 @@ public class QTBriefingSiteVisitBackingBean extends
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
 
+	/**
+	 * Briefing click event.
+	 *
+	 * @param event the event
+	 */
 	public void briefingClickEvent(AjaxBehaviorEvent event) {
 		debugLogger("briefingClickEvent");
 		Boolean selectedValue = (Boolean) event.getComponent().getAttributes()
@@ -638,6 +725,11 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	}
 
+	/**
+	 * Site visit click event.
+	 *
+	 * @param event the event
+	 */
 	public void siteVisitClickEvent(AjaxBehaviorEvent event) {
 		debugLogger("siteVisitClickEvent");
 		Boolean selectedValue = (Boolean) event.getComponent().getAttributes()
@@ -650,6 +742,13 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	}
 
+	/**
+	 * Edits the action.
+	 *
+	 * @param bsvDtl the bsv dtl
+	 * @param index the index
+	 * @param bsvType the bsv type
+	 */
 	public void editAction(ScQtBsvDtl bsvDtl, int index, String bsvType) {
 		debugLogger("editAction");
 		bsvDtl.setSelected(true);
@@ -661,18 +760,28 @@ public class QTBriefingSiteVisitBackingBean extends
 		retrievePmStateList();
 	}
 
+	/**
+	 * Gets the index.
+	 *
+	 * @return the index
+	 */
 	public int getIndex() {
 		return index;
 	}
 
+	/**
+	 * Sets the index.
+	 *
+	 * @param index the new index
+	 */
 	public void setIndex(int index) {
 		this.index = index;
 	}
 
 	/**
 	 * Will be called on change of accordian panel..
-	 * 
-	 * @param event
+	 *
+	 * @param event the event
 	 */
 	public void onZoneTabChange(TabChangeEvent event) {
 		debugLogger("onZoneTabChange");
@@ -682,6 +791,9 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvDtlBean(zoneBean);
 	}
 	
+	/**
+	 * Validate postcode.
+	 */
 	public void validatePostcode() {
 		debugLogger("validatePostcode");
 		String postcode = getManagedBean().getQtBriefing().getAddress().getPostcode();

@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
@@ -69,18 +79,26 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author SudheerKumar
- * 
+ * The Class QTScheduleDetailBackingBean.
+ *
+ * @author Viswanath
  */
 @ManagedBean(name = "qTScheduleDetailBackingBean")
 @RequestScoped
 public class QTScheduleDetailBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
 
+	/**
+	 * Debug logger.
+	 *
+	 * @param message the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -88,25 +106,46 @@ public class QTScheduleDetailBackingBean extends
 		log.info(message);
 	}
 
+	/** The checked. */
 	private Boolean checked;
 
+	/**
+	 * Gets the checked.
+	 *
+	 * @return the checked
+	 */
 	public Boolean getChecked() {
 		return checked;
 	}
 
+	/**
+	 * Sets the checked.
+	 *
+	 * @param checked the new checked
+	 */
 	public void setChecked(Boolean checked) {
 		this.checked = checked;
 	}
 
+	/**
+	 * Instantiates a new QT schedule detail backing bean.
+	 */
 	public QTScheduleDetailBackingBean() {
 
 	}
 
+	/**
+	 * Inits the details.
+	 */
 	@PostConstruct
 	public void initDetails() {
 
 	}
 
+	/**
+	 * Retrieve state list by country id
+	 * 
+	 */
 	public void retrievePmStateList() {
 		debugLogger("retrievePmStateList");
 		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
@@ -127,6 +166,9 @@ public class QTScheduleDetailBackingBean extends
 		retrievePmDivisions();
 	}
 
+	/**
+	 * Retrieve division list by state id (only applicable for sarawak).
+	 */
 	public void retrievePmDivisions() {
 		debugLogger("retrievePmDistrictList");
 		this.getManagedBean().setStateCode(false);
@@ -162,6 +204,9 @@ public class QTScheduleDetailBackingBean extends
 		retrievePmDistrictList();
 	}
 
+	/**
+	 * Retrieve district list by state id.
+	 */
 	public void retrievePmDistrictList() {
 		debugLogger("retrievePmDistrictList");
 		if (null != this.getManagedBean().getScQtSampleSubmission()) {
@@ -199,6 +244,9 @@ public class QTScheduleDetailBackingBean extends
 		retrievePmCityList();
 	}
 
+	/**
+	 * Retrieve city list by district id.
+	 */
 	public void retrievePmCityList() {
 		debugLogger("retrievePmCityList");
 		this.getManagedBean().setCitys(null);
@@ -217,6 +265,11 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the desk officer admin assistant.
+	 *
+	 * @return the desk officer admin assistant
+	 */
 	public void getDeskOfficerAdminAssistant() {
 		debugLogger("getDeskOfficerAdminAssistant");
 		if (null == getManagedBean().getDeskOfficerAdmin()) {
@@ -232,6 +285,9 @@ public class QTScheduleDetailBackingBean extends
 
 	}
 
+	/**
+	 * Add new contact person to list.
+	 */
 	public void addContactPerson() {
 		debugLogger("addContactPerson");
 		ScQtContactPerson contactperson = new ScQtContactPerson();
@@ -248,6 +304,9 @@ public class QTScheduleDetailBackingBean extends
 
 	}
 
+	/**
+	 * Delete contact person from list.
+	 */
 	public void deleteContactPerson() {
 		debugLogger("deleteContactPerson");
 		List<ScQtContactPerson> contactPersonsList = getManagedBean()
@@ -264,6 +323,11 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Handle desk officer changed.
+	 *
+	 * @param user the user
+	 */
 	public void handleDeskOfficerChanged(PmUser user) {
 		List<PmUser> list = getManagedBean().getDeskOfficerAdmin();
 		for (PmUser pmUser : list) {
@@ -275,6 +339,9 @@ public class QTScheduleDetailBackingBean extends
 		// getManagedBean().getQtContactPerson().setUser(user);
 	}
 
+	/**
+	 * Adds new desk officer admin assistant to list.
+	 */
 	public void addDeskOfficerAdminAssistant() {
 		debugLogger("addDeskOfficerAdminAssistant");
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
@@ -295,6 +362,11 @@ public class QTScheduleDetailBackingBean extends
 		this.getManagedBean().setPmuserContactpersonList(doaaList);
 	}
 
+	/**
+	 * Validation desk officer admin assistant.
+	 *
+	 * @param doaaList the doaa list
+	 */
 	private void validationDeskOfficerAdminAssistant(
 			List<ScQtContactPerson> doaaList) {
 		IQTDetailSO detailSO = null;
@@ -310,6 +382,9 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete desk officer admin assistant from list.
+	 */
 	public void deleteDeskOfficerAdminAssistant() {
 		debugLogger("deleteDeskOfficerAdminAssistant");
 		List<ScQtContactPerson> contactList = this.getManagedBean()
@@ -325,6 +400,11 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve pmuser name.
+	 *
+	 * @param contactPerson the contact person
+	 */
 	public void retrievePmuserName(ScQtContactPerson contactPerson) {
 		debugLogger("retrievePmuserName");
 		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
@@ -457,8 +537,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Will be called if its zone based and clicks edit icon..
-	 * 
-	 * @param sampleSubmission
+	 *
+	 * @param sampleSubmission the sample submission
+	 * @param index the index
 	 */
 	public void editAddress(ScQtSampleSubmission sampleSubmission, int index) {
 		if (sampleSubmission.getAddress() == null) {
@@ -496,6 +577,11 @@ public class QTScheduleDetailBackingBean extends
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
 	}
 
+	/**
+	 * Handle maximum date.
+	 *
+	 * @return the date
+	 */
 	public Date handleMaximumDate() {
 		debugLogger("handleMaximumDate");
 		ScQt scQt = this.getManagedBean().getQt();
@@ -514,6 +600,9 @@ public class QTScheduleDetailBackingBean extends
 
 	}
 
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	 */
 	public void preRenderView() {
 
 		SCSiteVisitProposalDataType payLoad = getBpmTaskDetails(SCSiteVisitProposalDataType.class);
@@ -544,6 +633,12 @@ public class QTScheduleDetailBackingBean extends
 						"/xhtml/sc/bsvattendance/additionalAttandanceApproval.xhtml");
 	}
 
+	/**
+	 * Submit registarion details.
+	 *
+	 * @param outcome the outcome
+	 * @return the string
+	 */
 	public String submitRegistarionDetails(String outcome) {
 
 		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
@@ -611,6 +706,12 @@ public class QTScheduleDetailBackingBean extends
 		return "";
 	}
 
+	/**
+	 * Gets the msg code by out come.
+	 *
+	 * @param outCome the out come
+	 * @return the msg code by out come
+	 */
 	private String getMsgCodeByOutCome(String outCome) {
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outCome)) {
 			return MessageConst.INFO_700007;
