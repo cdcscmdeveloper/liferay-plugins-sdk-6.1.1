@@ -76,8 +76,8 @@ import my.ep.web.backingbean.pm.profilemanagement.ProfileManagementBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -104,9 +104,6 @@ public class ApprovalBackingBean extends
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(ProfileManagementBackingBean.class);
-
-	/** The faces context. */
-	private FacesContext facesContext = FacesContext.getCurrentInstance();
 
 	/** The text before sign. */
 	private String textBeforeSign;
@@ -196,18 +193,16 @@ public class ApprovalBackingBean extends
 		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
+			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-			ScQtApprovalAttachment attachment = scQtApproval
-					.getScQtApprovalAttachment();
-			if (null == attachment) {
-				attachment = new ScQtApprovalAttachment();
-				attachment.setScQtApproval(scQtApproval);
-				scQtApproval.setScQtApprovalAttachment(attachment);
-			} else {
-				attachment.setScQtApproval(scQtApproval);
-				scQtApproval.setScQtApprovalAttachment(attachment);
+			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval.getScQtApprovalAttachments();
+			if (null == approvalAttachments) {
+				approvalAttachments = new ArrayList<ScQtApprovalAttachment>();
 			}
+			attachment.setScQtApproval(scQtApproval);
 			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			approvalAttachments.add(attachment);
+			scQtApproval.setScQtApprovalAttachments(approvalAttachments);
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			getManagedBean().setScQtApproval(scQtApproval);
@@ -219,13 +214,10 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Add attachment to list.
-	 * 
-	 * @param event
-	 *            the event
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 *
+	 * @param event the event
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void handleOtherFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
@@ -264,7 +256,7 @@ public class ApprovalBackingBean extends
 	 * Delete Attachment.
 	 */
 	public void deleteUploadFile() {
-		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
+		getManagedBean().getScQtApproval().setScQtApprovalAttachments(null);
 	}
 
 	/**
@@ -273,7 +265,7 @@ public class ApprovalBackingBean extends
 	public void deleteFile() {
 		TabBean bean = this.getManagedBean().getSelectedApprovalTabBean();
 		this.getManagedBean().setScQtApproval(bean.getScQtApproval());
-		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
+		getManagedBean().getScQtApproval().setScQtApprovalAttachments(null);
 	}
 
 	/**
