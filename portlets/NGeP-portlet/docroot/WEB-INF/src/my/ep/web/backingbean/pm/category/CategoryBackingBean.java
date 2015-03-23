@@ -1719,13 +1719,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @param pmCategoryRestr
 	 *            the pm category restr
 	 */
-	public void deleteCategoryRestr(PmCategoryRestr pmCategoryRestr){
-		/*if(this.getManagedBean().getSelectedPmCategoryRestr()!=null && this.getManagedBean().getSelectedPmCategoryRestr().size() > 0){*/
-			//for(PmCategoryRestr restrc : this.getManagedBean().getSelectedPmCategoryRestr()){
-				this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(pmCategoryRestr);
-				
-			//}
-		//}
+	public void deleteCategoryRestr(){
+		if(this.getManagedBean().getSelectedPmCategoryRestr().size() > 0){
+			for(PmCategoryRestr restrc : this.getManagedBean().getSelectedPmCategoryRestr()){
+				this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(restrc);
+			}
+		}
 	}
 
 	/**
