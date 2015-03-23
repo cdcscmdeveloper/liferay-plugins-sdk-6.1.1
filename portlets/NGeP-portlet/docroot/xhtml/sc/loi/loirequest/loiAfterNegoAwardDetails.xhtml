@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="isZonal"
+		value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
+		id="afterNegoAwardDetails" toggleable="true">
+		<table>
+			<tr>
+				<td style="width: 250px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.award.type']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendTypeCode)}"
+						size="30" /></td>
+			</tr>
+			<tr>
+				<td style="width: 250px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.rec.by']}" /></td>
+				<td><p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType ne ParameterConst.directAward}"
+						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy)}"
+						size="30" />
+						
+					<p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.directAward}"
+						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,
+					lOIDetailBackingBean.managedBean.docType)}"
+						size="30" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.item.list']}" toggleable="false">
+		<p:dataTable id="afterNegoItemList" var="loiloaItem"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
+			rowKey="#{itemPrice}" rowIndexVar="index">
+	       <ac:paginator for="afterNegoItemList" />
+			
+			<p:columnGroup type="header">
+				<p:row>
+				  <p:column style="width:10%;white-space:normal;"  rendered="#{isZonal}"
+						headerText="#{lbl['lbl.sc.zone']}" />
+				
+					<p:column style="width:15%;white-space:normal;"
+						headerText="#{lbl['lbl.sc.loiloa.loi.item']}" />
+
+					<p:column style="white-space:normal;text-align:right;"
+						headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" />
+
+					<p:column style="white-space:normal;text-align:right;"
+						headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" />
+
+					<p:column style="white-space:normal;text-align:right;"
+						headerText="#{lbl['lbl.tpl.spec.content.duration.month']}" />
+
+
+					<p:column style="white-space:normal;text-align:right;"
+						headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
+
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loi.qty']}" />
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loi.uom']}" />
+				</p:row>
+			
+			</p:columnGroup>
+			
+			<p:column style="width:15%;white-space:normal;" rendered="#{isZonal}">
+                <p:commandLink id="zoneName"
+					oncomplete="zoneLocPopup.show();"
+					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
+					
+					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{loiLoaItem.tplSpecZoneDtl}" />
+					
+					<h:outputText value="#{loiLoaItem.tplSpecZoneDtl.zoneName}" />
+			 </p:commandLink>
+           </p:column>
+
+			<p:column style="width:15%;white-space:normal;">
+                   #{loiloaItem.scRequestItem.itemName}
+             </p:column>
+
+			<p:column style="width:10%; text-align:right;">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column style="width:10%; text-align:right;">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+			</p:column>
+			
+			<p:column style="width:10%; text-align:right;">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+			</p:column>
+			
+			<p:column style="width:10%; text-align:right;">
+				<h:outputText
+					value="#{loiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column>
+				<h:outputText value="#{loiloaItem.qty}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column>
+                  #{loiloaItem.scRequestItem.uom.uomName}
+            </p:column>
+		</p:dataTable>
+
+	</p:panel>
+
+	<c:if test="#{isZonal}">
+		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
+	</c:if>
+</ui:composition>
