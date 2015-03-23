@@ -10,7 +10,6 @@
 */
 package my.ep.web.backingbean.sc.quatationtender;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -361,26 +360,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 		getManagedBean().setSearchPanelSuppliersNode(null);
 	}
 
-	/**
-	 * Method to search th*e supplier for panel and restricted tender.
-	 *
-	 * @param event the event
-	 */
-	/*public void searchPanelSupplierAction() {
-		debugLogger("searchPanelSupplierAction");
-
-		int totalSearchSupplier = 0;
-		TreeNode searchPanelSuppliersNode = null;
-		List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
-
-		if (panelSupplierList != null && panelSupplierList.size() > 0) {
-		}
-
-		this.getManagedBean().setTotalSearchSupplier(totalSearchSupplier);
-		this.getManagedBean().setSearchPanelSuppliersNode(
-				searchPanelSuppliersNode);
-	}*/
-
 	public void onTabChangeAction(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
 		if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.qt.supplier.list"))) {
@@ -664,9 +643,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Gets the locations.
-	 *
-	 * @param TreeNode
+	 * Gets the locations.convert Treenode to Location Criteria objects in
+	 * supplier qualification criteria.
+	 * 
+	 * @param zoneLocation
+	 *            (TreeNode zoneLocation)
 	 * @return List<ScQtLocCriteria>
 	 */
 	private List<ScQtLocCriteria> getLocations(TreeNode zoneLocation) {
@@ -684,10 +665,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Gets the zone locations.
-	 *
-	 * @param zoneLocation the zone location
-	 * @return the zone locations
+	 * Gets the zone locations. convert Treenode to TplSpecZoneLoc objects in
+	 * general information.
+	 * 
+	 * @param zoneLocation
+	 *            (TreeNode zoneLocation)
+	 * @return List<TplSpecZoneLoc>
 	 */
 	private List<TplSpecZoneLoc> getZoneLocations(TreeNode zoneLocation) {
 		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
@@ -862,7 +845,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Update zone location.
+	 * Update supplier locations.Event handle add Locations to Supplier
+	 * qualification criteria menu.
 	 */
 	public void updateZoneLocation() {
 		debugLogger("updateZoneLocation");
@@ -976,7 +960,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * To delete the selected TreeNode from list..
+	 * Delete supplier qualification tree node.Event handle delete Locations
+	 * from supplier qualification criteria.
 	 */
 	public void deleteSupplierQualificationTreeNode() {
 		debugLogger("deleteSupplierQualificationTreeNode");
@@ -1097,9 +1082,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Gets the dropdown location values.
-	 *
-	 * @param locationLevel the location level
+	 * Gets the dropdown location values.display the Location level dropdown
+	 * values.
+	 * 
+	 * @param locationLevel
+	 *            the location level
 	 * @return the dropdown location values
 	 */
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
@@ -1147,9 +1134,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Show supplier details.
-	 *
-	 * @param qtSupplier the qt supplier
+	 * Show supplier details.retrive suupplier address based on supplier in
+	 * restricted tender tab
+	 * 
+	 * @param qtSupplier
+	 *            (ScQtSupplier qtSupplier).
 	 */
 	public void showSupplierDetails(ScQtSupplier qtSupplier) {
 		debugLogger("showSupplierDetails");
@@ -1189,9 +1178,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Select location tree node.
-	 *
-	 * @param event the event
+	 * Select location tree node.Event handle check treeNode Locations in
+	 * Supplier qualification criteria .
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
 	 */
 	public void selectLocationTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
@@ -1200,9 +1191,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Un select location tree node.
-	 *
-	 * @param event the event
+	 * Un select location tree node.Event handle Uncheck treeNode Locations in
+	 * Supplier qualification criteria .
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
 	 */
 	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
@@ -1211,7 +1204,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Search for supplier count.
+	 * Search for supplier count.search for Total suppliers in supplier
+	 * qualification criteria.
 	 */
 	public void searchForSupplierCount() {
 		List<String> codes = new ArrayList<String>();
@@ -1402,8 +1396,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	/**
 	 * Construct l3 ids.
-	 *
-	 * @param categories the categories
+	 * 
+	 * @param categories
+	 *            the categories
 	 * @return the list
 	 */
 	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
@@ -1418,33 +1413,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 		return categoryIds;
 	}
 
-	// View Circular Attachmnets Download Method
 	/**
-	 * Download circular dtls.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * View circular attachments.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @return navigate to ctcircular page.
 	 */
-/*	public void downloadCircularDtls() throws IOException {
-		debugLogger("downloadCircularDtls");
-		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
-		itemList = new ArrayList<CtPanelItem>();
-		itemList.add(this.getManagedBean().getCtPanelItem());
-
-		String filePath = this.getManagedBean().getCtCircularVer()
-				.getCircularFilePath();
-		String fileName = this.getManagedBean().getCtCircularVer()
-				.getCircularFileName();
-
-		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
-		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		actualFilePath.append(filePath);
-
-		downloadFile(actualFilePath.toString(), fileName);
-		this.getManagedBean().setSelectpanelItem(itemList);
-	}*/
-	
 	public String viewCircularAttachments() {
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
@@ -1462,9 +1437,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Retrive supplier dtls.
-	 *
-	 * @param panelSupplier the panel supplier
+	 * Retrive supplier details.retrive supplier information based on supplier in
+	 * supplier qualification criteria.
+	 * 
+	 * @param panelSupplier
+	 *            (CtPanelSupplier panelSupplier).
 	 */
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
 		this.getManagedBean().setCtpanelSupplier(panelSupplier);
@@ -1512,7 +1489,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 	
 	/**
-	 * Check all conditions.
+	 * Method to check all the state/districts in data table.
 	 *
 	 * @param event the event
 	 */
@@ -1538,7 +1515,30 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 	
 	/**
-	 * Retriev location dtls.
+	 * Method to check all the state/districts in data table in dialog.
+	 *
+	 * @param event the event
+	 */
+	public void checkAllPopUpConditions(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		TreeNode treeNode = getManagedBean().getRootLocationTree();
+		if (treeNode != null) {
+			for (TreeNode stateNode : treeNode.getChildren()) {
+				if (stateNode.getChildCount() > 0) {
+					for (TreeNode districtNode : stateNode.getChildren()) {
+						districtNode.setSelected(flag);
+					}
+				}
+				stateNode.setSelected(flag);
+			}
+			getManagedBean().setRootLocationTree(treeNode);
+		} else {
+			
+		}
+	}
+	
+	/**
+	 * Retriev location details.
 	 *
 	 * @param scQtLocCriteriaList the sc qt loc criteria list
 	 */
