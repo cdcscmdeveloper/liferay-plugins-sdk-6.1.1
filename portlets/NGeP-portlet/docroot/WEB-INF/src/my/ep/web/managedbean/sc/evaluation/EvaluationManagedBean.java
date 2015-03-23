@@ -52,7 +52,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.web.backingbean.sc.evaluation.SummaryZoneBaen;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -279,12 +278,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The eva tot dis qualified suppliers. */
 	private int evaTotDisQualifiedSuppliers;
 
-	/** The summary zone bean. */
-	private List<SummaryZoneBaen> summaryZoneBean;
-
-	/** The summary item zone bean. */
-	private List<SummaryZoneBaen> summaryItemZoneBean;
-
 	/** The tpl spec zone dtls. */
 	private List<TplSpecZoneDtl> tplSpecZoneDtls;
 
@@ -302,9 +295,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The offer price item. */
 	private ScQtScoreOfferPrice offerPriceItem;
-
-	/** The fin spec zone bean. */
-	private List<SummaryZoneBaen> finSpecZoneBean;
 
 	/** The endorscommittee member list. */
 	private List<ScQtCommitteeActivity> endorscommitteeMemberList;
@@ -2025,44 +2015,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the summary zone bean.
-	 * 
-	 * @return the summary zone bean
-	 */
-	public List<SummaryZoneBaen> getSummaryZoneBean() {
-		return summaryZoneBean;
-	}
-
-	/**
-	 * Sets the summary zone bean.
-	 * 
-	 * @param summaryZoneBean
-	 *            the new summary zone bean
-	 */
-	public void setSummaryZoneBean(List<SummaryZoneBaen> summaryZoneBean) {
-		this.summaryZoneBean = summaryZoneBean;
-	}
-
-	/**
-	 * Gets the summary item zone bean.
-	 * 
-	 * @return the summary item zone bean
-	 */
-	public List<SummaryZoneBaen> getSummaryItemZoneBean() {
-		return summaryItemZoneBean;
-	}
-
-	/**
-	 * Sets the summary item zone bean.
-	 * 
-	 * @param summaryItemZoneBean
-	 *            the new summary item zone bean
-	 */
-	public void setSummaryItemZoneBean(List<SummaryZoneBaen> summaryItemZoneBean) {
-		this.summaryItemZoneBean = summaryItemZoneBean;
-	}
-
-	/**
 	 * Gets the tpl spec zone dtls.
 	 * 
 	 * @return the tpl spec zone dtls
@@ -2195,25 +2147,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setOfferPriceItem(ScQtScoreOfferPrice offerPriceItem) {
 		this.offerPriceItem = offerPriceItem;
-	}
-
-	/**
-	 * Gets the fin spec zone bean.
-	 * 
-	 * @return the fin spec zone bean
-	 */
-	public List<SummaryZoneBaen> getFinSpecZoneBean() {
-		return finSpecZoneBean;
-	}
-
-	/**
-	 * Sets the fin spec zone bean.
-	 * 
-	 * @param finSpecZoneBean
-	 *            the new fin spec zone bean
-	 */
-	public void setFinSpecZoneBean(List<SummaryZoneBaen> finSpecZoneBean) {
-		this.finSpecZoneBean = finSpecZoneBean;
 	}
 
 	/**
@@ -3181,7 +3114,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkReportDownload the checkReportDownload to set
+	 * @param checkReportDownload
+	 *            the checkReportDownload to set
 	 */
 	public void setCheckReportDownload(boolean checkReportDownload) {
 		this.checkReportDownload = checkReportDownload;
