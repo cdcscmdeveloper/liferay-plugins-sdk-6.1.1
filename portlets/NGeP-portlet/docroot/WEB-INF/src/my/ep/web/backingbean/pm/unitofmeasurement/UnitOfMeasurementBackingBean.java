@@ -96,7 +96,7 @@ public class UnitOfMeasurementBackingBean extends
 		debugLogger("resetMeasurementSearch");
 		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setStatus(null);
-		this.getManagedBean().setMeasurementCodes(new String());
+		this.getManagedBean().setMeasurementNames(new String());
 		this.getManagedBean().setMeasurementCodes(new String());
 		unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 		
