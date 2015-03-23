@@ -51,7 +51,10 @@ public class AuthorizedSignatoryBackingBean extends
 			.getLogger(AuthorizedSignatoryManagedBean.class);	
 	//Navigation Details
 	public static final String NAV_TO_SEARCH = "/xhtml/pm/authorizedsignatory/authorizedSignatoryMain.xhtml";
-	
+	/**
+	 *  The constructor used for save user logging.
+	 *  	 
+	 **/
 	public AuthorizedSignatoryBackingBean() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
@@ -62,7 +65,11 @@ public class AuthorizedSignatoryBackingBean extends
 			new LogKey(1L); 
 		}
 	}
-	
+	/**
+	 *  This method used for reset the search bean field and
+	 *  navigate to the search main page. 
+	 * 
+	 **/
 	public void preLoading(){
 		this.getManagedBean().setZone(new PmZone());
 		this.getManagedBean().setCertSignatories(new ArrayList<PmCertSignatory>());
@@ -82,7 +89,7 @@ public class AuthorizedSignatoryBackingBean extends
 	 * 
 	 */	
 	 public SelectItem[] getSignatoryStatusList() {
-		 return PmCommonUtil.getStatusOptionsDefault();
+		 return PmCommonUtil.getCommonStatusOptions();
 	 }
 	
 	/**
