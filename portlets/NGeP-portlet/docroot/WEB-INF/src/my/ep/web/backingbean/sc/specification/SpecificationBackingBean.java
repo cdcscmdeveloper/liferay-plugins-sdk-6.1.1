@@ -172,8 +172,8 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -184,6 +184,7 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -14492,4 +14493,46 @@ public class SpecificationBackingBean extends
 		this.count = count;
 	}
 
+	/**
+	 * Check all conditions.
+	 *
+	 * @param event the event
+	 */
+	public void checkAllConditions(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<TreeNode> list = getManagedBean().getZoneTrees();
+		if (null != list) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						for (TreeNode node2 : childNode.getChildren()) {
+							node2.setSelected(flag);
+						}
+					}
+					childNode.setSelected(flag);
+				}
+			}
+			getManagedBean().setZoneTrees(list);
+		} else {
+			
+		}
+	}
+	
+	public void checkAllPopUpConditions(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		TreeNode treeNode = getManagedBean().getRootLocationTree();
+		if (treeNode != null) {
+			for (TreeNode stateNode : treeNode.getChildren()) {
+				if (stateNode.getChildCount() > 0) {
+					for (TreeNode districtNode : stateNode.getChildren()) {
+						districtNode.setSelected(flag);
+					}
+				}
+				stateNode.setSelected(flag);
+			}
+			getManagedBean().setRootLocationTree(treeNode);
+		} else {
+			
+		}
+	}
 }
