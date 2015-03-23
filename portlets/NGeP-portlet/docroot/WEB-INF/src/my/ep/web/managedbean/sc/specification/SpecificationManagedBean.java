@@ -54,7 +54,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
@@ -158,9 +157,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	// B,S
 	/** The business owner. */
 	private String businessOwner = "B";
-
-	/** The bank list. */
-	private List<BankingBean> bankList;
 
 	/** The check list score. */
 	private List<ScQtCheckListScore> checkListScore;
@@ -739,11 +735,13 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The supplier location list. */
 	private List<ScQtLocCriteria> supplierLocationList;
-	
-	
+
 	/** The financial checklist action. */
 	private List<SelectItem> financialChecklistAction;
-	
+
+	/** The templatespec Newable. */
+	private boolean specNewable = true;
+
 	/**
 	 * Checks if is spec complete.
 	 * 
@@ -1475,25 +1473,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setToMonth(String toMonth) {
 		this.toMonth = toMonth;
-	}
-
-	/**
-	 * Gets the bank list.
-	 * 
-	 * @return the bank list
-	 */
-	public List<BankingBean> getBankList() {
-		return bankList;
-	}
-
-	/**
-	 * Sets the bank list.
-	 * 
-	 * @param bankList
-	 *            the new bank list
-	 */
-	public void setBankList(List<BankingBean> bankList) {
-		this.bankList = bankList;
 	}
 
 	/**
@@ -4916,7 +4895,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/**
 	 * Gets the supplier location list.
-	 *
+	 * 
 	 * @return the supplierLocationList
 	 */
 	public List<ScQtLocCriteria> getSupplierLocationList() {
@@ -4925,10 +4904,12 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/**
 	 * Sets the supplier location list.
-	 *
-	 * @param supplierLocationList the supplierLocationList to set
+	 * 
+	 * @param supplierLocationList
+	 *            the supplierLocationList to set
 	 */
-	public void setSupplierLocationList(List<ScQtLocCriteria> supplierLocationList) {
+	public void setSupplierLocationList(
+			List<ScQtLocCriteria> supplierLocationList) {
 		this.supplierLocationList = supplierLocationList;
 	}
 
@@ -4940,11 +4921,27 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param financialChecklistAction the financialChecklistAction to set
+	 * @param financialChecklistAction
+	 *            the financialChecklistAction to set
 	 */
 	public void setFinancialChecklistAction(
 			List<SelectItem> financialChecklistAction) {
 		this.financialChecklistAction = financialChecklistAction;
+	}
+
+	/**
+	 * @return the specNewable
+	 */
+	public boolean isSpecNewable() {
+		return specNewable;
+	}
+
+	/**
+	 * @param specNewable
+	 *            the specNewable to set
+	 */
+	public void setSpecNewable(boolean specNewable) {
+		this.specNewable = specNewable;
 	}
 
 }
