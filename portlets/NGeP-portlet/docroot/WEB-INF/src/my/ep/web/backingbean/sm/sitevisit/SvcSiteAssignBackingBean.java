@@ -12,11 +12,14 @@ import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
+import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.pm.RoleCode;
@@ -28,6 +31,7 @@ import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -63,6 +67,7 @@ public class SvcSiteAssignBackingBean extends
 		}
 		this.getManagedBean().setSmSvTask(resDTO.getSmSvTask());
 		this.getManagedBean().setSmRemark(new SmRemark());
+		setSiteVisitAddressesFacilityName();
 	}
 	
 	/**
@@ -212,5 +217,29 @@ public class SvcSiteAssignBackingBean extends
 			return RoleCode.UPS_SVC.value();		
 		else 
 			return null;
+	}
+	
+	/**
+	 * Set site visit address list facility name in data table
+	 */
+	private void setSiteVisitAddressesFacilityName() {
+		SmFacility smFacility = null;
+		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+		if (getManagedBean().getSmSvTask() != null
+				&& getManagedBean().getSmSvTask().getSmSvAddresses() != null
+				&& !getManagedBean().getSmSvTask().getSmSvAddresses().isEmpty()) {
+			for (SmSvAddress svAddress : getManagedBean().getSmSvTask()
+					.getSmSvAddresses()) {
+				if (svAddress.getSmAddress() != null) {
+					reqDTO.setSmAddressId(svAddress.getSmAddress()
+							.getAddressId());
+					smFacility = SmServiceLookup.getSiteVisitSO()
+							.retrieveSmFacilityByAddressId(reqDTO)
+							.getSmFacility();
+					svAddress.setFacilityName(smFacility == null ? ""
+							: smFacility.getFacilityName());
+				}
+			}
+		}
 	}
 }

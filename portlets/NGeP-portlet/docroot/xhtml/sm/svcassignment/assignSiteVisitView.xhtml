@@ -45,6 +45,10 @@
 			<p:dataTable var="svc"
 				value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smSvAddresses}"
 				rowIndexVar="rowIndex">
+				
+				<p:column headerText="#{lbl['lbl.sm.facility.name']}">
+				#{svc.facilityName}
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.address']}">
 					#{svc.smAddress.address1}<br />
