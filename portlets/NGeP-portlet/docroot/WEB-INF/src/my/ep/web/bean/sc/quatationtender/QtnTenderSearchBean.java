@@ -1,25 +1,67 @@
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
+ * 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.bean.sc.quatationtender;
 
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * The Class QtnTenderSearchBean.
+ *
+ * @author Viswanath
+ */
 public class QtnTenderSearchBean implements Serializable {
+	
+	/** The qt no. */
 	private String qtNo;
+	
+	/** The procurement mode. */
 	private String procurementMode;
+	
+	/** The qt title. */
 	private String qtTitle;
+	
+	/** The from created date. */
 	private Date fromCreatedDate;
+	
+	/** The to created date. */
 	private Date toCreatedDate;
+	
+	/** The from publish date. */
 	private Date fromPublishDate;
+	
+	/** The to publish date. */
 	private Date toPublishDate;
+	
+	/** The from closing date. */
 	private Date fromClosingDate;
+	
+	/** The to closing date. */
 	private Date toClosingDate;
+	
+	/** The qt status. */
 	private String qtStatus;
+	
+	/** The committee type. */
 	private String committeeType;
 	
+	/**
+	 * Instantiates a new qtn tender search bean.
+	 */
 	public QtnTenderSearchBean() {
 	}
 
 	/**
+	 * Gets the qt no.
+	 *
 	 * @return the qtNo
 	 */
 	public String getQtNo() {
@@ -27,6 +69,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the qt no.
+	 *
 	 * @param qtNo the qtNo to set
 	 */
 	public void setQtNo(String qtNo) {
@@ -34,6 +78,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the procurement mode.
+	 *
 	 * @return the procurementMode
 	 */
 	public String getProcurementMode() {
@@ -41,6 +87,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the procurement mode.
+	 *
 	 * @param procurementMode the procurementMode to set
 	 */
 	public void setProcurementMode(String procurementMode) {
@@ -48,6 +96,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the qt title.
+	 *
 	 * @return the qtTitle
 	 */
 	public String getQtTitle() {
@@ -55,6 +105,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the qt title.
+	 *
 	 * @param qtTitle the qtTitle to set
 	 */
 	public void setQtTitle(String qtTitle) {
@@ -62,6 +114,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the from created date.
+	 *
 	 * @return the fromCreatedDate
 	 */
 	public Date getFromCreatedDate() {
@@ -69,6 +123,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the from created date.
+	 *
 	 * @param fromCreatedDate the fromCreatedDate to set
 	 */
 	public void setFromCreatedDate(Date fromCreatedDate) {
@@ -76,6 +132,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the to created date.
+	 *
 	 * @return the toCreatedDate
 	 */
 	public Date getToCreatedDate() {
@@ -83,6 +141,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the to created date.
+	 *
 	 * @param toCreatedDate the toCreatedDate to set
 	 */
 	public void setToCreatedDate(Date toCreatedDate) {
@@ -90,6 +150,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the from publish date.
+	 *
 	 * @return the fromPublishDate
 	 */
 	public Date getFromPublishDate() {
@@ -97,6 +159,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the from publish date.
+	 *
 	 * @param fromPublishDate the fromPublishDate to set
 	 */
 	public void setFromPublishDate(Date fromPublishDate) {
@@ -104,6 +168,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the to publish date.
+	 *
 	 * @return the toPublishDate
 	 */
 	public Date getToPublishDate() {
@@ -111,6 +177,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the to publish date.
+	 *
 	 * @param toPublishDate the toPublishDate to set
 	 */
 	public void setToPublishDate(Date toPublishDate) {
@@ -118,6 +186,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the from closing date.
+	 *
 	 * @return the fromClosingDate
 	 */
 	public Date getFromClosingDate() {
@@ -125,6 +195,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the from closing date.
+	 *
 	 * @param fromClosingDate the fromClosingDate to set
 	 */
 	public void setFromClosingDate(Date fromClosingDate) {
@@ -132,6 +204,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the to closing date.
+	 *
 	 * @return the toClosingDate
 	 */
 	public Date getToClosingDate() {
@@ -139,6 +213,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the to closing date.
+	 *
 	 * @param toClosingDate the toClosingDate to set
 	 */
 	public void setToClosingDate(Date toClosingDate) {
@@ -146,6 +222,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the qt status.
+	 *
 	 * @return the qtStatus
 	 */
 	public String getQtStatus() {
@@ -153,6 +231,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the qt status.
+	 *
 	 * @param qtStatus the qtStatus to set
 	 */
 	public void setQtStatus(String qtStatus) {
@@ -160,6 +240,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Gets the committee type.
+	 *
 	 * @return the committeeType
 	 */
 	public String getCommitteeType() {
@@ -167,6 +249,8 @@ public class QtnTenderSearchBean implements Serializable {
 	}
 
 	/**
+	 * Sets the committee type.
+	 *
 	 * @param committeeType the committeeType to set
 	 */
 	public void setCommitteeType(String committeeType) {
