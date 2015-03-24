@@ -1,3 +1,4 @@
+/* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.managedbean.sc.noticeboard;
 
 import java.util.List;
@@ -32,7 +33,10 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 /**
- * @author sri NoticeBoard Managed Bean
+ * NoticeBoard Managed Bean class holds the properties of Notice Board UI screens.
+ * 
+ * @author sri 
+ * 
  */
 @ManagedBean(name = "noticeBoardManagedBean")
 @SessionScoped
@@ -233,401 +237,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setSearchBean(ISearchBean<ScQt> searchBean) {
 		this.searchBean = searchBean;
 	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public boolean isPubToday() {
-		return isPubToday;
-	}
-
-	public void setPubToday(boolean isPubToday) {
-		this.isPubToday = isPubToday;
-	}
-
-	public boolean isPubYesterday() {
-		return isPubYesterday;
-	}
-
-	public void setPubYesterday(boolean isPubYesterday) {
-		this.isPubYesterday = isPubYesterday;
-	}
-
-	public boolean isPubShow() {
-		return isPubShow;
-	}
-
-	public void setPubShow(boolean isPubShow) {
-		this.isPubShow = isPubShow;
-	}
-
-	public boolean isBreifToday() {
-		return isBreifToday;
-	}
-
-	public void setBreifToday(boolean isBreifToday) {
-		this.isBreifToday = isBreifToday;
-	}
-
-	public boolean isBreifYesterday() {
-		return isBreifYesterday;
-	}
-
-	public void setBreifYesterday(boolean isBreifYesterday) {
-		this.isBreifYesterday = isBreifYesterday;
-	}
-
-	public boolean isBreifShow() {
-		return isBreifShow;
-	}
-
-	public void setBreifShow(boolean isBreifShow) {
-		this.isBreifShow = isBreifShow;
-	}
-
-	public boolean isSvToday() {
-		return isSvToday;
-	}
-
-	public void setSvToday(boolean isSvToday) {
-		this.isSvToday = isSvToday;
-	}
-
-	public boolean isSvYesterday() {
-		return isSvYesterday;
-	}
-
-	public void setSvYesterday(boolean isSvYesterday) {
-		this.isSvYesterday = isSvYesterday;
-	}
-
-	public boolean isSvShow() {
-		return isSvShow;
-	}
-
-	public void setSvShow(boolean isSvShow) {
-		this.isSvShow = isSvShow;
-	}
-
-	public TreeNode getLocationRootNode() {
-		return locationRootNode;
-	}
-
-	public void setLocationRootNode(TreeNode locationRootNode) {
-		this.locationRootNode = locationRootNode;
-	}
-
-	public TreeNode getLocationSelectedNode() {
-		return locationSelectedNode;
-	}
-
-	public void setLocationSelectedNode(TreeNode locationSelectedNode) {
-		this.locationSelectedNode = locationSelectedNode;
-	}
-
-	public ISearchBean<Object> getLocationSearchBean() {
-		return locationSearchBean;
-	}
-
-	public void setLocationSearchBean(ISearchBean<Object> locationSearchBean) {
-		this.locationSearchBean = locationSearchBean;
-	}
-
-	public List<String> getTabs() {
-		return tabs;
-	}
-
-	public void setTabs(List<String> tabs) {
-		this.tabs = tabs;
-	}
-
-	public TreeNode getTempLocationRootNode() {
-		return tempLocationRootNode;
-	}
-
-	public void setTempLocationRootNode(TreeNode tempLocationRootNode) {
-		this.tempLocationRootNode = tempLocationRootNode;
-	}
-
-	public String getResetData() {
-		return resetData;
-	}
-
-	public void setResetData(String resetData) {
-		this.resetData = resetData;
-	}
-
-	public String getPreviousPage() {
-		return previousPage;
-	}
-
-	public void setPreviousPage(String previousPage) {
-		this.previousPage = previousPage;
-	}
-
-	public boolean isShowPubDate() {
-		return isShowPubDate;
-	}
-
-	public void setShowPubDate(boolean isShowPubDate) {
-		this.isShowPubDate = isShowPubDate;
-	}
-
-	public NoticeBoardSearchDataBean getPublishSearchDataBean() {
-		return publishSearchDataBean;
-	}
-
-	public void setPublishSearchDataBean(
-			NoticeBoardSearchDataBean publishSearchDataBean) {
-		this.publishSearchDataBean = publishSearchDataBean;
-	}
-
-	public NoticeBoardSearchDataBean getBriefSearchDataBean() {
-		return briefSearchDataBean;
-	}
-
-	public void setBriefSearchDataBean(
-			NoticeBoardSearchDataBean briefSearchDataBean) {
-		this.briefSearchDataBean = briefSearchDataBean;
-	}
-
-	public NoticeBoardSearchDataBean getSiteVisitDataBean() {
-		return siteVisitDataBean;
-	}
-
-	public void setSiteVisitDataBean(NoticeBoardSearchDataBean siteVisitDataBean) {
-		this.siteVisitDataBean = siteVisitDataBean;
-	}
-
-	public NoticeBoardSearchDataBean getClsDataBean() {
-		return clsDataBean;
-	}
-
-	public void setClsDataBean(NoticeBoardSearchDataBean clsDataBean) {
-		this.clsDataBean = clsDataBean;
-	}
-
-	public boolean isShowBriDate() {
-		return isShowBriDate;
-	}
-
-	public void setShowBriDate(boolean isShowBriDate) {
-		this.isShowBriDate = isShowBriDate;
-	}
-
-	public boolean isShowSiteDate() {
-		return isShowSiteDate;
-	}
-
-	public void setShowSiteDate(boolean isShowSiteDate) {
-		this.isShowSiteDate = isShowSiteDate;
-	}
-
-	public List<ScQtContactPerson> getContactPersons() {
-		return contactPersons;
-	}
-
-	public void setContactPersons(List<ScQtContactPerson> contactPersons) {
-		this.contactPersons = contactPersons;
-	}
-
 	
-
-	public List<TreeNode> getLocationNodes() {
-		return locationNodes;
-	}
-
-	public void setLocationNodes(List<TreeNode> locationNodes) {
-		this.locationNodes = locationNodes;
-	}
-
-	public List<ScQtCategory> getCategoryList() {
-		return categoryList;
-	}
-
-	public void setCategoryList(List<ScQtCategory> categoryList) {
-		this.categoryList = categoryList;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	
-	public SmSupplier getSmSupplier() {
-		return smSupplier;
-	}
-
-	public void setSmSupplier(SmSupplier smSupplier) {
-		this.smSupplier = smSupplier;
-	}
-
-	/**
-	 * @return the selectedTab
-	 */
-	public String getSelectedTab() {
-		return selectedTab;
-	}
-
-	/**
-	 * @param selectedTab the selectedTab to set
-	 */
-	public void setSelectedTab(String selectedTab) {
-		this.selectedTab = selectedTab;
-	}
-
-	
-
-	public String getQtNo() {
-		return qtNo;
-	}
-
-	public void setQtNo(String qtNo) {
-		this.qtNo = qtNo;
-	}
-
-	public PmOrgProfile getMinistryProfile() {
-		return ministryProfile;
-	}
-
-	public void setMinistryProfile(PmOrgProfile ministryProfile) {
-		this.ministryProfile = ministryProfile;
-	}
-
-	public PmOrgProfile getPtjProfile() {
-		return ptjProfile;
-	}
-
-	public void setPtjProfile(PmOrgProfile ptjProfile) {
-		this.ptjProfile = ptjProfile;
-	}
-
-	public PmCategoryL3 getCategoryL3() {
-		return categoryL3;
-	}
-
-	public void setCategoryL3(PmCategoryL3 categoryL3) {
-		this.categoryL3 = categoryL3;
-	}
-
-	public List<TplSpecZoneDtl> getZones() {
-		return zones;
-	}
-
-	public void setZones(List<TplSpecZoneDtl> zones) {
-		this.zones = zones;
-	}
-
-	public List<PmOrgProfile> getPtjList() {
-		return ptjList;
-	}
-
-	public void setPtjList(List<PmOrgProfile> ptjList) {
-		this.ptjList = ptjList;
-	}
-
-	public ScQtBsv getBsv() {
-		return bsv;
-	}
-
-	public void setBsv(ScQtBsv bsv) {
-		this.bsv = bsv;
-	}
-
-	/**
-	 * @return the scQtDocReports
-	 */
-	public List<ScQtDocReport> getScQtDocReports() {
-		return scQtDocReports;
-	}
-
-	/**
-	 * @param scQtDocReports the scQtDocReports to set
-	 */
-	public void setScQtDocReports(List<ScQtDocReport> scQtDocReports) {
-		this.scQtDocReports = scQtDocReports;
-	}
-
-	public List<SupplierQualificationBean> getQualificationBean() {
-		return qualificationBean;
-	}
-
-	public void setQualificationBean(
-			List<SupplierQualificationBean> qualificationBean) {
-		this.qualificationBean = qualificationBean;
-	}
-
-	
-	public List<BriefingZoneBean> getZoneBean() {
-		return zoneBean;
-	}
-
-	public void setZoneBean(List<BriefingZoneBean> zoneBean) {
-		this.zoneBean = zoneBean;
-	}
-
-	public BriefingZoneBean getNormalBsvBean() {
-		return normalBsvBean;
-	}
-
-	public void setNormalBsvBean(BriefingZoneBean normalBsvBean) {
-		this.normalBsvBean = normalBsvBean;
-	}
-
-	public List<ScQtProposalAmount> getProposalAmts() {
-		return proposalAmts;
-	}
-
-	public void setProposalAmts(List<ScQtProposalAmount> proposalAmts) {
-		this.proposalAmts = proposalAmts;
-	}
-
-	public List<SmMofAccount> getMofAccounts() {
-		return mofAccounts;
-	}
-
-	public void setMofAccounts(List<SmMofAccount> mofAccounts) {
-		this.mofAccounts = mofAccounts;
-	}
-
-	public String getMofNumber() {
-		return mofNumber;
-	}
-
-	public void setMofNumber(String mofNumber) {
-		this.mofNumber = mofNumber;
-	}
-
-	
-
-	public boolean isQualified() {
-		return qualified;
-	}
-
-	public void setQualified(boolean qualified) {
-		this.qualified = qualified;
-	}
-
-	
-	
-
 	/**
 	 * @return the selectedZoneTabIndex
 	 */
@@ -656,23 +266,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.zoneMenuModel = zoneMenuModel;
 	}
 
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public ScQtBsvDtl getBriefingDtls() {
-		return briefingDtls;
-		
-	}
-
-	public void setBriefingDtls(ScQtBsvDtl briefingDtls) {
-		this.briefingDtls = briefingDtls;
-	}
-
+	
 	/**
 	 * @return the proposalURL
 	 */
@@ -769,6 +363,680 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setAwardedItems(List<AwardedItemsBean> awardedItems) {
 		this.awardedItems = awardedItems;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the qtNo
+	 */
+	public String getQtNo() {
+		return qtNo;
+	}
+
+	/**
+	 * @param qtNo the qtNo to set
+	 */
+	public void setQtNo(String qtNo) {
+		this.qtNo = qtNo;
+	}
+
+	/**
+	 * @return the ministryProfile
+	 */
+	public PmOrgProfile getMinistryProfile() {
+		return ministryProfile;
+	}
+
+	/**
+	 * @param ministryProfile the ministryProfile to set
+	 */
+	public void setMinistryProfile(PmOrgProfile ministryProfile) {
+		this.ministryProfile = ministryProfile;
+	}
+
+	/**
+	 * @return the ptjProfile
+	 */
+	public PmOrgProfile getPtjProfile() {
+		return ptjProfile;
+	}
+
+	/**
+	 * @param ptjProfile the ptjProfile to set
+	 */
+	public void setPtjProfile(PmOrgProfile ptjProfile) {
+		this.ptjProfile = ptjProfile;
+	}
+
+	/**
+	 * @return the categoryL3
+	 */
+	public PmCategoryL3 getCategoryL3() {
+		return categoryL3;
+	}
+
+	/**
+	 * @param categoryL3 the categoryL3 to set
+	 */
+	public void setCategoryL3(PmCategoryL3 categoryL3) {
+		this.categoryL3 = categoryL3;
+	}
+
+	/**
+	 * @return the isPubToday
+	 */
+	public boolean isPubToday() {
+		return isPubToday;
+	}
+
+	/**
+	 * @param isPubToday the isPubToday to set
+	 */
+	public void setPubToday(boolean isPubToday) {
+		this.isPubToday = isPubToday;
+	}
+
+	/**
+	 * @return the isPubYesterday
+	 */
+	public boolean isPubYesterday() {
+		return isPubYesterday;
+	}
+
+	/**
+	 * @param isPubYesterday the isPubYesterday to set
+	 */
+	public void setPubYesterday(boolean isPubYesterday) {
+		this.isPubYesterday = isPubYesterday;
+	}
+
+	/**
+	 * @return the isPubShow
+	 */
+	public boolean isPubShow() {
+		return isPubShow;
+	}
+
+	/**
+	 * @param isPubShow the isPubShow to set
+	 */
+	public void setPubShow(boolean isPubShow) {
+		this.isPubShow = isPubShow;
+	}
+
+	/**
+	 * @return the isBreifToday
+	 */
+	public boolean isBreifToday() {
+		return isBreifToday;
+	}
+
+	/**
+	 * @param isBreifToday the isBreifToday to set
+	 */
+	public void setBreifToday(boolean isBreifToday) {
+		this.isBreifToday = isBreifToday;
+	}
+
+	/**
+	 * @return the isBreifYesterday
+	 */
+	public boolean isBreifYesterday() {
+		return isBreifYesterday;
+	}
+
+	/**
+	 * @param isBreifYesterday the isBreifYesterday to set
+	 */
+	public void setBreifYesterday(boolean isBreifYesterday) {
+		this.isBreifYesterday = isBreifYesterday;
+	}
+
+	/**
+	 * @return the isBreifShow
+	 */
+	public boolean isBreifShow() {
+		return isBreifShow;
+	}
+
+	/**
+	 * @param isBreifShow the isBreifShow to set
+	 */
+	public void setBreifShow(boolean isBreifShow) {
+		this.isBreifShow = isBreifShow;
+	}
+
+	/**
+	 * @return the isSvToday
+	 */
+	public boolean isSvToday() {
+		return isSvToday;
+	}
+
+	/**
+	 * @param isSvToday the isSvToday to set
+	 */
+	public void setSvToday(boolean isSvToday) {
+		this.isSvToday = isSvToday;
+	}
+
+	/**
+	 * @return the isSvYesterday
+	 */
+	public boolean isSvYesterday() {
+		return isSvYesterday;
+	}
+
+	/**
+	 * @param isSvYesterday the isSvYesterday to set
+	 */
+	public void setSvYesterday(boolean isSvYesterday) {
+		this.isSvYesterday = isSvYesterday;
+	}
+
+	/**
+	 * @return the isSvShow
+	 */
+	public boolean isSvShow() {
+		return isSvShow;
+	}
+
+	/**
+	 * @param isSvShow the isSvShow to set
+	 */
+	public void setSvShow(boolean isSvShow) {
+		this.isSvShow = isSvShow;
+	}
+
+	/**
+	 * @return the locationRootNode
+	 */
+	public TreeNode getLocationRootNode() {
+		return locationRootNode;
+	}
+
+	/**
+	 * @param locationRootNode the locationRootNode to set
+	 */
+	public void setLocationRootNode(TreeNode locationRootNode) {
+		this.locationRootNode = locationRootNode;
+	}
+
+	/**
+	 * @return the locationSelectedNode
+	 */
+	public TreeNode getLocationSelectedNode() {
+		return locationSelectedNode;
+	}
+
+	/**
+	 * @param locationSelectedNode the locationSelectedNode to set
+	 */
+	public void setLocationSelectedNode(TreeNode locationSelectedNode) {
+		this.locationSelectedNode = locationSelectedNode;
+	}
+
+	/**
+	 * @return the locationSearchBean
+	 */
+	public ISearchBean<Object> getLocationSearchBean() {
+		return locationSearchBean;
+	}
+
+	/**
+	 * @param locationSearchBean the locationSearchBean to set
+	 */
+	public void setLocationSearchBean(ISearchBean<Object> locationSearchBean) {
+		this.locationSearchBean = locationSearchBean;
+	}
+
+	/**
+	 * @return the tempLocationRootNode
+	 */
+	public TreeNode getTempLocationRootNode() {
+		return tempLocationRootNode;
+	}
+
+	/**
+	 * @param tempLocationRootNode the tempLocationRootNode to set
+	 */
+	public void setTempLocationRootNode(TreeNode tempLocationRootNode) {
+		this.tempLocationRootNode = tempLocationRootNode;
+	}
+
+	/**
+	 * @return the tabs
+	 */
+	public List<String> getTabs() {
+		return tabs;
+	}
+
+	/**
+	 * @param tabs the tabs to set
+	 */
+	public void setTabs(List<String> tabs) {
+		this.tabs = tabs;
+	}
+
+	/**
+	 * @return the resetData
+	 */
+	public String getResetData() {
+		return resetData;
+	}
+
+	/**
+	 * @param resetData the resetData to set
+	 */
+	public void setResetData(String resetData) {
+		this.resetData = resetData;
+	}
+
+	/**
+	 * @return the previousPage
+	 */
+	public String getPreviousPage() {
+		return previousPage;
+	}
+
+	/**
+	 * @param previousPage the previousPage to set
+	 */
+	public void setPreviousPage(String previousPage) {
+		this.previousPage = previousPage;
+	}
+
+	/**
+	 * @return the isShowPubDate
+	 */
+	public boolean isShowPubDate() {
+		return isShowPubDate;
+	}
+
+	/**
+	 * @param isShowPubDate the isShowPubDate to set
+	 */
+	public void setShowPubDate(boolean isShowPubDate) {
+		this.isShowPubDate = isShowPubDate;
+	}
+
+	/**
+	 * @return the isShowBriDate
+	 */
+	public boolean isShowBriDate() {
+		return isShowBriDate;
+	}
+
+	/**
+	 * @param isShowBriDate the isShowBriDate to set
+	 */
+	public void setShowBriDate(boolean isShowBriDate) {
+		this.isShowBriDate = isShowBriDate;
+	}
+
+	/**
+	 * @return the isShowSiteDate
+	 */
+	public boolean isShowSiteDate() {
+		return isShowSiteDate;
+	}
+
+	/**
+	 * @param isShowSiteDate the isShowSiteDate to set
+	 */
+	public void setShowSiteDate(boolean isShowSiteDate) {
+		this.isShowSiteDate = isShowSiteDate;
+	}
+
+	/**
+	 * @return the publishSearchDataBean
+	 */
+	public NoticeBoardSearchDataBean getPublishSearchDataBean() {
+		return publishSearchDataBean;
+	}
+
+	/**
+	 * @param publishSearchDataBean the publishSearchDataBean to set
+	 */
+	public void setPublishSearchDataBean(
+			NoticeBoardSearchDataBean publishSearchDataBean) {
+		this.publishSearchDataBean = publishSearchDataBean;
+	}
+
+	/**
+	 * @return the briefSearchDataBean
+	 */
+	public NoticeBoardSearchDataBean getBriefSearchDataBean() {
+		return briefSearchDataBean;
+	}
+
+	/**
+	 * @param briefSearchDataBean the briefSearchDataBean to set
+	 */
+	public void setBriefSearchDataBean(NoticeBoardSearchDataBean briefSearchDataBean) {
+		this.briefSearchDataBean = briefSearchDataBean;
+	}
+
+	/**
+	 * @return the siteVisitDataBean
+	 */
+	public NoticeBoardSearchDataBean getSiteVisitDataBean() {
+		return siteVisitDataBean;
+	}
+
+	/**
+	 * @param siteVisitDataBean the siteVisitDataBean to set
+	 */
+	public void setSiteVisitDataBean(NoticeBoardSearchDataBean siteVisitDataBean) {
+		this.siteVisitDataBean = siteVisitDataBean;
+	}
+
+	/**
+	 * @return the clsDataBean
+	 */
+	public NoticeBoardSearchDataBean getClsDataBean() {
+		return clsDataBean;
+	}
+
+	/**
+	 * @param clsDataBean the clsDataBean to set
+	 */
+	public void setClsDataBean(NoticeBoardSearchDataBean clsDataBean) {
+		this.clsDataBean = clsDataBean;
+	}
+
+	/**
+	 * @return the contactPersons
+	 */
+	public List<ScQtContactPerson> getContactPersons() {
+		return contactPersons;
+	}
+
+	/**
+	 * @param contactPersons the contactPersons to set
+	 */
+	public void setContactPersons(List<ScQtContactPerson> contactPersons) {
+		this.contactPersons = contactPersons;
+	}
+
+	/**
+	 * @return the briefingDtls
+	 */
+	public ScQtBsvDtl getBriefingDtls() {
+		return briefingDtls;
+	}
+
+	/**
+	 * @param briefingDtls the briefingDtls to set
+	 */
+	public void setBriefingDtls(ScQtBsvDtl briefingDtls) {
+		this.briefingDtls = briefingDtls;
+	}
+
+	/**
+	 * @return the locationNodes
+	 */
+	public List<TreeNode> getLocationNodes() {
+		return locationNodes;
+	}
+
+	/**
+	 * @param locationNodes the locationNodes to set
+	 */
+	public void setLocationNodes(List<TreeNode> locationNodes) {
+		this.locationNodes = locationNodes;
+	}
+
+	/**
+	 * @return the categoryList
+	 */
+	public List<ScQtCategory> getCategoryList() {
+		return categoryList;
+	}
+
+	/**
+	 * @param categoryList the categoryList to set
+	 */
+	public void setCategoryList(List<ScQtCategory> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public String getLocation() {
+		return location;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	/**
+	 * @return the mofAccounts
+	 */
+	public List<SmMofAccount> getMofAccounts() {
+		return mofAccounts;
+	}
+
+	/**
+	 * @param mofAccounts the mofAccounts to set
+	 */
+	public void setMofAccounts(List<SmMofAccount> mofAccounts) {
+		this.mofAccounts = mofAccounts;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+
+	/**
+	 * @return the selectedTab
+	 */
+	public String getSelectedTab() {
+		return selectedTab;
+	}
+
+	/**
+	 * @param selectedTab the selectedTab to set
+	 */
+	public void setSelectedTab(String selectedTab) {
+		this.selectedTab = selectedTab;
+	}
+
+	/**
+	 * @return the zones
+	 */
+	public List<TplSpecZoneDtl> getZones() {
+		return zones;
+	}
+
+	/**
+	 * @param zones the zones to set
+	 */
+	public void setZones(List<TplSpecZoneDtl> zones) {
+		this.zones = zones;
+	}
+
+	/**
+	 * @return the ptjList
+	 */
+	public List<PmOrgProfile> getPtjList() {
+		return ptjList;
+	}
+
+	/**
+	 * @param ptjList the ptjList to set
+	 */
+	public void setPtjList(List<PmOrgProfile> ptjList) {
+		this.ptjList = ptjList;
+	}
+
+	/**
+	 * @return the bsv
+	 */
+	public ScQtBsv getBsv() {
+		return bsv;
+	}
+
+	/**
+	 * @param bsv the bsv to set
+	 */
+	public void setBsv(ScQtBsv bsv) {
+		this.bsv = bsv;
+	}
+
+	/**
+	 * @return the scQtDocReports
+	 */
+	public List<ScQtDocReport> getScQtDocReports() {
+		return scQtDocReports;
+	}
+
+	/**
+	 * @param scQtDocReports the scQtDocReports to set
+	 */
+	public void setScQtDocReports(List<ScQtDocReport> scQtDocReports) {
+		this.scQtDocReports = scQtDocReports;
+	}
+
+	/**
+	 * @return the qualificationBean
+	 */
+	public List<SupplierQualificationBean> getQualificationBean() {
+		return qualificationBean;
+	}
+
+	/**
+	 * @param qualificationBean the qualificationBean to set
+	 */
+	public void setQualificationBean(
+			List<SupplierQualificationBean> qualificationBean) {
+		this.qualificationBean = qualificationBean;
+	}
+
+	/**
+	 * @return the qualified
+	 */
+	public boolean isQualified() {
+		return qualified;
+	}
+
+	/**
+	 * @param qualified the qualified to set
+	 */
+	public void setQualified(boolean qualified) {
+		this.qualified = qualified;
+	}
+
+	/**
+	 * @return the zoneBean
+	 */
+	public List<BriefingZoneBean> getZoneBean() {
+		return zoneBean;
+	}
+
+	/**
+	 * @param zoneBean the zoneBean to set
+	 */
+	public void setZoneBean(List<BriefingZoneBean> zoneBean) {
+		this.zoneBean = zoneBean;
+	}
+
+	/**
+	 * @return the normalBsvBean
+	 */
+	public BriefingZoneBean getNormalBsvBean() {
+		return normalBsvBean;
+	}
+
+	/**
+	 * @param normalBsvBean the normalBsvBean to set
+	 */
+	public void setNormalBsvBean(BriefingZoneBean normalBsvBean) {
+		this.normalBsvBean = normalBsvBean;
+	}
+
+	/**
+	 * @return the proposalAmts
+	 */
+	public List<ScQtProposalAmount> getProposalAmts() {
+		return proposalAmts;
+	}
+
+	/**
+	 * @param proposalAmts the proposalAmts to set
+	 */
+	public void setProposalAmts(List<ScQtProposalAmount> proposalAmts) {
+		this.proposalAmts = proposalAmts;
+	}
+
+	/**
+	 * @return the mofNumber
+	 */
+	public String getMofNumber() {
+		return mofNumber;
+	}
+
+	/**
+	 * @param mofNumber the mofNumber to set
+	 */
+	public void setMofNumber(String mofNumber) {
+		this.mofNumber = mofNumber;
+	}
+
+	/**
+	 * @return the companyName
+	 */
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	/**
+	 * @param companyName the companyName to set
+	 */
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	
