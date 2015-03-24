@@ -43,7 +43,7 @@
 
 				<h:outputLabel value="#{lbl['lbl.pm.main.category.code']}"></h:outputLabel>
 				<h:panelGrid columns="3">
-					<p:inputText value="#{categoryBackingBean.managedBean.mainCatCode}"
+					<p:inputText value="#{categoryBackingBean.managedBean.mainCatCode}" maxlength="2"
 						size="10" />
 					<h:outputLabel value="#{lbl['lbl.pm.main.category.desc']}"></h:outputLabel>
 					<p:inputText value="#{categoryBackingBean.managedBean.mainCatDesc}"
@@ -54,7 +54,7 @@
 					rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
 				<h:panelGrid columns="3">
 					<p:inputText value="#{categoryBackingBean.managedBean.subCatCode}"
-						size="10"
+						size="10" maxlength="2"
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" />
 					<h:outputLabel value="#{lbl['lbl.pm.sub.category.desc']}"
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
@@ -67,7 +67,7 @@
 					rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
 				<h:panelGrid columns="3">
 					<p:inputText value="#{categoryBackingBean.managedBean.subDivCode}"
-						size="10"
+						size="10" maxlength="2"
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" />
 					<h:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
