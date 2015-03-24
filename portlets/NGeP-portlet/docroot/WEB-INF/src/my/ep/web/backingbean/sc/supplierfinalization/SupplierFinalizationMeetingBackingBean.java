@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.supplierfinalization;
 
@@ -149,7 +149,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	}
 
 	/**
-	 * Retrieve quotation/tender details corresponding the qtId
+	 * Retrieve quotation/tender details corresponding to the qtId
 	 * @param qtId  
 	 */
 	public void retriveQTDetails(Long qtId) {
