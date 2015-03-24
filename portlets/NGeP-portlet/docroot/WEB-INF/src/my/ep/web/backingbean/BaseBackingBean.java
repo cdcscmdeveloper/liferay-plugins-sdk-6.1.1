@@ -864,4 +864,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return output;
 	}
+	
+	public String getShortFileName(String filename) {
+		if (filename != null && filename.length() > 15) {
+			filename = filename.substring(0, 15);
+			filename += "...";
+		}
+		return filename;
+	}
 }

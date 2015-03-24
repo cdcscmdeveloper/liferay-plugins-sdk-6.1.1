@@ -58,8 +58,9 @@
 				   <p:commandButton icon="iconAttachment" 
 					update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
 					value="#{lbl['lbl.bpm.choose.file']}" disabled="#{panelBackingBean.managedBean.viewContract}"/>	
-					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile(1)}" />				
+					<h:commandLink title="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+						value="#{panelBackingBean.getShortFileName(panelBackingBean.managedBean.circularVer.circularFileName)}"
+					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />				
 			  </h:panelGroup>	
 			              
 			              

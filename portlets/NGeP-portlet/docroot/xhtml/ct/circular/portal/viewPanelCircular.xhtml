@@ -107,8 +107,9 @@
 			</h:panelGrid>
 		
 		        <h:panelGroup id="uploadCircularPg">
-					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile(1)}" />				
+					<h:commandLink title="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+						value="#{panelBackingBean.getShortFileName(panelBackingBean.managedBean.circularVer.circularFileName)}" 
+					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />				
 			  </h:panelGroup>	
 	</h:panelGrid>
 	</p:panel>

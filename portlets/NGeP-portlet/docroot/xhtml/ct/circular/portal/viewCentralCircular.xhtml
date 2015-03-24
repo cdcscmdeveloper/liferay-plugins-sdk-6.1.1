@@ -74,7 +74,9 @@
 		        <p:outputLabel value="*" styleClass="mandatory" />
 		         <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 		       </h:panelGrid> 
-		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
+		        <h:commandLink title="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
+		        value="#{centralContractBackingBean.getShortFileName(centralContractBackingBean.managedBean.circularVer.circularFileName)}"
+		        styleClass="blue_font" 
 				action="#{centralContractBackingBean.downloadFile(1)}" />
 		   </h:panelGrid>	
 	</p:panel>

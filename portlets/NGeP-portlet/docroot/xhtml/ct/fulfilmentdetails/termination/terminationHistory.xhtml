@@ -154,7 +154,8 @@
 					</td>
 					<td>
 						<h:commandLink for="agreement" styleClass="blue_font"
-							value="#{terminationBackingBean.managedBean.ctContract.currentAgreement.fileName}"
+							title="#{terminationBackingBean.managedBean.ctContract.currentAgreement.fileName}"
+							value="#{terminationBackingBean.getShortFileName(terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}"
 							action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.ctContract.currentAgreement.filePath,
 							terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 					</td>

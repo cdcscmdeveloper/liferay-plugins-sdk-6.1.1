@@ -30,7 +30,8 @@
 						<f:setPropertyActionListener value="#{loaReportVar}" 
 						    target="#{amendmentBackingBean.managedBean.selectedScLoaReports}" />
 					</p:commandButton>
-					<h:commandLink rendered="#{loaReportVar.scLoaReportAttachment.filePath != null}" value="#{loaReportVar.scLoaReportAttachment.fileName}"
+					<h:commandLink rendered="#{loaReportVar.scLoaReportAttachment.filePath != null}" title="#{loaReportVar.scLoaReportAttachment.fileName}"
+						value="#{amendmentBackingBean.getShortFileName(loaReportVar.scLoaReportAttachment.fileName)}"
 						action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
 					</h:commandLink>
 				 </h:panelGroup>
