@@ -93,7 +93,6 @@ import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
-import my.ep.web.managedbean.sc.quationtender.Node;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -544,7 +543,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param selectedNode the selected node
 	 * @return the seleted tree node
 	 */
-	public TreeNode getSeletedTreeNode(TreeNode treeNode, Node selectedNode) {
+	/*public TreeNode getSeletedTreeNode(TreeNode treeNode, Node selectedNode) {
 		TreeNode selecetedTreeNode = null;
 		for (TreeNode childNode : treeNode.getChildren()) {
 			Node node = (Node) childNode.getData();
@@ -561,7 +560,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 		}
 		return selecetedTreeNode;
-	}
+	}*/
 
 	/**
 	 * Multi location change.
