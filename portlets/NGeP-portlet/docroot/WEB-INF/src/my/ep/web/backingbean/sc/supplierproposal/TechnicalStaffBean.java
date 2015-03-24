@@ -9,6 +9,16 @@ public class TechnicalStaffBean {
 	private SmPersonnel smPersonnel;
 	private List<PmParameterDesc> smStaffAcademics;
 	
+	/*
+	 * Default Constructor
+	 */
+	public TechnicalStaffBean(){
+		
+	}
+
+	/**
+	 * @param smPersonnel
+	 */
 	public TechnicalStaffBean(SmPersonnel smPersonnel) {
 		this.smPersonnel = smPersonnel;
 	}
