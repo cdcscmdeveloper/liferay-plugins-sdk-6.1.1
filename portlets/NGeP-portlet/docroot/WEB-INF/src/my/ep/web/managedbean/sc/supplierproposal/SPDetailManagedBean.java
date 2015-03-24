@@ -45,6 +45,7 @@ import org.primefaces.model.StreamedContent;
 
 /**
  * @author Viswanath
+ * @author Venkat Chanumolu
  * 
  */
 @ManagedBean(name = "supplierProposalDetailManagedBean")
@@ -81,7 +82,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	// private ScAttachment scAttachment = new ScAttachment();
 	private List<ScAttachment> scAttachmentList;
-	//MenuModel
+	// MenuModel
 	private MenuModel proposalZonalMenuModel;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
@@ -352,89 +353,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.nonFedMinDate = nonFedMinDate;
 	}
 
-	public boolean isCheckStatus() {
-		return checkStatus;
-	}
-
-	public void setCheckStatus(boolean checkStatus) {
-		this.checkStatus = checkStatus;
-	}
-
-	public ScQtProposalChecklist getSelectDetails() {
-		return selectDetails;
-	}
-
-	public void setSelectDetails(ScQtProposalChecklist selectDetails) {
-		this.selectDetails = selectDetails;
-	}
-
-	public List<ScAttachment> getScAttachmentList() {
-		return scAttachmentList;
-	}
-
-	public void setScAttachmentList(List<ScAttachment> scAttachmentList) {
-		this.scAttachmentList = scAttachmentList;
-	}
-
-	public ScQtProposalChecklist getQtProposalChecklist() {
-		return qtProposalChecklist;
-	}
-
-	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
-		this.qtProposalChecklist = qtProposalChecklist;
-	}
-
-	public List<ScQtProposalChecklist> getSelectedCheckDetails() {
-		return selectedCheckDetails;
-	}
-
-	public void setSelectedCheckDetails(
-			List<ScQtProposalChecklist> selectedCheckDetails) {
-		this.selectedCheckDetails = selectedCheckDetails;
-	}
-
-	public List<ScQtProposalChecklist> getFinanceCheckDetailsList() {
-		return financeCheckDetailsList;
-	}
-
-	public void setFinanceCheckDetailsList(
-			List<ScQtProposalChecklist> financeCheckDetailsList) {
-		this.financeCheckDetailsList = financeCheckDetailsList;
-	}
-
-	public List<ScQtProposalChecklist> getTecCheckDetailsList() {
-		return tecCheckDetailsList;
-	}
-
-	public void setTecCheckDetailsList(
-			List<ScQtProposalChecklist> tecCheckDetailsList) {
-		this.tecCheckDetailsList = tecCheckDetailsList;
-	}
-
-	public ScQtProposal getQtProposal() {
-		return qtProposal;
-	}
-
-	public void setQtProposal(ScQtProposal qtProposal) {
-		this.qtProposal = qtProposal;
-	}
-
-	public ScQt getQt() {
-		return qt;
-	}
-
-	public void setQt(ScQt qt) {
-		this.qt = qt;
-	}
-
-	public Object getProposalData() {
-		return proposalData;
-	}
-
-	public void setProposalData(Object proposalData) {
-		this.proposalData = proposalData;
-	}
-
 	/**
 	 * @return the supplierId
 	 */
@@ -448,47 +366,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierId(Long supplierId) {
 		this.supplierId = supplierId;
-	}
-
-	public TemplateSpecBean getTemplateSpecBean() {
-		return templateSpecBean;
-	}
-
-	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
-		this.templateSpecBean = templateSpecBean;
-	}
-
-	public ScQtCheckList getScQtCheckList() {
-		return scQtCheckList;
-	}
-
-	public void setScQtCheckList(ScQtCheckList scQtCheckList) {
-		this.scQtCheckList = scQtCheckList;
-	}
-
-	public int getPrepareActiveIndex() {
-		return prepareActiveIndex;
-	}
-
-	public void setPrepareActiveIndex(int prepareActiveIndex) {
-		this.prepareActiveIndex = prepareActiveIndex;
-	}
-
-	public List<ScQtPRPExperience> getScQtPRPExperiences() {
-		return scQtPRPExperiences;
-	}
-
-	public void setScQtPRPExperiences(List<ScQtPRPExperience> scQtPRPExperiences) {
-		this.scQtPRPExperiences = scQtPRPExperiences;
-	}
-
-	public List<ScQtPRPExperience> getSelectedPRPExperiences() {
-		return selectedPRPExperiences;
-	}
-
-	public void setSelectedPRPExperiences(
-			List<ScQtPRPExperience> selectedPRPExperiences) {
-		this.selectedPRPExperiences = selectedPRPExperiences;
 	}
 
 	/**
@@ -507,200 +384,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.scQtPRPExperienceNCheckLists = scQtPRPExperienceNCheckLists;
 	}
 
-	public List<ScQtPRPCreditFacility> getScQtPRPCreditFacilities() {
-		return scQtPRPCreditFacilities;
-	}
-
-	public void setScQtPRPCreditFacilities(
-			List<ScQtPRPCreditFacility> scQtPRPCreditFacilities) {
-		this.scQtPRPCreditFacilities = scQtPRPCreditFacilities;
-	}
-
-	public List<ScQtPRPCreditFacility> getSelectedPRPCreditFacilities() {
-		return selectedPRPCreditFacilities;
-	}
-
-	public void setSelectedPRPCreditFacilities(
-			List<ScQtPRPCreditFacility> selectedPRPCreditFacilities) {
-		this.selectedPRPCreditFacilities = selectedPRPCreditFacilities;
-	}
-
-	public List<ScQtPRPCashOnHand> getScQtPRPCashOnHand() {
-		return scQtPRPCashOnHand;
-	}
-
-	public void setScQtPRPCashOnHand(List<ScQtPRPCashOnHand> scQtPRPCashOnHand) {
-		this.scQtPRPCashOnHand = scQtPRPCashOnHand;
-	}
-
-	public List<ScQtPRPCashOnHand> getSelectedPRPCashOnHand() {
-		return selectedPRPCashOnHand;
-	}
-
-	public void setSelectedPRPCashOnHand(
-			List<ScQtPRPCashOnHand> selectedPRPCashOnHand) {
-		this.selectedPRPCashOnHand = selectedPRPCashOnHand;
-	}
-
-	public List<ScQtPRPBankStmt> getScQtPRPBankStmts() {
-		return scQtPRPBankStmts;
-	}
-
-	public void setScQtPRPBankStmts(List<ScQtPRPBankStmt> scQtPRPBankStmts) {
-		this.scQtPRPBankStmts = scQtPRPBankStmts;
-	}
-
-	public List<ScQtPRPBankStmt> getSelectedPRPBankStmts() {
-		return selectedPRPBankStmts;
-	}
-
-	public void setSelectedPRPBankStmts(
-			List<ScQtPRPBankStmt> selectedPRPBankStmts) {
-		this.selectedPRPBankStmts = selectedPRPBankStmts;
-	}
-
-	public ScQtPRPAssetLiability getScQtPRPAssetLiability() {
-		return scQtPRPAssetLiability;
-	}
-
-	public void setScQtPRPAssetLiability(
-			ScQtPRPAssetLiability scQtPRPAssetLiability) {
-		this.scQtPRPAssetLiability = scQtPRPAssetLiability;
-	}
-
-	public List<ScQtPRPAssetLiability> getScQtPRPAssetLiabilities() {
-		return scQtPRPAssetLiabilities;
-	}
-
-	public void setScQtPRPAssetLiabilities(
-			List<ScQtPRPAssetLiability> scQtPRPAssetLiabilities) {
-		this.scQtPRPAssetLiabilities = scQtPRPAssetLiabilities;
-	}
-
-	public List<ScQtPRPAssetLiability> getSelectedPRPAssetLiabilities() {
-		return selectedPRPAssetLiabilities;
-	}
-
-	public void setSelectedPRPAssetLiabilities(
-			List<ScQtPRPAssetLiability> selectedPRPAssetLiabilities) {
-		this.selectedPRPAssetLiabilities = selectedPRPAssetLiabilities;
-	}
-
-	public BigDecimal getTotalAmountCredit() {
-		return totalAmountCredit;
-	}
-
-	public void setTotalAmountCredit(BigDecimal totalAmountCredit) {
-		this.totalAmountCredit = totalAmountCredit;
-	}
-
-	public BigDecimal getTotalAmountPaid() {
-		return totalAmountPaid;
-	}
-
-	public void setTotalAmountPaid(BigDecimal totalAmountPaid) {
-		this.totalAmountPaid = totalAmountPaid;
-	}
-
-	public BigDecimal getTotalPercentagePaid() {
-		return totalPercentagePaid;
-	}
-
-	public void setTotalPercentagePaid(BigDecimal totalPercentagePaid) {
-		this.totalPercentagePaid = totalPercentagePaid;
-	}
-
-	public List<ScQtProposalScore> getScQtProposalScoreList() {
-		return scQtProposalScoreList;
-	}
-
-	public void setScQtProposalScoreList(
-			List<ScQtProposalScore> scQtProposalScoreList) {
-		this.scQtProposalScoreList = scQtProposalScoreList;
-	}
-
-	public ScQtProposalScore getScQtProposalScore() {
-		return scQtProposalScore;
-	}
-
-	public void setScQtProposalScore(ScQtProposalScore scQtProposalScore) {
-		this.scQtProposalScore = scQtProposalScore;
-	}
-
-	public BigDecimal getTotalcashHand() {
-		return totalcashHand;
-	}
-
-	public void setTotalcashHand(BigDecimal totalcashHand) {
-		this.totalcashHand = totalcashHand;
-	}
-
-	public BigDecimal getTotalAmount() {
-		return totalAmount;
-	}
-
-	public void setTotalAmount(BigDecimal totalAmount) {
-		this.totalAmount = totalAmount;
-	}
-
-	public BigDecimal getAvgAmount() {
-		return avgAmount;
-	}
-
-	public void setAvgAmount(BigDecimal avgAmount) {
-		this.avgAmount = avgAmount;
-	}
-
-	public ScQtPRPEmployee getScQtPRPEmployee() {
-		return scQtPRPEmployee;
-	}
-
-	public void setScQtPRPEmployee(ScQtPRPEmployee scQtPRPEmployee) {
-		this.scQtPRPEmployee = scQtPRPEmployee;
-	}
-
-	public int getTotalContracts() {
-		return totalContracts;
-	}
-
-	public void setTotalContracts(int totalContracts) {
-		this.totalContracts = totalContracts;
-	}
-
-	public int getTotalYears() {
-		return totalYears;
-	}
-
-	public void setTotalYears(int totalYears) {
-		this.totalYears = totalYears;
-	}
-
-	public BigDecimal getTotalContractAmount() {
-		return totalContractAmount;
-	}
-
-	public void setTotalContractAmount(BigDecimal totalContractAmount) {
-		this.totalContractAmount = totalContractAmount;
-	}
-
-	public ScQtSampleSubmission getScQtSampleSubmission() {
-		return scQtSampleSubmission;
-	}
-
-	public void setScQtSampleSubmission(
-			ScQtSampleSubmission scQtSampleSubmission) {
-		this.scQtSampleSubmission = scQtSampleSubmission;
-	}
-
-	public List<ScQtSampleSubmission> getScQtSampleSubmissionList() {
-		return scQtSampleSubmissionList;
-	}
-
-	public void setScQtSampleSubmissionList(
-			List<ScQtSampleSubmission> scQtSampleSubmissionList) {
-		this.scQtSampleSubmissionList = scQtSampleSubmissionList;
-	}
-
 	/**
 	 * @return the scQtSampleLable
 	 */
@@ -714,118 +397,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtSampleLable(ScQtSampleLable scQtSampleLable) {
 		this.scQtSampleLable = scQtSampleLable;
-	}
-
-	public List<ScLoa> getScLoaList() {
-		return scLoaList;
-	}
-
-	public void setScLoaList(List<ScLoa> scLoaList) {
-		this.scLoaList = scLoaList;
-	}
-
-	public int getContractSize() {
-		return contractSize;
-	}
-
-	public void setContractSize(int contractSize) {
-		this.contractSize = contractSize;
-	}
-
-	public int getNoOfYears() {
-		return noOfYears;
-	}
-
-	public void setNoOfYears(int noOfYears) {
-		this.noOfYears = noOfYears;
-	}
-
-	public ScQtDoc getScQtDoc() {
-		return scQtDoc;
-	}
-
-	public void setScQtDoc(ScQtDoc scQtDoc) {
-		this.scQtDoc = scQtDoc;
-	}
-
-	public List<TplSpecZoneDtl> getZones() {
-		return zones;
-	}
-
-	public void setZones(List<TplSpecZoneDtl> zones) {
-		this.zones = zones;
-	}
-
-	public TplSpecZoneDtl getSelectedZone() {
-		return selectedZone;
-	}
-
-	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
-		this.selectedZone = selectedZone;
-	}
-
-	public int getPrepareProposal() {
-		return prepareProposal;
-	}
-
-	public void setPrepareProposal(int prepareProposal) {
-		this.prepareProposal = prepareProposal;
-	}
-
-	public List<ScQtProposal> getQtProposalsList() {
-		return qtProposalsList;
-	}
-
-	public void setQtProposalsList(List<ScQtProposal> qtProposalsList) {
-		this.qtProposalsList = qtProposalsList;
-	}
-
-	public int getActiveIndex() {
-		return activeIndex;
-	}
-
-	public void setActiveIndex(int activeIndex) {
-		this.activeIndex = activeIndex;
-	}
-
-	public int getProposalIndex() {
-		return proposalIndex;
-	}
-
-	public void setProposalIndex(int proposalIndex) {
-		this.proposalIndex = proposalIndex;
-	}
-
-	public SmSupplier getSmSupplier() {
-		return smSupplier;
-	}
-
-	public void setSmSupplier(SmSupplier smSupplier) {
-		this.smSupplier = smSupplier;
-	}
-
-	public SmAppl getSmAppl() {
-		return smAppl;
-	}
-
-	public void setSmAppl(SmAppl smAppl) {
-		this.smAppl = smAppl;
-	}
-
-	public List<TechnicalStaffBean> getSmPersonnelList() {
-		return smPersonnelList;
-	}
-
-	public void setSmPersonnelList(List<TechnicalStaffBean> smPersonnelList) {
-		this.smPersonnelList = smPersonnelList;
-	}
-
-	public int getTotalNoOfYearsExperience() {
-		return totalNoOfYearsExperience;
-	}
-
-	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
-		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
 	}
 
 	/**
@@ -979,30 +550,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.selected = selected;
 	}
 
-	public String getPageUrl() {
-		return pageUrl;
-	}
-
-	public void setPageUrl(String pageUrl) {
-		this.pageUrl = pageUrl;
-	}
-
-	public String getDocDefinitionKey() {
-		return docDefinitionKey;
-	}
-
-	public void setDocDefinitionKey(String docDefinitionKey) {
-		this.docDefinitionKey = docDefinitionKey;
-	}
-
-	public String getCheckListDefintionKey() {
-		return checkListDefintionKey;
-	}
-
-	public void setCheckListDefintionKey(String checkListDefintionKey) {
-		this.checkListDefintionKey = checkListDefintionKey;
-	}
-
 	/**
 	 * @return the supplierFacilities
 	 */
@@ -1090,9 +637,11 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleLabelStreamContent the sampleLabelStreamContent to set
+	 * @param sampleLabelStreamContent
+	 *            the sampleLabelStreamContent to set
 	 */
-	public void setSampleLabelStreamContent(StreamedContent sampleLabelStreamContent) {
+	public void setSampleLabelStreamContent(
+			StreamedContent sampleLabelStreamContent) {
 		this.sampleLabelStreamContent = sampleLabelStreamContent;
 	}
 
@@ -1104,10 +653,850 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param proposalZonalMenuModel the proposalZonalMenuModel to set
+	 * @param proposalZonalMenuModel
+	 *            the proposalZonalMenuModel to set
 	 */
 	public void setProposalZonalMenuModel(MenuModel proposalZonalMenuModel) {
 		this.proposalZonalMenuModel = proposalZonalMenuModel;
+	}
+
+	/**
+	 * @return the qt
+	 */
+	public ScQt getQt() {
+		return qt;
+	}
+
+	/**
+	 * @param qt
+	 *            the qt to set
+	 */
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+	/**
+	 * @return the qtProposal
+	 */
+	public ScQtProposal getQtProposal() {
+		return qtProposal;
+	}
+
+	/**
+	 * @param qtProposal
+	 *            the qtProposal to set
+	 */
+	public void setQtProposal(ScQtProposal qtProposal) {
+		this.qtProposal = qtProposal;
+	}
+
+	/**
+	 * @return the qtProposalChecklist
+	 */
+	public ScQtProposalChecklist getQtProposalChecklist() {
+		return qtProposalChecklist;
+	}
+
+	/**
+	 * @param qtProposalChecklist
+	 *            the qtProposalChecklist to set
+	 */
+	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
+		this.qtProposalChecklist = qtProposalChecklist;
+	}
+
+	/**
+	 * @return the tecCheckDetailsList
+	 */
+	public List<ScQtProposalChecklist> getTecCheckDetailsList() {
+		return tecCheckDetailsList;
+	}
+
+	/**
+	 * @param tecCheckDetailsList
+	 *            the tecCheckDetailsList to set
+	 */
+	public void setTecCheckDetailsList(
+			List<ScQtProposalChecklist> tecCheckDetailsList) {
+		this.tecCheckDetailsList = tecCheckDetailsList;
+	}
+
+	/**
+	 * @return the financeCheckDetailsList
+	 */
+	public List<ScQtProposalChecklist> getFinanceCheckDetailsList() {
+		return financeCheckDetailsList;
+	}
+
+	/**
+	 * @param financeCheckDetailsList
+	 *            the financeCheckDetailsList to set
+	 */
+	public void setFinanceCheckDetailsList(
+			List<ScQtProposalChecklist> financeCheckDetailsList) {
+		this.financeCheckDetailsList = financeCheckDetailsList;
+	}
+
+	/**
+	 * @return the selectedCheckDetails
+	 */
+	public List<ScQtProposalChecklist> getSelectedCheckDetails() {
+		return selectedCheckDetails;
+	}
+
+	/**
+	 * @param selectedCheckDetails
+	 *            the selectedCheckDetails to set
+	 */
+	public void setSelectedCheckDetails(
+			List<ScQtProposalChecklist> selectedCheckDetails) {
+		this.selectedCheckDetails = selectedCheckDetails;
+	}
+
+	/**
+	 * @return the scQtCheckList
+	 */
+	public ScQtCheckList getScQtCheckList() {
+		return scQtCheckList;
+	}
+
+	/**
+	 * @param scQtCheckList
+	 *            the scQtCheckList to set
+	 */
+	public void setScQtCheckList(ScQtCheckList scQtCheckList) {
+		this.scQtCheckList = scQtCheckList;
+	}
+
+	/**
+	 * @return the activeIndex
+	 */
+	public int getActiveIndex() {
+		return activeIndex;
+	}
+
+	/**
+	 * @param activeIndex
+	 *            the activeIndex to set
+	 */
+	public void setActiveIndex(int activeIndex) {
+		this.activeIndex = activeIndex;
+	}
+
+	/**
+	 * @return the proposalIndex
+	 */
+	public int getProposalIndex() {
+		return proposalIndex;
+	}
+
+	/**
+	 * @param proposalIndex
+	 *            the proposalIndex to set
+	 */
+	public void setProposalIndex(int proposalIndex) {
+		this.proposalIndex = proposalIndex;
+	}
+
+	/**
+	 * @return the prepareActiveIndex
+	 */
+	public int getPrepareActiveIndex() {
+		return prepareActiveIndex;
+	}
+
+	/**
+	 * @param prepareActiveIndex
+	 *            the prepareActiveIndex to set
+	 */
+	public void setPrepareActiveIndex(int prepareActiveIndex) {
+		this.prepareActiveIndex = prepareActiveIndex;
+	}
+
+	/**
+	 * @return the selectDetails
+	 */
+	public ScQtProposalChecklist getSelectDetails() {
+		return selectDetails;
+	}
+
+	/**
+	 * @param selectDetails
+	 *            the selectDetails to set
+	 */
+	public void setSelectDetails(ScQtProposalChecklist selectDetails) {
+		this.selectDetails = selectDetails;
+	}
+
+	/**
+	 * @return the checkStatus
+	 */
+	public boolean isCheckStatus() {
+		return checkStatus;
+	}
+
+	/**
+	 * @param checkStatus
+	 *            the checkStatus to set
+	 */
+	public void setCheckStatus(boolean checkStatus) {
+		this.checkStatus = checkStatus;
+	}
+
+	/**
+	 * @return the proposalData
+	 */
+	public Object getProposalData() {
+		return proposalData;
+	}
+
+	/**
+	 * @param proposalData
+	 *            the proposalData to set
+	 */
+	public void setProposalData(Object proposalData) {
+		this.proposalData = proposalData;
+	}
+
+	/**
+	 * @return the scAttachmentList
+	 */
+	public List<ScAttachment> getScAttachmentList() {
+		return scAttachmentList;
+	}
+
+	/**
+	 * @param scAttachmentList
+	 *            the scAttachmentList to set
+	 */
+	public void setScAttachmentList(List<ScAttachment> scAttachmentList) {
+		this.scAttachmentList = scAttachmentList;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean
+	 *            the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
+
+	/**
+	 * @return the scQtProposalScoreList
+	 */
+	public List<ScQtProposalScore> getScQtProposalScoreList() {
+		return scQtProposalScoreList;
+	}
+
+	/**
+	 * @param scQtProposalScoreList
+	 *            the scQtProposalScoreList to set
+	 */
+	public void setScQtProposalScoreList(
+			List<ScQtProposalScore> scQtProposalScoreList) {
+		this.scQtProposalScoreList = scQtProposalScoreList;
+	}
+
+	/**
+	 * @return the scQtProposalScore
+	 */
+	public ScQtProposalScore getScQtProposalScore() {
+		return scQtProposalScore;
+	}
+
+	/**
+	 * @param scQtProposalScore
+	 *            the scQtProposalScore to set
+	 */
+	public void setScQtProposalScore(ScQtProposalScore scQtProposalScore) {
+		this.scQtProposalScore = scQtProposalScore;
+	}
+
+	/**
+	 * @return the scQtDoc
+	 */
+	public ScQtDoc getScQtDoc() {
+		return scQtDoc;
+	}
+
+	/**
+	 * @param scQtDoc
+	 *            the scQtDoc to set
+	 */
+	public void setScQtDoc(ScQtDoc scQtDoc) {
+		this.scQtDoc = scQtDoc;
+	}
+
+	/**
+	 * @return the zones
+	 */
+	public List<TplSpecZoneDtl> getZones() {
+		return zones;
+	}
+
+	/**
+	 * @param zones
+	 *            the zones to set
+	 */
+	public void setZones(List<TplSpecZoneDtl> zones) {
+		this.zones = zones;
+	}
+
+	/**
+	 * @return the selectedZone
+	 */
+	public TplSpecZoneDtl getSelectedZone() {
+		return selectedZone;
+	}
+
+	/**
+	 * @param selectedZone
+	 *            the selectedZone to set
+	 */
+	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
+		this.selectedZone = selectedZone;
+	}
+
+	/**
+	 * @return the prepareProposal
+	 */
+	public int getPrepareProposal() {
+		return prepareProposal;
+	}
+
+	/**
+	 * @param prepareProposal
+	 *            the prepareProposal to set
+	 */
+	public void setPrepareProposal(int prepareProposal) {
+		this.prepareProposal = prepareProposal;
+	}
+
+	/**
+	 * @return the qtProposalsList
+	 */
+	public List<ScQtProposal> getQtProposalsList() {
+		return qtProposalsList;
+	}
+
+	/**
+	 * @param qtProposalsList
+	 *            the qtProposalsList to set
+	 */
+	public void setQtProposalsList(List<ScQtProposal> qtProposalsList) {
+		this.qtProposalsList = qtProposalsList;
+	}
+
+	/**
+	 * @return the scLoaList
+	 */
+	public List<ScLoa> getScLoaList() {
+		return scLoaList;
+	}
+
+	/**
+	 * @param scLoaList
+	 *            the scLoaList to set
+	 */
+	public void setScLoaList(List<ScLoa> scLoaList) {
+		this.scLoaList = scLoaList;
+	}
+
+	/**
+	 * @return the contractSize
+	 */
+	public int getContractSize() {
+		return contractSize;
+	}
+
+	/**
+	 * @param contractSize
+	 *            the contractSize to set
+	 */
+	public void setContractSize(int contractSize) {
+		this.contractSize = contractSize;
+	}
+
+	/**
+	 * @return the noOfYears
+	 */
+	public int getNoOfYears() {
+		return noOfYears;
+	}
+
+	/**
+	 * @param noOfYears
+	 *            the noOfYears to set
+	 */
+	public void setNoOfYears(int noOfYears) {
+		this.noOfYears = noOfYears;
+	}
+
+	/**
+	 * @return the scQtPRPExperiences
+	 */
+	public List<ScQtPRPExperience> getScQtPRPExperiences() {
+		return scQtPRPExperiences;
+	}
+
+	/**
+	 * @param scQtPRPExperiences
+	 *            the scQtPRPExperiences to set
+	 */
+	public void setScQtPRPExperiences(List<ScQtPRPExperience> scQtPRPExperiences) {
+		this.scQtPRPExperiences = scQtPRPExperiences;
+	}
+
+	/**
+	 * @return the selectedPRPExperiences
+	 */
+	public List<ScQtPRPExperience> getSelectedPRPExperiences() {
+		return selectedPRPExperiences;
+	}
+
+	/**
+	 * @param selectedPRPExperiences
+	 *            the selectedPRPExperiences to set
+	 */
+	public void setSelectedPRPExperiences(
+			List<ScQtPRPExperience> selectedPRPExperiences) {
+		this.selectedPRPExperiences = selectedPRPExperiences;
+	}
+
+	/**
+	 * @return the totalContracts
+	 */
+	public int getTotalContracts() {
+		return totalContracts;
+	}
+
+	/**
+	 * @param totalContracts
+	 *            the totalContracts to set
+	 */
+	public void setTotalContracts(int totalContracts) {
+		this.totalContracts = totalContracts;
+	}
+
+	/**
+	 * @return the totalYears
+	 */
+	public int getTotalYears() {
+		return totalYears;
+	}
+
+	/**
+	 * @param totalYears
+	 *            the totalYears to set
+	 */
+	public void setTotalYears(int totalYears) {
+		this.totalYears = totalYears;
+	}
+
+	/**
+	 * @return the totalContractAmount
+	 */
+	public BigDecimal getTotalContractAmount() {
+		return totalContractAmount;
+	}
+
+	/**
+	 * @param totalContractAmount
+	 *            the totalContractAmount to set
+	 */
+	public void setTotalContractAmount(BigDecimal totalContractAmount) {
+		this.totalContractAmount = totalContractAmount;
+	}
+
+	/**
+	 * @return the scQtPRPCreditFacilities
+	 */
+	public List<ScQtPRPCreditFacility> getScQtPRPCreditFacilities() {
+		return scQtPRPCreditFacilities;
+	}
+
+	/**
+	 * @param scQtPRPCreditFacilities
+	 *            the scQtPRPCreditFacilities to set
+	 */
+	public void setScQtPRPCreditFacilities(
+			List<ScQtPRPCreditFacility> scQtPRPCreditFacilities) {
+		this.scQtPRPCreditFacilities = scQtPRPCreditFacilities;
+	}
+
+	/**
+	 * @return the selectedPRPCreditFacilities
+	 */
+	public List<ScQtPRPCreditFacility> getSelectedPRPCreditFacilities() {
+		return selectedPRPCreditFacilities;
+	}
+
+	/**
+	 * @param selectedPRPCreditFacilities
+	 *            the selectedPRPCreditFacilities to set
+	 */
+	public void setSelectedPRPCreditFacilities(
+			List<ScQtPRPCreditFacility> selectedPRPCreditFacilities) {
+		this.selectedPRPCreditFacilities = selectedPRPCreditFacilities;
+	}
+
+	/**
+	 * @return the totalAmountCredit
+	 */
+	public BigDecimal getTotalAmountCredit() {
+		return totalAmountCredit;
+	}
+
+	/**
+	 * @param totalAmountCredit
+	 *            the totalAmountCredit to set
+	 */
+	public void setTotalAmountCredit(BigDecimal totalAmountCredit) {
+		this.totalAmountCredit = totalAmountCredit;
+	}
+
+	/**
+	 * @return the totalAmountPaid
+	 */
+	public BigDecimal getTotalAmountPaid() {
+		return totalAmountPaid;
+	}
+
+	/**
+	 * @param totalAmountPaid
+	 *            the totalAmountPaid to set
+	 */
+	public void setTotalAmountPaid(BigDecimal totalAmountPaid) {
+		this.totalAmountPaid = totalAmountPaid;
+	}
+
+	/**
+	 * @return the totalPercentagePaid
+	 */
+	public BigDecimal getTotalPercentagePaid() {
+		return totalPercentagePaid;
+	}
+
+	/**
+	 * @param totalPercentagePaid
+	 *            the totalPercentagePaid to set
+	 */
+	public void setTotalPercentagePaid(BigDecimal totalPercentagePaid) {
+		this.totalPercentagePaid = totalPercentagePaid;
+	}
+
+	/**
+	 * @return the scQtPRPCashOnHand
+	 */
+	public List<ScQtPRPCashOnHand> getScQtPRPCashOnHand() {
+		return scQtPRPCashOnHand;
+	}
+
+	/**
+	 * @param scQtPRPCashOnHand
+	 *            the scQtPRPCashOnHand to set
+	 */
+	public void setScQtPRPCashOnHand(List<ScQtPRPCashOnHand> scQtPRPCashOnHand) {
+		this.scQtPRPCashOnHand = scQtPRPCashOnHand;
+	}
+
+	/**
+	 * @return the selectedPRPCashOnHand
+	 */
+	public List<ScQtPRPCashOnHand> getSelectedPRPCashOnHand() {
+		return selectedPRPCashOnHand;
+	}
+
+	/**
+	 * @param selectedPRPCashOnHand
+	 *            the selectedPRPCashOnHand to set
+	 */
+	public void setSelectedPRPCashOnHand(
+			List<ScQtPRPCashOnHand> selectedPRPCashOnHand) {
+		this.selectedPRPCashOnHand = selectedPRPCashOnHand;
+	}
+
+	/**
+	 * @return the totalcashHand
+	 */
+	public BigDecimal getTotalcashHand() {
+		return totalcashHand;
+	}
+
+	/**
+	 * @param totalcashHand
+	 *            the totalcashHand to set
+	 */
+	public void setTotalcashHand(BigDecimal totalcashHand) {
+		this.totalcashHand = totalcashHand;
+	}
+
+	/**
+	 * @return the scQtPRPBankStmts
+	 */
+	public List<ScQtPRPBankStmt> getScQtPRPBankStmts() {
+		return scQtPRPBankStmts;
+	}
+
+	/**
+	 * @param scQtPRPBankStmts
+	 *            the scQtPRPBankStmts to set
+	 */
+	public void setScQtPRPBankStmts(List<ScQtPRPBankStmt> scQtPRPBankStmts) {
+		this.scQtPRPBankStmts = scQtPRPBankStmts;
+	}
+
+	/**
+	 * @return the selectedPRPBankStmts
+	 */
+	public List<ScQtPRPBankStmt> getSelectedPRPBankStmts() {
+		return selectedPRPBankStmts;
+	}
+
+	/**
+	 * @param selectedPRPBankStmts
+	 *            the selectedPRPBankStmts to set
+	 */
+	public void setSelectedPRPBankStmts(
+			List<ScQtPRPBankStmt> selectedPRPBankStmts) {
+		this.selectedPRPBankStmts = selectedPRPBankStmts;
+	}
+
+	/**
+	 * @return the totalAmount
+	 */
+	public BigDecimal getTotalAmount() {
+		return totalAmount;
+	}
+
+	/**
+	 * @param totalAmount
+	 *            the totalAmount to set
+	 */
+	public void setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	/**
+	 * @return the avgAmount
+	 */
+	public BigDecimal getAvgAmount() {
+		return avgAmount;
+	}
+
+	/**
+	 * @param avgAmount
+	 *            the avgAmount to set
+	 */
+	public void setAvgAmount(BigDecimal avgAmount) {
+		this.avgAmount = avgAmount;
+	}
+
+	/**
+	 * @return the scQtPRPAssetLiability
+	 */
+	public ScQtPRPAssetLiability getScQtPRPAssetLiability() {
+		return scQtPRPAssetLiability;
+	}
+
+	/**
+	 * @param scQtPRPAssetLiability
+	 *            the scQtPRPAssetLiability to set
+	 */
+	public void setScQtPRPAssetLiability(
+			ScQtPRPAssetLiability scQtPRPAssetLiability) {
+		this.scQtPRPAssetLiability = scQtPRPAssetLiability;
+	}
+
+	/**
+	 * @return the scQtPRPAssetLiabilities
+	 */
+	public List<ScQtPRPAssetLiability> getScQtPRPAssetLiabilities() {
+		return scQtPRPAssetLiabilities;
+	}
+
+	/**
+	 * @param scQtPRPAssetLiabilities
+	 *            the scQtPRPAssetLiabilities to set
+	 */
+	public void setScQtPRPAssetLiabilities(
+			List<ScQtPRPAssetLiability> scQtPRPAssetLiabilities) {
+		this.scQtPRPAssetLiabilities = scQtPRPAssetLiabilities;
+	}
+
+	/**
+	 * @return the selectedPRPAssetLiabilities
+	 */
+	public List<ScQtPRPAssetLiability> getSelectedPRPAssetLiabilities() {
+		return selectedPRPAssetLiabilities;
+	}
+
+	/**
+	 * @param selectedPRPAssetLiabilities
+	 *            the selectedPRPAssetLiabilities to set
+	 */
+	public void setSelectedPRPAssetLiabilities(
+			List<ScQtPRPAssetLiability> selectedPRPAssetLiabilities) {
+		this.selectedPRPAssetLiabilities = selectedPRPAssetLiabilities;
+	}
+
+	/**
+	 * @return the scQtPRPEmployee
+	 */
+	public ScQtPRPEmployee getScQtPRPEmployee() {
+		return scQtPRPEmployee;
+	}
+
+	/**
+	 * @param scQtPRPEmployee
+	 *            the scQtPRPEmployee to set
+	 */
+	public void setScQtPRPEmployee(ScQtPRPEmployee scQtPRPEmployee) {
+		this.scQtPRPEmployee = scQtPRPEmployee;
+	}
+
+	/**
+	 * @return the totalNoOfYearsExperience
+	 */
+	public int getTotalNoOfYearsExperience() {
+		return totalNoOfYearsExperience;
+	}
+
+	/**
+	 * @param totalNoOfYearsExperience
+	 *            the totalNoOfYearsExperience to set
+	 */
+	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
+		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
+	}
+
+	/**
+	 * @return the scQtSampleSubmission
+	 */
+	public ScQtSampleSubmission getScQtSampleSubmission() {
+		return scQtSampleSubmission;
+	}
+
+	/**
+	 * @param scQtSampleSubmission
+	 *            the scQtSampleSubmission to set
+	 */
+	public void setScQtSampleSubmission(
+			ScQtSampleSubmission scQtSampleSubmission) {
+		this.scQtSampleSubmission = scQtSampleSubmission;
+	}
+
+	/**
+	 * @return the scQtSampleSubmissionList
+	 */
+	public List<ScQtSampleSubmission> getScQtSampleSubmissionList() {
+		return scQtSampleSubmissionList;
+	}
+
+	/**
+	 * @param scQtSampleSubmissionList
+	 *            the scQtSampleSubmissionList to set
+	 */
+	public void setScQtSampleSubmissionList(
+			List<ScQtSampleSubmission> scQtSampleSubmissionList) {
+		this.scQtSampleSubmissionList = scQtSampleSubmissionList;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier
+	 *            the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+
+	/**
+	 * @return the smAppl
+	 */
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	/**
+	 * @param smAppl
+	 *            the smAppl to set
+	 */
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
+	}
+
+	/**
+	 * @return the smPersonnelList
+	 */
+	public List<TechnicalStaffBean> getSmPersonnelList() {
+		return smPersonnelList;
+	}
+
+	/**
+	 * @param smPersonnelList
+	 *            the smPersonnelList to set
+	 */
+	public void setSmPersonnelList(List<TechnicalStaffBean> smPersonnelList) {
+		this.smPersonnelList = smPersonnelList;
+	}
+
+	/**
+	 * @return the pageUrl
+	 */
+	public String getPageUrl() {
+		return pageUrl;
+	}
+
+	/**
+	 * @param pageUrl
+	 *            the pageUrl to set
+	 */
+	public void setPageUrl(String pageUrl) {
+		this.pageUrl = pageUrl;
+	}
+
+	/**
+	 * @return the docDefinitionKey
+	 */
+	public String getDocDefinitionKey() {
+		return docDefinitionKey;
+	}
+
+	/**
+	 * @param docDefinitionKey
+	 *            the docDefinitionKey to set
+	 */
+	public void setDocDefinitionKey(String docDefinitionKey) {
+		this.docDefinitionKey = docDefinitionKey;
+	}
+
+	/**
+	 * @return the checkListDefintionKey
+	 */
+	public String getCheckListDefintionKey() {
+		return checkListDefintionKey;
+	}
+
+	/**
+	 * @param checkListDefintionKey
+	 *            the checkListDefintionKey to set
+	 */
+	public void setCheckListDefintionKey(String checkListDefintionKey) {
+		this.checkListDefintionKey = checkListDefintionKey;
 	}
 
 }
