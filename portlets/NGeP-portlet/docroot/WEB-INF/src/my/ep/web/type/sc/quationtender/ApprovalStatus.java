@@ -15,7 +15,7 @@ import my.ep.type.IEnumType;
 // TODO: Auto-generated Javadoc
 /**
  * 
- * Enum class for ApprovalAction.
+ * Enum class for ApprovalStatus.
  * 
  * @author VidyaSagarReddy
  * @since 22.11.2013

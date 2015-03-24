@@ -14,7 +14,7 @@ package my.ep.web.type.sc.quationtender;
 // TODO: Auto-generated Javadoc
 /**
  * 
- * Enum class for ApprovalAction.
+ * Enum class for CloneAll.
  * 
  * @author VidyaSagarReddy
  * @since 22.11.2013
