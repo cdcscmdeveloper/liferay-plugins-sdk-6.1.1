@@ -263,23 +263,27 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 						docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 						messageId = MessageConst.INFO_700007;
-						messagePrefix = "Cancellation for ";
+						//messagePrefix = "Cancellation for ";
+						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
-						messagePrefix = "Cancellation for ";
+						//messagePrefix = "Cancellation for ";
+						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 						messageId = MessageConst.INFO_700011;
-						messagePrefix = "Update for ";						
+						//messagePrefix = "Update for ";
+						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 						messageId = MessageConst.INFO_700043;
-						messagePrefix = "Update for ";
+						//messagePrefix = "Update for ";
+						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.update.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
 					} else {
 						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-							messagePrefix = "Cancellation for ";	
+							messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.cancellation.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
 						}
 						messageId = MessageConst.INFO_700005;
 						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
@@ -420,13 +424,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		double totalDeliveryQty = 0;
 		double totalDeliveryAmount = 0;
 		if(!anyAddressSelected){
-			throw new EpException(MessageConst.ERROR_100050, new String[]{"Delivery Address"});
+			throw new EpException(MessageConst.ERROR_100050, new String[]{ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}else{
 			if(!FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(actionName)){
 				for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
 						if(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()==null || selectedDelAddress.getFlTempDoAddr().getSupplierDoRef().length()==0) {
-							throw new EpException(MessageConst.ERROR_100051, new String[]{"Supplier DO. No.","Delivery Address "+getFullAddress(selectedDelAddress.getPmAddress())});
+							throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress())});
 						}
 						totalDeliveryQty = 0;
 						totalDeliveryAmount = 0;
@@ -436,19 +440,19 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 									itemAddress.setDeliveredAmt(new BigDecimal(0));
 								}
 								if(itemAddress.getDeliveredAmt().doubleValue() > 0 && itemAddress.getDeliveredQty().doubleValue() <= 0){
-									throw new EpException(MessageConst.ERROR_740008, new String[]{"Delivery Quantity",getFullAddress(selectedDelAddress.getPmAddress())});
+									throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress()),getFullAddress(selectedDelAddress.getPmAddress())});
 								}else if(itemAddress.getDeliveredAmt().doubleValue() <= 0 && itemAddress.getDeliveredQty().doubleValue() > 0){
-									throw new EpException(MessageConst.ERROR_740008, new String[]{"Delivery Amount",getFullAddress(selectedDelAddress.getPmAddress())});
+									throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress()),getFullAddress(selectedDelAddress.getPmAddress()),getFullAddress(selectedDelAddress.getPmAddress())});
 								}
 							}
 							totalDeliveryQty = totalDeliveryQty + itemAddress.getDeliveredQty().doubleValue();
 							totalDeliveryAmount = totalDeliveryAmount + itemAddress.getDeliveredAmt().doubleValue();
 						}
 						if(totalDeliveryQty==0) {
-							throw new EpException(MessageConst.ERROR_740008, new String[]{"Total Delivery Quantity",getFullAddress(selectedDelAddress.getPmAddress())});
+							throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.total.del.quantity",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getFullAddress(selectedDelAddress.getPmAddress())});
 						}
 						if(totalDeliveryAmount==0) {
-							throw new EpException(MessageConst.ERROR_740008, new String[]{"Total Delivery Amount",getFullAddress(selectedDelAddress.getPmAddress())});
+							throw new EpException(MessageConst.ERROR_740008, new String[]{ResourceBundleUtils.getMessage("lbl.fl.total.del.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getFullAddress(selectedDelAddress.getPmAddress())});
 						}
 					}
 				}
@@ -506,7 +510,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		if(delQtyCal.doubleValue()<0) {		
 			itemAddress.setDeliveredQty(BigDecimal.ZERO);
 			itemAddress.setDeliveredAmt(BigDecimal.ZERO);
-			throw new EpException(MessageConst.ERROR_100033, new String[]{"Delivery Quantity","0"});
+			throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.delivery.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
 		}
 		
 		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
@@ -765,7 +769,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
 		
@@ -920,7 +924,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				ISearchBean<PmUom> searchBeanData = getMeasurementSearchBeanData(searchBean);
 				UomReqDTO reqDTO = new UomReqDTO();
 				reqDTO.setMeasurementSearchBean(searchBeanData);				
-				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);	
+				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);	
 				UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getMeasurementSearchResultBean();
