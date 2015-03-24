@@ -156,7 +156,7 @@
 			                	</f:facet>
 				<p:inputText value="#{typeValueObj.toValue}" size="15"
 					id="toValueId" disabled="#{!(typeValueObj.brandNew)}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateToValue(index)}" update="@(.fromValueId)" />
 				</p:inputText>
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
@@ -180,8 +180,7 @@
 					showOn="button" id="effDate" style="width:100px;"
 					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 					required="true" label="#{lbl['lbl.pm.as.effdate']}"
-					readonlyInput="true" partialSubmit="true" process="@this"
-					update=":form:settingTabId:ruleTypeValueTableID"
+					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.effDate}">
 					<p:ajax event="dateSelect" update="@([id$=ruleConfigExpDateId])"
@@ -199,10 +198,10 @@
 					showOn="button" id="ruleConfigExpDateId" style="width :100px;"
 					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
-					partialSubmit="true" process=":form:settingTabId"
-					update="@form"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.expDate}">
+					<p:ajax event="dateSelect" update="@([id$=cloneLink])"
+						process="@this" />
 				</p:calendar>
 			</p:column>
 
@@ -225,9 +224,10 @@
 						<td><p:commandLink id="cloneLink"
 								title="#{lbl['lbl.cm.clone']}"
 								rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag}"
-								disabled="#{typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null or typeValueObj.expDate eq null or typeValueObj.effDate >= typeValueObj.expDate}"
+								disabled="#{!typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null or typeValueObj.expDate eq null or typeValueObj.effDate >= typeValueObj.expDate}"
 								action="#{ruleCatalogueBackingBean.cloneRuleTypeValue(index)}"
-								update=":form:settingTabId:addTypeValueButton, :form:settingTabId:ruleTypeValueTableID">
+								partialSubmit="true" process="@this"
+								update=":form:settingTabId:ruleTypeValueTableID">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;"><p:commandLink
@@ -243,19 +243,10 @@
 		<br />
 		<h:panelGroup id="addBtnId">
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.add']}" id="addTierButton"
-					style="float:right;"
-					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || 
-							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
-					action="#{catalogueBackingBean.addNewTierPricing()}"
-					disabled="#{catalogueBackingBean.disableAddTier()}"
-					update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:addTierButton"
-					process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
-				<p:commandButton id="addTypeValueButton"
-					value="#{lbl['lbl.btn.add']}"
-					action="#{ruleCatalogueBackingBean.addMoreRuleValue()}"
-					partialSubmit="true" process="@this"
-					update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.add']}" id="addTypeValueButton" style="float:right;"
+								action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
+								update=":form:settingTabId:ruleTypeValueTableID" partialSubmit="true"
+								process="@this"></p:commandButton>
 
 			</div>
 		</h:panelGroup>
