@@ -56,10 +56,9 @@
 			<tr>
 				<th width="20%"><h:outputLabel
 						value="#{lbl['lbl.pm.search.status']}">
-						<h:outputLabel value="*" styleClass="mandatory" />
 					</h:outputLabel></th>
 				<td><p:selectOneMenu style="width:203px"
-						value="#{usergroupBackingBean.managedBean.status}" >
+						value="#{usergroupBackingBean.managedBean.status}">
 						<f:selectItems
 							value="#{usergroupBackingBean.getUserGroupStatus()}" />
 					</p:selectOneMenu></td>
