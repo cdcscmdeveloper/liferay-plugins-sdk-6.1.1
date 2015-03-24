@@ -463,7 +463,7 @@
 		<property name="pk" value="businessNatureId" />
 
 		<property name="daoClass"
-			value="my.ep.persistance.dao.sc.directpurchase.BusinessNatureDAO" />
+			value="my.ep.persistence.dao.pm.common.businessnature.BusinessNatureDAO" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
@@ -951,7 +951,7 @@
 	<bean id="SC_REQUEST_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="requestSupplierItemId" />
 		<property name="daoClass"
-			value="my.ep.persistance.dao.sc.directpurchase.RequestSupplierItemDAO" />
+			value="my.ep.persistence.dao.sc.directpurchase.RequestSupplierItemDAO" />
 		<property name="searchMethod" value="retrieveSupplierItemList" />
 		<property name="columns">
 			<list>
