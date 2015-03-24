@@ -1001,10 +1001,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		filePath = filePath + "/"+ attachmentFormat.format(item.getFileName(), null);
 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
-		this.getManagedBean().getCtAgreement().setStampedPageName(item.getFileName());
-		this.getManagedBean().getCtAgreement().setStampedPagePath(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
+		getManagedBean().getCtAgreement().setStampedPageName(item.getFileName());
+		getManagedBean().getCtAgreement().setStampedPagePath(filePath);
 	}
 
 	/**
@@ -1024,10 +1024,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		filePath = filePath + "/"+ attachmentFormat.format(item.getFileName(), null);
 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
-		this.getManagedBean().getCtAgreement().setSignedPageName(item.getFileName());
-		this.getManagedBean().getCtAgreement().setSignedPagePath(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
+		getManagedBean().getCtAgreement().setSignedPageName(item.getFileName());
+		getManagedBean().getCtAgreement().setSignedPagePath(filePath);
 	}
 
 	/**
