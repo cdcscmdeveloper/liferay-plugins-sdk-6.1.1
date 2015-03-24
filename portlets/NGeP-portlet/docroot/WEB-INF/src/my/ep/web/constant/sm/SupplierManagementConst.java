@@ -144,6 +144,7 @@ public class SupplierManagementConst {
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	public static final int DELETED_RECORD_STATUS = 9;
+	public static final String TEMP_TYPE = "T";
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
@@ -379,7 +380,7 @@ public class SupplierManagementConst {
 	public static final String PREVIOUS_APPLICATION = "P";
 
 	// Site Visit
-	public static final String SVO_FIN_CHECKLIST = "FCL";
+	//public static final String SVO_FIN_CHECKLIST = "FCL";
 	public static final String MALAYSIA_CODE = "MY";
 	public static final String SABAH_CODE = "SA";
 	public static final String SARAWAK_CODE = "13";
