@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.util.Date;
@@ -158,7 +161,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param activeIndex the activeIndex to set
+	 * @param activeIndex 
+	 * 				the activeIndex to set
 	 */
 	public void setActiveIndex(int activeIndex) {
 		this.activeIndex = activeIndex;
@@ -172,7 +176,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param prepareActiveIndex the prepareActiveIndex to set
+	 * @param prepareActiveIndex 
+	 * 					the prepareActiveIndex to set
 	 */
 	public void setPrepareActiveIndex(int prepareActiveIndex) {
 		this.prepareActiveIndex = prepareActiveIndex;
@@ -186,7 +191,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt 
+	 * 			the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
@@ -200,7 +206,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtCommittee the scQtCommittee to set
+	 * @param scQtCommittee 
+	 * 				the scQtCommittee to set
 	 */
 	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
 		this.scQtCommittee = scQtCommittee;
@@ -214,7 +221,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param meetingList the meetingList to set
+	 * @param meetingList 
+	 * 				the meetingList to set
 	 */
 	public void setMeetingList(List<ScQtMeeting> meetingList) {
 		this.meetingList = meetingList;
@@ -228,7 +236,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedMeetingList the selectedMeetingList to set
+	 * @param selectedMeetingList 
+	 * 					the selectedMeetingList to set
 	 */
 	public void setSelectedMeetingList(List<ScQtMeeting> selectedMeetingList) {
 		this.selectedMeetingList = selectedMeetingList;
@@ -242,7 +251,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deletedMeetingList the deletedMeetingList to set
+	 * @param deletedMeetingList 
+	 * 				the deletedMeetingList to set
 	 */
 	public void setDeletedMeetingList(List<ScQtMeeting> deletedMeetingList) {
 		this.deletedMeetingList = deletedMeetingList;
@@ -256,7 +266,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param committeeList the committeeList to set
+	 * @param committeeList 
+	 * 				the committeeList to set
 	 */
 	public void setCommitteeList(List<ScQtCommitteeActivity> committeeList) {
 		this.committeeList = committeeList;
@@ -270,7 +281,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param committeeRemarkList the committeeRemarkList to set
+	 * @param committeeRemarkList 
+	 * 					the committeeRemarkList to set
 	 */
 	public void setCommitteeRemarkList(List<ScQtCommitteRemarks> committeeRemarkList) {
 		this.committeeRemarkList = committeeRemarkList;
@@ -284,7 +296,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param meetingAttendanceList the meetingAttendanceList to set
+	 * @param meetingAttendanceList 
+	 * 					the meetingAttendanceList to set
 	 */
 	public void setMeetingAttendanceList(
 			List<ScQtMeetingAttendance> meetingAttendanceList) {
@@ -299,7 +312,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedMeetingAttList the selectedMeetingAttList to set
+	 * @param selectedMeetingAttList 
+	 * 					the selectedMeetingAttList to set
 	 */
 	public void setSelectedMeetingAttList(
 			List<ScQtMeetingAttendance> selectedMeetingAttList) {
@@ -328,7 +342,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param documentList the documentList to set
+	 * @param documentList 
+	 * 				the documentList to set
 	 */
 	public void setDocumentList(List<ScQtFinalizationReport> documentList) {
 		this.documentList = documentList;
@@ -342,7 +357,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param recommendBy the recommendBy to set
+	 * @param recommendBy 
+	 * 				the recommendBy to set
 	 */
 	public void setRecommendBy(String recommendBy) {
 		this.recommendBy = recommendBy;
@@ -356,7 +372,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isItemize the isItemize to set
+	 * @param isItemize 
+	 * 				the isItemize to set
 	 */
 	public void setItemize(boolean isItemize) {
 		this.isItemize = isItemize;
@@ -370,7 +387,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isRecommendSupplier the isRecommendSupplier to set
+	 * @param isRecommendSupplier 
+	 * 					the isRecommendSupplier to set
 	 */
 	public void setRecommendSupplier(boolean isRecommendSupplier) {
 		this.isRecommendSupplier = isRecommendSupplier;
@@ -384,7 +402,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isReEvaluate the isReEvaluate to set
+	 * @param isReEvaluate 
+	 * 				the isReEvaluate to set
 	 */
 	public void setReEvaluate(boolean isReEvaluate) {
 		this.isReEvaluate = isReEvaluate;
@@ -398,7 +417,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isRePublish the isRePublish to set
+	 * @param isRePublish 
+	 * 				the isRePublish to set
 	 */
 	public void setRePublish(boolean isRePublish) {
 		this.isRePublish = isRePublish;
@@ -412,7 +432,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isForward the isForward to set
+	 * @param isForward 
+	 * 				the isForward to set
 	 */
 	public void setForward(boolean isForward) {
 		this.isForward = isForward;
@@ -426,7 +447,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isSingleAward the isSingleAward to set
+	 * @param isSingleAward 
+	 * 					the isSingleAward to set
 	 */
 	public void setSingleAward(boolean isSingleAward) {
 		this.isSingleAward = isSingleAward;
@@ -440,7 +462,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isMultipleAward the isMultipleAward to set
+	 * @param isMultipleAward 
+	 * 					the isMultipleAward to set
 	 */
 	public void setMultipleAward(boolean isMultipleAward) {
 		this.isMultipleAward = isMultipleAward;
@@ -454,7 +477,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isOnlineBidding the isOnlineBidding to set
+	 * @param isOnlineBidding 
+	 * 					the isOnlineBidding to set
 	 */
 	public void setOnlineBidding(boolean isOnlineBidding) {
 		this.isOnlineBidding = isOnlineBidding;
@@ -468,7 +492,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isMultipleLoi the isMultipleLoi to set
+	 * @param isMultipleLoi 
+	 * 					the isMultipleLoi to set
 	 */
 	public void setMultipleLoi(boolean isMultipleLoi) {
 		this.isMultipleLoi = isMultipleLoi;
@@ -482,7 +507,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isItemRowSelect the isItemRowSelect to set
+	 * @param isItemRowSelect 
+	 * 					the isItemRowSelect to set
 	 */
 	public void setItemRowSelect(boolean isItemRowSelect) {
 		this.isItemRowSelect = isItemRowSelect;
@@ -496,7 +522,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isSubmit the isSubmit to set
+	 * @param isSubmit 
+	 * 				the isSubmit to set
 	 */
 	public void setSubmit(boolean isSubmit) {
 		this.isSubmit = isSubmit;
@@ -510,7 +537,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isSecretaryUser the isSecretaryUser to set
+	 * @param isSecretaryUser 
+	 * 					the isSecretaryUser to set
 	 */
 	public void setSecretaryUser(boolean isSecretaryUser) {
 		this.isSecretaryUser = isSecretaryUser;
@@ -524,7 +552,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isProcCategoryMedicine the isProcCategoryMedicine to set
+	 * @param isProcCategoryMedicine 
+	 * 							the isProcCategoryMedicine to set
 	 */
 	public void setProcCategoryMedicine(boolean isProcCategoryMedicine) {
 		this.isProcCategoryMedicine = isProcCategoryMedicine;
@@ -538,7 +567,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param committeeEndorsementList the committeeEndorsementList to set
+	 * @param committeeEndorsementList 
+	 * 							the committeeEndorsementList to set
 	 */
 	public void setCommitteeEndorsementList(
 			List<ScQtCommitteeActivity> committeeEndorsementList) {
@@ -553,7 +583,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param shortlistedSupplierList the shortlistedSupplierList to set
+	 * @param shortlistedSupplierList 
+	 * 						the shortlistedSupplierList to set
 	 */
 	public void setShortlistedSupplierList(
 			List<ScQtEvaluationResultDtl> shortlistedSupplierList) {
@@ -568,7 +599,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param recommendedSupplierList the recommendedSupplierList to set
+	 * @param recommendedSupplierList 
+	 * 						the recommendedSupplierList to set
 	 */
 	public void setRecommendedSupplierList(
 			List<ScQtEvaluationResultDtl> recommendedSupplierList) {
@@ -583,7 +615,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectionMode the selectionMode to set
+	 * @param selectionMode 
+	 * 					the selectionMode to set
 	 */
 	public void setSelectionMode(String selectionMode) {
 		this.selectionMode = selectionMode;
@@ -597,7 +630,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param shortlistedSupplier the shortlistedSupplier to set
+	 * @param shortlistedSupplier 
+	 * 						the shortlistedSupplier to set
 	 */
 	public void setShortlistedSupplier(ScQtEvaluationResultDtl shortlistedSupplier) {
 		this.shortlistedSupplier = shortlistedSupplier;
@@ -611,7 +645,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param awardSupplier the awardSupplier to set
+	 * @param awardSupplier 
+	 * 					the awardSupplier to set
 	 */
 	public void setAwardSupplier(String awardSupplier) {
 		this.awardSupplier = awardSupplier;
@@ -625,7 +660,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param awardSupplierList the awardSupplierList to set
+	 * @param awardSupplierList 
+	 * 					the awardSupplierList to set
 	 */
 	public void setAwardSupplierList(List<SmSupplier> awardSupplierList) {
 		this.awardSupplierList = awardSupplierList;
@@ -639,7 +675,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param shortlistedSupppliersByZone the shortlistedSupppliersByZone to set
+	 * @param shortlistedSupppliersByZone 
+	 * 								the shortlistedSupppliersByZone to set
 	 */
 	public void setShortlistedSupppliersByZone(
 			Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone) {
@@ -654,7 +691,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtFinalization the scQtFinalization to set
+	 * @param scQtFinalization 
+	 * 					the scQtFinalization to set
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
@@ -668,7 +706,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param reminderList the reminderList to set
+	 * @param reminderList 
+	 * 					the reminderList to set
 	 */
 	public void setReminderList(List<ScQtCommitteeActivity> reminderList) {
 		this.reminderList = reminderList;
@@ -682,7 +721,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pinNo the pinNo to set
+	 * @param pinNo 
+	 * 			the pinNo to set
 	 */
 	public void setPinNo(String pinNo) {
 		this.pinNo = pinNo;
@@ -696,7 +736,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param subject the subject to set
+	 * @param subject 
+	 * 			the subject to set
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -710,7 +751,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param message the message to set
+	 * @param message 
+	 * 			the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -724,7 +766,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param zoneActiveIndex the zoneActiveIndex to set
+	 * @param zoneActiveIndex 
+	 * 					the zoneActiveIndex to set
 	 */
 	public void setZoneActiveIndex(int zoneActiveIndex) {
 		this.zoneActiveIndex = zoneActiveIndex;
@@ -738,7 +781,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tplSpecZoneDtl the tplSpecZoneDtl to set
+	 * @param tplSpecZoneDtl 
+	 * 					the tplSpecZoneDtl to set
 	 */
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
@@ -752,7 +796,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param recommendedSupplier the recommendedSupplier to set
+	 * @param recommendedSupplier 
+	 * 						the recommendedSupplier to set
 	 */
 	public void setRecommendedSupplier(ScQtEvaluationResultDtl recommendedSupplier) {
 		this.recommendedSupplier = recommendedSupplier;
@@ -766,7 +811,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isForwardToBpk the isForwardToBpk to set
+	 * @param isForwardToBpk 
+	 * 					the isForwardToBpk to set
 	 */
 	public void setForwardToBpk(boolean isForwardToBpk) {
 		this.isForwardToBpk = isForwardToBpk;
@@ -780,7 +826,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param onlineBiddingActiveIndex the onlineBiddingActiveIndex to set
+	 * @param onlineBiddingActiveIndex 
+	 * 							the onlineBiddingActiveIndex to set
 	 */
 	public void setOnlineBiddingActiveIndex(int onlineBiddingActiveIndex) {
 		this.onlineBiddingActiveIndex = onlineBiddingActiveIndex;
@@ -794,7 +841,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param onlineBiddingEndorsementList the onlineBiddingEndorsementList to set
+	 * @param onlineBiddingEndorsementList 
+	 * 							the onlineBiddingEndorsementList to set
 	 */
 	public void setOnlineBiddingEndorsementList(
 			List<ScQtCommitteeActivity> onlineBiddingEndorsementList) {
@@ -809,7 +857,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param onlineBiddingReminderList the onlineBiddingReminderList to set
+	 * @param onlineBiddingReminderList 
+	 * 							the onlineBiddingReminderList to set
 	 */
 	public void setOnlineBiddingReminderList(
 			List<ScQtCommitteeActivity> onlineBiddingReminderList) {
@@ -824,7 +873,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierBranch the supplierBranch to set
+	 * @param supplierBranch 
+	 * 					the supplierBranch to set
 	 */
 	public void setSupplierBranch(String supplierBranch) {
 		this.supplierBranch = supplierBranch;
@@ -838,7 +888,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierAddress the supplierAddress to set
+	 * @param supplierAddress 
+	 * 					the supplierAddress to set
 	 */
 	public void setSupplierAddress(SmAddress supplierAddress) {
 		this.supplierAddress = supplierAddress;
@@ -852,7 +903,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smPersonnel the smPersonnel to set
+	 * @param smPersonnel 
+	 * 				the smPersonnel to set
 	 */
 	public void setSmPersonnel(SmPersonnel smPersonnel) {
 		this.smPersonnel = smPersonnel;
@@ -866,7 +918,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param boardofDirectors the boardofDirectors to set
+	 * @param boardofDirectors 
+	 * 					the boardofDirectors to set
 	 */
 	public void setBoardofDirectors(List<SmPersonnel> boardofDirectors) {
 		this.boardofDirectors = boardofDirectors;
@@ -880,7 +933,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smCompanyBasic the smCompanyBasic to set
+	 * @param smCompanyBasic 
+	 * 					the smCompanyBasic to set
 	 */
 	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
 		this.smCompanyBasic = smCompanyBasic;
@@ -894,7 +948,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smMofAccount the smMofAccount to set
+	 * @param smMofAccount 
+	 * 				the smMofAccount to set
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
@@ -908,7 +963,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smSupplier the smSupplier to set
+	 * @param smSupplier 
+	 * 				the smSupplier to set
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
@@ -922,7 +978,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param streamContent the streamContent to set
+	 * @param streamContent 
+	 * 					the streamContent to set
 	 */
 	public void setStreamContent(StreamedContent streamContent) {
 		this.streamContent = streamContent;
@@ -936,7 +993,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tabList the tabList to set
+	 * @param tabList 
+	 * 			the tabList to set
 	 */
 	public void setTabList(List<TabBean> tabList) {
 		this.tabList = tabList;
@@ -950,7 +1008,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedTabBean the selectedTabBean to set
+	 * @param selectedTabBean 
+	 * 					the selectedTabBean to set
 	 */
 	public void setSelectedTabBean(TabBean selectedTabBean) {
 		this.selectedTabBean = selectedTabBean;
@@ -964,7 +1023,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param committeeTabLabel the committeeTabLabel to set
+	 * @param committeeTabLabel 
+	 * 					the committeeTabLabel to set
 	 */
 	public void setCommitteeTabLabel(String committeeTabLabel) {
 		this.committeeTabLabel = committeeTabLabel;
@@ -978,7 +1038,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param zoneMenuModel the zoneMenuModel to set
+	 * @param zoneMenuModel 
+	 * 				the zoneMenuModel to set
 	 */
 	public void setZoneMenuModel(MenuModel zoneMenuModel) {
 		this.zoneMenuModel = zoneMenuModel;
@@ -992,7 +1053,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param processName the processName to set
+	 * @param processName 
+	 * 				the processName to set
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
@@ -1006,7 +1068,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedRecommendList the selectedRecommendList to set
+	 * @param selectedRecommendList 
+	 * 						the selectedRecommendList to set
 	 */
 	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
 		this.selectedRecommendList = selectedRecommendList;
@@ -1020,7 +1083,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param itemList the itemList to set
+	 * @param itemList 
+	 * 			the itemList to set
 	 */
 	public void setItemList(List<ScQtRecommend> itemList) {
 		this.itemList = itemList;
@@ -1034,7 +1098,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param zoneDetails the zoneDetails to set
+	 * @param zoneDetails 
+	 * 				the zoneDetails to set
 	 */
 	public void setZoneDetails(List<TplSpecZoneDtl> zoneDetails) {
 		this.zoneDetails = zoneDetails;
@@ -1048,7 +1113,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param unRecommendedSupplierList the unRecommendedSupplierList to set
+	 * @param unRecommendedSupplierList 
+	 * 					the unRecommendedSupplierList to set
 	 */
 	public void setUnRecommendedSupplierList(
 			List<ScQtEvaluationResultDtl> unRecommendedSupplierList) {
@@ -1063,7 +1129,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param shortlistedPackageList the shortlistedPackageList to set
+	 * @param shortlistedPackageList 
+	 * 						the shortlistedPackageList to set
 	 */
 	public void setShortlistedPackageList(
 			List<ScQtEvaluationResultDtl> shortlistedPackageList) {
@@ -1078,7 +1145,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isCancel the isCancel to set
+	 * @param isCancel 
+	 * 			the isCancel to set
 	 */
 	public void setCancel(boolean isCancel) {
 		this.isCancel = isCancel;
@@ -1092,7 +1160,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isForwardToHigherAuthority the isForwardToHigherAuthority to set
+	 * @param isForwardToHigherAuthority 
+	 * 						the isForwardToHigherAuthority to set
 	 */
 	public void setForwardToHigherAuthority(boolean isForwardToHigherAuthority) {
 		this.isForwardToHigherAuthority = isForwardToHigherAuthority;
@@ -1106,7 +1175,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param committeeType the committeeType to set
+	 * @param committeeType 
+	 * 				the committeeType to set
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
@@ -1120,7 +1190,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param payLoad the payLoad to set
+	 * @param payLoad 
+	 * 			the payLoad to set
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
@@ -1142,7 +1213,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectAll the selectAll to set
+	 * @param selectAll 
+	 * 				the selectAll to set
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
@@ -1156,7 +1228,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param action the action to set
+	 * @param action 
+	 * 			the action to set
 	 */
 	public void setAction(String action) {
 		this.action = action;
