@@ -106,6 +106,7 @@
 										saveObject="usergroupBackingBean.managedBean.users"
 										postUpdateListener="usergroupBackingBean.userGroupListner(usergroupBackingBean.managedBean.users)"
 										update="@form"
+										disabled="#{!usergroupBackingBean.managedBean.selectGrp}"
 										conditionField="#{usergroupBackingBean.constuctConditionFields()}">
 									</ac:lov></td>
 								<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
