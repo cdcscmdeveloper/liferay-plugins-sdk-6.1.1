@@ -172,7 +172,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			log.info("######## FRN SLA end : "+System.currentTimeMillis()+" : "+new Date());
 			if (resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
-				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					String noteNo = null;
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700004;
@@ -188,6 +188,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 						noteNo = fulfilmentNote.getFulfilmentNoteNo();
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
+						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+						messageId = MessageConst.INFO_700005;
 						noteNo = fulfilmentNote.getFulfilmentNoteNo();
 					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -552,7 +555,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 * @param outcome the outcome
 	 */
 	public void gpkiSignAction(String outcome){
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFulfilmentRequest().getDocNo());
@@ -560,13 +563,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setTextBeforeSign(sb.toString());			
 			validateFulfilmentNote(outcome);
 			// set action
+			getManagedBean().setAutoUpdate(Boolean.FALSE);	
 			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);			
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		}else{
-			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
-				getManagedBean().setValidated(Boolean.TRUE);
-			}
+			getManagedBean().setValidated(Boolean.TRUE);
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			submitAction(outcome);
 		}
 	}
@@ -681,5 +683,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
 		}
 		
+	}
+	/**
+	 * Enable auto update.
+	 */
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
 	}
 }
