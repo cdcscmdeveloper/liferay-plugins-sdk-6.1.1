@@ -38,6 +38,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
@@ -170,6 +171,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -183,6 +185,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
@@ -10281,10 +10284,18 @@ public class SpecificationBackingBean extends
 		getManagedBean().setSpecName(null);
 		// getManagedBean().setStandardTemplate(null);
 		getManagedBean().setSearchProcurementId(null);
-		getManagedBean().setQtNum(null);
 		getManagedBean().setSearchItemTypeId(null);
 		getManagedBean().setQtTitle(null);
-		getManagedBean().setPublishDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setQtTitle(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setQtNo(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setProcurementMode(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setFromCreatedDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setToCreatedDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setFromPublishDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setToPublishDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setFromClosingDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setToClosingDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean().setQtStatus(null);
 	}
 
 	/**
@@ -10346,7 +10357,8 @@ public class SpecificationBackingBean extends
 							|| "".equalsIgnoreCase(getManagedBean().getQtNum())) {
 						getManagedBean().setQtNum("QT");
 					}
-
+					
+					populateQTSearchCriteria(getManagedBean().getQtnTendertemplateSearchBean(), searchBean);
 				}
 				if (null != getManagedBean().getSpecName()
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
@@ -10387,14 +10399,7 @@ public class SpecificationBackingBean extends
 							.getSearchProcurementId());
 					searchBean.getDataFilterBeans().add(procurementSearchBean);
 				}
-				if (null != getManagedBean().getQtNum()
-						&& !"".equalsIgnoreCase(getManagedBean().getQtNum())) {
-
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDoc.scQt.qtNo",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getQtNum(), true));
-				}
+				
 				if (null != specTypeCode) {
 					SearchFilterBean qtnoSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
@@ -10402,23 +10407,6 @@ public class SpecificationBackingBean extends
 					qtnoSearchBean.setSearchValue(specTypeCode);
 
 					searchBean.getDataFilterBeans().add(qtnoSearchBean);
-				}
-
-				if (null != getManagedBean().getQtTitle()
-						&& !"".equalsIgnoreCase(getManagedBean().getQtTitle())) {
-
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDoc.scQt.qtTitle",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getQtTitle(), true));
-				}
-
-				if (null != getManagedBean().getPublishDate()) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDoc.scQt.publishDate",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getPublishDate()));
-
 				}
 
 				qtTemplateReqDTO.setSearchBean(searchBean);
@@ -14492,6 +14480,7 @@ public class SpecificationBackingBean extends
 	public void setCount(int count) {
 		this.count = count;
 	}
+	
 
 	/**
 	 * Check all conditions.
@@ -14533,6 +14522,112 @@ public class SpecificationBackingBean extends
 			getManagedBean().setRootLocationTree(treeNode);
 		} else {
 			
+		}
+	}
+	
+
+	/**
+	 * Method to prepare qt search criteria.
+	 * 
+	 * @param templateQtnTenderSearchBean
+	 *            the qt search criteria bean
+	 * @param qtSearchBean
+	 *            the qt search filter bean
+	 */
+	private void populateQTSearchCriteria(
+			QtnTenderSearchBean templateQtnTenderSearchBean,
+			ISearchBean<TplSpecMaster> qtSearchBean) {
+		
+		if (templateQtnTenderSearchBean != null) {
+			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+			String qtTitle = templateQtnTenderSearchBean.getQtTitle();
+			if (!StringUtils.isBlank(qtTitle)) {
+				
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtDoc.scQt.qtTitle",
+								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
+								true));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtDoc.scQt.qtTitle",
+								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
+								true));
+			}
+			String qtNumber = templateQtnTenderSearchBean.getQtNo();
+			if (!StringUtils.isBlank(qtNumber)) {
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtDoc.scQt.qtNo",
+								SearchOperator.OPERATOR_LIKE.value(),
+								qtNumber, true));
+			}
+			String procurementMode = templateQtnTenderSearchBean.getProcurementMode();
+			if (!StringUtils.isBlank(procurementMode)) {
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtDoc.scQt.procurementMode.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								procurementMode));
+			}
+			Date fromCreatedDate = templateQtnTenderSearchBean.getFromCreatedDate();
+			Date toCreatedDate = templateQtnTenderSearchBean.getToCreatedDate();
+			if (null != fromCreatedDate || toCreatedDate != null) {
+				Calendar c1 = Calendar.getInstance();
+				c1.setTime(fromCreatedDate);
+				Calendar fromDate = Calendar.getInstance();
+				fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+						c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+				fromDate.set(Calendar.MILLISECOND, 0);
+				fromCreatedDate = fromDate.getTime();
+				if (toCreatedDate != null) {
+					Calendar c2 = Calendar.getInstance();
+					c2.setTime(toCreatedDate);
+					Calendar toDate = Calendar.getInstance();
+					toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+							c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+					toDate.set(Calendar.MILLISECOND, 0);
+					toCreatedDate = toDate.getTime();
+				}
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("scQtDoc.scQt.createdDate");
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromCreatedDate, toCreatedDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			Date fromPublishDate = templateQtnTenderSearchBean.getFromPublishDate();
+			Date toPublishDate = templateQtnTenderSearchBean.getToPublishDate();
+			if (null != fromPublishDate || null != toPublishDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("scQtDoc.scQt.publishDate");
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromPublishDate, toPublishDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			Date fromClosingDate = templateQtnTenderSearchBean.getFromClosingDate();
+			Date toClosingDate = templateQtnTenderSearchBean.getToClosingDate();
+			if (null != fromClosingDate || null != toClosingDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("scQtDoc.scQt.closingDate");
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromClosingDate, toClosingDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			String status = templateQtnTenderSearchBean.getQtStatus();
+			if (!StringUtils.isBlank(status)) {
+				qtSearchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
+								"scQtDoc.scQt.scQtStatus.pmStatus.statusId",
+								SearchOperator.OPERATOR_EQUALS.value(), status));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtDoc.scQt.scQtStatus.current",
+								SearchOperator.OPERATOR_EQUALS.value(), true));
+			}
+			// Adding search filterbeans to searchbean.
+			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
 	}
 }
