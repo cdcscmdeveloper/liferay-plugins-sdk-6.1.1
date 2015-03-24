@@ -8842,31 +8842,4 @@ public class SmApplicationBackingBean extends
 					.updateSupplierProfile(reqDTO);
 		}
 	}
-
-	// private void generateSuppDocPdfFile(VelocityContext context)
-	// throws Exception {
-	// String appNo = getManagedBean().getSmAppl().getApplNo();
-	// String baseDir = File.separator + "docuRepo" + File.separator + "dev"
-	// + File.separator + "ngep" + File.separator;
-	// String tempDir = baseDir + File.separator
-	// + Calendar.getInstance().get(Calendar.YEAR) + File.separator
-	// + SupplierManagementConst.FOLDER_NAME_SM + File.separator
-	// + appNo + File.separator
-	// + SupplierManagementConst.FOLDER_NAME_SUPPDOC;
-	//
-	// File theDir = new File(tempDir);
-	// if (!theDir.exists()) {
-	// theDir.mkdir();
-	// }
-	//
-	// File newFile = new File(tempDir+ File.separator
-	// + SupplierManagementConst.OFFLINE_SUPP_DOC_PRINT_LIST_FILENAME);
-	// if(!newFile.exists()){
-	// newFile.createNewFile();
-	// }
-	//
-	// // DocumentGenerator.getInstance().generatePdfFromVelocity(
-	// // SupplierManagementConst.DOCPATH_OFFLINE_SUPP_DOC_PRINT_LIST,
-	// // context, new FileOutputStream(tempDir));
-	// }
 }
