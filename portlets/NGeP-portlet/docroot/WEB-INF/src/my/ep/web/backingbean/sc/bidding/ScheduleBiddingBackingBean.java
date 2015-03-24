@@ -373,6 +373,8 @@ public class ScheduleBiddingBackingBean extends
 			biddingReqDTO.setOutcome(outCome);
 			biddingReqDTO.setToken(token);
 			biddingReqDTO.setTaskId(taskId);
+			biddingReqDTO.setRoleCode(getUserRoleCode());
+			biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			biddingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			// Need to call prepare save details method..
 			if (getManagedBean().getScBidContactPersonList() != null

@@ -299,6 +299,8 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setBsvDetails(bsvs);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setOutcome(outCome);
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setRoleCode(getUserRoleCode());
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
 				FacesContext
