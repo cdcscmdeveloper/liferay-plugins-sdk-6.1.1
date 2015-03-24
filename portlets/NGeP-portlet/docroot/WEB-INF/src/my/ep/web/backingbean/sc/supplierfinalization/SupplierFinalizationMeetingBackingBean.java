@@ -96,8 +96,9 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 /**
- * @author Faradiana
+ * Implementation for scheduling meeting for supplier finalization
  * 
+ * @author Faradiana
  */
 
 @ManagedBean(name = "suppFinalMeetingBackingBean")

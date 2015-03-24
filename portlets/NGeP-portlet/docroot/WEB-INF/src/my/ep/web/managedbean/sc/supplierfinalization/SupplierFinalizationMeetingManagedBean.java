@@ -21,6 +21,8 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
+ * Class to handle user session data corresponding to SupplierFinalizationMeetingBackingBean
+ * 
  * @author Faradiana
  * Supplier Finalization Meeting Managed Bean
  */
