@@ -104,11 +104,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	private TemplateSpecHelper tplSpecHelper;
 	
+	/**
+	 * Default Constructor
+	 */
+	
 	public BiddingManagedBean() {
-
-		
 		bidAction = new ScBidAction();
-		
 	}
 	
 	
@@ -129,18 +130,24 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.bidManagementInitialViewBy = bidManagementInitialViewBy;
 	}
 
-
+   /**
+    * Method For searching bid schedules 
+    */
 
 	public void searchForScheduledBids() {
 		searchDataModel.reloadData();
 	}
 	
-	
-	
+	/**
+	 * @return Date
+	 */
 	public Date getSearchBiddingDateToMinDate() {
 		return searchBiddingDateToMinDate;
 	}
 
+	/**
+	 * @param searchBiddingDateToMinDate
+	 */
 	public void setSearchBiddingDateToMinDate(Date searchBiddingDateToMinDate) {
 		this.searchBiddingDateToMinDate = searchBiddingDateToMinDate;
 	}
@@ -253,16 +260,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return scheduledBidList;
 	}
 
-
-
 	/**
 	 * @param scheduledBidList the scheduledBidList to set
 	 */
 	public void setScheduledBidList(List<ScBidSchedule> scheduledBidList) {
 		this.scheduledBidList = scheduledBidList;
 	}
-
-
 
 	/**
 	 * @return the bidAction
@@ -271,16 +274,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return bidAction;
 	}
 
-
-
 	/**
 	 * @param bidAction the bidAction to set
 	 */
 	public void setBidAction(ScBidAction bidAction) {
 		this.bidAction = bidAction;
 	}
-
-
 
 	/**
 	 * @return the supplierNotes
@@ -289,16 +288,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return supplierNotes;
 	}
 
-
-
 	/**
 	 * @param supplierNotes the supplierNotes to set
 	 */
 	public void setSupplierNotes(String supplierNotes) {
 		this.supplierNotes = supplierNotes;
 	}
-
-
 
 	/**
 	 * @return the scheduledBid
@@ -307,16 +302,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return scheduledBid;
 	}
 
-
-
 	/**
 	 * @param scheduledBid the scheduledBid to set
 	 */
 	public void setScheduledBid(ScBidSchedule scheduledBid) {
 		this.scheduledBid = scheduledBid;
 	}
-
-
 
 	/**
 	 * @return the scBidPriceList
@@ -325,16 +316,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return scBidPriceList;
 	}
 
-
-
 	/**
 	 * @param scBidPriceList the scBidPriceList to set
 	 */
 	public void setScBidPriceList(List<ScBidPrice> scBidPriceList) {
 		this.scBidPriceList = scBidPriceList;
 	}
-
-
 
 	/**
 	 * @return the lastBidPricesList
@@ -343,16 +330,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return lastBidPricesList;
 	}
 
-
-
 	/**
 	 * @param lastBidPricesList the lastBidPricesList to set
 	 */
 	public void setLastBidPricesList(List<ScBidPrice> lastBidPricesList) {
 		this.lastBidPricesList = lastBidPricesList;
 	}
-
-
 
 	/**
 	 * @return the scBidItemsList
@@ -361,16 +344,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return scBidItemsList;
 	}
 
-
-
 	/**
 	 * @param scBidItemsList the scBidItemsList to set
 	 */
 	public void setScBidItemsList(List<ScBidItem> scBidItemsList) {
 		this.scBidItemsList = scBidItemsList;
 	}
-
-
 
 	/**
 	 * @return the statusDescs
@@ -379,16 +358,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return statusDescs;
 	}
 
-
-
 	/**
 	 * @param statusDescs the statusDescs to set
 	 */
 	public void setStatusDescs(List<PmStatusDesc> statusDescs) {
 		this.statusDescs = statusDescs;
 	}
-
-
 
 	/**
 	 * @return the selectedStatusDescList
@@ -397,16 +372,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return selectedStatusDesc;
 	}
 
-
-
 	/**
 	 * @param selectedStatusDescList the selectedStatusDescList to set
 	 */
 	public void setSelectedStatusDesc(Long selectedStatusDesc) {
 		this.selectedStatusDesc = selectedStatusDesc;
 	}
-
-
 
 	/**
 	 * @return the searchBiddingNo
@@ -415,16 +386,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return searchBiddingNo;
 	}
 
-
-
 	/**
 	 * @param searchBiddingNo the searchBiddingNo to set
 	 */
 	public void setSearchBiddingNo(String searchBiddingNo) {
 		this.searchBiddingNo = searchBiddingNo;
 	}
-
-
 
 	/**
 	 * @return the searchDocumentNo
@@ -433,16 +400,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return searchDocumentNo;
 	}
 
-
-
 	/**
 	 * @param searchDocumentNo the searchDocumentNo to set
 	 */
 	public void setSearchDocumentNo(String searchDocumentNo) {
 		this.searchDocumentNo = searchDocumentNo;
 	}
-
-
 
 	/**
 	 * @return the searchBidTitle
@@ -451,16 +414,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return searchBidTitle;
 	}
 
-
-
 	/**
 	 * @param searchBidTitle the searchBidTitle to set
 	 */
 	public void setSearchBidTitle(String searchBidTitle) {
 		this.searchBidTitle = searchBidTitle;
 	}
-
-
 
 	/**
 	 * @return the searchBiddingDateFrom
@@ -469,16 +428,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return searchBiddingDateFrom;
 	}
 
-
-
 	/**
 	 * @param searchBiddingDateFrom the searchBiddingDateFrom to set
 	 */
 	public void setSearchBiddingDateFrom(Date searchBiddingDateFrom) {
 		this.searchBiddingDateFrom = searchBiddingDateFrom;
 	}
-
-
 
 	/**
 	 * @return the searchBiddingDateTo
@@ -487,16 +442,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return searchBiddingDateTo;
 	}
 
-
-
 	/**
 	 * @param searchBiddingDateTo the searchBiddingDateTo to set
 	 */
 	public void setSearchBiddingDateTo(Date searchBiddingDateTo) {
 		this.searchBiddingDateTo = searchBiddingDateTo;
 	}
-
-
 
 	/**
 	 * @return the bidPackages
@@ -505,16 +456,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return bidPackages;
 	}
 
-
-
 	/**
 	 * @param bidPackages the bidPackages to set
 	 */
 	public void setBidPackages(List<BidPackageBean> bidPackages) {
 		this.bidPackages = bidPackages;
 	}
-
-
 
 	/**
 	 * @return the selectedZone
@@ -523,16 +470,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return selectedZone;
 	}
 
-
-
 	/**
 	 * @param selectedZone the selectedZone to set
 	 */
 	public void setSelectedZone(String selectedZone) {
 		this.selectedZone = selectedZone;
 	}
-
-
 
 	/**
 	 * @return the createdDateFrom
@@ -541,16 +484,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return createdDateFrom;
 	}
 
-
-
 	/**
 	 * @param createdDateFrom the createdDateFrom to set
 	 */
 	public void setCreatedDateFrom(Date createdDateFrom) {
 		this.createdDateFrom = createdDateFrom;
 	}
-
-
 
 	/**
 	 * @return the createdDateTo
@@ -559,8 +498,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return createdDateTo;
 	}
 
-
-
 	/**
 	 * @param createdDateTo the createdDateTo to set
 	 */
@@ -568,15 +505,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.createdDateTo = createdDateTo;
 	}
 
-
 	/**
 	 * @return the actionType
 	 */
 	public String getActionType() {
 		return actionType;
 	}
-
-
 
 	/**
 	 * @param actionType the actionType to set
@@ -606,16 +540,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return newStartDate;
 	}
 
-
-
 	/**
 	 * @param newStartDate the newStartDate to set
 	 */
 	public void setNewStartDate(Date newStartDate) {
 		this.newStartDate = newStartDate;
 	}
-
-
 
 	/**
 	 * @return the newEndDate
@@ -624,16 +554,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return newEndDate;
 	}
 
-
-
 	/**
 	 * @param newEndDate the newEndDate to set
 	 */
 	public void setNewEndDate(Date newEndDate) {
 		this.newEndDate = newEndDate;
 	}
-
-
 
 	/**
 	 * @return the createdBy
@@ -642,16 +568,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return createdBy;
 	}
 
-
-
 	/**
 	 * @param createdBy the createdBy to set
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-
-
 
 	/**
 	 * @return the bidManagementViewBy
@@ -660,16 +582,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return bidManagementViewBy;
 	}
 
-
-
 	/**
 	 * @param bidManagementViewBy the bidManagementViewBy to set
 	 */
 	public void setBidManagementViewBy(String bidManagementViewBy) {
 		this.bidManagementViewBy = bidManagementViewBy;
 	}
-
-
 
 	/**
 	 * @return the searchDataModel
@@ -678,8 +596,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return searchDataModel;
 	}
 
-
-
 	/**
 	 * @param searchDataModel the searchDataModel to set
 	 */
@@ -687,16 +603,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.searchDataModel = searchDataModel;
 	}
 
-
-
 	/**
 	 * @return the rendered
 	 */
 	public boolean isRendered() {
 		return rendered;
 	}
-
-
 
 	/**
 	 * @param rendered the rendered to set
@@ -754,9 +666,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return historyPriceLinearModel;
 	}
 
-
-
-
 	/**
 	 * @param historyPriceLinearModel the historyPriceLinearModel to set
 	 */
@@ -766,8 +675,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 
 
-
-
 	/**
 	 * @return the itemPriceLinearModel
 	 */
@@ -775,16 +682,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 		return itemPriceLinearModel;
 	}
 
-
-
-
 	/**
 	 * @param itemPriceLinearModel the itemPriceLinearModel to set
 	 */
 	public void setItemPriceLinearModel(CartesianChartModel itemPriceLinearModel) {
 		this.itemPriceLinearModel = itemPriceLinearModel;
 	}
-
 
 	/**
 	 * @return the supplierCode
@@ -799,8 +702,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 	public void setSupplierCode(Long supplierCode) {
 		this.supplierCode = supplierCode;
 	}
-
-	
 	
 	/**
 	 * @param bidPriceLinearModel the bidPriceLinearModel to set
@@ -808,7 +709,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 	public void setBidPriceLinearModel(CartesianChartModel bidPriceLinearModel) {
 		this.bidPriceLinearModel = bidPriceLinearModel;
 	}
-
 
 	/**
 	 * @return the bidPriceLinearModel
@@ -831,7 +731,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.zoneDetailsList = zoneDetailsList;
 	}
 	
-	
 	/**
 	 * @return the tplSpecHelper
 	 */
@@ -844,15 +743,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 
 
-
 	/**
 	 * @param tplSpecHelper the tplSpecHelper to set
 	 */
 	public void setTplSpecHelper(TemplateSpecHelper tplSpecHelper) {
 		this.tplSpecHelper = tplSpecHelper;
 	}
-
-
 
 
 	private IPagingDataModel<ScBidSchedule> searchDataModel = new SearchPagingDataModel();

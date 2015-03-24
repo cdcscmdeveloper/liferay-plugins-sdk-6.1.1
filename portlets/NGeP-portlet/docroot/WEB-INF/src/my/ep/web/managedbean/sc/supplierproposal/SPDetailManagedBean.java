@@ -74,6 +74,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private int prepareActiveIndex;
 
 	private ScQtProposalChecklist selectDetails;
+	/**
+	 * flag to disable buttons if QT closed
+	 */
 	public boolean checkStatus = true;
 
 	// payLoad object Added By Vidyasagar.
