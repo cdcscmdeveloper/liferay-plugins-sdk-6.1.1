@@ -244,6 +244,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					
 					smSvFacility.setOverallSqft(smFacility.getAreaSquareFeet().toString());
 					smSvFacility.setEnclosedSqft(smFacility.getAreaSquareFeet().toString());
+					smSvFacility.setEnclosedCapacitySqft(smFacility.getAreaSquareFeet().toString());
 				}
 				if(smFacility.getOwnershipType().equals("R")){
 					smSvFacility.setPurchaseRentPrice(smFacility.getRentalRate());
@@ -285,7 +286,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(smSvTask.getSmSvFinChecklists().size() < 1){
 				log.info("******getSmSvFinChecklists() == null******");
 				List<PmParameterDesc> pmParamDesc = new ArrayList<PmParameterDesc>();
-				pmParamDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SVO_FIN_CHECKLIST, new FacesScopes().getUserLocale().getLanguage());
+				pmParamDesc = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.SVO_FIN_CHECKLIST, new FacesScopes().getUserLocale().getLanguage());
 				for(PmParameterDesc pmdesc : pmParamDesc){
 					SmSvFinChecklist svCL = new SmSvFinChecklist();
 					svCL.setPmParameter(pmdesc.getPmParameter());
