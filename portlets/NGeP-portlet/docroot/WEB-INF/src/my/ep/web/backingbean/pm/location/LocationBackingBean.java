@@ -214,34 +214,42 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				PmState state = this.getManagedBean().getState();
 				state.setStateCode(state.getStateCode().toUpperCase());
 				reqDTO.setPmState(state);
-				try {
-				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
+				StateResDTO resDTO = null;
+                
+				if(getManagedBean().getState().isBrandNew()){
+					resDTO = stateSO.retrieveStateByStateCode(reqDTO);
+					if(resDTO.isSuccessful()){
+						throw new EpException(MessageConst.ERR_900018);
+						}
+					}
+				
+				resDTO = stateSO.saveOrUpdateStates(reqDTO);
         
 				if (resDTO.isSuccessful()) {
 					result = resDTO.isSuccessful();
-					FacesContext.getCurrentInstance().addMessage(
+					if(getManagedBean().getState().isBrandNew()){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+										MessageUtils.getMessage(
+												MessageConst.ERR_900016, new String[] {"State ",
+														this.getManagedBean().getState()
+														.getStateName()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+						
+					}else{
+							FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.INFO_700004, new String[] {"State :",
+											MessageConst.ERR_900017, new String[] {"State ",
 													this.getManagedBean().getState()
 													.getStateName()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
+					}
 
-				}
-				} catch (Exception e) {
-					e.printStackTrace();
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.ERR_900013, new String[] {
-													this.getManagedBean().getState()
-													.getStateName()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					throw e;
 				}
 
 			} else if (getManagedBean().getSelectedType().equalsIgnoreCase(
@@ -257,35 +265,42 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				PmDivision division = this.getManagedBean().getDivision();
 				division.setDivisionCode(division.getDivisionCode().toUpperCase());
 				reqDTO.setPmDivision(division);
-				try {
-					DivisionResDTO resDTO = divisionSO
-							.saveOrUpdateDivision(reqDTO);
+				reqDTO.setStateId(division.getPmState().getStateId());
+				DivisionResDTO resDTO = null;
+				if(getManagedBean().getDivision().isBrandNew()){
+					resDTO = divisionSO.retrieveDivisionbyDivCode(reqDTO);
+					if(resDTO.isSuccessful()){
+						throw new EpException(MessageConst.ERR_900019);
+					}
+				}
+				
+					resDTO = divisionSO.saveOrUpdateDivision(reqDTO);
 					if (resDTO.isSuccessful()) {
 						result = resDTO.isSuccessful();
-						FacesContext.getCurrentInstance().addMessage(
+						
+						if(getManagedBean().getDivision().isBrandNew()){
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+											MessageUtils.getMessage(
+													MessageConst.ERR_900016, new String[] {"Division ",
+															this.getManagedBean().getDivision().getDivisionName()
+															},
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
+							
+						}else{
+								FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(
-												MessageConst.INFO_700004, new String[] {"Division :",
-														this.getManagedBean().getDivision()
-														.getDivisionName()},
+												MessageConst.ERR_900017, new String[] {"Division ",
+														this.getManagedBean().getDivision().getDivisionName()},
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
+						}
 
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.ERR_900013, new String[] {
-													this.getManagedBean().getDivision()
-													.getDivisionName()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					throw e;
-				}
 
 			} else if (getManagedBean().getSelectedType().equalsIgnoreCase(
 					ParameterConst.LOCATION_LEVEL_DISTRICT)) {
@@ -307,35 +322,45 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					district.setPmDivision(null);
 				}
 				reqDTO.setPmDistrict(district);
-				try {
-					DistrictResDTO resDTO = districtSO
-							.saveOrUpdateDistrict(reqDTO);
+				reqDTO.setStateId(district.getPmState().getStateId());
+				reqDTO.setDivisionId(district.getPmDivision().getDivisionId());
+				DistrictResDTO resDTO = null;
+				
+				if(getManagedBean().getDistrict().isBrandNew()){
+					resDTO = districtSO.retrievebyDisCode(reqDTO);
+					if(resDTO.isSuccessful()){
+						throw new EpException(MessageConst.ERR_900020);
+					}
+				}
+				
+				
+				resDTO = districtSO.saveOrUpdateDistrict(reqDTO);
+				
 					if (resDTO.isSuccessful()) {
 						result = resDTO.isSuccessful();
-						FacesContext.getCurrentInstance().addMessage(
+						if(getManagedBean().getDistrict().isBrandNew()){
+							FacesContext.getCurrentInstance().addMessage(
+									null,
+									new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+											MessageUtils.getMessage(
+													MessageConst.ERR_900016, new String[] {"District ",
+															this.getManagedBean().getDistrict().getDistrictName()},
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
+							
+						}else{
+								FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(
-												MessageConst.INFO_700004, new String[] {"District :",
-														this.getManagedBean().getDistrict()
-														.getDistrictName()},
+												MessageConst.ERR_900017, new String[] {"District :",
+														this.getManagedBean().getDistrict().getDistrictName()},
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
+						}
+						
 
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.ERR_900013, new String[] {
-													this.getManagedBean().getDistrict()
-													.getDistrictName()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					throw e;
-				}
 
 			} else if (getManagedBean().getSelectedType().equalsIgnoreCase(
 					ParameterConst.LOCATION_LEVEL_CITY)) {
@@ -349,36 +374,42 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				PmCity city = this.getManagedBean().getCity();
                 city.setCityCode(city.getCityCode().toUpperCase());
 				reqDTO.setPmCity(city);
-				try{
-				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
+				reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
+				CityResDTO resDTO = null;
+				
+				if(getManagedBean().getCity().isBrandNew()){
+					resDTO = citySO.retrieveBycityCode(reqDTO);
+					if(resDTO.isSuccessful()){
+						throw new EpException(MessageConst.ERR_900021);
+					}
+				}
+				
+				resDTO = citySO.saveOrUpdateCity(reqDTO);
 
 				if (resDTO.isSuccessful()) {
 					result = resDTO.isSuccessful();
-					FacesContext.getCurrentInstance().addMessage(
+					
+					if(getManagedBean().getCity().isBrandNew()){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+										MessageUtils.getMessage(
+												MessageConst.ERR_900016, new String[] {"City ",
+														this.getManagedBean().getCity().getCityName()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+						
+					}else{
+							FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.INFO_700004, new String[] {"City :",
-													this.getManagedBean().getCity()
-													.getCityName()},
+											MessageConst.ERR_900017, new String[] {"City ",
+													this.getManagedBean().getCity().getCityName()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
+					}
 					
-				}
-				} catch (Exception e) {
-					e.printStackTrace();
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.ERR_900013, new String[] {
-													this.getManagedBean().getCity()
-													.getCityName()},
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					
-					
-					throw e;
 				}
 				
 
