@@ -133,6 +133,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
@@ -1070,6 +1071,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
+		saveSupplierBusinesType(currentPageType);
 		log.info("******* Current page AFTER in managed bean ********"
 				+ getManagedBean().getCurrentPageType());
 	}
@@ -8767,6 +8769,11 @@ public class SmApplicationBackingBean extends
 		return ePRoleList;
 	}
 
+	/**
+	 * Get list of academic qualification
+	 * 
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> getAcademicQualifications() {
 		String suppType = StringUtils.isNotBlank(getManagedBean()
 				.getNewSupplierType()) ? getManagedBean().getNewSupplierType()
@@ -8818,6 +8825,22 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return finalList;
+	}
+
+	/**
+	 * Save supplier business type if got changes
+	 * 
+	 * @param currPage
+	 */
+	private void saveSupplierBusinesType(String currPage) {
+		if (currPage
+				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+				&& !getManagedBean().isDisabledBusinessType()) {
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+			SmServiceLookup.getMofRegistrationSO()
+					.updateSupplierProfile(reqDTO);
+		}
 	}
 
 	// private void generateSuppDocPdfFile(VelocityContext context)
