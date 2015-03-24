@@ -42,34 +42,36 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private List<ScBidItem> selectedBidItemList;
 	private ScBid scBid;
 	private List<ScQtRecommendDtl> bidParticipants;
-	
+
 	private List<ScBidSchedule> bidScheduleList;
 	private List<ScBidSchedule> selectedBidBidScheduleList;
-	
+
 	private boolean selectedAll;
 	private boolean selected;
-	private List<Integer>	selectedIndexes;
-	
+	private List<Integer> selectedIndexes;
+
 	private boolean selectedAllBidContacts;
 	private boolean selectedBidContact;
-	
+
 	private ScBidSchedule rowSelectedBid;
-	
+
 	private Date minStartDate;
 	private Date minEndDate;
 	private Date maxEndDate;
-	
+
 	private SCEvaluationDataType payLoad;
-	
+
+	/**
+	 * Default COnstructor
+	 */
 	public ScheduleBiddingManagedBean() {
-		Calendar c = Calendar.getInstance(); 
-		c.setTime(DateUtils.getCurrentDateWithoutTime()); 
+		Calendar c = Calendar.getInstance();
+		c.setTime(DateUtils.getCurrentDateWithoutTime());
 		c.add(Calendar.DATE, 1);
 		minStartDate = c.getTime();
 		minEndDate = c.getTime();
 	}
-	
-	
+
 	/**
 	 * @return the rowSelectedBid
 	 */
@@ -77,16 +79,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return rowSelectedBid;
 	}
 
-
-
 	/**
-	 * @param rowSelectedBid the rowSelectedBid to set
+	 * @param rowSelectedBid
+	 *            the rowSelectedBid to set
 	 */
 	public void setRowSelectedBid(ScBidSchedule rowSelectedBid) {
 		this.rowSelectedBid = rowSelectedBid;
 	}
-
-
 
 	/**
 	 * @return the bidScheduleList
@@ -95,16 +94,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return bidScheduleList;
 	}
 
-
 	/**
-	 * @param bidScheduleList the bidScheduleList to set
+	 * @param bidScheduleList
+	 *            the bidScheduleList to set
 	 */
 	public void setBidScheduleList(List<ScBidSchedule> bidScheduleList) {
 		this.bidScheduleList = bidScheduleList;
 	}
-
-
-
 
 	/**
 	 * @return the selectedBidBidScheduleList
@@ -113,19 +109,14 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return selectedBidBidScheduleList;
 	}
 
-
-
-
 	/**
-	 * @param selectedBidBidScheduleList the selectedBidBidScheduleList to set
+	 * @param selectedBidBidScheduleList
+	 *            the selectedBidBidScheduleList to set
 	 */
 	public void setSelectedBidBidScheduleList(
 			List<ScBidSchedule> selectedBidBidScheduleList) {
 		this.selectedBidBidScheduleList = selectedBidBidScheduleList;
 	}
-
-
-
 
 	/**
 	 * @return the bidParticipants
@@ -134,14 +125,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return bidParticipants;
 	}
 
-
 	/**
-	 * @param bidParticipants the bidParticipants to set
+	 * @param bidParticipants
+	 *            the bidParticipants to set
 	 */
 	public void setBidParticipants(List<ScQtRecommendDtl> bidParticipants) {
 		this.bidParticipants = bidParticipants;
 	}
-
 
 	/**
 	 * @return the scQtFinalization
@@ -150,14 +140,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return scQtFinalization;
 	}
 
-
 	/**
-	 * @param scQtFinalization the scQtFinalization to set
+	 * @param scQtFinalization
+	 *            the scQtFinalization to set
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
 	}
-
 
 	/**
 	 * @return the scBid
@@ -166,15 +155,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return scBid;
 	}
 
-
 	/**
-	 * @param scBid the scBid to set
+	 * @param scBid
+	 *            the scBid to set
 	 */
 	public void setScBid(ScBid scBid) {
 		this.scBid = scBid;
 	}
-
-
 
 	/**
 	 * @return the minEndDate
@@ -183,9 +170,9 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return minEndDate;
 	}
 
-
 	/**
-	 * @param minEndDate the minEndDate to set
+	 * @param minEndDate
+	 *            the minEndDate to set
 	 */
 	public void setMinEndDate(Date minEndDate) {
 		this.minEndDate = minEndDate;
@@ -199,12 +186,12 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param maxEndDate the maxEndDate to set
+	 * @param maxEndDate
+	 *            the maxEndDate to set
 	 */
 	public void setMaxEndDate(Date maxEndDate) {
 		this.maxEndDate = maxEndDate;
 	}
-
 
 	/**
 	 * @return the minStartDate
@@ -214,7 +201,8 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param minStartDate the minStartDate to set
+	 * @param minStartDate
+	 *            the minStartDate to set
 	 */
 	public void setMinStartDate(Date minStartDate) {
 		this.minStartDate = minStartDate;
@@ -228,7 +216,8 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedBidItemList the selectedBidItemList to set
+	 * @param selectedBidItemList
+	 *            the selectedBidItemList to set
 	 */
 	public void setSelectedBidItemList(List<ScBidItem> selectedBidItemList) {
 		this.selectedBidItemList = selectedBidItemList;
@@ -242,12 +231,12 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param bidItemList the bidItemList to set
+	 * @param bidItemList
+	 *            the bidItemList to set
 	 */
 	public void setBidItemList(List<ScBidItem> bidItemList) {
 		this.bidItemList = bidItemList;
 	}
-
 
 	/**
 	 * @return the scQt
@@ -257,7 +246,8 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt
+	 *            the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
@@ -267,15 +257,16 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	 * @return the multiSelectContact
 	 */
 	public List<ScBidContactPerson> getMultiSelectContact() {
-		if(multiSelectContact == null){
+		if (multiSelectContact == null) {
 			multiSelectContact = new ArrayList<ScBidContactPerson>();
 		}
-		
+
 		return multiSelectContact;
 	}
 
 	/**
-	 * @param multiSelectContact the multiSelectContact to set
+	 * @param multiSelectContact
+	 *            the multiSelectContact to set
 	 */
 	public void setMultiSelectContact(
 			List<ScBidContactPerson> multiSelectContact) {
@@ -290,7 +281,8 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scBidContactPersonList the scBidContactPersonList to set
+	 * @param scBidContactPersonList
+	 *            the scBidContactPersonList to set
 	 */
 	public void setScBidContactPersonList(
 			List<ScBidContactPerson> scBidContactPersonList) {
@@ -304,14 +296,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return selectedAll;
 	}
 
-
 	/**
-	 * @param selectedAll the selectedAll to set
+	 * @param selectedAll
+	 *            the selectedAll to set
 	 */
 	public void setSelectedAll(boolean selectedAll) {
 		this.selectedAll = selectedAll;
 	}
-
 
 	/**
 	 * @return the selected
@@ -320,35 +311,33 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return selected;
 	}
 
-
 	/**
-	 * @param selected the selected to set
+	 * @param selected
+	 *            the selected to set
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
 
-
 	/**
 	 * @return the selectedIndexes
 	 */
 	public List<Integer> getSelectedIndexes() {
-		
-		if(selectedIndexes == null ){
+
+		if (selectedIndexes == null) {
 			selectedIndexes = new ArrayList<Integer>();
 		}
-			
+
 		return selectedIndexes;
 	}
 
-
 	/**
-	 * @param selectedIndexes the selectedIndexes to set
+	 * @param selectedIndexes
+	 *            the selectedIndexes to set
 	 */
 	public void setSelectedIndexes(List<Integer> selectedIndexes) {
 		this.selectedIndexes = selectedIndexes;
 	}
-
 
 	/**
 	 * @return the selectedAllBidContacts
@@ -357,14 +346,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return selectedAllBidContacts;
 	}
 
-
 	/**
-	 * @param selectedAllBidContacts the selectedAllBidContacts to set
+	 * @param selectedAllBidContacts
+	 *            the selectedAllBidContacts to set
 	 */
 	public void setSelectedAllBidContacts(boolean selectedAllBidContacts) {
 		this.selectedAllBidContacts = selectedAllBidContacts;
 	}
-
 
 	/**
 	 * @return the selectedBidContact
@@ -373,14 +361,13 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return selectedBidContact;
 	}
 
-
 	/**
-	 * @param selectedBidContact the selectedBidContact to set
+	 * @param selectedBidContact
+	 *            the selectedBidContact to set
 	 */
 	public void setSelectedBidContact(boolean selectedBidContact) {
 		this.selectedBidContact = selectedBidContact;
 	}
-
 
 	/**
 	 * @return the payLoad
@@ -389,14 +376,12 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		return payLoad;
 	}
 
-
 	/**
-	 * @param payLoad the payLoad to set
+	 * @param payLoad
+	 *            the payLoad to set
 	 */
 	public void setPayLoad(SCEvaluationDataType payLoad) {
 		this.payLoad = payLoad;
 	}
-	
-	
-	
+
 }
