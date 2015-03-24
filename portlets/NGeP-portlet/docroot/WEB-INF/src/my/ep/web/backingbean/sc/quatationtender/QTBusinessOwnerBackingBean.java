@@ -405,7 +405,31 @@ public class QTBusinessOwnerBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-
+			
+			Date fromPublishDate = cloneBusinessOwnerSearchBean.getFromPublishDate();
+			Date toPublishDate = cloneBusinessOwnerSearchBean.getToPublishDate();
+			if (null != fromPublishDate || null != toPublishDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.PUBLISH_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromPublishDate, toPublishDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			
+			Date fromClosingDate = cloneBusinessOwnerSearchBean.getFromClosingDate();
+			Date toClosingDate = cloneBusinessOwnerSearchBean.getToClosingDate();
+			if (null != fromClosingDate || null != toClosingDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.CLOSED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromClosingDate, toClosingDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			
 			String status = cloneBusinessOwnerSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
 				qtSearchBean
@@ -1004,6 +1028,10 @@ public class QTBusinessOwnerBackingBean extends
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneBusinessOwnerSearchBean()
 				.setQtStatus(null);
+		this.getManagedBean().getQtnTenderSearchBean().setFromPublishDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setToPublishDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setFromClosingDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setToClosingDate(null);
 	}
 
 	/**
