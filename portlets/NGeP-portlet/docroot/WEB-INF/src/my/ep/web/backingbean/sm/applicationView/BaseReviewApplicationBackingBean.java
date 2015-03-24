@@ -1372,10 +1372,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public String getParamDescByParameterId(Long parameterId) {
 		PmParameter pmParameter = null;
 		if (parameterId != null) {
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			pmParameter = SmServiceLookup.getParameterSO()
-					.retrieveParameterById(reqDTO).getPmParameter();
+			pmParameter = SmApplicationUtil
+					.retrievePmParameterById(parameterId);
 			return pmParameter == null ? "" : SmCommonUtil
 					.getParamDescriptionByLanguageAndPmParameter(pmParameter);
 		} else {
