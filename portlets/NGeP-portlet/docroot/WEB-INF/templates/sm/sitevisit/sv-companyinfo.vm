@@ -76,10 +76,10 @@
 	        <td></td>
     	</tr>*#
     	
-    	<tr>
+    	#*<tr>
 	        <td width="30%"><b>Visiting Date</b></td>
 	        <td></td>
-    	</tr>
+    	</tr>*#
     	
     	<tr>
     		<td width="30%" valign="top"><b>Visiting Officers</b></td>
