@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.math.BigDecimal;
@@ -96,7 +99,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return scQt;
 	}
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt 
+	 * 			the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
@@ -108,7 +112,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return scQtFinalization;
 	}
 	/**
-	 * @param scQtFinalization the scQtFinalization to set
+	 * @param scQtFinalization 
+	 * 					the scQtFinalization to set
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
@@ -120,7 +125,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return committeeEndorsementList;
 	}
 	/**
-	 * @param committeeEndorsementList the committeeEndorsementList to set
+	 * @param committeeEndorsementList 
+	 * 						the committeeEndorsementList to set
 	 */
 	public void setCommitteeEndorsementList(
 			List<ScQtCommitteeActivity> committeeEndorsementList) {
@@ -133,7 +139,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return reminderList;
 	}
 	/**
-	 * @param reminderList the reminderList to set
+	 * @param reminderList 
+	 * 				the reminderList to set
 	 */
 	public void setReminderList(List<ScQtCommitteeActivity> reminderList) {
 		this.reminderList = reminderList;
@@ -145,7 +152,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return subject;
 	}
 	/**
-	 * @param subject the subject to set
+	 * @param subject 
+	 * 			the subject to set
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -157,7 +165,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return message;
 	}
 	/**
-	 * @param message the message to set
+	 * @param message 
+	 * 			the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -169,7 +178,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return pinNo;
 	}
 	/**
-	 * @param pinNo the pinNo to set
+	 * @param pinNo 
+	 * 			the pinNo to set
 	 */
 	public void setPinNo(String pinNo) {
 		this.pinNo = pinNo;
@@ -181,7 +191,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return biddingItemList;
 	}
 	/**
-	 * @param biddingItemList the biddingItemList to set
+	 * @param biddingItemList 
+	 * 					the biddingItemList to set
 	 */
 	public void setBiddingItemList(List<ScBidItem> biddingItemList) {
 		this.biddingItemList = biddingItemList;
@@ -193,7 +204,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return scBidding;
 	}
 	/**
-	 * @param scBidding the scBidding to set
+	 * @param scBidding 
+	 * 				the scBidding to set
 	 */
 	public void setScBidding(ScBid scBidding) {
 		this.scBidding = scBidding;
@@ -205,7 +217,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return biddingItemPriceList;
 	}
 	/**
-	 * @param biddingItemPriceList the biddingItemPriceList to set
+	 * @param biddingItemPriceList 
+	 * 						the biddingItemPriceList to set
 	 */
 	public void setBiddingItemPriceList(List<ScBidPrice> biddingItemPriceList) {
 		this.biddingItemPriceList = biddingItemPriceList;
@@ -217,7 +230,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return biddingPackagePriceList;
 	}
 	/**
-	 * @param biddingPackagePriceList the biddingPackagePriceList to set
+	 * @param biddingPackagePriceList 
+	 * 					the biddingPackagePriceList to set
 	 */
 	public void setBiddingPackagePriceList(List<BidPackageBean> biddingPackagePriceList) {
 		this.biddingPackagePriceList = biddingPackagePriceList;
@@ -229,7 +243,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return committeeType;
 	}
 	/**
-	 * @param committeeType the committeeType to set
+	 * @param committeeType 
+	 * 				the committeeType to set
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
@@ -241,7 +256,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return selectedBiddingItem;
 	}
 	/**
-	 * @param selectedBiddingItem the selectedBiddingItem to set
+	 * @param selectedBiddingItem 
+	 * 					the selectedBiddingItem to set
 	 */
 	public void setSelectedBiddingItem(ScBidItem selectedBiddingItem) {
 		this.selectedBiddingItem = selectedBiddingItem;
@@ -253,7 +269,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return remarks;
 	}
 	/**
-	 * @param remarks the remarks to set
+	 * @param remarks 
+	 * 			the remarks to set
 	 */
 	public void setRemarks(List<ScQtFinalizationEndorsementRemarks> remarks) {
 		this.remarks = remarks;
@@ -265,7 +282,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return attachmentDocType;
 	}
 	/**
-	 * @param attachmentDocType the attachmentDocType to set
+	 * @param attachmentDocType 
+	 * 					the attachmentDocType to set
 	 */
 	public void setAttachmentDocType(String attachmentDocType) {
 		this.attachmentDocType = attachmentDocType;
@@ -277,50 +295,100 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		return processName;
 	}
 	/**
-	 * @param processName the processName to set
+	 * @param processName 
+	 * 				the processName to set
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
 	}
+	/**
+	 * @return  the payLoad
+	 */
 	public Object getPayLoad() {
 		return payLoad;
 	}
+	/**
+	 * @param payLoad
+	 * 			the payLoad to set
+	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
 	}
+	/**
+	 * @return  the action
+	 */
 	public String getAction() {
 		return action;
 	}
+	/**
+	 * @param action
+	 * 			the action to set
+	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
+	/**
+	 * @return  the supplierCode
+	 */
 	public Long getSupplierCode() {
 		return supplierCode;
 	}
+	/**
+	 * @param supplierCode
+	 * 				the supplierCode to set
+	 */
 	public void setSupplierCode(Long supplierCode) {
 		this.supplierCode = supplierCode;
 	}
+	/**
+	 * @return the scheduledBid
+	 */
 	public ScBidSchedule getScheduledBid() {
 		return scheduledBid;
 	}
+	/**
+	 * @param scheduledBid
+	 * 				the scheduledBid to set
+	 */
 	public void setScheduledBid(ScBidSchedule scheduledBid) {
 		this.scheduledBid = scheduledBid;
 	}
+	/**
+	 * @return  the ScBidPriceList
+	 */
 	public List<ScBidPrice> getScBidPriceList() {
 		return ScBidPriceList;
 	}
+	/**
+	 * @param scBidPriceList
+	 * 				the scBidPriceList to set
+	 */
 	public void setScBidPriceList(List<ScBidPrice> scBidPriceList) {
 		ScBidPriceList = scBidPriceList;
 	}
+	/**
+	 * @return  the lowestNonBumiOfferedPrice
+	 */
 	public BigDecimal getLowestNonBumiOfferedPrice() {
 		return lowestNonBumiOfferedPrice;
 	}
+	/**
+	 * @param lowestNonBumiOfferedPrice
+	 * 				the lowestNonBumiOfferedPrice to set
+	 */
 	public void setLowestNonBumiOfferedPrice(BigDecimal lowestNonBumiOfferedPrice) {
 		this.lowestNonBumiOfferedPrice = lowestNonBumiOfferedPrice;
 	}
+	/**
+	 * @return  the bumiSuppLowestOfferedPrice
+	 */
 	public BigDecimal getBumiSuppLowestOfferedPrice() {
 		return bumiSuppLowestOfferedPrice;
 	}
+	/**
+	 * @param bumiSuppLowestOfferedPrice
+	 * 				the bumiSuppLowestOfferedPrice to set
+	 */
 	public void setBumiSuppLowestOfferedPrice(BigDecimal bumiSuppLowestOfferedPrice) {
 		this.bumiSuppLowestOfferedPrice = bumiSuppLowestOfferedPrice;
 	}
@@ -333,7 +401,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param shortlistedSupplier the shortlistedSupplier to set
+	 * @param shortlistedSupplier 
+	 * 					the shortlistedSupplier to set
 	 */
 	public void setShortlistedSupplier(ScQtEvaluationResult shortlistedSupplier) {
 		this.shortlistedSupplier = shortlistedSupplier;
@@ -347,7 +416,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param smSupplier the smSupplier to set
+	 * @param smSupplier 
+	 * 				the smSupplier to set
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
@@ -361,7 +431,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param smMofAccount the smMofAccount to set
+	 * @param smMofAccount 
+	 * 				the smMofAccount to set
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
@@ -375,7 +446,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param smCompanyBasic the smCompanyBasic to set
+	 * @param smCompanyBasic 
+	 * 					the smCompanyBasic to set
 	 */
 	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
 		this.smCompanyBasic = smCompanyBasic;
@@ -389,7 +461,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param smPersonnel the smPersonnel to set
+	 * @param smPersonnel 
+	 * 				the smPersonnel to set
 	 */
 	public void setSmPersonnel(SmPersonnel smPersonnel) {
 		this.smPersonnel = smPersonnel;
@@ -403,7 +476,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param supplierBranch the supplierBranch to set
+	 * @param supplierBranch 
+	 * 				the supplierBranch to set
 	 */
 	public void setSupplierBranch(String supplierBranch) {
 		this.supplierBranch = supplierBranch;
@@ -417,7 +491,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param supplierAddress the supplierAddress to set
+	 * @param supplierAddress 
+	 * 					the supplierAddress to set
 	 */
 	public void setSupplierAddress(SmAddress supplierAddress) {
 		this.supplierAddress = supplierAddress;
