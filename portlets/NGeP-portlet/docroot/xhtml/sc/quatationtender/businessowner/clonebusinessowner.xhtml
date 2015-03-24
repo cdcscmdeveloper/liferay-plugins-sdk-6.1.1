@@ -14,65 +14,98 @@
 				closable="true" showSummary="false" />
 			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
 				id="searchpnlid">
-				<table>
+				<table width="100%">
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-						<td colspan="3"><p:inputTextarea id="title1"
+						<td colspan="3"><p:inputText
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtTitle}"
-								cols="110" rows="2" style=" margin-bottom:5px; width: 100%; "
-								maxlength="100" /></td>
+								size="104" maxlength="100" /></td>
 					</tr>
+					
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
-						<td><p:inputText
-								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtNo}"
-								size="30" maxlength="21" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel
+						<td><p:inputText size="29" maxlength="21"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtNo}" /></td>
+								<td><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
-						<td><p:selectOneMenu
-								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.procurementMode}"
-								style="width: 178px;margin-bottom: 5px;">
+						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.procurementMode}">
 								<f:selectItems
 									value="#{qTBusinessOwnerBackingBean.getProcurementModeDropdownValues()}" />
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
-						<td><p:calendar
+						<td><p:calendar id="crdateFrm" showOn="button"
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
-								id="crdateFrm" showOn="button" size="30" readonlyInput="true"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 								<p:ajax event="dateSelect" update="createdtTo" />
 							</p:calendar></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
 						<td><p:calendar id="createdtTo" showOn="button"
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.toCreatedDate}"
 								mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								size="30" readonlyInput="true">
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 								<f:attribute name="startDate"
 									value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}" />
 								<f:validator validatorId="dateRangeValidator" />
 							</p:calendar></td>
 					</tr>
 					<tr>
+					<td><h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" /></td>
+					<td><p:calendar
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromPublishDate}"
+							id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<p:ajax event="dateSelect" update="pbdateTo" />
+						</p:calendar></td>
+					<td><h:outputLabel value="#{lbl['lbl.so.pbldtto']}" /></td>
+					<td><p:calendar id="pbdateTo" showOn="button"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.toPublishDate}"
+							mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromPublishDate}"
+							size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<f:attribute name="startDate"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromPublishDate}" />
+							<f:validator validatorId="dateRangeValidator" />
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" /></td>
+					<td><p:calendar
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromClosingDate}"
+							id="cldateFrom" showOn="button" size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<p:ajax event="dateSelect" update="cldateTo" />
+						</p:calendar></td>
+					<td><h:outputLabel value="#{lbl['lbl.so.clsdtto']}" /></td>
+					<td><p:calendar id="cldateTo" showOn="button"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.toClosingDate}"
+							mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromClosingDate}"
+							size="29" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
+							<f:attribute name="startDate"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromClosingDate}" />
+							<f:validator validatorId="dateRangeValidator" />
+						</p:calendar></td>
+				</tr>
+					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
-						<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
+						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtStatus}">
 								<f:selectItems
-									value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
+									value="#{qTBusinessOwnerBackingBean.getStatusDropdownValues('SC', 'QT')}" />
 							</p:selectOneMenu></td>
 						<td />
 						<td />
 					</tr>
 				</table>
+				
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						action="#{qTBusinessOwnerBackingBean.cloneSearchBOAction}"
@@ -111,7 +144,21 @@
 					<p:column headerText="#{lbl['lbl.so.crtdt']}">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime
-								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.so.pbdt']}" style="width:80px;">
+						<h:outputText value="#{scQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.clsdt']}" style="width:80px;">
+						<h:outputText value="#{scQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
