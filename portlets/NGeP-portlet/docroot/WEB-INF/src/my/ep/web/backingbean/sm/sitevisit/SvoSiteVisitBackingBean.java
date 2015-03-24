@@ -270,6 +270,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param viewMode
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
+		//this.getManagedBean().setAppId(1257676); //FT
+		//this.getManagedBean().setAppId(1257345);//FT
+		//this.getManagedBean().setAppId(1257944);//FT
+		//this.getManagedBean().setAppId(1258520);//#4126 #4377
+		
 		this.getManagedBean().setActiveIndex(0);
 		
 		log.info("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
@@ -1496,9 +1501,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//#{finLsItem.pmParameter.pmParameterDescs[0].codeName}
 		
 		List<String> finLsItem = new ArrayList<String>();
+		List<PmParameterDesc> pmParamDesc = new ArrayList<PmParameterDesc>();
+		pmParamDesc = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.SVO_FIN_CHECKLIST, templateLangCode);
 		
-		for(SmSvFinChecklist finCheckList : svTask.getSmSvFinChecklists()){
-			finLsItem.add(finCheckList.getPmParameter().getPmParameterDescs().get(0).getCodeName());
+		for(PmParameterDesc finCheckList : pmParamDesc){
+			finLsItem.add(finCheckList.getCodeName());
 		}
 		//svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos
 		//svoSiteVisitBackingBean.managedBean.totalCheqSign
