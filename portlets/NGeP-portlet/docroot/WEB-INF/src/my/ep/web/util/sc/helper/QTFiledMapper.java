@@ -1,5 +1,5 @@
 /**
- * 
+ *  Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.util.sc.helper;
 
@@ -11,11 +11,22 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.type.IEnumType;
 
 /**
- * @author VidyasagarReddy
+ * 
+ * QTFiledMapper class is used to enable or disable fileds
+ * 
+ * @author VidyaSagarReddy
+ * @since 22.11.2013
  * 
  */
 public class QTFiledMapper {
 
+	/**
+	 * To enable fileds by statusid and maintance flow
+	 * 
+	 * @param statusId
+	 * @param isMaintanceFlow
+	 * @return List<String> fieldNames
+	 */
 	public static List<String> getEnableFieldsByStatus(Long statusId,
 			boolean isMaintanceFlow) {
 		List<String> updatedFiledsList = null;
@@ -32,6 +43,9 @@ public class QTFiledMapper {
 
 	}
 
+	/**
+	 * Constant for Maintance Flow Fileds
+	 */
 	enum QTMaintanaceEnableFields implements IEnumType {
 
 		QT_PENDING_QT_SUBMISSION(QTStatusConst.QT_PENDING_QT_SUBMISSION,
@@ -137,6 +151,9 @@ public class QTFiledMapper {
 
 	}
 
+	/**
+	 * Constant for TaskList Fileds
+	 */
 	enum QTTaskListEnableFields implements IEnumType {
 
 		QT_PENDING_QT_SUBMISSION(QTStatusConst.QT_PENDING_QT_SUBMISSION,
@@ -154,7 +171,7 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
-						QTFieldConst.FILED_QT_PUB_APPROVAL});
+						QTFieldConst.FILED_QT_PUB_APPROVAL });
 
 		private Long statusId;
 		private String[] toBeEnableFields;

@@ -1,5 +1,5 @@
 /**
- * 
+ *  Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
@@ -119,12 +119,19 @@ import org.primefaces.model.UploadedFile;
 import com.liferay.portal.util.PortalUtil;
 
 /**
- * @author VidyasagarReddy
+ * 
+ * SourcingBaseBackingBean is the Base class for Quation Tender
+ * 
+ * @author VidyaSagarReddy
+ * @since 22.11.2013
  * 
  */
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
 
+	/**
+	 * Logger instance.
+	 */
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
 
@@ -132,7 +139,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * Method to retrive orgprofiles based on user id and parent org id
 	 * 
 	 * @param profileReqDTO
-	 * @return
+	 * @return List<PmOrgProfile> orgProfiles.
 	 */
 	public List<PmOrgProfile> retriveOrgProfiles(OrgProfileReqDTO profileReqDTO) {
 
@@ -144,6 +151,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return resDTO.getOrgProfileList();
 	}
 
+	/**
+	 * To constuct SelectItem s for dropndowns for orgprofiles
+	 * 
+	 * @param orgProfile
+	 * @return List<SelectItem> selectItems
+	 */
 	public List<SelectItem> toOrgProfileSelectItems(
 			List<PmOrgProfile> orgProfile) {
 		List<SelectItem> orgProfileSelectItems = new ArrayList<SelectItem>();
@@ -155,6 +168,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return orgProfileSelectItems;
 	}
 
+	/**
+	 * To constuct SelectItem s for dropndowns for users
+	 * 
+	 * @param users
+	 * @return List<SelectItem> selectItems
+	 */
 	public List<SelectItem> toSelectItmes(List<PmUser> users) {
 		List<SelectItem> userList = new ArrayList<SelectItem>();
 		userList.add(new SelectItem("", "SelectOne"));
@@ -164,6 +183,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return userList;
 	}
 
+	/**
+	 * To upload the attachment.
+	 * 
+	 * @param file
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	protected void uploadAttachment(UploadedFile file, ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
@@ -185,6 +212,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
+	/**
+	 * To populate details into ScAttachment instance.
+	 * 
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	protected void populateAttachmentDetails(ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
@@ -232,6 +266,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To get Actual file path for attachement.
+	 * 
+	 * @param attachment
+	 * @return filePath.
+	 */
 	protected String getActualFilePath(ScAttachment attachment) {
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
@@ -243,7 +283,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
-	 * determineIcon for displaying image icon
+	 * To set Icon.
+	 * 
+	 * @param attachment
+	 * @return
 	 */
 	public <ATTACHMENT extends ScAttachment> String determineIcon(
 			ATTACHMENT attachment) {
@@ -275,6 +318,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return imageFileName;
 	}
 
+	/**
+	 * To download the file.
+	 * 
+	 * @param scAttachment
+	 * @return File instance.
+	 * @throws IOException
+	 */
 	public <ATTACHMENT extends ScAttachment> File downloadFile(
 			ATTACHMENT scAttachment) throws IOException {
 		if (scAttachment != null
@@ -287,6 +337,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To download the file
+	 * 
+	 * @param filePath
+	 * @param fileName
+	 * @return File instance
+	 * @throws IOException
+	 */
 	public File downloadFile(String filePath, String fileName)
 			throws IOException {
 
@@ -308,6 +366,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return file;
 	}
 
+	/**
+	 * To download file by stream.
+	 * 
+	 * @param input
+	 * @param fileName
+	 * @throws IOException
+	 */
 	protected void downloadFileByInputStream(InputStream input, String fileName)
 			throws IOException {
 		log.info("Inside downloadFile(..)");
@@ -339,6 +404,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
+	/**
+	 * To download multiple files.
+	 * 
+	 * @param zipFileName
+	 * @param scAttachments
+	 * @throws IOException
+	 */
 	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(
 			String zipFileName, List<ATTACHMENT> scAttachments)
 			throws IOException {
@@ -394,6 +466,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To conver html to doc file.
+	 * 
+	 * @param content
+	 * @param filePath
+	 */
 	public void converthtmlToDocFile(String content, String filePath) {
 		log.info("Inside converthtmlToDocFile(..)");
 		WordprocessingMLPackage wordMLPackage;
@@ -420,6 +498,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		log.info("Exit converthtmlToDocFile(..)");
 	}
 
+	/**
+	 * Base method to invoke anthor action.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -505,7 +586,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
-	 * Method to populate parent orgprofiles for scqt.
+	 * To populate parentOrgProfile.
+	 * 
+	 * @param scQt
 	 */
 	public void populateParentOrgProfile(ScQt scQt) {
 		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
@@ -529,6 +612,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * TO Check wheter object is empty or null
+	 * 
+	 * @param testObject
+	 * @return boolean flag
+	 */
 	public boolean isNotNullOREmpty(List<? extends Object> testObject) {
 		if (null != testObject && !testObject.isEmpty()) {
 			return true;
@@ -536,6 +625,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 
+	/**
+	 * To set user Details.
+	 * 
+	 * @param baseObject
+	 */
 	public void setUserDetails(BaseEntity baseObject) {
 		PmUser user = new FacesScopes().getUserSessionBean();
 
@@ -547,6 +641,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		baseObject.setChangedBy(user.getUserId());
 	}
 
+	/**
+	 * To get Message constant.
+	 * 
+	 * @param outCome
+	 * @return String messageConstnt
+	 */
 	public String getMessgeConstant(String outCome) {
 		String msgCode = null;
 		if (outCome.equalsIgnoreCase("SUBMIT")) {
@@ -563,6 +663,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return msgCode;
 	}
 
+	/**
+	 * To retrieve UserName.
+	 * 
+	 * @param userId
+	 * @return String userName
+	 */
 	public String retriveUserName(Long userId) {
 		IUserSO userSo = null;
 		String userName = "";
@@ -583,6 +689,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return userName;
 	}
 
+	/**
+	 * To initialize remarks.
+	 * 
+	 * @param parent
+	 * @param workFlowStatus
+	 * @param scRemarks
+	 * @param clazz
+	 * @return ScRemark instance
+	 */
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
 			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
 			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
@@ -626,6 +741,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To remove empty remarks
+	 * 
+	 * @param scRemarks
+	 * @return List<ScRemarks> remarks
+	 */
 	protected <REMARK_CLASS extends ScRemark> List<REMARK_CLASS> finalizeRemarks(
 			List<REMARK_CLASS> scRemarks) {
 		if (scRemarks != null && scRemarks.size() > 0) {
@@ -639,6 +760,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return scRemarks;
 	}
 
+	/**
+	 * To get BpmTask Details.
+	 * 
+	 * @param clazz
+	 * @return Object payLoadInstance
+	 */
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz) {
@@ -676,6 +803,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To get Attachement as a stream
+	 * 
+	 * @param scAttachment
+	 * @param contentType
+	 * @return StreamContent instance
+	 * @throws IOException
+	 */
 	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
 			ATTACHMENT scAttachment, String contentType) throws IOException {
 		if (scAttachment != null) {
@@ -711,6 +846,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
+	/**
+	 * To get report from orcle reports
+	 * 
+	 * @param reportName
+	 * @param paramMap
+	 * @param attachment
+	 * @param checkDownloadstatus
+	 * @return File instance
+	 * @throws IOException
+	 */
 	protected File generatePdfFromOracle(String reportName,
 			Map<String, String> paramMap, ScAttachment attachment,
 			boolean checkDownloadstatus) throws IOException {
@@ -826,6 +971,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// Long userId = (Long) MDC.get(LogKey.USER_ID);
 	Timestamp date = new Timestamp(System.currentTimeMillis());
 
+	/**
+	 * To check Digisining Required
+	 * 
+	 * @param roleCode
+	 * @return boolean flag
+	 */
 	protected boolean isDigiSigningRequired(String roleCode) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -935,6 +1086,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 
+	/**
+	 * To construct category condition field
+	 * 
+	 * @param category
+	 * @return String instance
+	 */
 	public String constructCondtionFields(ScQtCategory category) {
 		StringBuffer buffer = new StringBuffer();
 		if (!isNullOrEmpty(category.getPmCategoryL1().getCategoryL1Code())) {
@@ -949,12 +1106,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return buffer.toString();
 	}
 
+	/**
+	 * To get message common
+	 * 
+	 * @param name
+	 * @return String instance
+	 */
 	public static String getMessageCommon(String name) {
 		return ResourceBundleUtils.getMessage(name,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
 	}
 
+	/**
+	 * To get supplier information
+	 * 
+	 * @param supplierId
+	 * @return String instance
+	 */
 	public String retriveSupplierDescById(Long supplierId) {
 
 		String status = "";
@@ -977,6 +1146,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return status;
 	}
 
+	/**
+	 * To compare supplier status date
+	 * 
+	 * @param enddate
+	 * @return boolean flag
+	 */
 	public boolean supplierStatusDateComparision(Date enddate) {
 		boolean isDate = false;
 		Date d1 = new Date();
@@ -992,6 +1167,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isDate;
 	}
 
+	/**
+	 * To get userRole Code
+	 * 
+	 * @return String roleCode
+	 */
 	public String getUserRoleCode() {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -1034,6 +1214,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return roleCode;
 	}
 
+	/**
+	 * To mark Selected records to be deleted
+	 * 
+	 * @param list
+	 * @param markDeletedList
+	 */
 	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsActionById(
 			List<ScQtCheckList> list, List<ScQtCheckList> markDeletedList) {
 		List<Integer> toBeRemoveIndx = new ArrayList<Integer>();
@@ -1068,6 +1254,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To remove records for existing.
+	 * 
+	 * @param list
+	 * @param toBeRemovedList
+	 */
 	public void deleteRowsActionById(List<? extends BaseEntity> list,
 			List<Integer> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
@@ -1081,6 +1273,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To check whether enable field or not.
+	 * 
+	 * @param fieldName
+	 * @param statusId
+	 * @param isMaintance
+	 * @return boolean flag
+	 */
 	public boolean enableFieldByStatusNFiledName(String fieldName,
 			Long statusId, boolean isMaintance) {
 
@@ -1133,6 +1333,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	/**
+	 * To save Evaluation Attachment
+	 * 
+	 * @param fileName
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	protected void SaveEvaluationAttachment(String fileName,
 			ScAttachment attachment) throws FileNotFoundException, IOException {
 
