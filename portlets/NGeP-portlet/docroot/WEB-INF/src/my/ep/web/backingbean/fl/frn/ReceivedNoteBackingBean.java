@@ -139,7 +139,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
 			
@@ -436,18 +436,18 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	public void validateFulfilmentNote(String outcome) {
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
-			throw new EpException(MessageConst.ERROR_100022, new String[]{"Actual Received Date"});
+			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
 			if(supplierEvaluation.getScore()==null) {
-				throw new EpException(MessageConst.ERROR_100051, new String[]{"Score",getCriteriaDesc(supplierEvaluation.getPmCriteria())});
+				throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.score",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getCriteriaDesc(supplierEvaluation.getPmCriteria())});
 			}
 		}
 		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
 			frnItem.setRejectedQty(frnItem.getFlDelOrderItem().getDeliveredQty().subtract(frnItem.getReceivedQty()));
 			if(frnItem.getReceivedQty().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
 				if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_740024, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+					throw new EpException(MessageConst.ERROR_740024, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
 				}
 			}
 			
@@ -511,7 +511,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	public void receivedAmtValidation(FlFulfilmentNoteItem item) {
 		if(item.getReceivedAmt().doubleValue() > item.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
 			item.setReceivedAmt(new BigDecimal(0));
-			throw new EpException(MessageConst.ERROR_100032, new String[]{"Received Amount","Delivery Amount"});
+			throw new EpException(MessageConst.ERROR_100032, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.received.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 //		if(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 //			if(item.getReceivedAmt().doubleValue() <= 0){

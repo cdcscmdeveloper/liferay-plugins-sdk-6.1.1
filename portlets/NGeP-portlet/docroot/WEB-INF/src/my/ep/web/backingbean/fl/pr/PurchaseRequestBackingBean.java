@@ -57,6 +57,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -536,7 +537,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		// default to Malaysia
 		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
 		CountryReqDTO countryReqDTO = new CountryReqDTO();
-		countryReqDTO.setCountryCode("MY");
+		countryReqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 		getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
 		getManagedBean().getFlManulaAddress().getPmAddress().setPmState(new PmState());
 		getManagedBean().getFlManulaAddress().getPmAddress().setPmDistrict(new PmDistrict());
@@ -554,7 +555,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			AddressReqDTO addReqDTO = new AddressReqDTO();
 			addReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 			addReqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
-			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 			AddressResDTO addResDTO = addressSO.retrieveAddressTypeList(addReqDTO);
 			getManagedBean().setAddressTypesList(addResDTO.getAddressTypeList());
 		}
@@ -1483,7 +1484,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		PmUser user = getFacesScopes().getUserSessionBean();
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(user.getUserId());
-		IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO .class);
+		IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
 		UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 		PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
 		getManagedBean().setPmUserOrg(userOrg);
@@ -1515,9 +1516,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public List<SelectItem> getReceivedPTJList() {
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-		retrievePTJList.add(new SelectItem("", "- Select One -"));
+		retrievePTJList.add(new SelectItem("", ResourceBundleUtils.getMessage("lbl.txt.select",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
 		//System.out.println("profile is for list::: "+getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
 		//orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
 		orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
@@ -1981,11 +1982,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
 			if(getManagedBean().getPmPrgActivity()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Program / Activity"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.program.activiti",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value()) || pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.SETIA.value())) {
 			if(getManagedBean().getPmSubSetia()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Project"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.project",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
 	}
@@ -2251,7 +2252,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * @return the user profiles
 	 */
 	public void getUserProfiles(){
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
 		UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
@@ -2267,14 +2268,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * @return the receiving officer list
 	 */
 	public AddressResDTO getReceivingOfficerList(Long addressId, String addressType){
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 		AddressReqDTO reqDTO = new AddressReqDTO();
 		reqDTO.setAddressId(addressId);
 		reqDTO.setAddressType(addressType);
 		AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
-		System.out.println("size ::: "+resDTO.getAddressTypeList().size());
-		//resDTO.get
 		return resDTO;
 	}
 	
@@ -2932,14 +2931,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
+					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}				
 				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_750010);
 				}
 			} else if(BpmOutcomeConst.BPM_REVISE.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
 			

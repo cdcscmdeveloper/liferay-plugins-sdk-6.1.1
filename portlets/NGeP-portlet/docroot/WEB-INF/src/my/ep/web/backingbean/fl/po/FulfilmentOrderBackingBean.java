@@ -213,10 +213,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					messageId = MessageConst.INFO_700011;
-					if("en".equals(languageCode)){
-						messagePrefix = "Government ";
-					}else if("ms".equals(languageCode)){
-						messageSuffix = " Kerajaan";
+					if(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode)){
+						messagePrefix=ResourceBundleUtils.getMessage("lbl.fl.government",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+"  ";
+					}else if(CommonConstants.LANGUAGE_CODE_MALAY.equals(languageCode)){
+						messagePrefix=" "+ResourceBundleUtils.getMessage("lbl.fl.government",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 					}
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
@@ -260,7 +260,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
@@ -310,7 +310,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			doMB.getManagedBean().setDisplayStopIntrDetls(true);
 			doMB.getManagedBean().setFlStopInstr(resDTO.getFlStopInstr());
 			reasonReqDTO.setReasonId(resDTO.getFlStopInstr().getPmReason().getReasonId());
-			reasonReqDTO.setLanguage("en");
+			reasonReqDTO.setLanguage(CommonConstants.DEFAULT_LANGUAGE_CODE);
 			ReasonResDTO reasonResDTO = reasonSO.retrieveReasonDescById(reasonReqDTO);
 			PmReasonDesc reasonDesc=reasonResDTO.getReasonDesc();
 			if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(resDTO.getFlStopInstr().getPmReason().getReasonCode())) {
@@ -488,10 +488,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	 * @param e the e
 	 */
 	public void factoringChecked(AjaxBehaviorEvent e) {
-		System.out.println("====enter process checked====");
-		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
 		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println("=======get id value=====" + id);
 		getManagedBean().setFactoringCheck(id);
 		getFactoringCompanyDtl();
 		
