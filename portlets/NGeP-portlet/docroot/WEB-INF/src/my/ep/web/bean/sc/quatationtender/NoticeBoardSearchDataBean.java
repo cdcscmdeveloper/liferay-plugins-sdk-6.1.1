@@ -1,15 +1,16 @@
-/**
- * 
- */
+/* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.bean.sc.quatationtender;
 
 import java.util.Date;
 
 /**
+ * NoticeBoardSearchDataBean class holds the properties to search data in Notice Board screen. 
+ * 
  * @author VidyasagarReddy
  *
  */
 public class NoticeBoardSearchDataBean {
+	
 	private boolean isToday;
 	private boolean isYesterday;
 	private Integer passDays;
