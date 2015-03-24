@@ -1,3 +1,4 @@
+/* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.noticeboard;
 
 import java.math.BigDecimal;
@@ -122,7 +123,11 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 /**
- * @author sri Notice Board Backing Bean
+ * Notice Board Backing Bean class will display the status of 
+ * 'Publish,Changes,Closed,Awarded' Quotation/Tender's in Notice Board screen.
+ *  
+ * @author sri 
+ *
  */
 @ManagedBean(name = "noticeBoardBackingBean")
 @ViewScoped
@@ -135,35 +140,44 @@ public class NoticeBoardBackingBean extends
 	private String mofNo;
 	private boolean visible;
 	private boolean displayImage;
-
+	
+	public NoticeBoardBackingBean() {
+		
+	}
+	
 	/**
 	 * Main Filtration For Notice Board
 	 */
 	public void searchNoticeBoard() {
+		
 		log.info("*** searchNoticeBoard **** ");
-
 		qtDataModel.reloadData();
 	}
 
 	/**
-	 * Sub Filtration for Tabs
-	 */
-	/**
+	 * Will be called on tab change event.
+	 * 
 	 * @param event
+	 * 			the instance of TabChangeEvent
 	 */
 	public void onTabChange(TabChangeEvent event) {
+		
 		log.info("*** TabChange Event **** ");
-
 		PmParameterDesc desc = (PmParameterDesc) event.getData();
 		this.getManagedBean().setSelectedTab(
 				desc.getPmParameter().getParameterCode());
 		searchNoticeBoard();
 	}
 
+	
 	/**
-	 * Qtn / Tender Tab qtnTenderDetails
+	 * Get Quotation/Tender details on click of QT Title link
+	 * 
+	 * @param qtId
+	 * 			the Long variable
 	 */
 	public void retrieveQTDetails(Long qtId) {
+		
 		log.info("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
@@ -260,6 +274,7 @@ public class NoticeBoardBackingBean extends
 	 * Drop down for Ministry
 	 */
 	public List<PmOrgProfile> retriveOrgProfilesForMinistryLevel() {
+		
 		log.info("populate Ministry List");
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -480,6 +495,11 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * @param selectedNode
+	 *  		the instance of TreeNode
+	 * @return TreeNode
+	 */
 	private TreeNode consturctTreeNode(TreeNode selectedNode) {
 		TreeNode root = new EpDefaultTreeNode("Root", null);
 		TreeNode immediateParent = selectedNode.getParent();
@@ -526,7 +546,14 @@ public class NoticeBoardBackingBean extends
 		return root;
 	}
 
+	/**
+	 * Clear previous nodes on click of tree nodes.
+	 * 
+	 * @param selectedNode
+	 * 			the String variable	
+	 */
 	public void clearTreeNode(String selectedNode) {
+		
 		if (selectedNode.equalsIgnoreCase("location")) {
 			this.getManagedBean().setLocationSelectedNode(null);
 			TreeNode rootNode = this.getManagedBean().getTempLocationRootNode();
@@ -550,10 +577,12 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
-	 * Navigate to supplier qualification criteria screen
+	 * Navigate to supplier qualification criteria screen 
+	 * on click of check supplier icon.
 	 * 
 	 * @param qtId
-	 * @return path
+	 *  		the Long variable
+	 * @return navigateUrl
 	 */
 	public String gotoSupplierQualificationCriteria(Long qtId) {
 
@@ -568,12 +597,17 @@ public class NoticeBoardBackingBean extends
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
 	}
 
+	/**
+	 * Navigate to supplier registration screen on click of register icon
+	 * 
+	 * @param qtId
+	 * 			the Long Variable
+	 * @return navigateUrl
+	 */
 	public String gotoSupplierRegistration(Long qtId) {
 
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
-
 		retriveBsvDetails(qtId);
-
 		this.getManagedBean().setMofNumber(
 				this.getManagedBean().getSmSupplier().getSmMofAccount()
 						.getMofNo());
@@ -597,7 +631,14 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * hide or show date fields based on date types.
+	 * 
+	 * @param dateType
+	 * 			the String variable	
+	 */
 	public void hideAndShowDates(String dateType) {
+		
 		if (dateType.equalsIgnoreCase("PbDate")) {
 			if (this.getManagedBean().getPublishSearchDataBean().getPassDays() != null) {
 				this.getManagedBean().setShowPubDate(true);
@@ -619,14 +660,14 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
+	/**
+	 * Reset all required form values on click of 'Reset' button.
+	 */
 	public void reset() {
-		// RequestContext.getCurrentInstance().reset("form:nbpanel");
 
 		this.getManagedBean().setQtNo(null);
 		this.getManagedBean().setTitle(null);
-
 		this.getManagedBean().setClsDataBean(new NoticeBoardSearchDataBean());
-
 		this.getManagedBean().setShowPubDate(false);
 		this.getManagedBean().setShowSiteDate(false);
 		this.getManagedBean().setShowBriDate(false);
@@ -651,6 +692,12 @@ public class NoticeBoardBackingBean extends
 		clearTreeNode("location");
 	}
 
+	/**
+	 * Method will be called on Zone tab change
+	 * 
+	 * @param changeEvent
+	 *        the instance of TabChangeEvent
+	 */
 	public void zoneTabChange(TabChangeEvent changeEvent) {
 		this.getManagedBean().setBriefingDtls(null);
 		TplSpecZoneDtl specZoneDtl = ((BriefingZoneBean) changeEvent.getData())
@@ -662,6 +709,12 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * Set location,address from Bsv Details bean
+	 * 
+	 * @param briefing
+	 *        the instance of ScQtBsvDtl 
+	 */
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
 		StringBuffer address = new StringBuffer(briefing.getAddress()
@@ -686,6 +739,14 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setAddress(address.toString());
 	}
 
+	/**
+	 * Method is used to display price schedule details screen
+	 * on click of 'Show Price Schedule' link
+	 * 
+	 * @param qtId
+	 *        the Long variable. 
+	 * @return naviagteUrl
+	 */
 	public String showPriceSchedules(Long qtId) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		ScQtCommittee evalCommitte = null;
@@ -734,15 +795,11 @@ public class NoticeBoardBackingBean extends
 		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml";
 	}
 
-	public String getMofNo() {
-		return mofNo;
-	}
-
-	public void setMofNo(String mofNo) {
-		this.mofNo = mofNo;
-	}
-
+	/**
+	 * Verify whether Mofno is valid or not.
+	 */
 	public void checkSupplierQulificationStatus() {
+		
 		this.getManagedBean().setQualificationBean(null);
 		String mofNo = getMofNo();
 		setVisible(false);
@@ -795,14 +852,13 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
-	 * Handle Department dropdown changed - reset selected ptj profile and
+	 * Handle Department drop down changed - reset selected ptj profile and
 	 * populate list of department.
 	 * */
 	public void handleMinistryProfileChanged() {
 
 		Long parentOrgProfileId = this.getManagedBean().getMinistryProfile()
 				.getOrgProfileId();
-
 		if (parentOrgProfileId != null) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
@@ -1129,20 +1185,11 @@ public class NoticeBoardBackingBean extends
 	}
 
 	/**
-	 * @return the qtDataModel
+	 * Will be called up on tab change in offered price screen.
+	 * 
+	 * @param changeEvent
+	 *        the instance of TabChangeEvent
 	 */
-	public IPagingDataModel<Object[]> getQtDataModel() {
-		return qtDataModel;
-	}
-
-	/**
-	 * @param qtDataModel
-	 *            the qtDataModel to set
-	 */
-	public void setQtDataModel(IPagingDataModel<Object[]> qtDataModel) {
-		this.qtDataModel = qtDataModel;
-	}
-
 	public void offeredPriceTabChange(TabChangeEvent changeEvent) {
 
 		TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) changeEvent.getData();
@@ -1150,7 +1197,6 @@ public class NoticeBoardBackingBean extends
 		IQTNoticeBoardSO qtNoticeBoardSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTNoticeBoardSO.class);
-
 		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		reqDTO.setZoneId(zoneDtl.getSpecZoneId());
 		NoticeBoardResDTO resDTO = qtNoticeBoardSO
@@ -1240,6 +1286,7 @@ public class NoticeBoardBackingBean extends
 	 * 
 	 * } return false; }
 	 */
+	
 	/**
 	 * TO register the supplier for Bsv...
 	 */
@@ -1325,6 +1372,7 @@ public class NoticeBoardBackingBean extends
 
 	/**
 	 * @param attandance
+	 *         the instance of ScQtBsvAttendance list
 	 */
 	private void isAttananceMarkedOrNot(
 			List<ScQtBsvAttendance> preRegisterdAttandance) {
@@ -1344,12 +1392,18 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * Display Award details on click of 'Show Award Details' link
+	 * 
+	 * @param qtId 
+	 *         the Long variable.
+	 * @return navigateUrl
+	 */
 	public String showAwardDetails(Long qtId) {
+		
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
-
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
-
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
@@ -1415,7 +1469,16 @@ public class NoticeBoardBackingBean extends
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml";
 	}
 
+	/**
+	 * Method is used to download all documents from repository 
+	 * on click of 'Download all' button.
+	 * 
+	 * @param qtId
+	 *        the Long variable.
+	 * @throws Exception
+	 */
 	public void downloadAllQTDocuments(Long qtId) throws Exception {
+		
 		log.info("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
@@ -1472,15 +1535,14 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
-	public boolean isVisible() {
-		return visible;
-	}
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
+	/**
+	 * construct the ConditionFields based on MinistryProfile
+	 * 
+	 * @return orgProfileId
+	 */
 	public String constuctConditionFields() {
+		
 		if (null != this.getManagedBean().getMinistryProfile()) {
 			Long orgProfileId = this.getManagedBean().getMinistryProfile()
 					.getOrgProfileId();
@@ -1491,12 +1553,18 @@ public class NoticeBoardBackingBean extends
 		return "";
 	}
 
-	public NoticeBoardBackingBean() {
-		// reset();
 
-	}
-
+	/**
+	 * Method will return 0 days if clsDate is after Today date else
+	 * number of days.
+	 * 
+	 * @param clsDate
+	 *         the String variable.
+	 * @return closingDays
+	 * @throws Exception
+	 */
 	public String getClosingDays(String clsDate) throws Exception {
+		
 		if (log.isDebugEnabled()) {
 			log.debug("getClosingDays");
 		}
@@ -1525,7 +1593,16 @@ public class NoticeBoardBackingBean extends
 		return closingDays;
 	}
 
+	/**
+	 *Method is used to download the document from repository 
+	 *on click of download button.
+	 * 
+	 * @param scQtDocReport
+	 * 			the instance of ScQtDocReport
+	 * @throws Exception
+	 */
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
+		
 		log.info("** Qtn / TenderDetsils **");
 		ScQt scQt = this.getManagedBean().getScQt();
 
@@ -1565,6 +1642,12 @@ public class NoticeBoardBackingBean extends
 		downloadFile(scQtDocReportAttachment);
 	}
 
+	/**
+	 * Get Bsvs details.
+	 * 
+	 * @param qtId
+	 *        the Long variable.
+	 */
 	private void retriveBsvDetails(Long qtId) {
 
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -1642,7 +1725,16 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 
+	/**
+	 * Returns true if clsDate is less than or equal to Today date
+	 * 
+	 * @param clsDate
+	 * 			the String variable
+	 * @return true/false
+	 * @throws Exception
+	 */
 	public boolean isShowHours(String clsDate) throws Exception {
+		
 		if (!StringUtils.isEmpty(clsDate)) {
 			Date closingDate = DateUtils.convertStringToDate(
 					CommonConstants.DEFAULT_DATETIME_FORMAT,
@@ -1655,12 +1747,17 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * Method will be called to update attendance through Ajax.
+	 * 
+	 * @param event
+	 *        the instance of AjaxBehaviorEvent
+	 */
 	public void updateToBeAttandance(AjaxBehaviorEvent event) {
+		
 		boolean isChecked = ((SelectBooleanCheckbox) event.getSource())
 				.isSelected();
-
 		ScQtBsvDtl bsvDtl = this.getManagedBean().getBriefingDtls();
-
 		if (null != bsvDtl) {
 			if (isChecked) {
 
@@ -1685,7 +1782,14 @@ public class NoticeBoardBackingBean extends
 
 	}
 
+	/**
+	 * Method will be called on row select event from data table.
+	 * 
+	 * @param event
+	 *         the instance of SelectEvent
+	 */
 	public void onRowSelect(SelectEvent event) {
+		
 		this.getManagedBean().setBriefingDtls(null);
 		ScQtBsvDtl scQtBsvDtl = (ScQtBsvDtl) event.getObject();
 
@@ -1768,7 +1872,14 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 	}
 
+	/**
+	 * Method will be called on change of tabs.
+	 * 
+	 * @param event
+	 *         the instance of TabChangeEvent
+	 */
 	public void bsvZoneTabChange(TabChangeEvent event) {
+		
 		BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 		TplSpecZoneDtl tplZoneDetails = this.getManagedBean()
@@ -1799,23 +1910,18 @@ public class NoticeBoardBackingBean extends
 		return isUser;
 	}
 
-	public boolean isDisplayImage() {
-		return displayImage;
-	}
-
-	public void setDisplayImage(boolean displayImage) {
-		this.displayImage = displayImage;
-	}
-
 	/**
 	 * Get any Committee member details through 
 	 * retrieveCommitteByQtIdNCommType method
 	 * 
 	 * @param commType
+	 *        the String variable 
 	 * @param qtId
+	 *        the Long variable
 	 * @return qtCommitte
 	 */
 	private ScQtCommittee getQtCommiteDtlsByQtIdNType(String commType, Long qtId) {
+		
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setCommitteeType(commType);
 		reqDTO.setQtId(qtId);
@@ -1837,9 +1943,11 @@ public class NoticeBoardBackingBean extends
 	 * Get ScLoa object through retrieveLoaListByQtId method
 	 * 
 	 * @param qtId
+	 *        the Long variable 
 	 * @return ScLoa
 	 */
 	private List<ScLoa> retrieveLOA(Long qtId) {
+		
 		IQTAwardSO qtAwardSO = null;
 		try {
 			qtAwardSO = getQTAwardSO();
@@ -1855,6 +1963,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	private IQTAwardSO getQTAwardSO() {
+		
 		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
@@ -1863,11 +1972,14 @@ public class NoticeBoardBackingBean extends
 	
 	
 	/**
-	 * Get final price from retriveBidSupplierItems method.
+	 * Get final price of BidSupplierItems.
 	 * 
 	 * @param qtId
+	 *         the Long variable
 	 * @param recommendType
+	 *         the String variable
 	 * @param scLoiLoaItem
+	 *         the instance of ScLoiLoaItem
 	 * @return finalPrice
 	 */
 	private BigDecimal getPriceByBidding(Long qtId, String recommendType, ScLoiLoaItem scLoiLoaItem) {
@@ -1925,10 +2037,11 @@ public class NoticeBoardBackingBean extends
 	 * Get notice board QT info through retrieveQtNoticeDtl 
 	 * method of IQTNoticeBoardSO
 	 * 
-	 * @param reqDTO
+	 * @param reqDTO 
+	 *         the instance of NoticeBoardReqDTO
 	 * @return qtNoticeBoardSO
 	 */
-	public NoticeBoardResDTO getNBResDTO(NoticeBoardReqDTO reqDTO) {
+	private NoticeBoardResDTO getNBResDTO(NoticeBoardReqDTO reqDTO) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1937,5 +2050,62 @@ public class NoticeBoardBackingBean extends
 		} finally {
 			qtNoticeBoardSO = null;
 		}
+	}
+	
+	/**
+	 * @return the qtDataModel
+	 */
+	public IPagingDataModel<Object[]> getQtDataModel() {
+		return qtDataModel;
+	}
+
+	/**
+	 * @param qtDataModel
+	 *            the qtDataModel to set
+	 */
+	public void setQtDataModel(IPagingDataModel<Object[]> qtDataModel) {
+		this.qtDataModel = qtDataModel;
+	}
+	
+	/**
+	 * @return the mofNo
+	 */
+	public String getMofNo() {
+		return mofNo;
+	}
+
+	/**
+	 * @param mofNo the mofNo to set
+	 */
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
+	}
+
+	/**
+	 * @return the visible
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+
+	/**
+	 * @param visible the visible to set
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	/**
+	 * @return the displayImage
+	 */
+	public boolean isDisplayImage() {
+		return displayImage;
+	}
+
+	/**
+	 * @param displayImage the displayImage to set
+	 */
+	public void setDisplayImage(boolean displayImage) {
+		this.displayImage = displayImage;
 	}
 }
