@@ -33,17 +33,15 @@
 						icon="iconAttachment" update="upAgrSignedPagePg, upAgrSignedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
-						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
-						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName != null}"
+						value="#{agreementBackingBean.managedBean.ctAgreement.signedPageName}"
+						rendered="#{agreementBackingBean.managedBean.ctAgreement.signedPageName != null}"
 						styleClass="blue_font"
-						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.signedPagePath,
-							agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName)}" />
+						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.signedPagePath,
+							agreementBackingBean.managedBean.ctAgreement.signedPageName)}" />
 					<p:spacer width="1"/>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.page']}" />
 				</h:panelGroup>
 			</h:panelGrid>
-			</h:panelGrid>
-		   <h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth150">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.stamped.page']}" />
@@ -55,11 +53,11 @@
 						icon="iconAttachment" update="upStampedPagePg, upStampedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
-						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
-						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName != null}"
+						value="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName}"
+						rendered="#{agreementBackingBean.managedBean.ctAgreement.stampedPageName != null}"
 						styleClass="blue_font"
-						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPagePath,
-							agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName)}" />
+						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.stampedPagePath,
+							agreementBackingBean.managedBean.ctAgreement.stampedPageName)}" />
 					<p:spacer width="1"/>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.stamped.page']}" />
 				</h:panelGroup>
