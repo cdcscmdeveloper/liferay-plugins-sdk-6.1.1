@@ -338,7 +338,7 @@ public class EvaluationBackingBean extends
 			// award = QTConstants.AWARD_TYPE_PACKAGE;
 			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 			summaryReqDTO.setResultStages(resultStg);
-			//this.getManagedBean().setSummaryZoneBean(null);
+			// this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE
 				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
 				&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -346,7 +346,7 @@ public class EvaluationBackingBean extends
 								.getCommitteeType())) {
 			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 			summaryReqDTO.setResultStages(resultStg);
-			//this.getManagedBean().setSummaryZoneBean(null);
+			// this.getManagedBean().setSummaryZoneBean(null);
 
 		} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
@@ -359,7 +359,7 @@ public class EvaluationBackingBean extends
 			if (!this.getManagedBean().getScQt().isZonal()) {
 				award = SourcingConstants.AWARD_BY_ITEM;
 			}
-			//this.getManagedBean().setSummaryZoneBean(null);
+			// this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 				.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
 				&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -370,14 +370,14 @@ public class EvaluationBackingBean extends
 			if (!this.getManagedBean().getScQt().isZonal()) {
 				award = SourcingConstants.AWARD_BY_ITEM;
 			}
-			//this.getManagedBean().setSummaryZoneBean(null);
+			// this.getManagedBean().setSummaryZoneBean(null);
 		} else if (QTConstants.PREFERENCE_MARGIN.equalsIgnoreCase(this
 				.getManagedBean().getSummaryViewBy())) {
 
 			resultStg.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
 
 			summaryReqDTO.setResultStages(resultStg);
-			//this.getManagedBean().setSummaryZoneBean(null);
+			// this.getManagedBean().setSummaryZoneBean(null);
 		}
 
 		summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -625,6 +625,17 @@ public class EvaluationBackingBean extends
 
 							&& !resDTO.getQtCommittee()
 									.getCommitteeActivities().isEmpty()) {
+						for (ScQtCommitteeActivity committeeActivity : resDTO
+								.getQtCommittee().getCommitteeActivities()) {
+							if (committeeActivity
+									.getScCommitteeMember()
+									.getMemberRole()
+									.getParameterCode()
+									.equals(SourcingConstants.MEMBER_ROLE_SECRATARY)) {
+								committeeActivity.setAttended(true);
+
+							}
+						}
 
 						this.getManagedBean().setCommitteeMemberList(
 								resDTO.getQtCommittee()
@@ -2192,93 +2203,90 @@ public class EvaluationBackingBean extends
 		try {
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			//if (null == this.getManagedBean().getFinSpecZoneBean()) {
-				this.getManagedBean().setSpecZoneDtls(speczone.getZones());
-				
-				populateFinancialSpecDetailsByZone();
-				for (int i = 0; i < speczone.getZones().size(); i++) {
+			// if (null == this.getManagedBean().getFinSpecZoneBean()) {
+			this.getManagedBean().setSpecZoneDtls(speczone.getZones());
 
-					EvaluationReqDTO zoneReqDto = new EvaluationReqDTO();
-					if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())) {
+			populateFinancialSpecDetailsByZone();
+			for (int i = 0; i < speczone.getZones().size(); i++) {
+
+				EvaluationReqDTO zoneReqDto = new EvaluationReqDTO();
+				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+					zoneReqDto.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+				} else {
+					if (this.getManagedBean().getScQt().isDemoRequired()) {
 						zoneReqDto
-								.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+								.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
 					} else {
-						if (this.getManagedBean().getScQt().isDemoRequired()) {
-							zoneReqDto
-									.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
-						} else {
-							zoneReqDto
-									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-						}
+						zoneReqDto
+								.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 					}
-
-					this.getManagedBean().setSelectedZone(
-							speczone.getZones().get(0));
-
-					zoneReqDto.setQtId(this.getManagedBean().getScQt()
-							.getQtId());
-					zoneReqDto.setSpeZoneId(speczone.getZones().get(0)
-							.getSpecZoneId());
-					zoneReqDto.setCheckListId(this.getManagedBean()
-							.getScQtChecklist().getQtChecklistId());
-					EvaluationResDTO zoneResDTO = new EvaluationResDTO();
-					if (this.getManagedBean()
-							.getSelectedZone()
-							.getZoneName()
-							.equalsIgnoreCase(
-									speczone.getZones().get(i).getZoneName())) {
-						zoneResDTO = evaluationSo
-								.retrievProposalCheckListByCheckListNZone(zoneReqDto);
-					}
-
-					/*
-					 * SummaryZoneBaen finSpecZone = new
-					 * SummaryZoneBaen(speczone .getZones().get(i), null, null,
-					 * 0);
-					 */
-					if (null != zoneResDTO.getComplianceResultBean()
-							&& zoneResDTO.getComplianceResultBean()
-									.getTotalRecord() > 0
-							&& this.getManagedBean()
-									.getSelectedZone()
-									.getZoneName()
-									.equalsIgnoreCase(
-											speczone.getZones().get(i)
-													.getZoneName())) {
-						/*
-						 * finSpecZone = new SummaryZoneBaen(speczone.getZones()
-						 * .get(i), zoneResDTO.getComplianceResultBean()
-						 * .getResultList(), null, 0);
-						 */
-						this.getManagedBean().setFinSpecSupplierList(
-								zoneResDTO.getComplianceResultBean()
-										.getResultList());
-					}
-
-					if (null != speczone.getScoreOfferPrices()
-							&& this.getManagedBean()
-									.getSelectedZone()
-									.getZoneName()
-									.equalsIgnoreCase(
-											speczone.getZones().get(i)
-													.getZoneName())) {
-						this.getManagedBean().setOfferPricePackage(
-								speczone.getScoreOfferPrices());
-						this.getManagedBean().setWithInVarieance(
-								speczone.getWithinVarieancePackage());
-						/*
-						 * finSpecZone = new SummaryZoneBaen(speczone.getZones()
-						 * .get(i), zoneResDTO.getComplianceResultBean()
-						 * .getResultList(), speczone.getScoreOfferPrices(), 0);
-						 */
-					}
-
-					// this.getManagedBean().getFinSpecZoneBean().add(finSpecZone);
-
 				}
-			//}
+
+				this.getManagedBean().setSelectedZone(
+						speczone.getZones().get(0));
+
+				zoneReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+				zoneReqDto.setSpeZoneId(speczone.getZones().get(0)
+						.getSpecZoneId());
+				zoneReqDto.setCheckListId(this.getManagedBean()
+						.getScQtChecklist().getQtChecklistId());
+				EvaluationResDTO zoneResDTO = new EvaluationResDTO();
+				if (this.getManagedBean()
+						.getSelectedZone()
+						.getZoneName()
+						.equalsIgnoreCase(
+								speczone.getZones().get(i).getZoneName())) {
+					zoneResDTO = evaluationSo
+							.retrievProposalCheckListByCheckListNZone(zoneReqDto);
+				}
+
+				/*
+				 * SummaryZoneBaen finSpecZone = new SummaryZoneBaen(speczone
+				 * .getZones().get(i), null, null, 0);
+				 */
+				if (null != zoneResDTO.getComplianceResultBean()
+						&& zoneResDTO.getComplianceResultBean()
+								.getTotalRecord() > 0
+						&& this.getManagedBean()
+								.getSelectedZone()
+								.getZoneName()
+								.equalsIgnoreCase(
+										speczone.getZones().get(i)
+												.getZoneName())) {
+					/*
+					 * finSpecZone = new SummaryZoneBaen(speczone.getZones()
+					 * .get(i), zoneResDTO.getComplianceResultBean()
+					 * .getResultList(), null, 0);
+					 */
+					this.getManagedBean().setFinSpecSupplierList(
+							zoneResDTO.getComplianceResultBean()
+									.getResultList());
+				}
+
+				if (null != speczone.getScoreOfferPrices()
+						&& this.getManagedBean()
+								.getSelectedZone()
+								.getZoneName()
+								.equalsIgnoreCase(
+										speczone.getZones().get(i)
+												.getZoneName())) {
+					this.getManagedBean().setOfferPricePackage(
+							speczone.getScoreOfferPrices());
+					this.getManagedBean().setWithInVarieance(
+							speczone.getWithinVarieancePackage());
+					/*
+					 * finSpecZone = new SummaryZoneBaen(speczone.getZones()
+					 * .get(i), zoneResDTO.getComplianceResultBean()
+					 * .getResultList(), speczone.getScoreOfferPrices(), 0);
+					 */
+				}
+
+				// this.getManagedBean().getFinSpecZoneBean().add(finSpecZone);
+
+			}
+			// }
 		} finally {
 			evaluationSo = null;
 		}
@@ -4705,6 +4713,8 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType()) && !this.getManagedBean()
 						.isReadOnly()))) {
+					checkCommitteeMembersAttendance(this.getManagedBean()
+							.getCommitteeMemberList());
 					saveMeetingDtls(false);
 				}
 				retriveComplianceTechnical();
@@ -4751,6 +4761,8 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())
 							&& !this.getManagedBean().isReadOnly()) {
+						checkCommitteeMembersAttendance(this.getManagedBean()
+								.getCommitteeMemberList());
 						saveMeetingDtls(false);
 						// retriveTechnicalEvaluationStage();
 					}
@@ -4761,6 +4773,8 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 					if (!this.getManagedBean().isReadOnly()) {
+						checkCommitteeMembersAttendance(this.getManagedBean()
+								.getCommitteeMemberList());
 						saveMeetingDtls(false);
 					}
 					retriveFinancialEvaluationStage();
@@ -4921,6 +4935,107 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
+	}
+
+	// check attendance for opening committee.
+	private void checkCommitteeMembersAttendance(
+			List<ScQtCommitteeActivity> committeeActivityList) {
+		if (null != committeeActivityList && !committeeActivityList.isEmpty()) {
+			List<ScQtCommitteeActivity> chairPersonList = new ArrayList<ScQtCommitteeActivity>();
+			List<ScQtCommitteeActivity> secretaryList = new ArrayList<ScQtCommitteeActivity>();
+			List<ScQtCommitteeActivity> memberList = new ArrayList<ScQtCommitteeActivity>();
+			for (ScQtCommitteeActivity committeeActivity : committeeActivityList) {
+				if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
+						.equalsIgnoreCase(committeeActivity
+								.getScCommitteeMember().getMemberRole()
+								.getParameterCode())) {
+					chairPersonList.add(committeeActivity);
+
+				} else if (ParameterConst.COMMITTEE_ROLE_SECRETARY
+						.equalsIgnoreCase(committeeActivity
+								.getScCommitteeMember().getMemberRole()
+								.getParameterCode())) {
+					secretaryList.add(committeeActivity);
+
+				} else if (ParameterConst.COMMITTEE_ROLE_MEMBER
+						.equalsIgnoreCase(committeeActivity
+								.getScCommitteeMember().getMemberRole()
+								.getParameterCode())) {
+					memberList.add(committeeActivity);
+
+				}
+
+			}
+			if (!isAtleastOneChairPersonAttendance(chairPersonList)) {
+				throw new EpException(MessageConst.ERROR_760252,
+						new String[] { "ChairPerson" });
+			}
+			if (!isAtleastOneSecretaryAttendance(secretaryList)) {
+				throw new EpException(MessageConst.ERROR_760252,
+						new String[] { "Secretary" });
+			}
+
+			if (!isAtleastOneMemberAttendance(memberList)) {
+				throw new EpException(MessageConst.ERROR_760252,
+						new String[] { "Member" });
+			}
+
+		}
+
+	}
+
+	private boolean isAtleastOneChairPersonAttendance(
+			List<ScQtCommitteeActivity> chairPersonList) {
+		int i = 0;
+		if (null != chairPersonList && !chairPersonList.isEmpty()) {
+			for (ScQtCommitteeActivity committeeActivity : chairPersonList) {
+				if (committeeActivity.isAttended()) {
+					i++;
+				}
+
+			}
+			if (i >= 1) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isAtleastOneSecretaryAttendance(
+			List<ScQtCommitteeActivity> secretaryList) {
+		int i = 0;
+		if (null != secretaryList && !secretaryList.isEmpty()) {
+			for (ScQtCommitteeActivity committeeActivity : secretaryList) {
+				if (committeeActivity.isAttended()) {
+					i++;
+				}
+
+			}
+			if (i >= 1) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isAtleastOneMemberAttendance(
+			List<ScQtCommitteeActivity> memberList) {
+		int i = 0;
+		if (null != memberList && !memberList.isEmpty()) {
+			for (ScQtCommitteeActivity committeeActivity : memberList) {
+				if (committeeActivity.isAttended()) {
+					i++;
+				}
+
+			}
+			if (i >= 1) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -6755,7 +6870,7 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
 	}
-	
+
 	/**
 	 * Generate analisis keputusan penilaian teknikal pdf.
 	 * 
