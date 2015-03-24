@@ -54,6 +54,11 @@
 		    		<td><b>Schedule Date of Visit</b></td>
 		    		<td>$smVmUtil.formatDate($svAdd.scheduleDate)</td>
 		    	</tr>
+		    	
+		    	<tr>
+	        		<td width="30%"><b>Visiting Date</b></td>
+	        		<td></td>
+    			</tr>
 		    	<tr><td><br /></td></tr>
 	    	#end
     	#end
