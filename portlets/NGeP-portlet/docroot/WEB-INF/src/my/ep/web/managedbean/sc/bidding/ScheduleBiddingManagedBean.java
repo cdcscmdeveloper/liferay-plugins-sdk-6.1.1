@@ -297,17 +297,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.scBidContactPersonList = scBidContactPersonList;
 	}
 
-
-	public SCEvaluationDataType getPayLoad() {
-		return payLoad;
-	}
-
-
-	public void setPayLoad(SCEvaluationDataType payLoad) {
-		this.payLoad = payLoad;
-	}
-
-
 	/**
 	 * @return the selectedAll
 	 */
@@ -391,6 +380,23 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	public void setSelectedBidContact(boolean selectedBidContact) {
 		this.selectedBidContact = selectedBidContact;
 	}
+
+
+	/**
+	 * @return the payLoad
+	 */
+	public SCEvaluationDataType getPayLoad() {
+		return payLoad;
+	}
+
+
+	/**
+	 * @param payLoad the payLoad to set
+	 */
+	public void setPayLoad(SCEvaluationDataType payLoad) {
+		this.payLoad = payLoad;
+	}
+	
 	
 	
 }
