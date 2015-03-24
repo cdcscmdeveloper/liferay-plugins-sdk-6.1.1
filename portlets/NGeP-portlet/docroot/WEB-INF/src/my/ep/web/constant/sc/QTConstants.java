@@ -1,11 +1,13 @@
 /**
- * 
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.constant.sc;
 
 /**
- * @author VidyasagarReddy
+ * QTConstants for constants for sourcing.
  * 
+ * @author VidaysagarReddy
+ * @since 13.11.2013
  */
 public interface QTConstants {
 
@@ -63,7 +65,7 @@ public interface QTConstants {
 	public static final String LOI_PAGE = "/xhtml/sc/loi/loirequest/loiDetailsMaint.xhtml";
 	public static final String SUPPLIER_LOI_PAGE = "/xhtml/sc/loi/supplierresponse/loiSupplierMaint.xhtml";
 	public static final String MULTI_LOI_PAGE = "loiNegotiationResultMenu.xhtml";
-	public static final String QT_LOA_LIST_PAGE = "/xhtml/sc/loa/qtLoaList/qtLoaList.xhtml"; 
+	public static final String QT_LOA_LIST_PAGE = "/xhtml/sc/loa/qtLoaList/qtLoaList.xhtml";
 	public static final String QT_SUPPLIER_A1_PAGE = "/xhtml/sc/loa/supplierresponse/a1form/loaSupplierAOneMaint.xhtml";
 	public static final String SC_DIRECT_LOA_MAIN_PAGE = "/xhtml/sc/loa/directnego/directLoaDetailsMain.xhtml";
 
@@ -76,12 +78,11 @@ public interface QTConstants {
 	public static final String SC_PERFORMANCE_BOND_TAB = "Performance Bond";
 	public static final String SC_PAYMENT_TAB = "Payment Details";
 	public static final String LOI_NEGO_TERM_PRICE = "Price";
-	
-	
+
 	public static final Long SC_MEETING_PENDING_STATUS_ID = 62650L;
 	public static final Long SC_MEETING_CANCELLED_STATUS_ID = 62651L;
 	public static final Long SC_MEETING_DONE_STATUS_ID = 62652L;
-	public static final Long SC_MEETING_POSTPONE_STATUS_ID = 62653L;	
+	public static final Long SC_MEETING_POSTPONE_STATUS_ID = 62653L;
 
 	// Supplier Finalization Constants
 	public static final String SF_FORWARD_TO_HIGHER_AUTH = "Forward Higher Authority";
@@ -193,7 +194,7 @@ public interface QTConstants {
 	public static final String FINANCIAL_EVALUATION = "F";
 
 	public static final int CHECKLIST_USER_SCORE = 2;
-	
+
 	public static final String OTHERS_APPROVAL = "Others Approval";
 	public static final String PUBLICATION_APPROVAL = "Publication Approval";
 	public static final String QT_ALL = "A";
