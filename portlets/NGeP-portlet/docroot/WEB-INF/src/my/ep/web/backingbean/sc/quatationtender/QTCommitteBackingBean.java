@@ -398,6 +398,30 @@ public class QTCommitteBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
+			
+			Date fromPublishDate = cloneQtnTenderSearchBean.getFromPublishDate();
+			Date toPublishDate = cloneQtnTenderSearchBean.getToPublishDate();
+			if (null != fromPublishDate || null != toPublishDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.PUBLISH_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromPublishDate, toPublishDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			
+			Date fromClosingDate = cloneQtnTenderSearchBean.getFromClosingDate();
+			Date toClosingDate = cloneQtnTenderSearchBean.getToClosingDate();
+			if (null != fromClosingDate || null != toClosingDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.CLOSED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromClosingDate, toClosingDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
 			String status = cloneQtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
 				qtSearchBean
@@ -1117,6 +1141,9 @@ public class QTCommitteBackingBean extends
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		this.getManagedBean().setSearchcommitteeNode(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setFromPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setToPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setFromClosingDate(null);
 	}
 
 	/**
