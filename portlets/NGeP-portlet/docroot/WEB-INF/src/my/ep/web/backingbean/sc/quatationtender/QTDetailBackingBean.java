@@ -1846,11 +1846,20 @@ public class QTDetailBackingBean extends
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO resDTO=null;
+			if(null == this.getManagedBean().getAmendMentBean()){
 			reqDTO.setQtdetail(this.getManagedBean().getQt());
 			reqDTO.setAvaliableApprovals(this.getManagedBean().getQtApprovals());
-			QuationTenderResDTO resDTO = detailSO
+			
+			 resDTO = detailSO
 					.retriveQTApprovalDetails(reqDTO);
+			}else{
+				
+			}
+			
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
 
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
@@ -2920,11 +2929,7 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setGosodos(
 							tenderResDTO.getBudgetDtls());
 				}
-				List<ScQtApproval> approvals = tenderResDTO.getQtDetail()
-						.getScQtApprovals();
-				if (CollectionUtils.isNotEmpty(approvals)) {
-					this.getManagedBean().setQtApprovals(approvals);
-				}
+				
 			}
 		} finally {
 			QtDetailsSO = null;
@@ -4150,11 +4155,21 @@ public class QTDetailBackingBean extends
 	 */
 	public boolean enableFiledByApprovalStatus(String filedName) {
 
+		Long currentStatus = this.getManagedBean().getCurrentStatusId();
 		List<ScQtApproval> approvals = this.getManagedBean().getQtApprovals();
-		ScQtApproval bpkApproval = getQtApprovalByCategory(approvals,
-				ParameterConst.APPROVAL_CATEGORY_BPK);
-		ScQtApproval pbaApproval = getQtApprovalByCategory(approvals,
-				ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+		ScQtApproval finalizationCommitte = null;
+		ScQtApproval bpkApproval = null;
+		ScQtApproval publicationApproval = null;
+		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
+
+			bpkApproval = getQtApprovalByCategory(approvals,
+					ParameterConst.APPROVAL_CATEGORY_BPK);
+		} else {
+			finalizationCommitte = getQtApprovalByCategory(approvals,
+					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+			publicationApproval = getQtApprovalByCategory(approvals,
+					ParameterConst.APPROVAL_CATEGORY_PTJ);
+		}
 		boolean flag = false;
 		if (null != bpkApproval) {
 
@@ -4165,30 +4180,35 @@ public class QTDetailBackingBean extends
 						ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD);
 			} else if (QTFieldConst.FILED_QT_VALIDITY_PERIOD
 					.equalsIgnoreCase(filedName)) {
-
-				flag = isApprovalRequestExists(
-						bpkApproval,
-						ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD);
+				if (SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND > this
+						.getManagedBean().getQt().getEstimatedAmount().intValue()) {
+					flag = isApprovalRequestExists(
+							bpkApproval,
+							ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD);
+				}
+			
 			}
 
 		}
-		if (!flag && null != pbaApproval) {
+		if (!flag && null != finalizationCommitte) {
+
+			if (QTFieldConst.FILED_QT_VALIDITY_PERIOD
+					.equalsIgnoreCase(filedName)) {
+
+				flag = isApprovalRequestExists(
+						finalizationCommitte,
+						ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+			}
+
+		}
+		if (!flag && null != publicationApproval) {
 			if (QTFieldConst.FILED_QT_PUBLISH_PERIOD
 					.equalsIgnoreCase(filedName)) {
 
 				flag = isApprovalRequestExists(
-						pbaApproval,
+						publicationApproval,
 						ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_PREPATION_ST_DATE);
 			}
-
-			else if (QTFieldConst.FILED_QT_VALIDITY_PERIOD
-					.equalsIgnoreCase(filedName)) {
-
-				flag = isApprovalRequestExists(
-						pbaApproval,
-						ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
-			}
-
 		}
 		return flag;
 	}
@@ -4202,12 +4222,14 @@ public class QTDetailBackingBean extends
 	 */
 	private ScQtApproval getQtApprovalByCategory(List<ScQtApproval> approvals,
 			String approvalCategory) {
+		if(CollectionUtils.isNotEmpty(approvals)){
 		for (ScQtApproval scQtApproval : approvals) {
 			if (approvalCategory.equalsIgnoreCase(scQtApproval
 					.getApprovalCategory().getParameterCode())) {
 				return scQtApproval;
 
 			}
+		}
 		}
 		return null;
 	}
