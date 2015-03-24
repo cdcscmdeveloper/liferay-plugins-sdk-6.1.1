@@ -287,7 +287,9 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<h:commandLink title="#{attachFile.fileName}" 
+									value="#{contractDetailsBackingBean.getShortFileName(attachFile.fileName)}"
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 			 	 				<p:commandLink onclick="deleteAttachmentDlg1.show();" action="#{contractDetailsBackingBean.setAttachFileIndex(attachFileIndex)}"
 									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId) and !contractDetailsBackingBean.managedBean.viewContract}">
 			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>

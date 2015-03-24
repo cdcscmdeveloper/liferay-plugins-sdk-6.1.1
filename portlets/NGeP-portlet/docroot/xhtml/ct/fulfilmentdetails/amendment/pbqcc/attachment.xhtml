@@ -32,7 +32,9 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<h:commandLink title="#{attachFile.fileName}" 
+									value="#{amendmentBackingBean.getShortFileName(attachFile.fileName)}"
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 			 	 				<p:commandLink onclick="deleteComitteDlg.show();"  disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
 			 	 				   action="#{amendmentBackingBean.setAttachFileIndex(attachFileIndex)}">
 			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>

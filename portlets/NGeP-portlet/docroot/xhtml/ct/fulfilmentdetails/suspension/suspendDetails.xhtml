@@ -116,7 +116,8 @@
 					</td>
 					<td>
 						<h:commandLink for="agreement" styleClass="blue_font"
-							value="#{suspensionBackingBean.managedBean.ctContract.currentAgreement.fileName}"
+							title="#{suspensionBackingBean.managedBean.ctContract.currentAgreement.fileName}"
+							value="#{suspensionBackingBean.getShortFileName(suspensionBackingBean.managedBean.ctContract.currentAgreement.fileName)}"
 							action="#{suspensionBackingBean.downloadFile(suspensionBackingBean.managedBean.ctContract.currentAgreement.filePath,
 							suspensionBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 					</td>

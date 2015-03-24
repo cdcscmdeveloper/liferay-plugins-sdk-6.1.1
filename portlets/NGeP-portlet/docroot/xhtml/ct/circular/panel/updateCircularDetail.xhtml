@@ -80,7 +80,9 @@
 				</p:calendar>
 				
 				    <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-			    <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />	
+			    <h:commandLink title="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+			    	value="#{panelBackingBean.getShortFileName(panelBackingBean.managedBean.circularVer.circularFileName)}"
+			    	styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />	
 			 
 		 </h:panelGrid>
 </ui:composition>

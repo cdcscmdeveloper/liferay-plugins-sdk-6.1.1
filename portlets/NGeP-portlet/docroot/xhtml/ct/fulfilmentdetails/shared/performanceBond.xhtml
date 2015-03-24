@@ -37,7 +37,7 @@
 					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:85px;" />
 			</p:column>
 		
-			<p:column style="width:30%;" headerText="#{lbl['lbl.ct.financial.inst']}">
+			<p:column style="width:25%;" headerText="#{lbl['lbl.ct.financial.inst']}">
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
 				    style="width:230px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
 					   <f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
@@ -72,14 +72,15 @@
 			    </p:calendar>
 			</p:column>
 			
-			<p:column styleClass="column-align-center" style="width:32%;" headerText="#{lbl['lbl.txt.attachment']}" >
+			<p:column styleClass="column-align-center" style="width:35%;" headerText="#{lbl['lbl.txt.attachment']}" >
 				<h:panelGroup id="uploadBondPg" columns="2">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
 					     style="float:left;" icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
-						value="#{varBond.fileName}"
+						title="#{varBond.fileName}"
+						value="#{contractDetailsBackingBean.getShortFileName(varBond.fileName)}"						
 						style="float:left;margin-top:10px;" styleClass="blue_font"
 						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup>
