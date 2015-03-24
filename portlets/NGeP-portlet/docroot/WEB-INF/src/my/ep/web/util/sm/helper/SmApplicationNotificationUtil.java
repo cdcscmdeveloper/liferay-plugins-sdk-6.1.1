@@ -56,7 +56,7 @@ public class SmApplicationNotificationUtil {
 						"lbl.sm.notifAddr.semunanjung", null));
 			}
 		}
-		reqDTO.setNotifLink("<a href=\"https://www.google.com.my\"> Sila Klik </a>");
+		reqDTO.setNotifLink("<a href=\"https://www.google.com.my\"> di sini </a>");
 
 	}
 
