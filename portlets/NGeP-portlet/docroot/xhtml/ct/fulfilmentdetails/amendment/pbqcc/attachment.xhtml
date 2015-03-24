@@ -32,8 +32,7 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:commandLink title="#{attachFile.fileName}" 
-									value="#{amendmentBackingBean.getShortFileName(attachFile.fileName)}"
+								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 			 	 				<p:commandLink onclick="deleteComitteDlg.show();"  disabled="#{amendmentBackingBean.managedBean.prepareLOA}"
 			 	 				   action="#{amendmentBackingBean.setAttachFileIndex(attachFileIndex)}">

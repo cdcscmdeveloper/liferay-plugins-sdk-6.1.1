@@ -69,16 +69,16 @@
 		       <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" id="popupButtonCal6" 
 			             style="width:115px;" disabled="true">
 			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
-		     
-		      <h:panelGrid columns="2" style="float:right;">
-		        <p:outputLabel value="*" styleClass="mandatory" />
-		         <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-		       </h:panelGrid> 
-		        <h:commandLink title="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
-		        value="#{centralContractBackingBean.getShortFileName(centralContractBackingBean.managedBean.circularVer.circularFileName)}"
-		        styleClass="blue_font" 
-				action="#{centralContractBackingBean.downloadFile(1)}" />
-		   </h:panelGrid>	
+		   </h:panelGrid>
+		   <h:panelGrid columns="2">
+				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
+		        	<p:outputLabel value="*" styleClass="mandatory" />
+		         	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+		       	</h:panelGrid> 
+		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
+		       	 	styleClass="blue_font" 
+					action="#{centralContractBackingBean.downloadFile(1)}" />
+			</h:panelGrid>
 	</p:panel>
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">

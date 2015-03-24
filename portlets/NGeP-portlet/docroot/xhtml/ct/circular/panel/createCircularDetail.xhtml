@@ -33,7 +33,7 @@
 				    <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 				    <p:inputText  style="width:170px;" maxlength="60" disabled="#{panelBackingBean.managedBean.viewContract}"
 						value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />
-						
+					<f:verbatim/><f:verbatim/>
 						 <h:panelGrid columns="2" style="float:right;">
 						    <p:outputLabel value="*" styleClass="mandatory" />
 							<p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
@@ -47,22 +47,6 @@
 			                </p:calendar> 
 			                <p:message for="popupButtonCal" display="icon" />
 			              </h:panelGrid>
-			              
-			              
-			               <h:panelGrid columns="2" style="float:right;">
-			     <p:outputLabel value="*" styleClass="mandatory" />
-				 <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-			</h:panelGrid>
-		
-		        <h:panelGroup id="uploadCircularPg">
-				   <p:commandButton icon="iconAttachment" 
-					update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
-					value="#{lbl['lbl.bpm.choose.file']}" disabled="#{panelBackingBean.managedBean.viewContract}"/>	
-					<h:commandLink title="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-						value="#{panelBackingBean.getShortFileName(panelBackingBean.managedBean.circularVer.circularFileName)}"
-					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />				
-			  </h:panelGroup>	
-			              
 			              
 		               <h:panelGrid columns="2" style="float:right;">
 		                    <p:outputLabel value="*" styleClass="mandatory" />
@@ -79,6 +63,20 @@
 		         	   </p:calendar>
 		         	   <p:message for="popupButtonCal1" display="icon" />
 		         	</h:panelGrid>			        
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
+			     	<p:outputLabel value="*" styleClass="mandatory" />
+				 	<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+				</h:panelGrid>
+		
+		        <h:panelGroup id="uploadCircularPg">
+				   	<p:commandButton icon="iconAttachment" 
+						update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
+						value="#{lbl['lbl.bpm.choose.file']}" disabled="#{panelBackingBean.managedBean.viewContract}"/>	
+					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+						styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />				
+			  	</h:panelGroup>	
 			</h:panelGrid>
 	
 	 
