@@ -244,7 +244,28 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			
+			Date fromPublishDate = cloneDocumentSearchBean.getFromPublishDate();
+			Date toPublishDate = cloneDocumentSearchBean.getToPublishDate();
+			if (null != fromPublishDate || null != toPublishDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.PUBLISH_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromPublishDate, toPublishDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			Date fromClosingDate = cloneDocumentSearchBean.getFromClosingDate();
+			Date toClosingDate = cloneDocumentSearchBean.getToClosingDate();
+			if (null != fromClosingDate || null != toClosingDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.CLOSED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromClosingDate, toClosingDate);
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
 			String status = cloneDocumentSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {				
 				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQtStatus.pmStatus.statusId", SearchOperator.OPERATOR_EQUALS.value(), status));				
@@ -476,6 +497,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		this.getManagedBean().getCloneDocumentSearchBean().setFromCreatedDate(null);
 		this.getManagedBean().getCloneDocumentSearchBean().setToCreatedDate(null);
 		this.getManagedBean().getCloneDocumentSearchBean().setQtStatus(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setFromPublishDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setToPublishDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setFromClosingDate(null);
+		this.getManagedBean().getCloneDocumentSearchBean().setToClosingDate(null);
 	}
 
 	/**
