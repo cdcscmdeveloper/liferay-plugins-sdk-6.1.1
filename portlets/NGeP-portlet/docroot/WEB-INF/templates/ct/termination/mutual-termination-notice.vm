@@ -2,10 +2,6 @@
    <head>
       <style>
          @page { size: A4 portrait;}
-         .footer {
-         display: block; text-align: center;
-         position: running(footer);
-         }
       </style>
    </head>
    <body>
@@ -57,6 +53,7 @@
       <div style="text-align: left;"><strong>$supplierAddress</strong></div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="font-weight: normal; text-align: left;">Tuan,</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="text-align: left;"><strong>Notis Penamatan Bersama Kontrak</strong></div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="text-align: left;"><strong>Kontrak:<span class="Apple-tab-span" style="white-space: pre;">			</span>$contractTitle</strong></div>
@@ -81,7 +78,7 @@
       <div style="font-weight: normal; text-align: left;">------------------------------------------------------</div>
       <div style="font-weight: normal; text-align: left;">$approverName</div>
       <div style="font-weight: normal; text-align: left;">$approverDesignation</div>
-      <div style="font-weight: normal; text-align: left;">$jabatanName</div>
+      <div style="font-weight: normal; text-align: left;">$ptjName</div>
       <div style="font-weight: normal; text-align: left;">$ministryName</div>
    </body>
 </html>
