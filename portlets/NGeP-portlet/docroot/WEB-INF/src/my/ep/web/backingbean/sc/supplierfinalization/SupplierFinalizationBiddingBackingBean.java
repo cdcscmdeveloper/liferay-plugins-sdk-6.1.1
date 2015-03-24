@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.sc.supplierfinalization;
 
 import java.io.FileNotFoundException;
@@ -73,6 +76,8 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
 /**
+ * Implementation for supplier finalization by bidding
+ * 
  * @author Faradiana Supplier Finalization online Bidding Backing Bean
  */
 @ManagedBean(name = "suppFinalBiddingBackingBean")
@@ -89,10 +94,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 1;
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 1;
 
+	/**
+	 * Default constructor
+	 */
 	public SupplierFinalizationBiddingBackingBean() {
 
 	}
 
+	/**
+	 * Initialize the data required when the page is initially rendered (based
+	 * on the task-id of the selected quotation/tender) and sets the data in
+	 * managed bean associated with the current user session
+	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
 
@@ -122,6 +135,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		retrieveBiddingSummary();
 	}
 
+	/**
+	 * Retrieve quotation/tender details corresponding to the qtId
+	 * @param qtId
+	 * 			The id of the quotation/tender to be loaded
+	 */
 	public void retriveQTDetails(Long qtId) {
 		IQTDetailSO qtDetailSO;
 		try {
@@ -141,6 +159,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieve supplier finalization details details corresponding to the qtId
+	 * @param qtId
+	 * 			The id of the quotation/tender 
+	 */	
 	public void retrieveSupplierFinalization(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -247,6 +270,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
+	/**
+	 * Event to handle selection of bidding item
+	 * @param event
+	 * 			selection event object
+	 */
 	public void selectBiddingItem(SelectEvent event) {
 		ScBidItem bidItem = (ScBidItem) event.getObject();
 
@@ -306,6 +334,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
+	/**
+	 * To show item price in a popup
+	 * 
+	 * @param packageItem
+	 * 				the packageItem corresponding to which price is shown in popup
+	 */
 	public void supplierItemPricePopupAction(BidPackageBean packageItem) {
 
 		getManagedBean().setSupplierCode(
@@ -335,8 +369,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	/**
 	 * Set the selected supplier details in managed bean associated with the current user session
-	 * @param scQtRecommend  the scQtRecommend which holds the item
-	 * @param selectedRecommendDtl  the selectedRecommendDtl while holds the recommended supplier
+	 * 
+	 * @param scQtRecommend  
+	 * 				the scQtRecommend which holds the item
+	 * @param selectedRecommendDtl  
+	 * 				the selectedRecommendDtl while holds the recommended supplier
 	 */
 	public void showSupplierDetails(ScQtRecommend scQtRecommend, ScQtRecommendDtl selectedRecommendDtl) {
 		debugLogger("showSuppDetails");
@@ -432,6 +469,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
+	/**
+	 * To send reminder to committee members
+	 */
 	public void sendReminder() {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -464,8 +504,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
-	// when committee members endorsed the Supplier Finalization or chairperson
-	// sign off the Supplier Finalization
+	/**
+	 * For committee members to endorse the Supplier Finalization or chairperson
+	 * sign off the Supplier Finalization
+	 */
 	public void signOff() {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -534,6 +576,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 		getManagedBean().setRemarks(remarks);
 	}
 
+	/**
+	 * To handle file upload event
+	 * 
+	 * @param event
+	 *            the file upload event object
+	 * @throws FileNotFoundException
+	 *             the exception that would be thrown if the file being updated does
+	 *             not exist
+	 * @throws IOException
+	 *             the exception that would be thrown if an I/O error is encountered
+	 *             while uploading the file
+	 */
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
@@ -589,6 +643,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return imageFileName;
 	}
 
+	/**
+	 * To save offline endorsement
+	 */
 	public void saveOfflineEndorsement() {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -644,8 +701,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return scQtFinalization;
 	}
 	
-	
-	
+	/**
+	 * To submit bidding endorsement
+	 * 
+	 * @param outcome
+	 *  	 	the outcome
+	 */
 	public void submitBiddingEndorsement(String outcome) {
 		debugLogger("submitBiddingEndorsement");
 		this.getManagedBean().setAction(outcome);
@@ -655,7 +716,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			updateBPMTask(outcome, null);
 		}	
 	}
-	
 
 	private void updateBPMTask(String outCome, PmDigiSign digiSign){
 		debugLogger("updateBPMTask");
@@ -735,12 +795,20 @@ public class SupplierFinalizationBiddingBackingBean extends
 				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
-	
+	/**
+	 * To digitally sign using GPK device
+	 * 
+	 * @param digiSign
+	 * 			the digital signature
+	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
 
+	/**
+	 * @return  the textBeforeSign
+	 */
 	public String getTextBeforeSign() {
 		StringBuilder sb = new StringBuilder();
 		if(getManagedBean().getScQt() != null){
@@ -751,6 +819,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return textBeforeSign;
 	}
 
+	/**
+	 * @param textBeforeSign
+	 * 				the textBeforeSign to set
+	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
