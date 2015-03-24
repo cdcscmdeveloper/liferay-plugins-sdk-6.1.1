@@ -85,7 +85,6 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public RuleCatalogueBackingBean() {
-	
 
 	}
 
@@ -107,7 +106,9 @@ public class RuleCatalogueBackingBean extends
 		try {
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IConfigGeneralSO.class);
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
 			ConfigGeneralReqDTO reqDTO = new ConfigGeneralReqDTO();
 			ConfigGeneralResDTO resDTO = cgeneralSO.getConfigGeneral(reqDTO);
 			this.getManagedBean().setSelectedConfigGeneral(
@@ -246,31 +247,38 @@ public class RuleCatalogueBackingBean extends
 			reqTDTO.setOrgProfileId(null);
 			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
 			getManagedBean().setThreshold(resTDTO.getThresholdList().get(0));
-			getManagedBean().setUnplannedThreshold(resTDTO.getThresholdList().get(0).getS2Unplanned());
-			getManagedBean().setBudgetThreshold(resTDTO.getThresholdList().get(0).getBudgetSpent());
-//			for (PmThreshold threshold : resTDTO.getThresholdList()) {
-//				this.getManagedBean().getThresholds().add(threshold);
-//			}
-			
+			getManagedBean().setUnplannedThreshold(
+					resTDTO.getThresholdList().get(0).getS2Unplanned());
+			getManagedBean().setBudgetThreshold(
+					resTDTO.getThresholdList().get(0).getBudgetSpent());
+			// for (PmThreshold threshold : resTDTO.getThresholdList()) {
+			// this.getManagedBean().getThresholds().add(threshold);
+			// }
+
 			thresholdSO.insertMinistryThresholds();
 			ThresholdResDTO finalResDTO = new ThresholdResDTO();
 			if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
-				finalResDTO = thresholdSO.getMinistryThresholds();				
-			}else{
+				finalResDTO = thresholdSO.getMinistryThresholds();
+			} else {
 				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean()
+						.getUserId());
+				UserResDTO userResDTO = userSO
+						.retrieveUserOrgListByUserId(userReqDTO);
 				ThresholdReqDTO thresholdreqDTO = new ThresholdReqDTO();
-				thresholdreqDTO.setOrgProfileId(userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-				finalResDTO = thresholdSO.getOperationalThresholds(thresholdreqDTO);
+				thresholdreqDTO.setOrgProfileId(userResDTO.getUserOrgList()
+						.get(0).getPmOrgProfile().getOrgProfileId());
+				finalResDTO = thresholdSO
+						.getOperationalThresholds(thresholdreqDTO);
 			}
-			
-		
-			if(!finalResDTO.getThresholdList().isEmpty()){
-				getManagedBean().setUnplannedThresholdList(finalResDTO.getThresholdList());
-				getManagedBean().setBudgetThresholdList(finalResDTO.getThresholdList());
+
+			if (!finalResDTO.getThresholdList().isEmpty()) {
+				getManagedBean().setUnplannedThresholdList(
+						finalResDTO.getThresholdList());
+				getManagedBean().setBudgetThresholdList(
+						finalResDTO.getThresholdList());
 			}
-			
+
 			System.out
 					.println("...................resTDTO.getThresholdList().size()="
 							+ resTDTO.getThresholdList().size());
@@ -734,7 +742,11 @@ public class RuleCatalogueBackingBean extends
 
 				PmConfigRuleValue baseValueToCompare = ruleType
 						.getConfigRuleValues().get(i);
-				if(baseValueToCompare.getRecordStatusFlg() == 0){//if is inActive one go to next record
+				if (baseValueToCompare.getRecordStatusFlg() == 0) {// if is
+																	// inActive
+																	// one go to
+																	// next
+																	// record
 					continue;
 				}
 				log.info(".........................baseValueToCompare.getRuleValue()="
@@ -742,7 +754,8 @@ public class RuleCatalogueBackingBean extends
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
 					PmConfigRuleValue value = ruleType.getConfigRuleValues()
 							.get(j);
-					if(value.getRecordStatusFlg() == 0){//if is inActive one go to next record
+					if (value.getRecordStatusFlg() == 0) {// if is inActive one
+															// go to next record
 						continue;
 					}
 					log.info(".........................second.value.getRuleValue()="
@@ -753,15 +766,18 @@ public class RuleCatalogueBackingBean extends
 							ruleType.getValidationType())) {
 						log.info("................befor throw exeption for category...................");
 						// hit error and return
-						switch(ruleType.getValidationType()){
-						case '1' : throw new EpException(MessageConst.ERROR_770109,
-					        	new String[] { ruleType.getRuleTypeDesc() });
-						case '2' : throw new EpException(MessageConst.ERROR_770110,
-							        	new String[] { ruleType.getRuleTypeDesc() });		           
-						case '3' : throw new EpException(MessageConst.ERROR_770154,
-					        	new String[] { ruleType.getRuleTypeDesc() });
+						switch (ruleType.getValidationType()) {
+						case '1':
+							throw new EpException(MessageConst.ERROR_770109,
+									new String[] { ruleType.getRuleTypeDesc() });
+						case '2':
+							throw new EpException(MessageConst.ERROR_770110,
+									new String[] { ruleType.getRuleTypeDesc() });
+						case '3':
+							throw new EpException(MessageConst.ERROR_770154,
+									new String[] { ruleType.getRuleTypeDesc() });
 						}
-						
+
 					}
 
 					// }
@@ -839,10 +855,10 @@ public class RuleCatalogueBackingBean extends
 					firstRuleValue.getExpDate(), secondRuleValue.getEffDate(),
 					secondRuleValue.getExpDate());
 		} else if (validationType == '2') {// EffectiveDate +value validation
-			
+
 			if (RuleDataTypeId.getParameterCode().equalsIgnoreCase("c")) {
-				if (firstRuleValue.getCategoryDisplayValue().equals(secondRuleValue
-						.getCategoryDisplayValue()))
+				if (firstRuleValue.getCategoryDisplayValue().equals(
+						secondRuleValue.getCategoryDisplayValue()))
 					isValuesEqual = true;
 			} else {
 				if (firstRuleValue.getRuleValue().equals(
@@ -851,7 +867,8 @@ public class RuleCatalogueBackingBean extends
 
 			}
 			if (isValuesEqual) {
-				validationResult = !isDateOverlaped(firstRuleValue.getEffDate(),
+				validationResult = !isDateOverlaped(
+						firstRuleValue.getEffDate(),
 						firstRuleValue.getExpDate(),
 						secondRuleValue.getEffDate(),
 						secondRuleValue.getExpDate());
@@ -862,7 +879,7 @@ public class RuleCatalogueBackingBean extends
 		} else {// validationType == '3' , //EffectiveDate + value + Range
 				// validation
 			if (firstRuleValue.getRuleValue().equals(
-					secondRuleValue.getRuleValue())){
+					secondRuleValue.getRuleValue())) {
 				isValuesEqual = true;
 			}
 			if (isValuesEqual) {
@@ -884,14 +901,14 @@ public class RuleCatalogueBackingBean extends
 
 	boolean isRangeOverlaped(Double fromValue1, Double toValue1,
 			Double fromValue2, Double toValue2) {
-//		if (toValue1 == null) {
-//			return fromValue1 <= toValue2;
-//
-//		}
-//		if (toValue2 == null) {
-//			return fromValue2 <= toValue1;
-//
-//		}
+		// if (toValue1 == null) {
+		// return fromValue1 <= toValue2;
+		//
+		// }
+		// if (toValue2 == null) {
+		// return fromValue2 <= toValue1;
+		//
+		// }
 		return fromValue1 <= toValue2 && fromValue2 <= toValue1;
 	}
 
@@ -1519,7 +1536,7 @@ public class RuleCatalogueBackingBean extends
 						+ resTDTO.getThresholdList().size());
 
 	}
-	
+
 	/**
 	 * get faces scopes
 	 * 
@@ -1529,96 +1546,113 @@ public class RuleCatalogueBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
-	public boolean checkIsEpAdmin(){
-		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+
+	public boolean checkIsEpAdmin() {
+		if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
-	
-	public void onChangeMainUnplannedThreshold(){
-	//	getManagedBean().getThreshold().setS2Unplanned(getManagedBean().getUnplannedThreshold().intValue());
-		for(PmThreshold threshold : getManagedBean().getUnplannedThresholdList()){
-			threshold.setS2Unplanned(getManagedBean().getThreshold().getS2Unplanned());
+
+	public void onChangeMainUnplannedThreshold() {
+		// getManagedBean().getThreshold().setS2Unplanned(getManagedBean().getUnplannedThreshold().intValue());
+		for (PmThreshold threshold : getManagedBean()
+				.getUnplannedThresholdList()) {
+			threshold.setS2Unplanned(getManagedBean().getThreshold()
+					.getS2Unplanned());
 		}
 	}
-	
-	public void onChangeMainBudgetThreshold(){
-		for(PmThreshold threshold : getManagedBean().getBudgetThresholdList()){
-			threshold.setBudgetSpent(getManagedBean().getThreshold().getBudgetSpent());
+
+	public void onChangeMainBudgetThreshold() {
+		for (PmThreshold threshold : getManagedBean().getBudgetThresholdList()) {
+			threshold.setBudgetSpent(getManagedBean().getThreshold()
+					.getBudgetSpent());
 		}
 	}
-	
-	public void saveThresholds(int type){
+
+	public void saveThresholds(int type) {
 		// 1 - unplanned
 		// 2 - budget
-		
+
 		List<PmThreshold> saveThresholdList = new ArrayList<PmThreshold>();
 		saveThresholdList.add(getManagedBean().getThreshold());
-		if(type == 1){
-			saveThresholdList.addAll(getManagedBean().getUnplannedThresholdList());
-		}else if(type == 2){
-			saveThresholdList.addAll(getManagedBean().getBudgetThresholdList());			
+		if (type == 1) {
+			saveThresholdList.addAll(getManagedBean()
+					.getUnplannedThresholdList());
+		} else if (type == 2) {
+			saveThresholdList.addAll(getManagedBean().getBudgetThresholdList());
 		}
-		
-		try{
+
+		try {
 			IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOperationalThresholdSO.class);
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
 			ThresholdReqDTO reqDTO = new ThresholdReqDTO();
 			reqDTO.setThresholdList(saveThresholdList);
-			reqDTO.setPmConfigGeneral(getManagedBean().getSelectedConfigGeneral());
-			ThresholdResDTO resDTO = thresholdSO.updateOperationalThresholdList(reqDTO);
-			
+			reqDTO.setPmConfigGeneral(getManagedBean()
+					.getSelectedConfigGeneral());
+			ThresholdResDTO resDTO = thresholdSO
+					.updateOperationalThresholdList(reqDTO);
+
 			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
 			ThresholdResDTO resTDTO = null;
 			reqTDTO.setOrgProfileId(null);
 			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
 			getManagedBean().setThreshold(resTDTO.getThresholdList().get(0));
-			getManagedBean().setUnplannedThreshold(resTDTO.getThresholdList().get(0).getS2Unplanned());
-			getManagedBean().setBudgetThreshold(resTDTO.getThresholdList().get(0).getBudgetSpent());
-			
+			getManagedBean().setUnplannedThreshold(
+					resTDTO.getThresholdList().get(0).getS2Unplanned());
+			getManagedBean().setBudgetThreshold(
+					resTDTO.getThresholdList().get(0).getBudgetSpent());
+
 			ThresholdResDTO finalResDTO = new ThresholdResDTO();
 			if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
-				finalResDTO = thresholdSO.getMinistryThresholds();				
-			}else{
+				finalResDTO = thresholdSO.getMinistryThresholds();
+			} else {
 				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean()
+						.getUserId());
+				UserResDTO userResDTO = userSO
+						.retrieveUserOrgListByUserId(userReqDTO);
 				ThresholdReqDTO thresholdreqDTO = new ThresholdReqDTO();
-				thresholdreqDTO.setOrgProfileId(userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-				finalResDTO = thresholdSO.getOperationalThresholds(thresholdreqDTO);
-			}			
-		
-			if(!finalResDTO.getThresholdList().isEmpty()){
-				getManagedBean().setUnplannedThresholdList(finalResDTO.getThresholdList());
-				getManagedBean().setBudgetThresholdList(finalResDTO.getThresholdList());
+				thresholdreqDTO.setOrgProfileId(userResDTO.getUserOrgList()
+						.get(0).getPmOrgProfile().getOrgProfileId());
+				finalResDTO = thresholdSO
+						.getOperationalThresholds(thresholdreqDTO);
+			}
+
+			if (!finalResDTO.getThresholdList().isEmpty()) {
+				getManagedBean().setUnplannedThresholdList(
+						finalResDTO.getThresholdList());
+				getManagedBean().setBudgetThresholdList(
+						finalResDTO.getThresholdList());
 			}
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setTabActiveIndex(2);
-				if(type == 1){
+				if (type == 1) {
 					getManagedBean().setThresholdIndex(0);
-				}else if(type == 2){
+				} else if (type == 2) {
 					getManagedBean().setThresholdIndex(1);
 				}
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(
-						MessageConst.INFO_770093,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale())));
-				
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770093,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * clone Rule Type Value.
 	 * 
@@ -1626,36 +1660,99 @@ public class RuleCatalogueBackingBean extends
 	 *            (int index(mandatory))
 	 */
 	public void cloneRuleTypeValue(int index) {
-
+		log.info("cloneRuleTypeValue....index=" + index);
 		PmConfigRuleValue ruleValue = new PmConfigRuleValue();
-		ruleValue.setEffDate(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index).getEffDate());
-		ruleValue.setExpDate(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index).getExpDate());
+		ruleValue.setEffDate(this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues().get(index).getEffDate());
+		ruleValue.setExpDate(this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues().get(index).getExpDate());
 		ruleValue.setShowFlag(false);
-		
+
 		ruleValue.setGroupValueId(this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().get(index).getGroupValueId());
+		log.info("groupValueId="
+				+ this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().get(index).getGroupValueId());
 
-		int markIndex = getLastIndexToClone(this.getManagedBean().getSelectedRuleType()
-				.getConfigRuleValues(), this.getManagedBean().getSelectedRuleType()
-			.getConfigRuleValues().get(index).getGroupValueId());
-	
-		if(this.getManagedBean().getSelectedRuleType()
-				.getConfigRuleValues().get(markIndex).getToValue() != null){
+		int markIndex = getLastIndexToClone(this.getManagedBean()
+				.getSelectedRuleType().getConfigRuleValues(), this
+				.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+				.get(index).getGroupValueId());
+		log.info("markIndex=" + markIndex);
+		if (this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+				.get(markIndex).getToValue() != null && !this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+						.get(markIndex).getRuleValue().isEmpty()) {
 			ruleValue.setFromValue(this.getManagedBean().getSelectedRuleType()
 					.getConfigRuleValues().get(markIndex).getToValue() + 1);
 			ruleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-			.add(markIndex + 1, ruleValue);
+					.add(markIndex + 1, ruleValue);
 		} else {
 			throw new EpException(MessageConst.ERROR_715010);
 		}
-		
+
 	}
 	
-	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues, Integer GroupId){
+	/**
+* update ToValue.
+* 
+* @param index
+*            (int index(mandatory))
+*/
+public void updateToValue(int index) {
+   log.info("................index="+index);
+   log.info("................this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size()="+this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size());
+if (index < this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size() - 1) {
+	PmConfigRuleValue rulevalue = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index + 1);
+	if (rulevalue.getGroupValueId() == this.getManagedBean()
+			.getSelectedRuleType().getConfigRuleValues().get(index).getGroupValueId())
+		rulevalue.setFromValue(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index).getToValue() + 1);
+  }
+}
+
+	/*
+	 * Adds the new ruleTypeValue.
+	 */
+	public void addNewRuleTypeValue() {
+
+		log.debug("*****addNewRuleTypeValue*****");
+		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
+		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
+		newRuleValue.setEffDate(new Date());
+
+		if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
+				.getParameterCode().equals("C")) {
+			newRuleValue.setCategoryL3Id(new PmCategoryL3()); // make sure to
+																// delete the
+																// new obj
+																// before update
+																// if doesn't
+																// selected
+		}
+		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1) {
+			if (this.getManagedBean().getSelectedRuleType()
+					.getConfigRuleValues() != null
+					&& this.getManagedBean().getSelectedRuleType()
+							.getConfigRuleValues().size() > 0) {
+              int size = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size();
+              newRuleValue.setGroupValueId(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(size-1).getGroupValueId() +1 );
+			} else {
+				  newRuleValue.setGroupValueId(1);
+			}
+			newRuleValue.setFromValue(1d);
+		}
+		int index = this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues().size();
+		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+				.add(index, newRuleValue);
+
+	}
+
+	public int getLastIndexToClone(List<PmConfigRuleValue> pmConfigValues,
+			Integer GroupId) {
 		int addIndex = 0;
-		for(PmConfigRuleValue ruleValue : pmConfigValues){
-			if(ruleValue.getGroupValueId() == GroupId){
+		for (PmConfigRuleValue ruleValue : pmConfigValues) {
+			if (ruleValue.getGroupValueId() == GroupId) {
 				addIndex = pmConfigValues.indexOf(ruleValue);
 			}
 		}
