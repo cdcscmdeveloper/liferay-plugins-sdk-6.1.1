@@ -1738,6 +1738,8 @@ public class QTDetailBackingBean extends
 								.getTaskId());
 						committeReqDTO.setPayLoad(res.getPojo());
 						committeReqDTO.setOutcome(outcome);
+						committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+						committeReqDTO.setRoleCode(getUserRoleCode());
 						committeReqDTO.setScQt(qt);
 						committeResDto = committeSO
 								.updateFinalizateSecrataryTask(committeReqDTO);
@@ -1752,6 +1754,8 @@ public class QTDetailBackingBean extends
 								.getTaskId());
 						committeReqDTO.setPayLoad(res.getPojo());
 						committeReqDTO.setOutcome(outcome);
+						committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+						committeReqDTO.setRoleCode(getUserRoleCode());
 						committeReqDTO.setScQt(qt);
 						committeResDto = committeSO
 								.updateBPMAction(committeReqDTO);
@@ -1768,6 +1772,8 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				committeReqDTO.setPayLoad(res.getPojo());
 				committeReqDTO.setOutcome(outcome);
+				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+				committeReqDTO.setRoleCode(getUserRoleCode());
 				committeReqDTO.setScQt(qt);
 				committeResDto = committeSO
 						.updateFinalizateSecrataryTask(committeReqDTO);

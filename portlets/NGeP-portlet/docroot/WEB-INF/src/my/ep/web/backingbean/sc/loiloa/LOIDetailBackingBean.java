@@ -545,6 +545,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
 			reqDTO.setDocId(scLoiLoa.getDocId());
+			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {

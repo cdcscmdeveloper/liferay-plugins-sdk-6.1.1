@@ -1335,6 +1335,9 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(taskId);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			
 			reqDTO.setDigiSignData(digiSign);
 
 			ScQtCommittee scQtCommittee = preparationDtlsInfo();
