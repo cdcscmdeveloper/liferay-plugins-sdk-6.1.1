@@ -19,6 +19,7 @@
 		<ac:gpkiPopup 
 			textBeforeSign="#{receivedNoteBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{receivedNoteBackingBean.preSubmitAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{receivedNoteBackingBean.enableAutoUpdate()}" 
 		/>
 		<f:event listener="#{receivedNoteBackingBean.preRenderView}"
 			type="preRenderView" />
@@ -35,7 +36,7 @@
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{receivedNoteBackingBean.gpkiSignAction(bpmAction)}" />
+							action="#{receivedNoteBackingBean.gpkiSignAction(bpmAction)}"/>
 					</ui:repeat>
 					<c:if
 						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
