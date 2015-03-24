@@ -6604,6 +6604,18 @@ public class EvaluationBackingBean extends
 				generateTechnicalEvaluationPdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_HARGA_TAWARAN.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
+				generateHargaTawaranPdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_OVERALL_FIN_SUMMARY.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
+				generateOverallFinancialSummaryPdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_FEC_REPORT.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
+				generateFinancialEvaluationReportPdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
 			}
 			scQtEvaluationReport
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
@@ -6730,6 +6742,96 @@ public class EvaluationBackingBean extends
 				.replaceAll("&lt;&lt;NO_OF_SUPPLIER&gt;&gt;", totalSuppliers);
 		return html;
 	}
+	
+	/**
+	 * @param scQtEvaluationReportAttachment
+	 * @param scQt
+	 */
+	private void generateFinancialEvaluationReportPdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
+		debugLogger("generateFinancialEvaluationReportPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportId = "";
+		String reportName = "";
+
+		if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_FEC_OTHER_CRITERIA;
+			reportId = ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL; // SC_018
+		}
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, this
+				.getManagedBean().isCheckReportDownload());
+	}
+
+	/**
+	 * @param scQtEvaluationReportAttachment
+	 * @param scQt
+	 */
+	private void generateOverallFinancialSummaryPdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
+		debugLogger("generateOverallFinancialSummaryPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportId = "";
+		String reportName = "";
+
+		if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_FEC_OVERALL_FIN_3E;
+			reportId = ReportConst.OVRL_FINRS_FEC_RPT_VAL; // SC_020
+		}
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, this
+				.getManagedBean().isCheckReportDownload());
+	}
+
+	/**
+	 * @param scQtEvaluationReportAttachment
+	 * @param scQt
+	 */
+	private void generateHargaTawaranPdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
+		debugLogger("generateHargaTawaranPdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportId = "";
+		String reportName = "";
+
+		if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_FEC_PRICEOFFER_3D;
+			reportId = ReportConst.HARGA_TAWARAN_FEC_RPT_VAL; // SC_016
+		}
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, this
+				.getManagedBean().isCheckReportDownload());
+	}
 
 	/**
 	 * @param scQtEvaluationReportAttachment
@@ -6837,7 +6939,9 @@ public class EvaluationBackingBean extends
 
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
-
+			reportName = ReportConst.SC_EC_OVERALLTECH_WITH_WEI_4H;
+			reportId = ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL; // SC_035
+			
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 
