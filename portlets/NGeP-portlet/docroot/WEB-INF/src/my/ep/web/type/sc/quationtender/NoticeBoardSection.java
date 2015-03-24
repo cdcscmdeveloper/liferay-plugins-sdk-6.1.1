@@ -1,11 +1,11 @@
-/**
- * 
- */
+/* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.type.sc.quationtender;
 
 import my.ep.type.IEnumType;
 
 /**
+ * NoticeBoardSection Enum class for Notice board screen
+ * 
  * @author VidyasagarReddy
  *
  */
@@ -17,25 +17,21 @@ public enum NoticeBoardSection implements IEnumType{
 	
 	private String sectionName;
 	
-	
+	/**
+	 * Parameterized constructor
+	 * 
+	 * @param section
+	 * 			the String variable	
+	 */
 	private NoticeBoardSection(String section){
 		this.sectionName=section;
 	}
-
-
-
-	/* (non-Javadoc)
-	 * @see my.ep.type.IEnumType#value()
-	 */
+	
 	@Override
 	public Object value() {
-		// TODO Auto-generated method stub
 		return sectionName;
 	}
 	
-	public static void main(String arg[]){
-		System.out.println(NoticeBoardSection.PUBLISHDETAILS.name());
-	}
 	
 
 }
