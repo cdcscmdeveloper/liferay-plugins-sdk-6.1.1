@@ -149,6 +149,8 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
 /**
+ * Implementation for supplier finalization
+ * 
  * @author Faradiana
  * @author Praneeth
  * 

@@ -27,6 +27,8 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
+ * Class to handle user session data corresponding to SupplierFinalizationBiddingBackingBean
+ * 
  * @author Faradiana
  * Supplier Finalization Managed Bean
  */
