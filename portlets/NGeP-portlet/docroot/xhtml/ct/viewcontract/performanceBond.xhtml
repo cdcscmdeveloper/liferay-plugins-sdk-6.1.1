@@ -47,7 +47,8 @@
 			
 			<p:column styleClass="column-align-center" style="width:32%;" headerText="#{lbl['lbl.txt.attachment']}" >
 				<h:panelGroup id="uploadBondPg">
-					<h:commandLink value="#{varBond.fileName}"
+					<h:commandLink title="#{varBond.fileName}"
+						value="#{contractDetailsBackingBean.getShortFileName(varBond.fileName)}"
 						style="float:right;" styleClass="blue_font"
 						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup>

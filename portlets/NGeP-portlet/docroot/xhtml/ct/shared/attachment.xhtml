@@ -32,7 +32,9 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<h:commandLink title="#{attachFile.fileName}" 
+									value="#{ctBackingBean.getShortFileName(attachFile.fileName)}" 
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onclick="deleteAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
 									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)
 												and !ctBackingBean.managedBean.viewContract}">

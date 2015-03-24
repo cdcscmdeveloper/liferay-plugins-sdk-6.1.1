@@ -84,7 +84,9 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
+								<h:commandLink title="#{attachFile.fileName}" 
+									value="#{amendmentBackingBean.getShortFileName(attachFile.fileName)}"
+									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 			 	 			</td>
 						</tr>
 					</table>

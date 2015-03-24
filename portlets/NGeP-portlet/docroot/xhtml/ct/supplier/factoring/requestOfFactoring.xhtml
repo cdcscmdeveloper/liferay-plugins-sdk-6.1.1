@@ -301,7 +301,8 @@
 				     	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.agreement']}" />
 						<p:spacer width="3" />
 						<h:commandLink
-							value="#{supplierBackingBean.managedBean.factoring.fileName}"
+							title="#{supplierBackingBean.managedBean.factoring.fileName}"
+							value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.fileName)}"
 							style="float:left;" styleClass="blue_font"
 							rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}"
 							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}" />
@@ -325,7 +326,8 @@
 							disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean.isApproverRole() or supplierBackingBean.managedBean.viewOnly}" />
 						<p:spacer width="1" />
 						<h:commandLink
-							value="#{supplierBackingBean.managedBean.factoring.removeFileName}"
+							title="#{supplierBackingBean.managedBean.factoring.removeFileName}"
+							value="#{supplierBackingBean.getShortFileName(supplierBackingBean.managedBean.factoring.removeFileName)}"
 							style="float:left;" styleClass="blue_font"
 							rendered="#{supplierBackingBean.managedBean.factoring.removeFileName != null}"
 							action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}" />

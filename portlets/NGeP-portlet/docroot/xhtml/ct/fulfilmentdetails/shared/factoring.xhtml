@@ -70,9 +70,11 @@
 			  </h:panelGrid> 
                  
                  <p:outputLabel  value="#{lbl['lbl.ct.copy.factoring.agreement']}"  />  
-                    <h:commandLink value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName}"  style="float:left;" styleClass="blue_font" 
-	                      action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.ctFactoring.filePath, 
-	                      contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName)}" />			
+                    <h:commandLink title="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName}"  
+                    	value="#{contractDetailsBackingBean.getShortFileName(contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName)}"
+                    	style="float:left;" styleClass="blue_font" 
+	                    action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.ctFactoring.filePath, 
+	                    contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName)}" />			
              </h:panelGrid>
         </p:panel>
 </ui:composition>

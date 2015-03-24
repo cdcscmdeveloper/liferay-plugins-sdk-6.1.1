@@ -33,7 +33,8 @@
 						icon="iconAttachment" update="upAgrSignedPagePg, upAgrSignedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
-						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
+						title="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
+						value="#{agreementBackingBean.getShortFileName(agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName)}"
 						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName != null}"
 						styleClass="blue_font"
 						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.signedPagePath,
@@ -55,7 +56,8 @@
 						icon="iconAttachment" update="upStampedPagePg, upStampedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
-						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
+						title="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
+						value="#{agreementBackingBean.getShortFileName(agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName)}"
 						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName != null}"
 						styleClass="blue_font"
 						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPagePath,

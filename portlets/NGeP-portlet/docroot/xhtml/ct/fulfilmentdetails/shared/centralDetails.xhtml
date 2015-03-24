@@ -100,7 +100,8 @@
 					</td>
 					<td>
 						<h:commandLink for="centralAgreement" styleClass="blue_font"
-							value="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName}"
+							title="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName}"
+							value="#{contractDetailsBackingBean.getShortFileName(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName)}"
 							action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.filePath,
 							contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 					</td>
