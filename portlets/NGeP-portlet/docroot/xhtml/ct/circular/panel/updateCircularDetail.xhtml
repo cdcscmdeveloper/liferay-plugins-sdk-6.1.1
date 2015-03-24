@@ -56,7 +56,7 @@
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			   		</p:inputText>	 
 			   		
-			   		<p:outputLabel value="Circular Extension" />
+			   		<p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
 			   	        <p:selectBooleanCheckbox id="extensionId" value="#{panelBackingBean.managedBean.circularExtension}">
 			                 <p:ajax event="change" update=":form:pc" listener="#{panelBackingBean.chkCircularExtension}" process="@this"/> 
 			           </p:selectBooleanCheckbox>
@@ -78,11 +78,12 @@
 				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
 				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
 				</p:calendar>
-				
-				    <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-			    <h:commandLink title="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-			    	value="#{panelBackingBean.getShortFileName(panelBackingBean.managedBean.circularVer.circularFileName)}"
-			    	styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />	
-			 
 		 </h:panelGrid>
+		 <h:panelGrid columns="2">
+				<h:panelGrid style="float:right;" class="columnWidth200">
+		        	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+		    	</h:panelGrid> 
+		        <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+			    	styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />	
+		</h:panelGrid>
 </ui:composition>

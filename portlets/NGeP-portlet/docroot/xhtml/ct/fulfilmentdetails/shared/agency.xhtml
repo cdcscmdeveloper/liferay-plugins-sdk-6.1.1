@@ -287,8 +287,7 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:commandLink title="#{attachFile.fileName}" 
-									value="#{contractDetailsBackingBean.getShortFileName(attachFile.fileName)}"
+								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 			 	 				<p:commandLink onclick="deleteAttachmentDlg1.show();" action="#{contractDetailsBackingBean.setAttachFileIndex(attachFileIndex)}"
 									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId) and !contractDetailsBackingBean.managedBean.viewContract}">

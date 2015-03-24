@@ -72,20 +72,20 @@
 						  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
 						<p:spacer width="5" />
 						<h:outputText value="#{lbl['lbl.ct.months']}" />
-					</h:panelGroup>	
-				       
-				       <h:panelGrid columns="2" style="float:right;">
-				          <p:outputLabel value="*" styleClass="mandatory" />
-				          <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-				      </h:panelGrid>
+					</h:panelGroup>
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+				</h:panelGrid>
 		             
-		             <h:panelGroup id="uploadCircularPg">
-			         	<p:commandButton icon="iconAttachment" value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"
-				          	action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
-				        <h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
-				           styleClass="blue_font" title="#{centralContractBackingBean.managedBean.circularVer.circularFileName}"
-				           value="#{centralContractBackingBean.getShortFileName(centralContractBackingBean.managedBean.circularVer.circularFileName)}" />					
-			         </h:panelGroup>
+		 		<h:panelGroup id="uploadCircularPg">
+			  		<p:commandButton icon="iconAttachment" value="#{lbl['lbl.bpm.choose.file']}" update="uploadCircularPg, uploadCircularDlg"
+						action="#{centralContractBackingBean.setCentralDetailsValue()}" disabled="#{centralContractBackingBean.managedBean.viewContract}"/>	
+				 	<h:commandLink action="#{centralContractBackingBean.downloadFile(1)}" 
+				 		styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />					
+			  		</h:panelGroup>
 			</h:panelGrid>
 	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="false" 
 	    resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">

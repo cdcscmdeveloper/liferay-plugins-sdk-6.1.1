@@ -76,14 +76,14 @@
 					<p:spacer width="5" />
 					<h:outputText value="#{lbl['lbl.ct.months']}" />
 				</h:panelGroup>
-		     
-		      <h:panelGrid columns="2" style="float:right;">
-		        <p:outputLabel value="*" styleClass="mandatory" />
-		         <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-		       </h:panelGrid> 
-		        <h:commandLink title="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
-		        value="#{centralContractBackingBean.getShortFileName(centralContractBackingBean.managedBean.circularVer.circularFileName)}" 
-		        styleClass="blue_font" 
-				action="#{centralContractBackingBean.downloadFile(1)}" />
 		   </h:panelGrid>
+		   <h:panelGrid columns="2">
+				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
+		        	<p:outputLabel value="*" styleClass="mandatory" />
+		         	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+		    	</h:panelGrid> 
+		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
+		        	styleClass="blue_font" 
+					action="#{centralContractBackingBean.downloadFile(1)}" />
+			</h:panelGrid>
 </ui:composition>

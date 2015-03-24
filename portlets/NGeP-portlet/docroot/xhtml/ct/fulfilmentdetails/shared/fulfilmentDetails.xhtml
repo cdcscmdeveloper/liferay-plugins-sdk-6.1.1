@@ -214,8 +214,7 @@
 	   <h:panelGroup id="uploadAp201Pg">
 			 <p:commandButton oncomplete="uploadAp201Dlg.show();return false;" icon="iconAttachment" 
 				 update="uploadAp201Pg" value="#{lbl['lbl.bpm.choose.file']}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>	
-		     <h:commandLink title="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201FileName}" 
-		          value="#{contractDetailsBackingBean.getShortFileName(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201FileName)}" 
+		     <h:commandLink value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201FileName}" 
 		          styleClass="blue_font" action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201FilePath, contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201FileName)}" />					
 		</h:panelGroup>
     </h:panelGrid> 
