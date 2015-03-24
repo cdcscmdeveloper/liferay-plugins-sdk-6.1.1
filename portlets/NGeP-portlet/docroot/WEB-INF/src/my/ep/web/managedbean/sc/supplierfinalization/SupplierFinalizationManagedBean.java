@@ -35,6 +35,8 @@ import org.primefaces.model.StreamedContent;
 //import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 
 /**
+ * Class to handle user session data corresponding to SupplierFinalizationBackingBean
+ * 
  * @author Faradiana
  * Supplier Finalization Managed Bean
  */
