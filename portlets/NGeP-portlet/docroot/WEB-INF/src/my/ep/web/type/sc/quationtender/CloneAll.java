@@ -1,16 +1,28 @@
-/**
+/* 
+ ***************************************************   
+ * Product nextgen ePerolehan 
  * 
- */
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.type.sc.quationtender;
 
-import my.ep.type.IEnumType;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author SudheerKumar
+ * 
+ * Enum class for ApprovalAction.
+ * 
+ * @author VidyaSagarReddy
+ * @since 22.11.2013
  * 
  */
 public enum CloneAll{
 	
+	/** The Qtn tender title. */
 	QtnTenderTitle {
 		@Override
 		public String getValue() {
@@ -26,6 +38,8 @@ public enum CloneAll{
 
 		
 	},
+	
+	/** The Qtn tender details. */
 	QtnTenderDetails {
 
 		@Override
@@ -41,6 +55,8 @@ public enum CloneAll{
 		}
 
 	},
+	
+	/** The Approval workflow. */
 	ApprovalWorkflow{
 
 		@Override
@@ -56,6 +72,8 @@ public enum CloneAll{
 		}
 		
 	},
+	
+	/** The Supplier qualification criteria. */
 	SupplierQualificationCriteria{
 
 		@Override
@@ -71,6 +89,8 @@ public enum CloneAll{
 		}
 	
 	},
+	
+	/** The Schedule. */
 	Schedule{
 
 		@Override
@@ -86,6 +106,8 @@ public enum CloneAll{
 		}
 		
 	},
+	
+	/** The Documents. */
 	Documents{
 
 		@Override
@@ -103,8 +125,18 @@ public enum CloneAll{
 	};
 		
 	
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public abstract String getValue();
 
+	/**
+	 * Gets the display name.
+	 *
+	 * @return the display name
+	 */
 	public abstract String getDisplayName();
 
 }
