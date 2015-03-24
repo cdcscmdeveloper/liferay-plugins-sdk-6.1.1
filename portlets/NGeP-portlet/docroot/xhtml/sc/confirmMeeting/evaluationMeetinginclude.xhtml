@@ -174,11 +174,11 @@
 					<p:spacer width="5"></p:spacer>
 					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
 				</f:facet>
-				<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
-					<h:outputText
-						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}" />
-				</ui:fragment>
-				<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
+
+				<h:outputText
+					value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}" />
+
+				<!-- <ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
 					<p:selectOneMenu id="meetingRoleId" required="true"
 						label="#{lbl['lbl.sc.eva.committee.role']}"
 						value="#{committeeMember.scCommitteeMember.memberRole.parameterId}"
@@ -189,7 +189,7 @@
 							listener="#{evaluationMeetingBackingBean.chnageMemberRole(index,evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"></p:ajax>
 					</p:selectOneMenu>
 					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
-				</ui:fragment>
+				</ui:fragment> -->
 
 			</p:column>
 
