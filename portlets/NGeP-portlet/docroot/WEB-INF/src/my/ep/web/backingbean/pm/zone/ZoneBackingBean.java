@@ -43,11 +43,13 @@ import my.ep.web.bean.pm.ZoneSearchBean;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.util.MessageUtils;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ZoneBackingBean.
  */
@@ -176,8 +178,16 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	     	}
 		if (zone.isBrandNew()) {			
 			if (isExistZoneCode(getManagedBean().getPmZone().getZoneCode())) {
-				throw new EpException(MessageConst.ERROR_770138);
-
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_770138, new String[] {
+												getManagedBean().getPmZone().getZoneCode(),
+												getManagedBean().getPmZone().getZoneName()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+				return NAV_TO_MAINTAIN;
 			}
 		
 			zone.setZoneCode(zone.getZoneCode().toUpperCase());
@@ -196,15 +206,31 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 		reqDTO.setPmZone(zone);
 
-		ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);
+		ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);		
+		
 		if (resDTO.isSuccessful()) {
 			result = resDTO.isSuccessful();
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Zone", this
-							.getManagedBean().getPmZone().getZoneName()
-							+ " is Successfully saved"));
+			if (this.getManagedBean().getPmZone().isBrandNew()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_780098, new String[] {
+												resDTO.getPmZone().getZoneCode(),
+												resDTO.getPmZone().getZoneName()},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_780097, new String[] {												
+												resDTO.getPmZone().getZoneCode(),
+												resDTO.getPmZone().getZoneName()},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
 
 		}
 		if(getManagedBean().getPmZone().isBrandNew()){
