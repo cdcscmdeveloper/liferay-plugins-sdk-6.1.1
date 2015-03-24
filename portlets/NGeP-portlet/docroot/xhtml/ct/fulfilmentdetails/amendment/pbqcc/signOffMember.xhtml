@@ -62,7 +62,7 @@
               </p:dataTable>
          </h:panelGrid>
      </p:panel>
-     <p:panel header="Attachement" toggleable="true" 
+     <p:panel header="#{lbl['lbl.txt.attachment']}" toggleable="true" 
         rendered="#{amendmentBackingBean.managedBean.contractVer.committeDecisionAttachements.size() > 0}">
 		<table style="width: 100%">
 				    <tr>
@@ -84,8 +84,7 @@
 						<tr>
 							<td></td>
 							<td>
-								<h:commandLink title="#{attachFile.fileName}" 
-									value="#{amendmentBackingBean.getShortFileName(attachFile.fileName)}"
+								<h:commandLink value="#{attachFile.fileName}" 
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 			 	 			</td>
 						</tr>

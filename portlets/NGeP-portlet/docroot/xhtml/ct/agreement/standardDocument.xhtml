@@ -137,8 +137,7 @@
 					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
 					icon="iconAttachment" value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg, uploadAgDlg" />
 				<h:outputLabel rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}" />
-				<h:commandLink title="#{agreementBackingBean.managedBean.ctAgreement.fileName}" 
-					value="#{agreementBackingBean.getShortFileName(agreementBackingBean.managedBean.ctAgreement.fileName)}"
+				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}" 
 					style="float:left;" styleClass="blue_font"
 					rendered="#{agreementBackingBean.managedBean.ctAgreement.fileName != null}"
 					action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.filePath, agreementBackingBean.managedBean.ctAgreement.fileName)}" />

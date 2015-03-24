@@ -99,19 +99,18 @@
 					disabled="true" maxlength="4" style="text-align:right; width:50px;" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.months']}" />
-			</h:panelGroup>	
-			
-			 <h:panelGrid columns="2" style="float:right;">
-			     <p:outputLabel value="*" styleClass="mandatory" />
-				 <h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-			</h:panelGrid>
-		
-		        <h:panelGroup id="uploadCircularPg">
-					<h:commandLink title="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-						value="#{panelBackingBean.getShortFileName(panelBackingBean.managedBean.circularVer.circularFileName)}" 
-					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile()}" />				
-			  </h:panelGroup>	
+			</h:panelGroup>
 	</h:panelGrid>
+	<h:panelGrid columns="2">
+	 	<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
+			<p:outputLabel value="*" styleClass="mandatory" />
+			<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+		</h:panelGrid>
+		<h:panelGroup id="uploadCircularPg">
+			<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+				styleClass="blue_font" action="#{panelBackingBean.downloadFile()}" />				
+		</h:panelGroup>					
+	</h:panelGrid>		
 	</p:panel>
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" >
