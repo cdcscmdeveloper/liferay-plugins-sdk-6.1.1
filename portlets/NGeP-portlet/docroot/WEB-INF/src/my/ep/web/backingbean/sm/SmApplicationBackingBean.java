@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -137,12 +139,14 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -8142,8 +8146,70 @@ public class SmApplicationBackingBean extends
 	 */
 	public void retrieveBusinessTypeList() {
 		SelectItem[] selectItems = getDropdownCodeValues(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE);
-		this.getManagedBean().setBusinessTypeLs(selectItems);
-		initTypeOfBusiness();
+		List<SelectItem> businessTypeSelectItems = new ArrayList<SelectItem>();
+		if (selectItems != null && selectItems.length > 0) {
+			String bizType = getManagedBean().getSmSupplier().getBusinessType();
+			for (SelectItem item : selectItems) {
+				if (item.getValue() != null) {
+					if (bizType
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+							|| bizType
+									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+
+						if (item.getValue()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+								|| item.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)) {
+							businessTypeSelectItems.add(item);
+						}
+					} else if (bizType
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+							|| bizType
+									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
+						if (item.getValue()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+								|| item.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
+							businessTypeSelectItems.add(item);
+						}
+					} else if (bizType
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+							|| bizType
+									.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
+						if (item.getValue()
+								.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
+								|| item.getValue()
+										.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)) {
+							businessTypeSelectItems.add(item);
+						}
+					}
+				}
+			}
+		}
+
+		// sort
+		if (CollectionUtils.isNotEmpty(businessTypeSelectItems)) {
+			Collections.sort(businessTypeSelectItems,
+					new Comparator<SelectItem>() {
+						@Override
+						public int compare(final SelectItem s1,
+								final SelectItem s2) {
+							return StringUtil
+									.upperCase(s1.getLabel())
+									.compareTo(
+											StringUtil.upperCase(s2.getLabel()));
+						}
+					});
+		}
+		this.getManagedBean()
+				.setBusinessTypeLs(
+						businessTypeSelectItems
+								.toArray(new SelectItem[businessTypeSelectItems
+										.size()]));
+		getManagedBean().setBusinessTypeVal(
+				getParameterDesc(
+						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
+						getManagedBean().getSmSupplier().getBusinessType()));
 	}
 
 	/**
@@ -8523,31 +8589,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Initiate the type of business for the supplier in the managed bean.
-	 */
-	private void initTypeOfBusiness() {
-		List<SelectItem> businessTypeSelectItems = new ArrayList<SelectItem>();
-		if (this.getManagedBean().getBusinessTypeLs() != null) {
-			businessTypeSelectItems = Arrays.asList(this.getManagedBean()
-					.getBusinessTypeLs());
-			if (getManagedBean().getSmSupplier() != null) {
-				for (SelectItem selectItem : businessTypeSelectItems) {
-					if (selectItem.getValue() != null
-							&& selectItem.getValue() != null) {
-						if (selectItem.getValue().equals(
-								getManagedBean().getSmSupplier()
-										.getBusinessType())) {
-							getManagedBean().setBusinessTypeVal(
-									selectItem.getLabel().toString());
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Update and set all categories, added in the company experience section to
 	 * the managed bean mapping
 	 */
@@ -8597,32 +8638,6 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setSelectedCompExpCats(selectedCompExpCatsList);
-	}
-
-	/**
-	 * Gets the business type description or lable based on code.
-	 * 
-	 * @param businessTypeVal
-	 *            - String
-	 * @return String - the business type description or label
-	 */
-	public String getBusinessType(String businessTypeVal) {
-		String retVal = "";
-		List<SelectItem> businessTypeItems = new ArrayList<SelectItem>();
-		if (StringUtils.isNotBlank(businessTypeVal)) {
-			if (getManagedBean().getBusinessTypeLs() != null
-					&& getManagedBean().getBusinessTypeLs().length > 0) {
-				businessTypeItems = Arrays.asList(getManagedBean()
-						.getBusinessTypeLs());
-				for (SelectItem item : businessTypeItems) {
-					if (businessTypeVal.equals(item.getValue())) {
-						retVal = item.getLabel();
-						break;
-					}
-				}
-			}
-		}
-		return retVal;
 	}
 
 	/**

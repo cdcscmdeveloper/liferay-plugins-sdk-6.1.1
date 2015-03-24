@@ -67,13 +67,12 @@
 					<td style="word-wrap: break-word"><p:outputLabel
 							rendered="#{backingBean.managedBean.disabledBusinessType}"
 							styleClass="outputLabel-view"
-							value="#{backingBean.getBusinessType(backingBean.managedBean.smSupplier.businessType)}" />
+							value="#{backingBean.managedBean.businessTypeVal}" />
 						<p:selectOneMenu id="smBusTypeId" required="true"
 							label="#{lbl['lbl.sm.regtype']}"
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							rendered="#{!backingBean.managedBean.disabledBusinessType}"
 							style="width:310px">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
 						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"
 							showSummary="true" showDetail="false" display="icon" /></td>
