@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.util.Date;
@@ -70,7 +73,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return scQtMeetings;
 	}
 	/**
-	 * @param scQtMeetings the scQtMeetings to set
+	 * @param scQtMeetings 
+	 * 				the scQtMeetings to set
 	 */
 	public void setScQtMeetings(List<ScQtMeeting> scQtMeetings) {
 		this.scQtMeetings = scQtMeetings;
@@ -82,7 +86,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return meetingMultiSelect;
 	}
 	/**
-	 * @param meetingMultiSelect the meetingMultiSelect to set
+	 * @param meetingMultiSelect 
+	 * 					the meetingMultiSelect to set
 	 */
 	public void setMeetingMultiSelect(List<ScQtMeeting> meetingMultiSelect) {
 		this.meetingMultiSelect = meetingMultiSelect;
@@ -94,7 +99,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return committeMember;
 	}
 	/**
-	 * @param committeMember the committeMember to set
+	 * @param committeMember 
+	 * 					the committeMember to set
 	 */
 	public void setCommitteMember(ScCommitteeMember committeMember) {
 		this.committeMember = committeMember;
@@ -106,7 +112,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return selections;
 	}
 	/**
-	 * @param selections the selections to set
+	 * @param selections 
+	 * 				the selections to set
 	 */
 	public void setSelections(List<SelectItem> selections) {
 		this.selections = selections;
@@ -118,7 +125,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return tabTitle;
 	}
 	/**
-	 * @param tabTitle the tabTitle to set
+	 * @param tabTitle 
+	 * 				the tabTitle to set
 	 */
 	public void setTabTitle(String tabTitle) {
 		this.tabTitle = tabTitle;
@@ -130,7 +138,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return name;
 	}
 	/**
-	 * @param name the name to set
+	 * @param name 
+	 * 			the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -142,7 +151,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return identificationNo;
 	}
 	/**
-	 * @param identificationNo the identificationNo to set
+	 * @param identificationNo 
+	 * 					the identificationNo to set
 	 */
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
@@ -154,7 +164,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return identificationType;
 	}
 	/**
-	 * @param identificationType the identificationType to set
+	 * @param identificationType 
+	 * 					the identificationType to set
 	 */
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
@@ -166,7 +177,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return externalUsers;
 	}
 	/**
-	 * @param externalUsers the externalUsers to set
+	 * @param externalUsers 
+	 * 				the externalUsers to set
 	 */
 	public void setExternalUsers(List<PmUser> externalUsers) {
 		this.externalUsers = externalUsers;
@@ -178,7 +190,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return selectedPmUser;
 	}
 	/**
-	 * @param selectedPmUser the selectedPmUser to set
+	 * @param selectedPmUser 
+	 * 				the selectedPmUser to set
 	 */
 	public void setSelectedPmUser(List<PmUser> selectedPmUser) {
 		this.selectedPmUser = selectedPmUser;
@@ -190,7 +203,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return roleTypes;
 	}
 	/**
-	 * @param roleTypes the roleTypes to set
+	 * @param roleTypes 
+	 * 				the roleTypes to set
 	 */
 	public void setRoleTypes(SelectItem[] roleTypes) {
 		this.roleTypes = roleTypes;
@@ -202,7 +216,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return roleName;
 	}
 	/**
-	 * @param roleName the roleName to set
+	 * @param roleName 
+	 * 				the roleName to set
 	 */
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
@@ -214,7 +229,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return committeeMembersList;
 	}
 	/**
-	 * @param committeeMembersList the committeeMembersList to set
+	 * @param committeeMembersList 
+	 * 					the committeeMembersList to set
 	 */
 	public void setCommitteeMembersList(List<ScCommitteeMember> committeeMembersList) {
 		this.committeeMembersList = committeeMembersList;
@@ -226,7 +242,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return cloneQtnTenderSearchBean;
 	}
 	/**
-	 * @param cloneQtnTenderSearchBean the cloneQtnTenderSearchBean to set
+	 * @param cloneQtnTenderSearchBean 
+	 * 							the cloneQtnTenderSearchBean to set
 	 */
 	public void setCloneQtnTenderSearchBean(
 			QtnTenderSearchBean cloneQtnTenderSearchBean) {
@@ -239,7 +256,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return cloneTenderList;
 	}
 	/**
-	 * @param cloneTenderList the cloneTenderList to set
+	 * @param cloneTenderList 
+	 * 					the cloneTenderList to set
 	 */
 	public void setCloneTenderList(List<ScQt> cloneTenderList) {
 		this.cloneTenderList = cloneTenderList;
@@ -251,7 +269,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return selectedCloneTender;
 	}
 	/**
-	 * @param selectedCloneTender the selectedCloneTender to set
+	 * @param selectedCloneTender 
+	 * 					the selectedCloneTender to set
 	 */
 	public void setSelectedCloneTender(List<ScQt> selectedCloneTender) {
 		this.selectedCloneTender = selectedCloneTender;
@@ -264,7 +283,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return scQtCommittee;
 	}
 	/**
-	 * @param scQtCommittee the scQtCommittee to set
+	 * @param scQtCommittee 
+	 * 				the scQtCommittee to set
 	 */
 	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
 		this.scQtCommittee = scQtCommittee;
@@ -276,7 +296,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return qtCommitteeRemarks;
 	}
 	/**
-	 * @param qtCommitteeRemarks the qtCommitteeRemarks to set
+	 * @param qtCommitteeRemarks 
+	 * 					the qtCommitteeRemarks to set
 	 */
 	public void setQtCommitteeRemarks(List<ScQtCommitteRemarks> qtCommitteeRemarks) {
 		this.qtCommitteeRemarks = qtCommitteeRemarks;
@@ -288,7 +309,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return scQt;
 	}
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt 
+	 * 			the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
@@ -300,7 +322,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return cloneSearchQTDataModel;
 	}
 	/**
-	 * @param cloneSearchQTDataModel the cloneSearchQTDataModel to set
+	 * @param cloneSearchQTDataModel 
+	 * 						the cloneSearchQTDataModel to set
 	 */
 	public void setCloneSearchQTDataModel(
 			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
@@ -313,7 +336,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return cloneCommitteMembers;
 	}
 	/**
-	 * @param cloneCommitteMembers the cloneCommitteMembers to set
+	 * @param cloneCommitteMembers 
+	 * 				the cloneCommitteMembers to set
 	 */
 	public void setCloneCommitteMembers(List<ScCommitteeMember> cloneCommitteMembers) {
 		this.cloneCommitteMembers = cloneCommitteMembers;
@@ -325,7 +349,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return cloneCommitteMembersSelect;
 	}
 	/**
-	 * @param cloneCommitteMembersSelect the cloneCommitteMembersSelect to set
+	 * @param cloneCommitteMembersSelect 
+	 * 						the cloneCommitteMembersSelect to set
 	 */
 	public void setCloneCommitteMembersSelect(
 			List<ScCommitteeMember> cloneCommitteMembersSelect) {
@@ -338,7 +363,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return processName;
 	}
 	/**
-	 * @param processName the processName to set
+	 * @param processName 
+	 * 				the processName to set
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
@@ -350,7 +376,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return payLoad;
 	}
 	/**
-	 * @param payLoad the payLoad to set
+	 * @param payLoad 
+	 * 			the payLoad to set
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
@@ -362,7 +389,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return selectedCommitteeMembersList;
 	}
 	/**
-	 * @param selectedCommitteeMembersList the selectedCommitteeMembersList to set
+	 * @param selectedCommitteeMembersList 
+	 * 							the selectedCommitteeMembersList to set
 	 */
 	public void setSelectedCommitteeMembersList(
 			List<ScCommitteeMember> selectedCommitteeMembersList) {
@@ -375,7 +403,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return originalCommitteeMembersList;
 	}
 	/**
-	 * @param originalCommitteeMembersList the originalCommitteeMembersList to set
+	 * @param originalCommitteeMembersList 
+	 * 						the originalCommitteeMembersList to set
 	 */
 	public void setOriginalCommitteeMembersList(
 			List<ScCommitteeMember> originalCommitteeMembersList) {
@@ -388,7 +417,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return deletedMeetingList;
 	}
 	/**
-	 * @param deletedMeetingList the deletedMeetingList to set
+	 * @param deletedMeetingList 
+	 * 					the deletedMeetingList to set
 	 */
 	public void setDeletedMeetingList(List<ScQtMeeting> deletedMeetingList) {
 		this.deletedMeetingList = deletedMeetingList;
@@ -400,7 +430,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		return committeeType;
 	}
 	/**
-	 * @param committeeType the committeeType to set
+	 * @param committeeType 
+	 * 				the committeeType to set
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
@@ -414,7 +445,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @param selectAll the selectAll to set
+	 * @param selectAll 
+	 * 				the selectAll to set
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
