@@ -57,6 +57,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -741,6 +742,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The templatespec Newable. */
 	private boolean specNewable = true;
+	
+	/** For Create Specification  Screen. */
+	private QtnTenderSearchBean qtnTendertemplateSearchBean;
 
 	/**
 	 * Checks if is spec complete.
@@ -1166,7 +1170,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 * Instantiates a new specification managed bean.
 	 */
 	public SpecificationManagedBean() {
-
+		qtnTendertemplateSearchBean = new QtnTenderSearchBean();
 	}
 
 	/**
@@ -4942,6 +4946,21 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSpecNewable(boolean specNewable) {
 		this.specNewable = specNewable;
+	}
+
+	/**
+	 * @return the qtnTendertemplateSearchBean
+	 */
+	public QtnTenderSearchBean getQtnTendertemplateSearchBean() {
+		return qtnTendertemplateSearchBean;
+	}
+
+	/**
+	 * @param qtnTendertemplateSearchBean the qtnTendertemplateSearchBean to set
+	 */
+	public void setQtnTendertemplateSearchBean(
+			QtnTenderSearchBean qtnTendertemplateSearchBean) {
+		this.qtnTendertemplateSearchBean = qtnTendertemplateSearchBean;
 	}
 
 }
