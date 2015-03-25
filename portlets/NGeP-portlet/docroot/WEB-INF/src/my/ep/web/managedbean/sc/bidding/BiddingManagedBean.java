@@ -35,8 +35,8 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.CartesianChartModel;
 
 /**
+ * Bidding Managed Bean
  * @author Venkat Chanumolu
- * 
  */
 
 @ManagedBean(name = "biddingMB")
