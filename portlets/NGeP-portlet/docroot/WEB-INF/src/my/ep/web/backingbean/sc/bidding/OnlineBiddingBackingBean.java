@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.bidding;
 
 import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -44,6 +45,11 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
+/**
+ * Online Bidding Backing Bean
+ * @author Venkat Chanumolu
+ *
+ */
 @ManagedBean(name = "onlineBiddingBB")
 @ViewScoped
 public class OnlineBiddingBackingBean extends BaseBackingBean {
@@ -93,6 +99,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			commonUtils
 					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
+	/**
+	 * Default Constructor
+	 */
 	public OnlineBiddingBackingBean() {
 
 	}
@@ -176,6 +185,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	}
 
+	/**
+	 * Listener method for Bid selection events
+	 * @throws PortalException
+	 * @throws SystemException
+	 * @throws IOException
+	 */
 	public void selectedBidChangeListener() throws PortalException,
 			SystemException, IOException {
 		log.info("selectedBidChangeListener");
@@ -205,6 +220,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				+ bidScheduleId);
 	}
 
+	/**
+	 * Listener method for poll events
+	 * @throws PortalException
+	 * @throws SystemException
+	 * @throws IOException
+	 */
 	public void pollListener() throws PortalException, SystemException,
 			IOException {
 		log.info("pollListener - start");
@@ -278,6 +299,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 	}
 
+	/**
+	 * action method to populate item details
+	 * @param scBidPrice
+	 */
 	public void itemDetialsPopupAction(ScBidPrice scBidPrice) {
 		log.info("itemDetialsPopupAction");
 
@@ -285,6 +310,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	}
 
+	/**
+	 * Listener method for spinner component change events
+	 * @param scBidPrice
+	 */
 	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
 
 		log.info("decrementAmountValueChangeListener");
@@ -319,6 +348,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.doubleValue();
 	}
 
+	/**
+	 * action method to confirm and submit bid price
+	 * @param scBidPrice
+	 */
 	public void confirmAndSubmitBIdPrice(ScBidPrice scBidPrice) {
 
 		log.info("confirmAndSubmitBIdPrice");
@@ -358,6 +391,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 	}
 
+	/**
+	 * action method to update bid price and calculate rank
+	 * @param bidPriceItem
+	 */
 	public void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
 		log.info("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
@@ -407,6 +444,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 	}
 
+	/**
+	 * Listener method to notify bid status change
+	 * @throws PortalException
+	 * @throws SystemException
+	 * @throws IOException
+	 */
 	public void biddStatusNotificationAction() throws PortalException,
 			SystemException, IOException {
 		log.info("biddStatusNotificationAction");
@@ -447,6 +490,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
+	 * method to calculate item  new price total
 	 * @return the itemNewBidPriceTotal
 	 */
 	public String getItemNewBidPriceTotal() {
@@ -491,6 +535,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
+	 * method to calculate remaining time for bid
 	 * @return the remainingBidTime
 	 */
 	public Long getRemainingBidTime() {
@@ -518,6 +563,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
+	 * method to calculate item last bid price total
 	 * @return the itemLastBidPriceTotal
 	 */
 	public String getItemLastBidPriceTotal() {
@@ -550,6 +596,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
+	 * method to calculate refresh interval for poll component
 	 * @return the interval
 	 */
 	public Long getInterval() {
@@ -573,6 +620,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
+	 * method to return remaining seconds for static clock
 	 * @return the remainingSeconds
 	 */
 	public String getRemainingSeconds() {
@@ -589,6 +637,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
+	 * method to return remaining minutes for static clock
 	 * @return the remainingMinutes
 	 */
 	public String getRemainingMinutes() {
@@ -605,6 +654,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
+	 * method to return remaining hours for static clock
 	 * @return the remainingHours
 	 */
 	public String getRemainingHours() {
