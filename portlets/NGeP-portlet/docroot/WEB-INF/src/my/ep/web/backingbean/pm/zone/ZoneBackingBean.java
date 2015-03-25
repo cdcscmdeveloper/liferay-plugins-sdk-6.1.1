@@ -73,6 +73,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	/** The result. */
 	boolean result = false;
+	
+	/** The result. *//*
+	boolean statusField = false;*/
 	// Default value
 	/** The Constant SEARCH_DEFAULT. */
 	public static final boolean SEARCH_DEFAULT = false;
@@ -81,14 +84,14 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * Instantiates a new zone backing bean.
 	 */
 	public ZoneBackingBean() {
-
+         
 	}
 
 	/**
 	 * Pre loading zone.
 	 */
 	public void preLoadingZone() {	
-		log.info("preLoading Zone method");
+		log.info("preLoading Zone method");		
 		this.resetZoneSearchBean();		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -100,6 +103,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 */
 	public void resetZoneSearchBean() {
 		log.info("ZoneSearchBeanLoading ----");
+		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setZoneSearchBean(new ZoneSearchBean());
 		searchZone = new SearchZonePagingDataModel();
 	}
@@ -117,14 +121,14 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * @return the string
 	 */
 	public String backToSearch() {
-
+		this.getManagedBean().setLazy(true);		
 		return NAV_TO_MAIN;
 	}
 
 	/**
 	 * Initial zone.
 	 */
-	public void initialZone() {
+	public void initialZone() {		
 		getManagedBean().setPmZone(new PmZone());
 		getManagedBean().setZoneStateList(new ArrayList<PmZoneState>());
 		
@@ -355,12 +359,15 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
+		
+		
 
 		/**
 		 * Instantiates a new search zone paging data model.
 		 */
 		public SearchZonePagingDataModel() {
-			super("searchZone");
+			
+			super("searchZone",getManagedBean().isLazy());
 		}
 
 		
