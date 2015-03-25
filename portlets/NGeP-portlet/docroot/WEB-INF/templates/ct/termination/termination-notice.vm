@@ -57,8 +57,8 @@
       <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="text-align: left;"><strong>Notis Penamatan Kontrak</strong></div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="text-align: left;"><strong>Kontrak:<span class="Apple-tab-span" style="white-space: pre;">			</span>$contractTitle</strong></div>
-      <div style="text-align: left;"><strong>No. Kontrak:<span class="Apple-tab-span" style="white-space:pre">		</span>$contractPhysicalNo</strong></div>
+      <div style="text-align: left;"><strong>Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">			</span>$contractTitle</strong></div>
+      <div style="text-align: left;"><strong>No. Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space:pre">		</span>$contractPhysicalNo</strong></div>
       <div style="text-align: left;"><strong>Had Nilai Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span>RM&nbsp;$contractAmount</strong></div>
       <div style="text-align: left;"><strong>Tempoh Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$effDate sehingga $expDate</strong></div>
       <div style="font-weight: normal; text-align: left;">
