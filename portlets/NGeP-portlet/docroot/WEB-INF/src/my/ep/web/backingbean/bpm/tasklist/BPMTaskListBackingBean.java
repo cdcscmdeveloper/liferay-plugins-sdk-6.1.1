@@ -442,16 +442,25 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE,
 				SourcingConstants.QT_APPROVAL_PAGE);
-		
+
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_CANCELATION,SourcingConstants.QT_APPROVAL_PAGE);
-		
+				+ SCProcessNameConst.APPROVE_CANCELATION,
+				SourcingConstants.QT_APPROVAL_PAGE);
+
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_SUPPLIER_ADD,SourcingConstants.QT_ADDITIONAL_ATTANDANCE_PAGE);
-		
+				+ SCProcessNameConst.APPROVE_SUPPLIER_ADD,
+				SourcingConstants.QT_ADDITIONAL_ATTANDANCE_PAGE);
+
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
-				+ SCProcessNameConst.APPROVE_QT_CHANGE,SourcingConstants.QT_APPROVAL_PAGE);
-		
+				+ SCProcessNameConst.BPK_APPROVE_QT_CHANGE,
+				SourcingConstants.QT_APPROVAL_PAGE);
+		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+				+ SCProcessNameConst.FC_APPROVE_QT_CHANGE,
+				SourcingConstants.QT_APPROVAL_PAGE);
+		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+				+ SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE,
+				SourcingConstants.QT_APPROVAL_PAGE);
+
 		this.getManagedBean().setBpmMap(temp);
 
 		System.out.println("testing BPM******");
