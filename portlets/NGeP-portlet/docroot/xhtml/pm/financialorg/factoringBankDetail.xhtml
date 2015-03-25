@@ -55,29 +55,39 @@
 				<p:message for="accountNo" id="accountNoMsg" display="icon" />
 			</p:column>
 
-			<p:column style="width: 17% !important">
+			<p:column style="width: 15% !important">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.financialorg.effdate']}" />
 				</f:facet>
-
+				<h:outputText value="#{financialacc.effDate}"
+					rendered ="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.effDate)}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
 				<p:calendar value="#{financialacc.effDate}" showOn="button"
 					id="effDte" size="10" readonlyInput="true" required="true"
 					label="#{lbl['lbl.pm.financialorg.effdate']}"
 					mindate="#{financialOrgBackingBean.managedBean.currentDate}"
 			  		maxdate="#{ProfileManagementConst.maxDate}"
-					disabled="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.effDate)}"
+					rendered="#{financialacc.brandNew or financialOrgBackingBean.editableBankDet(financialacc.effDate)}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" update="expDate" />
 				</p:calendar>
 				<p:message for="effDte" id="effDteMsg" display="icon" />
 			</p:column>
 
-			<p:column style="width: 17% !important" headerText="#{lbl['lbl.pm.financialorg.expdate']}" >
+			<p:column style="width: 15% !important" headerText="#{lbl['lbl.pm.financialorg.expdate']}" >
+				<h:outputText value="#{financialacc.expDate}"
+					rendered="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.expDate)}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+					
 				<p:calendar id="expDate" value="#{financialacc.expDate}"
 					showOn="button" size="10" mindate="#{financialOrgBackingBean.managedBean.currentDate}"
 					readonlyInput="true"
-					disabled="#{!financialacc.brandNew and !financialOrgBackingBean.editableBankDet(financialacc.expDate)}"
+					rendered="#{financialacc.brandNew or financialOrgBackingBean.editableBankDet(financialacc.expDate)}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 
 				</p:calendar>
@@ -92,7 +102,7 @@
 				</p:selectOneMenu>
 			</p:column>
 			
-			<p:column width="5%" headerText="#{lbl['lbl.pm.financialorg.action']}">
+			<p:column width="9%" headerText="#{lbl['lbl.pm.financialorg.action']}">
 	             <p:commandLink partialSubmit="true" disabled="#{!financialacc.brandNew}"
 					process="@this" action="#{financialOrgBackingBean.deleteFinancialAcc(rowIndex)}"
 					update="financialaccid" >
