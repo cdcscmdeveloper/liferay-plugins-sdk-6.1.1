@@ -974,7 +974,14 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722526);
 			}
 		}
-
+		if (appl.getSmCompanyBasic() != null && !appl.getSmCompanyBasic().isWithFederal()
+				&& !appl.getSmCompanyBasic().isWithGlc()
+				&& !appl.getSmCompanyBasic().isWithOthers()
+				&& !appl.getSmCompanyBasic().isWithState()
+				&& !appl.getSmCompanyBasic().isWithStatutory()) {
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_722601);
+		}
 		appl = null;
 		return validSave;
 
