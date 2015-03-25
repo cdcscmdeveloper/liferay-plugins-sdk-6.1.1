@@ -23,6 +23,9 @@ public class SupportDocumentSearchBean {
 	private Long pmZone;
 	private String docName;
 	private String businessCategory;
+	private String certBodyName;
+	private String docStatus;
+	
 	/**
 	 * @return the docCategoryParam
 	 */
@@ -130,6 +133,18 @@ public class SupportDocumentSearchBean {
 	 */
 	public void setDocCategoryParamCode(String docCategoryParamCode) {
 		this.docCategoryParamCode = docCategoryParamCode;
+	}
+	public String getDocStatus() {
+		return docStatus;
+	}
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	public String getCertBodyName() {
+		return certBodyName;
+	}
+	public void setCertBodyName(String certBodyName) {
+		this.certBodyName = certBodyName;
 	}
 	
 	
