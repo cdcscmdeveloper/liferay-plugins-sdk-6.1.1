@@ -293,6 +293,34 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
 		}
+		
+		
+		if (certBody.getBodyCode() != null
+				&& !"".equalsIgnoreCase(certBody.getBodyCode())) { 
+			SearchFilterBean profCertSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());				
+		
+			profCertSearchBean.setSearchField("bodyCode");
+			profCertSearchBean.setCaseInsensitive(true);		
+			profCertSearchBean.setSearchValue(certBody.getBodyCode());
+			ISearchBean<PmCertBody> searchBean = new SearchBean<PmCertBody>();
+			searchBean.getDataFilterBeans().add(profCertSearchBean);
+			
+			ICertBodySO bodySO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICertBodySO.class);
+			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
+			certBodyReqDTO.setCertBodySearchBean(searchBean);
+			CertBodyResDTO certBodyResDTO = bodySO.retrieveBodyList(certBodyReqDTO);
+			if(certBodyResDTO.getCertBodyResultBean() != null &&
+					certBodyResDTO.getCertBodyResultBean().getResultList() !=null &&
+					!certBodyResDTO
+					.getCertBodyResultBean().getResultList().isEmpty() ){
+				throw new EpException(MessageConst.ERROR_770160,
+						new String[] {certBody.getBodyCode()});
+			}
+			
+		}
 	}		
 
 	/**
@@ -324,8 +352,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
 										MessageConst.INFO_770091, new String[] {
-												resDTO.getCertBody().getBodyCode(),
-												resDTO.getCertBody().getBodyCode()
+												resDTO.getCertBody().getBodyName()
 														 },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
@@ -335,9 +362,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_770092, new String[] {
-												resDTO.getCertBody().getBodyCode(),
-												resDTO.getCertBody().getBodyCode() },
+										MessageConst.INFO_770092,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				redirectUrl = null;

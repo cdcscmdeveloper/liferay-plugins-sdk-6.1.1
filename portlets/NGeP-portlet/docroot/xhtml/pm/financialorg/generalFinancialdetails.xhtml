@@ -28,6 +28,7 @@
 				<td><p:inputText id="finOrgName" styleClass="ppDisplayTextL"
 						label="#{lbl['lbl.pm.financialorg.name']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.finOrgName}"
+						disabled ="#{financialOrgBackingBean.checkFinancialServices()}"
 						required="#{!empty param['disableValidation']}" size="40" maxlength="100" /></td>
 				<td><p:message id="finOrgNameMsg" for="finOrgName"
 						display="icon" /></td>
