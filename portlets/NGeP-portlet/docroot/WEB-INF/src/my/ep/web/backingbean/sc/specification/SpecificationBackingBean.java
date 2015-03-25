@@ -14534,10 +14534,9 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
-	 * Check all conditions.
-	 * 
-	 * @param event
-	 *            the event
+	 * Method to check all the state/districts in data table.
+	 *
+	 * @param event the event
 	 */
 	public void checkAllConditions(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -14555,27 +14554,81 @@ public class SpecificationBackingBean extends
 			}
 			getManagedBean().setZoneTrees(list);
 		} else {
-
+			
 		}
 	}
-
-	public void checkAllPopUpConditions(AjaxBehaviorEvent event) {
-		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+	
+	/**
+	 * Method to check all the state/districts in data table in dialog.
+	 *
+	 * @param isCheck
+	 */
+	public void checkAllPopUpConditions(boolean ischeck) {
+		// boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		TreeNode treeNode = getManagedBean().getRootLocationTree();
 		if (treeNode != null) {
 			for (TreeNode stateNode : treeNode.getChildren()) {
 				if (stateNode.getChildCount() > 0) {
 					for (TreeNode districtNode : stateNode.getChildren()) {
-						districtNode.setSelected(flag);
+						districtNode.setSelected(ischeck);
 					}
 				}
-				stateNode.setSelected(flag);
+				stateNode.setSelected(ischeck);
 			}
 			getManagedBean().setRootLocationTree(treeNode);
 		} else {
-
+			
 		}
 	}
+	
+	/**
+	 * Method to check all the state/districts in data table.
+	 *
+	 * @param event the event
+	 */
+	public void checkAllZoneGeneral(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<TreeNode> list = getManagedBean().getZoneGeneralTrees();
+		if (null != list) {
+			for (TreeNode node : list) {
+				for (TreeNode childNode : node.getChildren()) {
+					if (childNode.getChildCount() > 0) {
+						for (TreeNode node2 : childNode.getChildren()) {
+							node2.setSelected(flag);
+						}
+					}
+					childNode.setSelected(flag);
+				}
+			}
+			getManagedBean().setZoneGeneralTrees(list);
+		} else {
+			
+		}
+	}
+	
+	/**
+	 * Method to check all the state/districts in data table in dialog.
+	 *
+	 * @param isCheck
+	 */
+	public void checkAllZoneGeneralPopUp(boolean ischeck) {
+		// boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		TreeNode treeNode = getManagedBean().getRootZoanlTree();
+		if (treeNode != null) {
+			for (TreeNode stateNode : treeNode.getChildren()) {
+				if (stateNode.getChildCount() > 0) {
+					for (TreeNode districtNode : stateNode.getChildren()) {
+						districtNode.setSelected(ischeck);
+					}
+				}
+				stateNode.setSelected(ischeck);
+			}
+			getManagedBean().setRootZoanlTree(treeNode);
+		} else {
+			
+		}
+	}
+
 
 	/**
 	 * Method to prepare qt search criteria.
