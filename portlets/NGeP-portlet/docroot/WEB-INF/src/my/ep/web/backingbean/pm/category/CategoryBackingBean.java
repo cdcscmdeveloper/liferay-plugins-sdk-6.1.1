@@ -899,6 +899,18 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
 				this.getManagedBean().getPmCategoryL3().setCategoryTypeCode(parameterResDTO.getPmParameter());
 			}
+			
+			//check the duplicate restriction
+			if(!checkCategoryRestrDuplicateCompanyType()){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_775006,																
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return "/xhtml/pm/category/categoryl3.xhtml";
+		   }
+			
 			if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null 
 					&& this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size()>0){ 
 				for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs())
@@ -937,10 +949,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 			}
 			
-			//check the duplicate restriction
-			if(!checkCategoryRestrDuplicateCompanyType()){
-				throw new EpException(MessageConst.ERROR_775006);
-			}
+			
 			
 			//remove basic category if any
 			log.info("this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
