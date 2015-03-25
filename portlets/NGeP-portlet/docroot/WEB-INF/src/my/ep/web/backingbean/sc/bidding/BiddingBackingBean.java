@@ -45,12 +45,21 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
+/**
+ * Bidding Backing Bean
+ * 
+ * @author Venkat Chanumolu
+ */
+
 @ManagedBean(name = "biddingBB")
 @ViewScoped
 public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	private static Logger log = Logger.getLogger(BiddingBackingBean.class);
 
+	/**
+	 * Default Constructor
+	 */
 	public BiddingBackingBean() {
 		getStatusDescList();
 	}
@@ -62,6 +71,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		log.info(message);
 	}
 
+	/**
+	 * method to reset search fields
+	 */
 	public void resetSearchFormAction() {
 
 		getManagedBean().setSearchBiddingNo(null);
@@ -75,6 +87,11 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Listener method for search for start date selection events
+	 * 
+	 * @param event
+	 */
 	public void startDateSelectListener(SelectEvent event) {
 
 		getManagedBean()
@@ -82,6 +99,11 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * method to fetch status drop down list values
+	 * 
+	 * @return
+	 */
 	public List<PmStatusDesc> getStatusDescList() {
 		List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
 
@@ -115,6 +137,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		return statusDescs;
 	}
 
+	/**
+	 * Action method for bid pause event
+	 * @param bid
+	 */
 	public void bidPausePopUpAction(ScBidSchedule bid) {
 
 		getManagedBean().setBidAction(new ScBidAction());
@@ -129,6 +155,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Action method for bid cancel event
+	 * @param bid
+	 */
 	public void bidCancelPopUpAction(ScBidSchedule bid) {
 
 		getManagedBean().setBidAction(new ScBidAction());
@@ -141,6 +171,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Action method for bid pause or cancel event
+	 * @return
+	 */
 	public String bidPauseOrCancelAction() {
 
 		IBiddingSO biddingSO = null;
@@ -172,6 +206,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Action method for bid reschedule or re-bid event
+	 * @param bid
+	 */
 	public void reScheduleOrReBidPopUpAction(ScBidSchedule bid) {
 
 		IBiddingSO biddingSO = null;
@@ -216,6 +254,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Listener method for bid action type change
+	 * @param e
+	 */
 	public void bidActionTypeChangeListener(AjaxBehaviorEvent e) {
 
 		String type = (String) e.getComponent().getAttributes().get("value");
@@ -235,6 +277,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Listener Method for date selection events for resume bid
+	 * @param e
+	 */
 	public void resumeBidNewStartDateSelectListener(AjaxBehaviorEvent e) {
 
 		Date startDate = (Date) e.getComponent().getAttributes().get("value");
@@ -269,6 +315,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 	}
 
+	/**
+	 * Listener Method for date selection events for re-bid
+	 * @param e(event)
+	 */
 	public void reBidNewEndDateSelectListener(AjaxBehaviorEvent e) {
 
 		Date endDate = (Date) e.getComponent().getAttributes().get("value");
@@ -284,6 +334,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 	}
 
+	/**
+	 * Action method for re schedule or re-bid
+	 */
 	public void reScheduleOrReBidAction() {
 
 		IBiddingSO biddingSO = null;
@@ -357,6 +410,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * Action method to navigate to bid management screen
+	 * @param bid
+	 */
 	public void bidManagementAction(ScBidSchedule bid) {
 		renewSesionObject();
 
@@ -542,15 +599,16 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		chartSeries.setLabel("Bid Price");
 
 		for (ScBidPrice bidPrice : bidPriceList) {
-			
-			if(bidPrice.getBidPrice() != null && bidPrice.getCreatedDate() != null){
+
+			if (bidPrice.getBidPrice() != null
+					&& bidPrice.getCreatedDate() != null) {
 				chartSeries.set(
 						getCurrentTimeWithoutDate(bidPrice.getCreatedDate()),
 						bidPrice.getBidPrice());
-			}else{
-				chartSeries.set(
-						getCurrentTimeWithoutDate(bidPrice.getScBidSupplierItem().getCreatedDate()),
-						bidPrice.getScBidSupplierItem().getItemStartPrice());
+			} else {
+				chartSeries.set(getCurrentTimeWithoutDate(bidPrice
+						.getScBidSupplierItem().getCreatedDate()), bidPrice
+						.getScBidSupplierItem().getItemStartPrice());
 			}
 		}
 
@@ -560,6 +618,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 	}
 
+	/**
+	 * Listener method for view type change
+	 * @param e(event)
+	 */
 	public void viewByChangeListener(AjaxBehaviorEvent e) {
 
 		log.info("viewByChangeListener");
@@ -615,6 +677,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * action method to populate supplier item details
+	 * @param packageItem
+	 */
 	public void supplierItemPricePopupAction(BidPackageBean packageItem) {
 
 		getManagedBean().setSupplierCode(
@@ -642,6 +708,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 	}
 
+	/**
+	 * Listener method for row selection events
+	 * @param bidItem
+	 */
 	public void rowSelectListener(ScBidItem bidItem) {
 		log.info("rowSelectListener");
 
@@ -675,6 +745,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
+	/**
+	 * action method to populate history price details
+	 * @param bidPrice
+	 */
 	public void historyPricePopupAction(ScBidPrice bidPrice) {
 
 		getManagedBean().setHistoryPrice(bidPrice);
@@ -720,7 +794,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		chartSeries.setLabel("Bid Price");
 
 		for (ScBidPrice bidPrice : bidPriceList) {
-			if(bidPrice.getCreatedDate() != null){
+			if (bidPrice.getCreatedDate() != null) {
 				chartSeries.set(
 						getCurrentTimeWithoutDate(bidPrice.getCreatedDate()),
 						bidPrice.getBidPrice());
@@ -740,6 +814,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		return time;
 	}
 
+	/**
+	 * action method to navigate toprevious page
+	 * @return
+	 */
 	public String biddingMonitorBackAction() {
 		debugLogger("supplierProposalBackAction");
 		return "/xhtml/sc/bidding/biddingmain.xhtml ? faces-redirect=true";
