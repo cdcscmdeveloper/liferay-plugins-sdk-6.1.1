@@ -27,7 +27,7 @@
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.update']}"
 						action="#{financialOrgBackingBean.saveFinancialOrg('UPDATE')}"
-						update="@([id$=Msg])" style="float:right;" 
+						update="@form, @([id$=Msg])" style="float:right;" 
 						rendered="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">
 						<f:param name="disableValidation" value="true" />   
 					</p:commandButton>

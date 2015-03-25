@@ -14,17 +14,17 @@
 			value="#{supportDocBackingBean.managedBean.categoryRestrictions}"
 			var="restrict">
 			<ac:paginator for="dtCat" />
-		<p:column  width="8%" headerText="#{lbl['lbl.pm.category.code']}">  
+		<p:column  width="10%" headerText="#{lbl['lbl.pm.category.code']}">  
 	    	#{(restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code).concat(restrict.pmCategoryL3.pmCategoryL2.categoryL2Code).concat(restrict.pmCategoryL3.categoryL3Code)}
 	    	
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l1']}" style="width: 24% !important;white-space:normal !important">  
+			<p:column headerText="#{lbl['lbl.pm.category.l1']}" style="width: 22% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l2']}" style="width: 24% !important;white-space:normal !important">  
+			<p:column headerText="#{lbl['lbl.pm.category.l2']}" style="width: 22% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.pmCategoryL2.categoryName}
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l3']}" style="width: 24% !important;white-space:normal !important">  
+			<p:column headerText="#{lbl['lbl.pm.category.l3']}" style="width: 22% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.categoryName}
         </p:column>
 			<p:column  width="15%">
@@ -37,7 +37,7 @@
 					<f:selectItems value="#{supportDocBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
+			<p:column width="9%" headerText="#{lbl['lbl.pm.action']}">
 	           <p:commandLink partialSubmit="true" disabled="#{!restrict.brandNew}"
 					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCategory,rowIndex)}"
 					update="dtCat" >

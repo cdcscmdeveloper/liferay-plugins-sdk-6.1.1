@@ -885,7 +885,7 @@ public class FinancialOrgBackingBean extends
 				    		new FacesScopes().getUserLocale());
 					redirectUrl = NAV_TO_SEARCH;
 				}else if(BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(outcome)){
-					message = MessageUtils.getMessage(MessageConst.INFO_780096, new String[]{resDTO.getPmFinancialOrg().getFinOrgName()}, 
+					message = MessageUtils.getMessage(MessageConst.INFO_780096, 
 				    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
 				    		new FacesScopes().getUserLocale());
 					redirectUrl = null;
@@ -1100,6 +1100,25 @@ public class FinancialOrgBackingBean extends
 		if(tempServiceSet.size()!=tempServiceList.size()){
 			throw new EpException("Service Type must be unique.");
 		}
+		
+	}
+	
+	/**
+	 * check if one of the active Financial Services is “Payment Bank”
+	 * 
+	 * **/
+	public boolean checkFinancialServices(){
+		boolean disabled = false;
+		if(getManagedBean().getFinancialOrg().getPmFinancialSvcs() !=null &&
+				!getManagedBean().getFinancialOrg().getPmFinancialSvcs().isEmpty()){
+			for(PmFinancialSvc financialSvc:getManagedBean().getFinancialOrg().getPmFinancialSvcs()){
+				if(ParameterConst.BANK_SERVICES_PAYMENT_BANK.equals(financialSvc.getServiceTypeCode().getParameterCode())){
+					disabled = true;
+					break;		
+				}
+			}
+		}
+		return disabled;
 		
 	}
 	/* Financial Service - END */
