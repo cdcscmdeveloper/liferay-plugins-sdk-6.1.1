@@ -22,7 +22,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.status']}" />
 				</f:facet>
-				<p:selectOneMenu styleClass="ppDropDownWidthS"
+				<p:selectOneMenu styleClass="ppDropDownWidthS" style="width: 110px !important;"
 					value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
 					<f:selectItems value="#{supportDocBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
