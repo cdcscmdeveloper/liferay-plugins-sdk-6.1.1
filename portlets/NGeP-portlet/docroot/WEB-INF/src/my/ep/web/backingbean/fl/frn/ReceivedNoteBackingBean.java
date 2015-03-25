@@ -554,7 +554,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 *
 	 * @param outcome the outcome
 	 */
-	public void gpkiSignAction(String outcome){
+	public String gpkiSignAction(String outcome){
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
@@ -566,10 +566,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setAutoUpdate(Boolean.FALSE);	
 			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
 		}else{
 			getManagedBean().setValidated(Boolean.TRUE);
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			submitAction(outcome);
+			return submitAction(outcome);
 		}
 	}
 	
