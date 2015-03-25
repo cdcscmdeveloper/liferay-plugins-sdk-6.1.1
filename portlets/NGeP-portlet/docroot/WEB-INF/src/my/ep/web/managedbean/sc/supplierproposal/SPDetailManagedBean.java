@@ -44,9 +44,9 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
 
 /**
+ * Supplier Proposal Managed Bean
  * @author Viswanath
  * @author Venkat Chanumolu
- * 
  */
 @ManagedBean(name = "supplierProposalDetailManagedBean")
 @SessionScoped
@@ -183,15 +183,25 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private Map<Long, TemplateSpecBean> zoneTplSpecBeanMap;
 	private StreamedContent sampleLabelStreamContent;
 
+	/**
+	 * 
+	 * @return list of ScQtProposals
+	 */
 	public List<ScQtProposal> getSelectMultipleProposalList() {
 		return selectMultipleProposalList;
 	}
 
+	/**
+	 * @param selectMultipleProposalList
+	 */
 	public void setSelectMultipleProposalList(
 			List<ScQtProposal> selectMultipleProposalList) {
 		this.selectMultipleProposalList = selectMultipleProposalList;
 	}
 
+	/**
+	 * Default Consructor
+	 */
 	public SPDetailManagedBean() {
 		log.info("inside ");
 	}
