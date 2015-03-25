@@ -10285,7 +10285,6 @@ public class SpecificationBackingBean extends
 		// getManagedBean().setStandardTemplate(null);
 		getManagedBean().setSearchProcurementId(null);
 		getManagedBean().setSearchItemTypeId(null);
-		getManagedBean().setQtTitle(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setProcurementMode(null);
@@ -10353,12 +10352,15 @@ public class SpecificationBackingBean extends
 				} else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
 						.equalsIgnoreCase(getManagedBean()
 								.getStandardTemplate())) {
-					if (null == getManagedBean().getQtNum()
-							|| "".equalsIgnoreCase(getManagedBean().getQtNum())) {
-						getManagedBean().setQtNum("QT");
+					QtnTenderSearchBean templateQtnTenderSearchBean = getManagedBean()
+												.getQtnTendertemplateSearchBean();
+					if (null == templateQtnTenderSearchBean.getQtNo()
+							|| "".equalsIgnoreCase(templateQtnTenderSearchBean
+									.getQtNo())) {
+						getManagedBean().getQtnTendertemplateSearchBean()
+								.setQtNo("QT");
 					}
-					
-					populateQTSearchCriteria(getManagedBean().getQtnTendertemplateSearchBean(), searchBean);
+					populateQTSearchCriteria(templateQtnTenderSearchBean, searchBean);
 				}
 				if (null != getManagedBean().getSpecName()
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
