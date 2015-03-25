@@ -150,7 +150,8 @@
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="basicBUEmail"
 							label="#{lbl['lbl.sm.userprofile.email']}"
-							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}" 
+							validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}"
 							size="40" required="true" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 							<f:validateRegex
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
