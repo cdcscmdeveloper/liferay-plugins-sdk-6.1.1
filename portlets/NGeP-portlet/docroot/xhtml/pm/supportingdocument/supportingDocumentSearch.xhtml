@@ -124,6 +124,24 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.businessCategory}" />
 				</td>
 			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.suppdoc.status']}" /></th>
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docStatus}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{supportDocBackingBean.getActiveAndInactiveStatusOptions()}" />
+					</p:selectOneMenu></td>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pm.suppdoc.certified.body']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" maxlength="10" label="#{lbl['lbl.pm.suppdoc.certified.body']}"
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.certBodyName}" />
+				</td>
+			</tr>
 			</c:if>
 			<tr>
 				<td colspan="4">

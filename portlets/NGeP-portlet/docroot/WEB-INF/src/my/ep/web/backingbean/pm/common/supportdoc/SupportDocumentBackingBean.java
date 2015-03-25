@@ -41,6 +41,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -116,6 +117,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("resetSupportDocSearchBean");
 		this.getManagedBean().setSupportDocSearchBean(new SupportDocumentSearchBean());
 		pmDocumentDataModel = new PmDocumentDataModel();
+		getManagedBean().setPmDocumentResultList(new ArrayList<PmDocument>());
 	}
 	
 	
@@ -1312,8 +1314,23 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				|| StringUtils.isBlank(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
 			throw new EpException(MessageConst.ERROR_770083);
 		}
+		DocumentReqDTO reqDTO = new DocumentReqDTO();
+		reqDTO.setDocCategoryCode(getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode());
+		reqDTO.setDocName(getManagedBean().getSupportDocSearchBean().getDocName());		
+		reqDTO.setAppTypeId(getManagedBean().getSupportDocSearchBean().getAppTypeParam());
+		reqDTO.setCompanyTypeId(getManagedBean().getSupportDocSearchBean().getComTypeParam());
+		reqDTO.setSupplierTypeId(getManagedBean().getSupportDocSearchBean().getSuppTypeParam());
+		reqDTO.setCategoryName(getManagedBean().getSupportDocSearchBean().getBusinessCategory());
+		reqDTO.setZoneId(getManagedBean().getSupportDocSearchBean().getPmZone());
+		reqDTO.setProcurementCatId(getManagedBean().getSupportDocSearchBean().getProcureCatParam());
+		reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean().getDocStatus());
+		reqDTO.setCertBodyName(getManagedBean().getSupportDocSearchBean().getCertBodyName());
 		
-		pmDocumentDataModel.reloadData();
+		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
+		DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
+		
+		getManagedBean().setPmDocumentResultList(resDTO.getDocumentList());
+		//pmDocumentDataModel.reloadData();
 		log.info("searchDocument - End");
 		
 	}
@@ -1358,6 +1375,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchField("pmDocumentRestrs.appTypeCode.parameterId");
 				bean.setSearchValue(sdSearchBean.getAppTypeParam());
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
 				searchBean.getDataFilterBeans().add(bean);
 				isEmpty = false;
 			}
@@ -1368,6 +1386,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchField("pmDocumentRestrs.companyTypeCode.parameterId");
 				bean.setSearchValue(sdSearchBean.getComTypeParam());
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
 				searchBean.getDataFilterBeans().add(bean);
 				isEmpty = false;
 			}
@@ -1378,6 +1397,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchField("pmDocumentRestrs.supplierTypeCode.parameterId");
 				bean.setSearchValue(sdSearchBean.getSuppTypeParam());
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
 				searchBean.getDataFilterBeans().add(bean);
 				isEmpty = false;
 			}
@@ -1389,6 +1409,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				bean.setCaseInsensitive(true);
 				bean.setSearchField("pmDocumentRestrs.pmCategoryL3.categoryName");
 				bean.setSearchValue(sdSearchBean.getBusinessCategory());
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
 				searchBean.getDataFilterBeans().add(bean);
 				isEmpty = false;
 			}
@@ -1557,6 +1578,17 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 		}
 		return isUnique;
+	}
+	
+	
+	/**
+	 * The method used for generating a list of available display type of status
+	 * as selection.
+	 * 
+	 * @return the selection list of display type
+	 */
+	public static SelectItem[] getActiveAndInactiveStatusOptions() {
+		return PmCommonUtil.getRecordStatusOptions();
 	}
 	
 	/**

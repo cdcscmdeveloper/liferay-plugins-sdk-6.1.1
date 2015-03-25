@@ -10,7 +10,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 
 	<p:panel id="pSupportDocResult" header="#{lbl['lbl.pm.support.doc.result']}" toggleable="true">
 		<p:dataTable id="dtSupportDocResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" rows="10" 
-			 rowIndexVar="rowIndex" value="#{supportDocBackingBean.pmDocumentDataModel}" var="document"  lazy="true">
+			 rowIndexVar="rowIndex" value="#{supportDocBackingBean.managedBean.pmDocumentResultList}" var="document" >
 			<ac:paginator for="dtSupportDocResult" />
 			<p:column headerText="#{lbl['lbl.pm.document.name']}"  style="width:50%; white-space:normal;">
 	            #{document.docName}
