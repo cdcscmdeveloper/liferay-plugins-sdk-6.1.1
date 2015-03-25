@@ -32,6 +32,7 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmZoneState;
@@ -46,6 +47,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.util.MessageUtils;
 import my.ep.web.util.FacesScopes;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -87,7 +89,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 */
 	public void preLoadingZone() {	
 		log.info("preLoading Zone method");
-		this.resetZoneSearchBean();
+		this.resetZoneSearchBean();		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_MAIN);
@@ -324,10 +326,25 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 									.getStateName(), true));
 			isEmpty = false;
 		}	
+		
+		String status=getManagedBean().getZoneSearchBean().getStatus();
+		
+		if (StringUtils.isBlank(status)) {			
+			List<Integer> statusList = new ArrayList<Integer>();
+			statusList.add(DbValueConst.RECORD_STATUS_ACTIVE);
+			statusList.add(DbValueConst.RECORD_STATUS_DELETED);
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), statusList));		
+
+		} else {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							getManagedBean().getZoneSearchBean().getStatus()));		
+							getManagedBean().getZoneSearchBean().getStatus()));				
+		}
+
 		return searchBean;
 	}
 
