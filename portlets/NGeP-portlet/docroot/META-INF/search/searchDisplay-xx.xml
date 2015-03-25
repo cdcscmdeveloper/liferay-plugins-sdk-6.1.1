@@ -830,7 +830,7 @@
 					<property name="columnName" value="votFundCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.fl.vot" />
+					<property name="bundleKey" value="lbl.fl.fund" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="description" />
