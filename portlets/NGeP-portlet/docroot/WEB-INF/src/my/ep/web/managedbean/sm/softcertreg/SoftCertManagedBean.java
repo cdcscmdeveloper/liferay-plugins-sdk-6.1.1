@@ -30,6 +30,8 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> softCertPayList;
 	private HashMap<Long, BigDecimal> paymentMap = new HashMap<Long, BigDecimal>();
 	private BigDecimal totalPaymentAmount;
+	private BigDecimal totalAmountBeforeGst;
+	private BigDecimal totalGstAmount;
 	private SmPersonnel loginUserPersonnelInfo;
 	private SmPersonnel freeSoftCertPersonnel;
 	private String loginRoleName;
@@ -172,6 +174,22 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setFreeSoftCertPersonnel(SmPersonnel freeSoftCertPersonnel) {
 		this.freeSoftCertPersonnel = freeSoftCertPersonnel;
+	}
+
+	public BigDecimal getTotalAmountBeforeGst() {
+		return totalAmountBeforeGst;
+	}
+
+	public void setTotalAmountBeforeGst(BigDecimal totalAmountBeforeGst) {
+		this.totalAmountBeforeGst = totalAmountBeforeGst;
+	}
+
+	public BigDecimal getTotalGstAmount() {
+		return totalGstAmount;
+	}
+
+	public void setTotalGstAmount(BigDecimal totalGstAmount) {
+		this.totalGstAmount = totalGstAmount;
 	}
 
 }
