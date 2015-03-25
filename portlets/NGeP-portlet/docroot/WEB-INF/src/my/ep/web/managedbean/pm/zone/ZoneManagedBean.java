@@ -40,6 +40,13 @@ public class ZoneManagedBean extends BaseManagedBean {
 	/** The pm zone. */
 	private PmZone pmZone;
 	
+	/** The pm zone. */
+	private boolean isLazy=false;
+	
+	
+
+	
+
 	/** The states. */
 	private List<PmState> states = new ArrayList<PmState>();
 	
@@ -327,6 +334,25 @@ public class ZoneManagedBean extends BaseManagedBean {
 	 */
 	public void setPmZonesList(List<PmZone> pmZonesList) {
 		this.pmZonesList = pmZonesList;
+	}
+	
+	/**
+	 * Checks if is lazy.
+	 * 
+	 * @return true, if is lazy
+	 */
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	/**
+	 * Sets the lazy.
+	 * 
+	 * @param isLazy
+	 *            the new lazy
+	 */
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
 	}
 
 }
