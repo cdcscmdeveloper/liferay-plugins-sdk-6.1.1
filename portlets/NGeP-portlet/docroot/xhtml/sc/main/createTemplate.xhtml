@@ -8,8 +8,8 @@
 
 
 
-	<p:dialog widgetVar="createOwnerSpec" modal="true" width="1000"
-		id="bocreateSpec" height="500">
+	<p:dialog widgetVar="createOwnerSpec" modal="true" width="950"
+		id="bocreateSpec" height="600" position="top" header="#{lbl['lbl.sc.spec.create.specification']}">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.business.owner']}"></ac:title> -->
 		<p:messages id="bocreateTemplate" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
@@ -82,18 +82,18 @@
 						</tr>
 						
 						<tr>
-							<td><h:outputLabel
+							<td valign="top"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel></td>
-							<td colspan="3"><p:inputText size="109" style="margin-bottom:5px;"
+							<td colspan="3"><p:inputText size="104" style="margin-bottom:5px;"
 									maxlength="100"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
 						</tr>
 						
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
+							<td valign="top"><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
 							<td colspan="3"><p:inputText
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtTitle}"
-									size="109" maxlength="100" /></td>
+									size="104" maxlength="100" /></td>
 						</tr>
 						
 						<tr>
