@@ -4713,6 +4713,8 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType()) && !this.getManagedBean()
 						.isReadOnly()))) {
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+							.getScQtMeetings());
 					checkCommitteeMembersAttendance(this.getManagedBean()
 							.getCommitteeMemberList());
 					saveMeetingDtls(false);
@@ -4761,6 +4763,8 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())
 							&& !this.getManagedBean().isReadOnly()) {
+						checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());
 						checkCommitteeMembersAttendance(this.getManagedBean()
 								.getCommitteeMemberList());
 						saveMeetingDtls(false);
@@ -4773,6 +4777,8 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 					if (!this.getManagedBean().isReadOnly()) {
+						checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());
 						checkCommitteeMembersAttendance(this.getManagedBean()
 								.getCommitteeMemberList());
 						saveMeetingDtls(false);
@@ -4935,6 +4941,29 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
+	}
+
+	// check meeting details status Done or not.
+	private void checkMeetingDetailsAndStatus(
+			List<ScQtMeeting> meetingDetailsList) {
+		if (null == meetingDetailsList || meetingDetailsList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760253);
+		} else {
+			int i = 0;
+			for (ScQtMeeting meeting : meetingDetailsList) {
+				if (null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting
+								.getMeetingStatus().getStatusId())) {
+					i++;
+
+				}
+			}
+			if (i == 0) {
+				throw new EpException(MessageConst.ERROR_760255);
+			}
+		}
+
 	}
 
 	// check attendance for opening committee.
@@ -5593,7 +5622,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setScAttachment(attachemnt);
 			this.getManagedBean().setReportDownloadFileName(reportFileName);
 			retriveMeetingDtls(qtId, committeeType, index);
-			getStatusDropdownValues("SC", "MS");
+			// getStatusDropdownValues("SC", "MS");
 			if (save == true) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -6604,18 +6633,27 @@ public class EvaluationBackingBean extends
 				generateTechnicalEvaluationPdf(
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_HARGA_TAWARAN.equals(docDefinitionKey)) {
+			} else if (SourcingConstants.DOC_DEF_KEY_HARGA_TAWARAN
+					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
 				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateHargaTawaranPdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_OVERALL_FIN_SUMMARY.equals(docDefinitionKey)) {
+				generateHargaTawaranPdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_OVERALL_FIN_SUMMARY
+					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
 				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateOverallFinancialSummaryPdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-			} else if (SourcingConstants.DOC_DEF_KEY_FEC_REPORT.equals(docDefinitionKey)) {
+				generateOverallFinancialSummaryPdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+			} else if (SourcingConstants.DOC_DEF_KEY_FEC_REPORT
+					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
 				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateFinancialEvaluationReportPdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
+				generateFinancialEvaluationReportPdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
 			}
 			scQtEvaluationReport
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
@@ -6742,13 +6780,13 @@ public class EvaluationBackingBean extends
 				.replaceAll("&lt;&lt;NO_OF_SUPPLIER&gt;&gt;", totalSuppliers);
 		return html;
 	}
-	
+
 	/**
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
-	private void generateFinancialEvaluationReportPdf(ScAttachment attachment, ScQt qt)
-			throws Exception {
+	private void generateFinancialEvaluationReportPdf(ScAttachment attachment,
+			ScQt qt) throws Exception {
 		debugLogger("generateFinancialEvaluationReportPdf");
 		populateAttachmentDetails(attachment);
 
@@ -6777,8 +6815,8 @@ public class EvaluationBackingBean extends
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
-	private void generateOverallFinancialSummaryPdf(ScAttachment attachment, ScQt qt)
-			throws Exception {
+	private void generateOverallFinancialSummaryPdf(ScAttachment attachment,
+			ScQt qt) throws Exception {
 		debugLogger("generateOverallFinancialSummaryPdf");
 		populateAttachmentDetails(attachment);
 
@@ -6941,7 +6979,7 @@ public class EvaluationBackingBean extends
 				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_EC_OVERALLTECH_WITH_WEI_4H;
 			reportId = ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL; // SC_035
-			
+
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 
