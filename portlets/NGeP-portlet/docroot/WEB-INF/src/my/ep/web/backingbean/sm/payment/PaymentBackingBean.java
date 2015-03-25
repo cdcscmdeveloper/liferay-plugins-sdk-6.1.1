@@ -80,14 +80,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public PaymentBackingBean() {
 		this.getManagedBean().setCountry("MY");
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
-
-			new LogKey(pmUser.getUserId());
-		} else {
-			new LogKey(1L);
-		}
+		SmCommonUtil.setMDCUserId();
 	}
 
 	/**
