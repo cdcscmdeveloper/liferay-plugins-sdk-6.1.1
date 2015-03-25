@@ -1529,7 +1529,7 @@ public class SmCommonUtil {
 			if (user != null) {
 				userId = user.getUserId();
 			}
-			MDC.put(LogKey.USER_ID, userId);
+			new LogKey(userId);
 		}
 	}
 
