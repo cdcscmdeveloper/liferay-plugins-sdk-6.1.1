@@ -55,6 +55,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -386,7 +387,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
 				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
-				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
+				|| sc.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
 			setSupplierUser(true);
 			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
