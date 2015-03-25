@@ -43,8 +43,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 
 /**
+ * Schedule Bidding Backing Bean
  * @author Venkat Chanumolu
- * 
  */
 
 @ManagedBean(name = "scheduleBiddingBB")
@@ -74,7 +74,7 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	/**
-	 * method executed pre-rendering of page
+	 * method to navigate online bidding page
 	 */
 
 	public void preRenderView() {
@@ -103,7 +103,7 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	/**
-	 * Method to apply dates to all the selected items in the data tabel
+	 * Method to apply dates to all the selected items in the data table
 	 */
 	public void applyBidDates() {
 
