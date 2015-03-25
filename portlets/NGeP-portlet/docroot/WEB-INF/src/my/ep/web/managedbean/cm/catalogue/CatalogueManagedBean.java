@@ -221,6 +221,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The compare label. */
 	private List<String> compareLabel;
+	
+	/** The item specification. */
+	private List<String> itemSpec;
 
 	/** The selected lov uom. */
 	private PmUom selectedLovUom;
@@ -983,6 +986,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public void setCompareLabel(List<String> compareLabel) {
 		this.compareLabel = compareLabel;
+	}
+	
+	/**
+	 * Gets the  item specification.
+	 * 
+	 * @return the  item specification
+	 */
+	public List<String> getItemSpec() {
+		return itemSpec;
+	}
+
+	/**
+	 * Sets the item specification.
+	 * 
+	 * @param itemSpec
+	 *            the new item specification
+	 */
+	public void setItemSpec(List<String>  itemSpec) {
+		this.itemSpec = itemSpec;
 	}
 
 	/**
