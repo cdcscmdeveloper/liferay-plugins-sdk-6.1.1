@@ -46,7 +46,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmCategoryL3> selectedCategoryL3s;
 	private List <PmCertBody> selectedCertBodies;
 	private int selectedTabIndex;
-	
+	private List <PmDocument> pmDocumentResultList;
 	
 	/**
 	 * @return the selectedTabIndex
@@ -289,6 +289,14 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 
 	public void setSelectedCertBodies(List <PmCertBody> selectedCertBodies) {
 		this.selectedCertBodies = selectedCertBodies;
+	}
+
+	public List <PmDocument> getPmDocumentResultList() {
+		return pmDocumentResultList;
+	}
+
+	public void setPmDocumentResultList(List <PmDocument> pmDocumentResultList) {
+		this.pmDocumentResultList = pmDocumentResultList;
 	}
 	
 	
