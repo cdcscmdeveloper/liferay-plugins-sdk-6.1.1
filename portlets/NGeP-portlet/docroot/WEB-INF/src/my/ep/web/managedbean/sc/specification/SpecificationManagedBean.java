@@ -736,6 +736,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	/** For Create Specification  Screen. */
 	private QtnTenderSearchBean qtnTendertemplateSearchBean;
+	
+	 /** The temp zone name. */
+    private String  tempZoneName;
 
 	/**
 	 * Checks if is spec complete.
@@ -4895,6 +4898,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setQtnTendertemplateSearchBean(
 			QtnTenderSearchBean qtnTendertemplateSearchBean) {
 		this.qtnTendertemplateSearchBean = qtnTendertemplateSearchBean;
+	}
+
+	/**
+	 * @return the tempZoneName
+	 */
+	public String getTempZoneName() {
+		return tempZoneName;
+	}
+
+	/**
+	 * @param tempZoneName the tempZoneName to set
+	 */
+	public void setTempZoneName(String tempZoneName) {
+		this.tempZoneName = tempZoneName;
 	}
 
 }
