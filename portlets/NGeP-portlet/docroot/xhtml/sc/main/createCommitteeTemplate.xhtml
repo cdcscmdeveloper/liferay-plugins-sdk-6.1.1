@@ -8,8 +8,8 @@
 
 
 
-	<p:dialog widgetVar="createOwnerSpec" modal="true" width="1000"
-		height="500">
+	<p:dialog widgetVar="createOwnerSpec" modal="true" width="950"
+		height="600" position="top" header="#{lbl['lbl.sc.spec.create.specification']}">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
 		<p:messages id="specCommitteecreateTemplate" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" />
@@ -63,59 +63,136 @@
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
-					<table>
+					<table width="100%">
 						<tr>
-							<td style="width: 115px;"><h:outputLabel
-									value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel></td>
-							<td><p:selectOneMenu style="margin-bottom:5px;"
+							<td><p:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}"></p:outputLabel>
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
 									required="#{specificationBackingBean.managedBean.required}"
 									label="#{lbl['lbl.sc.tpl.search.item']}"
-									id="sourcingCommitteeItemType"
-									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
+									id="sourcingSpecItemType"
+									value="#{specificationBackingBean.managedBean.searchItemTypeId}"
+									style="margin-bottom:5px;">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
+
 									<p:ajax event="change"
 										listener="#{specificationBackingBean.itemTypeChange}"
-										update="commiteeCreationSpec"></p:ajax>
-								</p:selectOneMenu> <p:message id="sourcingTemplateItemType"
-									for="sourcingCommitteeItemType" display="icon">
-								</p:message></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
-							<td colspan="3"><p:inputText
-									value="#{specificationBackingBean.managedBean.qtTitle}"
-									size="100" maxlength="100" /></td>
+										update="cretaeupdate"></p:ajax>
+								</p:selectOneMenu> <p:message id="sourcingBoItemType" for="sourcingSpecItemType"
+									display="icon"></p:message></td>
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" />
-							</td>
-							<td><p:calendar
-									value="#{specificationBackingBean.managedBean.publishDate}"
-									readonlyInput="true"
-									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-									showOn="button">
-								</p:calendar></td>
-						</tr>
-						<tr>
-							<td style="width: 115px;"><h:outputLabel
+							<td valign="top"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel></td>
-							<td><p:inputText size="100" style="margin-bottom:5px;"
-									maxlength="200"
+							<td colspan="3"><p:inputText size="104"
+									style="margin-bottom:5px;" maxlength="100"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
 						</tr>
+
 						<tr>
-							<td style="width: 115px;"><h:outputLabel
+							<td valign="top"><p:outputLabel
+									value="#{lbl['lbl.so.title']}" /></td>
+							<td colspan="3"><p:inputText
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtTitle}"
+									size="104" maxlength="100" /></td>
+						</tr>
+
+						<tr>
+							<td><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.qtn.no']}"></h:outputLabel></td>
 							<td><p:inputText style="margin-bottom:5px;" maxlength="21"
-									value="#{specificationBackingBean.managedBean.qtNum}" /></td>
+									size="29"
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}" /></td>
+
+							<td><h:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
+							<td><p:selectOneMenu id="procurementid"
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.procurementMode}"
+									style="width:210px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{qTDetailBB.getProcurementModeDropdownValues()}" />
+								</p:selectOneMenu></td>
+
 						</tr>
+
 						<tr>
-							<td style="width: 150px;"><h:outputLabel
+							<td><h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
+							<td><p:calendar
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
+									id="crdateFrom" showOn="button" size="29" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									<p:ajax event="dateSelect" update="crdateTo" />
+								</p:calendar></td>
+							<td><h:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+							<td><p:calendar id="crdateTo" showOn="button"
+									label="#{lbl['lbl.so.creatdtto']}"
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toCreatedDate}"
+									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
+									size="29" readonlyInput="true"
+									required="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate ne null or !specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate eq ''}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									<f:attribute name="startDate"
+										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}" />
+								</p:calendar></td>
+						</tr>
+
+						<tr>
+							<td><h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" /></td>
+							<td><p:calendar
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
+									id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									<p:ajax event="dateSelect" update="pbdateTo" />
+								</p:calendar></td>
+							<td><h:outputLabel value="#{lbl['lbl.so.pbldtto']}" /></td>
+							<td><p:calendar id="pbdateTo" showOn="button"
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toPublishDate}"
+									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
+									size="29" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									<f:attribute name="startDate"
+										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}" />
+									<f:validator validatorId="dateRangeValidator" />
+								</p:calendar></td>
+						</tr>
+
+						<tr>
+							<td><h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" /></td>
+							<td><p:calendar
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
+									id="cldateFrom" showOn="button" size="29" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									<p:ajax event="dateSelect" update="cldateTo" />
+								</p:calendar></td>
+							<td><h:outputLabel value="#{lbl['lbl.so.clsdtto']}" /></td>
+							<td><p:calendar id="cldateTo" showOn="button"
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toClosingDate}"
+									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
+									size="29" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									<f:attribute name="startDate"
+										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}" />
+									<f:validator validatorId="dateRangeValidator" />
+								</p:calendar></td>
+						</tr>
+
+						<tr>
+							<td><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
+							<td><p:selectOneMenu
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtStatus}"
+									style="width: 210px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{specificationBackingBean.getStatusDropdownValues('SC', 'QT')}" />
+								</p:selectOneMenu></td>
+						</tr>
+
+						<tr>
+							<td><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.procure.category']}"></h:outputLabel></td>
 							<td><p:selectOneMenu
-									value="#{specificationBackingBean.managedBean.searchProcurementId}">
+									value="#{specificationBackingBean.managedBean.searchProcurementId}"
+									style="width:210px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 								</p:selectOneMenu></td>
