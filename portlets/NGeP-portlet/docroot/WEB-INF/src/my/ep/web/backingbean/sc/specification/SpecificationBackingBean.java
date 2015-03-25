@@ -178,6 +178,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -3973,6 +3974,8 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setIndex(i);
 			getManagedBean().setZoneName(
 					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
+			getManagedBean().setTempZoneName(
+					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
 		} finally {
 
 		}
@@ -4224,6 +4227,9 @@ public class SpecificationBackingBean extends
 					new ArrayList<TplSpecLoc>());
 		}
 		List<ZonesBean> beans = getManagedBean().getBeans();
+		if (null == beans) {
+			beans = new ArrayList<ZonesBean>();
+		}
 		ZonesBean zonesBean = new ZonesBean();
 		String locationLevel = this.getManagedBean().getStateCode();
 		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
@@ -4283,39 +4289,45 @@ public class SpecificationBackingBean extends
 
 			List<PmCity> cities = SourcingLocationHelper
 					.getCityFromLocationDTO(allNodes);
+			String editZoneName = getManagedBean().getTempZoneName();
+			if (getManagedBean().getIndex() >= 0) {
+				updateZoneBean(editZoneName);
+			}
+			zone.setTplSpecZoneLocs(allNodes);
 			zonesBean.setTplSpecZoneDtl(zone);
+			// zonesBean.setTplSpecZoneDtl(zone);
 			// validate zone name
-			checkZoneExistsOrNot(zone, getManagedBean().getIndex());
+			checkZoneExistsOrNot(zone);
 
 			if (locationLevel
 					.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)) {
 				// check whether state exists or not
 				if (!getManagedBean().getBeans().isEmpty()) {
-					checkDuplicateStateOrDivOrDist(zone, allNodes);
+					checkDuplicateStateOrDivOrDist(zone);
 				}
-				zonesBean.setTplSpecZoneLocs(allNodes);
+				// zonesBean.setTplSpecZoneLocs(allNodes);
 			}
 
 			if (locationLevel
 					.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
 				// check whether division exists or not
 				if (!getManagedBean().getBeans().isEmpty()) {
-					checkDuplicateStateOrDivOrDist(zone, allNodes);
+					checkDuplicateStateOrDivOrDist(zone);
 				}
-				zonesBean.setTplSpecZoneLocs(allNodes);
+				// zonesBean.setTplSpecZoneLocs(allNodes);
 			}
 
 			if (locationLevel
 					.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
 				// check whether district exists or not
 				if (!getManagedBean().getBeans().isEmpty()) {
-					checkDuplicateStateOrDivOrDist(zone, allNodes);
+					checkDuplicateStateOrDivOrDist(zone);
 				}
-				zonesBean.setTplSpecZoneLocs(allNodes);
+				// zonesBean.setTplSpecZoneLocs(allNodes);
 			}
 
 			beans.add(zonesBean);
-			getManagedBean().setBeans(beans);
+
 			if (getManagedBean().getIndex() == -1) {
 
 				getManagedBean().getZoneGeneralTrees().add(
@@ -4335,13 +4347,32 @@ public class SpecificationBackingBean extends
 								states, districts, divisions, cities,
 								TplSpecZoneLoc.class));
 			}
+			getManagedBean().getBeans().add(zonesBean);
 		} else {
 			throw new EpException("Please select At least one Zone Location");
 		}
 		this.getManagedBean().setZoneLocation(false);
 		getManagedBean().setZoneName(null);
+		getManagedBean().setTempZoneName(null);
 		this.getManagedBean().setIndex(-1);
 		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
+
+	}
+
+	// check zone name existing in the list or not.
+	private void updateZoneBean(String zoneName) {
+		List<ZonesBean> beans = new ArrayList<ZonesBean>();
+		List<ZonesBean> zoneBeans = getManagedBean().getBeans();
+
+		if (zoneBeans != null && zoneBeans.size() > 0) {
+			for (ZonesBean zonesBean : zoneBeans) {
+				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
+				if (!prevsZone.getZoneName().equalsIgnoreCase(zoneName)) {
+					beans.add(zonesBean);
+				}
+			}
+		}
+		getManagedBean().setBeans(beans);
 
 	}
 
@@ -4350,31 +4381,29 @@ public class SpecificationBackingBean extends
 	 * 
 	 * @param tplSpecZoneDtl
 	 *            (TplSpecZoneDtl tplSpecZoneDtl)
-	 * @param index
-	 *            (int index)
+	 * 
 	 * @return List<Long>
 	 */
-	private List<Long> checkZoneExistsOrNot(TplSpecZoneDtl tplSpecZoneDtl,
-			int index) {
+	private List<Long> checkZoneExistsOrNot(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<Long> results = new ArrayList<Long>();
-		if (index < 0) {
-			List<ZonesBean> list = getManagedBean().getBeans();
-			if (list != null && list.size() > 0) {
+		// if (index < 0) {
+		List<ZonesBean> list = getManagedBean().getBeans();
+		if (list != null && list.size() > 0) {
 
-				for (ZonesBean zonesBean : list) {
-					TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+			for (ZonesBean zonesBean : list) {
+				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
 
-					if (zone != null) {
+				if (zone != null) {
 
-						if (zone.getZoneName().equalsIgnoreCase(
-								tplSpecZoneDtl.getZoneName())) {
-							throw new EpException(tplSpecZoneDtl.getZoneName()
-									+ " zone already exists.");
-						}
+					if (zone.getZoneName().equalsIgnoreCase(
+							tplSpecZoneDtl.getZoneName())) {
+						throw new EpException(tplSpecZoneDtl.getZoneName()
+								+ " zone already exists.");
 					}
 				}
 			}
 		}
+		// }
 		return results;
 	}
 
@@ -4386,16 +4415,18 @@ public class SpecificationBackingBean extends
 	 * @param tplSpecZoneLocs
 	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
 	 */
-	private void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl,
-			List<TplSpecZoneLoc> tplSpecZoneLocs) {
+	private void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<Long> stateIds = null;
 		List<Long> divIds = null;
 		List<Long> distIds = null;
 
-		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
-			stateIds = getPmStateIds(tplSpecZoneLocs);
-			divIds = getPmDivisionIds(tplSpecZoneLocs);
-			distIds = getPmDistrictsIds(tplSpecZoneLocs);
+		if (null!=tplSpecZoneDtl.getTplSpecZoneLocs()
+				&& tplSpecZoneDtl.getTplSpecZoneLocs().size() > 0) {
+			List<TplSpecZoneLoc> currentTplSpecLocs = tplSpecZoneDtl
+					.getTplSpecZoneLocs();
+			stateIds = getPmStateIds(currentTplSpecLocs);
+			divIds = getPmDivisionIds(currentTplSpecLocs);
+			distIds = getPmDistrictsIds(currentTplSpecLocs);
 		}
 
 		List<ZonesBean> list = getManagedBean().getBeans();
@@ -4403,66 +4434,73 @@ public class SpecificationBackingBean extends
 		if (list != null && list.size() > 0) {
 
 			for (ZonesBean zonesBean : list) {
-				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
 
-				if (zone != null) {
+				if (prevsZone != null) {
 
-					if (!zone.getZoneName().equalsIgnoreCase(
-							tplSpecZoneDtl.getZoneName())) {
+					if (prevsZone.getTplSpecZoneLocs() != null
+							&& prevsZone.getTplSpecZoneLocs().size() > 0) {
+						List<TplSpecZoneLoc> previousTplSpecLocs = prevsZone
+								.getTplSpecZoneLocs();
+						for (TplSpecZoneLoc TplSpecZoneLoc : previousTplSpecLocs) {
 
-						if (zonesBean.getTplSpecZoneLocs() != null
-								&& zonesBean.getTplSpecZoneLocs().size() > 0) {
+							if (TplSpecZoneLoc.getPmState() != null) {
 
-							for (TplSpecZoneLoc TplSpecZoneLoc : zonesBean
-									.getTplSpecZoneLocs()) {
+								if (stateIds != null && stateIds.size() > 0) {
 
-								if (TplSpecZoneLoc.getPmState() != null) {
-
-									if (stateIds != null && stateIds.size() > 0) {
-
-										if (stateIds.contains(TplSpecZoneLoc
-												.getPmState().getStateId())) {
-											throw new EpException(
-													TplSpecZoneLoc.getPmState()
-															.getStateName()
-															+ " state already exists in "
-															+ zone.getZoneName());
-										}
-									}
-
-								}
-
-								if (TplSpecZoneLoc.getPmDivision() != null) {
-									if (divIds != null && divIds.size() > 0) {
-										if (divIds.contains(TplSpecZoneLoc
-												.getPmDivision()
-												.getDivisionId())) {
-											throw new EpException(
-													TplSpecZoneLoc
-															.getPmDivision()
-															.getDivisionName()
-															+ " division already exists in "
-															+ zone.getZoneName());
-										}
+									if (stateIds.contains(TplSpecZoneLoc
+											.getPmState().getStateId())) {
+										throw new EpException(
+												MessageConst.ERROR_760168,
+												new String[] {
+														TplSpecZoneLoc
+																.getPmState()
+																.getStateName(),
+														prevsZone.getZoneName() });
 									}
 								}
 
-								if (TplSpecZoneLoc.getPmDistrict() != null) {
-									if (distIds != null && distIds.size() > 0) {
-										if (distIds.contains(TplSpecZoneLoc
-												.getPmDistrict()
-												.getDistrictId())) {
-											throw new EpException(
-													TplSpecZoneLoc
-															.getPmDistrict()
-															.getDistrictName()
-															+ " district already exists in "
-															+ zone.getZoneName());
-										}
+							}
+
+							if (TplSpecZoneLoc.getPmDivision() != null) {
+								if (divIds != null && divIds.size() > 0) {
+									if (divIds.contains(TplSpecZoneLoc
+											.getPmDivision().getDivisionId())) {
+										throw new EpException(
+												MessageConst.ERROR_760167,
+												new String[] {
+														TplSpecZoneLoc
+																.getPmDivision()
+																.getDivisionName(),
+														prevsZone.getZoneName() });
+									}
+								}
+							}
+
+							if (TplSpecZoneLoc.getPmDistrict() != null) {
+								if (distIds != null && distIds.size() > 0) {
+									if (distIds.contains(TplSpecZoneLoc
+											.getPmDistrict().getDistrictId())) {
+										throw new EpException(
+												MessageConst.ERROR_760166,
+												new String[] {
+														TplSpecZoneLoc
+																.getPmDistrict()
+																.getDistrictName(),
+														prevsZone.getZoneName() });
 									}
 								}
 							}
 						}
+					}
+					if (prevsZone.getZoneName().equals(
+							tplSpecZoneDtl.getZoneName())) {
+						throw new EpException(
+								MessageConst.INFO_700027,
+								new String[] { ResourceBundleUtils.getMessage(
+										tplSpecZoneDtl.getZoneName(),
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
 					}
 				}
 			}
@@ -9210,7 +9248,8 @@ public class SpecificationBackingBean extends
 		} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			spReqDTO = prepareSpecReq();
 			spReqDTO.setOutcome(action);
-			spReqDTO.setPrepareSpecStatus(this.getManagedBean().getCurrentStatusId());
+			spReqDTO.setPrepareSpecStatus(this.getManagedBean()
+					.getCurrentStatusId());
 			spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			spReqDTO.setPayLoad(this.getManagedBean()
 					.getSpecificationDataType());
@@ -10287,14 +10326,22 @@ public class SpecificationBackingBean extends
 		getManagedBean().setSearchItemTypeId(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTendertemplateSearchBean().setQtNo(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setProcurementMode(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setFromCreatedDate(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setToCreatedDate(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setFromPublishDate(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setToPublishDate(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setFromClosingDate(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setToClosingDate(null);
-		this.getManagedBean().getQtnTendertemplateSearchBean().setQtStatus(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setProcurementMode(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setFromCreatedDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setToCreatedDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setFromPublishDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setToPublishDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setFromClosingDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setToClosingDate(null);
+		this.getManagedBean().getQtnTendertemplateSearchBean()
+				.setQtStatus(null);
 	}
 
 	/**
@@ -10353,14 +10400,15 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(getManagedBean()
 								.getStandardTemplate())) {
 					QtnTenderSearchBean templateQtnTenderSearchBean = getManagedBean()
-												.getQtnTendertemplateSearchBean();
+							.getQtnTendertemplateSearchBean();
 					if (null == templateQtnTenderSearchBean.getQtNo()
 							|| "".equalsIgnoreCase(templateQtnTenderSearchBean
 									.getQtNo())) {
 						getManagedBean().getQtnTendertemplateSearchBean()
 								.setQtNo("QT");
 					}
-					populateQTSearchCriteria(templateQtnTenderSearchBean, searchBean);
+					populateQTSearchCriteria(templateQtnTenderSearchBean,
+							searchBean);
 				}
 				if (null != getManagedBean().getSpecName()
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
@@ -10401,7 +10449,7 @@ public class SpecificationBackingBean extends
 							.getSearchProcurementId());
 					searchBean.getDataFilterBeans().add(procurementSearchBean);
 				}
-				
+
 				if (null != specTypeCode) {
 					SearchFilterBean qtnoSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
@@ -12232,7 +12280,8 @@ public class SpecificationBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		specReqDTO.setPmUser(facesScopes.getUserSessionBean());
 		specReqDTO.setRoleCode(getUserRoleCode());
-		specReqDTO.setPrepareSpecStatus(this.getManagedBean().getCurrentStatusId());
+		specReqDTO.setPrepareSpecStatus(this.getManagedBean()
+				.getCurrentStatusId());
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		specReqDTO.setToken(ctx);
 		IQTSpecSO specSO = getSpecSO();
@@ -12503,7 +12552,8 @@ public class SpecificationBackingBean extends
 		spReqDTO.setToken(ctx);
 		spReqDTO.setPmUser(facesScopes.getUserSessionBean());
 		spReqDTO.setRoleCode(getUserRoleCode());
-		spReqDTO.setPrepareSpecStatus(this.getManagedBean().getCurrentStatusId());
+		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
+				.getCurrentStatusId());
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
@@ -14482,12 +14532,12 @@ public class SpecificationBackingBean extends
 	public void setCount(int count) {
 		this.count = count;
 	}
-	
 
 	/**
 	 * Check all conditions.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void checkAllConditions(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
@@ -14505,10 +14555,10 @@ public class SpecificationBackingBean extends
 			}
 			getManagedBean().setZoneTrees(list);
 		} else {
-			
+
 		}
 	}
-	
+
 	public void checkAllPopUpConditions(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		TreeNode treeNode = getManagedBean().getRootLocationTree();
@@ -14523,10 +14573,9 @@ public class SpecificationBackingBean extends
 			}
 			getManagedBean().setRootLocationTree(treeNode);
 		} else {
-			
+
 		}
 	}
-	
 
 	/**
 	 * Method to prepare qt search criteria.
@@ -14539,12 +14588,12 @@ public class SpecificationBackingBean extends
 	private void populateQTSearchCriteria(
 			QtnTenderSearchBean templateQtnTenderSearchBean,
 			ISearchBean<TplSpecMaster> qtSearchBean) {
-		
+
 		if (templateQtnTenderSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = templateQtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				
+
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtDoc.scQt.qtTitle",
 								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
@@ -14558,17 +14607,20 @@ public class SpecificationBackingBean extends
 			if (!StringUtils.isBlank(qtNumber)) {
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtDoc.scQt.qtNo",
-								SearchOperator.OPERATOR_LIKE.value(),
-								qtNumber, true));
+								SearchOperator.OPERATOR_LIKE.value(), qtNumber,
+								true));
 			}
-			String procurementMode = templateQtnTenderSearchBean.getProcurementMode();
+			String procurementMode = templateQtnTenderSearchBean
+					.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
 				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scQtDoc.scQt.procurementMode.parameterCode",
+						new SearchFilterBean(
+								"scQtDoc.scQt.procurementMode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								procurementMode));
 			}
-			Date fromCreatedDate = templateQtnTenderSearchBean.getFromCreatedDate();
+			Date fromCreatedDate = templateQtnTenderSearchBean
+					.getFromCreatedDate();
 			Date toCreatedDate = templateQtnTenderSearchBean.getToCreatedDate();
 			if (null != fromCreatedDate || toCreatedDate != null) {
 				Calendar c1 = Calendar.getInstance();
@@ -14595,7 +14647,8 @@ public class SpecificationBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			Date fromPublishDate = templateQtnTenderSearchBean.getFromPublishDate();
+			Date fromPublishDate = templateQtnTenderSearchBean
+					.getFromPublishDate();
 			Date toPublishDate = templateQtnTenderSearchBean.getToPublishDate();
 			if (null != fromPublishDate || null != toPublishDate) {
 				SearchFilterBean bean = new SearchFilterBean();
@@ -14606,7 +14659,8 @@ public class SpecificationBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			Date fromClosingDate = templateQtnTenderSearchBean.getFromClosingDate();
+			Date fromClosingDate = templateQtnTenderSearchBean
+					.getFromClosingDate();
 			Date toClosingDate = templateQtnTenderSearchBean.getToClosingDate();
 			if (null != fromClosingDate || null != toClosingDate) {
 				SearchFilterBean bean = new SearchFilterBean();
