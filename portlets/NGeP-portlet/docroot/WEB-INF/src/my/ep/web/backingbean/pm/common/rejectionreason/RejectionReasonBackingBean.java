@@ -21,11 +21,15 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
@@ -445,15 +449,18 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public String saveRejectReason(){
 		log.info("saveRejectReason - Start");
-		boolean isSuccess = false;
 		String returnPage = null;
 		//unique reason code
-		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode()
-				, this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId()
-				, this.getManagedBean().getSelectedReason().isBrandNew()?null:this.getManagedBean().getSelectedReason().getReasonId())){
-			throw new EpException(MessageConst.ERROR_770003, new String[]{this.getManagedBean().getSelectedReason().getReasonCode()});
-
+		if(this.getManagedBean().getSelectedReason().isBrandNew()){
+			generateReasonCode();
 		}
+		
+//		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode()
+//				, this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId()
+//				, this.getManagedBean().getSelectedReason().isBrandNew()?null:this.getManagedBean().getSelectedReason().getReasonId())){
+//			throw new EpException(MessageConst.ERROR_770003, new String[]{this.getManagedBean().getSelectedReason().getReasonCode()});
+//
+//		}
 		
 		if(this.getManagedBean().isSuppReason()){
 			validateRestrictions(this.getManagedBean().getSelectedReason());
@@ -479,6 +486,37 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	
 	}
 	
+	private void generateReasonCode() {
+		IReasonSO reasonSO = (IReasonSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		IParameterSO parameterSO  = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		ParameterReqDTO paramReq = new ParameterReqDTO();
+		String reasonCode = null;
+		paramReq.setParameterId(getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId());
+		ParameterResDTO paramRes = parameterSO.retrieveParameterById(paramReq);	
+		
+		if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_CANCELATION)){
+			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_CANCELATION;
+		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_REJECTION)){
+			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_REJECTION;
+		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.REASON_CATEGORY_SUPPLIER)){
+			reasonCode = ProfileManagementConst.REASON_CATEGORY_SUPPLIER;
+		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.STOP_INSTRUCTION)){
+			reasonCode = ProfileManagementConst.STOP_INSTRUCTION;
+		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TERMINATION)){
+			reasonCode = ProfileManagementConst.CONTRACT_TERMINATION;
+		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.FWD_HIGHER_AUTH)){
+			reasonCode = ProfileManagementConst.FWD_HIGHER_AUTH;
+		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PURCHASE_IN_DEFAULT)){
+			reasonCode = ProfileManagementConst.PURCHASE_IN_DEFAULT;
+		}
+		reqDTO.setReasonCode(reasonCode);
+		
+		ReasonResDTO resDTO = reasonSO.generateReasonCode(reqDTO);
+		getManagedBean().getSelectedReason().setReasonCode(resDTO.getReasonCode());
+	}
+
+
 	/**
 	 * create new reject reason
 	 * @param rejectReason
@@ -529,7 +567,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_770007, new String[]{rejectReason.getReasonCode()},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				return redirectToSearchReason();
 			}
 			
 		}catch (Exception e){
