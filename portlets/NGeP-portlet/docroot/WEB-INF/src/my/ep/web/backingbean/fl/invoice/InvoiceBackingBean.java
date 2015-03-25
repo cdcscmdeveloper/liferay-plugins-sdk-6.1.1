@@ -616,7 +616,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	public void retrieveInvTotalAmount(FlInvoiceItem flInvoiceItem){
 		if(flInvoiceItem.getInvAmt().doubleValue()>flInvoiceItem.getReceivedAmt().doubleValue()) {
 			flInvoiceItem.setInvAmt(flInvoiceItem.getReceivedAmt());
-			throw new EpException(MessageConst.ERROR_100032, new String[]{"Invoice Amount","Received Amount"});
+			throw new EpException(MessageConst.ERROR_100032, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.amount.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+					ResourceBundleUtils.getMessage("lbl.fl.received.amount.message",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
 	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
@@ -1197,7 +1199,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
 
