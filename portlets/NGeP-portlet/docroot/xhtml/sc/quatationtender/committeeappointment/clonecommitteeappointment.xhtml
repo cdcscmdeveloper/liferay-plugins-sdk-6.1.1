@@ -14,13 +14,13 @@
 				closable="true" showSummary="false" />
 			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
 				toggleable="true">
-				<table>
+				<table width="100%" >
 					<tr>
 						<td valign="top"><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 						<td colspan="3"><p:inputText
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-								size="110" maxlength="100" /></td>
+								size="104" maxlength="100" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel
@@ -146,7 +146,7 @@
 					<p:column headerText="#{lbl['lbl.so.crtdt']}">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime
-								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					
