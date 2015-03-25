@@ -11,8 +11,7 @@
 					<h:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " />
 				</td>
 				<td class="header-info-text">
-					<p:commandLink value="#{createDOBackingBean.managedBean.fulfilmentOrder.docNo}"
-					action="#{createDOBackingBean.navigateOrderNoPage}"/>
+					#{createDOBackingBean.managedBean.fulfilmentOrder.docNo}
 				</td>
 				<td><h:outputLabel value="#{lbl['lbl.fl.frn.do.no']} " rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null}"/>
 				</td>
