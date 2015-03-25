@@ -323,16 +323,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The spec name. */
 	private String specName;
-
-	/** The qt num. */
-	private String qtNum;
-
-	/** The qt title. */
-	private String qtTitle;
-
-	/** The publish date. */
-	private Date publishDate;
-
+	
 	/** The status id. */
 	private Long statusId;
 
@@ -935,44 +926,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneLocation(boolean isZoneLocation) {
 		this.isZoneLocation = isZoneLocation;
-	}
-
-	/**
-	 * Gets the qt title.
-	 * 
-	 * @return the qt title
-	 */
-	public String getQtTitle() {
-		return qtTitle;
-	}
-
-	/**
-	 * Sets the qt title.
-	 * 
-	 * @param qtTitle
-	 *            the new qt title
-	 */
-	public void setQtTitle(String qtTitle) {
-		this.qtTitle = qtTitle;
-	}
-
-	/**
-	 * Gets the publish date.
-	 * 
-	 * @return the publish date
-	 */
-	public Date getPublishDate() {
-		return publishDate;
-	}
-
-	/**
-	 * Sets the publish date.
-	 * 
-	 * @param publishDate
-	 *            the new publish date
-	 */
-	public void setPublishDate(Date publishDate) {
-		this.publishDate = publishDate;
 	}
 
 	/**
@@ -2199,25 +2152,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSpecName(String specName) {
 		this.specName = specName;
-	}
-
-	/**
-	 * Gets the qt num.
-	 * 
-	 * @return the qt num
-	 */
-	public String getQtNum() {
-		return qtNum;
-	}
-
-	/**
-	 * Sets the qt num.
-	 * 
-	 * @param qtNum
-	 *            the new qt num
-	 */
-	public void setQtNum(String qtNum) {
-		this.qtNum = qtNum;
 	}
 
 	/**
