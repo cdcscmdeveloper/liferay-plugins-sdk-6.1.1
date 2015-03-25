@@ -112,7 +112,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 
 		this.getManagedBean().setFieldCodes(new String());
 		this.getManagedBean().setFieldNames(new String());
-		this.getManagedBean().setStatus(1L);
+		this.getManagedBean().setStatus(null);
 		educationFieldDataModel = new EducationFieldPagingDataModel();
 
 	}
