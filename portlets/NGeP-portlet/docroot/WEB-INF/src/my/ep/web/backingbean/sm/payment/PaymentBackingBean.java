@@ -55,34 +55,38 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 
-@ManagedBean (name = "paymentBackingBean")
+@ManagedBean(name = "paymentBackingBean")
 @RequestScoped
-public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
+public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 	public static Logger log = Logger.getLogger(PaymentBackingBean.class);
-	private final String merchantId = EpPropertiesUtils.getInstance().getProperty("molpay.merchantid");
-	private final String vKey = EpPropertiesUtils.getInstance().getProperty("molpay.vkey");
-	private final String paymentGatewayUrl = EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";
-	private final String molIpnUrl =  EpPropertiesUtils.getInstance().getProperty("molpay.ipnurl");
+	private final String merchantId = EpPropertiesUtils.getInstance()
+			.getProperty("molpay.merchantid");
+	private final String vKey = EpPropertiesUtils.getInstance().getProperty(
+			"molpay.vkey");
+	private final String paymentGatewayUrl = EpPropertiesUtils.getInstance()
+			.getProperty("molpay.url") + merchantId + "/";
+	private final String molIpnUrl = EpPropertiesUtils.getInstance()
+			.getProperty("molpay.ipnurl");
 	private String vCode;
-	
+
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 
-	@ManagedProperty(value="#{paymentBean}")
+	@ManagedProperty(value = "#{paymentBean}")
 	private PaymentBean paymentBean;
-	
+
 	/**
 	 * Construct and initialized PaymentBackingBean
 	 */
-	public PaymentBackingBean(){
+	public PaymentBackingBean() {
 		this.getManagedBean().setCountry("MY");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
 			System.out.println("***userId: " + pmUser.getUserId());
 
-			new LogKey(pmUser.getUserId()); 
-		}else{
-			new LogKey(1L); 
+			new LogKey(pmUser.getUserId());
+		} else {
+			new LogKey(1L);
 		}
 	}
 
@@ -92,12 +96,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	public String getMerchantId() {
 		return merchantId;
 	}
+
 	/**
 	 * @return the vKey
 	 */
 	public String getvKey() {
 		return vKey;
 	}
+
 	/**
 	 * @return the paymentGatewayUrl
 	 */
@@ -113,89 +119,103 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	}
 
 	/**
-	 * @param vCode the vCode to set
+	 * @param vCode
+	 *            the vCode to set
 	 */
 	public void setvCode(String vCode) {
 		this.vCode = vCode;
 	}
-	
+
 	/**
 	 * Set payment item description
 	 */
-	public void retrievePaymentItem(){
-		List<PmParameterDesc> pmParameterDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.PM_PAYMENT_ITEM, new FacesScopes().getUserLocale().getLanguage());
+	public void retrievePaymentItem() {
+		List<PmParameterDesc> pmParameterDesc = SmCommonUtil
+				.retrieveParameterDescList(
+						SupplierManagementConst.PM_PAYMENT_ITEM,
+						new FacesScopes().getUserLocale().getLanguage());
 		supplierPaymentItemMap = new HashMap<String, PmParameterDesc>();
-		
-		for(PmParameterDesc pmDesc : pmParameterDesc){
-			supplierPaymentItemMap.put(pmDesc.getPmParameter().getParameterCode(), pmDesc);
+
+		for (PmParameterDesc pmDesc : pmParameterDesc) {
+			supplierPaymentItemMap.put(pmDesc.getPmParameter()
+					.getParameterCode(), pmDesc);
 		}
 	}
 
-	public void confirmPayment(){
+	public void confirmPayment() {
 
 	}
 
 	/**
 	 * Retrieve bill by application id from task list
 	 */
-	public void retrieveBillInfo(){
+	public void retrieveBillInfo() {
 		/*
 		 * for testing Purpose
 		 */
 		log.debug(">>>>>>>InitPayment Stert>>>>");
-		/*MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-		mofReqDTO.setApplId(1009);
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-		MofRegistrationResDTO mofResDTO  = mofRegistrationSO.retrieveSupplierProfileByApplId(mofReqDTO);
-		this.getManagedBean().setSmAppl(mofResDTO.getSmAppl());
-		this.getManagedBean().setAppId(mofReqDTO.getApplId());*/ //dummy test
+		/*
+		 * MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		 * mofReqDTO.setApplId(1009); IMofRegistrationSO mofRegistrationSO =
+		 * (IMofRegistrationSO)
+		 * BusinessDelegate.getInstance().getServiceObject("sm",
+		 * IMofRegistrationSO.class); MofRegistrationResDTO mofResDTO =
+		 * mofRegistrationSO.retrieveSupplierProfileByApplId(mofReqDTO);
+		 * this.getManagedBean().setSmAppl(mofResDTO.getSmAppl());
+		 * this.getManagedBean().setAppId(mofReqDTO.getApplId());
+		 */// dummy test
 
-		//this.getManagedBean().setAppId(2997L);
+		// this.getManagedBean().setAppId(2997L);
 		log.info("*******retrieveBillInfo Start******");
-		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setApplId(this.getManagedBean().getAppId());
 		PaymentResDTO resDTO = reqSO.retrieveSmBillByApplId(reqDTO);
 		this.getManagedBean().setSmAppl(resDTO.getSmBill().getSmAppl());
-		
-		log.info("*******Bill Object**********" + resDTO.getSmBill().getBillId());
+
+		log.info("*******Bill Object**********"
+				+ resDTO.getSmBill().getBillId());
 		this.getManagedBean().setSmBill(resDTO.getSmBill());
 		Long billId = resDTO.getSmBill().getBillId();
 		List<SmBillDtl> smBillDtls = resDTO.getSmBill().getSmBillDtls();
 
-		
-		if(resDTO.getSmBill().getSmPayments().size() > 0){
-			//System.out.println("******check is it Offline Payment*****");
-			/*if(checkOfflinePayment(billId)){
-				//this.getManagedBean().setOfflinePayment(true);
-				System.out.println("*****is Offline Payment*****");
-				BigDecimal ttlAmount = new BigDecimal(0);
-				
-				this.getManagedBean().setNewSmBillDtlLs(new ArrayList<SmBillDtl>());
-				for(SmBillDtl billDtl : smBillDtls){
-					ttlAmount = ttlAmount.add(billDtl.getItemPrice());
-					this.getManagedBean().getNewSmBillDtlLs().add(billDtl);
-				}
-			
-				System.out.println("TotalAmount>>>>>>" + ttlAmount);
-				this.getManagedBean().setTotalAmount(ttlAmount);
-				
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentSummary.xhtml");		
-			}else{*/
-				//this.getManagedBean().setOfflinePayment(false);
-				log.debug("*****is Online Payment*****");
-				
-				proceedToItemList(smBillDtls);
-			//}
-		}else{
+		if (resDTO.getSmBill().getSmPayments().size() > 0) {
+			// System.out.println("******check is it Offline Payment*****");
+			/*
+			 * if(checkOfflinePayment(billId)){
+			 * //this.getManagedBean().setOfflinePayment(true);
+			 * System.out.println("*****is Offline Payment*****"); BigDecimal
+			 * ttlAmount = new BigDecimal(0);
+			 * 
+			 * this.getManagedBean().setNewSmBillDtlLs(new
+			 * ArrayList<SmBillDtl>()); for(SmBillDtl billDtl : smBillDtls){
+			 * ttlAmount = ttlAmount.add(billDtl.getItemPrice());
+			 * this.getManagedBean().getNewSmBillDtlLs().add(billDtl); }
+			 * 
+			 * System.out.println("TotalAmount>>>>>>" + ttlAmount);
+			 * this.getManagedBean().setTotalAmount(ttlAmount);
+			 * 
+			 * FacesContext fc = FacesContext.getCurrentInstance();
+			 * fc.getApplication().getNavigationHandler().handleNavigation(fc,
+			 * null,"/xhtml/sm/payment/paymentSummary.xhtml"); }else{
+			 */
+			// this.getManagedBean().setOfflinePayment(false);
+			log.debug("*****is Online Payment*****");
+
+			proceedToItemList(smBillDtls);
+			// }
+		} else {
 			proceedToItemList(smBillDtls);
 		}
 	}
-	
+
 	/**
-	 * Set item list based on bill type and redirect to payment page. ie:Softcert payment, processing fee and registration fee
-	 * @param List<SmBillDtl> smBillDtlLs
+	 * Set item list based on bill type and redirect to payment page.
+	 * ie:Softcert payment, processing fee and registration fee
+	 * 
+	 * @param List
+	 *            <SmBillDtl> smBillDtlLs
 	 */
 	public void proceedToItemList(List<SmBillDtl> smBillDtlLs) {
 		getManagedBean().setSoftcertPayment(false);
@@ -223,19 +243,20 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				.handleNavigation(fc, null,
 						"/xhtml/sm/payment/portletViewMode.xhtml");
 	}
-	
+
 	/**
 	 * Set selected item to be paid and redirect to payment summary page
+	 * 
 	 * @return String
 	 */
-	public String proceedToPaymentSummary(){
+	public String proceedToPaymentSummary() {
 		log.debug("****proceedToPaymentSummary****");
 
 		SmBill smBill = this.getManagedBean().getSmBill();
 		BigDecimal ttlAmount = new BigDecimal(0);
 		this.getManagedBean().setNewSmBillDtlLs(new ArrayList<SmBillDtl>());
 		retrievePaymentItem();
-		
+
 		Map<Long, SmPersonnel> selectedSoftCertMap = new HashMap<Long, SmPersonnel>();
 		if (this.getManagedBean().getSelectedSoftCertLs() != null
 				&& this.getManagedBean().getSelectedSoftCertLs().length > 0) {
@@ -244,8 +265,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				selectedSoftCertMap.put(selectedPersonnel.getPersonnelId(),
 						selectedPersonnel);
 			}
-		}	
-		
+		}
+
 		for (SmBillDtl billDtl : smBill.getSmBillDtls()) {
 			if (billDtl.getPmParameter().getParameterCode()
 					.equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
@@ -259,41 +280,58 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				this.getManagedBean().getNewSmBillDtlLs().add(billDtl);
 			}
 		}
-		
-		for(SmBillDtl newItemDtlLs : this.getManagedBean().getNewSmBillDtlLs()){
+
+		for (SmBillDtl newItemDtlLs : this.getManagedBean().getNewSmBillDtlLs()) {
 			ttlAmount = ttlAmount.add(newItemDtlLs.getItemPrice());
 			log.info("TotalAmount>>>>>>" + ttlAmount);
 		}
-	
-		this.getManagedBean().setTotalAmount(ttlAmount);
+		getManagedBean().setTotalAmountBeforeGst(
+				ttlAmount.setScale(2, BigDecimal.ROUND_UP));
+		BigDecimal gst = getManagedBean().isSoftcertPayment() ? new BigDecimal(
+				6).divide(new BigDecimal(100)).multiply(ttlAmount)
+				: BigDecimal.ZERO;
+		getManagedBean().setGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
+		this.getManagedBean().setTotalAmount(
+				gst.add(ttlAmount).setScale(2, BigDecimal.ROUND_UP));
 		return "paymentSummary";
 	}
-	
+
 	/**
 	 * Create and update payment,bill,personnel and call payment gateway
+	 * 
 	 * @return String
 	 */
-	public String submitPayment(){
+	public String submitPayment() {
 		log.debug("********submitPayment******");
-		if(this.getManagedBean().getSmBill() != null){
-			List<PmParameterDesc> paymentModeLs =SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.PM_PAYMENT_MODE, new FacesScopes().getUserLocale().getLanguage());
-			List<PmStatusDesc> paymentStatusLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
+		if (this.getManagedBean().getSmBill() != null) {
+			List<PmParameterDesc> paymentModeLs = SmCommonUtil
+					.retrieveParameterDescList(
+							SupplierManagementConst.PM_PAYMENT_MODE,
+							new FacesScopes().getUserLocale().getLanguage());
+			List<PmStatusDesc> paymentStatusLs = SmCommonUtil
+					.retrievePmStatusList("SM",
+							SupplierManagementConst.PM_STATUS_PAYMENT,
+							new FacesScopes().getUserLocale().getLanguage());
 			PmParameter paymentMode = new PmParameter();
 			SmPayment payment = new SmPayment();
 			PmStatus paymentStatus = new PmStatus();
-			
-			for(PmParameterDesc pMethod : paymentModeLs){
-				if(pMethod.getPmParameter().getParameterCode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
+
+			for (PmParameterDesc pMethod : paymentModeLs) {
+				if (pMethod.getPmParameter().getParameterCode()
+						.equals(SupplierManagementConst.ONLINE_PAYMENT)) {
 					paymentMode = pMethod.getPmParameter();
 				}
 			}
-			
-			for(PmStatusDesc pStat : paymentStatusLs){
-				if(pStat.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT)){
+
+			for (PmStatusDesc pStat : paymentStatusLs) {
+				if (pStat
+						.getPmStatus()
+						.getStatusId()
+						.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT)) {
 					paymentStatus = pStat.getPmStatus();
 				}
 			}
-			
+
 			payment.setPaymentMode(paymentMode);
 			payment.setPmStatus(paymentStatus);
 
@@ -302,94 +340,111 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			List<SmPaymentDtl> pymDtlList = new ArrayList<SmPaymentDtl>();
 			BigDecimal totalAmount = new BigDecimal(0);
 
-			for(SmBillDtl newBillDtl : this.getManagedBean().getNewSmBillDtlLs()){
+			for (SmBillDtl newBillDtl : this.getManagedBean()
+					.getNewSmBillDtlLs()) {
 				SmPaymentDtl paymentDtl = new SmPaymentDtl();
 				paymentDtl.setSmBillDtl(newBillDtl);
 				paymentDtl.setSmPayment(payment);
 				pymDtlList.add(paymentDtl);
 				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
 			}
-			
-			totalAmount = totalAmount.setScale(2,BigDecimal.ROUND_UP);
+
+			totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_UP);
 			payment.setSmPaymentDtls(pymDtlList);
 			payment.setSmBill(smBill);
 			payment.setPaymentAmt(totalAmount);
 
-			log.info("***Total Amount***" +totalAmount);
+			log.info("***Total Amount***" + totalAmount);
 
-//			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
+			// if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
 			SmPaymentOrder pymtOrder = new SmPaymentOrder();
 			pymtOrder.setSmPayment(payment);
 			pymtOrder.setPaymentGateway("MOL");
-			//pymtOrder.setChannelName("TESTING");
+			// pymtOrder.setChannelName("TESTING");
 
 			payment.setSmPaymentOrder(pymtOrder);
-//			}
+			// }
 
 			List<SmPayment> smPaymentLs = new ArrayList<SmPayment>();
 			smPaymentLs.add(payment);
 			smBill.setSmPayments(smPaymentLs);
-			
+
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(smBill);
-			
-			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+
+			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IPaymentSO.class);
 			PaymentResDTO resDTO = new PaymentResDTO();
 			resDTO = reqSO.createPayment(reqDTO);
-			
-			log.info("******Payment ID********" + resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
-			
-/*			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.OFFLINE_PAYMENT)){
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721051,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale())));
 
-				return "paymentAcknowledge";
+			log.info("******Payment ID********"
+					+ resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
 
-			}else{*/
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				
-				this.getManagedBean().setOrderId(resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
-				this.getManagedBean().setBillMobile(pmUser.getMobileNo());
-				this.getManagedBean().setBillEmail(pmUser.getEmail());
-				this.getManagedBean().setBillName(pmUser.getUserName());
-				this.getManagedBean().setBillDesc("NGeP Payment");
-				//this.getManagedBean().
-				String orderId = resDTO.getSmBill().getSmPayments().get(0).getPaymentId().toString();
-				String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId + vKey);
-				log.info("******VC********" + vc);
-				BigDecimal ttlAmt = resDTO.getSmBill().getSmPayments().get(0).getPaymentAmt();
-				this.setvCode(vc);
-				this.getManagedBean().setTotalAmount(ttlAmt);
-				
-				
-				List paymentDtls = new ArrayList();
-				paymentDtls.add(0, this.getManagedBean().getTaskId());
-				paymentDtls.add(1, this.getManagedBean().getBpmPojo());
-				paymentBean.getPaymentMap().put(orderId, paymentDtls);
-				
-				
-				return "paymentRequestSubmission";
-			//}
+			/*
+			 * if(this.getManagedBean().getPaymentMode().equals(
+			 * SupplierManagementConst.OFFLINE_PAYMENT)){
+			 * FacesContext.getCurrentInstance().addMessage(null,new
+			 * FacesMessage
+			 * (FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage
+			 * (MessageConst.INFO_721051, MessageUtils.BUNDLE_COMMON_MESSAGES,
+			 * new FacesScopes().getUserLocale())));
+			 * 
+			 * return "paymentAcknowledge";
+			 * 
+			 * }else{
+			 */
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+
+			this.getManagedBean().setOrderId(
+					resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
+			this.getManagedBean().setBillMobile(pmUser.getMobileNo());
+			this.getManagedBean().setBillEmail(pmUser.getEmail());
+			this.getManagedBean().setBillName(pmUser.getUserName());
+			this.getManagedBean().setBillDesc("NGeP Payment");
+			// this.getManagedBean().
+			String orderId = resDTO.getSmBill().getSmPayments().get(0)
+					.getPaymentId().toString();
+			String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId
+					+ vKey);
+			log.info("******VC********" + vc);
+			BigDecimal ttlAmt = resDTO.getSmBill().getSmPayments().get(0)
+					.getPaymentAmt();
+			this.setvCode(vc);
+			this.getManagedBean().setTotalAmount(ttlAmt);
+
+			List paymentDtls = new ArrayList();
+			paymentDtls.add(0, this.getManagedBean().getTaskId());
+			paymentDtls.add(1, this.getManagedBean().getBpmPojo());
+			paymentBean.getPaymentMap().put(orderId, paymentDtls);
+
+			return "paymentRequestSubmission";
+			// }
 		}
-		
+
 		return "";
 	}
-	
+
 	/**
 	 * Payment gateway processing and response status
+	 * 
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public void responsePreRender() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-			
-		PortletRequest pr = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("javax.portlet.request");
-		Method method = pr.getClass().getMethod("getOriginalHttpServletRequest");
-		HttpServletRequest httpServletRequest = (HttpServletRequest)method.invoke(pr, new Object[] {});
-		
+	public void responsePreRender() throws NoSuchMethodException,
+			SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
+
+		PortletRequest pr = (PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestMap()
+				.get("javax.portlet.request");
+		Method method = pr.getClass()
+				.getMethod("getOriginalHttpServletRequest");
+		HttpServletRequest httpServletRequest = (HttpServletRequest) method
+				.invoke(pr, new Object[] {});
+
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
@@ -399,32 +454,35 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		String appcode = httpServletRequest.getParameter("appcode");
 		String paydate = httpServletRequest.getParameter("paydate");
 		String skey = httpServletRequest.getParameter("skey");
-		String channel = httpServletRequest.getParameter("channel") != null ?  httpServletRequest.getParameter("channel") : null;
-		String errorCode = httpServletRequest.getParameter("error_code") != null ?  httpServletRequest.getParameter("error_code") : null;
-		String errorDesc = httpServletRequest.getParameter("error_desc") != null ?  httpServletRequest.getParameter("error_desc") : null;
-	
+		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest
+				.getParameter("channel") : null;
+		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest
+				.getParameter("error_code") : null;
+		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest
+				.getParameter("error_desc") : null;
+
 		String paymentTaskId = null;
 		Object paymentBpmPojo = null;
-		
-		if(paymentBean.getPaymentMap().containsKey(orderId)) {
+
+		if (paymentBean.getPaymentMap().containsKey(orderId)) {
 			List paymentDtls = paymentBean.getPaymentMap().get(orderId);
-			if(paymentDtls != null) {
+			if (paymentDtls != null) {
 				paymentTaskId = (String) paymentDtls.get(0);
 				paymentBpmPojo = paymentDtls.get(1);
 			}
 		}
-		
+
 		log.info("paymentBean.getPaymentTaskId(): " + paymentTaskId);
 		log.info("paymentBean.getPaymentBpmPojo(): " + paymentBpmPojo);
 		this.getManagedBean().setTaskId(paymentTaskId);
-		this.getManagedBean().setBpmPojo(paymentBpmPojo);		
-		
-		try{
+		this.getManagedBean().setBpmPojo(paymentBpmPojo);
+
+		try {
 			curlIPN(httpServletRequest);
-		}catch(Exception ex){
-			log.error("curlIPN: "+ ex.getMessage());
+		} catch (Exception ex) {
+			log.error("curlIPN: " + ex.getMessage());
 		}
-		
+
 		log.info("orderId: " + orderId);
 		log.info("tranID: " + tranID);
 		log.info("status:" + status);
@@ -437,16 +495,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		log.info("error_code:" + errorCode);
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
-		
-		//To verify the data integrity sending by MOLPay
-		String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
-		String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
-		
+
+		// To verify the data integrity sending by MOLPay
+		String key0 = SmCommonUtil.md5(tranID + orderId + status + domain
+				+ amount + currency);
+		String key1 = SmCommonUtil
+				.md5(paydate + domain + key0 + appcode + vKey);
+
 		log.info("SKey>>>>" + skey);
 		log.info("Key1>>>>" + key1);
-		if(skey.equals(key1)){
+		if (skey.equals(key1)) {
 			log.info("SKey & Key1 Are Match>>>>");
-			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IPaymentSO.class);
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			Long ordId = Long.valueOf(orderId);
 			BigDecimal txAmount = new BigDecimal(amount);
@@ -454,67 +515,80 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			reqDTO.setPaymentId(ordId);
 			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
 			boolean validPayment = false;
-			
-			if(resDTO.getSmPayment() != null){
+
+			if (resDTO.getSmPayment() != null) {
 				SmPayment smPayment = resDTO.getSmPayment();
-				
-				List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
-				Map<Long,PmStatusDesc> pmStatusDescMap = SmCommonUtil.converPmStatusListToMap(pmStatLs);
-				
+
+				List<PmStatusDesc> pmStatLs = SmCommonUtil
+						.retrievePmStatusList("SM",
+								SupplierManagementConst.PM_STATUS_PAYMENT,
+								new FacesScopes().getUserLocale().getLanguage());
+				Map<Long, PmStatusDesc> pmStatusDescMap = SmCommonUtil
+						.converPmStatusListToMap(pmStatLs);
+
 				log.info("pmStatLs>>>>>" + pmStatLs.size());
 				SmPaymentResponse smPaymentRes = new SmPaymentResponse();
 				SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
 				Long statusCode = null;
 				Long paymentId = smPayment.getPaymentId();
-				
+
 				log.info("Status Success 0>>>>>");
-				if(status.equals(SupplierManagementConst.MOL_SUCCESS)){
+				if (status.equals(SupplierManagementConst.MOL_SUCCESS)) {
 					BigDecimal paymentAmount = smPayment.getPaymentAmt();
 					log.info("paymentId>>>>" + paymentId);
 					log.info("orderId>>>>" + orderId);
 					log.info("paymentAmount>>>>" + paymentAmount);
 					log.info("txAmount>>>>" + txAmount);
-					
-					/*boolean test = (paymentId == ordId && paymentAmount.compareTo(txAmount) == 0);
-					boolean payOrd = (paymentId == ordId);
-					boolean px = (paymentAmount.compareTo(txAmount) == 0);
-					log.info("test<>>>>>" + test);
-					log.info("payOrd<>>>>>" + payOrd);
-					log.info("px<>>>>>" + px);*/
-					
-					if(paymentId.longValue() == ordId.longValue() && paymentAmount.compareTo(txAmount) == 0){
-						log.info("current status>>>>" + smPayment.getPmStatus().getStatusId());
-						if(smPayment.getPmStatus() != null){
-							if(smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_PENDING_PAYMENT || 
-									smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_FAILED_PAYMENT){
-								log.info("current payment>>>>" + smPayment.getPmStatus().getStatusId());
 
-								if(!smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT)){
+					/*
+					 * boolean test = (paymentId == ordId &&
+					 * paymentAmount.compareTo(txAmount) == 0); boolean payOrd =
+					 * (paymentId == ordId); boolean px =
+					 * (paymentAmount.compareTo(txAmount) == 0);
+					 * log.info("test<>>>>>" + test); log.info("payOrd<>>>>>" +
+					 * payOrd); log.info("px<>>>>>" + px);
+					 */
+
+					if (paymentId.longValue() == ordId.longValue()
+							&& paymentAmount.compareTo(txAmount) == 0) {
+						log.info("current status>>>>"
+								+ smPayment.getPmStatus().getStatusId());
+						if (smPayment.getPmStatus() != null) {
+							if (smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_PENDING_PAYMENT
+									|| smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_FAILED_PAYMENT) {
+								log.info("current payment>>>>"
+										+ smPayment.getPmStatus().getStatusId());
+
+								if (!smPayment
+										.getPmStatus()
+										.getStatusId()
+										.equals(SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT)) {
 									statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
 									validPayment = true;
-								}else{
-									statusCode = smPayment.getPmStatus().getStatusId();
+								} else {
+									statusCode = smPayment.getPmStatus()
+											.getStatusId();
 								}
 							}
-						}else{
+						} else {
 							log.info("<<<existing status is NUll>>>>");
 							statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
 							validPayment = true;
 						}
-					}
-					else{
+					} else {
 						statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 					}
-				}else if(status.equals(SupplierManagementConst.MOL_PENDING)){
+				} else if (status.equals(SupplierManagementConst.MOL_PENDING)) {
 					statusCode = SupplierManagementConst.PM_STAT_PENDING_PAYMENT;
-					
-				}else if(status.equals(SupplierManagementConst.MOL_FAIL)){
+
+				} else if (status.equals(SupplierManagementConst.MOL_FAIL)) {
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
-				
+
 				Date txDate;
 				try {
-					txDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss",paydate);
+					txDate = DateUtils.convertStringToDate(
+							"yyyy-MM-dd HH:mm:ss", paydate);
 				} catch (Exception e) {
 					txDate = new Date();
 					e.printStackTrace();
@@ -528,217 +602,247 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				smPaymentRes.setPaymentStatus(status);
 				smPaymentRes.setPaidAmt(txAmount);
 				paymentOrder.getSmPaymentResponses().add(smPaymentRes);
-				
+
 				PmStatusDesc pmStatDesc = pmStatusDescMap.get(statusCode);
 				smPayment.setPmStatus(pmStatDesc.getPmStatus());
-				
-				//updatePayment(smPayment,validPayment);
+
+				// updatePayment(smPayment,validPayment);
 				String token = getFacesScopes().getBPMAuthenticationCtxToken();
 				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
-				
+
 				pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
-				
+
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setSmPayment(smPayment);
 				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 
-				pymtReqDTO.setTaskId(this.getManagedBean().getTaskId()); 
+				pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				pymtReqDTO.setToken(token);
-				
+
 				FacesScopes fs = new FacesScopes();
 				pymtReqDTO.setServerName(fs.getRequest().getServerName());
 				pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
-				
+
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-				
-				showPaymentResponse(status,paymentId);
+
+				showPaymentResponse(status, paymentId);
 				this.renewSesionObject();
-			}else{
-				showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null);
+			} else {
+				showPaymentResponse(
+						SupplierManagementConst.PAYMENT_INVALID_RES, null);
 				this.renewSesionObject();
 			}
-		}else{
-			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null);		
+		} else {
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,
+					null);
 			this.renewSesionObject();
-			
+
 		}
-		
-//		paymentBean.setPaymentBpmPojo(null);
-//		paymentBean.setPaymentTaskId(null);
-		
-		if(paymentBean.getPaymentMap().containsKey(orderId)) {
+
+		// paymentBean.setPaymentBpmPojo(null);
+		// paymentBean.setPaymentTaskId(null);
+
+		if (paymentBean.getPaymentMap().containsKey(orderId)) {
 			paymentBean.getPaymentMap().remove(orderId);
 		}
 
 	}
-	
+
 	/**
 	 * Redirect back from payment summary page to payment information page
+	 * 
 	 * @return String
 	 */
 	public String back() {
 		return "portletViewMode.xhtml";
 	}
-	
-	private void curlIPN(HttpServletRequest httpServletRequest) throws Exception{
-		Enumeration<String> resParameters = httpServletRequest.getParameterNames();
-		//List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+	private void curlIPN(HttpServletRequest httpServletRequest)
+			throws Exception {
+		Enumeration<String> resParameters = httpServletRequest
+				.getParameterNames();
+		// List<NameValuePair> params = new ArrayList<NameValuePair>();
 		StringBuilder strParams = new StringBuilder();
-		
-		while(resParameters.hasMoreElements()){
-			String paramName = (String)resParameters.nextElement();
-			//params.add(new BasicNameValuePair(paramName, httpServletRequest.getParameter(paramName)));
-			strParams.append(paramName + "=" + httpServletRequest.getParameter(paramName));
+
+		while (resParameters.hasMoreElements()) {
+			String paramName = (String) resParameters.nextElement();
+			// params.add(new BasicNameValuePair(paramName,
+			// httpServletRequest.getParameter(paramName)));
+			strParams.append(paramName + "="
+					+ httpServletRequest.getParameter(paramName));
 			strParams.append("&");
-			log.info(paramName + " - " + httpServletRequest.getParameter(paramName));
+			log.info(paramName + " - "
+					+ httpServletRequest.getParameter(paramName));
 		}
 		strParams.append("treq=1");
 		log.info("StrParams>>>>>>" + strParams);
-		//URL url = null;
-		//BufferedReader reader = null;
+		// URL url = null;
+		// BufferedReader reader = null;
 
-		try
-		{
+		try {
 			// create the HttpURLConnection
 			URL url = new URL(molIpnUrl);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
 
 			// just want to do an HTTP POST here
 			connection.setRequestMethod("POST");
 
 			// uncomment this if you want to write output to this url
 			connection.setDoOutput(true);
-			
+
 			OutputStream os = connection.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+					os, "UTF-8"));
 			writer.write(strParams.toString());
 			writer.flush();
 			writer.close();
 			os.close();
 			// give it 15 seconds to respond
-			/*connection.setReadTimeout(15*1000);
-			connection.connect();
-			
-			StringBuilder stringBuilder;
-			// read the output from the server
-			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			stringBuilder = new StringBuilder();
-			
-			System.out.println("***********CURL Response*********");
-			String line = null;
-			while ((line = reader.readLine()) != null)
-			{
-				stringBuilder.append(line + "\n");
-			}
-			log.info(">>>"+ stringBuilder.toString());*/
-		}
-		catch (Exception e)
-		{
+			/*
+			 * connection.setReadTimeout(15*1000); connection.connect();
+			 * 
+			 * StringBuilder stringBuilder; // read the output from the server
+			 * reader = new BufferedReader(new
+			 * InputStreamReader(connection.getInputStream())); stringBuilder =
+			 * new StringBuilder();
+			 * 
+			 * System.out.println("***********CURL Response*********"); String
+			 * line = null; while ((line = reader.readLine()) != null) {
+			 * stringBuilder.append(line + "\n"); } log.info(">>>"+
+			 * stringBuilder.toString());
+			 */
+		} catch (Exception e) {
 			e.printStackTrace();
-			//throw e;
+			// throw e;
 		}
 	}
-	
-	/*private boolean checkOfflinePayment(Long billId){
-		boolean result = false;
-		
-		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
-		PaymentReqDTO reqDTO = new PaymentReqDTO();
-		reqDTO.setBillId(billId);
-		reqDTO.setPaymentMode(SupplierManagementConst.OFFLINE_PAYMENT);
-		
-		PaymentResDTO resDTO = reqSO.retrievePaymentByBillIdAndMode(reqDTO);
-		
-		if(resDTO.getSmPaymentLs().size() > 0){
-			result = true;
-		}
-		
-		return result;
-	}*/
-	
+
+	/*
+	 * private boolean checkOfflinePayment(Long billId){ boolean result = false;
+	 * 
+	 * IPaymentSO reqSO = (IPaymentSO)
+	 * BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+	 * PaymentReqDTO reqDTO = new PaymentReqDTO(); reqDTO.setBillId(billId);
+	 * reqDTO.setPaymentMode(SupplierManagementConst.OFFLINE_PAYMENT);
+	 * 
+	 * PaymentResDTO resDTO = reqSO.retrievePaymentByBillIdAndMode(reqDTO);
+	 * 
+	 * if(resDTO.getSmPaymentLs().size() > 0){ result = true; }
+	 * 
+	 * return result; }
+	 */
+
 	/**
 	 * Get payment mode list for drop down
+	 * 
 	 * @return List<SelectItem>
 	 */
-	public List<SelectItem> getPaymentModeDropDown(){
-    	List<SelectItem> list = new ArrayList<SelectItem>();
+	public List<SelectItem> getPaymentModeDropDown() {
+		List<SelectItem> list = new ArrayList<SelectItem>();
 		SelectItem[] items = getDropdownCodeValues(SupplierManagementConst.PM_PAYMENT_MODE);
-		for(SelectItem item : items) {
-			if(item.getValue()!=null) {			
+		for (SelectItem item : items) {
+			if (item.getValue() != null) {
 				list.add(item);
 			}
 		}
 		return list;
-    }
-	
+	}
+
 	/**
 	 * Get payment gateway response status
-	 * @param String status
-	 * @param Long paymentId
+	 * 
+	 * @param String
+	 *            status
+	 * @param Long
+	 *            paymentId
 	 */
-	public void showPaymentResponse(String status, Long paymentId){
+	public void showPaymentResponse(String status, Long paymentId) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		boolean paymentStatus = false;
-		
+
 		switch (status) {
-		case SupplierManagementConst.MOL_SUCCESS : 
-			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721059,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,
-					new FacesScopes().getUserLocale())));
+		case SupplierManagementConst.MOL_SUCCESS:
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721059,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			paymentStatus = true;
 			break;
 
-		case SupplierManagementConst.MOL_FAIL : 
-			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.ERROR_721051,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,
-					new FacesScopes().getUserLocale())));
+		case SupplierManagementConst.MOL_FAIL:
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_721051,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			break;
 
-		case SupplierManagementConst.MOL_PENDING :
-			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721055,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,
-					new FacesScopes().getUserLocale())));
+		case SupplierManagementConst.MOL_PENDING:
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721055,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			break;
 
-		case SupplierManagementConst.PAYMENT_INVALID_RES :
-			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,
-					new FacesScopes().getUserLocale())));
+		case SupplierManagementConst.PAYMENT_INVALID_RES:
+			fc.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			break;
 
 		}
-		
-		if(paymentStatus && paymentId != null){
+
+		if (paymentStatus && paymentId != null) {
 			PaymentAcknowledgeBackingBean paymentAckBB = new PaymentAcknowledgeBackingBean();
 			paymentAckBB.getManagedBean().setPaymentId(paymentId);
 			paymentAckBB.getManagedBean().setPaymentStatus(true);
 		}
-		
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"/xhtml/sm/payment/paymentAcknowledge.xhtml");
 
 	}
-	
+
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
+
 	/**
 	 * Create and update payment,bill,personnel and redirect to success page
 	 */
-	public void tempPaymentSuccess(){
+	public void tempPaymentSuccess() {
 		log.info("********submitPayment******");
-		if(this.getManagedBean().getSmBill() != null){
-			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
-			Map<Long,PmStatusDesc> pmStatusDescMap = SmCommonUtil.converPmStatusListToMap(pmStatLs);
+		if (this.getManagedBean().getSmBill() != null) {
+			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList(
+					"SM", SupplierManagementConst.PM_STATUS_PAYMENT,
+					new FacesScopes().getUserLocale().getLanguage());
+			Map<Long, PmStatusDesc> pmStatusDescMap = SmCommonUtil
+					.converPmStatusListToMap(pmStatLs);
 			PmParameter paymentMode = new PmParameter();
 			SmPayment payment = new SmPayment();
 			PmStatus paymentStatus = new PmStatus();
-			
-			paymentMode = SmCommonUtil.retrieveParameterByTypeAndCode(SupplierManagementConst.PM_PAYMENT_MODE,SupplierManagementConst.ONLINE_PAYMENT,new FacesScopes().getUserLocale().getLanguage());
-			paymentStatus = pmStatusDescMap.get(SupplierManagementConst.PM_STAT_PENDING_PAYMENT).getPmStatus();
-			
+
+			paymentMode = SmCommonUtil.retrieveParameterByTypeAndCode(
+					SupplierManagementConst.PM_PAYMENT_MODE,
+					SupplierManagementConst.ONLINE_PAYMENT, new FacesScopes()
+							.getUserLocale().getLanguage());
+			paymentStatus = pmStatusDescMap.get(
+					SupplierManagementConst.PM_STAT_PENDING_PAYMENT)
+					.getPmStatus();
+
 			payment.setPaymentMode(paymentMode);
 			payment.setPmStatus(paymentStatus);
 
@@ -747,76 +851,81 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			List<SmPaymentDtl> pymDtlList = new ArrayList<SmPaymentDtl>();
 			BigDecimal totalAmount = new BigDecimal(0);
 
-			for(SmBillDtl newBillDtl : this.getManagedBean().getNewSmBillDtlLs()){
+			for (SmBillDtl newBillDtl : this.getManagedBean()
+					.getNewSmBillDtlLs()) {
 				SmPaymentDtl paymentDtl = new SmPaymentDtl();
 				paymentDtl.setSmBillDtl(newBillDtl);
 				paymentDtl.setSmPayment(payment);
 				pymDtlList.add(paymentDtl);
 				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
 			}
-			
-			totalAmount = totalAmount.setScale(2,BigDecimal.ROUND_UP);
+
+			totalAmount = totalAmount.add(getManagedBean().getGstAmount())
+					.setScale(2, BigDecimal.ROUND_UP);
 			payment.setSmPaymentDtls(pymDtlList);
 			payment.setSmBill(smBill);
 			payment.setPaymentAmt(totalAmount);
 
-			log.info("***Total Amount***" +totalAmount);
+			log.info("***Total Amount***" + totalAmount);
 
-//			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
+			// if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
 			SmPaymentOrder pymtOrder = new SmPaymentOrder();
 			pymtOrder.setSmPayment(payment);
 			pymtOrder.setPaymentGateway("MOL");
-			//pymtOrder.setChannelName("TESTING");
+			// pymtOrder.setChannelName("TESTING");
 
 			payment.setSmPaymentOrder(pymtOrder);
-
 
 			List<SmPayment> smPaymentLs = new ArrayList<SmPayment>();
 			smPaymentLs.add(payment);
 			smBill.setSmPayments(smPaymentLs);
-			
+
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(smBill);
-			
-			//create Payment
-			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+
+			// create Payment
+			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IPaymentSO.class);
 			PaymentResDTO resDTO = new PaymentResDTO();
 			resDTO = reqSO.createPayment(reqDTO);
-			
+
 			/*****************************************************************************************************************/
-			//retrieve from smPayment
-			IPaymentSO paymentSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+			// retrieve from smPayment
+			IPaymentSO paymentSO = (IPaymentSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IPaymentSO.class);
 			PaymentReqDTO paymentReqDTO = new PaymentReqDTO();
-			Long ordId = Long.valueOf(resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
+			Long ordId = Long.valueOf(resDTO.getSmBill().getSmPayments().get(0)
+					.getPaymentId());
 			BigDecimal txAmount = new BigDecimal(0);
-			txAmount = totalAmount.setScale(2,BigDecimal.ROUND_UP);
+			txAmount = totalAmount.setScale(2, BigDecimal.ROUND_UP);
 			Long txID = Long.valueOf("123456");
 			paymentReqDTO.setPaymentId(ordId);
-			
-			PaymentResDTO paymentResDTO = paymentSO.retrievePaymentInfoByPaymentId(paymentReqDTO);
+
+			PaymentResDTO paymentResDTO = paymentSO
+					.retrievePaymentInfoByPaymentId(paymentReqDTO);
 			boolean validPayment = false;
 			String status = "00";
-			
+
 			SmPayment smPayment = paymentResDTO.getSmPayment();
-					
+
 			SmPaymentResponse smPaymentRes = new SmPaymentResponse();
 			SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
 			Long statusCode = null;
-			
+
 			statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
 			validPayment = true;
-			
+
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
-			
-//			SmPaymentResponse smPaymentRes = new SmPaymentResponse();
-//			SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
-			
-			
+
+			// SmPaymentResponse smPaymentRes = new SmPaymentResponse();
+			// SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
+
 			PmStatusDesc pmStatDesc = pmStatusDescMap.get(statusCode);
-			log.info(">>>>PaymentStatus ID>>>>" + pmStatDesc.getPmStatus().getStatusId());
+			log.info(">>>>PaymentStatus ID>>>>"
+					+ pmStatDesc.getPmStatus().getStatusId());
 			smPayment.setPmStatus(pmStatDesc.getPmStatus());
-			
+
 			paymentOrder.setChannelName("");
 			smPaymentRes.setTransactionId(txID);
 			smPaymentRes.setErrorCode("");
@@ -826,86 +935,91 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			smPaymentRes.setPaymentStatus(status);
 			smPaymentRes.setPaidAmt(txAmount);
 			paymentOrder.getSmPaymentResponses().add(smPaymentRes);
-			
+
 			pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 			pymtReqDTO.setValidPayment(validPayment);
 			pymtReqDTO.setSmPayment(smPayment);
 			pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 
-			pymtReqDTO.setTaskId(this.getManagedBean().getTaskId()); 
+			pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 			pymtReqDTO.setToken(token);
-			
+
 			FacesScopes fs = new FacesScopes();
 			pymtReqDTO.setServerName(fs.getRequest().getServerName());
 			pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
-			
+
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-			
-			showPaymentResponse(status,ordId);
+
+			showPaymentResponse(status, ordId);
 			this.renewSesionObject();
 		}
-		
-		/*String token = getFacesScopes().getBPMAuthenticationCtxToken();
-		PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
-		
-		pymtReqDTO.setSmAppl(this.getManagedBean().getSmAppl());
-		pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
-		pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-		pymtReqDTO.setToken(token);
-		
-		String paymentType = "";
-		
-		for(SmBillDtl billDtl : this.getManagedBean().getNewSmBillDtlLs()){
-			if(billDtl.getPmParameter().getParameterCode().equals("MF") || billDtl.getPmParameter().getParameterCode().equals("RF")){
-				paymentType = billDtl.getPmParameter().getParameterCode();
-			}
-		}
-		
-		pymtReqDTO.setPaymentType(paymentType);
-		
-		try{
-			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
-			reqSO.updatePaymentBpm(pymtReqDTO);
-			
-			showPaymentResponse(SupplierManagementConst.MOL_SUCCESS);
 
-		}catch(Exception ex){
-			throw new EpException(ex.getMessage());
-		}
-	
-		return null;*/
+		/*
+		 * String token = getFacesScopes().getBPMAuthenticationCtxToken();
+		 * PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+		 * 
+		 * pymtReqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+		 * pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
+		 * pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		 * pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+		 * pymtReqDTO.setToken(token);
+		 * 
+		 * String paymentType = "";
+		 * 
+		 * for(SmBillDtl billDtl : this.getManagedBean().getNewSmBillDtlLs()){
+		 * if(billDtl.getPmParameter().getParameterCode().equals("MF") ||
+		 * billDtl.getPmParameter().getParameterCode().equals("RF")){
+		 * paymentType = billDtl.getPmParameter().getParameterCode(); } }
+		 * 
+		 * pymtReqDTO.setPaymentType(paymentType);
+		 * 
+		 * try{ IPaymentSO reqSO = (IPaymentSO)
+		 * BusinessDelegate.getInstance().getServiceObject("sm",
+		 * IPaymentSO.class); reqSO.updatePaymentBpm(pymtReqDTO);
+		 * 
+		 * showPaymentResponse(SupplierManagementConst.MOL_SUCCESS);
+		 * 
+		 * }catch(Exception ex){ throw new EpException(ex.getMessage()); }
+		 * 
+		 * return null;
+		 */
 	}
-	
+
 	/**
 	 * Get bill item description
-	 * @param PmParameter pmParameter
+	 * 
+	 * @param PmParameter
+	 *            pmParameter
 	 * @return String
 	 */
-	public String getBillItemDescByLanguage(PmParameter pmParameter){
+	public String getBillItemDescByLanguage(PmParameter pmParameter) {
 		String desc = "";
-		
-		if(pmParameter!=null){
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-					.getParameterDescList(pmParameter.getParameterType());
-			if(parameterDescs!=null){
-				for(PmParameterDesc paramDesc:parameterDescs){
-					if(paramDesc.getPmParameter()!=null && 
-							paramDesc.getPmParameter().getParameterId().compareTo(pmParameter.getParameterId())==0){
-						desc =  paramDesc.getCodeName();
+
+		if (pmParameter != null) {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescList(
+							pmParameter.getParameterType());
+			if (parameterDescs != null) {
+				for (PmParameterDesc paramDesc : parameterDescs) {
+					if (paramDesc.getPmParameter() != null
+							&& paramDesc.getPmParameter().getParameterId()
+									.compareTo(pmParameter.getParameterId()) == 0) {
+						desc = paramDesc.getCodeName();
 						break;
 					}
 				}
 			}
 		}
-		
+
 		return desc;
 	}
-	
+
 	/**
 	 * Set softcert personnel list from bill
-	 * @param List<SmBillDtl> smBillDtlLs
+	 * 
+	 * @param List
+	 *            <SmBillDtl> smBillDtlLs
 	 */
 	private void setBilledSoftCertPersonnels(List<SmBillDtl> smBillDtlLs) {
 		this.getManagedBean().setSelectedSoftCertLs(new SmPersonnel[0]);
@@ -918,7 +1032,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			}
 		}
 	}
-	
+
 	/**
 	 * Get paid personnel for soft certificate in payment summary
 	 * 
@@ -941,8 +1055,5 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	public void setPaymentBean(PaymentBean paymentBean) {
 		this.paymentBean = paymentBean;
 	}
-	
-	
-	
-}
 
+}

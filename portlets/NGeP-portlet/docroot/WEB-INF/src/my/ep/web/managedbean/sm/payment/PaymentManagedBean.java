@@ -18,7 +18,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class PaymentManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	
-	//private double amount;
 	private Long orderId;
 	private String billName;
 	private String billEmail;
@@ -28,8 +27,8 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private SmAppl smAppl;
 	private SmBill smBill;
 	private BigDecimal totalAmount;
-	//private SmBillDtl[] selectedSoftCertLs;
-	//private ArrayList<SmBillDtl> selectedSoftCertLs;
+	private BigDecimal totalAmountBeforeGst;
+	private BigDecimal gstAmount;
 	private SmPersonnel[] selectedSoftCertLs;
 	private List<SmPersonnel> softCertReqPersonnels;
 	private SmBillDtl applicationPayment;
@@ -37,17 +36,8 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private Map<Long,SmBillDtl> defaultCertPaymentMap;
 	private Object bpmPojo;
 	private boolean softcertPayment;
-	
-	//private boolean offlinePayment;
 	private Long appId;
-	//private String paymentMode; 
-		
-//	/**
-//	 * @return the amount
-//	 */
-//	public double getAmount() {
-//		return amount;
-//	}
+	
 	/**
 	 * @return the orderId
 	 */
@@ -247,18 +237,6 @@ public class PaymentManagedBean extends BaseManagedBean{
 	public void setAppId(Long appId) {
 		this.appId = appId;
 	}
-	/**
-	 * @return the paymentMode
-	 */
-/*	public String getPaymentMode() {
-		return paymentMode;
-	}
-	*//**
-	 * @param paymentMode the paymentMode to set
-	 *//*
-	public void setPaymentMode(String paymentMode) {
-		this.paymentMode = paymentMode;
-	}*/
 	public Object getBpmPojo() {
 		return bpmPojo;
 	}
@@ -270,6 +248,18 @@ public class PaymentManagedBean extends BaseManagedBean{
 	}
 	public void setSoftcertPayment(boolean softcertPayment) {
 		this.softcertPayment = softcertPayment;
+	}
+	public BigDecimal getTotalAmountBeforeGst() {
+		return totalAmountBeforeGst;
+	}
+	public void setTotalAmountBeforeGst(BigDecimal totalAmountBeforeGst) {
+		this.totalAmountBeforeGst = totalAmountBeforeGst;
+	}
+	public BigDecimal getGstAmount() {
+		return gstAmount;
+	}
+	public void setGstAmount(BigDecimal gstAmount) {
+		this.gstAmount = gstAmount;
 	}
 
 }

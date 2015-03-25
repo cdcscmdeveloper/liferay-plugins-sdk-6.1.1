@@ -39,6 +39,14 @@
 				</tr>
 			</table>	
 		</p:panel>
+		
+	<div align="left" class="header-info">
+		<br />
+		<table style="width: 100%">
+			<tr><td><p:outputLabel value="#{lbl['lbl.sm.gst.disclaimer']}" styleClass="outputLabel-view" /></td></tr>
+		</table>
+		<br />
+	</div>
 
 	<h:panelGrid id="search" style="width:100%;">
 	 
@@ -74,13 +82,21 @@
        </p:column>
        
        <p:columnGroup type="footer">
-			<p:row>
-				<p:column footerText=""></p:column>
-				<p:column footerText="#{lbl['lbl.sm.total']}"
-					style="text-align:left" />
-				<p:column footerText="#{softCertBackingBean.managedBean.totalPaymentAmount}" style="text-align:left"/>
-
-			</p:row>
+       		<p:row>
+       			<p:column footerText=""></p:column>
+                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.gst.total.exclude.gst']} :" />
+                <p:column footerText="#{softCertBackingBean.managedBean.totalAmountBeforeGst}" style="text-align:left"/>
+            </p:row>
+            <p:row>
+            	<p:column footerText=""></p:column>
+                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.add.gst']} :" />
+                <p:column footerText="#{softCertBackingBean.managedBean.totalGstAmount}" style="text-align:left"/>
+            </p:row>
+            <p:row>
+            	<p:column footerText=""></p:column>
+                <p:column style="text-align:right" footerText="#{lbl['lbl.sm.payment.total.payable']} :" />
+                <p:column footerText="#{softCertBackingBean.managedBean.totalPaymentAmount}" style="text-align:left"/>
+            </p:row>
 		</p:columnGroup>
        
      </p:dataTable>

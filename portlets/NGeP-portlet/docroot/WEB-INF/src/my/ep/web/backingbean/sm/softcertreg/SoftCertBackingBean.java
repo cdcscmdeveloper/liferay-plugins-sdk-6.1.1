@@ -147,7 +147,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 			i++;
 		}
-		this.getManagedBean().setTotalPaymentAmount(amount);
+		BigDecimal gst = amount.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
+				: new BigDecimal(6).divide(new BigDecimal(100))
+						.multiply(amount);
+		getManagedBean()
+				.setTotalGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
+		this.getManagedBean().setTotalAmountBeforeGst(
+				amount.setScale(2, BigDecimal.ROUND_UP));
+		this.getManagedBean().setTotalPaymentAmount(
+				gst.add(amount).setScale(2, BigDecimal.ROUND_UP));
 		setPaymentBtnLbl();
 	}
 
