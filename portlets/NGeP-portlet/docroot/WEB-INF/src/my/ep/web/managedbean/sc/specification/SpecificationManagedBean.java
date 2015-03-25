@@ -739,6 +739,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	 /** The temp zone name. */
     private String  tempZoneName;
+    
+    private boolean isCheckAllList = false;
 
 	/**
 	 * Checks if is spec complete.
@@ -4912,6 +4914,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setTempZoneName(String tempZoneName) {
 		this.tempZoneName = tempZoneName;
+	}
+
+	/**
+	 * @return the isCheckAllList
+	 */
+	public boolean isCheckAllList() {
+		return isCheckAllList;
+	}
+
+	/**
+	 * @param isCheckAllList the isCheckAllList to set
+	 */
+	public void setCheckAllList(boolean isCheckAllList) {
+		this.isCheckAllList = isCheckAllList;
 	}
 
 }

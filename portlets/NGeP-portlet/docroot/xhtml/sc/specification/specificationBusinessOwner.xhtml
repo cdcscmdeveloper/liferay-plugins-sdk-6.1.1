@@ -271,28 +271,27 @@
 							<p:treeNode type="district">
 								<h:outputText value="#{location.pmDistrict.districtName}" />
 							</p:treeNode>
-
-
-
-
 						</p:tree>
 					</p:column>
-
 					<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 						style="width:10%">
 						<p:commandLink
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							actionListener="#{specificationBackingBean.editZones(zoneTree,index)}"
-							process="@this" update="@([id$=zonePopupGeneral])"
+							process="@this" update="@([id$=dlgId])"
 							oncomplete="ZoneGeneral.show();">
 							<p:graphicImage library="ep/images/design" name="edit.png"
 								value="/resources/ep/images/design/edit.png" />
 						</p:commandLink>
 					</p:column>
-
 				</p:dataTable>
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
+				<p:selectBooleanCheckbox id="checkAllZonesList" style="float:left;margin-top: 13px;margin-right: -4px;">
+					<p:ajax event="change" partialSubmit="true" process="@all" update="zoneGeneralDataTable" listener="#{specificationBackingBean.checkAllZoneGeneral}" />
+				</p:selectBooleanCheckbox>
+				<p:spacer width="1" />
+				<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -304,20 +303,17 @@
 			</div>
 		</h:panelGroup>
 	</h:panelGroup>
-	<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
+	<p:dialog id="dlgId" header="#{lbl['lbl.sc.spec.zone.add.location']}"
 		widgetVar="ZoneGeneral" modal="true" width="490" position="top"
 		height="410">
 		<p:messages id="specBusinessOwnerZonemessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true" />
 		<h:panelGroup id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td" border="0">
-
 				<TR>
 					<TD width="30%" valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory" /></TD>
-
-
 					<td width="70%">
 						<table>
 							<tr>
@@ -330,11 +326,7 @@
 							</tr>
 						</table>
 					</td>
-
-
 				</TR>
-
-
 				<TR>
 					<TD valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.zone.location']}" /> <p:outputLabel
@@ -362,10 +354,13 @@
 						</div>
 					</TD>
 				</TR>
-
 			</table>
 		</h:panelGroup>
-
+		<p:selectBooleanCheckbox id="popupCheck"  style="float:left;margin-top: 13px;margin-right: -4px;" value="#{specificationBackingBean.managedBean.checkAllList}">
+			<p:ajax event="change" partialSubmit="true" process="@all" update=":form:treeZoneGeneralPopup" listener="#{specificationBackingBean.checkAllZoneGeneralPopUp(specificationBackingBean.managedBean.checkAllList)}" />
+		</p:selectBooleanCheckbox>
+		<p:spacer width="1" />
+		<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
 			style="float:right;" onclick="ZoneGeneral.hide();" />
