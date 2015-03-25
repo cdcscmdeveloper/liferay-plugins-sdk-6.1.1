@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -34,6 +36,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -58,6 +61,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
@@ -139,6 +144,8 @@ import org.primefaces.model.StreamedContent;
  * The Class LOADetailBackingBean.
  *
  * @author Viswanath
+ * 
+ * @author Sri
  */
 @ManagedBean(name = "lOADetailBackingBean")
 @RequestScoped
@@ -274,26 +281,33 @@ public class LOADetailBackingBean extends
 	 * @return the big decimal
 	 */
 	private BigDecimal  calcBondAmount(ScLoa scLoa){
-		BigDecimal  contractDuration = scLoa.getContractDuration();
-		//BigDecimal  bondPercentage = scLoa.getBondPercentage();
-		BigDecimal loaAmt  = scLoa.getLoaAmt();
+		BigDecimal  contractDuration = BigDecimal.ZERO;
+		BigDecimal loaAmt  = BigDecimal.ZERO;
 		BigDecimal bondAmt  = BigDecimal.ZERO; 
+		BigDecimal bondPercentage = BigDecimal.ZERO;
+		if(scLoa.getLoaAmt() != null){
+			loaAmt  = scLoa.getLoaAmt();
+			// Get performance bond rule percentage
+			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(ParameterTypeConst.RULE_BOND_PERCENTAGE_TYPE);
+			ruleReqDTO.setCompareValue(scLoa.getLoaAmt().toString());
+			RuleResDTO roleResDTO = ruleSO.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
+			MathContext mc = new MathContext(2, RoundingMode.HALF_EVEN);
+			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueStrList() != null 
+					&& roleResDTO.getRuleValueStrList().size() > 0) {
+				String percentage = roleResDTO.getRuleValueStrList().get(0);
+				bondPercentage = new BigDecimal(percentage).divide(new BigDecimal("100"), mc);
+			}
 
-
-		if(loaAmt != null && loaAmt.intValue() >0){
-			int loaAmount = loaAmt.intValue();
-			if(loaAmount >= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND){  // >=500000
-				// 5%
-				BigDecimal  duration = contractDuration.divide(new BigDecimal(12)); 
-				double totalAmt  = loaAmt.divide(duration).multiply(new BigDecimal(0.05)).doubleValue();
-				bondAmt = new BigDecimal(totalAmt);
-			} else{
-				// 2.5%
-				BigDecimal  duration = contractDuration.divide(new BigDecimal(12)); 
-				double totalAmt  = loaAmt.divide(duration).multiply(new BigDecimal(0.025)).doubleValue();
-				bondAmt = new BigDecimal(totalAmt);
+			if(scLoa.getContractDuration() != null && scLoa.getContractDuration().intValue()>0){
+				contractDuration = scLoa.getContractDuration();
+				BigDecimal  duration = contractDuration.divide(new BigDecimal(12), mc); 
+				bondAmt  = loaAmt.divide(duration, mc).multiply(bondPercentage);
 			}
 		}
+
 		return bondAmt;
 	}
 
