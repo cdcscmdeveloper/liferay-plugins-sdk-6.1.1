@@ -60,6 +60,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
@@ -109,6 +110,7 @@ import my.ep.persistence.entity.cm.catalog.CmZonalTariffPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
@@ -1171,7 +1173,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				cmSupplierItem.setPmUom(ctPanelItem.getPmUom());
 				cmSupplierItem.setMinOrder(Double.valueOf(ctPanelItem.getMinimumOrderQty()).intValue());
-				cmSupplierItem.setItemDesc(ctPanelItem.getSpecification());
+				//cmSupplierItem.setItemDesc(ctPanelItem.getSpecification());
+				this.getManagedBean().setItemSpec(null);
+				if (ctPanelItem.getItemCategoryId().getParameterId() == getParameterByTypeAndCode(ParameterTypeConst.ITEM_CATEGORY_TYPE, 
+						ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC).getParameterId()) {
+					List<String> specList = new ArrayList<String>();
+					for (CtPanelItemSpec ctPanelItemSpec : ctPanelItem.getCtPanelItemSpecs()) {
+						specList.add(ctPanelItemSpec.getSpecification());
+					}
+					this.getManagedBean().setItemSpec(specList);
+				}
 				
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 				
