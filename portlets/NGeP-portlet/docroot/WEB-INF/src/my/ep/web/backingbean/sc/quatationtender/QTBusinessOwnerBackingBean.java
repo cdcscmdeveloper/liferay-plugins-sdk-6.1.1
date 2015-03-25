@@ -1028,10 +1028,10 @@ public class QTBusinessOwnerBackingBean extends
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneBusinessOwnerSearchBean()
 				.setQtStatus(null);
-		this.getManagedBean().getQtnTenderSearchBean().setFromPublishDate(null);
-		this.getManagedBean().getQtnTenderSearchBean().setToPublishDate(null);
-		this.getManagedBean().getQtnTenderSearchBean().setFromClosingDate(null);
-		this.getManagedBean().getQtnTenderSearchBean().setToClosingDate(null);
+		this.getManagedBean().getCloneBusinessOwnerSearchBean().setFromPublishDate(null);
+		this.getManagedBean().getCloneBusinessOwnerSearchBean().setToPublishDate(null);
+		this.getManagedBean().getCloneBusinessOwnerSearchBean().setFromClosingDate(null);
+		this.getManagedBean().getCloneBusinessOwnerSearchBean().setToClosingDate(null);
 	}
 
 	/**
