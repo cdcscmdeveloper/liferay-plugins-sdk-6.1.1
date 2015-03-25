@@ -24,6 +24,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 
 /**
+ * Schedule Bidding Managed Bean
  * @author Venkat Chanumolu
  * 
  */

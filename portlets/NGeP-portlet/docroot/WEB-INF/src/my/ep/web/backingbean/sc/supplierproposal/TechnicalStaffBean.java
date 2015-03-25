@@ -4,7 +4,11 @@ import java.util.List;
 
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmPersonnel;
-
+/**
+ * TechnicalStaffBean an utility bean for supplier proposal.
+ * @author venkat chanumolu
+ *
+ */
 public class TechnicalStaffBean {
 	private SmPersonnel smPersonnel;
 	private List<PmParameterDesc> smStaffAcademics;
