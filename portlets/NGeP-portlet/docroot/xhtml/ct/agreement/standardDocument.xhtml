@@ -63,14 +63,15 @@
 						</h:commandLink>
 					</h:panelGroup>
 					<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
-							<p:commandButton oncomplete="uploadUserDefineDlg.show();return false;"
-								icon="iconAttachment" update=":form:contentTable, uploadUserDefineDlg">
-								<f:setPropertyActionListener value="#{contentsVar}"  target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
-							</p:commandButton>
-							<h:commandLink rendered="#{contentsVar.filePath != null}" title="#{contentsVar.fileName}"
-								value="#{agreementBackingBean.getShortFileName(contentsVar.fileName)}"
-								action="#{agreementBackingBean.downloadFile(contentsVar.filePath, contentsVar.fileName)}">
-						    </h:commandLink>
+						<p:commandButton icon="iconAttachment"  rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"
+					   		update=":form:contentTable, :form:uploadUserDefineDlg" oncomplete="uploadUserDefineDlg.show();return false;"  >
+							<f:setPropertyActionListener value="#{contentsVar}" 
+						    	target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
+						</p:commandButton>
+						<h:commandLink rendered="#{contentsVar.filePath != null}" title="#{contentsVar.fileName}"
+							value="#{agreementBackingBean.getShortFileName(contentsVar.fileName)}"
+							action="#{agreementBackingBean.downloadFile(contentsVar.filePath, contentsVar.fileName)}">
+					    </h:commandLink>
 					 </h:panelGroup>
 				</p:column>
 			</p:dataTable>
