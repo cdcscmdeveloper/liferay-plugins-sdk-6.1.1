@@ -8206,10 +8206,6 @@ public class SmApplicationBackingBean extends
 						businessTypeSelectItems
 								.toArray(new SelectItem[businessTypeSelectItems
 										.size()]));
-		getManagedBean().setBusinessTypeVal(
-				getParameterDesc(
-						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-						getManagedBean().getSmSupplier().getBusinessType()));
 	}
 
 	/**
