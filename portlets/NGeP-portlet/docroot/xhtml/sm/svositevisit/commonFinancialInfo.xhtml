@@ -85,7 +85,7 @@
 			rowIndexVar="rowIndex">
 
 			<p:column headerText="#{lbl['lbl.sm.itemsLbl']}">
-				#{finLsItem.pmParameter.pmParameterDescs[0].codeName}
+				#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.svoFinChecklist,finLsItem.pmParameter.parameterCode)}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.availableLbl']}">
