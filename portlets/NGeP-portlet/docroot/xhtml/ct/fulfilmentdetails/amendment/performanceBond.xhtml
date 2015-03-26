@@ -33,13 +33,13 @@
              </p:column>	
          
             <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;" > 
-                 <p:calendar value="#{varBond.effDate}" id="popupButtonCal4" showOn="button" size="10" disabled="true" 
-                    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:100px" /> 
+			  	 <p:inputText value="#{varBond.effDate}" style="width:100px;"  disabled="true" >
+                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
             </p:column>	
            
             <p:column headerText="#{lbl['lbl.ct.expiry.date']}"  style="width:10%;"> 
-                <p:calendar value="#{varBond.expDate}" id="popupButtonCal5" showOn="button" disabled="true"  
-                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10" style="width:100px"/> 
+                <p:inputText value="#{varBond.expDate}" style="width:100px;"  disabled="true" >
+                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
             </p:column>	
            
             <p:column styleClass="column-align-center" headerText="#{lbl['lbl.txt.attachment']}"  style="width:25%;">
