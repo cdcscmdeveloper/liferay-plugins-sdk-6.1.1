@@ -144,6 +144,7 @@ public class ReportBackingBean extends
 	FLReportBackingBean flReportBackingBean;
 	SMReportBackingBean smReportBackingBean;
 	CTReportBackingBean ctReportBackingBean;
+	PPReportBackingBean ppReportBackingBean;
 	Long unspid = null;
 	private List<SelectItem> levOneCatLst2 = new ArrayList<SelectItem>();
 	private List<SelectItem> levOneCatLst3 = new ArrayList<SelectItem>();
@@ -736,6 +737,15 @@ public class ReportBackingBean extends
 	public void setSmReportBackingBean(SMReportBackingBean smReportBackingBean) {
 		this.smReportBackingBean = smReportBackingBean;
 	}
+	
+
+	public PPReportBackingBean getPpReportBackingBean() {
+		return ppReportBackingBean;
+	}
+
+	public void setPpReportBackingBean(PPReportBackingBean ppReportBackingBean) {
+		this.ppReportBackingBean = ppReportBackingBean;
+	}
 
 	public List<SelectItem> getOrgProfileIdNameList() {
 		return orgProfileIdNameList;
@@ -1008,18 +1018,44 @@ public class ReportBackingBean extends
 	private String ctGroupOne;
 	private String ctGroupTwo;
 	private String ctProductService;
-	private String ctLoanNo;
-		
-	private String ctProcurementMode;
-	
+	private String ctLoanNo;		
+	private String ctProcurementMode;	
 	private String ctPhysicalContractNo;
 	private String ctGroupThree;
 	private String ctStatusTwo;
 	private String ctLOAPhysicalNo;	
 	private String ctUserType;
 	private String ctSubType;
+	// PP
+	private String ppYear;
+	private String ppMinistry;
+	private String ppPTJ;	
 
 	
+	public String getPpYear() {
+		return ppYear;
+	}
+
+	public void setPpYear(String ppYear) {
+		this.ppYear = ppYear;
+	}
+
+	public String getPpMinistry() {
+		return ppMinistry;
+	}
+
+	public void setPpMinistry(String ppMinistry) {
+		this.ppMinistry = ppMinistry;
+	}
+
+	public String getPpPTJ() {
+		return ppPTJ;
+	}
+
+	public void setPpPTJ(String ppPTJ) {
+		this.ppPTJ = ppPTJ;
+	}
+
 	public String getScPurchaseInDefaultStatus() {
 		return scPurchaseInDefaultStatus;
 	}
@@ -2640,10 +2676,46 @@ public class ReportBackingBean extends
 	public List<SelectItem> getReportList() {
 		return reportList;
 	}
-
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
 	}
+	
+	/*private void retrieveMinistryList() {
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		OrgProfileResDTO resDTO = orgProfileSO
+				.retrieveOrgProfileListByMinistry(reqDTO);
+		List<PmOrgProfile> orgProfileList =resDTO.getOrgProfileList();
+		for (PmOrgProfile ptj : orgProfileList) {
+			ptj.getOrgName();
+		}
+		//this.getManagedBean().setOrgProfileList(resDTO.getOrgProfileList());
+	}
+	public void retrievePtjListByMinistryId() {
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		Long lngMinId= null;
+		if(this.getCommonMinistry()!=null){
+			lngMinId = Long.parseLong(this.getCommonMinistry());
+		}
+		if(lngMinId!=null){	
+			reqDTO.setParentOrgProfileId(lngMinId);
+			//reqDTO.setParentOrgProfileId((long) 231618);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrievePtjListByMinistryId(reqDTO);
+			List<PmOrgProfile> orgProfileList =resDTO.getOrgProfileList();
+			for (PmOrgProfile ptj : orgProfileList) {
+				ptj.getOrgName();
+			}
+		}
+	}*/
+	
 	public SelectItem[] getDocTypeStatusDropDown(){
 		docTypeStatusItems = null;
 		String doctype = null;
@@ -2758,7 +2830,7 @@ public class ReportBackingBean extends
 		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-        	//lngUserId = (long) 227446;        	
+        	//lngUserId = (long) 241765;        	
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -2830,7 +2902,7 @@ public class ReportBackingBean extends
 		paramList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-        	//lngUserId = (long) 1365;        	
+        	//lngUserId = (long) 227446;        	
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -2874,7 +2946,7 @@ public class ReportBackingBean extends
 	}
 
 	public static List<PmCategoryL1> retrieveParentCategoryListForExperiencePage() {
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();		
+		//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();		
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(ReportConst.PM_MODULE_SER_OBJ, ICategoryCodeSO.class);
 		CategoryCodeResDTO catCodeResDTO = reqSO.retrieveCategoryL1List();
@@ -2970,8 +3042,8 @@ public class ReportBackingBean extends
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();				
-			//lngUserId = (long)118925;// 241997;//213972;// 220152;
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();				
+			lngUserId = (long)241765;//240610;//241765;//147038;// 241997;//213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -3149,6 +3221,11 @@ public class ReportBackingBean extends
 				.getMessageCommon(ReportConst.MOD_CT_TTL));
 		selectItem4.setValue(ReportConst.CT_MOD_VAL);
 		moduleList.add(selectItem4);
+		SelectItem selectItem6 = new SelectItem();
+		selectItem6.setLabel(CommonMethod
+				.getMessageCommon(ReportConst.MOD_PP_TTL));
+		selectItem6.setValue(ReportConst.PP_MOD_VAL);
+		moduleList.add(selectItem6);
 		//callfunction();
 		//retrieveHighRoleCodeByUser();
 		return moduleList;
@@ -3422,8 +3499,9 @@ public class ReportBackingBean extends
 				parameterCodeType = object[0].toString();
 			}
 			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ))){
-				retrieveFPJPTJList();
 				retrieveFPJMinistryList();
+				retrieveFPJPTJList();
+				
 			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))){
 				retrieveFMIMinistryList();
 			}
@@ -3443,6 +3521,7 @@ public class ReportBackingBean extends
 				ptjList.add(ptjLst.get(i));
 			}			
 		}
+		//retrievePtjListByMinistryId();
 		return ptjList;
 	}
 	public List<String>  retrieveFMIPTJList() {
@@ -3461,6 +3540,7 @@ public class ReportBackingBean extends
 			}
 			
 		}
+		//retrievePtjListByMinistryId();
 		return ptjList;
 	}
 	public List<SelectItem>  retrieveFPJMinistryList() {
@@ -3802,6 +3882,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		flReportBackingBean = new FLReportBackingBean();
 		smReportBackingBean = new SMReportBackingBean();
 		ctReportBackingBean = new CTReportBackingBean();
+		ppReportBackingBean = new PPReportBackingBean();
 		rptGenBean = new ReportsGenerateBean();
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
@@ -3870,6 +3951,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			} else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT))) {
 				ctReportBackingBean.enableCriteriaVariablesByReportByCT(
+						rptGenBean, authoriztionList);
+			}else if ((this.getModuleValue()
+					.equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN))) {
+				ppReportBackingBean.enableCriteriaVariablesByReportByPP(
 						rptGenBean, authoriztionList);
 			}
 			resetReportForm();
@@ -4217,6 +4302,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			} else if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.CONTRACT_MANAGEMENT)) {
 				generateCTReport();
+			}else if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.PROCUREMENT_PLAN)) {
+				generatePPReport();
 			}
 			if (null != constructedParamString
 					&& !ReportConst.EMPTY_VAL.equals(constructedParamString)) {
@@ -5723,7 +5811,52 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
-
+	/*
+	 * Generate PP module report
+	 */
+	public void generatePPReport() {
+		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
+				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
+				|| ((this.getPpYear() != null) && (this
+						.getPpYear() != ReportConst.EMPTY_VAL))) {
+			if ((this.getCommonPtj() != null)
+					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
+						+ this.getCommonPtj());
+			}
+			if ((this.getCommonMinistry() != null)
+					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
+								+ this.getCommonMinistry());
+			}
+			if ((this.getPpYear() != null)
+					&& (this.getPpYear() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPpYearVar(ReportConst.AMP_SM_YEAR_EQ
+						+ this.getPpYear());
+			}
+			
+			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
+			if ((rptGenBean.getUrlReportJSPName() != null)
+					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+						+ rptGenBean.getUrlReportJSPName()
+						+ rptGenBean.getPpPTJVar()
+						+ rptGenBean.getPpMinistryVar()
+						+ rptGenBean.getPpYearVar()			
+						+ rptGenBean.getReportValueIdVar()
+						+ rptGenBean.getUserIdVar());
+			} else {
+				throw new EpException(
+						CommonMethod
+								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+			}
+		} else {
+			throw new EpException(
+					CommonMethod
+							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+		}
+	}
 	/*
 	 * validate quotNo
 	 */
@@ -5940,6 +6073,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setFlGroupFifteen(null);
 		this.setFlGroupSixteen(null);
 		this.setFlGroupSeventeen(null);
+		this.setPpMinistry(null);
+		this.setPpPTJ(null);
+		this.setPpYear(null);
 	}
 
 	protected void fileGenerateReport(String reportFile,
