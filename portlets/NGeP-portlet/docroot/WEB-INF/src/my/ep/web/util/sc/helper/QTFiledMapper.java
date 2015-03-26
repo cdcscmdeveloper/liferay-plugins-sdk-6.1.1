@@ -180,7 +180,15 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
-						QTFieldConst.FILED_QT_PUB_APPROVAL });
+						QTFieldConst.FILED_QT_PUB_APPROVAL }), QT_REVISION_PUBLICATION(
+				QTStatusConst.QT_REVISION_PUBLICATION, new String[] {
+						QTFieldConst.FILED_QT_ESTMT_AMT,
+						QTFieldConst.FILED_QT_TITLE,
+						QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION });
 
 		private Long statusId;
 		private String[] toBeEnableFields;
