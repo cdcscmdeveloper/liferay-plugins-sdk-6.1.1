@@ -38,6 +38,20 @@
 						</p:inputText>
 						<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
 					</p:column>
+					
+					<p:column
+						headerText="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
+						width="15%">
+						
+						<p:inputText id="auLetterNo" styleClass="ppDisplayTextS"
+							value="#{role.letterNo}"
+							required="#{role.pmRole.roleCode eq 'FL_APPROVER'}"
+							label="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
+							disabled="#{!(role.pmRole.roleCode eq 'FL_APPROVER')}" maxlength="18">
+							<p:ajax event="change" process="@this" />
+						</p:inputText>
+						<p:message id="auLetterNoMsg" for="auLetterNo" display="icon" />
+					</p:column>
 					<p:column
 						headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"
 						width="15%">
