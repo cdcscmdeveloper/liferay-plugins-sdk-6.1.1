@@ -38,6 +38,7 @@
 
 		</table>
 		
+		<ui:remove>
 		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true" id="catLevel">
 			<h:panelGrid columns="1">
 			
@@ -118,7 +119,7 @@
 					<h:outputText value="#{lbl['lbl.pm.bumi.percentage']}" />
 					</h:panelGroup>
 					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}" 
-						style="width: 108px;">
+						style="width: 200px;">
 						<f:selectItem itemLabel="0%" itemValue="0" />
 						<f:selectItem itemLabel="51%" itemValue="51" />
 						<f:selectItem itemLabel="100%" itemValue="100" />
@@ -155,7 +156,151 @@
 				
 			</h:panelGrid>
 		</p:panel>
-		
+		</ui:remove>
+
+
+		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true" id="catLevel">
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /> <p:outputLabel
+							value="* " styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{categoryBackingBean.managedBean.catLevel}"
+							disabled="true" style="width: 108px;">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
+								itemValue="1" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
+								itemValue="2" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
+						</p:selectOneMenu></td>							
+
+					<td><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
+							value="* " styleClass="mandatory" /></td>
+					<td><p:inputText
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
+							size="70" /></td>
+							
+				</tr>
+				<th>&#160;</th>
+				<td>&#160;</td>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
+							value="* " styleClass="mandatory" /></td>
+					<td><p:inputText
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
+							size="12" maxlength="2"
+							rendered="#{categoryBackingBean.managedBean.newCategory}" /> <p:inputText
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
+							size="12" maxlength="2"
+							rendered="#{!categoryBackingBean.managedBean.newCategory}"
+							readonly="true" disabled="true" /></td>
+
+					<td><p:outputLabel value="#{lbl['lbl.pm.special.category']}" />
+						<p:outputLabel value="* " styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}"
+							rendered="#{!categoryBackingBean.managedBean.newCategory}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItems
+								value="#{categoryBackingBean.managedBean.specialCategory}"
+								var="specialCategory" itemLabel="#{specialCategory.codeName}"
+								itemValue="#{specialCategory.pmParameter.parameterId}">
+							</f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{categoryBackingBean.updateSpecialCategory}"
+								update="@form" />
+						</p:selectOneMenu> <p:selectOneMenu
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}"
+							rendered="#{categoryBackingBean.managedBean.newCategory}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItems
+								value="#{categoryBackingBean.managedBean.specialCategory}"
+								var="specialCategory" itemLabel="#{specialCategory.codeName}"
+								itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
+						</p:selectOneMenu></td>
+				</tr>
+				<th>&#160;</th>
+			  <td>&#160;</td>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.paid.capital']}" /> <p:outputLabel
+							value="* " styleClass="mandatory" /></td>
+					<td><p:inputText
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
+							size="12"
+							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" /></td>
+
+					<td><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>
+					<td><p:selectBooleanCheckbox
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
+							<p:ajax event="change"
+								listener="#{categoryBackingBean.updateSpecialGroup}"
+								update="groupdetails" />
+						</p:selectBooleanCheckbox></td>
+				</tr>
+				<th>&#160;</th>
+				<td>&#160;</td>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel
+							value="* " styleClass="mandatory" /></td>
+					<td><p:selectOneMenu required="true"
+							label="#{lbl['lbl.pm.status']}"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.recordStatusFlg}"
+							disabled="false" style="width: 108px;">
+							<f:selectItems
+								value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
+						</p:selectOneMenu></td>
+
+					<td><p:outputLabel value="#{lbl['lbl.pm.operate.from.home']}" /></td>
+					<td><p:selectBooleanCheckbox
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" /></td>
+				</tr>
+				<th>&#160;</th>
+				<td>&#160;</td>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
+						<p:outputLabel value="* " styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}"
+							style="width: 108px;">
+							<f:selectItem itemLabel="0%" itemValue="0" />
+							<f:selectItem itemLabel="51%" itemValue="51" />
+							<f:selectItem itemLabel="100%" itemValue="100" />
+						</p:selectOneMenu></td>
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.category.restriction']}" /></td>
+					<td><p:selectBooleanCheckbox
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
+							<p:ajax event="change" update="outpnlCatRes" />
+						</p:selectBooleanCheckbox></td>
+				</tr>
+				<th>&#160;</th>
+				<td>&#160;</td>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
+						<p:outputLabel value="* " styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
+							rendered="#{!categoryBackingBean.managedBean.newCategory}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
+							<f:selectItems
+								value="#{categoryBackingBean.managedBean.supplierType}"
+								var="supplierType" itemLabel="#{supplierType.codeName}"
+								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
+						</p:selectOneMenu> <p:selectOneMenu
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
+							rendered="#{categoryBackingBean.managedBean.newCategory}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
+							<f:selectItems
+								value="#{categoryBackingBean.managedBean.supplierType}"
+								var="supplierType" itemLabel="#{supplierType.codeName}"
+								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+		</p:panel>
+
 		<p>&nbsp;</p>
 		<p>&nbsp;</p>
 		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
@@ -165,7 +310,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}" /></td>
 					<td><p:inputText
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryL2Code}"
-							size="15" disabled="true" readonly="true" /></td>
+							size="12" disabled="true" readonly="true" /></td>
 
 					<td style="width: 15%;"><p:outputLabel
 							value="#{lbl['lbl.pm.sub.category.desc']}" /></td>
@@ -173,12 +318,13 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryName}"
 							size="100" disabled="true" readonly="true" /></td>
 				</tr>
-				
+				<th>&#160;</th>
+				<td>&#160;</td>
 				<tr>
 					<td style="width: 15%"><p:outputLabel value="#{lbl['lbl.pm.main.category.code']}" /></td>
 					<td><p:inputText style="float: right:width: 15%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"
-							size="15" disabled="true" readonly="true" /></td>
+							size="12" disabled="true" readonly="true" /></td>
 
 					<td style="width: 15%"><p:outputLabel value="#{lbl['lbl.pm.main.category.desc']}"
 							style="float: right" /></td>
@@ -228,7 +374,7 @@
 			</p:column>
 			
 			<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
-	             <p:commandLink partialSubmit="true" disabled="#{!pmBasicCategory.brandNew }"
+	             <p:commandLink partialSubmit="true"  disabled="#{!pmBasicCategory.brandNew }"
 					process="@this" action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
 					update="groupdetailsId" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -268,7 +414,7 @@
 				<h:outputText value="#{pmMachineCategory.pmMachine.machineDesc}" />
             </p:column>
 			<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
-	             <p:commandLink partialSubmit="true" disabled="#{!pmMachineCategory.brandNew }"
+	             <p:commandLink partialSubmit="true" 
 					process="@this" action="#{categoryBackingBean.deletePmMachine(pmMachineCategory)}"
 					update="machineDetailsId" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -516,14 +662,14 @@
 						
 						<ac:paginator for="dtlCategoryRestrId"></ac:paginator>						
 						<p:column headerText="#{lbl['lbl.pm.company.type']}" width="50%" >
-							<p:selectOneMenu  value="#{pmCategoryRestr.companyTypeId.parameterId}" required="true" label="#{lbl['lbl.pm.company.type']}" disabled="#{!pmCategoryRestr.brandNew }" >
+							<p:selectOneMenu  value="#{pmCategoryRestr.companyTypeId.parameterId}" required="true" label="#{lbl['lbl.pm.company.type']}" disabled="#{!pmBasicCategory.brandNew }" >
 								   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						           <f:selectItems value="#{categoryBackingBean.getPopulateCompanyTypeList()}" var="compType" itemValue="#{compType.pmParameter.parameterId}" itemLabel="#{compType.codeName}"/>
 						      </p:selectOneMenu>
 							</p:column>
 							
 				<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
-	             <p:commandLink partialSubmit="true" disabled="#{!pmCategoryRestr.brandNew }"
+	             <p:commandLink partialSubmit="true" disabled="#{!pmBasicCategory.brandNew }"
 					process="@this" action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
 					update="dtlCategoryRestrId" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>

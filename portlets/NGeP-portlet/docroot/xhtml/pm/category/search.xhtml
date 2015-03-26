@@ -98,6 +98,8 @@
 								update="catSearch" />
 						</p:selectOneMenu></td>
 				</tr>
+				<th>&#160;</th>
+				<td>&#160;</td>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.code']}" /></td>
 					<td><p:inputText 
@@ -107,6 +109,8 @@
 					<td><p:inputText 
 							value="#{categoryBackingBean.managedBean.mainCatDesc}" size="50" /></td>
 				</tr>
+				<th>&#160;</th>
+				<td>&#160;</td>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
@@ -120,6 +124,8 @@
 							value="#{categoryBackingBean.managedBean.subCatDesc}" size="50"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
 				</tr>
+				<th>&#160;</th>
+				<td>&#160;</td>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
 							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
