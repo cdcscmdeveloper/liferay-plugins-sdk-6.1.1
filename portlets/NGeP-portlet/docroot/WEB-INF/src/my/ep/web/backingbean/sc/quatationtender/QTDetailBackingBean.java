@@ -161,7 +161,7 @@ import org.primefaces.model.TreeNode;
 // TODO: Auto-generated Javadoc
 /**
  * The Class QTDetailBackingBean.
- *
+ * 
  * @Author VidyasagarReddy
  */
 @ManagedBean(name = "qTDetailBB")
@@ -183,8 +183,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Debug logger.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -255,8 +256,9 @@ public class QTDetailBackingBean extends
 	 */
 	/**
 	 * Delete go so do item.
-	 *
-	 * @param changeEvent the change event
+	 * 
+	 * @param changeEvent
+	 *            the change event
 	 */
 	public void deleteGoSoDoItem(ValueChangeEvent changeEvent) {
 		ScQtBudget gosodoBudget = (ScQtBudget) changeEvent.getNewValue();
@@ -271,8 +273,9 @@ public class QTDetailBackingBean extends
 	 */
 	/**
 	 * Handle go changed.
-	 *
-	 * @param qtGosodoBudget the qt gosodo budget
+	 * 
+	 * @param qtGosodoBudget
+	 *            the qt gosodo budget
 	 * @return the list
 	 */
 	public List<PmSo> handleGoChanged(ScQtBudget qtGosodoBudget) {
@@ -309,8 +312,9 @@ public class QTDetailBackingBean extends
 	 */
 	/**
 	 * Handle so changed.
-	 *
-	 * @param qtGosodoBudget the qt gosodo budget
+	 * 
+	 * @param qtGosodoBudget
+	 *            the qt gosodo budget
 	 */
 	public void handleSoChanged(ScQtBudget qtGosodoBudget) {
 		debugLogger("handleSoChanged");
@@ -339,8 +343,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Handle do change.
-	 *
-	 * @param qtGosodoBudget the qt gosodo budget
+	 * 
+	 * @param qtGosodoBudget
+	 *            the qt gosodo budget
 	 */
 	public void handleDoChange(ScQtBudget qtGosodoBudget) {
 
@@ -382,7 +387,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Submit qt details action.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String submitQTDetailsAction() {
@@ -520,7 +525,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the go list.
-	 *
+	 * 
 	 * @return the go list
 	 */
 	public List<PmGo> getGoList() {
@@ -539,7 +544,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Handle ptj name.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public List<PmOrgProfile> handlePTJName() {
@@ -564,8 +569,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Handle ptj name changed.
-	 *
-	 * @param orgProfile the org profile
+	 * 
+	 * @param orgProfile
+	 *            the org profile
 	 */
 	public void handlePTJNameChanged(PmOrgProfile orgProfile) {
 		List<PmOrgProfile> orgProfileList = getManagedBean()
@@ -583,7 +589,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Goto qt search page.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String gotoQtSearchPage() {
@@ -600,8 +606,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Method to return the maintance page.
-	 *
-	 * @param scQt the sc qt
+	 * 
+	 * @param scQt
+	 *            the sc qt
 	 * @return maintanacepage
 	 */
 	public String editAction(ScQt scQt) {
@@ -801,41 +808,7 @@ public class QTDetailBackingBean extends
 				scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
 			}
 		}
-		/*
-		 * if (!scQt.isZonal() && !scQt.isPanel()) { List<ScQtLocCriteria>
-		 * locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
-		 * this.getManagedBean().getZoneTrees(), null); if (null != locCriteria
-		 * && !locCriteria.isEmpty()) {
-		 * scQt.getScQtSupplierCriteria().setScQtLocCriteria(locCriteria); }
-		 * else { scQt.getScQtSupplierCriteria().setScQtLocCriteria(null); }
-		 * List<ScQtLocCriteria> existingcheckLocCriteria =
-		 * (List<ScQtLocCriteria>) checkExistingLocation( locCriteria,
-		 * this.getManagedBean().getExistingSupplierLocationList(),
-		 * this.getManagedBean().getLocalLevelCode()); if
-		 * (existingcheckLocCriteria != null &&
-		 * !existingcheckLocCriteria.isEmpty()) {
-		 * scQt.getScQtSupplierCriteria().setScQtLocCriteria(
-		 * existingcheckLocCriteria); } if (locCriteria != null &&
-		 * !locCriteria.isEmpty()) { this.getManagedBean().getSupplierCriteria()
-		 * .setScQtLocCriteria(locCriteria); ScQtSupplierCriteria
-		 * qtSupplierCriteria = this.getManagedBean() .getSupplierCriteria(); if
-		 * (null != qtSupplierCriteria && null !=
-		 * qtSupplierCriteria.getLocationLevel() && null ==
-		 * qtSupplierCriteria.getLocationLevel() .getParameterId()) {
-		 * qtSupplierCriteria.setLocationLevel(null); }
-		 * qtSupplierCriteria.setQtZoneCriterias(null); } } else if
-		 * (scQt.isZonal() && !scQt.isPanel()) { List<ScQtLocCriteria>
-		 * locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
-		 * this.getManagedBean().getZoneTrees(), null); List<ScQtLocCriteria>
-		 * existingcheckLocCriteria = (List<ScQtLocCriteria>)
-		 * checkExistingLocation( locCriteria,
-		 * this.getManagedBean().getExistingSupplierLocationList(),
-		 * this.getManagedBean().getLocalLevelCode()); if
-		 * (existingcheckLocCriteria != null &&
-		 * !existingcheckLocCriteria.isEmpty()) {
-		 * scQt.getScQtSupplierCriteria().setScQtLocCriteria(
-		 * existingcheckLocCriteria); } }
-		 */
+
 		if (null != this.getManagedBean().getSupplierCriteria()) {
 			setUserDetails(this.getManagedBean().getSupplierCriteria());
 			scQt.setScQtSupplierCriteria(this.getManagedBean()
@@ -861,21 +834,7 @@ public class QTDetailBackingBean extends
 					tabBean.getScQtApproval().setApproverSettings(
 							tabBean.getBudgetApprovalUsers().getTarget());
 				}
-				/*
-				 * if
-				 * (tabBean.getScQtApproval().getApprovalType().equals(QTConstants
-				 * .OTHERS_APPROVAL)) { for (ScQtApprovalRequest approvalRequest
-				 * : tabBean.getScQtApproval().getScQtApprovalDtls()) { if
-				 * (approvalRequest.getApproverAction() != null &&
-				 * approvalRequest.getApproverAction().getParameterId() == null)
-				 * { approvalRequest.setApproverAction(null); } if
-				 * (approvalRequest.getAppRequestRemark() != null) {
-				 * ScQtAppRequestRemark remarks =
-				 * approvalRequest.getAppRequestRemark(); if
-				 * (remarks.getRemark() == null ||
-				 * remarks.getRemark().equals("")) {
-				 * approvalRequest.setAppRequestRemark(null); } } } }
-				 */
+
 				tabBean.getScQtApproval().setScQtApprovalRemarks(
 						finalizeRemarks(tabBean.getScQtApproval()
 								.getScQtApprovalRemarks()));
@@ -1027,16 +986,7 @@ public class QTDetailBackingBean extends
 					if (null == deduction.getDeductionType().getParameterCode()) {
 						throw new EpException(MessageConst.ERROR_100022,
 								new String[] { "Deduction Type" });
-						/*
-						 * } else { List<ScQtDeductionClause> deductionClauses =
-						 * deduction .getScQtDeductionClauses(); if (null !=
-						 * deductionClauses && !deductionClauses.isEmpty()) {
-						 * for (ScQtDeductionClause deductionClause :
-						 * deductionClauses) {
-						 * deductionClause.setScQtDeduction(deduction); }
-						 * deduction.setScQtDeductionClauses(deductionClauses);
-						 * }
-						 */
+
 					}
 				}
 			}
@@ -1099,12 +1049,13 @@ public class QTDetailBackingBean extends
 				.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
 
 		quationTenderReqDTO.setSaveFlow(this.getManagedBean().isSaveFlow());
+		quationTenderReqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
 		return quationTenderReqDTO;
 	}
 
 	/**
 	 * Gets the to be remove list.
-	 *
+	 * 
 	 * @return the to be remove list
 	 */
 	private List<ScQtDocReport> getToBeRemoveList() {
@@ -1120,7 +1071,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Retrieve country.
-	 *
+	 * 
 	 * @return the pm country
 	 */
 	private PmCountry retrieveCountry() {
@@ -1374,8 +1325,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Process checked.
-	 *
-	 * @param e the e
+	 * 
+	 * @param e
+	 *            the e
 	 */
 	public void processChecked(AjaxBehaviorEvent e) {
 		// Boolean id = (Boolean) e.getComponent().getAttributes().get("value");
@@ -1384,8 +1336,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Retrieve committee appointment tab dtl.
-	 *
-	 * @param isApprovalReq the is approval req
+	 * 
+	 * @param isApprovalReq
+	 *            the is approval req
 	 */
 	public void retrieveCommitteeAppointmentTabDtl(boolean isApprovalReq) {
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
@@ -1514,9 +1467,11 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Copy bo members to spec committe.
-	 *
-	 * @param specCommitte the spec committe
-	 * @param boCommitte the bo committe
+	 * 
+	 * @param specCommitte
+	 *            the spec committe
+	 * @param boCommitte
+	 *            the bo committe
 	 */
 	private void copyBoMembersToSpecCommitte(ScQtCommittee specCommitte,
 			ScQtCommittee boCommitte) {
@@ -1562,8 +1517,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Retrieve finalization secratry dtl.
-	 *
-	 * @param qtId the qt id
+	 * 
+	 * @param qtId
+	 *            the qt id
 	 * @return the list
 	 */
 	private List<PmParameter> retrieveFinalizationSecratryDtl(Long qtId) {
@@ -1605,8 +1561,11 @@ public class QTDetailBackingBean extends
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
+	 * preRenderView()
 	 */
 	public void preRenderView() {
 		Long qtId = null;
@@ -1664,8 +1623,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Update bpm task.
-	 *
-	 * @param outcome the outcome
+	 * 
+	 * @param outcome
+	 *            the outcome
 	 * @return the string
 	 */
 	public String updateBpmTask(String outcome) {
@@ -1738,7 +1698,8 @@ public class QTDetailBackingBean extends
 								.getTaskId());
 						committeReqDTO.setPayLoad(res.getPojo());
 						committeReqDTO.setOutcome(outcome);
-						committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+						committeReqDTO.setPmUser(facesScopes
+								.getUserSessionBean());
 						committeReqDTO.setRoleCode(getUserRoleCode());
 						committeReqDTO.setScQt(qt);
 						committeResDto = committeSO
@@ -1754,7 +1715,8 @@ public class QTDetailBackingBean extends
 								.getTaskId());
 						committeReqDTO.setPayLoad(res.getPojo());
 						committeReqDTO.setOutcome(outcome);
-						committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+						committeReqDTO.setPmUser(facesScopes
+								.getUserSessionBean());
 						committeReqDTO.setRoleCode(getUserRoleCode());
 						committeReqDTO.setScQt(qt);
 						committeResDto = committeSO
@@ -1826,8 +1788,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Sets the out come action.
-	 *
-	 * @param outCome the new out come action
+	 * 
+	 * @param outCome
+	 *            the new out come action
 	 */
 	public void setOutComeAction(String outCome) {
 		this.getManagedBean().setOutCome(outCome);
@@ -1852,20 +1815,15 @@ public class QTDetailBackingBean extends
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
-			
+
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			QuationTenderResDTO resDTO=null;
-			if(null == this.getManagedBean().getAmendMentBean()){
+			QuationTenderResDTO resDTO = null;
+
 			reqDTO.setQtdetail(this.getManagedBean().getQt());
 			reqDTO.setAvaliableApprovals(this.getManagedBean().getQtApprovals());
-			
-			 resDTO = detailSO
-					.retriveQTApprovalDetails(reqDTO);
-			}else{
-				
-			}
-			
+			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
+			resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
 
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
@@ -2649,7 +2607,7 @@ public class QTDetailBackingBean extends
 	 * The Class QTPagingDataModel.
 	 */
 	private class QTPagingDataModel extends PagingDataModel<ScQt> {
-		
+
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
@@ -2658,9 +2616,11 @@ public class QTDetailBackingBean extends
 
 		/**
 		 * Instantiates a new QT paging data model.
-		 *
-		 * @param componentId the component id
-		 * @param qtnTenderSearchBean the qtn tender search bean
+		 * 
+		 * @param componentId
+		 *            the component id
+		 * @param qtnTenderSearchBean
+		 *            the qtn tender search bean
 		 */
 		public QTPagingDataModel(String componentId,
 				QtnTenderSearchBean qtnTenderSearchBean) {
@@ -2670,8 +2630,9 @@ public class QTDetailBackingBean extends
 
 		/**
 		 * retrieve list of ScQt by params.
-		 *
-		 * @param searchBean the search bean
+		 * 
+		 * @param searchBean
+		 *            the search bean
 		 * @return the i search result bean
 		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
 		 */
@@ -2698,8 +2659,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Retrieve parameter desc by type.
-	 *
-	 * @param type the type
+	 * 
+	 * @param type
+	 *            the type
 	 * @return the list
 	 */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
@@ -2724,9 +2686,11 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the quote zones.
-	 *
-	 * @param treeNodes the tree nodes
-	 * @param supplierCriteria the supplier criteria
+	 * 
+	 * @param treeNodes
+	 *            the tree nodes
+	 * @param supplierCriteria
+	 *            the supplier criteria
 	 * @return the quote zones
 	 */
 	private List<ScQtLocCriteria> getQuoteZones(List<TreeNode> treeNodes,
@@ -2810,7 +2774,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Search qt back action.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String searchQtBackAction() {
@@ -2820,9 +2784,11 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Retrieve quation tender details.
-	 *
-	 * @param qtId the qt id
-	 * @param docType the doc type
+	 * 
+	 * @param qtId
+	 *            the qt id
+	 * @param docType
+	 *            the doc type
 	 */
 	public void retrieveQuationTenderDetails(Long qtId, String docType) {
 		debugLogger("retrieveQuationTenderDetails");
@@ -2935,7 +2901,7 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setGosodos(
 							tenderResDTO.getBudgetDtls());
 				}
-				
+
 			}
 		} finally {
 			QtDetailsSO = null;
@@ -2944,9 +2910,11 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the qt commite dtls by qt id n type.
-	 *
-	 * @param commType the comm type
-	 * @param qtId the qt id
+	 * 
+	 * @param commType
+	 *            the comm type
+	 * @param qtId
+	 *            the qt id
 	 * @return the qt commite dtls by qt id n type
 	 */
 	private ScQtCommittee getQtCommiteDtlsByQtIdNType(String commType, Long qtId) {
@@ -3052,9 +3020,11 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Approver setting dtls.
-	 *
-	 * @param code the code
-	 * @param approval the approval
+	 * 
+	 * @param code
+	 *            the code
+	 * @param approval
+	 *            the approval
 	 * @return the dual list model
 	 */
 	private DualListModel<ScQtApproverSettings> approverSettingDtls(
@@ -3107,8 +3077,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Technical spec edit action.
-	 *
-	 * @param checklist the checklist
+	 * 
+	 * @param checklist
+	 *            the checklist
 	 * @return the string
 	 */
 	public String technicalSpecEditAction(ScQtCheckList checklist) {
@@ -3127,8 +3098,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the local goods radio values.
-	 *
-	 * @param itemType the item type
+	 * 
+	 * @param itemType
+	 *            the item type
 	 * @return the local goods radio values
 	 */
 	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
@@ -3157,7 +3129,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Technical spec back action.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String technicalSpecBackAction() {
@@ -3167,8 +3139,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Financial spec edit action.
-	 *
-	 * @param checklist the checklist
+	 * 
+	 * @param checklist
+	 *            the checklist
 	 * @return the string
 	 */
 	public String financialSpecEditAction(ScQtCheckList checklist) {
@@ -3187,7 +3160,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Financial spec back action.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String financialSpecBackAction() {
@@ -3197,7 +3170,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the procurement mode dropdown values.
-	 *
+	 * 
 	 * @return the procurement mode dropdown values
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
@@ -3215,8 +3188,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Change secretary comm type.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void changeSecretaryCommType(AjaxBehaviorEvent event) {
 		debugLogger("changeSecretaryCommType");
@@ -3235,8 +3209,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Retrieve pm user secratry dtl.
-	 *
-	 * @param committeeType the committee type
+	 * 
+	 * @param committeeType
+	 *            the committee type
 	 * @return the list
 	 */
 	public List<PmUser> retrievePmUserSecratryDtl(String committeeType) {
@@ -3372,9 +3347,12 @@ public class QTDetailBackingBean extends
 			reqDTO.getQtdetail().setModified(false);
 			detailSO.validateApprovalDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
+			QtAmendMentBean amendMentBean = this.getManagedBean()
+					.getAmendMentBean();
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
+			this.getManagedBean().setAmendMentBean(amendMentBean);
 			retrieveApprovalTabDtl();
 			break;
 		case 4:
@@ -3444,8 +3422,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Qt details tab change.
-	 *
-	 * @param activeIndex the active index
+	 * 
+	 * @param activeIndex
+	 *            the active index
 	 */
 	public void qtDetailsTabChange(Integer activeIndex) {
 		int priviousIndex = this.getManagedBean().getActiveIndex();
@@ -3566,9 +3545,11 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Check is approval exists.
-	 *
-	 * @param qtApproval the qt approval
-	 * @param existingApprovalTabs the existing approval tabs
+	 * 
+	 * @param qtApproval
+	 *            the qt approval
+	 * @param existingApprovalTabs
+	 *            the existing approval tabs
 	 * @return the sc qt approval
 	 */
 	private ScQtApproval checkIsApprovalExists(ScQtApproval qtApproval,
@@ -3598,11 +3579,15 @@ public class QTDetailBackingBean extends
 
 					if (null != approvalTab.getScQtApproval()
 							.getScQtApprovalAttachments()) {
-						/*approvalTab.getScQtApproval()
-								.getScQtApprovalAttachments()
-								.setScQtApproval(qtApproval);*/
-						qtApproval.setScQtApprovalAttachments(approvalTab
-								.getScQtApproval().getScQtApprovalAttachments());
+						/*
+						 * approvalTab.getScQtApproval()
+						 * .getScQtApprovalAttachments()
+						 * .setScQtApproval(qtApproval);
+						 */
+						qtApproval
+								.setScQtApprovalAttachments(approvalTab
+										.getScQtApproval()
+										.getScQtApprovalAttachments());
 					}
 					return qtApproval;
 				}
@@ -3613,7 +3598,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the parameter so.
-	 *
+	 * 
 	 * @return the parameter so
 	 */
 	private IParameterSO getParameterSO() {
@@ -3623,8 +3608,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Construct bsv by bean.
-	 *
-	 * @param bsvDtlBean the bsv dtl bean
+	 * 
+	 * @param bsvDtlBean
+	 *            the bsv dtl bean
 	 * @return the sc qt bsv
 	 */
 	private ScQtBsv constructBsvByBean(BriefingZoneBean bsvDtlBean) {
@@ -3655,8 +3641,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Checks if is empty or null.
-	 *
-	 * @param list the list
+	 * 
+	 * @param list
+	 *            the list
 	 * @return true, if is empty or null
 	 */
 	private boolean isEmptyOrNull(List<? extends Object> list) {
@@ -3668,10 +3655,13 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * method to give whether to enable buttons or not..
-	 *
-	 * @param statusId the status id
-	 * @param evalType the eval type
-	 * @param committe the committe
+	 * 
+	 * @param statusId
+	 *            the status id
+	 * @param evalType
+	 *            the eval type
+	 * @param committe
+	 *            the committe
 	 * @return the enable flag by status
 	 */
 	private boolean getEnableFlagByStatus(Long statusId, String evalType,
@@ -3707,7 +3697,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * will be called in maintance flow only..
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String submitQtDetailsForApproval() {
@@ -3735,16 +3725,19 @@ public class QTDetailBackingBean extends
 						}
 						finalizeRemarks(tabBean.getScQtApproval()
 								.getScQtApprovalRemarks());
-						tabBean.getScQtApproval()
-								.getScQtApprovalDtls()
-								.addAll(tabBean.getScQtApproval()
-										.getHistoryApprovalRequests());
+						/*
+						 * tabBean.getScQtApproval() .getScQtApprovalDtls()
+						 * .addAll(tabBean.getScQtApproval()
+						 * .getHistoryApprovalRequests());
+						 */
 						approvalList.add(tabBean.getScQtApproval());
 					}
 				}
 				qtDetails.setScQtApprovals(approvalList);
 			}
 			quationTenderReqDTO.setQtdetail(qtDetails);
+			quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
+					.getAmendMentBean());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
 			String msgCode;
@@ -3782,7 +3775,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * will be called in maintance flow only..
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String cancelQtDetails() {
@@ -3868,9 +3861,11 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Pba approver setting dtls.
-	 *
-	 * @param approval the approval
-	 * @param qtId the qt id
+	 * 
+	 * @param approval
+	 *            the approval
+	 * @param qtId
+	 *            the qt id
 	 * @return the list
 	 */
 	private List<PmParameter> pbaApproverSettingDtls(ScQtApproval approval,
@@ -3890,8 +3885,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Change pb secretary comm type.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void changePbSecretaryCommType(AjaxBehaviorEvent event) {
 		debugLogger("retrieveFinalizationCommitteeSecretaryName");
@@ -3921,7 +3917,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Constuct condition fields.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String constuctConditionFields() {
@@ -3938,8 +3934,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the latest bsv date.
-	 *
-	 * @param bsvDetails the bsv details
+	 * 
+	 * @param bsvDetails
+	 *            the bsv details
 	 * @return the latest bsv date
 	 */
 	private Date getLatestBsvDate(List<ScQtBsvDtl> bsvDetails) {
@@ -3962,7 +3959,7 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Submit qt cancel details.
-	 *
+	 * 
 	 * @return the string
 	 */
 	public String submitQtCancelDetails() {
@@ -4035,8 +4032,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the msg code by task name.
-	 *
-	 * @param taskName the task name
+	 * 
+	 * @param taskName
+	 *            the task name
 	 * @return the msg code by task name
 	 */
 	private String getMsgCodeByTaskName(String taskName) {
@@ -4048,8 +4046,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Update user id to settings.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void updateUserIdToSettings(AjaxBehaviorEvent event) {
 		Long id = (Long) event.getComponent().getAttributes().get("value");
@@ -4066,8 +4065,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Enable field by status n filed name.
-	 *
-	 * @param fieldName the field name
+	 * 
+	 * @param fieldName
+	 *            the field name
 	 * @return true, if successful
 	 */
 	public boolean enableFieldByStatusNFiledName(String fieldName) {
@@ -4080,8 +4080,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Qt maiantance value change listner.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void qtMaiantanceValueChangeListner(ValueChangeEvent event) {
 
@@ -4096,10 +4097,13 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Update qt ammend ment dtls.
-	 *
-	 * @param componentId the component id
-	 * @param oldValue the old value
-	 * @param newValue the new value
+	 * 
+	 * @param componentId
+	 *            the component id
+	 * @param oldValue
+	 *            the old value
+	 * @param newValue
+	 *            the new value
 	 */
 	private void updateQtAmmendMentDtls(String componentId, Object oldValue,
 			Object newValue) {
@@ -4130,9 +4134,6 @@ public class QTDetailBackingBean extends
 			}
 			if (!amendMentBean.getOldEstmtPrice().equals((BigDecimal) newValue)) {
 				amendMentBean.setNewEstmtPrice((BigDecimal) newValue);
-			} else {
-				amendMentBean.setNewEstmtPrice(null);
-
 			}
 
 		} else if ("proposalvalidity".equalsIgnoreCase(componentId)) {
@@ -4141,12 +4142,8 @@ public class QTDetailBackingBean extends
 				amendMentBean.setOldValidityPeriodDays((Integer) oldValue);
 
 			}
-			if (!amendMentBean.getOldValidityPeriodDays().equals(
-					(Integer) newValue)) {
+			if (amendMentBean.getOldValidityPeriodDays() != (Integer) newValue) {
 				amendMentBean.setNewValidityPeriodDays((Integer) newValue);
-			} else {
-				amendMentBean.setNewValidityPeriodDays(null);
-
 			}
 
 		}
@@ -4155,8 +4152,9 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Enable filed by approval status.
-	 *
-	 * @param filedName the filed name
+	 * 
+	 * @param filedName
+	 *            the filed name
 	 * @return true, if successful
 	 */
 	public boolean enableFiledByApprovalStatus(String filedName) {
@@ -4187,12 +4185,13 @@ public class QTDetailBackingBean extends
 			} else if (QTFieldConst.FILED_QT_VALIDITY_PERIOD
 					.equalsIgnoreCase(filedName)) {
 				if (SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND > this
-						.getManagedBean().getQt().getEstimatedAmount().intValue()) {
+						.getManagedBean().getQt().getEstimatedAmount()
+						.intValue()) {
 					flag = isApprovalRequestExists(
 							bpkApproval,
 							ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD);
 				}
-			
+
 			}
 
 		}
@@ -4221,30 +4220,34 @@ public class QTDetailBackingBean extends
 
 	/**
 	 * Gets the qt approval by category.
-	 *
-	 * @param approvals the approvals
-	 * @param approvalCategory the approval category
+	 * 
+	 * @param approvals
+	 *            the approvals
+	 * @param approvalCategory
+	 *            the approval category
 	 * @return the qt approval by category
 	 */
 	private ScQtApproval getQtApprovalByCategory(List<ScQtApproval> approvals,
 			String approvalCategory) {
-		if(CollectionUtils.isNotEmpty(approvals)){
-		for (ScQtApproval scQtApproval : approvals) {
-			if (approvalCategory.equalsIgnoreCase(scQtApproval
-					.getApprovalCategory().getParameterCode())) {
-				return scQtApproval;
+		if (CollectionUtils.isNotEmpty(approvals)) {
+			for (ScQtApproval scQtApproval : approvals) {
+				if (approvalCategory.equalsIgnoreCase(scQtApproval
+						.getApprovalCategory().getParameterCode())) {
+					return scQtApproval;
 
+				}
 			}
-		}
 		}
 		return null;
 	}
 
 	/**
 	 * Checks if is approval request exists.
-	 *
-	 * @param qtApproval the qt approval
-	 * @param requestType the request type
+	 * 
+	 * @param qtApproval
+	 *            the qt approval
+	 * @param requestType
+	 *            the request type
 	 * @return true, if is approval request exists
 	 */
 	private boolean isApprovalRequestExists(ScQtApproval qtApproval,
