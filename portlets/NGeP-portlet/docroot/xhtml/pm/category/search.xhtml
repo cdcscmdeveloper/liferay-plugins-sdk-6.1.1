@@ -19,9 +19,9 @@
 				<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
 			</p:panel>
 		</ui:remove>
-		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
-			toggleable="true" id="catSearch">
-
+		
+		
+            <ui:remove>
 			<h:panelGrid columns="2">
 				<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -76,8 +76,67 @@
 						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" />
 				</h:panelGrid>
 			</h:panelGrid>
+			</ui:remove>        
+        
+         <p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
+			toggleable="true" id="catSearch">
+				<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.category.level']}"/>
+					    <p:outputLabel value="* " styleClass="mandatory" /></td>
 
-			<div style="text-align: right;">
+					<td><p:selectOneMenu style="width:205px;margin-bottom:5px;"
+							value="#{categoryBackingBean.managedBean.pmCategoryLevel}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
+								itemValue="1" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
+								itemValue="2" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
+							<p:ajax event="change"
+								listener="#{categoryBackingBean.updateCategoryLevel()}"
+								update="catSearch" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.main.category.code']}" /></td>
+					<td><p:inputText 
+							value="#{categoryBackingBean.managedBean.mainCatCode}"
+							maxlength="2" size="27" /></td>
+					<td><p:outputLabel  value="#{lbl['lbl.pm.main.category.desc']}" /></td>
+					<td><p:inputText 
+							value="#{categoryBackingBean.managedBean.mainCatDesc}" size="50" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+					<td><p:inputText
+							value="#{categoryBackingBean.managedBean.subCatCode}" size="27"
+							maxlength="2"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+					<td><p:outputLabel style="float: right:width: 15%" value="#{lbl['lbl.pm.sub.category.desc']}"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+					<td><p:inputText
+							value="#{categoryBackingBean.managedBean.subCatDesc}" size="50"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+					<td><p:inputText
+							value="#{categoryBackingBean.managedBean.subDivCode}" size="27"
+							maxlength="2"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+					<td><p:inputText style="float: right:width: 15%"
+							value="#{categoryBackingBean.managedBean.subDivDesc}" size="50"
+							rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" /></td>
+				</tr>
+
+              </table>
+       
+				<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.pm.organisation.search']}"
 					action="#{categoryBackingBean.SearchCategory}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -90,7 +149,7 @@
 
 			</div>
 
-		</p:panel>
+		</p:panel>		
 		<p:panel header="#{lbl['lbl.pm.organisation.result']}"
 			toggleable="true" style="width:100%">
 			<p:dataTable id="searchCategory" var="category"
