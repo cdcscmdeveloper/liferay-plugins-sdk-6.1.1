@@ -195,7 +195,8 @@ public class ApprovalBackingBean extends
 			ScAttachment scAttachment = null;
 			ScQtApprovalAttachment attachment = new ScQtApprovalAttachment();
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval.getScQtApprovalAttachments();
+			List<ScQtApprovalAttachment> approvalAttachments = scQtApproval
+					.getScQtApprovalAttachments();
 			if (null == approvalAttachments) {
 				approvalAttachments = new ArrayList<ScQtApprovalAttachment>();
 			}
@@ -214,10 +215,13 @@ public class ApprovalBackingBean extends
 
 	/**
 	 * Add attachment to list.
-	 *
-	 * @param event the event
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void handleOtherFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
@@ -342,7 +346,7 @@ public class ApprovalBackingBean extends
 					ParameterConst.DOCTYPE_BGT_APPROVAL);
 
 		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.APPROVE_QT_CHANGE
+				|| SCProcessNameConst.BPK_APPROVE_QT_CHANGE
 						.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
@@ -350,6 +354,38 @@ public class ApprovalBackingBean extends
 					ParameterConst.APPROVAL_CATEGORY_BPK,
 					ParameterConst.DOCTYPE_BPK_APPROVAL);
 			scQtApproval.setApproverSettings(null);
+
+			for (ScQtApprovalRequest approvalRequest : scQtApproval
+					.getScQtApprovalDtls()) {
+				if (approvalRequest.getApproverAction() == null) {
+					approvalRequest.setApproverAction(new PmParameter());
+				} else {
+					approvalRequest.setApproverAction(new PmParameter());
+				}
+			}
+		} else if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE
+				.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.PTJ_APPROVAL.dispalyName());
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_PTJ,
+					ParameterConst.DOCTYPE_QUOTATION);
+
+			for (ScQtApprovalRequest approvalRequest : scQtApproval
+					.getScQtApprovalDtls()) {
+				if (approvalRequest.getApproverAction() == null) {
+					approvalRequest.setApproverAction(new PmParameter());
+				} else {
+					approvalRequest.setApproverAction(new PmParameter());
+				}
+			}
+		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
+				.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType(
+					ApprovalCategory.PTJ_APPROVAL.dispalyName());
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
+					ParameterConst.DOCTYPE_QUOTATION);
 
 			for (ScQtApprovalRequest approvalRequest : scQtApproval
 					.getScQtApprovalDtls()) {
@@ -692,7 +728,7 @@ public class ApprovalBackingBean extends
 				finalizeRemarks(this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
-				// committeReqDTO.setSaveFlow(true);
+				committeReqDTO.setSaveFlow(true);
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
 
@@ -865,25 +901,6 @@ public class ApprovalBackingBean extends
 		return qtCommitte;
 	}
 
-	/*
-	 * private ScCommittee getCommitteeTypeDtl(String type, Long id) {
-	 * CommitteReqDTO reqDTO = new CommitteReqDTO(); ScCommittee committee =
-	 * null; reqDTO.setCommitteeType(type); reqDTO.setQtId(id); CommitteResDTO
-	 * resDTO = null;
-	 * 
-	 * try { ICommitteSO committeSO = BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	 * resDTO = committeSO .retrieveCommitteMembersByQtIdAndCommType(reqDTO);
-	 * List<ScCommitteeMember> commMembers = resDTO
-	 * .getCommMemberResultBean().getResultList();
-	 * 
-	 * if (!commMembers.isEmpty()) { committee =
-	 * commMembers.get(0).getScCommittee();
-	 * committee.setScCommitteeMembers(commMembers);
-	 * getManagedBean().setScCommittee(committee); } } catch (Exception ex) {
-	 * ex.printStackTrace(); } return committee; }
-	 */
-
 	/**
 	 * Gets the ScQtApproval Details.
 	 * 
@@ -905,7 +922,7 @@ public class ApprovalBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
 		QuationTenderResDTO resDTO = detailSO
-				.retriveQTApprovalDetails(tenderReqDTO);
+				.retrieveApprovalsByQtIdNType(tenderReqDTO);
 		ScQtApproval approval = resDTO.getQtApproval();
 		this.getManagedBean().setQt(resDTO.getQtDetail());
 		return approval;
