@@ -68,6 +68,8 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
+import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
@@ -75,6 +77,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.pm.AddressType;
@@ -109,6 +112,7 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
@@ -614,19 +618,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		} else {	
 			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
-				if (agencyWitness.getOfficerName() == null) {
+				if (agencyWitness.getOfficerName() == null || agencyWitness.getOfficerName().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witnes", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.agency.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (agencyWitness.getOfficerIc() == null) {
+				if (agencyWitness.getOfficerIc() == null || agencyWitness.getOfficerIc().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witnes", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.agency.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (agencyWitness.getOfficerPosition() == null) {
+				if (agencyWitness.getOfficerPosition() == null || agencyWitness.getOfficerPosition().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witnes", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.agency.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 	           checkDuplicateAgencyWitness(agencyWitness.getOfficerIc());
@@ -651,19 +655,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		} else {
 	    	for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
-				if (supplierWitness.getOfficerName() == null) {
+				if (supplierWitness.getOfficerName() == null || supplierWitness.getOfficerName().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witnes", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.name.supplier.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (supplierWitness.getOfficerIc() == null) {
+				if (supplierWitness.getOfficerIc() == null || supplierWitness.getOfficerIc().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witnes", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ic.supplier.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				if (supplierWitness.getOfficerPosition() == null) {
+				if (supplierWitness.getOfficerPosition() == null || supplierWitness.getOfficerPosition().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witnes", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.position.supplier.witness", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				checkDuplicateSupplierWitness(supplierWitness.getOfficerIc());
@@ -724,6 +728,71 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			throw new EpException(MessageConst.WARN_755011, new String[]{icNo});
 		}
     }
+	
+	/**
+	 * The method used to authenticate user during submit the agreement.
+	 * This method will invoke a confirmation dialog for user authentication.
+	 * This method will call save agreement method once authentication success.
+	 * 
+	 * @param  outcome  the user action on this agreement
+	 * @return result of the saveAgreement process
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
+     */
+    public String gpkiSignAction(String outcome) throws Exception {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+			validateAgreement(outcome);
+			CtContractVer contractVer = getManagedBean().getContractVer();
+			CtContract contract = getManagedBean().getCtContract();
+			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(contract.getContractNo());
+			sb.append(contractVer.getDocType());
+			sb.append(contractVer.getCtContractValue().getEffDate());
+			sb.append(contractVer.getCtContractValue().getExpDate());
+			sb.append(contractVer.getCtContractValue().getContractAmount());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		} else {
+			return this.saveAgreement(outcome);
+		}
+	}
+	
+    /**
+	 * The method used to set value for security check
+	 * before save the contract.
+	 * 
+	 * @param  pmDigiSign  an object of digital sign
+	 * @return result of the saveContract process
+	 * @throws Exception   if an exception occurred
+	 * @see    Exception
+     */
+    public String preSubmitAgreement(PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		}
+		return saveAgreement(getManagedBean().getButtonAction());
+	}
+    
+    /**
+   	 * The method to used auto update of request.
+   	 */
+	public void enableAutoUpdate() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	/**
+   	 * The method used to set update value false for disable purpose.
+     */
+	public void disableUpdate() {
+		getManagedBean().setAutoUpdate(false);
+	}	
+	
 	
 	/**
 	 * The Method used to set user role as per user login.

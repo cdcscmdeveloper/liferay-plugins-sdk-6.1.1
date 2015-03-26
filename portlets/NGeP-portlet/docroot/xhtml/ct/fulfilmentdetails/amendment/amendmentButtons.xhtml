@@ -9,6 +9,12 @@
 			textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
+	<ac:spkiPopup
+			password="#{amendmentBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{amendmentBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{amendmentBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
@@ -32,6 +38,7 @@
 							styleClass="ui-button"
 							disabled="#{!amendmentBackingBean.managedBean.bpmActionFlag}"
 							action="#{amendmentBackingBean.gpkiSignAction(outcome)}"
+							actionListener="#{spkiBackingBean.getChallengeQuestions}"
 							rendered="#{!amendmentBackingBean.managedBean.memberSignOff}" />
 					</ui:repeat></td>
 			</tr>

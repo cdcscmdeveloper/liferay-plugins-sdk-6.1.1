@@ -125,6 +125,8 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -1206,10 +1208,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 * @see    Exception
      */
 	public String gpkiSignAction(String outcome) throws Exception {
-		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
-				&& isGpkiRole()) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			chkComplyAP201Rule();
     	    setSecretary();
 			validateContractAmendment(outcome);
@@ -1223,7 +1222,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && isSupplierRole()) {
+			validateContractAmendment(outcome);	
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);			
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			return null;
+		}
+		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
 		} else {
@@ -1241,10 +1247,57 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 * @see    Exception
      */
 	public String preSubmitContractAmendment(PmDigiSign pmDigiSign) throws Exception {
-		if (pmDigiSign != null) {
-			this.getManagedBean().setPmDigiSign(pmDigiSign);			
+		if (pmDigiSign != null && isSupplierRole()) {
+			FacesScopes facesScope = new FacesScopes();
+			Long userId = facesScope.getUserSessionBean().getUserId();
+			Timestamp date = new Timestamp(System.currentTimeMillis());
+			String originalText = prepareSupplierOriginalText();
+			pmDigiSign.setCreatedBy(userId);
+		    pmDigiSign.setCreatedDate(date);
+		    pmDigiSign.setOrginalData(originalText);
+		    pmDigiSign.setSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
+			getManagedBean().setPmDigiSign(pmDigiSign);			
+		} else if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		return saveContractAmendment(getManagedBean().getButtonAction());
+	}
+	
+	/**
+	 * The method used to retrieve the supplier information for security check.
+	 * 
+	 * @return orginalText the supplier information
+	 */
+    private String prepareSupplierOriginalText() {
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		SmSupplier smSupplier = null;
+		String countryCode ="";
+		String orginalText = "";
+
+		if (getManagedBean().getCtContract().getSmSupplier() != null) {
+			smSupplier = getManagedBean().getCtContract().getSmSupplier();
+			if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
+					&& smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size() > 0) {
+				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+				for (SmCompanyAddress compaAddress : companyAddress) {
+					if (compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) {
+						countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+						break;
+					}
+				}
+			}
+		}		
+		sb.append(getManagedBean().getCtContract().getContractNo())
+			.append("|")
+			.append(facesScopes.getUserSessionBean().getIdentificationNo())
+			.append("|")
+			.append(smSupplier.getRegNo())
+			.append("|")
+			.append(countryCode);
+		orginalText  = sb.toString();
+		return orginalText;
 	}
 	
 	/**
@@ -4257,20 +4310,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	/**
-     * The method used to verify the login user has role for GPKI signing.
+	 * The method used to verify the login user is supplier.
 	 * 
-	 * @return true, if login user has role for GPKI signing
-	 *         false, if login user hasn't  role for GPKI signing
+	 * @return true, if login user is supplier
+	 *         false, if login user is not supplier
      */
-	private boolean isGpkiRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
-			return true;
-		} else {
-			return false;
-		}
+	private boolean isSupplierRole() {
+		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()));
 	}
 	
 	/**
@@ -4298,7 +4347,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 *         false, if login user is not BPK approver or contract approver
      */
     public boolean isApprover() {
-		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
+		return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
     

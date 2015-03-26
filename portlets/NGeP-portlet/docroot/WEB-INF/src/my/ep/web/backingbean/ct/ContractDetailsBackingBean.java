@@ -1236,9 +1236,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * @see    Exception
      */
     public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
-				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome) 
-				|| BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			validateCtContractVer(outcome);
 			CtContractVer contractVer = getManagedBean().getContractVer();
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -3438,7 +3436,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 *         false, if login user is not BPK approver or contract approver
      */
     public boolean isApprover() {
-		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
+		return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}    
 
