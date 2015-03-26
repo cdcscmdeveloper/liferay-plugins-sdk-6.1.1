@@ -4769,8 +4769,8 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType()) && !this.getManagedBean()
 						.isReadOnly()))) {
-					checkMeetingDetailsAndStatus(this.getManagedBean()
-							.getScQtMeetings());
+					//checkMeetingDetailsAndStatus(this.getManagedBean()
+							//.getScQtMeetings());
 					checkCommitteeMembersAttendance(this.getManagedBean()
 							.getCommitteeMemberList());
 					saveMeetingDtls(false);
@@ -4819,8 +4819,8 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())
 							&& !this.getManagedBean().isReadOnly()) {
-						checkMeetingDetailsAndStatus(this.getManagedBean()
-								.getScQtMeetings());
+						/*checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());*/
 						checkCommitteeMembersAttendance(this.getManagedBean()
 								.getCommitteeMemberList());
 						saveMeetingDtls(false);
@@ -4833,8 +4833,8 @@ public class EvaluationBackingBean extends
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 					if (!this.getManagedBean().isReadOnly()) {
-						checkMeetingDetailsAndStatus(this.getManagedBean()
-								.getScQtMeetings());
+					/*	checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());*/
 						checkCommitteeMembersAttendance(this.getManagedBean()
 								.getCommitteeMemberList());
 						saveMeetingDtls(false);
@@ -5000,7 +5000,7 @@ public class EvaluationBackingBean extends
 	}
 
 	// check meeting details status Done or not.
-	private void checkMeetingDetailsAndStatus(
+/*	private void checkMeetingDetailsAndStatus(
 			List<ScQtMeeting> meetingDetailsList) {
 		if (null == meetingDetailsList || meetingDetailsList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760253);
@@ -5020,7 +5020,7 @@ public class EvaluationBackingBean extends
 			}
 		}
 
-	}
+	}*/
 
 	// check attendance for opening committee.
 	private void checkCommitteeMembersAttendance(
