@@ -363,32 +363,50 @@ public class FinancialOrgBackingBean extends
 
 	/* ----*/
 	
+	/**
+	 * contact person add button action- show the contact person dialog
+	 */
 	public void addContacePerson() {
 		RequestContext.getCurrentInstance().execute("contactPersonPopup.show()");
 		getManagedBean().setShowParentMsg(false);
 	}
 
+	/**
+	 * contact person ok button action- hide the contact person dialog
+	 */
 	public void okContacePerson() {
 		RequestContext.getCurrentInstance().execute("contactPersonPopup.hide()");
 		getManagedBean().setShowParentMsg(true);
 	}
 
+	/**
+	 * contact person close button action- hide the contact person dialog
+	 */
 	public void closeContacePerson() {
 		RequestContext.getCurrentInstance().execute("contactPersonPopup.hide()");
 		getManagedBean().setShowParentMsg(true);
 	}
 
+	/**
+	 * branch contact person add button action- show the branch contact person dialog
+	 */
 	public void addBranchContacePerson() {
 
 		RequestContext.getCurrentInstance().execute("branchContactPersonPopup.show()");
 		getManagedBean().setShowParentMsg(false);
 	}
 
+	/**
+	 * branch contact person ok button action- hide the branch contact person dialog
+	 */
 	public void okBranchContacePersonAction() {
 		RequestContext.getCurrentInstance().execute("branchContactPersonPopup.hide()");
 		getManagedBean().setShowParentMsg(false);
 	}
 
+	/**
+	 * branch contact person close button action- hide the branch contact person dialog
+	 */
 	public void closeBranchContacePerson() {
 
 		RequestContext.getCurrentInstance().execute(
