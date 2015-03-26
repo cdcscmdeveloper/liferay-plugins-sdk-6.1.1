@@ -28,35 +28,35 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</th>
 					<td>
 						<p:selectBooleanCheckbox id="chkAppType" value="#{supportDocBackingBean.managedBean.selectedDocument.byAppType}">
-							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.updateTabSelectedIndex(supportDocBackingBean.restrApp)}"
+							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrApp)}"
 								/>
 						</p:selectBooleanCheckbox>
 					 	<h:outputText value="#{lbl['lbl.pm.by.application.type']}"/>
 					 	<br/>
 					 	
 						<p:selectBooleanCheckbox id="chkComType" value="#{supportDocBackingBean.managedBean.selectedDocument.byCompType}">
-							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.updateTabSelectedIndex(supportDocBackingBean.restrComp)}"
+							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrComp)}"
 								/>
 						</p:selectBooleanCheckbox>
 						<h:outputText value="#{lbl['lbl.pm.by.company.type']}"/>
 						<br/>
 						
 						<p:selectBooleanCheckbox id="chkSuppType" value="#{supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
-							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.updateTabSelectedIndex(supportDocBackingBean.restrSupp)}"
+							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrSupp)}"
 								/>
 						</p:selectBooleanCheckbox>
 						<h:outputText value="#{lbl['lbl.pm.by.supplier.type']}"/>
 						<br/>
 						
 						<p:selectBooleanCheckbox id="chkCat" value="#{supportDocBackingBean.managedBean.selectedDocument.byCategory}">
-							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.updateTabSelectedIndex(supportDocBackingBean.restrCategory)}"
+							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrCategory)}"
 								/>
 						</p:selectBooleanCheckbox>
 						<h:outputText value="#{lbl['lbl.pm.by.category']}"/>
 						<br/>
 						
 						<p:selectBooleanCheckbox id="chkCertBody" value="#{supportDocBackingBean.managedBean.selectedDocument.byCertBody}">
-							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.updateTabSelectedIndex(supportDocBackingBean.restrCertbody)}"
+							<p:ajax event="change" process="@this" update="pDocRestriction" listener="#{supportDocBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrCertbody)}"
 								/>
 						</p:selectBooleanCheckbox>
 						<h:outputText value="#{lbl['lbl.pm.suppdoc.certified.body']}"/>

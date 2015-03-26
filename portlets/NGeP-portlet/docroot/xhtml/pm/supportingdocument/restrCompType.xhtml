@@ -33,19 +33,9 @@
 					supportDocBackingBean.restrComp)}" />
 				</p:selectOneMenu>
 				<p:message id="somCompTypeMsg" for="somCompType" display="icon" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.pm.status']}" />
-				</f:facet>
-				<p:selectOneMenu styleClass="ppDropDownWidthS"
-					value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
-					<f:selectItems value="#{supportDocBackingBean.getStatusOptions()}" />
-				</p:selectOneMenu>
-			</p:column>
+			</p:column>		
 			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}">
-	           <p:commandLink partialSubmit="true" disabled="#{!restrict.brandNew}"
+	           <p:commandLink partialSubmit="true"
 					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrComp,rowIndex)}"
 					update="dtComType" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
