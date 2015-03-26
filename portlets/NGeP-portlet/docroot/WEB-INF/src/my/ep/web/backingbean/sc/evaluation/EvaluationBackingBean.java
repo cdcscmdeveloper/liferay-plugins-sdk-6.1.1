@@ -1913,7 +1913,21 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getScQtChecklist().getDefinationType()
 									.getParameterCode())) {
-				reqDTO.setCompliance(true);
+				// reqDTO.setCompliance(true);
+				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
+					reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+				} else {
+					if (this.getManagedBean().getScQt().isDemoRequired()) {
+						reqDTO.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+					} else {
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					}
+				}
 			}
 
 			else {
@@ -2006,7 +2020,21 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getScQtChecklist().getDefinationType()
 									.getParameterCode())) {
-				reqDTO.setCompliance(true);
+				// reqDTO.setCompliance(true);
+				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
+					reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+				} else {
+					if (this.getManagedBean().getScQt().isDemoRequired()) {
+						reqDTO.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+					} else {
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					}
+				}
 			} else {
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
@@ -2100,7 +2128,21 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getScQtChecklist().getDefinationType()
 									.getParameterCode())) {
-				reqDTO.setCompliance(true);
+				// reqDTO.setCompliance(true);
+				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
+					reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+				} else {
+					if (this.getManagedBean().getScQt().isDemoRequired()) {
+						reqDTO.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+					} else {
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					}
+				}
 			}
 
 			else {
@@ -2148,12 +2190,12 @@ public class EvaluationBackingBean extends
 					if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
-						reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+						specDtls.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
 					} else {
 						if (this.getManagedBean().getScQt().isDemoRequired()) {
-							reqDTO.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+							specDtls.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
 						} else {
-							reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 						}
 					}
 				}
@@ -2394,7 +2436,21 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getScQtChecklist().getDefinationType()
 									.getParameterCode())) {
-				reqDTO.setCompliance(true);
+				// reqDTO.setCompliance(true);
+				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())
+						|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+								.equalsIgnoreCase(this.getManagedBean()
+										.getCommitteeType())) {
+					reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+				} else {
+					if (this.getManagedBean().getScQt().isDemoRequired()) {
+						reqDTO.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+					} else {
+						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					}
+				}
 			}
 
 			else {
