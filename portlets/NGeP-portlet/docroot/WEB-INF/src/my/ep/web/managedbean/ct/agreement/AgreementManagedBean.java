@@ -20,6 +20,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -42,12 +43,15 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String agreementType = "";
 	private String fileDirectory;
+	private String textBeforeSign;
+	private String buttonAction;
 	private Long departmentProfileId;
 	private int selectedTabIndex;
 	private double performanceBondRuleAmt;
 	private boolean uploadFinalAgreement;
 	private boolean uploadStampedAndSignedPage;
 	private boolean validateWitness;
+	private boolean autoUpdate = true;
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
 	private List<CtAgreementParty> ctSupplierWitness;
@@ -66,6 +70,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	private CtAgreement ctAgreement;
 	private CtAgreementContent selectedAgreementContent;
+	private PmDigiSign pmDigiSign;	
 	
 	/**
 	 * @return the action
@@ -137,6 +142,34 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.fileDirectory = fileDirectory;
 	}
 	
+	/**
+	 * @return the textBeforeSign
+	 */
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	/**
+	 * @param textBeforeSign the textBeforeSign to set
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	/**
+	 * @return the buttonAction
+	 */
+	public String getButtonAction() {
+		return buttonAction;
+	}
+
+	/**
+	 * @param buttonAction the buttonAction to set
+	 */
+	public void setButtonAction(String buttonAction) {
+		this.buttonAction = buttonAction;
+	}
+
 	/**
 	 * @return the departmentProfileId
 	 */
@@ -219,6 +252,20 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setValidateWitness(boolean validateWitness) {
 		this.validateWitness = validateWitness;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 
 	/**
@@ -496,4 +543,18 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setSelectedAgreementContent(CtAgreementContent selectedAgreementContent) {
 		this.selectedAgreementContent = selectedAgreementContent;
 	}
+
+	/**
+	 * @return the pmDigiSign
+	 */
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	/**
+	 * @param pmDigiSign the pmDigiSign to set
+	 */
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}	
 }

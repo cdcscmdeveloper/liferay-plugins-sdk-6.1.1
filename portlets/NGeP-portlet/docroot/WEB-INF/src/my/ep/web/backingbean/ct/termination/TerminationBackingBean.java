@@ -784,7 +784,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 * Method used to check login user as approver
     */
     public boolean isApprover() {
-		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
+    	return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
     
     /**
@@ -826,8 +827,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 * Call save suspension method once authentication done
     */
 	public String gpkiSignAction(String outcome) throws Exception{
-		 if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
-					|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE))){
+		 if (BpmOutcomeConst.BPM_ENDORSE.equals(outcome)) {
 			validateContractTermination(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
@@ -843,11 +843,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		}else if(BpmOutcomeConst.BPM_CANCEL.equals(outcome)){
+		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		}
-		else{
+		} else {
 			return saveContractTermination(outcome);
 		}
 	}

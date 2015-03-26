@@ -657,13 +657,17 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.curentAccNoBankName = curentAccNoBankName;
 	}
 
+	/**
+	 * @return the spkiBackingBean
+	 */
 	public SpkiBackingBean getSpkiBackingBean() {
 		return spkiBackingBean;
 	}
 
+	/**
+	 * @param spkiBackingBean the spkiBackingBean to set
+	 */
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
 	}
-	
-	
 }

@@ -1250,9 +1250,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * Call save central circular method once authentication done
     */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
-				|| BpmOutcomeConst.BPM_REJECT.equals(outcome)
-				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			validateCircular(outcome);
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
@@ -1267,11 +1265,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		}else if(BpmOutcomeConst.BPM_CANCEL.equals(outcome)){
+		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		}
-		else{
+		} else {
 			return saveCircular(outcome);
 		}
 	}
