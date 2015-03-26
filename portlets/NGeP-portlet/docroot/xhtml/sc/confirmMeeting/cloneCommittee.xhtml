@@ -15,7 +15,8 @@
 				<tr>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-					<td colspan="3"><p:inputTextarea maxlength="100" style="margin-bottom:3px;"
+					<td colspan="3"><p:inputTextarea maxlength="100"
+							style="margin-bottom:3px;"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
 							rows="2" cols="50" /></td>
 				</tr>
@@ -83,8 +84,8 @@
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 					style="float:right;"
 					action="#{evaluationMeetingBackingBean.resetClone}"
-					update="clonesearchpnlid" resetValues="true"
-					partialSubmit="true" process="@this" />
+					update="clonesearchpnlid" resetValues="true" partialSubmit="true"
+					process="@this" />
 				<p:commandButton value="Search" style="float:right;"
 					action="#{evaluationMeetingBackingBean.cloneSearchCommitteAction}"
 					update="clonesearchCommitteid" partialSubmit="true"
@@ -181,8 +182,11 @@
 				</p:column>
 				<p:column style="width:10%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.eva.committee.role']}">
-					<h:outputText
-						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}"></h:outputText>
+					<ui:fragment rendered="#{committeeMember.PNP == true}">
+						<h:outputText
+							value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}"></h:outputText>
+					</ui:fragment>
+
 
 				</p:column>
 
@@ -190,13 +194,12 @@
 			<p:spacer height="30"></p:spacer>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					style="float:right;"
-					onclick="screen2.hide();" />
+					style="float:right;" onclick="screen2.hide();" />
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this,committeedtlsid" partialSubmit="true"
 					actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 					oncomplete="prepareCommittee.paginator.endLink.click();"
-				    update="evaluationpreparecommittee" />
+					update="evaluationpreparecommittee" />
 
 			</div>
 		</p:panel>
