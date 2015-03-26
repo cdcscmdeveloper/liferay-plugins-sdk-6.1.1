@@ -1147,6 +1147,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setOutcome("Active");
 			getManagedBean().setPriceTypeTariff(false);
 			getManagedBean().setPricingTabIndex(0);
+			getManagedBean().setItemSpec(null);
 			
 			// Panel Circular Item
 			if((supplierItem.getCircularNo()!=null && supplierItem.getCircularNo().length()>0) && 
@@ -1174,7 +1175,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				cmSupplierItem.setPmUom(ctPanelItem.getPmUom());
 				cmSupplierItem.setMinOrder(Double.valueOf(ctPanelItem.getMinimumOrderQty()).intValue());
 				//cmSupplierItem.setItemDesc(ctPanelItem.getSpecification());
-				this.getManagedBean().setItemSpec(null);
 				if (ctPanelItem.getItemCategoryId().getParameterId() == getParameterByTypeAndCode(ParameterTypeConst.ITEM_CATEGORY_TYPE, 
 						ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC).getParameterId()) {
 					List<String> specList = new ArrayList<String>();
