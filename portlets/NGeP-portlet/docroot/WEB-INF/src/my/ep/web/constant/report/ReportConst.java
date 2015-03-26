@@ -14,12 +14,14 @@ public class ReportConst {
 	public static final String MOD_FL_TTL = "lbl.module.orderFulfillment";
 	public static final String MOD_SM_TTL = "lbl.module.supplierManagement";
 	public static final String MOD_CT_TTL = "lbl.module.contractManagement";
+	public static final String MOD_PP_TTL = "lbl.module.procurementPlan";
 	public static final String SC_MOD_VAL = "SC";
 	public static final String DP_MOD_VAL = "DP";
 	public static final String CM_MOD_VAL = "CM";
 	public static final String FL_MOD_VAL = "FL";
 	public static final String SM_MOD_VAL = "SM";	
-	public static final String CT_MOD_VAL = "CT";	
+	public static final String CT_MOD_VAL = "CT";
+	public static final String PP_MOD_VAL = "PP";	
 	//SC Module reports start	
 	public static final String SPPPP_PEMATUHAN_OC_RPT_VAL = "SC_001";	
 	public static final String KPPP1_PEMATUHAN_OC_RPT_VAL = "SC_002";	
@@ -243,6 +245,15 @@ public class ReportConst {
 	public static final String YEP_AP58A_RPT_PO_VAL = "YEPReport–AP58A-PO";	
 	public static final String SUP_PERF_RPT_PO_VAL = "FL_050";	
 	public static final String SUMM_RPT_PAN_ITM_VAL = "FL_033";
+	//PP
+	public static final String PP_PROCUREMENT_PTJ_LEVEL_RPT_VAL = "PP_001";
+	public static final String PP_PROCUREMENT_MINISTRY_LEVEL_RPT_VAL = "PP_002";
+	public static final String PP_PROCUREMENT_BKP_LEVEL_RPT_VAL = "PP_003";
+	public static final String PP_EXPENDITURE_PLAN_PTJ_LEVEL_RPT_VAL = "PP_004";
+	public static final String PP_EXPEND_MINISTRY_BY_VOT_PTJ_LEVEL_RPT_VAL = "PP_005";
+	public static final String PP_EXPEND_MINISTRY_BY_GOSO_PTJ_LEVEL_RPT_VAL = "PP_006";
+	public static final String PP_EXPEND_MINISTRY_BY_GOSO_VOT_LEVEL_RPT_VAL = "PP_007";
+	public static final String PP_EXPENDITURE_BPK_LEVEL_RPT_VAL = "PP_008";
 	//JSP
 	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
 	public static final String FL_NGEP_DELIVERY = "FL_NGEP_DELIVERY.jsp";
