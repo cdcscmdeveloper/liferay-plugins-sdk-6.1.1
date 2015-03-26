@@ -233,6 +233,10 @@ public class ReportsGenerateBean {
 		private boolean ctLOAPhysicalNoView = false;
 		private boolean ctUserTypeView = false;
 		private boolean ctSubTypeView = false;
+		//PP
+		private boolean ppYearView = false;
+		private boolean ppMinistryView = false;
+		private boolean ppPTJView = false;	
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -391,9 +395,48 @@ public class ReportsGenerateBean {
 		private String flGroupFifteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSeventeenVar=ReportConst.EMPTY_VAL;
+		//PP
+		private String ppYearVar=ReportConst.EMPTY_VAL;
+		private String ppMinistryVar=ReportConst.EMPTY_VAL;
+		private String ppPTJVar=ReportConst.EMPTY_VAL;
 		
 		
-		
+		public boolean isPpYearView() {
+			return ppYearView;
+		}
+		public void setPpYearView(boolean ppYearView) {
+			this.ppYearView = ppYearView;
+		}
+		public boolean isPpMinistryView() {
+			return ppMinistryView;
+		}
+		public void setPpMinistryView(boolean ppMinistryView) {
+			this.ppMinistryView = ppMinistryView;
+		}
+		public boolean isPpPTJView() {
+			return ppPTJView;
+		}
+		public void setPpPTJView(boolean ppPTJView) {
+			this.ppPTJView = ppPTJView;
+		}
+		public String getPpYearVar() {
+			return ppYearVar;
+		}
+		public void setPpYearVar(String ppYearVar) {
+			this.ppYearVar = ppYearVar;
+		}
+		public String getPpMinistryVar() {
+			return ppMinistryVar;
+		}
+		public void setPpMinistryVar(String ppMinistryVar) {
+			this.ppMinistryVar = ppMinistryVar;
+		}
+		public String getPpPTJVar() {
+			return ppPTJVar;
+		}
+		public void setPpPTJVar(String ppPTJVar) {
+			this.ppPTJVar = ppPTJVar;
+		}
 		public boolean isSmMandatoryCreatedFromDateView() {
 			return smMandatoryCreatedFromDateView;
 		}
