@@ -623,11 +623,12 @@ public class QTDetailBackingBean extends
 			Long qtId = scQt.getQtId();
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-
+			reqDTO.setMaintanceFlow(true);
 			reqDTO.setQtId(qtId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
+			setAmmendMentBean(resDTO.getAmendMentBean());
 			this.getManagedBean().setQtApprovals(
 					selectedScQt.getScQtApprovals());
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
@@ -1049,7 +1050,10 @@ public class QTDetailBackingBean extends
 				.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
 
 		quationTenderReqDTO.setSaveFlow(this.getManagedBean().isSaveFlow());
-		quationTenderReqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
+		if (this.getManagedBean().isMaintanceFlow()) {
+			quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
+					.getAmendMentBean());
+		}
 		return quationTenderReqDTO;
 	}
 
@@ -3314,6 +3318,7 @@ public class QTDetailBackingBean extends
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId(), null);
+			setAmmendMentBean(resDTO.getAmendMentBean());
 			// this.getManagedBean().setQt(resDTO.getQtDetail());
 			break;
 		case 1:
@@ -3332,6 +3337,7 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setSelectedTabIndex(subTabIndex);
 			// this.getManagedBean().setActiveIndex(0);
 			retrieveCommitteeAppointmentTabDtl(false);
+			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 2:
 			reqDTO = prepareQTInfo();
@@ -3341,6 +3347,7 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			retrieveSuppQualificationTabDtl();
+			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
 		case 3:
 			reqDTO = prepareQTInfo();
@@ -3353,7 +3360,9 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			this.getManagedBean().setAmendMentBean(amendMentBean);
+			setAmmendMentBean(resDTO.getAmendMentBean());
 			retrieveApprovalTabDtl();
+			
 			break;
 		case 4:
 			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
@@ -3373,6 +3382,7 @@ public class QTDetailBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
+				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveScheduleTabDtl();
 			}
 			break;
@@ -3384,6 +3394,7 @@ public class QTDetailBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
+				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDeductionPaymentTabDtl();
 			}
 			break;
@@ -3394,6 +3405,7 @@ public class QTDetailBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
+				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDocumentTabDtl();
 				break;
 			}
@@ -3408,6 +3420,7 @@ public class QTDetailBackingBean extends
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				this.getManagedBean().setCurrentStatusId(currentStatus);
+				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrievePublicationApprovalTabDtl();
 			}
 			break;
@@ -4268,5 +4281,11 @@ public class QTDetailBackingBean extends
 			}
 		}
 		return true;
+	}
+	
+	private void setAmmendMentBean(QtAmendMentBean amendMentBean){
+		if(null != amendMentBean){
+		this.getManagedBean().setAmendMentBean(amendMentBean);
+		}
 	}
 }
