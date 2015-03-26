@@ -783,7 +783,7 @@
 
 	<portlet>
 		<portlet-name>scQuotationTender</portlet-name>
-		<display-name>Quotation/Tender Search</display-name>
+		<display-name>Quotation/Tender Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -795,8 +795,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Quotation/Tender Search</title>
-			<short-title>Quotation/Tender Search</short-title>
+			<title>Quotation/Tender Maintenance</title>
+			<short-title>Quotation/Tender Maintenance</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
