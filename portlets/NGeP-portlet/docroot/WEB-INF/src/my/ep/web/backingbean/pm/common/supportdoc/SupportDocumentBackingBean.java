@@ -37,7 +37,6 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -117,7 +116,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("resetSupportDocSearchBean");
 		this.getManagedBean().setSupportDocSearchBean(new SupportDocumentSearchBean());
 		pmDocumentDataModel = new PmDocumentDataModel();
-		getManagedBean().setPmDocumentResultList(new ArrayList<PmDocument>());
 	}
 	
 	
@@ -1314,23 +1312,23 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				|| StringUtils.isBlank(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
 			throw new EpException(MessageConst.ERROR_770083);
 		}
-		DocumentReqDTO reqDTO = new DocumentReqDTO();
-		reqDTO.setDocCategoryCode(getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode());
-		reqDTO.setDocName(getManagedBean().getSupportDocSearchBean().getDocName());		
-		reqDTO.setAppTypeId(getManagedBean().getSupportDocSearchBean().getAppTypeParam());
-		reqDTO.setCompanyTypeId(getManagedBean().getSupportDocSearchBean().getComTypeParam());
-		reqDTO.setSupplierTypeId(getManagedBean().getSupportDocSearchBean().getSuppTypeParam());
-		reqDTO.setCategoryName(getManagedBean().getSupportDocSearchBean().getBusinessCategory());
-		reqDTO.setZoneId(getManagedBean().getSupportDocSearchBean().getPmZone());
-		reqDTO.setProcurementCatId(getManagedBean().getSupportDocSearchBean().getProcureCatParam());
-		reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean().getDocStatus());
-		reqDTO.setCertBodyName(getManagedBean().getSupportDocSearchBean().getCertBodyName());
-		
-		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
-		DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
-		
-		getManagedBean().setPmDocumentResultList(resDTO.getDocumentList());
-		//pmDocumentDataModel.reloadData();
+//		DocumentReqDTO reqDTO = new DocumentReqDTO();
+//		reqDTO.setDocCategoryCode(getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode());
+//		reqDTO.setDocName(getManagedBean().getSupportDocSearchBean().getDocName());		
+//		reqDTO.setAppTypeId(getManagedBean().getSupportDocSearchBean().getAppTypeParam());
+//		reqDTO.setCompanyTypeId(getManagedBean().getSupportDocSearchBean().getComTypeParam());
+//		reqDTO.setSupplierTypeId(getManagedBean().getSupportDocSearchBean().getSuppTypeParam());
+//		reqDTO.setCategoryName(getManagedBean().getSupportDocSearchBean().getBusinessCategory());
+//		reqDTO.setZoneId(getManagedBean().getSupportDocSearchBean().getPmZone());
+//		reqDTO.setProcurementCatId(getManagedBean().getSupportDocSearchBean().getProcureCatParam());
+//		reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean().getDocStatus());
+//		reqDTO.setCertBodyName(getManagedBean().getSupportDocSearchBean().getCertBodyName());
+//		
+//		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
+//		DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
+//		
+//		getManagedBean().setPmDocumentResultList(resDTO.getDocumentList());
+		pmDocumentDataModel.reloadData();
 		log.info("searchDocument - End");
 		
 	}
@@ -1500,11 +1498,21 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 			
 			try {	
-				ISearchBean<PmDocument> searchBeanData = getSearchBeanData(searchBean);
+				//ISearchBean<PmDocument> searchBeanData = getSearchBeanData(searchBean);
 				DocumentReqDTO reqDTO = new DocumentReqDTO();
-				reqDTO.setDocumentSearchBean(searchBeanData);
+				reqDTO.setDocumentSearchBean(searchBean);
+				reqDTO.setDocCategoryCode(getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode());
+				reqDTO.setDocName(getManagedBean().getSupportDocSearchBean().getDocName());		
+				reqDTO.setAppTypeId(getManagedBean().getSupportDocSearchBean().getAppTypeParam());
+				reqDTO.setCompanyTypeId(getManagedBean().getSupportDocSearchBean().getComTypeParam());
+				reqDTO.setSupplierTypeId(getManagedBean().getSupportDocSearchBean().getSuppTypeParam());
+				reqDTO.setCategoryName(getManagedBean().getSupportDocSearchBean().getBusinessCategory());
+				reqDTO.setZoneId(getManagedBean().getSupportDocSearchBean().getPmZone());
+				reqDTO.setProcurementCatId(getManagedBean().getSupportDocSearchBean().getProcureCatParam());
+				reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean().getDocStatus());
+				reqDTO.setCertBodyName(getManagedBean().getSupportDocSearchBean().getCertBodyName());
 				IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
-				DocumentResDTO resDTO = reqSO.retrieveDocumentBySearchBean(reqDTO);
+				DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getDocumentResultBean();
 				}
