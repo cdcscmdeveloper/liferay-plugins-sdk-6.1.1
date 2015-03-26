@@ -1688,7 +1688,7 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 					.add(markIndex + 1, ruleValue);
 		} else {
-			throw new EpException(MessageConst.ERROR_715010);
+			throw new EpException(MessageConst.ERROR_770156);
 		}
 
 	}
