@@ -36,11 +36,9 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>				
 		<f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />
-		<p:panel id="panelIdforMsags">
-	          <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-			  <ui:include src="/xhtml/ct/agreement/agreementButtons.xhtml" />
-			  <ui:include src="/xhtml/ct/agreement/agreementHeader.xhtml" />
-		</p:panel>
+   		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	  	<ui:include src="/xhtml/ct/agreement/agreementButtons.xhtml" />
+	  	<ui:include src="/xhtml/ct/agreement/agreementHeader.xhtml" />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		  <tr>
 			<td width="20%" valign="top" class="sidemenutd">
