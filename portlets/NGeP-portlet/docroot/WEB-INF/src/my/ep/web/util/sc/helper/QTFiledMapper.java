@@ -74,11 +74,16 @@ public class QTFiledMapper {
 		QT_REVISION_PUBLICATION(QTStatusConst.QT_REVISION_PUBLICATION,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
-						QTFieldConst.FILED_QT_FILE_NO,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
-						QTFieldConst.FILED_QT_SUPPQUALIFICATION }),
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+						QTFieldConst.FILED_QT_BSVDETAILS,
+						QTFieldConst.FILED_QT_PUBLISH_DATE,
+						QTFieldConst.FILED_QT_SCHDETAILS,
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_PUB_APPROVAL }),
 
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
 				new String[] { QTFieldConst.FILED_QT_ESTMT_AMT,
@@ -89,9 +94,10 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_BSVDETAILS,
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
-
+						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
-						QTFieldConst.FILED_QT_DOCUMENTS, }), QT_PROPOSAL_PREPARATION(
+						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_PUB_APPROVAL }), QT_PROPOSAL_PREPARATION(
 				QTStatusConst.QT_PROPOSAL_PREPARATION, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
@@ -184,11 +190,16 @@ public class QTFiledMapper {
 				QTStatusConst.QT_REVISION_PUBLICATION, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
-						QTFieldConst.FILED_QT_FILE_NO,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 						QTFieldConst.FILED_QT_APPROVAL_WORKFLOW,
-						QTFieldConst.FILED_QT_SUPPQUALIFICATION });
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+						QTFieldConst.FILED_QT_BSVDETAILS,
+						QTFieldConst.FILED_QT_PUBLISH_DATE,
+						QTFieldConst.FILED_QT_SCHDETAILS,
+						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
+						QTFieldConst.FILED_QT_DOCUMENTS,
+						QTFieldConst.FILED_QT_PUB_APPROVAL });
 
 		private Long statusId;
 		private String[] toBeEnableFields;
