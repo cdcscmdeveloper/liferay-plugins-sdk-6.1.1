@@ -24,10 +24,13 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
+
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
+
+
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
@@ -347,13 +350,30 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
 						IEducationFieldSO.class);
-
+		
+		
+		if (eduField.isBrandNew()) {			
+			if (!isExistEduField(eduField.getFieldCode())) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(
+										MessageConst.ERROR_770160, new String[] {
+												getManagedBean().getPmEduField().getFieldCode(),
+												getManagedBean().getPmEduField().getFieldName()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+				return NAV_TO_MAINTAIN;
+			}
+		
+		}
+		
 		EducationFieldResDTO resDTO = iEducationfieldSO
 				.saveOrUpdateEduFieldDtls(reqDTO);
 		this.getManagedBean().setPmEduField(resDTO.getEduField());
 
 		if (resDTO.isSuccessful()) {
-			if (this.getManagedBean().getPmEduField().isBrandNew()) {
+			if (eduField.isBrandNew()){
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -362,7 +382,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 												resDTO.getEduField()
 												.getFieldCode(),
 												resDTO.getEduField()
-														.getFieldCode() },
+														.getFieldName() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			} else {
@@ -374,7 +394,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 												resDTO.getEduField()
 												.getFieldCode(),
 												resDTO.getEduField()
-														.getFieldCode() },
+														.getFieldName() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
@@ -390,6 +410,42 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 
 	}
 
+	
+	public boolean isExistEduField(String newEduFieldCode) {
+
+		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
+
+		reqDTO.setFieldCode(newEduFieldCode);
+
+		IEducationFieldSO educationfieldSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,
+						IEducationFieldSO.class);		
+
+		EducationFieldResDTO resDTO=educationfieldSO.retrieveEducationFieldList(reqDTO);
+
+
+		List<String> eduFieldTypeLs = new ArrayList<String>();
+
+		if(resDTO.getEduFieldList()!=null && !resDTO.getEduFieldList().isEmpty()){			
+
+			for(PmEduField eduField:resDTO.getEduFieldList())
+			{
+				String oldEduField=eduField.getFieldCode().toString();
+				if(newEduFieldCode.equals(oldEduField)){
+					eduFieldTypeLs.add(oldEduField);
+					if(eduFieldTypeLs.contains(oldEduField)){
+						return false;
+					}
+				}
+				eduFieldTypeLs.add(oldEduField);
+
+			}
+		}
+		return true;
+	}
+
+	
 	/**
 	 * add list of category into PmEduFieldRestr.
 	 * 
