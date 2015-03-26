@@ -132,7 +132,14 @@
 							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{committeeMember.selected}">
+				<p:selectBooleanCheckbox value="#{committeeMember.selected}"
+					disabled="true"
+					rendered="#{committeeMember.scCommitteeMember.memberRole.parameterCode eq 'S'}">
+
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{committeeMember.selected}"
+					rendered="#{committeeMember.scCommitteeMember.memberRole.parameterCode ne 'S'}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
