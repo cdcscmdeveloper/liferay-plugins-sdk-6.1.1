@@ -39,13 +39,13 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private Long orgTypeId;
 	private SelectItem[] orgTypeList;
 	// Org Details
-	private PmOrgProfile orgProfile;	
+	private PmOrgProfile orgProfile;
 	private Date currentDate = new Date();
 	private List<PmZone> zoneList;
-	private PmZone zone = new PmZone();	
-	
+	private PmZone zone = new PmZone();
+
 	// Office Address
-	private List<PmAddressType> officeAddressTypeList;	
+	private List<PmAddressType> officeAddressTypeList;
 	private PmAddressType pmAddressType;
 	private PmAddress officeAddress;
 	private PmContact officeContactPerson;
@@ -58,49 +58,48 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 	private PmContact deliveryContactPerson;
 	private List<PmAddressType> selectedAddressTypes;
-	
+
 	private List<PmAddress> addressList;
 	private PmAddress selectedPmAddress;
-	private PmAddress pmAddress= new PmAddress();	
-	private List<PmOrgProfile> orgProfileList;	
+	private PmAddress pmAddress = new PmAddress();
+	private List<PmOrgProfile> orgProfileList;
 	private PmFinancialOrg financialOrg = new PmFinancialOrg();
-    private List<PmFinancialOrg> financialBanks = new ArrayList<PmFinancialOrg>();
+	private List<PmFinancialOrg> financialBanks = new ArrayList<PmFinancialOrg>();
 	private List<PmFinancialAcc> pmFinancialAcc = new ArrayList<PmFinancialAcc>();
-	
+
 	private List<SmSupplierBank> smSupplierBanks = new ArrayList<SmSupplierBank>();
 	private List<SmSupplierBank> deletedSupplierBankList = new ArrayList<SmSupplierBank>();
 	private List<SmPersonnel> smPersonnels = new ArrayList<SmPersonnel>();
 	private List<SmPersonnel> deletedSmPersonnelList = new ArrayList<SmPersonnel>();
-	
+
 	private List<PmProfileGroup> profileGroup;
 	private List<PmProfileGroup> selectedProfileGroups;
 	private PmProfileGroup selectedProfileGroup;
 	private PmProfileGroup pmProfileGroup;
 	private PmOrgProfile authOrgProfile;
-    private List<PmUser> supplierUserList;
+	private List<PmUser> supplierUserList;
 	private List<PmUser> supplierUsers;
 	private List<PmUser> selectedSupplierUsers;
 
-	private PmUser user;	
+	private PmUser user;
 	private boolean showParentMsg;
 	private boolean emptyMinistry;
-	
+
 	private boolean islazy = false;
 
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
-		deliveryAddress= new PmAddressType();
-		officeContactPerson = new PmContact();		
+		deliveryAddress = new PmAddressType();
+		officeContactPerson = new PmContact();
 		orgProfile = new PmOrgProfile();
 		pmAddressType.setPmAddress(officeAddress);
-		officeAddressTypeList = new ArrayList<PmAddressType>();		
+		officeAddressTypeList = new ArrayList<PmAddressType>();
 		orgProfile.setParentOrgProfile(new PmOrgProfile());
 		deliveryAddress.setPmAddress(new PmAddress());
-		deliveryContactPerson = new PmContact();	
-		
+		deliveryContactPerson = new PmContact();
 
-	}	
+	}
 
 	/**
 	 * @return the officeAddress
@@ -175,7 +174,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setOrgProfile(PmOrgProfile orgProfile) {
 		this.orgProfile = orgProfile;
-	}	
+	}
 
 	/**
 	 * @return the currentDate
@@ -221,7 +220,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setPmAddressType(PmAddressType pmAddressType) {
 		this.pmAddressType = pmAddressType;
 	}
-    /**
+
+	/**
 	 * @return the zone
 	 */
 	public PmZone getZone() {
@@ -252,8 +252,6 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.officeAddressTypeList = officeAddressTypeList;
 	}
 
-	
-
 	/**
 	 * @return the orgProfileList
 	 */
@@ -268,8 +266,6 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
 		this.orgProfileList = orgProfileList;
 	}
-
-	
 
 	/**
 	 * @return the pmFinancialAcc
@@ -301,8 +297,6 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.selectedTabIndex = selectedTabIndex;
 	}
 
-	
-
 	/**
 	 * @return the financialOrg
 	 */
@@ -322,19 +316,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 * @return the organisationSearchBean
 	 */
 	public OrganisationSearchBean getOrganisationSearchBean() {
-		if(organisationSearchBean== null){
-			organisationSearchBean= new OrganisationSearchBean();
+		if (organisationSearchBean == null) {
+			organisationSearchBean = new OrganisationSearchBean();
 		}
 		return organisationSearchBean;
 	}
 
 	/**
-	 * @param organisationSearchBean the organisationSearchBean to set
+	 * @param organisationSearchBean
+	 *            the organisationSearchBean to set
 	 */
-	public void setOrganisationSearchBean(OrganisationSearchBean organisationSearchBean) {
+	public void setOrganisationSearchBean(
+			OrganisationSearchBean organisationSearchBean) {
 		this.organisationSearchBean = organisationSearchBean;
 	}
-	
 
 	/**
 	 * @return the orgTypeId
@@ -344,13 +339,12 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param orgTypeId the orgTypeId to set
+	 * @param orgTypeId
+	 *            the orgTypeId to set
 	 */
 	public void setOrgTypeId(Long orgTypeId) {
 		this.orgTypeId = orgTypeId;
 	}
-
-	
 
 	/**
 	 * @return the deliveryAddressList
@@ -360,7 +354,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param deliveryAddressList the deliveryAddressList to set
+	 * @param deliveryAddressList
+	 *            the deliveryAddressList to set
 	 */
 	public void setDeliveryAddressList(List<PmAddressType> deliveryAddressList) {
 		this.deliveryAddressList = deliveryAddressList;
@@ -374,13 +369,12 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedDeliveryAddress the selectedDeliveryAddress to set
+	 * @param selectedDeliveryAddress
+	 *            the selectedDeliveryAddress to set
 	 */
 	public void setSelectedDeliveryAddress(PmAddressType selectedDeliveryAddress) {
 		this.selectedDeliveryAddress = selectedDeliveryAddress;
 	}
-
-	
 
 	/**
 	 * @return the deliveryAddress
@@ -390,7 +384,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param deliveryAddress the deliveryAddress to set
+	 * @param deliveryAddress
+	 *            the deliveryAddress to set
 	 */
 	public void setDeliveryAddress(PmAddressType deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
@@ -404,7 +399,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param addressTypesList the addressTypesList to set
+	 * @param addressTypesList
+	 *            the addressTypesList to set
 	 */
 	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
 		this.addressTypesList = addressTypesList;
@@ -418,7 +414,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param profileGroup the profileGroup to set
+	 * @param profileGroup
+	 *            the profileGroup to set
 	 */
 	public void setProfileGroup(List<PmProfileGroup> profileGroup) {
 		this.profileGroup = profileGroup;
@@ -432,9 +429,11 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedProfileGroups the selectedProfileGroups to set
+	 * @param selectedProfileGroups
+	 *            the selectedProfileGroups to set
 	 */
-	public void setSelectedProfileGroups(List<PmProfileGroup> selectedProfileGroups) {
+	public void setSelectedProfileGroups(
+			List<PmProfileGroup> selectedProfileGroups) {
 		this.selectedProfileGroups = selectedProfileGroups;
 	}
 
@@ -446,7 +445,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedProfileGroup the selectedProfileGroup to set
+	 * @param selectedProfileGroup
+	 *            the selectedProfileGroup to set
 	 */
 	public void setSelectedProfileGroup(PmProfileGroup selectedProfileGroup) {
 		this.selectedProfileGroup = selectedProfileGroup;
@@ -460,7 +460,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param supplierUsers the supplierUsers to set
+	 * @param supplierUsers
+	 *            the supplierUsers to set
 	 */
 	public void setSupplierUsers(List<PmUser> supplierUsers) {
 		this.supplierUsers = supplierUsers;
@@ -474,7 +475,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param supplierUserList the supplierUserList to set
+	 * @param supplierUserList
+	 *            the supplierUserList to set
 	 */
 	public void setSupplierUserList(List<PmUser> supplierUserList) {
 		this.supplierUserList = supplierUserList;
@@ -488,7 +490,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedSupplierUsers the selectedSupplierUsers to set
+	 * @param selectedSupplierUsers
+	 *            the selectedSupplierUsers to set
 	 */
 	public void setSelectedSupplierUsers(List<PmUser> selectedSupplierUsers) {
 		this.selectedSupplierUsers = selectedSupplierUsers;
@@ -502,7 +505,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param user the user to set
+	 * @param user
+	 *            the user to set
 	 */
 	public void setUser(PmUser user) {
 		this.user = user;
@@ -516,7 +520,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param showParentMsg the showParentMsg to set
+	 * @param showParentMsg
+	 *            the showParentMsg to set
 	 */
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
@@ -530,7 +535,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param authOrgProfile the authOrgProfile to set
+	 * @param authOrgProfile
+	 *            the authOrgProfile to set
 	 */
 	public void setAuthOrgProfile(PmOrgProfile authOrgProfile) {
 		this.authOrgProfile = authOrgProfile;
@@ -544,7 +550,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedPmAddress the selectedPmAddress to set
+	 * @param selectedPmAddress
+	 *            the selectedPmAddress to set
 	 */
 	public void setSelectedPmAddress(PmAddress selectedPmAddress) {
 		this.selectedPmAddress = selectedPmAddress;
@@ -558,7 +565,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param pmAddress the pmAddress to set
+	 * @param pmAddress
+	 *            the pmAddress to set
 	 */
 	public void setPmAddress(PmAddress pmAddress) {
 		this.pmAddress = pmAddress;
@@ -572,7 +580,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param pmProfileGroup the pmProfileGroup to set
+	 * @param pmProfileGroup
+	 *            the pmProfileGroup to set
 	 */
 	public void setPmProfileGroup(PmProfileGroup pmProfileGroup) {
 		this.pmProfileGroup = pmProfileGroup;
@@ -607,11 +616,10 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		return deletedSmPersonnelList;
 	}
 
-	public void setDeletedSmPersonnelList(List<SmPersonnel> deletedSmPersonnelList) {
+	public void setDeletedSmPersonnelList(
+			List<SmPersonnel> deletedSmPersonnelList) {
 		this.deletedSmPersonnelList = deletedSmPersonnelList;
 	}
-
-	
 
 	/**
 	 * @return the addressList
@@ -621,13 +629,12 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param addressList the addressList to set
+	 * @param addressList
+	 *            the addressList to set
 	 */
 	public void setAddressList(List<PmAddress> addressList) {
 		this.addressList = addressList;
 	}
-
-	
 
 	/**
 	 * @return the deliveryContactPerson
@@ -637,13 +644,12 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param deliveryContactPerson the deliveryContactPerson to set
+	 * @param deliveryContactPerson
+	 *            the deliveryContactPerson to set
 	 */
 	public void setDeliveryContactPerson(PmContact deliveryContactPerson) {
 		this.deliveryContactPerson = deliveryContactPerson;
 	}
-
-	
 
 	/**
 	 * @return the selectedAddressTypes
@@ -653,7 +659,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param selectedAddressTypes the selectedAddressTypes to set
+	 * @param selectedAddressTypes
+	 *            the selectedAddressTypes to set
 	 */
 	public void setSelectedAddressTypes(List<PmAddressType> selectedAddressTypes) {
 		this.selectedAddressTypes = selectedAddressTypes;
@@ -667,56 +674,85 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param financialBanks the financialBanks to set
+	 * @param financialBanks
+	 *            the financialBanks to set
 	 */
 	public void setFinancialBanks(List<PmFinancialOrg> financialBanks) {
 		this.financialBanks = financialBanks;
 	}
 
-	public boolean isEmptyMinistry() {
-		return emptyMinistry;
-	}
-
-	public void setEmptyMinistry(boolean emptyMinistry) {
-		this.emptyMinistry = emptyMinistry;
-	}
-
-	public boolean isIslazy() {
-		return islazy;
-	}
-
-	public void setIslazy(boolean islazy) {
-		this.islazy = islazy;
-	}
-
-	
-	public SelectItem[] getOrgTypeList() {
-		return orgTypeList;
-	}
-
-	public void setOrgTypeList(SelectItem[] orgTypeList) {
-		this.orgTypeList = orgTypeList;
-	}
-
-	public int getOrgCategory() {
-		return orgCategory;
-	}
-
-	public void setOrgCategory(int orgCategory) {
-		this.orgCategory = orgCategory;
-	}
-
+	/**
+	 * @return the searchOrgCategory
+	 */
 	public int getSearchOrgCategory() {
 		return searchOrgCategory;
 	}
 
+	/**
+	 * @param searchOrgCategory
+	 *            the searchOrgCategory to set
+	 */
 	public void setSearchOrgCategory(int searchOrgCategory) {
 		this.searchOrgCategory = searchOrgCategory;
 	}
 
-	
+	/**
+	 * @return the orgCategory
+	 */
+	public int getOrgCategory() {
+		return orgCategory;
+	}
 
+	/**
+	 * @param orgCategory
+	 *            the orgCategory to set
+	 */
+	public void setOrgCategory(int orgCategory) {
+		this.orgCategory = orgCategory;
+	}
 
-	
+	/**
+	 * @return the orgTypeList
+	 */
+	public SelectItem[] getOrgTypeList() {
+		return orgTypeList;
+	}
 
+	/**
+	 * @param orgTypeList
+	 *            the orgTypeList to set
+	 */
+	public void setOrgTypeList(SelectItem[] orgTypeList) {
+		this.orgTypeList = orgTypeList;
+	}
+
+	/**
+	 * @return the emptyMinistry
+	 */
+	public boolean isEmptyMinistry() {
+		return emptyMinistry;
+	}
+
+	/**
+	 * @param emptyMinistry
+	 *            the emptyMinistry to set
+	 */
+	public void setEmptyMinistry(boolean emptyMinistry) {
+		this.emptyMinistry = emptyMinistry;
+	}
+
+	/**
+	 * @return the islazy
+	 */
+	public boolean isIslazy() {
+		return islazy;
+	}
+
+	/**
+	 * @param islazy
+	 *            the islazy to set
+	 */
+	public void setIslazy(boolean islazy) {
+		this.islazy = islazy;
+	}
 }
