@@ -295,7 +295,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		}
 		
 		
-		if (certBody.getBodyCode() != null
+		if (certBody.isBrandNew() && certBody.getBodyCode() != null
 				&& !"".equalsIgnoreCase(certBody.getBodyCode())) { 
 			SearchFilterBean profCertSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());				
