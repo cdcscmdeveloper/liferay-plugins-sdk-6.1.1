@@ -567,6 +567,7 @@ public class QTDetailBackingBean extends
 		return null;
 	}
 	
+	
 
 	/**
 	 * Handle ptj name changed.
@@ -3389,10 +3390,10 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setAmendMentBean(amendMentBean);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			retrieveApprovalTabDtl();
-			
+
 			break;
 		case 4:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (isinvokeValidations(getManagedBean().getQt())) {
 				reqDTO = prepareQTInfo();
 				detailSO.validateBsvDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3402,7 +3403,7 @@ public class QTDetailBackingBean extends
 			}
 			break;
 		case 5:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (isinvokeValidations(getManagedBean().getQt())) {
 				reqDTO = prepareQTInfo();
 				detailSO.validateScheduleDetails(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3414,7 +3415,7 @@ public class QTDetailBackingBean extends
 			}
 			break;
 		case 6:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (isinvokeValidations(getManagedBean().getQt())) {
 				reqDTO = prepareQTInfo();
 				// detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -3426,7 +3427,7 @@ public class QTDetailBackingBean extends
 			}
 			break;
 		case 7:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (isinvokeValidations(getManagedBean().getQt())) {
 				reqDTO = prepareQTInfo();
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
@@ -3439,7 +3440,7 @@ public class QTDetailBackingBean extends
 		case 8:
 			break;
 		case 9:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (this.getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 				reqDTO = prepareQTInfo();
 				reqDTO.getQtdetail().setModified(true);
 				detailSO.validateApprovalDetails(reqDTO);
@@ -3494,19 +3495,19 @@ public class QTDetailBackingBean extends
 				break;
 
 			case 4:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+				if (isinvokeValidations(getManagedBean().getQt()) ){
 					detailSO.validateBsvDetails(prepareQTInfo());
 				}
 				break;
 
 			case 5:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+				if (isinvokeValidations(getManagedBean().getQt()) ) {
 					detailSO.validateScheduleDetails(prepareQTInfo());
 				}
 				break;
 
 			case 6:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
+				if (isinvokeValidations(getManagedBean().getQt()) ){
 					// detailSO.validateDeductionDtls(prepareQTInfo());
 				}
 				break;
@@ -4309,10 +4310,24 @@ public class QTDetailBackingBean extends
 		}
 		return true;
 	}
-	
-	private void setAmmendMentBean(QtAmendMentBean amendMentBean){
-		if(null != amendMentBean){
-		this.getManagedBean().setAmendMentBean(amendMentBean);
+
+	private void setAmmendMentBean(QtAmendMentBean amendMentBean) {
+		if (null != amendMentBean) {
+			this.getManagedBean().setAmendMentBean(amendMentBean);
 		}
+	}
+
+	private boolean isinvokeValidations(ScQt scQt) {
+
+		PmStatus pmStatus =  scQt.getQtStatus();
+		if(null != pmStatus){
+		Long qtStatus = pmStatus.getStatusId();
+		if (qtStatus > QTStatusConst.QT_PENDING_QT_SUBMISSION
+				&& qtStatus < QTStatusConst.QT_BRIEFING_SITE_VISIT) {
+			return true;
+		}
+		}
+		return false;
+
 	}
 }
