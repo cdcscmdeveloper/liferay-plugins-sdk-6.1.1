@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ import org.primefaces.context.RequestContext;
 // TODO: Auto-generated Javadoc
 /**
  * The Class QTScheduleDetailBackingBean.
- *
+ * 
  * @author Viswanath
  */
 @ManagedBean(name = "qTScheduleDetailBackingBean")
@@ -96,8 +96,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Debug logger.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -111,7 +112,7 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Gets the checked.
-	 *
+	 * 
 	 * @return the checked
 	 */
 	public Boolean getChecked() {
@@ -120,8 +121,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Sets the checked.
-	 *
-	 * @param checked the new checked
+	 * 
+	 * @param checked
+	 *            the new checked
 	 */
 	public void setChecked(Boolean checked) {
 		this.checked = checked;
@@ -267,7 +269,7 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Gets the desk officer admin assistant.
-	 *
+	 * 
 	 * @return the desk officer admin assistant
 	 */
 	public void getDeskOfficerAdminAssistant() {
@@ -325,8 +327,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Handle desk officer changed.
-	 *
-	 * @param user the user
+	 * 
+	 * @param user
+	 *            the user
 	 */
 	public void handleDeskOfficerChanged(PmUser user) {
 		List<PmUser> list = getManagedBean().getDeskOfficerAdmin();
@@ -364,8 +367,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Validation desk officer admin assistant.
-	 *
-	 * @param doaaList the doaa list
+	 * 
+	 * @param doaaList
+	 *            the doaa list
 	 */
 	private void validationDeskOfficerAdminAssistant(
 			List<ScQtContactPerson> doaaList) {
@@ -402,8 +406,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Retrieve pmuser name.
-	 *
-	 * @param contactPerson the contact person
+	 * 
+	 * @param contactPerson
+	 *            the contact person
 	 */
 	public void retrievePmuserName(ScQtContactPerson contactPerson) {
 		debugLogger("retrievePmuserName");
@@ -511,35 +516,34 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void handlePublishClosingDate() {
 		ScQt scQt = this.getManagedBean().getQt();
-		Long statusId = scQt.getQtStatus()
-				.getStatusId();
-		if (statusId >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-			Date clsDate = null;
-			if (!scQt.isBsvRequired()) {
-				if (null != scQt.getPublishDate()) {
-					clsDate = DateUtils.addDays(scQt.getPublishDate(),
-							scQt.getPublishPeriod());
-				}
-			} else {
-				if (null != scQt.getLatestBsvDate()) {
-					clsDate = DateUtils.addDays(scQt.getLatestBsvDate(),
-							scQt.getPublishPeriod());
-				}
+
+		Date clsDate = null;
+		if (!scQt.isBsvRequired()) {
+			if (null != scQt.getPublishDate()) {
+				clsDate = DateUtils.addDays(scQt.getPublishDate(),
+						scQt.getPublishPeriod());
 			}
-			if (null != clsDate) {
-				scQt.setClosingDate(clsDate);
-				getManagedBean().setProposalValidityUntil(
-						DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
+		} else {
+			if (null != scQt.getLatestBsvDate()) {
+				clsDate = DateUtils.addDays(scQt.getLatestBsvDate(),
+						scQt.getPublishPeriod());
 			}
+		}
+		if (null != clsDate) {
+			scQt.setClosingDate(clsDate);
+			getManagedBean().setProposalValidityUntil(
+					DateUtils.addDays(clsDate, scQt.getQtValidityPeriod()));
 		}
 
 	}
 
 	/**
 	 * Will be called if its zone based and clicks edit icon..
-	 *
-	 * @param sampleSubmission the sample submission
-	 * @param index the index
+	 * 
+	 * @param sampleSubmission
+	 *            the sample submission
+	 * @param index
+	 *            the index
 	 */
 	public void editAddress(ScQtSampleSubmission sampleSubmission, int index) {
 		if (sampleSubmission.getAddress() == null) {
@@ -579,7 +583,7 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Handle maximum date.
-	 *
+	 * 
 	 * @return the date
 	 */
 	public Date handleMaximumDate() {
@@ -600,8 +604,11 @@ public class QTScheduleDetailBackingBean extends
 
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
+	 * preRenderView()
 	 */
 	public void preRenderView() {
 
@@ -635,8 +642,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Submit registarion details.
-	 *
-	 * @param outcome the outcome
+	 * 
+	 * @param outcome
+	 *            the outcome
 	 * @return the string
 	 */
 	public String submitRegistarionDetails(String outcome) {
@@ -708,8 +716,9 @@ public class QTScheduleDetailBackingBean extends
 
 	/**
 	 * Gets the msg code by out come.
-	 *
-	 * @param outCome the out come
+	 * 
+	 * @param outCome
+	 *            the out come
 	 * @return the msg code by out come
 	 */
 	private String getMsgCodeByOutCome(String outCome) {

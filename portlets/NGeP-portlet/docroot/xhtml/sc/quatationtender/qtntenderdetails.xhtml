@@ -72,8 +72,8 @@
 				<td><p:inputMask id="publishperiod" mask="9?99" maxlength="3"
 						placeHolder="" label="#{lbl['lbl.so.publishing.period']}"
 						required="true" value="#{qTDetailBB.managedBean.qt.publishPeriod}"
-						disabled="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_PERIOD) and qTDetailBB.enableFiledByApprovalStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
-						size="30" style="text-align:right">
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
+					valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"	size="30" style="text-align:right">
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
 					</p:inputMask> <p:message id="publishperiodMsg" for="publishperiod"
@@ -85,8 +85,8 @@
 						maxlength="5" placeHolder=""
 						label="#{lbl['lbl.so.publishing.period']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
-						disabled="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_VALIDITY_PERIOD) and qTDetailBB.enableFiledByApprovalStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
-						valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner()}"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
+						valueChangeListener="#{qTDetailBB.qtMaiantanceValueChangeListner}"
 						style="text-align:right">
 						<f:ajax></f:ajax>
 					</p:inputMask> <p:message id="proposalvalidityMsg" for="proposalvalidity"
