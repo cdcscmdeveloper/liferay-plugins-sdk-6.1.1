@@ -3,7 +3,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-
+	<style>
+		.pmrequiredfield:before {
+		 color: red;
+		 content: "* ";
+		}
+	
+	</style>
 
 	<p:panel id="addManualDelAddrPnl">
 
@@ -161,8 +167,8 @@
 						  	<td><p:message for="faxNo" id="faxNoMsg" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.header.general.org.contactPerson']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel styleClass="pmrequiredfield" value="#{lbl['lbl.pm.header.general.org.contactPerson']}" />
+				</td>
 				<td><p:commandLink
 						action="#{organisationBackingBean.addContacePerson}"
 						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
