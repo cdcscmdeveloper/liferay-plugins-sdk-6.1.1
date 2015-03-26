@@ -42,6 +42,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> deleteCategoryRestrictions;
 	private List <PmDocumentRestr> deleteCertBodyRestrictions;
 	private List <PmDocumentRestr> deleteCheckListRestrictions;
+	private List <PmDocumentRestr> deleteRestrictions;
 	
 	private List <PmCategoryL3> selectedCategoryL3s;
 	private List <PmCertBody> selectedCertBodies;
@@ -288,6 +289,14 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 
 	public void setSelectedCertBodies(List <PmCertBody> selectedCertBodies) {
 		this.selectedCertBodies = selectedCertBodies;
+	}
+
+	public List <PmDocumentRestr> getDeleteRestrictions() {
+		return deleteRestrictions;
+	}
+
+	public void setDeleteRestrictions(List <PmDocumentRestr> deleteRestrictions) {
+		this.deleteRestrictions = deleteRestrictions;
 	}
 	
 	
