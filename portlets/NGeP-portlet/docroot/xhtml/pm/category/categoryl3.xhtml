@@ -156,34 +156,43 @@
 			</h:panelGrid>
 		</p:panel>
 		
-		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true" id="catParent">
-			<h:panelGrid columns="4" columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5">
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
+			id="catParent">
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}" /></td>
+					<td><p:inputText
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryL2Code}"
+							size="15" disabled="true" readonly="true" /></td>
+
+					<td style="width: 15%;"><p:outputLabel
+							value="#{lbl['lbl.pm.sub.category.desc']}" /></td>
+					<td><p:inputText style="float: right:width: 15%;"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryName}"
+							size="100" disabled="true" readonly="true" /></td>
+				</tr>
 				
-				<h:panelGroup style="float: right">
-				<h:outputText value="#{lbl['lbl.pm.sub.category.code']}" />
-				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryL2Code}" size="15" disabled="true" readonly="true"/>
-				
-				<h:panelGroup style="float: right">
-				<h:outputText value="#{lbl['lbl.pm.sub.category.desc']}" />
-				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryName}" size="120" disabled="true" readonly="true"/>
-				
-				<h:panelGroup style="float: right">
-				<h:outputText value="#{lbl['lbl.pm.main.category.code']}" />
-				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}" size="15" disabled="true" readonly="true"/>
-				
-				<h:panelGroup style="float: right">
-				<h:outputText value="#{lbl['lbl.pm.main.category.desc']}" />
-				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" size="120" disabled="true" readonly="true"/>
-				
-				
-			</h:panelGrid>
+				<tr>
+					<td style="width: 15%"><p:outputLabel value="#{lbl['lbl.pm.main.category.code']}" /></td>
+					<td><p:inputText style="float: right:width: 15%"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"
+							size="15" disabled="true" readonly="true" /></td>
+
+					<td style="width: 15%"><p:outputLabel value="#{lbl['lbl.pm.main.category.desc']}"
+							style="float: right" /></td>
+					<td><p:inputText style="float: right:width: 15%"
+							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}"
+							size="100" disabled="true" readonly="true" /></td>
+				</tr>
+
+			</table>
 		</p:panel>
-		
-		
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+
 		<p:panel id="groupdetails" header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
 		<p:dataTable id="groupdetailsId" 
 			rowKey="#{pmBasicCategory.createdDate}"
