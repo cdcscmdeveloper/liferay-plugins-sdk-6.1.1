@@ -1320,7 +1320,9 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 									getParameterDesc(pmDocument.getDocCategoryCode())
 					    		}, 
 					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
-					    		new FacesScopes().getUserLocale())));				
+					    		new FacesScopes().getUserLocale())));	
+					
+					loadSupportDoc(pmDocument.getDocumentId());
 					return null;
 					
 				}
