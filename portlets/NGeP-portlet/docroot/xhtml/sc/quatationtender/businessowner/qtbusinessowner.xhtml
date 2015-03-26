@@ -24,6 +24,30 @@
 					</table>
 				</td>
 			</tr>
+			<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+			<tr>
+				<td style="width: 154px;" valign="top">
+					<p:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="4">
+					<p:selectOneMenu
+						id="ptjselect" required="true"
+						label="#{lbl['lbl.sc.ptj']}"
+						value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}">
+						
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems value="#{qTDetailBB.handlePTJName()}"
+							var="pmOrgProfile"
+							itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+							itemValue="#{pmOrgProfile.orgProfileId}" />
+						<p:ajax event="change"
+							partialSubmit="true" process="@this" update="orgName"
+							listener="#{qTDetailBB.handlePTJNameChanged}" />
+							
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			</c:if>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.so.crtdt']}" /></td>
 				<td><p:inputText size="30" 
