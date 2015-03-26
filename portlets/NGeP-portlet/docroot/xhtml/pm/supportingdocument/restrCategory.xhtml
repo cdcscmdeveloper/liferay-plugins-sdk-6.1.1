@@ -47,9 +47,6 @@
 		</p:dataTable>
 		<br />
 		<div class="ppRightBtn">
-			<table style="float: right;">
-				<tr>
-					<td>
 						<!--  Popup Category Details --> <ac:lov id="lovCategory"
 							lovId="PM_CATEGORY_L3_ALL" styleClass="ppDisplayCalS"
 							readonly="true" selectionMode="multiple"
@@ -59,9 +56,7 @@
 							saveObject="supportDocBackingBean.managedBean.selectedCategoryL3s"
 							postUpdateListener="supportDocBackingBean.updateCategoryL3(supportDocBackingBean.managedBean.selectedCategoryL3s)"
 							conditionField="recordStatus^1" />
-					</td>
-				</tr>
-			</table>
+				
 		</div>
 	</p:outputPanel>
 </ui:composition>
