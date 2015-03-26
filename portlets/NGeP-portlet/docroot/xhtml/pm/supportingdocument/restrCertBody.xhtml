@@ -37,9 +37,6 @@
 		</p:dataTable>
 		<br />
 		<div class="ppRightBtn">
-			<table style="float: right;">
-				<tr>
-					<td>
 						<!--  Popup Cert Body --> <ac:lov id="lovCertBody"
 							lovId="PM_CERT_BODY" styleClass="ppDisplayCalS"
 							readonly="true" selectionMode="multiple"
@@ -48,10 +45,8 @@
 							update=":form:tvDocRestriction:dtCertBody"
 							saveObject="supportDocBackingBean.managedBean.selectedCertBodies"
 							postUpdateListener="supportDocBackingBean.updateCertBody(supportDocBackingBean.managedBean.selectedCertBodies)"
-							conditionField="recordStatus^1|isCertifiedBody^1|isGlp^1" />
-					</td>
-				</tr>
-			</table>
+							conditionField="recordStatus^1|isCertifiedBody^1|isGlp^1" />					
+			
 		</div>
 	</p:outputPanel>
 </ui:composition>
