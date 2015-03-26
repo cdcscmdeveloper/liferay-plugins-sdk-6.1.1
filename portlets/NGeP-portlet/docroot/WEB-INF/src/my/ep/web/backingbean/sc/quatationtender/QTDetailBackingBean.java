@@ -566,6 +566,33 @@ public class QTDetailBackingBean extends
 		}
 		return null;
 	}
+	
+
+	/**
+	 * Handle ptj name changed.
+	 * 
+	 */
+	public void handlePTJNameChanged() {
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			
+			ScQt scQT = getManagedBean().getQt();
+			
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(scQT.getPmOrgProfile()
+					.getOrgProfileId());
+			
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileDtlByProfileId(reqDTO);
+			
+			scQT.setPmOrgProfile(resDTO.getPmOrgProfile());
+			
+		} finally {
+			orgProfileSO = null;
+		}
+	}
 
 	/**
 	 * Handle ptj name changed.
