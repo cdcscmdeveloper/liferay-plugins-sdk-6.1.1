@@ -315,15 +315,21 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				PmDistrict district = this.getManagedBean().getDistrict();
 				district.setDistrictCode(district.getDistrictCode().toUpperCase());
 				if(!this.getManagedBean().getDivisionBox()){
-					if(district.getPmDivision().getDivisionId()== null){
-						throw new EpException(MessageConst.ERR_900014);
-					}
+					if(null!=district.getPmDivision()){
+						if(district.getPmDivision().getDivisionId()== null){
+							throw new EpException(MessageConst.ERR_900014);
+							}
+						}
 				}else{
 					district.setPmDivision(null);
 				}
 				reqDTO.setPmDistrict(district);
 				reqDTO.setStateId(district.getPmState().getStateId());
-				reqDTO.setDivisionId(district.getPmDivision().getDivisionId());
+				if(null!=district.getPmDivision()){
+					reqDTO.setDivisionId(district.getPmDivision().getDivisionId());
+				}else{
+					reqDTO.setDivisionId(null);
+				}
 				DistrictResDTO resDTO = null;
 				
 				if(getManagedBean().getDistrict().isBrandNew()){
@@ -332,7 +338,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						throw new EpException(MessageConst.ERR_900020);
 					}
 				}
-				
 				
 				resDTO = districtSO.saveOrUpdateDistrict(reqDTO);
 				
