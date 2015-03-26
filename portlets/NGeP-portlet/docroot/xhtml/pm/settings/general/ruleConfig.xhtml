@@ -68,7 +68,7 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+				<p:inputText value="#{typeValueObj.ruleValue}" size="20"  maxlength="20"
 					id="amountValueId" disabled="#{!(typeValueObj.brandNew)}"
 					required="true" requiredMessage="Value is mandatory"
 					validator="#{webappBean.checkIntegerField}"
@@ -102,7 +102,7 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+				<p:inputText value="#{typeValueObj.ruleValue}" size="20" maxlength="20"
 					id="percentageValueId" disabled="#{!(typeValueObj.brandNew)}"
 					required="true" requiredMessage="Value is mandatory"
 					validator="#{webappBean.checkFloatField}"
@@ -140,7 +140,7 @@
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
-				<p:inputText value="#{typeValueObj.fromValue}" size="15"
+				<p:inputText value="#{typeValueObj.fromValue}" size="15"  maxlength="18"
 					id="fromValueId" disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
@@ -154,7 +154,7 @@
 				<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
-				<p:inputText value="#{typeValueObj.toValue}" size="15"
+				<p:inputText value="#{typeValueObj.toValue}" size="15"  maxlength="18"
 					id="toValueId" disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateToValue(index)}" update="@(.fromValueId)" />
 				</p:inputText>
@@ -224,7 +224,7 @@
 						<td><p:commandLink id="cloneLink"
 								title="#{lbl['lbl.cm.clone']}"
 								rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag}"
-								disabled="#{!typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null or typeValueObj.expDate eq null or typeValueObj.effDate >= typeValueObj.expDate}"
+								disabled="#{!typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null }"
 								action="#{ruleCatalogueBackingBean.cloneRuleTypeValue(index)}"
 								partialSubmit="true" process="@this"
 								update=":form:settingTabId:ruleTypeValueTableID">
