@@ -7310,7 +7310,9 @@ public class EvaluationBackingBean extends
 						committeeActivity.getScCommitteeMember().setIcPassport(
 								"");
 					}
-					committeeActivities.add(committeeActivity);
+					if (committeeActivity.isAttended()) {
+						committeeActivities.add(committeeActivity);
+					}
 				}
 			}
 			if (null != scQtCommittee.getMeetingAttendances()
