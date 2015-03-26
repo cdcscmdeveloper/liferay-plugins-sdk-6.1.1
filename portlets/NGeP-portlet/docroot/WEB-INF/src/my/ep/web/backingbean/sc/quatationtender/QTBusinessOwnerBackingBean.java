@@ -135,7 +135,8 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	@PostConstruct
 	public void init() {
-		if (this.getManagedBean().getQt().getMinistrySpecSecrataryId() == null) {
+		if (this.getManagedBean().getQt() != null && 
+			this.getManagedBean().getQt().getMinistrySpecSecrataryId() == null) {
 			this.getManagedBean().getQt()
 					.setMinistrySpecSecrataryId(new PmUser());
 		}
@@ -441,7 +442,8 @@ public class QTBusinessOwnerBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+			if (null != this.getManagedBean().getQt().getPmOrgProfile() && 
+				this.getManagedBean().getQt().getPmOrgProfile().getParentOrgProfile() != null) {
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
 								"pmOrgProfile.parentOrgProfile.orgProfileId",
@@ -1266,6 +1268,80 @@ public class QTBusinessOwnerBackingBean extends
 					+ "?faces-redirect=true";
 		} finally {
 			orgProfileSO = null;
+			detailSO = null;
+		}
+	}
+	
+	/**
+	 * To create the Quatation/Tender and redirect to BO creation screen..
+	 * 
+	 */
+	public void preCreateQuotationTenderRenderView() {
+		debugLogger("preCreateQuotationTenderRenderView");
+		
+		super.renewSesionObject();
+		this.getManagedBean().setEditable(false);
+		
+		IQTDetailSO detailSO = null;
+		try {
+
+			ScQt scQt = new ScQt();
+			scQt.setPmOrgProfile(new PmOrgProfile());
+			scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			scQt.setMinistrySpecSecrataryId(new PmUser());
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			QuationTenderResDTO dto = detailSO
+					.retriveQTDetails(quationTenderReqDTO);
+			ScQtCommittee qtCommitte = new ScQtCommittee();
+			qtCommitte.setScQt(scQt);
+			setUserDetails(qtCommitte);
+			qtCommitte.setCommitteeActivities(null);
+			qtCommitte.setQtCommitteRemarks(null);
+			qtCommitte.setScQtMeetings(null);
+			ScCommittee committee = new ScCommittee();
+			PmStatus committeStatus = new PmStatus();
+			committeStatus.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
+			committee.setCommitteStatus(committeStatus);
+			committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO
+					.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+			parameterReqDTO
+					.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
+			ParameterResDTO parameterResDTO = getParameterSO()
+					.retrieveParameterByTypeAndCode(parameterReqDTO);
+			committee.setCommitteeType(parameterResDTO.getPmParameter());
+			qtCommitte.setScCommittee(committee);
+			this.getManagedBean().setScQtCommittee(qtCommitte);
+			this.getManagedBean().setScCommitteeMemberList(
+					qtCommitte.getScCommittee().getScCommitteeMembers());
+			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
+			PmStatus status = new PmStatus();
+			status.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
+			scQt.setQtStatus(status);
+
+			scQt.setQtNo(dto.getQtNo());
+			ScQtStatus qtStatus = new ScQtStatus();
+			qtStatus.setScQt(scQt);
+			qtStatus.setPmStatus(status);
+			qtStatus.setCurrent(true);
+			qtStatus.setDocType(QTConstants.DOCTYPE_QT);
+			List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+			qtStatuses.add(qtStatus);
+			scQt.setScQtStatus(qtStatuses);
+			this.getManagedBean().setQt(scQt);
+			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
+					.getStatusId();
+			this.getManagedBean().setCurrentStatusId(currentStatus);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.BO_MAINTANANCE_PAGE);
+			
+		} finally {
 			detailSO = null;
 		}
 	}

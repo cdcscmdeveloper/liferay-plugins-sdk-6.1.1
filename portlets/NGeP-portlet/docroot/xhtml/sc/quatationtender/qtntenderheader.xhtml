@@ -20,7 +20,8 @@
 				</ui:fragment>
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.so.ptj.name']}" /></td>
 				<td class="header-info-text">
-					#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}</td>
+					<h:outputText id="orgName" value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}" />
+				</td>
 				
 				<td width="10%"><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 				<td class="header-info-text">

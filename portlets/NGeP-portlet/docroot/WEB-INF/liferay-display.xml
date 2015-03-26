@@ -123,6 +123,7 @@
 		    <portlet id="scRequestNoteSearch" />
 		    <portlet id="Direct Nego"></portlet>
 		    <portlet id="scAddtionalAttandance" />
+		    <portlet id="scCreateQuotationTender" />
 		    
 		</category>
 
