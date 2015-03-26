@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.primefaces.model.DualListModel;
@@ -32,6 +33,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -115,6 +117,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
+	
+	@ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
 	
 	/**
 	 * @return the action
@@ -1107,5 +1112,19 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
-	}	
+	}
+	
+	/**
+	 * @return the spkiBackingBean
+	 */
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	/**
+	 * @param spkiBackingBean the spkiBackingBean to set
+	 */
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
+	}
 }
