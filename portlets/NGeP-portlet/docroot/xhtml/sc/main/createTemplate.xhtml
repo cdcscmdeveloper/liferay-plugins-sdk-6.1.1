@@ -6,7 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
+	<style type="text/css">
+			.custTextbox input {
+				width: 185px !important;
+			}
+	</style>
 
 	<p:dialog widgetVar="createOwnerSpec" modal="true" width="950"
 		id="bocreateSpec" height="600" position="top" header="#{lbl['lbl.sc.spec.create.specification']}">
@@ -84,7 +88,7 @@
 						<tr>
 							<td valign="top"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel></td>
-							<td colspan="3"><p:inputText size="104" style="margin-bottom:5px;"
+							<td colspan="3"><p:inputText style="width:670px; margin-bottom:5px;"
 									maxlength="100"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
 						</tr>
@@ -93,14 +97,14 @@
 							<td valign="top"><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
 							<td colspan="3"><p:inputText
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtTitle}"
-									size="104" maxlength="100" /></td>
+									style="width:670px;" maxlength="100" /></td>
 						</tr>
 						
 						<tr>
 							<td><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.qtn.no']}"></h:outputLabel></td>
-							<td><p:inputText style="margin-bottom:5px;" maxlength="21" size="29"
-									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}" /></td>
+							<td><p:inputText style="width:210px; margin-bottom:5px;" maxlength="21" 
+									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}"/></td>
 									
 							<td><h:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
 							<td><p:selectOneMenu id="procurementid"
@@ -116,8 +120,8 @@
 							<td><h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
-									id="crdateFrom" showOn="button" size="29" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									id="crdateFrom" showOn="button" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<p:ajax event="dateSelect" update="crdateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
@@ -125,9 +129,9 @@
 									label="#{lbl['lbl.so.creatdtto']}"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toCreatedDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
-									size="29" readonlyInput="true"
+									readonlyInput="true"
 									required="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate ne null or !specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate eq ''}"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<f:attribute name="startDate"
 										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}" />
 								</p:calendar></td>
@@ -137,16 +141,16 @@
 							<td><h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
-									id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									id="pbdateFrom" showOn="button"  readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<p:ajax event="dateSelect" update="pbdateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.so.pbldtto']}" /></td>
 							<td><p:calendar id="pbdateTo" showOn="button"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toPublishDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
-									size="29" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<f:attribute name="startDate"
 										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}" />
 									<f:validator validatorId="dateRangeValidator" />
@@ -157,16 +161,16 @@
 							<td><h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
-									id="cldateFrom" showOn="button" size="29" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									id="cldateFrom" showOn="button" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<p:ajax event="dateSelect" update="cldateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.so.clsdtto']}" /></td>
 							<td><p:calendar id="cldateTo" showOn="button"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toClosingDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
-									size="29" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<f:attribute name="startDate"
 										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}" />
 									<f:validator validatorId="dateRangeValidator" />
