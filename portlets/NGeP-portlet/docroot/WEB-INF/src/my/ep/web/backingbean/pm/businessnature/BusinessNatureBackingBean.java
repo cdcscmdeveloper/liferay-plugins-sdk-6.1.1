@@ -6,9 +6,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -30,6 +27,9 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author DK
@@ -158,14 +158,37 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */
 	public SelectItem[] getBusinessNatureCategoryLv(){
 		
-		SelectItem[] items = new SelectItem[5];
-		items[0] = new SelectItem(10, "SECTION");
-		items[1] = new SelectItem(20, "DIVISION");
-		items[2] = new SelectItem(30, "GROUP");
-		items[3] = new SelectItem(40, "CLASS");
-		items[4] = new SelectItem(50, "ITEM");
+//		SelectItem[] items = new SelectItem[6];
+//		items[0] = new SelectItem(null, "- Select One -");
+//		items[1] = new SelectItem(10, "SECTION");
+//		items[2] = new SelectItem(20, "DIVISION");
+//		items[3] = new SelectItem(30, "GROUP");
+//		items[4] = new SelectItem(40, "CLASS");
+//		items[5] = new SelectItem(50, "ITEM");
 		
-		return items;
+		SelectItem[] items =  new SelectItem[6];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(10, ResourceBundleUtils.getMessage(
+				"lbl.sm.businessnature.lvl1.section", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[2] = new SelectItem(20, ResourceBundleUtils.getMessage(
+				"lbl.sm.businessnature.lvl2.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[3] = new SelectItem(30, ResourceBundleUtils.getMessage(
+				"lbl.sm.businessnature.lvl3.group", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[4] = new SelectItem(40, ResourceBundleUtils.getMessage(
+				"lbl.sm.businessnature.lvl4.class", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		items[5] = new SelectItem(50, ResourceBundleUtils.getMessage(
+				"lbl.sm.businessnature.lvl5.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+		
+	    return items;
+		
+		
 	}	
 
 	/**
@@ -548,12 +571,14 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 				businessNatureReqDTO.setLevelCode(businessNature.getLevelCode());
 				BusinessNatureResDTO businessNatureResDTO = businessNatureSO.retrieveBusinessNatureListByLevel(businessNatureReqDTO);
 				if(businessNatureResDTO.getBusinessNatureList().size()>0){
-					FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(
-								MessageConst.ERROR_775005,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.ERR_900015,
+									new String[]{getManagedBean().getTaskName(),ResourceBundleUtils.getMessage(getManagedBean().getPmBusinessNature().getLevelCode(),ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 					return false;
 				}
 			}
@@ -588,10 +613,8 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 			BusinessNatureResDTO resDTO = iBusinessNatureSO.saveBusinessNatureDtls(reqDTO);
 			 this.getManagedBean().setPmBusinessNature(resDTO.getBusinessNature());
 			 if(resDTO.isSuccessful()){
-				 
 				 if (this.getManagedBean().isBrandNew()){
 					 if(Integer.valueOf(this.getManagedBean().getPmBusinessNature().getBusinessLevel())>10){
-						 
 						 BusinessNatureReqDTO businessNatureReqDTO = new BusinessNatureReqDTO();
 						 businessNatureReqDTO.setBusinessLevel(this.getManagedBean().getPmBusinessNature().getParentBusinessNature().getBusinessLevel());
 						 businessNatureReqDTO.setBusinessNatureId(this.getManagedBean().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
@@ -603,13 +626,24 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 					 }
 				 }
 				 
+				 if(this.getManagedBean().isBrandNew()){
+					 FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.ERR_900016,
+										new String[]{getManagedBean().getTaskName(),ResourceBundleUtils.getMessage(getManagedBean().getPmBusinessNature().getLevelCode(),ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					 
+				 }else{
 				 FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_700004,
-							new String[]{"",ResourceBundleUtils.getMessage("lbl.pm.category",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+						MessageUtils.getMessage(MessageConst.ERR_900024,
+							new String[]{getManagedBean().getTaskName(),ResourceBundleUtils.getMessage(getManagedBean().getPmBusinessNature().getLevelCode(),ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
+				 }
 			 }
 		 
 		}catch(Exception e){
@@ -624,8 +658,30 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 			return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 	 }
 	
-	public void updateCategoryLevel(){
+	public void updateCategoryLevel(){ResourceBundleUtils.getMessage(	"lbl.sm.businessnature.lvl5.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+			new FacesScopes().getUserLocale());
 		log.info("getManagedBean().getCategoryLvl() "+getManagedBean().getCategoryLvl());
+		if(getManagedBean().getCategoryLvl()==10){
+			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl1.section", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}else if(getManagedBean().getCategoryLvl()==20){
+			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl2.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}else if(getManagedBean().getCategoryLvl()==30){
+			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl3.group", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			
+		}else if(getManagedBean().getCategoryLvl()==40){
+			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl4.class", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			
+		}else if(getManagedBean().getCategoryLvl()==50){
+			getManagedBean().setTaskName(ResourceBundleUtils.getMessage(	"lbl.sm.businessnature.lvl5.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			
+		}
+
+		
 	}
 	
 }
