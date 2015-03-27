@@ -11,12 +11,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.web.integration.eperunding.AssociatedCompany;
 import my.ep.web.integration.eperunding.BoardOfDirector;
 import my.ep.web.integration.eperunding.BranchCompany;
@@ -301,96 +304,74 @@ public class FileUtility {
 
 	// 1GFMAS
 
-	public void masterDataVendorFileOutPutStream(
-			List<MasterDataVendor> content, String filePath) {
+	public void masterDataVendorFileOutPutStream(List<MasterDataVendor> content, String filePath) {
 		String PROCESS_ID = "APIVE";
+		
+		String fileName = createFileNameGfmas(PROCESS_ID);
 
 		Writer writer = null;
 
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath
-							+ createFileNameGfmas(PROCESS_ID)), "utf-8"));
+							+ fileName), "utf-8"));
 
 			if (content.size() != 0) {
 				StringBuffer line;
 				StringBuffer subLine;
 				for (MasterDataVendor mDataVendor : content) {
 					line = new StringBuffer();
-					line.append(formatIntegerField(mDataVendor.getRecordType(),
-							1, "R"));
-					line.append(formatStringField(mDataVendor.getAgencyId(), 6,
-							"L"));
-					line.append(formatStringField(mDataVendor.getVendorIdCode()
-							.replaceAll("-", ""), 20, "L"));
-					line.append(formatStringField(mDataVendor.getEntityCode(),
-							4, "L"));
-					line.append(formatStringField(mDataVendor.getName(), 35,
-							"L"));
-					line.append(formatStringField(mDataVendor.getName2(), 35,
-							"L"));
-					line.append(formatStringField(mDataVendor.getAddress(), 35,
-							"L"));
-					line.append(formatStringField(mDataVendor.getAddress2(),
-							35, "L"));
-					line.append(formatStringField(mDataVendor.getAddress3(),
-							35, "L"));
-					line.append(formatStringField(mDataVendor.getPostCode(), 5,
-							"L"));
-					line.append(formatStringField(mDataVendor.getCity(), 35,
-							"L"));
-					line.append(formatStringField(mDataVendor.getRegion(), 3,
-							"L"));
-					line.append(formatStringField(mDataVendor.getCountry(), 2,
-							"L"));
-					line.append(formatStringField(mDataVendor.getTelephoneNo(),
-							15, "L"));
-					line.append(formatStringField(mDataVendor.getFaxNo(), 15,
-							"L"));
-					line.append(formatStringField(
-							mDataVendor.getEmailAddress(), 100, "L"));
-					line.append(formatStringField(
-							mDataVendor.getGlReconAccount(), 10, "L"));
-					line.append(formatStringField(mDataVendor.getCurrency(), 5,
-							"L"));
-					line.append(formatStringField(mDataVendor.getIncoTerm(), 3,
-							"L"));
-					line.append(formatStringField(mDataVendor.getPaymentTerm(),
-							4, "L"));
-					line.append(formatIntegerField(
-							mDataVendor.getBankAccountInfoCount(), 3, "R"));
-					line.append(formatIntegerField(mDataVendor.getStatus(), 1,
-							"R"));
+					line.append(formatIntegerField(mDataVendor.getRecordType(),	1, "R"));
+					line.append(formatStringField(mDataVendor.getAgencyId(), 6,	"L"));
+					if(null!=mDataVendor.getVendorIdCode())
+						line.append(formatStringField(mDataVendor.getVendorIdCode()	.replaceAll("-", ""), 20, "L"));
+					else
+						line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
+					line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
+					line.append(formatStringField(mDataVendor.getName(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getName2(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getAddress(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getAddress2(),35, "L"));
+					line.append(formatStringField(mDataVendor.getAddress3(),35, "L"));
+					line.append(formatStringField(mDataVendor.getPostCode(), 5,"L"));
+					line.append(formatStringField(mDataVendor.getCity(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getRegion(), 3,"L"));
+					line.append(formatStringField(mDataVendor.getCountry(), 2,"L"));
+					line.append(formatStringField(mDataVendor.getTelephoneNo(),	15, "L"));
+					line.append(formatStringField(mDataVendor.getFaxNo(), 15,"L"));
+					line.append(formatStringField(mDataVendor.getEmailAddress(), 100, "L"));
+					line.append(formatStringField(mDataVendor.getGlReconAccount(), 10, "L"));
+					line.append(formatStringField(mDataVendor.getCurrency(), 5,"L"));
+					line.append(formatStringField(mDataVendor.getIncoTerm(), 3,"L"));
+					line.append(formatStringField(mDataVendor.getPaymentTerm(),4, "L"));
+					line.append(formatIntegerField(mDataVendor.getBankAccountInfoCount(), 3, "R"));
+					line.append(formatIntegerField(mDataVendor.getStatus(), 1,"R"));
+					line.append(formatStringField(mDataVendor.getMobileNo(), 15,"L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					if (mDataVendor.getBankAccountInfoList().size() != 0) {
-						for (BankAccountInformation bankInfo : mDataVendor
-								.getBankAccountInfoList()) {
+						for (BankAccountInformation bankInfo : mDataVendor.getBankAccountInfoList()) {
 							subLine = new StringBuffer();
-							subLine.append(formatIntegerField(
-									bankInfo.getRecordType(), 1, "R"));
-							subLine.append(formatIntegerField(
-									bankInfo.getRecordNumber(), 3, "R"));
-							subLine.append(formatStringField(
-									bankInfo.getBankCountry(), 2, "L"));
-							subLine.append(formatStringField(
-									bankInfo.getBankKey(), 15, "L"));
-							subLine.append(formatStringField(
-									bankInfo.getBankAccount(), 18, "L"));
-							subLine.append(formatStringField(
-									bankInfo.getCurrency(), 5, "L"));
-							subLine.append(formatStringField(
-									bankInfo.getAccountHolderName(), 60, "L"));
+							subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
+							subLine.append(formatIntegerField(bankInfo.getRecordNumber(), 3, "R"));
+							subLine.append(formatStringField(bankInfo.getBankCountry(), 2, "L"));
+							subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
+							subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
+							subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
+							subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));
 							subLine.append(System.getProperty("line.separator"));
 							writer.write(subLine.toString());
 							writer.flush();
 						}
-
+						
 					}
-
 				}
+			}else{
+				System.out.println("content is null");
 			}
 			System.out.println("local fie create....");
+			Encryption encryption = new Encryption();
+			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010");
 		} catch (IOException e) {
 
 		} finally {
@@ -818,15 +799,23 @@ public class FileUtility {
 					IntegrationConstants.ENCODING.name())) {
 
 				FileUtility fileUtility = new FileUtility();
+				String[] invoiceArray = null;
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-
-					paymentInfo = new PaymentInfo();
-
-					paymentInfo.setPaymentRefNo(fileUtility.getValue(line, 33, 18));
-					paymentInfo.setPaymentDate(fileUtility.getValue(line, 11, 8));
-					//paymentInfo.setInvoiceNoList(fileUtility.getValue(line, 4, 6));
-					paymentList.add(paymentInfo);
+					if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
+						paymentInfo = new PaymentInfo();
+						invoiceArray = new String[1];
+						paymentInfo.setPaymentRefNo(fileUtility.getValue(line, 33, 18));
+						paymentInfo.setPaymentDate(fileUtility.getValue(line, 11, 8));
+						System.out.println("setPaymentRefNo  :"+fileUtility.getValue(line, 33, 18));
+						System.out.println("setPaymentDate  :"+fileUtility.getValue(line, 11, 8));
+					}else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
+						invoiceArray[0] =fileUtility.getValue(line, 9, 17);
+						System.out.println("Invoice No  :"+fileUtility.getValue(line, 9, 17));
+						paymentInfo.setInvoiceArray(invoiceArray);
+						paymentList.add(paymentInfo);
+					}
+					
 
 				}
 			} catch (IOException e) {
@@ -840,32 +829,47 @@ public class FileUtility {
 	
 	// set values for masterData material Info 1gfmas
 	
-	public List<MasterDataMaterialInfo> setGfmasMasterDataMaterialInfo(List<CmItem> cmItemList){
+	public List<MasterDataMaterialInfo> setGfmasMasterDataMaterialInfo(CodificationResDTO resDTO){
 		
 		List<MasterDataMaterialInfo> masterDataMaterialInfoList = new ArrayList<MasterDataMaterialInfo>();
 		MasterDataMaterialInfo masterDataMaterialInfo = null;
 		
-		if(cmItemList.size()>0){
+		if(resDTO.getItemList().size()>0){
 			
-			for(CmItem cmItem :cmItemList){
+			for(CmItem cmItem :resDTO.getItemList()){
 				masterDataMaterialInfo = new MasterDataMaterialInfo();
 				
-				cmItem.getCmSupplierItems();
-	
+				
 				masterDataMaterialInfo.setMaterialCode(cmItem.getExtensionCode());
 				masterDataMaterialInfo.setCodeType("P");
 				masterDataMaterialInfo.setActionCode(checkAction(cmItem.getCreatedDate(), cmItem.getChangedDate()));
-				masterDataMaterialInfo.setMaterialDesc(cmItem.getItemName());
-				masterDataMaterialInfo.setMaterialAddDesc("Sample for testing");
+				if(cmItem.getItemName().length()>40){
+					masterDataMaterialInfo.setMaterialDesc(cmItem.getItemName().substring(0, 39));
+					masterDataMaterialInfo.setMaterialAddDesc(cmItem.getItemName().substring(40, cmItem.getItemName().length()-1));
+				}else{
+					masterDataMaterialInfo.setMaterialDesc(cmItem.getItemName());
+				}
+				
 		
+				//expiry date will be 3 years from current date
+				Calendar c = Calendar.getInstance();    
+				c.setTime(new Date());
+				c.add(Calendar.YEAR, 3);
+				
 				masterDataMaterialInfo.setStartEffectiveDt(new Date());
-				masterDataMaterialInfo.setEndEffectiveDt(new Date());
+				masterDataMaterialInfo.setEndEffectiveDt(c.getTime());
 				masterDataMaterialInfo.setCommodityName(cmItem.getCmUnspsc().getUnspscTitle());
 				masterDataMaterialInfo.setBaseUnitOfMeasure("UN");
 				masterDataMaterialInfo.setMaterialType(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 2)+"00");
 				masterDataMaterialInfo.setMaterialGroup(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 4)+"0000");
-				masterDataMaterialInfo.setAltUnitOfMeasure("U25");
+				if(null!=findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList())){
+					masterDataMaterialInfo.setAltUnitOfMeasure(findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList()));
+				}else{
+					masterDataMaterialInfo.setAltUnitOfMeasure("UN");
+				}
+
 				masterDataMaterialInfoList.add(masterDataMaterialInfo);
+				
 			}
 		}
 		
@@ -876,31 +880,41 @@ public class FileUtility {
 	
 	// set values for masterData material Info phis
 	
-    public List<my.ep.web.integration.phis.MasterDataMaterialInfo> setPHISMasterDataMaterialInfo(List<CmItem> cmItemList){
+    public List<my.ep.web.integration.phis.MasterDataMaterialInfo> setPHISMasterDataMaterialInfo(CodificationResDTO resDTO){
 		
 		List<my.ep.web.integration.phis.MasterDataMaterialInfo> masterDataMaterialInfoList = new ArrayList<my.ep.web.integration.phis.MasterDataMaterialInfo>();
 		my.ep.web.integration.phis.MasterDataMaterialInfo masterDataMaterialInfo = null;
 		
-		if(cmItemList.size()>0){
+		if(resDTO.getItemList().size()>0){
 			
-			for(CmItem cmItem :cmItemList){
+			for(CmItem cmItem :resDTO.getItemList()){
 				masterDataMaterialInfo = new my.ep.web.integration.phis.MasterDataMaterialInfo();
 				
 				cmItem.getCmSupplierItems();
 	
 				masterDataMaterialInfo.setProductCode(cmItem.getExtensionCode());
 				masterDataMaterialInfo.setCodeType("P");
-				masterDataMaterialInfo.setOldProductCode("123");
-				masterDataMaterialInfo.setItemDescription("Sample for testing");
+				masterDataMaterialInfo.setOldProductCode("NA");
+				masterDataMaterialInfo.setItemDescription(cmItem.getItemName());
 				masterDataMaterialInfo.setKodTindakan(checkAction(cmItem.getCreatedDate(), cmItem.getChangedDate()));
 		
+				//expiry date will be 3 years from current date
+				Calendar c = Calendar.getInstance();    
+				c.setTime(new Date());
+				c.add(Calendar.YEAR, 3);
+				
 				masterDataMaterialInfo.setStartEffectiveDate(new Date());
-				masterDataMaterialInfo.setEndEffectiveDate(new Date());
+				masterDataMaterialInfo.setEndEffectiveDate(c.getTime());
 				masterDataMaterialInfo.setCommodityName(cmItem.getCmUnspsc().getUnspscTitle());
 				masterDataMaterialInfo.setBaseUnitOfMeasure("UN");
 				masterDataMaterialInfo.setSegment(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 2));
 				masterDataMaterialInfo.setFamily(getValue(cmItem.getCmUnspsc().getUnspscCode(), 0, 4));
-				masterDataMaterialInfo.setAltUnitOfMeasurement("U25");
+				if(null!=findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList())){
+					masterDataMaterialInfo.setAltUnitOfMeasurement(findUomCode(cmItem.getItemId(),resDTO.getCmSupplierItemsList()));
+				}else{
+					masterDataMaterialInfo.setAltUnitOfMeasurement("UN");
+				}
+				
 				masterDataMaterialInfoList.add(masterDataMaterialInfo);
 			}
 		}
@@ -2069,6 +2083,17 @@ public class FileUtility {
 		  String result = line.substring(begin, begin+size);
 		  return result.trim();
 	  }
-
+	
+	public String findUomCode(Long itemId,List<CmSupplierItem> supplierItems){
+		String uomCode = null;
+		
+		for(CmSupplierItem cmSupplierItem :supplierItems){
+			if(cmSupplierItem.getCmItem().getItemId().equals(itemId)){
+				uomCode = cmSupplierItem.getPmUom().getUomCode();
+			}
+		}
+		System.out.println("uomCode :"+uomCode);
+		return uomCode;
+	}
 
 }
