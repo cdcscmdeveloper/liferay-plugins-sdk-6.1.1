@@ -3,9 +3,6 @@
  */
 package my.ep.web.bean.pm;
 
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmZone;
-
 /**
  * Search Bean for Support Document 
  * 
