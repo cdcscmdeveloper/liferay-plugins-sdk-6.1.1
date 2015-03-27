@@ -183,7 +183,7 @@
 							
 				</tr>
 				<th>&#160;</th>
-				<td>&#160;</td>
+			    <td>&#160;</td>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
@@ -221,7 +221,7 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<th>&#160;</th>
-			  <td>&#160;</td>
+			    <td>&#160;</td>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.paid.capital']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
@@ -374,7 +374,7 @@
 			</p:column>
 			
 			<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
-	             <p:commandLink partialSubmit="true"  disabled="#{!pmBasicCategory.brandNew }"
+	             <p:commandLink partialSubmit="true"  
 					process="@this" action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
 					update="groupdetailsId" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -662,14 +662,14 @@
 						
 						<ac:paginator for="dtlCategoryRestrId"></ac:paginator>						
 						<p:column headerText="#{lbl['lbl.pm.company.type']}" width="50%" >
-							<p:selectOneMenu  value="#{pmCategoryRestr.companyTypeId.parameterId}" required="true" label="#{lbl['lbl.pm.company.type']}" disabled="#{!pmBasicCategory.brandNew }" >
+							<p:selectOneMenu  value="#{pmCategoryRestr.companyTypeId.parameterId}" required="true" label="#{lbl['lbl.pm.company.type']}" >
 								   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						           <f:selectItems value="#{categoryBackingBean.getPopulateCompanyTypeList()}" var="compType" itemValue="#{compType.pmParameter.parameterId}" itemLabel="#{compType.codeName}"/>
 						      </p:selectOneMenu>
 							</p:column>
 							
 				<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
-	             <p:commandLink partialSubmit="true" disabled="#{!pmBasicCategory.brandNew }"
+	             <p:commandLink partialSubmit="true" 
 					process="@this" action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
 					update="dtlCategoryRestrId" >
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
