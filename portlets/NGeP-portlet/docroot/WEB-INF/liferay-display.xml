@@ -228,6 +228,7 @@
 		<portlet id="forceReplaceSupplierAdmin"></portlet>
 		<portlet id="reactivateBasicAccount"></portlet>
 		<portlet id="supplierBusinessNature"></portlet>
+		<portlet id="postsupplierregistration"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
