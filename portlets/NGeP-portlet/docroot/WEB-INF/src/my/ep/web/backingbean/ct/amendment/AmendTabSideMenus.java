@@ -77,7 +77,7 @@ public class AmendTabSideMenus {
 		  
 		if (menuWithDecision == null) {
 			menuWithDecision =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+					ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 		  
 		if (menuWithMeetings == null) {
