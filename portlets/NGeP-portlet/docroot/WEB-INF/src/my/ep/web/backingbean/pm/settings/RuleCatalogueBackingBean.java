@@ -742,11 +742,17 @@ public class RuleCatalogueBackingBean extends
 
 				PmConfigRuleValue baseValueToCompare = ruleType
 						.getConfigRuleValues().get(i);
-				if (baseValueToCompare.getRecordStatusFlg() == 0) {// if is
+				log.info(".............ruleType.getIsRangeValue() == "
+						+ ruleType.getIsRangeValue());
+				log.info(".............baseValueToCompare.isShowFlag()="
+						+ baseValueToCompare.isShowFlag());
+				if (baseValueToCompare.getRecordStatusFlg() == 0 || (ruleType.getIsRangeValue() == 1 && !baseValueToCompare.isShowFlag())) {// if is
 																	// inActive
 																	// one go to
 																	// next
-																	// record
+																	// record\
+	
+
 					continue;
 				}
 				log.info(".........................baseValueToCompare.getRuleValue()="
@@ -754,8 +760,14 @@ public class RuleCatalogueBackingBean extends
 				for (int j = i + 1; j <= (ruleType.getConfigRuleValues().size() - 1); j++) {
 					PmConfigRuleValue value = ruleType.getConfigRuleValues()
 							.get(j);
-					if (value.getRecordStatusFlg() == 0) {// if is inActive one
+					log.info(".............ruleType.getIsRangeValue() == "
+							+ ruleType.getIsRangeValue());
+					log.info(".............baseValueToCompare.isShowFlag()="
+							+ value.isShowFlag());
+					if (value.getRecordStatusFlg() == 0 || (ruleType.getIsRangeValue() == 1 && !baseValueToCompare.isShowFlag())) {// if is inActive one
 															// go to next record
+					
+
 						continue;
 					}
 					log.info(".........................second.value.getRuleValue()="
@@ -854,7 +866,7 @@ public class RuleCatalogueBackingBean extends
 			validationResult = !isDateOverlaped(firstRuleValue.getEffDate(),
 					firstRuleValue.getExpDate(), secondRuleValue.getEffDate(),
 					secondRuleValue.getExpDate());
-		} else if (validationType == '2') {// EffectiveDate +value validation
+		} else if (validationType == '2' || validationType == '3') {// EffectiveDate +value validation
 
 			if (RuleDataTypeId.getParameterCode().equalsIgnoreCase("c")) {
 				if (firstRuleValue.getCategoryDisplayValue().equals(
@@ -876,25 +888,25 @@ public class RuleCatalogueBackingBean extends
 				validationResult = true;
 			}
 
-		} else {// validationType == '3' , //EffectiveDate + value + Range
-				// validation
-			if (firstRuleValue.getRuleValue().equals(
-					secondRuleValue.getRuleValue())) {
-				isValuesEqual = true;
-			}
-			if (isValuesEqual) {
-				validationResult = !(isRangeOverlaped(
-						firstRuleValue.getFromValue(),
-						firstRuleValue.getToValue(),
-						secondRuleValue.getFromValue(),
-						secondRuleValue.getToValue()) && isDateOverlaped(
-						firstRuleValue.getEffDate(),
-						firstRuleValue.getExpDate(),
-						secondRuleValue.getEffDate(),
-						secondRuleValue.getExpDate()));
-			} else {
-				validationResult = true;
-			}
+//		} else {// validationType == '3' , //EffectiveDate + value + Range
+//				// validation
+//			if (firstRuleValue.getRuleValue().equals(
+//					secondRuleValue.getRuleValue())) {
+//				isValuesEqual = true;
+//			}
+//			if (isValuesEqual) {
+//				validationResult = !(isRangeOverlaped(
+//						firstRuleValue.getFromValue(),
+//						firstRuleValue.getToValue(),
+//						secondRuleValue.getFromValue(),
+//						secondRuleValue.getToValue()) && isDateOverlaped(
+//						firstRuleValue.getEffDate(),
+//						firstRuleValue.getExpDate(),
+//						secondRuleValue.getEffDate(),
+//						secondRuleValue.getExpDate()));
+//			} else {
+//				validationResult = true;
+//			}
 		}
 		return validationResult;
 	}
@@ -1679,6 +1691,12 @@ public class RuleCatalogueBackingBean extends
 				.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.get(index).getGroupValueId());
 		log.info("markIndex=" + markIndex);
+		
+		if(this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+				.get(markIndex).getRuleValue() == null || this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+				.get(markIndex).getRuleValue().isEmpty()){
+			throw new EpException(MessageConst.ERROR_770160);
+		}
 		if (this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.get(markIndex).getToValue() != null && !this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 						.get(markIndex).getRuleValue().isEmpty()) {
