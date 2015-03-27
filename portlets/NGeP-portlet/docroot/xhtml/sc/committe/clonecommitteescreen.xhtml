@@ -87,7 +87,7 @@
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 			<p:dataTable id="clonesearchCommitteid"
 				value="#{committeBackingBean.managedBean.cloneSearchQTDataModel}"
 				selection="#{committeBackingBean.managedBean.selectedCloneTender}"
@@ -112,7 +112,7 @@
 						value="#{committeBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.crtdt']}">
+				<p:column headerText="#{lbl['lbl.sc.crtdt']}">
 					<h:outputText value="#{scQt.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
