@@ -41,7 +41,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -1189,87 +1188,6 @@ public class QTBusinessOwnerBackingBean extends
 			detailSO = null;
 		}
 		return null;
-	}
-
-	/**
-	 * To creates the business owner from search Qtmaintanace Create
-	 * Quatation/Tender button. And redirect to BO creation screen..
-	 * 
-	 * @return the string
-	 */
-	public String createBusinessOwner() {
-		debugLogger("createBusinessOwner");
-		this.getManagedBean().setEditable(false);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(getManagedBean().getQt().getPmOrgProfile()
-				.getOrgProfileId());
-		IOrgProfileSO orgProfileSO = null;
-		IQTDetailSO detailSO = null;
-		try {
-			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileDtlByProfileId(reqDTO);
-			PmOrgProfile orgProfile = resDTO.getPmOrgProfile();
-
-			ScQt scQt = new ScQt();
-			// ScQt scQt = this.getManagedBean().getQt();
-			scQt.setPmOrgProfile(orgProfile);
-			scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			scQt.setMinistrySpecSecrataryId(new PmUser());
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-			quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			QuationTenderResDTO dto = detailSO
-					.retriveQTDetails(quationTenderReqDTO);
-			ScQtCommittee qtCommitte = new ScQtCommittee();
-			qtCommitte.setScQt(scQt);
-			setUserDetails(qtCommitte);
-			qtCommitte.setCommitteeActivities(null);
-			qtCommitte.setQtCommitteRemarks(null);
-			qtCommitte.setScQtMeetings(null);
-			ScCommittee committee = new ScCommittee();
-			PmStatus committeStatus = new PmStatus();
-			committeStatus.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
-			committee.setCommitteStatus(committeStatus);
-			committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO
-					.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO
-					.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
-			ParameterResDTO parameterResDTO = getParameterSO()
-					.retrieveParameterByTypeAndCode(parameterReqDTO);
-			committee.setCommitteeType(parameterResDTO.getPmParameter());
-			qtCommitte.setScCommittee(committee);
-			this.getManagedBean().setScQtCommittee(qtCommitte);
-			this.getManagedBean().setScCommitteeMemberList(
-					qtCommitte.getScCommittee().getScCommitteeMembers());
-			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
-			scQt.setQtStatus(status);
-
-			scQt.setQtNo(dto.getQtNo());
-			ScQtStatus qtStatus = new ScQtStatus();
-			qtStatus.setScQt(scQt);
-			qtStatus.setPmStatus(status);
-			qtStatus.setCurrent(true);
-			qtStatus.setDocType(QTConstants.DOCTYPE_QT);
-			List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
-			qtStatuses.add(qtStatus);
-			scQt.setScQtStatus(qtStatuses);
-			this.getManagedBean().setQt(scQt);
-			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
-					.getStatusId();
-			this.getManagedBean().setCurrentStatusId(currentStatus);
-			return "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml"
-					+ "?faces-redirect=true";
-		} finally {
-			orgProfileSO = null;
-			detailSO = null;
-		}
 	}
 	
 	/**
