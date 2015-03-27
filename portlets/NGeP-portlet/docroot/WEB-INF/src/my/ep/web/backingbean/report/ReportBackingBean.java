@@ -3108,9 +3108,9 @@ public class ReportBackingBean extends
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
-			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
+			lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
 			
-			lngUserId = (long)241765;//240610;//241765;//147038;// 241997;//213972;// 220152;
+			//lngUserId = (long)241765;//240610;//241765;//147038;// 241997;//213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
