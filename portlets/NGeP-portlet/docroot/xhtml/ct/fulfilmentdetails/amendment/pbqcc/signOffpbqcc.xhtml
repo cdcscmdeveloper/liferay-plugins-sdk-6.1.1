@@ -23,12 +23,11 @@
 			        update=":form:pqQcDecisionId"  listener="#{amendmentBackingBean.setPbQcDecisionValue}"></p:ajax>
 		    </p:selectOneMenu>
 		   
-		    <h:panelGroup>
-                <div style="height: 80px; vertical-align:top;">
-                      <h:outputText value="*" styleClass="mandatory" />
-                     <p:outputLabel for="justificationPbQCC" value="#{lbl['lbl.txt.remarks']}" />
-                </div>
-            </h:panelGroup>
+		   <h:panelGrid columns="2" style="float:right;">               
+            	<h:outputText value="*" styleClass="mandatory" />
+                    <p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
+               
+           </h:panelGrid>
             <h:panelGrid>
                <p:inputTextarea id="justificationPbQCC"   rows="4" disabled="#{isPrepareLoa
                or amendmentBackingBean.managedBean.disableFinalAmendDetails}"
