@@ -596,26 +596,6 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * Handle ptj name changed.
-	 * 
-	 * @param orgProfile
-	 *            the org profile
-	 */
-	public void handlePTJNameChanged(PmOrgProfile orgProfile) {
-		List<PmOrgProfile> orgProfileList = getManagedBean()
-				.getUserDivisionList();
-		if (null != orgProfileList) {
-			for (PmOrgProfile list : orgProfileList) {
-				if (list.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-					getManagedBean().setOrgProfile(list);
-				}
-			}
-		} else {
-			debugLogger("org profile list should not be empty");
-		}
-	}
-
-	/**
 	 * Goto qt search page.
 	 * 
 	 * @return the string
