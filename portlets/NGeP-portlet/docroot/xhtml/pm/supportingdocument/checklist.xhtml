@@ -78,7 +78,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somDocStatus" required="true"
 						label="#{lbl['lbl.pm.status']}"  disabled="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
-						<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+						<f:selectItems  value="#{supportDocBackingBean.getActiveAndInactiveStatusOptions()}"/>
 					</p:selectOneMenu>
 					<p:message id="somDocStatusMsg" for="somDocStatus" display="icon" />
 				</td>
