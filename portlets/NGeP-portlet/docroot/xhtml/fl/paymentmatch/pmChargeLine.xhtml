@@ -166,43 +166,44 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
+					<td><p:inputText size="17" disabled="true" 
+							value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
+					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.votFundCode}"
-							size="9" disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
+							size="9" disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
+					<td ><p:inputText
+							value="#{paymentMatchBackingBean.managedBean.prgActivityCode}"
+							size="9" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
 					<td><p:inputText
-							size="17" disabled="true" value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.gosodo']}" /></td>
+							value="#{paymentMatchBackingBean.managedBean.projectCode}"
+							size="9" disabled="true" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td> 
+					<td><p:inputText
+							value="#{paymentMatchBackingBean.managedBean.setiaCode}"
+							size="9" disabled="true" />
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td> 
+					<td>
+						<p:inputText value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.financingType,paymentMatchBackingBean.managedBean.financingTypeCode)}"
+							size="9" disabled="true" />
+					</td>		
+				</tr>
+				<tr>
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
 					<td><p:inputText
 							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
 				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.program.activiti']}" /></td>
-					<td><p:inputText
-							value="#{paymentMatchBackingBean.managedBean.prgActivityCode}"
-							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td>
-					<td><p:inputText
-							value="#{paymentMatchBackingBean.managedBean.projectCode}"
-							size="9" disabled="true" /></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.setia.subsetia']}" /></td>
-					<td><p:inputText
-							value="#{paymentMatchBackingBean.managedBean.setiaCode}"
-							size="9" disabled="true" /></td>
-					<td><p:inputText
-							value="#{paymentMatchBackingBean.managedBean.subSetiaCode}"
-							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td>
-					<td><p:inputText value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.financingType,paymentMatchBackingBean.managedBean.financingTypeCode)}"
-							size="9" disabled="true" /></td>
-
-				</tr>
-			</table>
+			</table>	
 		</h:panelGroup>
 	</p:panel>
 </ui:composition>
