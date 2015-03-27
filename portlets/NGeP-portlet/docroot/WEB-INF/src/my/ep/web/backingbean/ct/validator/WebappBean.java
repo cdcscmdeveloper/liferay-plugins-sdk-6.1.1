@@ -154,13 +154,13 @@ public class WebappBean {
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
     }
     public void validatePercentageNumber(FacesContext ctx, UIComponent fieldName, Object obj){
-    	Integer inputValue=(Integer)obj;
-    	String inputValueStr = inputValue.toString();
-    	inputValueStr=inputValueStr==null? "":inputValueStr;
-        if(!inputValueStr.isEmpty()){
+    	String inputValue=(String)obj;
+//    	String inputValueStr = inputValue.toString();
+    	inputValue=inputValue==null? "":inputValue;
+        if(!inputValue.isEmpty()){
            String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
            String pattern="^((100)|(\\d{0,2}))$";  
-          if(!inputValueStr.matches(pattern)){
+          if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
           }
         }
