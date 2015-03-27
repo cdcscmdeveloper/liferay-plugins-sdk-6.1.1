@@ -960,6 +960,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}
+		
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && getManagedBean().getAckFA() != null
+				  && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)
+				  && getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() == null){
+			throw new EpException(MessageConst.ERROR_100022, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.ct.bank.account.name", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+	
 		// Validation for amendment type
 		if (!getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
 				&& !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
