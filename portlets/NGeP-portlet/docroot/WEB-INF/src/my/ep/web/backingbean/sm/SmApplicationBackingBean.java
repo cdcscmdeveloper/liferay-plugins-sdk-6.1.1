@@ -8869,4 +8869,39 @@ public class SmApplicationBackingBean extends
 					.updateSupplierProfile(reqDTO);
 		}
 	}
+	
+	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
+		
+		log.info("pmCategoryL3.getCategoryName(): " + pmCategoryL3.getCategoryName());
+		
+		List<SmSupplierCategory> qtCategoryList = getManagedBean().getActiveCategoryList();
+		
+		if (qtCategoryList == null) {
+			qtCategoryList = new ArrayList<SmSupplierCategory>();
+			this.getManagedBean().setActiveCategoryList(qtCategoryList);
+		}
+		
+		SmSupplierCategory categ = new SmSupplierCategory();
+		categ.setRevNo(1);
+		// categ.setApprvrDecFlg(1);
+		// categ.setPoDecFlg(1);
+		categ.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+		if (getManagedBean().getSmAppl().getApplCategoryType()
+				.equalsIgnoreCase("S")) {
+			categ.setSpecialCategory(true);
+		}
+		categ.setSmAppl(getManagedBean().getSmAppl());
+		categ.setSupplierType(getManagedBean().getSmAppl()
+				.getSupplierType());
+		getManagedBean().setSelectedCategory(categ);
+		
+		categ.setPmCategoryL3(pmCategoryL3);
+		categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
+		categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2().getPmCategoryL1());
+		
+		getManagedBean().getActiveCategoryList().add(categ);
+		
+		log.info("getManagedBean().getActiveCategoryList(): " + getManagedBean().getActiveCategoryList());
+		
+	}
 }
