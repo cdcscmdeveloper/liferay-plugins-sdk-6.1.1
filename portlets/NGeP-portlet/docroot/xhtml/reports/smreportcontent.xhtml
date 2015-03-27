@@ -63,7 +63,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
 													itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
 											</p:selectOneMenu></td>
-										<td><p:message id="rptZoneMsg" for="Zone" display="icon" />
+										<td><p:message id="rptZoneMsg" for="Zone" display="icon"  autoUpdate="true" closable="true" showSummary="false"/>
 										</td>
 									</tr>
 								</table>
@@ -112,7 +112,7 @@
 											</p:selectOneMenu>
 										</td>
 										<td><p:message id="smManRegStatusMsg"
-												for="smManRegStatus" display="icon" /></td>
+												for="smManRegStatus" display="icon"  autoUpdate="true" closable="true" showSummary="false" /></td>
 									</tr>
 								</table>
 							</p:column>
@@ -158,7 +158,7 @@
 													itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
 											</p:selectOneMenu></td>
 										<td><p:message id="supplierTypeMsg" for="SupplierType"
-												display="icon" /></td>
+												display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -192,7 +192,7 @@
 													itemValue="#{lbl['lbl.rpt.both']}"></f:selectItem>
 											</p:selectOneMenu></td>
 										<td><p:message id="BothSupplierTypeMsg"
-												for="BothSupplierType" display="icon" /></td>
+												for="BothSupplierType" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -227,7 +227,7 @@
 												required="true" style="margin-top:5px;width:290px;">
 											</p:inputText></td>
 										<td><p:message id="CompanyNameMsg" for="CompanyName"
-												display="icon" /></td>
+												display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -264,7 +264,7 @@
 												required="true" style="margin-top:5px;width:290px;">
 											</p:inputText></td>
 										<td><p:message id="MOFRegNoMsg" for="MOFRegNo"
-												display="icon" /></td>
+												display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -301,7 +301,7 @@
 												required="true" style="margin-top:5px;width:290px;">
 											</p:inputText></td>
 										<td><p:message id="smApplicationNoMsg"
-												for="smApplicationNo" display="icon" /></td>
+												for="smApplicationNo" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -331,7 +331,7 @@
 												<f:selectItems value="#{reportBackingBean.smUPSSVOUserList}"></f:selectItems>
 											</p:selectOneMenu></td>
 										<td><p:message id="smSVOUserMsg" for="smSVOUser"
-												display="icon" /></td>
+												display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -384,7 +384,7 @@
 													itemValue="#{lbl['lbl.rpt.cmpltdrpt']}"></f:selectItem>
 											</p:selectOneMenu></td>
 										<td><p:message id="appStatusMsg" for="ApplicationStatus"
-												display="icon" /></td>
+												display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -462,7 +462,7 @@
 													itemValue="#{lbl['lbl.rpt.rpttyperejected']}"></f:selectItem>
 											</p:selectOneMenu></td>
 										<td><p:message id="smReportTypeMsg" for="ReportType"
-												display="icon" /></td>
+												display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -519,7 +519,7 @@
 					 			                      partialSubmit="true" update="@all"/>
 											</p:selectOneMenu></td>
 										<td><p:message id="RegistrationTypeMsg"
-												for="RegistrationType" display="icon" /></td>
+												for="RegistrationType" display="icon" autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -551,7 +551,7 @@
 													value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
 											</p:selectOneMenu></td>
 										<td><p:message id="smManStatByStateMsg"
-												for="smManStatByState" display="icon" /></td>
+												for="smManStatByState" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -600,7 +600,7 @@
 													process="@this" partialSubmit="true" update="ManDistrict" />
 											</p:selectOneMenu></td>
 										<td><p:message id="ManStateMsg" for="ManState"
-												display="icon" /></td>
+												display="icon" autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -645,7 +645,7 @@
 												<f:selectItems value="#{reportBackingBean.districtLst}"></f:selectItems>
 											</p:selectOneMenu></td>
 										<td><p:message id="ManDistrictMsg" for="ManDistrict"
-												display="icon" /></td>
+												display="icon" autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -672,7 +672,7 @@
 												<f:selectItems value="#{reportBackingBean.scYearList}"></f:selectItems>
 											</p:selectOneMenu></td>
 										<td><p:message id="MonthlyRptByYearMsg"
-												for="MonthlyRptByYear" display="icon" /></td>
+												for="MonthlyRptByYear" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></td>
 									</tr>
 								</table>
 							</p:column>
@@ -729,8 +729,7 @@
 										update="conslChild,conslSubChild" />
 								</p:selectOneMenu>
 								<p:message id="consultProjParCatCodeMsg"
-									for="consultProjParCatCode" showSummary="true"
-									showDetail="false" display="icon" />
+									for="consultProjParCatCode"  autoUpdate="true" closable="true" showSummary="false" display="icon" />
 							</p:column>
 
 
@@ -752,7 +751,7 @@
 										update="conslSubChild" />
 								</p:selectOneMenu>
 								<p:message id="conslChildMsg" for="conslChild"
-									showSummary="true" showDetail="false" display="icon" />
+									showSummary="true" showDetail="false" display="icon"  autoUpdate="true" closable="true" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
@@ -773,7 +772,7 @@
 										update="conslSubChild" />
 								</p:selectOneMenu>
 								<p:message id="conslSubChildMsg" for="conslSubChild"
-									showSummary="true" showDetail="false" display="icon" />
+									showSummary="true" showDetail="false" display="icon"  autoUpdate="true" closable="true" />
 							</p:column>
 						</p:dataTable>
 						<p:spacer height="2px;" />
@@ -832,7 +831,7 @@
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryFromDateMsg"
-							for="MandatoryFromDate" display="icon" /></TD>
+							for="MandatoryFromDate" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							style="width:145px;" /></TD>
 					<TD><p:calendar label="#{lbl['lbl.rpt.todate']}"
@@ -843,7 +842,7 @@
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryToDateMsg" for="MandatoryToDate"
-							display="icon" /></TD>
+							display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 				</TR>
 			</TABLE>
 		</c:if>
@@ -865,7 +864,7 @@
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 						</p:selectOneMenu></TD>
 					<TD><p:message id="MandatoryFromYearMsg"
-							for="MandatoryFromYear" display="icon" /></TD>
+							for="MandatoryFromYear" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 					<TD style="width:145px;"><p:outputLabel value="#{lbl['lbl.rpt.createdTo']}"
 							 /><p:outputLabel value="*" styleClass="mandatory"
 							 /></TD>
@@ -876,7 +875,7 @@
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 						</p:selectOneMenu></TD>
 					<TD><p:message id="MandatoryToYearMsg" for="MandatoryToYear"
-							display="icon" /></TD>
+							display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 				</TR>
 			</TABLE>
 		</c:if>
@@ -898,7 +897,7 @@
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryCreatedFromDateMsg"
-							for="MandatoryCreatedFromDate" display="icon" /></TD>
+							for="MandatoryCreatedFromDate" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							style="width:145px;" /></TD>
 					<TD><p:calendar label="#{lbl['lbl.rpt.todate']}"
@@ -909,7 +908,7 @@
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryCreatedToDateMsg" for="MandatoryCreatedToDate"
-							display="icon" /></TD>
+							display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 				</TR>
 			</TABLE>
 		</c:if>
@@ -931,7 +930,7 @@
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryReceivedFromDateMsg"
-							for="MandatoryReceivedFromDate" display="icon" /></TD>
+							for="MandatoryReceivedFromDate" display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							style="width:145px;" /></TD>
 					<TD><p:calendar label="#{lbl['lbl.rpt.todate']}"
@@ -942,7 +941,7 @@
 							partialSubmit="true" process="@form">
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryReceivedToDateMsg" for="MandatoryReceivedToDate"
-							display="icon" /></TD>
+							display="icon"  autoUpdate="true" closable="true" showSummary="false"/></TD>
 				</TR>
 			</TABLE>
 		</c:if>
