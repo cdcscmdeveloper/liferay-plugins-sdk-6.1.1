@@ -15,7 +15,7 @@
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 				columns="2" columnClasses="columnWidth20">
 
-				<h:outputLabel value="#{lbl['lbl.so.title']}"/>
+				<h:outputLabel value="#{lbl['lbl.sc.title']}"/>
 				<p:inputText value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.qtTitle}" size="100" />
 
 			</h:panelGrid>
@@ -23,27 +23,27 @@
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 				columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
-				<h:outputLabel value="#{lbl['lbl.so.qtnno']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.qtnno']}" />
 				<p:inputText id="clnqtnno" value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.qtNo}" />
 
 
-				<h:outputLabel value="#{lbl['lbl.so.procmode']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.procmode']}" />
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.procurementMode}">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
 				</p:selectOneMenu>
 
 
-				<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.creatdtfrom']}" />
 				<p:calendar value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 					id="clncrdateFrm" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 
-				<h:outputLabel value="#{lbl['lbl.so.creatdtto']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.creatdtto']}" />
 				<p:calendar value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 					id="clncrdateTo" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 
 
-				<h:outputLabel value="#{lbl['lbl.so.status']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.status']}" />
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.qtStatus}"  style="margin-top:5px;">
 					<f:selectItem itemLabel="Select One" itemValue="" />
@@ -75,7 +75,7 @@
 
 
 					
-					<p:column headerText="#{lbl['lbl.so.qtnno']}">
+					<p:column headerText="#{lbl['lbl.sc.qtnno']}">
 
 						<h:outputText value="#{tenders.qtNo}" />
 
@@ -83,7 +83,7 @@
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.title']}">
+					<p:column headerText="#{lbl['lbl.sc.title']}">
 						<h:outputText value="#{tenders.qtTitle}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.so.procmode']}">

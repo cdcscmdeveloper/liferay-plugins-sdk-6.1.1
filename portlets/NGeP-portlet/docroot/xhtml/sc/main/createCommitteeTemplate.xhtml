@@ -96,7 +96,7 @@
 
 						<tr>
 							<td valign="top"><p:outputLabel
-									value="#{lbl['lbl.so.title']}" /></td>
+									value="#{lbl['lbl.sc.title']}" /></td>
 							<td colspan="3"><p:inputText
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtTitle}"
 									style="width:670px;" maxlength="100" /></td>
@@ -108,7 +108,7 @@
 							<td><p:inputText style="width:210px; margin-bottom:5px;" maxlength="21"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}" /></td>
 
-							<td><h:outputLabel value="#{lbl['lbl.so.procmode']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.procmode']}" /></td>
 							<td><p:selectOneMenu id="procurementid"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.procurementMode}"
 									style="width:210px;margin-bottom: 5px;">
@@ -119,16 +119,16 @@
 						</tr>
 
 						<tr>
-							<td><h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.creatdtfrom']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									id="crdateFrom" showOn="button"  readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<p:ajax event="dateSelect" update="crdateTo" />
 								</p:calendar></td>
-							<td><h:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.creatdtto']}" /></td>
 							<td><p:calendar id="crdateTo" showOn="button"
-									label="#{lbl['lbl.so.creatdtto']}"
+									label="#{lbl['lbl.sc.creatdtto']}"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toCreatedDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									readonlyInput="true"
@@ -140,14 +140,14 @@
 						</tr>
 
 						<tr>
-							<td><h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
 									id="pbdateFrom" showOn="button" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<p:ajax event="dateSelect" update="pbdateTo" />
 								</p:calendar></td>
-							<td><h:outputLabel value="#{lbl['lbl.so.pbldtto']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
 							<td><p:calendar id="pbdateTo" showOn="button"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toPublishDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
@@ -160,14 +160,14 @@
 						</tr>
 
 						<tr>
-							<td><h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
 									id="cldateFrom" showOn="button" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
 									<p:ajax event="dateSelect" update="cldateTo" />
 								</p:calendar></td>
-							<td><h:outputLabel value="#{lbl['lbl.so.clsdtto']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
 							<td><p:calendar id="cldateTo" showOn="button"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toClosingDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
@@ -180,7 +180,7 @@
 						</tr>
 
 						<tr>
-							<td><h:outputLabel value="#{lbl['lbl.so.status']}" /></td>
+							<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 							<td><p:selectOneMenu
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtStatus}"
 									style="width: 210px;margin-bottom: 5px;">
@@ -232,7 +232,7 @@
 						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtNo}" />
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.title']}"
+					<p:column headerText="#{lbl['lbl.sc.title']}"
 						style="width:15%;white-space: normal;"
 						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 

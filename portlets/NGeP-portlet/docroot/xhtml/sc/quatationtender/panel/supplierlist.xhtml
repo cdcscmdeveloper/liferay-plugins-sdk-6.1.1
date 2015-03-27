@@ -33,7 +33,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.so.status']}">
+				<p:column headerText="#{lbl['lbl.sc.status']}">
 					<h:outputText
 						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qtSupplier.supplier.smMofAccounts[0].expDate) eq 'true'}"
 						value="Active" />
