@@ -71,7 +71,7 @@
 				<h:outputText
 					value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.bsvStatus.statusId)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.action']}"
+			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:5%;white-space: normal;text-align: center;">
 				<p:commandLink
 					rendered="#{QTStatusConst.BSV_COMPLETED ne briefingdtls.bsvStatus.statusId}"
@@ -190,7 +190,7 @@
 							value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(sitevisitdtls.bsvStatus.statusId)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.action']}"
+					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:5%;white-space: normal;text-align: center;">
 						<p:commandLink
 							rendered="#{QTStatusConst.BSV_COMPLETED ne sitevisitdtls.bsvStatus.statusId}"
