@@ -3116,6 +3116,16 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 	}
 
+	public void approveAllCategoryCodesByPOorApprover() {
+		for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
+			if (getManagedBean().isPoUser()) {
+				cat.setPoDecFlg(1);
+			} else if(getManagedBean().isApproverUser()){
+				cat.setApprvrDecFlg(1);
+			}
+		}
+	}
+
 	/**
 	 * Delete selected category codes from the SmSupplierCategory list of the
 	 * application.
