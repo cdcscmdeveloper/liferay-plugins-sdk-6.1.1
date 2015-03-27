@@ -345,7 +345,10 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				
 				List <PmDocumentRestr> checklistRestriction = new ArrayList<PmDocumentRestr>();
 				for(PmDocumentRestr pmDocumentRestr:pmDocument.getPmDocumentRestrs()){
-					checklistRestriction.add(pmDocumentRestr);
+					if(pmDocument.isByProcureCat() && pmDocumentRestr.getProcurementCatCode()!=null
+							&& DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){	
+						checklistRestriction.add(pmDocumentRestr);
+					}
 				}
 				this.getManagedBean().setCheckListRestrictions(checklistRestriction);
 
@@ -611,6 +614,60 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 //					isUnique = false;
 //				}
 				
+			}
+		}
+		return isUnique;
+	}
+	
+	
+	/**
+	 *  LOV PostListener - add the selected certbody to the pmCertBodies list.
+	 *  @param pmCertBodies
+	 * **/
+	public void updateCertBody(List<PmCertBody> pmCertBodies){
+		log.info("updateCertBody");
+		if(pmCertBodies!=null){
+			if(this.getManagedBean().getCertBodyRestrictions()==null){
+				this.getManagedBean().setCertBodyRestrictions(new ArrayList<PmDocumentRestr>());
+			}
+			if(isUniqueCertBody()){
+				PmDocumentRestr certBodyRestr = null;
+				for(PmCertBody pmCertBody: pmCertBodies){
+					certBodyRestr = new PmDocumentRestr();
+					certBodyRestr.setPmCertBody(pmCertBody);
+					this.getManagedBean().getCertBodyRestrictions().add(certBodyRestr);
+				}
+				this.getManagedBean().getSelectedCertBodies().clear();
+			}else{
+				throw new EpException(MessageConst.ERROR_770159);
+			}
+		}
+	}
+	
+	/**
+	 * check if the selected certbody existed in the pmCertBodies list.
+	 * @return boolean
+	 * **/
+	private boolean isUniqueCertBody(){
+		log.info("isUniqueCertBody");
+		boolean isUnique = true;
+		if(this.getManagedBean().getSelectedCertBodies()!=null 
+				&& !this.getManagedBean().getSelectedCertBodies().isEmpty()){
+			if(this.getManagedBean().getCertBodyRestrictions()!=null && !this.getManagedBean().getCertBodyRestrictions().isEmpty()){
+				List <Long> certBodyId = new ArrayList<Long>();
+				
+				for(PmDocumentRestr pmDocumentRestr: this.getManagedBean().getCertBodyRestrictions()){
+					if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){
+						certBodyId.add(pmDocumentRestr.getPmCertBody().getCertBodyId());
+					}
+				}	
+			
+				for(PmCertBody pmCertBody: this.getManagedBean().getSelectedCertBodies()){
+					if(certBodyId.contains(pmCertBody.getCertBodyId())){
+						isUnique = false;
+						break;
+					}
+				}
 			}
 		}
 		return isUnique;
@@ -1062,11 +1119,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					pmDocument.setByProcureCat(true);
 				}
 			}
-		}else{
-			if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
-				pmDocument.setByProcureCat(false);
-			}
 		}
+//		else{
+//			if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
+//				pmDocument.setByProcureCat(false);
+//			}
+//		}
 	}
 	/**
 	 * validate all restrictions
@@ -1339,6 +1397,99 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		
 	
 	}
+	
+	
+	/**
+	 * This method used to trigger uncheck action and set remove existing item in to list for update later.
+	 * @param index
+	 * **/
+	public void checkDocumentRestrictions(int index){
+		if(getManagedBean().getDeleteRestrictions() == null){
+			getManagedBean().setDeleteRestrictions(new ArrayList<PmDocumentRestr>());
+		}
+		
+		int tabIndex = index - 1;		
+		if(tabIndex == 0 && !getManagedBean().getSelectedDocument().isByAppType()){
+			if(getManagedBean().getAppTypeRestrictions() !=null &&
+					!getManagedBean().getAppTypeRestrictions().isEmpty()){
+				for(PmDocumentRestr documentRestr : getManagedBean().getAppTypeRestrictions()){
+					if(!documentRestr.isBrandNew()){
+						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(documentRestr);
+					}
+				}
+				getManagedBean().getAppTypeRestrictions().clear();
+			}		
+		}else if(tabIndex == 1 && !getManagedBean().getSelectedDocument().isByCompType()){
+			if(getManagedBean().getComTypeRestrictions() !=null &&
+					!getManagedBean().getComTypeRestrictions().isEmpty()){
+				for(PmDocumentRestr documentRestr : getManagedBean().getComTypeRestrictions()){
+					if(!documentRestr.isBrandNew()){
+						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(documentRestr);
+					}
+				}
+				getManagedBean().getComTypeRestrictions().clear();
+			}
+		}else if(tabIndex == 2 && !getManagedBean().getSelectedDocument().isBySupplierType()){
+			if(getManagedBean().getSuppTypeRestrictions() !=null &&
+					!getManagedBean().getSuppTypeRestrictions().isEmpty()){
+				for(PmDocumentRestr documentRestr : getManagedBean().getSuppTypeRestrictions()){
+					if(!documentRestr.isBrandNew()){
+						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(documentRestr);
+					}
+				}
+				getManagedBean().getSuppTypeRestrictions().clear();
+			}
+		}else if(tabIndex == 3 && !getManagedBean().getSelectedDocument().isByCategory()){
+			if(getManagedBean().getCategoryRestrictions() !=null &&
+					!getManagedBean().getCategoryRestrictions().isEmpty()){
+				for(PmDocumentRestr documentRestr : getManagedBean().getCategoryRestrictions()){
+					if(!documentRestr.isBrandNew()){
+						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(documentRestr);
+					}
+				}
+				getManagedBean().getCategoryRestrictions().clear();
+			}
+		}else if(tabIndex == 4 && !getManagedBean().getSelectedDocument().isByCertBody()){
+			if(getManagedBean().getCertBodyRestrictions() !=null &&
+					!getManagedBean().getCertBodyRestrictions().isEmpty()){
+				for(PmDocumentRestr documentRestr : getManagedBean().getCertBodyRestrictions()){
+					if(!documentRestr.isBrandNew()){
+						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(documentRestr);
+					}
+				}
+				getManagedBean().getCertBodyRestrictions().clear();
+			}
+		}
+		
+		updateTabSelectedIndex(index);
+	}
+	
+	/**
+	 * update the tab index after for checkbox action
+	 * @param index
+	 * **/
+	public void updateTabSelectedIndex(int index){
+		defaultTab(getManagedBean().getSelectedDocument());
+		
+		int tabIndex = index - 1;
+		if(tabIndex == 0 && getManagedBean().getSelectedDocument().isByAppType()){
+			getManagedBean().setSelectedTabIndex(tabIndex);			
+		}else if(tabIndex == 1 && getManagedBean().getSelectedDocument().isByCompType()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}else if(tabIndex == 2 && getManagedBean().getSelectedDocument().isBySupplierType()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}else if(tabIndex == 3 && getManagedBean().getSelectedDocument().isByCategory()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}else if(tabIndex == 4 && getManagedBean().getSelectedDocument().isByCertBody()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}
+		
+	}
 
 	
 	/**
@@ -1354,22 +1505,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				|| StringUtils.isBlank(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
 			throw new EpException(MessageConst.ERROR_770083);
 		}
-//		DocumentReqDTO reqDTO = new DocumentReqDTO();
-//		reqDTO.setDocCategoryCode(getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode());
-//		reqDTO.setDocName(getManagedBean().getSupportDocSearchBean().getDocName());		
-//		reqDTO.setAppTypeId(getManagedBean().getSupportDocSearchBean().getAppTypeParam());
-//		reqDTO.setCompanyTypeId(getManagedBean().getSupportDocSearchBean().getComTypeParam());
-//		reqDTO.setSupplierTypeId(getManagedBean().getSupportDocSearchBean().getSuppTypeParam());
-//		reqDTO.setCategoryName(getManagedBean().getSupportDocSearchBean().getBusinessCategory());
-//		reqDTO.setZoneId(getManagedBean().getSupportDocSearchBean().getPmZone());
-//		reqDTO.setProcurementCatId(getManagedBean().getSupportDocSearchBean().getProcureCatParam());
-//		reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean().getDocStatus());
-//		reqDTO.setCertBodyName(getManagedBean().getSupportDocSearchBean().getCertBodyName());
-//		
-//		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
-//		DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
-//		
-//		getManagedBean().setPmDocumentResultList(resDTO.getDocumentList());
 		pmDocumentDataModel.reloadData();
 		log.info("searchDocument - End");
 		
@@ -1565,140 +1700,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			return null;
 		}
 	}
-	
-	/**
-	 * This method used to trigger uncheck action and set remove existing item in to list for update later.
-	 * **/
-	public void checkDocumentRestrictions(int index){
-		if(getManagedBean().getDeleteRestrictions() == null){
-			getManagedBean().setDeleteRestrictions(new ArrayList<PmDocumentRestr>());
-		}
-		
-		int tabIndex = index - 1;		
-		if(tabIndex == 0 && !getManagedBean().getSelectedDocument().isByAppType()){
-			if(getManagedBean().getAppTypeRestrictions() !=null &&
-					!getManagedBean().getAppTypeRestrictions().isEmpty()){
-				for(PmDocumentRestr documentRestr : getManagedBean().getAppTypeRestrictions()){
-					if(!documentRestr.isBrandNew()){
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
-					}
-				}
-				getManagedBean().getAppTypeRestrictions().clear();
-			}		
-		}else if(tabIndex == 1 && !getManagedBean().getSelectedDocument().isByCompType()){
-			if(getManagedBean().getComTypeRestrictions() !=null &&
-					!getManagedBean().getComTypeRestrictions().isEmpty()){
-				for(PmDocumentRestr documentRestr : getManagedBean().getComTypeRestrictions()){
-					if(!documentRestr.isBrandNew()){
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
-					}
-				}
-				getManagedBean().getComTypeRestrictions().clear();
-			}
-		}else if(tabIndex == 2 && !getManagedBean().getSelectedDocument().isBySupplierType()){
-			if(getManagedBean().getSuppTypeRestrictions() !=null &&
-					!getManagedBean().getSuppTypeRestrictions().isEmpty()){
-				for(PmDocumentRestr documentRestr : getManagedBean().getSuppTypeRestrictions()){
-					if(!documentRestr.isBrandNew()){
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
-					}
-				}
-				getManagedBean().getSuppTypeRestrictions().clear();
-			}
-		}else if(tabIndex == 3 && !getManagedBean().getSelectedDocument().isByCategory()){
-			if(getManagedBean().getCategoryRestrictions() !=null &&
-					!getManagedBean().getCategoryRestrictions().isEmpty()){
-				for(PmDocumentRestr documentRestr : getManagedBean().getCategoryRestrictions()){
-					if(!documentRestr.isBrandNew()){
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
-					}
-				}
-				getManagedBean().getCategoryRestrictions().clear();
-			}
-		}else if(tabIndex == 4 && !getManagedBean().getSelectedDocument().isByCertBody()){
-			if(getManagedBean().getCertBodyRestrictions() !=null &&
-					!getManagedBean().getCertBodyRestrictions().isEmpty()){
-				for(PmDocumentRestr documentRestr : getManagedBean().getCertBodyRestrictions()){
-					if(!documentRestr.isBrandNew()){
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
-					}
-				}
-				getManagedBean().getCertBodyRestrictions().clear();
-			}
-		}
-		
-		updateTabSelectedIndex(index);
-	}
-	
-	
-	public void updateTabSelectedIndex(int index){
-		defaultTab(getManagedBean().getSelectedDocument());
-		
-		int tabIndex = index - 1;
-		if(tabIndex == 0 && getManagedBean().getSelectedDocument().isByAppType()){
-			getManagedBean().setSelectedTabIndex(tabIndex);			
-		}else if(tabIndex == 1 && getManagedBean().getSelectedDocument().isByCompType()){
-			getManagedBean().setSelectedTabIndex(tabIndex);
-		}else if(tabIndex == 2 && getManagedBean().getSelectedDocument().isBySupplierType()){
-			getManagedBean().setSelectedTabIndex(tabIndex);
-		}else if(tabIndex == 3 && getManagedBean().getSelectedDocument().isByCategory()){
-			getManagedBean().setSelectedTabIndex(tabIndex);
-		}else if(tabIndex == 4 && getManagedBean().getSelectedDocument().isByCertBody()){
-			getManagedBean().setSelectedTabIndex(tabIndex);
-		}
-		
-	}
-	
-	public void updateCertBody(List<PmCertBody> pmCertBodies){
-		log.info("updateCertBody");
-		if(pmCertBodies!=null){
-			if(this.getManagedBean().getCertBodyRestrictions()==null){
-				this.getManagedBean().setCertBodyRestrictions(new ArrayList<PmDocumentRestr>());
-			}
-			if(isUniqueCertBody()){
-				PmDocumentRestr certBodyRestr = null;
-				for(PmCertBody pmCertBody: pmCertBodies){
-					certBodyRestr = new PmDocumentRestr();
-					certBodyRestr.setPmCertBody(pmCertBody);
-					this.getManagedBean().getCertBodyRestrictions().add(certBodyRestr);
-				}
-				this.getManagedBean().getSelectedCertBodies().clear();
-			}else{
-				throw new EpException(MessageConst.ERROR_770159);
-			}
-		}
-	}
-	
-	private boolean isUniqueCertBody(){
-		log.info("isUniqueCertBody");
-		boolean isUnique = true;
-		if(this.getManagedBean().getSelectedCertBodies()!=null 
-				&& !this.getManagedBean().getSelectedCertBodies().isEmpty()){
-			if(this.getManagedBean().getCertBodyRestrictions()!=null && !this.getManagedBean().getCertBodyRestrictions().isEmpty()){
-				List <Long> certBodyId = new ArrayList<Long>();
-				
-				for(PmDocumentRestr pmDocumentRestr: this.getManagedBean().getCertBodyRestrictions()){
-					if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){
-						certBodyId.add(pmDocumentRestr.getPmCertBody().getCertBodyId());
-					}
-				}	
-			
-				for(PmCertBody pmCertBody: this.getManagedBean().getSelectedCertBodies()){
-					if(certBodyId.contains(pmCertBody.getCertBodyId())){
-						isUnique = false;
-						break;
-					}
-				}
-			}
-		}
-		return isUnique;
-	}
-	
 	
 	/**
 	 * The method used for generating a list of available display type of status
