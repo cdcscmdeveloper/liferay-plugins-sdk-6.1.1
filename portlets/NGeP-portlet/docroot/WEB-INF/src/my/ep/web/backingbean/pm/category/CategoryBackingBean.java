@@ -33,7 +33,6 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -495,13 +494,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		this.getManagedBean().getPmCategoryL3();
 		
-		if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory()!=null
-				&& this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()>0 ){
-			for(PmBasicCategory pmBasicCategory:this.getManagedBean().getPmCategoryL3().getPmBasicCategory())
-			{
-				pmBasicCategory.setBrandNew(false);
-			}
-		}
+		
 	}
 	
 	/**
@@ -525,13 +518,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setSearchField(searchField);
 		this.getManagedBean().setSearchOperator(searchOperator);
 		
-		if(this.getManagedBean().getPmCategoryL3().getPmMachineCategory()!=null 
-				&& this.getManagedBean().getPmCategoryL3().getPmMachineCategory().size()>0){
-			for(PmMachineCategory pmMachineCategory:this.getManagedBean().getPmCategoryL3().getPmMachineCategory())
-			{
-				pmMachineCategory.setBrandNew(false);
-			}
-		}
 	}
 	
 	/**
@@ -919,34 +905,37 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			
 			//if not category restc, remove exisitng restr
-			if(!this.getManagedBean().getPmCategoryL3().isByCompType() && 
-					this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs() != null && 
-						this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size() > 0){
+			if(this.getManagedBean().getDeletedpmRestrCategory()!=null  && 
+					this.getManagedBean().getDeletedpmRestrCategory().size() > 0){
 				log.info("*******NOT COMPANY RESTRICT*********");
-				
+				CategoryCodeReqDTO categoryCodeReqDTO = new CategoryCodeReqDTO();
 				//this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().clear();
-				for (PmCategoryRestr categoryRestr : 
-									 this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()) {
-					categoryRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-				}
 				
+				for (PmCategoryRestr categoryRestr : 
+					this.getManagedBean().getDeletedpmRestrCategory()) {
+				
+					categoryRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					categoryCodeReqDTO.setPmCategoryRestr(categoryRestr);
+					categoryCodeSO.saveRestrCategory(categoryCodeReqDTO);
+				}
+
 			}
 			
 			//remove basic category if any
-			log.info("this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
-			if(this.getManagedBean().getSelectedBasicCategory() != null && !this.getManagedBean().getSelectedBasicCategory().isEmpty()) {
+			/*log.info("this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());*/
+			
+			if(this.getManagedBean().getDeletedpmBasicCategory()!=null &&
+					 this.getManagedBean().getDeletedpmBasicCategory().size()>0){
+				
 				CategoryCodeReqDTO categoryCodeReqDTO = new CategoryCodeReqDTO();
-				for(PmBasicCategory pmBasicCategory: this.getManagedBean().getSelectedBasicCategory()) {
-					
+				
+				for(PmBasicCategory pmBasicCategory:this.getManagedBean().getDeletedpmBasicCategory())
+				{
 					pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					categoryCodeReqDTO.setPmBasicCategory(pmBasicCategory);
-					categoryCodeSO.deleteBasicCategory(categoryCodeReqDTO);
-					
-					//this.getManagedBean().getPmCategoryL3().getPmBasicCategory().remove(pmBasicCategory);
-					
-					//reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
-					//categoryCodeSO.saveSubDivision(reqDTO);
+					categoryCodeSO.saveBasicCategory(categoryCodeReqDTO);
 				}
+
 			}
 			
 			//remove machine category if any
@@ -956,8 +945,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				for(PmMachineCategory pmMachineCategory: this.getManagedBean().getDeletedpmMachineCategory()) {
 					
 					pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-					categoryCodeReqDTO.setPmMachineCategoryId(pmMachineCategory.getMachineCategoryId());
-					categoryCodeSO.deleteMachineCategory(categoryCodeReqDTO);
+					categoryCodeReqDTO.setPmMachineCategory(pmMachineCategory);
+					categoryCodeSO.saveMachineCategory(categoryCodeReqDTO);
 				}
 			}
 			
@@ -966,6 +955,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				reset();
 				
 				if (this.getManagedBean().isNewCategory()){
 					this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
@@ -1032,7 +1022,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				//categoryCodeSO.deleteBasicCategory(reqDTO);
 				
 				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().remove(pmBasicCategory);
-				
+				if (!pmBasicCategory.isBrandNew()) {
+					pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					if (this.getManagedBean().getDeletedpmBasicCategory() == null) {
+						this.getManagedBean().setDeletedpmBasicCategory(new ArrayList<PmBasicCategory>());
+					}
+					this.getManagedBean().getDeletedpmBasicCategory().add(pmBasicCategory);
+				}
 				//reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				//categoryCodeSO.saveSubDivision(reqDTO);
 		}
@@ -1060,6 +1056,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				if (!pmMachineCategory.isBrandNew()) {
 					pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					
+					if (this.getManagedBean().getDeletedpmMachineCategory() == null) {
+						this.getManagedBean().setDeletedpmMachineCategory(new ArrayList<PmMachineCategory>());
+					}
 					this.getManagedBean().getDeletedpmMachineCategory().add(pmMachineCategory);
 				}
 				
@@ -1385,6 +1385,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedLOV()) {
 				
 				PmBasicCategory pmBasicCategory = new PmBasicCategory();
+				
+				pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				
 				pmBasicCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				pmBasicCategory.setBasicCategoryL3(pmCategoryL3.getCategoryL3Id());
 				pmBasicCategory.setBasicCategoryL2(pmCategoryL3.getPmCategoryL2().getCategoryL2Id());
@@ -1432,6 +1435,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			for(PmMachine pmMachine: this.getManagedBean().getSelectedpmMachine()) {
 				
 				PmMachineCategory pmMachineCategory = new PmMachineCategory();
+				pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				pmMachineCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				
 				//parameter
@@ -1720,7 +1724,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * Reset.
 	 */
 	public void reset() {
-		
+		this.getManagedBean().setDeletedpmBasicCategory(null);
+		this.getManagedBean().setDeletedpmMachineCategory(null);
+		this.getManagedBean().setDeletedpmRestrCategory(null);
 	}
 	
 	/**
@@ -1786,16 +1792,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		restr.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 		restr.setCompanyTypeId(new PmParameter());
+		restr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 		
-		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null
-				&& this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size()>0)
-		{
-			for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs())
-			{
-				pmCategoryRestr.setBrandNew(false);
-			}
-		}
-		restr.setBrandNew(true);
 		this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().add(restr);
 		
 		
@@ -1813,6 +1811,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		/*if(this.getManagedBean().getSelectedPmCategoryRestr().size() > 0){
 			for(PmCategoryRestr restrc : this.getManagedBean().getSelectedPmCategoryRestr()){*/
 				this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().remove(pmCategoryRestr);
+				if (!pmCategoryRestr.isBrandNew()) {
+					pmCategoryRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					if (this.getManagedBean().getDeletedpmRestrCategory() == null) {
+						this.getManagedBean().setDeletedpmRestrCategory(new ArrayList<PmCategoryRestr>());
+					}
+					this.getManagedBean().getDeletedpmRestrCategory().add(pmCategoryRestr);
+				}
 			/*}
 		}*/
 	}
