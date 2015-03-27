@@ -281,7 +281,7 @@ public class SalutationBackingBean extends
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.INFO_770091, new String[] {
+											MessageConst.INFO_776001, new String[] {
 													resDTO.getSalutation().getSalutationCode(),
 													resDTO.getSalutation().getSalutationCode()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -291,7 +291,7 @@ public class SalutationBackingBean extends
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.INFO_770092, new String[] {
+											MessageConst.INFO_776002, new String[] {
 													resDTO.getSalutation().getSalutationCode(),
 													resDTO.getSalutation().getSalutationCode()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
