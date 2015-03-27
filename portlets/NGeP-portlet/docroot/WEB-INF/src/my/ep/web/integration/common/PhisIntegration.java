@@ -1,6 +1,5 @@
 package my.ep.web.integration.common;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +48,7 @@ import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
+import my.ep.web.integration.phis.masterdatamateriainfo.PHISMasterDataMaterialInfomationPortTypeProxy;
 import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type;
@@ -59,15 +59,22 @@ import my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /*
-* @ Ganga prasad
+* @ Ganga prasade
 */
 public class PhisIntegration {
 	
-	public static void main(String[] args) throws IOException {
-		PhisIntegration test = new PhisIntegration();
-		//test.creatteFilesforPHIS();
-		//test.createFileforSSTInformation();
-	}
+//	public static void main(String[] args) throws IOException {
+//		PhisIntegration test = new PhisIntegration();
+//		test.createFilesforPHIS();
+//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+//		gfmasIntegration.masterDataVendorGfmasInbound();
+//		gfmasIntegration.votGfmasInbound();
+//		gfmasIntegration.masterDataMaterialInfoGfmas();
+//		test.masterDataMaterialInfoPHIS();
+//		gfmasIntegration.sstInformationGfmas();
+//		EperundingIntegration eperundingIntegration = new EperundingIntegration();
+//		eperundingIntegration.createFilesforEperunding();
+//	}
 	IVotFundSO votFundSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IVotFundSO.class);
@@ -208,9 +215,10 @@ public class PhisIntegration {
 			String filePath = IntegrationConstants.FILE_PATH;
 
 			// calling method to save data in files
-			System.out.println("before ");
 			utility.createPhisFileInLocal(itemTypes, mColors, mMeasures,mBrands,mClasses, filePath);
-			System.out.println("after..");
+			
+//			utility.setMasterDataMaterialInfo(resDTO.getCmSupplierItemsList());
+			
 
 		}else{
 		System.out.println("not available.");
@@ -298,7 +306,6 @@ public class PhisIntegration {
 
 	public void votFund() {
 
-		
 		VotFundReqDTO reqDTO = new VotFundReqDTO();		
 		Date date = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -525,9 +532,33 @@ public class PhisIntegration {
 
 	}
 	
-	public void masterDataMaterialInfoPHIS(List<MasterDataMaterialInfo> materialInfoList){/*
+	public void masterDataMaterialInfoPHIS(){
 
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateInString = "12-03-2015";
+		Date date = null;
+		try {
+			date = sdf.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		reqDTO.setCreateDate(date);
+		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
+		CodificationResDTO resDTO = codificationSO
+				.searchItemByCreateDate(reqDTO);
 		
+		List<MasterDataMaterialInfo> materilInfoList = null;
+		FileUtility fileUtility = new FileUtility();
+		if (resDTO.isSuccessful()) {
+			
+			materilInfoList = fileUtility.setPHISMasterDataMaterialInfo(resDTO);
+		}
 		try{
 			my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type epmfRq_Type = new my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type();
 		
@@ -542,9 +573,10 @@ public class PhisIntegration {
 			rqUID_Type.setAsyncRqUID("PHS-220");
 			rqUID_Type.setRqUID(IntegrationConstants.SEQUENCE_NO);
 		
+			rqHeader_Type.setUID(rqUID_Type);
 		
 		
-		for(MasterDataMaterialInfo materialInfo:materialInfoList){
+		for(MasterDataMaterialInfo materialInfo:materilInfoList){
 		
 			my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type materialInformationRq_Type = new my.ep.web.integration.phis.masterdatamateriainfo.MaterialInformationRq_Type();
 			materialInformationRq_Type.setProductCode(materialInfo.getProductCode());
@@ -564,6 +596,13 @@ public class PhisIntegration {
 		
 			epmfRq_Type.setMaterialInformationRq(materialInformationRq_Type);
 			epmfRq_Type.setRqHeader(rqHeader_Type);
+			
+			PHISMasterDataMaterialInfomationPortTypeProxy typeProxy = new PHISMasterDataMaterialInfomationPortTypeProxy();
+			
+			    my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type epmfRs_Type = typeProxy.inquire(epmfRq_Type);
+			
+				System.out.println("getStatusCode :"+epmfRs_Type.getRsHeader().getStatus().getStatusCode());
+				System.out.println("getStatusDesc :"+epmfRs_Type.getRsHeader().getStatus().getStatusDesc());
 		}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -571,7 +610,7 @@ public class PhisIntegration {
 		
 		
 	
-	*/}
+	}
 
 
 }
