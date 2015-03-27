@@ -110,7 +110,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{qTDocumentsBackingBean.resetClone}" update="clonedocid"  resetValues="true" partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 				<p:dataTable id="clonesearchdocid" styleClass="cloneResults"
 					value="#{qTDocumentsBackingBean.managedBean.cloneDocumentDataModel}"
 					selection="#{qTDocumentsBackingBean.managedBean.selectedDocumentCloneTender}"
@@ -134,20 +134,20 @@
 						<h:outputText value="#{qTDocumentsBackingBean.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.crtdt']}">
+					<p:column headerText="#{lbl['lbl.sc.crtdt']}">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.so.pbdt']}">
+					<p:column headerText="#{lbl['lbl.sc.published.date']}">
 						<h:outputText value="#{scQt.publishDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.clsdt']}">
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}">
 						<h:outputText value="#{scQt.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />

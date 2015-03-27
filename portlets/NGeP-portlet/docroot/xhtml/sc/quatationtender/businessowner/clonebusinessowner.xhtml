@@ -116,7 +116,7 @@
 						partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 				<p:dataTable id="clonesearchboid"
 					value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerDataModel}"
 					selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneBusinessTender}"
@@ -141,21 +141,21 @@
 							value="#{qTBusinessOwnerBackingBean.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.crtdt']}">
+					<p:column headerText="#{lbl['lbl.sc.crtdt']}">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.so.pbdt']}" style="width:80px;">
+					<p:column headerText="#{lbl['lbl.sc.published.date']}" style="width:80px;">
 						<h:outputText value="#{scQt.publishDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.clsdt']}" style="width:80px;">
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}" style="width:80px;">
 						<h:outputText value="#{scQt.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
