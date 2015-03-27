@@ -64,6 +64,24 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					
 				</td>
 			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.suppdoc.status']}" /></th>
+				<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docStatus}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{supportDocBackingBean.getActiveAndInactiveStatusOptions()}" />
+					</p:selectOneMenu></td>
+				<th>
+					
+				</th>
+				<td>
+					
+				</td>
+			</tr>
+			
 			</c:if>
 			<c:if test="#{ParameterConst.documentCategorySupplierDocument eq supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
 			<tr>
