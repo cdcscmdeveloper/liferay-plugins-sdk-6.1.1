@@ -105,9 +105,8 @@
 				<p:inputText value="#{typeValueObj.ruleValue}" size="20" maxlength="20"
 					id="percentageValueId" disabled="#{!(typeValueObj.brandNew)}"
 					required="true" requiredMessage="Value is mandatory"
-					validator="#{webappBean.checkFloatField}"
-					validatorMessage="Value of Percentage Type should be a Float!">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					validator="#{webappBean.validatePercentageNumber}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink])" />
 				</p:inputText>
 				<p:message id="percentageValueMsg" for="percentageValueId"
 					display="icon" />
@@ -135,14 +134,14 @@
 			<p:column width="15%"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
 				validator="#{webappBean.checkFloatField}"
-				validatorMessage="Value of ToValue should be a Float!">
+				validatorMessage="Value of FromValue should be a Float!">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
 				<p:inputText value="#{typeValueObj.fromValue}" size="15"  maxlength="18"
 					id="fromValueId" disabled="#{!(typeValueObj.brandNew)}">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink])" />
 				</p:inputText>
 				<p:message id="fromValueMsg" for="fromValueId" display="icon" />
 			</p:column>
@@ -150,13 +149,13 @@
 			<p:column width="15%"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
 				validator="#{webappBean.checkFloatField}"
-				validatorMessage="Value of FromValue should be a Float!">
+				validatorMessage="Value of ToValue should be a Float!">
 				<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
 				<p:inputText value="#{typeValueObj.toValue}" size="15"  maxlength="18"
 					id="toValueId" disabled="#{!(typeValueObj.brandNew)}">
-					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateToValue(index)}" update="@(.fromValueId)" />
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateToValue(index)}" update="@(.fromValueId,[id$=cloneLink])" />
 				</p:inputText>
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
