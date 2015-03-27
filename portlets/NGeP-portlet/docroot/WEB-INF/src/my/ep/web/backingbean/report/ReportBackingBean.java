@@ -110,6 +110,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> orgProfileIdNameList = new ArrayList<SelectItem>();
 	private List<SelectItem> userListbyprofileRole = new ArrayList<SelectItem>();
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();
+	private List<SelectItem> smStateList  = new ArrayList<SelectItem>();
 	private List<SelectItem> districtLst = new ArrayList<SelectItem>();
 	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();
 	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
@@ -213,6 +214,14 @@ public class ReportBackingBean extends
 	
 
 	
+
+	public List<SelectItem> getSmStateList() {
+		return smStateList;
+	}
+
+	public void setSmStateList(List<SelectItem> smStateList) {
+		this.smStateList = smStateList;
+	}
 
 	public Long getMinistryId() {
 		return ministryId;
@@ -2802,18 +2811,25 @@ public class ReportBackingBean extends
 			doctype =ReportConst.DOC_TYPE_PA;
 		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.DED_RPT_MIN_VAL))){
 			doctype =ReportConst.DOC_TYPE_DN;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SUMM_RPT_PAN_ITM_VAL))){
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SUMM_RPT_PAN_ITM_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_PO;
 		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL))){
 			doctype =ReportConst.DOC_TYPE_PR;
-		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){			
+		}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){	
+			docTypeStatusItemsList=new ArrayList<SelectItem>();
 			tempOneStatusItems = getStatusDropdownValues(this.getModuleValue(),ReportConst.DOC_TYPE_PO);
 			tempTwoStatusItems = getStatusDropdownValues(this.getModuleValue(),ReportConst.DOC_TYPE_PR);
 			for(SelectItem item1:tempOneStatusItems){
-				docTypeStatusItemsList.add(item1);
+				
+					docTypeStatusItemsList.add(item1);
+				
 			}
 			for(SelectItem item2:tempTwoStatusItems){
-				docTypeStatusItemsList.add(item2);
+				if((!item2.getLabel().equals("- Select One -"))){
+						
+							docTypeStatusItemsList.add(item2);
+					
+				}
 			}
 		}		
 		if(null!=doctype){
@@ -3110,7 +3126,7 @@ public class ReportBackingBean extends
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
 			
-			//lngUserId = (long)241765;//240610;//241765;//147038;// 241997;//213972;// 220152;
+			//lngUserId = (long)112612;//240610;//241765;//147038;// 241997;//213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
