@@ -1523,14 +1523,12 @@ public class SmCommonUtil {
 	 * Set MDC user_id value to be used in BaseEntity for auditing purposes.
 	 */
 	public static void setMDCUserId() {
-		if (MDC.get(LogKey.USER_ID) == null) {
-			Long userId = 1L;
-			PmUser user = new FacesScopes().getUserSessionBean();
-			if (user != null) {
-				userId = user.getUserId();
-			}
-			new LogKey(userId);
+		Long userId = 1L;
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			userId = user.getUserId();
 		}
+		new LogKey(userId);
 	}
 
 	/**
