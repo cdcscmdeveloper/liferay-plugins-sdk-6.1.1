@@ -29,8 +29,10 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 	private Long categoryCodeIdLvl2;
 	private Long categoryCodeIdLvl3;
 	private String categoryDesciption;
+	private String categoryCode;
 	private PmCategoryL3 selectedCategoryL3;
 	private IPagingDataModel<PmCategoryL3> categoryDescrDataModel;
+	private IPagingDataModel<PmCategoryL3> categoryDataModel;
 	
 	public CategoryCodeSearchManagedBean() {
 	}
@@ -133,4 +135,26 @@ public class CategoryCodeSearchManagedBean extends BaseManagedBean {
 		this.categoryDescrDataModel = categoryDescrDataModel;
 	}
 
+	/**
+	 * @return the categoryDescrDataModel
+	 */
+	public IPagingDataModel<PmCategoryL3> getCategoryDataModel() {
+		return categoryDataModel;
+	}
+
+	/**
+	 * @param categoryDescrDataModel the categoryDescrDataModel to set
+	 */
+	public void setCategoryDataModel(IPagingDataModel<PmCategoryL3> categoryDataModel) {
+		this.categoryDataModel = categoryDataModel;
+	}
+
+	public String getCategoryCode() {
+		return categoryCode;
+	}
+
+	public void setCategoryCode(String categoryCode) {
+		this.categoryCode = categoryCode;
+	}
+	
 }

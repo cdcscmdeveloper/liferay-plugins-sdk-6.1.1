@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.pm.cc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.el.MethodExpression;
@@ -73,6 +74,19 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		
 		getManagedBean().setCategoryDesciption(null);
 		getCategoryDescrDataModel().resetData();
+	}
+	
+	public void categorySearchAction() {
+		debugLogger("searchAction");
+		
+		getCategoryDataModel().reloadData();
+	}
+	
+	public void categoryResetAction() {
+		debugLogger("resetAction");
+		
+		getManagedBean().setCategoryDesciption(null);
+		getCategoryDataModel().resetData();
 	}
 	
 	public void okAction(String methodActionStr) {
@@ -328,4 +342,315 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			return null;
 		}
 	}
+	
+	public IPagingDataModel<PmCategoryL3> getCategoryDataModel() {
+		IPagingDataModel<PmCategoryL3> categoryDataModel = getManagedBean().getCategoryDataModel();
+		
+		if (categoryDataModel == null) {
+			categoryDataModel = new CategoryPagingDataModel();
+			getManagedBean().setCategoryDataModel(categoryDataModel);
+		}
+		
+		return categoryDataModel;
+	}
+	
+	private class CategoryPagingDataModel extends PagingDataModel<PmCategoryL3> {
+		private static final long serialVersionUID = 1L;
+
+		public CategoryPagingDataModel() {
+			super("catDescrTbl", false);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<PmCategoryL3> pageChangeListener(
+				ISearchBean<PmCategoryL3> searchBean) {
+			debugLogger("pageChangeListener");
+
+			ICategoryCodeSO categoryCodeSO;
+			try {
+				categoryCodeSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+								ICategoryCodeSO.class);
+				
+				String categoryDesciption = getManagedBean().getCategoryDesciption();
+				if(!categoryDesciption.isEmpty()) {
+					BaseSearchFilterBean l1SearchFilterBean = new SearchFilterBean("pmCategoryL2.pmCategoryL1.categoryName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							categoryDesciption,
+							true);
+					l1SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					BaseSearchFilterBean l2SearchFilterBean = new SearchFilterBean("pmCategoryL2.categoryName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							categoryDesciption,
+							true);
+					l2SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					BaseSearchFilterBean l3SearchFilterBean = new SearchFilterBean("categoryName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							categoryDesciption,
+							true);
+					l3SearchFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					
+					searchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(
+									new SearchMultiFilterBean(
+											l1SearchFilterBean,
+											SearchCondition.CONDITION_OR.value(),
+											l2SearchFilterBean),
+									SearchCondition.CONDITION_OR.value(),
+									l3SearchFilterBean));
+				}
+				
+				String categoryCode = getManagedBean().getCategoryCode();
+				if(!categoryCode.isEmpty()) {
+					String l1Code = categoryCode.substring(0, 2);
+					String l2Code = categoryCode.substring(2, 4);
+					String l3Code = categoryCode.substring(4, 6);
+					
+					
+					BaseSearchFilterBean l1CodeSearchFilterBean = new SearchFilterBean("pmCategoryL2.pmCategoryL1.categoryL1Code",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							l1Code,
+							true);
+					BaseSearchFilterBean l2CodeSearchFilterBean = new SearchFilterBean("pmCategoryL2.categoryL2Code",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							l2Code,
+							true);
+					BaseSearchFilterBean l3CodeSearchFilterBean = new SearchFilterBean("categoryL3Code",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							l3Code,
+							true);
+					
+					searchBean.getDataFilterBeans().add(l1CodeSearchFilterBean);
+					searchBean.getDataFilterBeans().add(l2CodeSearchFilterBean);
+					searchBean.getDataFilterBeans().add(l3CodeSearchFilterBean);					
+				}
+				
+				// Order by categoryName
+				searchBean.getSortColumns().add(
+						new SearchOrderBean("categoryName"));
+
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setSearchBean(searchBean);
+				CategoryCodeResDTO resDTO = categoryCodeSO.searchAllCategoryL3(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getCategoryL3ResultBean();
+				}
+			} finally {
+				categoryCodeSO = null;
+			}
+
+			return null;
+		}
+	}
+	/**
+	 * to retrieve L1 Category Codes in dropdown by the following parameters
+	 * @param supplierType
+	 * @param facilityType
+	 * @param paidUpCapital
+	 * @param bumiPercentage
+	 * @param categoryType
+	 * @param businessTypeCode
+	 * @return
+	 */
+	public List<SelectItem> retrieveCategoryL1List(
+			String supplierType, String facilityType, Integer paidUpCapital, 
+			Integer bumiPercentage, String categoryType, String businessTypeCode) {
+		
+		System.out.println("supplierType: " + supplierType);
+		System.out.println("facilityType: " + facilityType);
+		System.out.println("paidUpCapital: " + paidUpCapital);
+		System.out.println("bumiPercentage: " + bumiPercentage);
+		System.out.println("categoryType: " + categoryType);
+		System.out.println("businessTypeCode: " + businessTypeCode);
+		
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		log.info("** getSupplierType type ***"
+				+ supplierType);
+		log.info("** getApplCategoryType type ***" + categoryType);
+		reqDTO.setSupplierTypeCode(supplierType);
+		reqDTO.setBusinessTypeCode(businessTypeCode);
+		if (facilityType.equalsIgnoreCase("H")) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (paidUpCapital != null) {
+			reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+		}
+		Integer bumiPerc = new Integer(0);
+		if (bumiPercentage != null) {
+			bumiPerc = bumiPercentage.intValue();
+			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
+				bumiPerc = 99;
+			}
+		}
+		if (categoryType.equals("N")) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
+		}
+		log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
+		reqDTO.setBumiPercentage(bumiPerc);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
+		System.out.println("resDTO.getCategoryL1List(): " + resDTO.getCategoryL1List());		
+		
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		for(PmCategoryL1 l1 : resDTO.getCategoryL1List()) {
+			System.out.println("l1.getCategoryName(): " + l1.getCategoryName());
+			selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
+		}
+		
+		return selectItems;
+	}
+	
+	/**
+	 * to retrieve L2 Category Codes in dropdown by the following parameters
+	 * @param categoryL1Id
+	 * @param supplierType
+	 * @param facilityType
+	 * @param paidUpCapital
+	 * @param bumiPercentage
+	 * @param categoryType
+	 * @param businessTypeCode
+	 * @return
+	 */
+	public List<SelectItem> retrieveCategoryL2List(
+			long categoryL1Id, 
+			String supplierType, String facilityType, Integer paidUpCapital, 
+			Integer bumiPercentage, String categoryType, String businessTypeCode) {
+		
+		System.out.println("categoryL1Id: " + categoryL1Id);
+		System.out.println("supplierType: " + supplierType);
+		System.out.println("facilityType: " + facilityType);
+		System.out.println("paidUpCapital: " + paidUpCapital);
+		System.out.println("bumiPercentage: " + bumiPercentage);
+		System.out.println("categoryType: " + categoryType);
+		System.out.println("businessTypeCode: " + businessTypeCode);
+		
+		if(categoryL1Id == 0) {
+			return new ArrayList<SelectItem>();
+		}
+		
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(categoryL1Id);
+		reqDTO.setSupplierTypeCode(supplierType);
+		if (facilityType.equalsIgnoreCase("H")) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (paidUpCapital != null) {
+			reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+		}
+		if (categoryType.equals("N")) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
+		}
+		Integer bumiPerc = new Integer(0);
+		if (bumiPercentage != null) {
+			bumiPerc = bumiPercentage.intValue();
+			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
+				bumiPerc = 99;
+			}
+		}
+		reqDTO.setBusinessTypeCode(businessTypeCode);
+		log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
+		reqDTO.setBumiPercentage(bumiPerc);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
+
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		for(PmCategoryL2 l2 : resDTO.getCategoryL2List()) {
+			selectItems.add(new SelectItem(l2.getCategoryL2Id(), l2.getCategoryL2Code() + " - " + l2.getCategoryName()));
+		}
+		
+		return selectItems;
+	}
+	
+	/**
+	 * to retrieve L3 Category Codes in dropdown by the following parameters
+	 * @param categoryL2Id
+	 * @param supplierType
+	 * @param facilityType
+	 * @param paidUpCapital
+	 * @param bumiPercentage
+	 * @param categoryType
+	 * @param businessTypeCode
+	 * @return
+	 */
+	public List<SelectItem> retrieveCategoryL3List(
+			long categoryL2Id, 
+			String supplierType, String facilityType, Integer paidUpCapital, 
+			Integer bumiPercentage, String categoryType, String businessTypeCode) {
+		
+		System.out.println("categoryL2Id: " + categoryL2Id);
+		System.out.println("supplierType: " + supplierType);
+		System.out.println("facilityType: " + facilityType);
+		System.out.println("paidUpCapital: " + paidUpCapital);
+		System.out.println("bumiPercentage: " + bumiPercentage);
+		System.out.println("categoryType: " + categoryType);
+		System.out.println("businessTypeCode: " + businessTypeCode);
+		
+		if(categoryL2Id == 0) {
+			return new ArrayList<SelectItem>();
+		}
+		
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		log.info("** getSupplierType type ***"
+				+ supplierType);
+		log.info("** getApplCategoryType type ***"
+				+ categoryType);
+		reqDTO.setSupplierTypeCode(supplierType);
+		reqDTO.setBusinessTypeCode(businessTypeCode);
+		if (categoryType.equals("N")) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
+		}
+		if (facilityType.equalsIgnoreCase("H")) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (paidUpCapital != null) {
+			reqDTO.setPaidUpCapital(paidUpCapital.intValue());
+		}
+		Integer bumiPerc = new Integer(0);
+		if (bumiPercentage != null) {
+			bumiPerc = bumiPercentage.intValue();
+			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
+				bumiPerc = 99;
+			}
+		}
+		log.info("*** Bumi Percent Sent for Category L3 ***** " + bumiPerc);
+		reqDTO.setBumiPercentage(bumiPerc);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		for(PmCategoryL3 l3 : resDTO.getCategoryL3List()) {
+			selectItems.add(new SelectItem(l3.getCategoryL3Id(), l3.getCategoryL3Code() + " - " + l3.getCategoryName()));
+		}
+		
+		return selectItems;
+	}
+	
+	public void resetL2L3CategoryCode() {
+		this.getManagedBean().setCategoryCodeIdLvl2(null);
+		this.getManagedBean().setCategoryCodeIdLvl3(null);
+	}
+
 }
