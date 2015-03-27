@@ -143,7 +143,12 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 150px; margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
+						<f:selectItems value="#{contractRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
+					</p:selectOneMenu></td>
+					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:selectOneMenu id="votCode1" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{contractRequestBackingBean.managedBean.votFundId}"
 						style="width: 102px; margin-bottom: 5px;">
@@ -155,7 +160,9 @@
 							<p:ajax event="change"
 							listener="#{contractRequestBackingBean.checkVotFundDropdown}"
 							update="fundLov,pmActiveLov,projectLov,setiaCode,subSetiaCode,cpCode" />
-					</p:selectOneMenu><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/></td>
+					</p:selectOneMenu>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
 					<td><h:panelGroup styleClass="fundLov" id="fundLov"><ac:lov id="fund"
 						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.fund.code']}"
@@ -163,30 +170,16 @@
 						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
 						readonly="true"
 						size="4"
-						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{contractRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
 						postUpdateListener="contractRequestBackingBean.checkVotFundLov()" 
+						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{contractRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
 						value="#{contractRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
 					</ac:lov></h:panelGroup></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 150px; margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
-						<f:selectItems value="#{contractRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
-					</p:selectOneMenu></td>
-					
-					<td><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
-					<td><h:panelGroup styleClass="gosodoLov" id="gosodoLov"><ac:lov id="gosodo"
-						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.charge.asset.gosodo']}"
-						saveObject="contractRequestBackingBean.managedBean.gosodo"
-						readonly="true"
-						size="8"
-						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
-						value="#{contractRequestBackingBean.managedBean.gosodo.glAccCode}"	>
-					</ac:lov></h:panelGroup><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td> 
-					<td><h:panelGroup styleClass="pmActiveLov" id="pmActiveLov"><ac:lov id="pmActive"
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
+					<td ><h:panelGroup styleClass="pmActiveLov" id="pmActiveLov"><ac:lov id="pmActive"
 						lovId="PM_PRG_ACTIVITY" headerText="#{lbl['lbl.fl.program.activiti']}"
 						saveObject="contractRequestBackingBean.managedBean.pmPrgActivity"
 						readonly="true"
@@ -195,17 +188,20 @@
 						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
 						value="#{contractRequestBackingBean.managedBean.pmPrgActivity.prgActivityCode}"	>
 					</ac:lov></h:panelGroup></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
+				</tr>
+				<tr>
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
 					<td><h:panelGroup styleClass="projectLov" id="projectLov"><ac:lov id="pmProject"
 						lovId="PM_PROJECT" headerText="#{lbl['lbl.fl.project']}"
 						saveObject="contractRequestBackingBean.managedBean.pmSubSetia"
 						readonly="true"
-						size="4"
+						size="7"
 						disabled="#{!contractRequestBackingBean.managedBean.projectLov}" 
 						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
 						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
 						value="#{contractRequestBackingBean.managedBean.pmSubSetia.projectCode}"	>
-					</ac:lov></h:panelGroup></td>
+					</ac:lov>
+					</h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td> 
 					<td><h:panelGroup styleClass="setiaLov" id="setiaLov">
 						<p:inputText size="2" id="setiaCode"
@@ -220,9 +216,20 @@
 						readonly="true"
 						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.pmSubSetia.financingType)}" />
 					</td>		
-					
 				</tr>
-				
+				<tr>
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
+					<td><h:panelGroup styleClass="gosodoLov" id="gosodoLov"><ac:lov id="gosodo"
+						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.charge.asset.gosodo']}"
+						saveObject="contractRequestBackingBean.managedBean.gosodo"
+						readonly="true"
+						size="7"
+						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
+						value="#{contractRequestBackingBean.managedBean.gosodo.glAccCode}"	>
+					</ac:lov></h:panelGroup>
+					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
+				</tr>
 			</table>
 			<table style="width: 100%;">
 			<tr>
