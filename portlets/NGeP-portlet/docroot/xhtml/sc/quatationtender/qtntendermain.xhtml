@@ -17,7 +17,7 @@
 		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 
-		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">
 			<table width="1100px">
 				<tr>
@@ -102,7 +102,7 @@
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
 							style="width: 212px;margin-bottom: 5px;">
 							<f:selectItems
-								value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
+								value="#{qTDetailBB.getStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeQuotation)}" />
 						</p:selectOneMenu></td>
 				</tr>
 			</table>
@@ -117,7 +117,7 @@
 			</div>
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 			<h:panelGroup id="table-wrapper" style="width:100%;">
 				<p:dataTable id="searchQTs"
 					value="#{qTDetailBB.managedBean.searchQTDataModel}" var="scQt"
@@ -139,32 +139,32 @@
 							value="#{qTDetailBB.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.crtdt']}" style="width:80px;">
+					<p:column headerText="#{lbl['lbl.sc.crtdt']}" style="width:80px;">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.pbdt']}" style="width:80px;">
+					<p:column headerText="#{lbl['lbl.sc.published.date']}" style="width:80px;">
 						<h:outputText value="#{scQt.publishDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.clsdt']}" style="width:80px;">
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}" style="width:80px;">
 						<h:outputText value="#{scQt.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.status']}" style="width:200px;">
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
 						<h:outputText value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"/>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%">
 						<p:commandLink action="#{qTDetailBB.editAction(scQt)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this">
 							<p:graphicImage library="ep/images/design" name="edit.png"
