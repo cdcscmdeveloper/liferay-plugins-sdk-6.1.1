@@ -723,8 +723,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
 		SuppFinalizationResDTO suppFinalizationResDTO = null;
 		suppFinalizationReqDTO.setOutcome(outCome);
+		suppFinalizationReqDTO.setRoleCode(getUserRoleCode());
+		FacesScopes facesScope = new FacesScopes();
+		suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
 		suppFinalizationReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		suppFinalizationReqDTO.setToken(new FacesScopes()
+		suppFinalizationReqDTO.setToken(facesScope
 				.getBPMAuthenticationCtxToken());
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
