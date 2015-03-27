@@ -1153,7 +1153,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				if (getManagedBean().getPbQcApproved() == null || getManagedBean().getPbQcApproved().equalsIgnoreCase("")) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.decision", 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.decision", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				if (getManagedBean().getContractVer().getCtAmendment().getPbqcJustification() == null

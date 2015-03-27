@@ -144,7 +144,7 @@
 			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'MET')}" update=":form" />
 	
-		 <p:menuitem value="#{lbl['lbl.ct.menu.decision']}"
+		 <p:menuitem value="#{lbl['lbl.ct.decision']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.signUpdateDecision or amendmentBackingBean.managedBean.signOffDecision
 			or amendmentBackingBean.managedBean.decisionPbQcLOA}"
@@ -219,13 +219,13 @@
 					<ui:include src="pbqcc/committe.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.decision'] 
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision'] 
 				and !amendmentBackingBean.managedBean.signOffDecision}">
 					<ui:include src="pbqcc/signOffpbqcc.xhtml"/>
 					<ui:include src="pbqcc/attachment.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.decision']
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.decision']
 				     and amendmentBackingBean.managedBean.signOffDecision}">
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
