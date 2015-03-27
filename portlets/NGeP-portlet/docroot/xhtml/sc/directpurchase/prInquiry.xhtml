@@ -204,7 +204,7 @@
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}" toggleable="true">
 		 <table style="width: 100%">
 			<tr>
-				<td style="width: 18%;">
+				<td style="width: 16%;">
 					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
 					<p:outputLabel value="*" styleClass="mandatory"  rendered="#{!purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
 				</td>
@@ -270,7 +270,7 @@
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 	  <table style="width: 100%">
 		<tr>
-			<td class="TableFieldLeft" width="17%"></td>
+			<td class="TableFieldLeft" width="16%"></td>
 			
 			<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
