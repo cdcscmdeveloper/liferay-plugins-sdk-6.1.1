@@ -235,7 +235,7 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
 							<p:ajax event="change"
 								listener="#{categoryBackingBean.updateSpecialGroup}"
-								update="groupdetails" />
+								update="groupdetails,@form" />
 						</p:selectBooleanCheckbox></td>
 				</tr>
 				<th>&#160;</th>
