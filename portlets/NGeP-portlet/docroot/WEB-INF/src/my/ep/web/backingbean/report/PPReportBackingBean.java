@@ -63,6 +63,11 @@ public class PPReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
         	rptGenBean.setPpMinistryView(true);
         	rptGenBean.setPpPTJView(true);							
         break;
+		case ReportConst.PP_EXPENDITURE_UNPLANNED_LEVEL_RPT_VAL:		        	
+			rptGenBean.setPpYearView(true);
+        	rptGenBean.setPpMinistryView(true);
+        	rptGenBean.setPpPTJView(true);							
+        break;
 		default: 
         	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
             //break;

@@ -254,6 +254,7 @@ public class ReportConst {
 	public static final String PP_EXPEND_MINISTRY_BY_GOSO_PTJ_LEVEL_RPT_VAL = "PP_006";
 	public static final String PP_EXPEND_MINISTRY_BY_GOSO_VOT_LEVEL_RPT_VAL = "PP_007";
 	public static final String PP_EXPENDITURE_BPK_LEVEL_RPT_VAL = "PP_008";
+	public static final String PP_EXPENDITURE_UNPLANNED_LEVEL_RPT_VAL = "PP_009";
 	//JSP
 	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
 	public static final String FL_NGEP_DELIVERY = "FL_NGEP_DELIVERY.jsp";
