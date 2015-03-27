@@ -37,14 +37,14 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.creatdtfrom']}" /></td>
 						<td><p:calendar id="crdateFrm" showOn="button"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
 								size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 								<p:ajax event="dateSelect" update="createdtTo" />
 							</p:calendar></td>
-							<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sc.creatdtto']}" /></td>
 						<td><p:calendar id="createdtTo" showOn="button"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toCreatedDate}"
 								mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
@@ -56,14 +56,14 @@
 							</p:calendar></td>
 					</tr>
 					<tr>
-					<td><h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
 					<td><p:calendar
 							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromPublishDate}"
 							id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 							<p:ajax event="dateSelect" update="pbdateTo" />
 						</p:calendar></td>
-					<td><h:outputLabel value="#{lbl['lbl.so.pbldtto']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
 					<td><p:calendar id="pbdateTo" showOn="button"
 							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toPublishDate}"
 							mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromPublishDate}"
@@ -75,14 +75,14 @@
 						</p:calendar></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
 					<td><p:calendar
 							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromClosingDate}"
 							id="cldateFrom" showOn="button" size="29" readonlyInput="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 							<p:ajax event="dateSelect" update="cldateTo" />
 						</p:calendar></td>
-					<td><h:outputLabel value="#{lbl['lbl.so.clsdtto']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
 					<td><p:calendar id="cldateTo" showOn="button"
 							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toClosingDate}"
 							mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromClosingDate}"
@@ -126,11 +126,11 @@
 						<h:outputText value="#{scQt.qtNo}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.title']}">
+					<p:column headerText="#{lbl['lbl.sc.title']}">
 						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.procmode']}">
+					<p:column headerText="#{lbl['lbl.sc.procmode']}">
 						<h:outputText value="#{qTDocumentsBackingBean.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
