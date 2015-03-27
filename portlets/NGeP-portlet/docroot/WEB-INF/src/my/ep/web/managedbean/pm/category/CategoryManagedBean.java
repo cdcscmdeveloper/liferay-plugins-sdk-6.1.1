@@ -135,8 +135,14 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	/** The selectedpm machine category. */
 	private List<PmMachineCategory> selectedpmMachineCategory;
 	
-	/** The deletedpm machine category. */
+	/** The deleted pm machine category. */
 	private List<PmMachineCategory> deletedpmMachineCategory = new ArrayList<PmMachineCategory>();
+	
+	/** The deleted pm category restr. */
+	private List<PmCategoryRestr> deletedpmRestrCategory=new ArrayList<PmCategoryRestr>();
+
+	/** The deleted pm basic category list. */
+	private List<PmBasicCategory> deletedpmBasicCategory=new ArrayList<PmBasicCategory>();
 	
 	/** The selected pm category restr. */
 	private List<PmCategoryRestr> selectedPmCategoryRestr;
@@ -821,7 +827,45 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	}
 
 
+	/**
+	 * Gets the deletedpm restr category.
+	 * 
+	 * @return the deletedpm restr category
+	 */
+	public List<PmCategoryRestr> getDeletedpmRestrCategory() {
+		return deletedpmRestrCategory;
+	}
 
+	/**
+	 * Sets the deletedpm restr category.
+	 * 
+	 * @param deletedpmRestrCategory
+	 *            the new deletedpm restr category
+	 */
+	public void setDeletedpmRestrCategory(
+			List<PmCategoryRestr> deletedpmRestrCategory) {
+		this.deletedpmRestrCategory = deletedpmRestrCategory;
+	}
+
+	/**
+	 * Gets the deletedpm basic category.
+	 * 
+	 * @return the deletedpm basic category
+	 */
+	public List<PmBasicCategory> getDeletedpmBasicCategory() {
+		return deletedpmBasicCategory;
+	}
+
+	/**
+	 * Sets the deletedpm basic category.
+	 * 
+	 * @param deletedpmBasicCategory
+	 *            the new deletedpm basic category
+	 */
+	public void setDeletedpmBasicCategory(
+			List<PmBasicCategory> deletedpmBasicCategory) {
+		this.deletedpmBasicCategory = deletedpmBasicCategory;
+	}
 	
 
 }
