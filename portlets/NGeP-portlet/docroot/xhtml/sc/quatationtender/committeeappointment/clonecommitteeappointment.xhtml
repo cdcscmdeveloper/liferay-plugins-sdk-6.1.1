@@ -14,23 +14,23 @@
 				closable="true" showSummary="false" />
 			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
 				toggleable="true">
-				<table width="100%" >
+				<table width="900px" >
 					<tr>
 						<td valign="top"><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 						<td colspan="3"><p:inputText
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-								size="104" maxlength="100" /></td>
+								style="width:650px;" maxlength="100" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel
+						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
-						<td><p:inputText
+						<td style="width:285px;"><p:inputText
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
-								size="29" maxlength="21" /></td>
-						<td><p:outputLabel
+								style="width:210px;" maxlength="21" /></td>
+						<td style="width:165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
-						<td><p:selectOneMenu
+						<td style="width:285px;"><p:selectOneMenu
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 								style="width: 210px;margin-bottom: 5px;">
 								<f:selectItems
