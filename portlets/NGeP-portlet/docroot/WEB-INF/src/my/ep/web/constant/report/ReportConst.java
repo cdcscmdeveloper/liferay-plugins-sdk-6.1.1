@@ -112,12 +112,16 @@ public class ReportConst {
 		public static final String SC_TEC_TECH_SPEC = "SC_TEC_TECH_SPEC.jsp";
 		public static final String SC_TEC_OVERALL_WITH_WEI_2F = "SC_TEC_OVERALL_WITH_WEI_2F.jsp";
 		public static final String SC_TEC_OTHER_CRITERIA = "SC_TEC_OTHER_CRITERIA.jsp";
+		public static final String SC_EC_OTHER_CRITERIA = "SC_EC_OTHER_CRITERIA.jsp";
 		// EC
 		public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_SHORTLIST_ASSES_4A.jsp";
 		public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_METHOD_OF_ASSES_4B.jsp";
 		public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "SC_EC_GEN_SPEC_4D.jsp";
 		public static final String SC_AKPTPH_EC_RPT_JSP = "SC_EC_PRICE_EVAL_4E.jsp";
 		public static final String SC_EC_OVERALLTECH_WITH_WEI_4H = "SC_EC_OVERALLTECH_WITH_WEI_4H.jsp";
+		public static final String SC_EC_OVERALL_FIN_4I = "SC_EC_OVERALL_FIN_4I.jsp";
+		public static final String SC_EC_TECH_SPEC_WEI = "SC_EC_TECH_SPEC_WEI.jsp";
+		public static final String SC_EC_TECH_SPEC = "SC_EC_TECH_SPEC.jsp";
 		
 		//FC
 		public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "SC_FC_ANALYSIS_EVAL_REP_8A.jsp";
