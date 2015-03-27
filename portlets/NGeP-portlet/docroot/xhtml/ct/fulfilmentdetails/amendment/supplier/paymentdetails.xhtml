@@ -12,9 +12,9 @@
 			 <p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}"/>
 		 </h:panelGrid>
 		<h:panelGrid columns="2">
-		   <p:selectOneMenu id="accountNo"  style="width:310px; margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.bank.account.name']}"
+		   <p:selectOneMenu id="accountNo"  style="width:310px; margin-bottom: 5px;" 
 			 value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
-			   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
+			   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 			   <f:selectItems value="#{amendmentBackingBean.populateBankAccountList}"/>
 			    <p:ajax event="change" process="@this" update="paymentDetails" listener="#{amendmentBackingBean.changeAccountActionListener}"/>
 		     </p:selectOneMenu>
