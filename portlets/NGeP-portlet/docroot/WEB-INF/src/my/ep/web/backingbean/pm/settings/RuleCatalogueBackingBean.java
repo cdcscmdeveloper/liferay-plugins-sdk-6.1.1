@@ -1695,7 +1695,7 @@ public class RuleCatalogueBackingBean extends
 		if(this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.get(markIndex).getRuleValue() == null || this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.get(markIndex).getRuleValue().isEmpty()){
-			throw new EpException(MessageConst.ERROR_770160);
+			throw new EpException(MessageConst.ERROR_770162);
 		}
 		if (this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.get(markIndex).getToValue() != null && !this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
