@@ -939,7 +939,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			
 			//remove machine category if any
-			log.info("this.getManagedBean().getDeletedpmMachineCategory().size() = "+this.getManagedBean().getDeletedpmMachineCategory().size());
+			//log.info("this.getManagedBean().getDeletedpmMachineCategory().size() = "+this.getManagedBean().getDeletedpmMachineCategory().size());
 			if(this.getManagedBean().getDeletedpmMachineCategory() != null && !this.getManagedBean().getDeletedpmMachineCategory().isEmpty()) {
 				CategoryCodeReqDTO categoryCodeReqDTO = new CategoryCodeReqDTO();
 				for(PmMachineCategory pmMachineCategory: this.getManagedBean().getDeletedpmMachineCategory()) {
