@@ -164,7 +164,7 @@
 						</h:outputText>
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.so.bo.status']}">
+					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
 							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 					</p:column>
@@ -184,7 +184,7 @@
 						listener="#{qTCommitteBackingBean.onNodeUnselect}"
 						/>
 
-					<p:column headerText="#{lbl['lbl.so.bo.name']}">
+					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<h:outputText style="font-weight: bold;"
 							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.committeeType)}"
 							rendered="#{committeeNode.type == 'committee'}" />
@@ -194,12 +194,12 @@
 							style="white-space: normal;word-wrap:break-word;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
 						<h:outputText value="#{committeeNode.object.icPassport}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+					<p:column headerText="#{lbl['lbl.sc.designation']}">
 						<h:outputText value="#{committeeNode.object.designation}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
 							style="white-space: normal;" />
@@ -211,12 +211,12 @@
 							style="white-space: normal;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+					<p:column headerText="#{lbl['lbl.sc.grade']}">
 						<h:outputText value="#{committeeNode.object.grade}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+					<p:column headerText="#{lbl['lbl.sc.pnp']}">
 						<h:outputText value="#{committeeNode.object.PNP ? 'Yes' : 'No'}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
 					</p:column>
