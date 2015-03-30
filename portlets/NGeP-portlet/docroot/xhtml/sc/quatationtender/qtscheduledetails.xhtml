@@ -87,7 +87,7 @@
 				</tr>
 			</c:if>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
 						readonly="true" disabled="true" size="14"
@@ -95,7 +95,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.so.proposal.validity.until']}" /></td>
+						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
 				<td><p:inputText id="proposalvalidityid"
 						value="#{qTScheduleDetailBackingBean.managedBean.proposalValidityUntil}"
 						readonly="true" disabled="true" style="margin-top:5px;" size="14">
@@ -130,7 +130,7 @@
 				<p:column selectionMode="multiple" style="width:2%"
 					disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 
-				<p:column headerText="#{lbl['lbl.so.zone.location']}">
+				<p:column headerText="#{lbl['lbl.sc.qt.zone.location ']}">
 					<h:outputText
 						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 				</p:column>

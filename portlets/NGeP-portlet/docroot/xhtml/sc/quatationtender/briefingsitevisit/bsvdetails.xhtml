@@ -113,12 +113,12 @@
 		<table style="width: 100%" border="0">
 			<tr>
 				<td style="width: 160px;"><p:outputLabel
-						value="#{lbl['lbl.so.attendance.brief']}" /></td>
+						value="#{lbl['lbl.sc.qt.attendance.brief']}" /></td>
 				<td style="width: 130px;"><p:selectOneRadio
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						value="#{bsvdtlbean.scQtBsv.allBriefingReq}">
-						<f:selectItem itemLabel="#{lbl['lbl.so.all']}" itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.so.atleast']}" itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
 						<p:ajax event="click"
 							listener="#{qTBriefingSiteVisitBackingBean.briefingClickEvent}"
 							update="@([id$=minbsvattend])" />
@@ -226,12 +226,12 @@
 				<table style="width: 100%" border="0">
 					<tr>
 						<td style="width: 165px;"><p:outputLabel
-								value="#{lbl['lbl.so.attendance.site']}" /></td>
+								value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
 						<td style="width: 130px;"><p:selectOneRadio
 								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 								value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
-								<f:selectItem itemLabel="#{lbl['lbl.so.all']}" itemValue="true" />
-								<f:selectItem itemLabel="#{lbl['lbl.so.atleast']}" itemValue="false" />
+								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
+								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
 								<p:ajax event="click"
 									listener="#{qTBriefingSiteVisitBackingBean.siteVisitClickEvent}"
 									update="@([id$=minSiteVisitAtt])" />

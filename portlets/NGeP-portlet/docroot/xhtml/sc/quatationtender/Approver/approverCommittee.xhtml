@@ -8,21 +8,21 @@
 
 	<c:if
 		test="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets ne null and approvalBackingBean.managedBean.qt.scQtGosodoBudgets.size() > 0}">
-		<p:panel header="#{lbl['lbl.so.goso.list']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.qt.goso.list']}" toggleable="true">
 			<p:dataTable id="gosoList"
 				value="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets}"
 				var="goso" style="width : 100%">
 
 				<ac:paginator for="gosoList" />
 
-				<p:column headerText="#{lbl['lbl.so.gocode']}">
+				<p:column headerText="#{lbl['lbl.sc.qt.gocode']}">
 					<h:inputText value="#{goso.pmGo.goCode}" disabled="true" size="30" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.socode']}">
+				<p:column headerText="#{lbl['lbl.sc.qt.socode']}">
 					<h:inputText value="#{goso.pmSo.soCode}" disabled="true" size="30" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.so.goso.amount']}">
+				<p:column headerText="#{lbl['lbl.sc.qt.goso.amount']}">
 					<h:inputText value="#{goso.budgetAmt}" disabled="true" size="30" />
 				</p:column>
 
