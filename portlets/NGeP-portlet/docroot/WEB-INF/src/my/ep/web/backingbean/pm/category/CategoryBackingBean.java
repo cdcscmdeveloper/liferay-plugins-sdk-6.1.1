@@ -1031,9 +1031,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 				//reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				//categoryCodeSO.saveSubDivision(reqDTO);
+				
 		}
 	//}
-		//log.info("deleteBasicCategory this.getManagedBean().getSelectedBasicCategory().size() = "+this.getManagedBean().getSelectedBasicCategory().size());
+		
 	//}
 	
 	
@@ -1049,7 +1050,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			for(PmMachineCategory pmMachineCategory: this.getManagedBean().getSelectedpmMachineCategory()) {*/
 				
-				//reqDTO.setPmBasicCategory(pmBasicCategory);
+				//reqDTO.setPsmBasicCategory(pmBasicCategory);
 				//categoryCodeSO.deleteBasicCategory(reqDTO);
 				
 				this.getManagedBean().getPmCategoryL3().getPmMachineCategory().remove(pmMachineCategory);
@@ -1067,7 +1068,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				//categoryCodeSO.saveSubDivision(reqDTO);
 			//}
 		//}
-		log.info("deletePmMachine this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
+		//log.info("deletePmMachine this.getManagedBean().getSelectedpmMachineCategory().size() = "+this.getManagedBean().getSelectedpmMachineCategory().size());
 	}
 	
 	/**
@@ -1386,7 +1387,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				PmBasicCategory pmBasicCategory = new PmBasicCategory();
 				
-				pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				//pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				
 				pmBasicCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				pmBasicCategory.setBasicCategoryL3(pmCategoryL3.getCategoryL3Id());
@@ -1435,7 +1436,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			for(PmMachine pmMachine: this.getManagedBean().getSelectedpmMachine()) {
 				
 				PmMachineCategory pmMachineCategory = new PmMachineCategory();
-				pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				//pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				pmMachineCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				
 				//parameter
@@ -1792,7 +1793,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		restr.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 		restr.setCompanyTypeId(new PmParameter());
-		restr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+		//restr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 		
 		this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().add(restr);
 		
