@@ -34,6 +34,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -56,8 +57,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
 	private static final String CATALOGUE_UPLOAD_PATH = "codification-search";
 	private static final String SUPPLIER_TYPE_SELECTION_PATH = "supplierRegistrationCont";
-	private static final String SOFT_CERT_PATH = "request-soft-cert";
-	private static final String MOF_REG_PATH = "mof-registration";
+	private static final String SOFT_CERT_PATH = "supptemp-request-soft-cert";
+	private static final String MOF_REG_PATH = "supptemp-mof-registration";
 	private static final String TASK_LIST_PATH = "task-list";
 	//private static final String DASHBOARD = "dashboard";
 	private static final String DASHBOARD_PATH = "welcome";
@@ -83,7 +84,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			if(appl != null){
 				log.info("*****In Progress*********");
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
-				desc = workFlowStatus.getPmStatus().getPmStatusDescs().get(0).getStatusName();
+				//desc = workFlowStatus.getPmStatus().getPmStatusDescs();
+				//desc = workFlowStatus.getPmStatus().getPmStatusDescs().get(0).getStatusName();
 				desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
 				path = TASK_LIST_PATH;
 				
@@ -211,7 +213,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			reqDTO.setSmSupp(getManagedBean().getSmSupplier());
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IRegistrationSO.class);
 			try{
-				RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
+				RegistrationResDTO resDTO = reqSO.updateSupplier(reqDTO);
 				log.info("--------Supplier------------" + this.getManagedBean().getSmSupplier().getBusinessType());
 				
 				if(resDTO.isSuccessful()){
@@ -309,7 +311,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		mofRegistrationReqDTO.setSmSupplier(supplier);
 		mofRegistrationReqDTO.setAppType(ParameterConst.NEW_SM_APPLN_FOR_MOF);
 		
-		MofRegistrationResDTO mofRegistrationResDTO = mofRegSO.retrieveLatestSmApplicationDraft(mofRegistrationReqDTO);
+		MofRegistrationResDTO mofRegistrationResDTO = mofRegSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO);
 		
 		return mofRegistrationResDTO.getSmAppl();
 	}
@@ -352,8 +354,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 /*	private void initCatalogueBackingBean(){
 		CatalogueBackingBean cBB = new CatalogueBackingBean();
 		cBB.preRenderCatalogue();
-	}
+	}*/
 	
+/*	
 	private void initSoftcertBackingBean(){
 		SoftCertBackingBean scBB = new SoftCertBackingBean();
 		scBB.preRenderSoftCert();
