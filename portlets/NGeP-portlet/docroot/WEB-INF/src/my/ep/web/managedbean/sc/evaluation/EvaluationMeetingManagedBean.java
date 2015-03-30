@@ -98,10 +98,10 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> cloneCommitteMemebersSelect;
 
 	/** The committee member activity. */
-	private List<ScQtCommitteeActivity> committeeMemberActivity;
+	private List<ScCommitteeMember> committeeMemberActivity;
 
 	/** The committee activity select. */
-	private List<ScQtCommitteeActivity> committeeActivitySelect;
+	private List<ScCommitteeMember> committeeActivitySelect;
 
 	/** The sc qt committee. */
 	private ScQtCommittee scQtCommittee;
@@ -128,7 +128,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtMeeting> meetingRemoveList;
 
 	/** The remove committee list. */
-	private List<ScQtCommitteeActivity> removeCommitteeList;
+	private List<ScCommitteeMember> removeCommitteeList;
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -172,26 +172,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
-	}
-
-	/**
-	 * Gets the removes the committee list.
-	 * 
-	 * @return the removes the committee list
-	 */
-	public List<ScQtCommitteeActivity> getRemoveCommitteeList() {
-		return removeCommitteeList;
-	}
-
-	/**
-	 * Sets the removes the committee list.
-	 * 
-	 * @param removeCommitteeList
-	 *            the new removes the committee list
-	 */
-	public void setRemoveCommitteeList(
-			List<ScQtCommitteeActivity> removeCommitteeList) {
-		this.removeCommitteeList = removeCommitteeList;
 	}
 
 	/**
@@ -579,45 +559,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.cloneCommitteMemebersSelect = cloneCommitteMemebersSelect;
 	}
 
-	/**
-	 * Gets the committee member activity.
-	 * 
-	 * @return the committee member activity
-	 */
-	public List<ScQtCommitteeActivity> getCommitteeMemberActivity() {
-		return committeeMemberActivity;
-	}
-
-	/**
-	 * Sets the committee member activity.
-	 * 
-	 * @param committeeMemberActivity
-	 *            the new committee member activity
-	 */
-	public void setCommitteeMemberActivity(
-			List<ScQtCommitteeActivity> committeeMemberActivity) {
-		this.committeeMemberActivity = committeeMemberActivity;
-	}
-
-	/**
-	 * Gets the committee activity select.
-	 * 
-	 * @return the committee activity select
-	 */
-	public List<ScQtCommitteeActivity> getCommitteeActivitySelect() {
-		return committeeActivitySelect;
-	}
-
-	/**
-	 * Sets the committee activity select.
-	 * 
-	 * @param committeeActivitySelect
-	 *            the new committee activity select
-	 */
-	public void setCommitteeActivitySelect(
-			List<ScQtCommitteeActivity> committeeActivitySelect) {
-		this.committeeActivitySelect = committeeActivitySelect;
-	}
 
 	/**
 	 * Gets the sc qt committee.
@@ -752,6 +693,50 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeTypeDesc(String committeeTypeDesc) {
 		this.committeeTypeDesc = committeeTypeDesc;
+	}
+
+	/**
+	 * @return the committeeMemberActivity
+	 */
+	public List<ScCommitteeMember> getCommitteeMemberActivity() {
+		return committeeMemberActivity;
+	}
+
+	/**
+	 * @param committeeMemberActivity the committeeMemberActivity to set
+	 */
+	public void setCommitteeMemberActivity(
+			List<ScCommitteeMember> committeeMemberActivity) {
+		this.committeeMemberActivity = committeeMemberActivity;
+	}
+
+	/**
+	 * @return the committeeActivitySelect
+	 */
+	public List<ScCommitteeMember> getCommitteeActivitySelect() {
+		return committeeActivitySelect;
+	}
+
+	/**
+	 * @param committeeActivitySelect the committeeActivitySelect to set
+	 */
+	public void setCommitteeActivitySelect(
+			List<ScCommitteeMember> committeeActivitySelect) {
+		this.committeeActivitySelect = committeeActivitySelect;
+	}
+
+	/**
+	 * @return the removeCommitteeList
+	 */
+	public List<ScCommitteeMember> getRemoveCommitteeList() {
+		return removeCommitteeList;
+	}
+
+	/**
+	 * @param removeCommitteeList the removeCommitteeList to set
+	 */
+	public void setRemoveCommitteeList(List<ScCommitteeMember> removeCommitteeList) {
+		this.removeCommitteeList = removeCommitteeList;
 	}
 
 }

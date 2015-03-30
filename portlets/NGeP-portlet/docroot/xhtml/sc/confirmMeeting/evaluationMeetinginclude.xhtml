@@ -97,7 +97,7 @@
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				process="@this" partialSubmit="true"
+				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.scQtMeetings,evaluationMeetingBackingBean.managedBean.meetingRemoveList)}"
 				update="evaluationmeetingDetails">
 				<f:setPropertyActionListener
@@ -134,46 +134,43 @@
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{committeeMember.selected}"
 					disabled="true"
-					rendered="#{committeeMember.scCommitteeMember.memberRole.parameterCode eq 'S'}">
+					rendered="#{committeeMember.memberRole.parameterCode eq 'S'}">
 
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox value="#{committeeMember.selected}"
-					rendered="#{committeeMember.scCommitteeMember.memberRole.parameterCode ne 'S'}">
+					rendered="#{committeeMember.memberRole.parameterCode ne 'S'}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column style="width:30%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
-				<h:outputText
-					value="#{committeeMember.scCommitteeMember.memberName}"></h:outputText>
+				<h:outputText value="#{committeeMember.memberName}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:15%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
-				<h:outputText
-					value="#{committeeMember.scCommitteeMember.icPassport}"></h:outputText>
+				<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:15%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
-				<h:outputText
-					value="#{committeeMember.scCommitteeMember.designation}"></h:outputText>
+				<h:outputText value="#{committeeMember.designation}"></h:outputText>
 			</p:column>
 			<p:column style="width:15%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
-				<h:outputText value="#{committeeMember.scCommitteeMember.email}"></h:outputText>
+				<h:outputText value="#{committeeMember.email}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:7%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
-				<h:outputText value="#{committeeMember.scCommitteeMember.grade}"></h:outputText>
+				<h:outputText value="#{committeeMember.grade}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:6%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
 				<h:outputText
-					value="#{lbl[committeeMember.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
+					value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
 			<p:column style="width:10%;">
 				<f:facet name="header">
@@ -183,20 +180,7 @@
 				</f:facet>
 
 				<h:outputText
-					value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}" />
-
-				<!-- <ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
-					<p:selectOneMenu id="meetingRoleId" required="true"
-						label="#{lbl['lbl.sc.eva.committee.role']}"
-						value="#{committeeMember.scCommitteeMember.memberRole.parameterId}"
-						style="width: 110px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							listener="#{evaluationMeetingBackingBean.chnageMemberRole(index,evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"></p:ajax>
-					</p:selectOneMenu>
-					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
-				</ui:fragment> -->
+					value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}" />
 
 			</p:column>
 
