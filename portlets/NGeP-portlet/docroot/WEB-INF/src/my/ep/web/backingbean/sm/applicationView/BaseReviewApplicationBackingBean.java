@@ -148,7 +148,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						.getApplicationNoParam()));
 				SmApplRevisionResDTO resDTO = applRevisionSO
 						.readApplicationHist(reqDTO);
-				setApplication(resDTO);
+				setApplication(resDTO.getSmAppl());
 			}
 
 		} catch (NullPointerException ne) {
@@ -416,8 +416,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmApplRevisionResDTO
 	 *            resDTO
 	 */
-	private void setApplication(SmApplRevisionResDTO resDTO) {
-		initStep0BaseInfo(resDTO);
+	public void setApplication(SmAppl smAppl) {
+		initStep0BaseInfo(smAppl);
 		initStep1CompanyInfo();
 		initStep2BranchCompanyInfo();
 		initStep3CaptialAndEquityInfo();
@@ -437,9 +437,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmApplRevisionResDTO
 	 *            resDTO
 	 */
-	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
-		getManagedBean().setSmAppl(resDTO.getSmAppl());
-		getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
+	private void initStep0BaseInfo(SmAppl smAppl) {
+		getManagedBean().setSmAppl(smAppl);
+		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
 		getManagedBean().setBusinessTypeVal(
 				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
 						.getSmSupplier()));

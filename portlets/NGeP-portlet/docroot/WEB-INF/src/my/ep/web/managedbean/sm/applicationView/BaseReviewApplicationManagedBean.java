@@ -94,6 +94,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean reviewApplicationExist;
 	private boolean hasPreviousApplication;
 	private boolean viewSupplierProfile;
+	private boolean searchSupplierProfile;
 	private boolean previousApproved;
 	private boolean original;
 	private String selectedCertType;
@@ -902,6 +903,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedCompanyExperienceCatL3(
 			String selectedCompanyExperienceCatL3) {
 		this.selectedCompanyExperienceCatL3 = selectedCompanyExperienceCatL3;
+	}
+
+	public boolean isSearchSupplierProfile() {
+		return searchSupplierProfile;
+	}
+
+	public void setSearchSupplierProfile(boolean searchSupplierProfile) {
+		this.searchSupplierProfile = searchSupplierProfile;
 	}
 
 }
