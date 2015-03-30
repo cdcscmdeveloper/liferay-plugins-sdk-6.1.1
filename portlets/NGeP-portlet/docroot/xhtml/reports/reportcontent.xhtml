@@ -81,11 +81,11 @@
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.enableCriteriaMenuView}">     
 						 <p:panel style="width: 100%;" header="#{reportBackingBean.reportName}"
 						 id="rptNameId" toggleable="true">    
-						 <table  style="width: 100%;margin-top:17px;"  >
+						 <table  style="width: 100%;margin-top:4px;"  >
 						 <c:if test="#{reportBackingBean.managedBean.rptGenBean.madatoryIndicatorView}">
 						  <tr>
 						    <td width="100%">
-								<p:outputLabel value="*" styleClass="mandatory" style="float:left;margin-left:20px;"/><p:outputLabel value=" Indicates required field" style="white-space:normal;float:left;"/>
+								<p:outputLabel styleClass="instruction" style="float:left;margin-left:20px;" value="#{lbl['lbl.instruction.mandatory']}"/>
 							    </td>
 						  </tr>
 						  </c:if>
