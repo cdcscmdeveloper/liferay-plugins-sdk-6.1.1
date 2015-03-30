@@ -229,6 +229,7 @@
 		<portlet id="reactivateBasicAccount"></portlet>
 		<portlet id="supplierBusinessNature"></portlet>
 		<portlet id="postsupplierregistration"></portlet>
+		<portlet id="supplierRegistrationCont"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
