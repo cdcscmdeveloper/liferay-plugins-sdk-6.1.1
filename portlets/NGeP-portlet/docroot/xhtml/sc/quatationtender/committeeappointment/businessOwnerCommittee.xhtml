@@ -26,34 +26,34 @@
 
 			
 
-			<p:column headerText="#{lbl['lbl.so.bo.name']}">
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{specificationcommittee.memberName}" style="white-space: normal;"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 				style="widht: 15%">
 				<h:outputText value="#{specificationcommittee.icPassport}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.designation']}"
+			<p:column headerText="#{lbl['lbl.sc.designation']}"
 				style="widht: 15%">
 				<h:outputText value="#{specificationcommittee.designation}" style="white-space: normal;"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.email']}" style="widht: 10%">
+			<p:column headerText="#{lbl['lbl.sc.email']}" style="widht: 10%">
 				<h:outputText value="#{specificationcommittee.email}" style="white-space: normal;"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.grade']}" style="widht: 5%">
+			<p:column headerText="#{lbl['lbl.sc.grade']}" style="widht: 5%">
 				<h:outputText value="#{specificationcommittee.grade}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="widht: 1%">
+			<p:column headerText="#{lbl['lbl.sc.pnp']}" style="widht: 1%">
 				<h:outputText
 					value="#{lbl[specificationcommittee.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}"
+			<p:column headerText="#{lbl['lbl.sc.consolidate']}"
 				style="widht: 10%">
 				<h:outputText
 					value="#{lbl[specificationcommittee.consolidateValue ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />

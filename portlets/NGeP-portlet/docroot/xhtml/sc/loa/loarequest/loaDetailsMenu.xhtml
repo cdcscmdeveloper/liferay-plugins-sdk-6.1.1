@@ -475,7 +475,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.designation']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.designation']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
@@ -483,7 +483,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
 					required="true"
 					maxlength="30"
-					label="#{lbl['lbl.sc.loiloa.witness.designation']}"
+					label="#{lbl['lbl.sc.designation']}"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
 			</td>
