@@ -223,7 +223,7 @@
 			rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 24%;"><p:outputLabel
+					<td style="width: 19%;"><p:outputLabel
 							value="#{lbl['lbl.sc.purchase.in.default.order.qty']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="ordqty" maxlength="14"
@@ -241,7 +241,7 @@
 		<h:panelGroup id="rmkId">   
 		   <table style="width: 100%">
 			 <tr>
-			    <td  width="24.5%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
+			    <td  width="19.5%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			     <table>
@@ -276,7 +276,7 @@
 	 <h:panelGroup id="attachmentId">
 	   <table style="width: 100%">
 		<tr>
-			<td width="24%" style="vertical-align: center;padding-right: 0px;text-align: right;">
+			<td width="19%" style="vertical-align: center;padding-right: 0px;text-align: right;">
 			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
