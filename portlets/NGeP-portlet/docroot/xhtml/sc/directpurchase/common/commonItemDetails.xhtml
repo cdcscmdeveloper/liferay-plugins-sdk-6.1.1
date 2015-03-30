@@ -118,8 +118,8 @@
 					
 				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;">	
 					   <p:row>
-			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;">
-			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important;">
+			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="15"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
@@ -128,7 +128,7 @@
 									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
-							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="15"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.afterSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
@@ -209,7 +209,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" />
 					</f:facet>
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
-					   disabled="true" size="14" style="margin-top: 8px;"  />
+					   disabled="true" size="10" style="margin-top: 8px;"  />
 				</p:column>
 				
 				<p:column style="width:12%; white-space: normal;">
