@@ -438,7 +438,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setSearchBean(searchBean);
-				CategoryCodeResDTO resDTO = categoryCodeSO.searchAllCategoryL3(reqDTO);
+				CategoryCodeResDTO resDTO = categoryCodeSO.searchCategoryL3(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getCategoryL3ResultBean();
 				}
@@ -462,13 +462,6 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	public List<SelectItem> retrieveCategoryL1List(
 			String supplierType, String facilityType, Integer paidUpCapital, 
 			Integer bumiPercentage, String categoryType, String businessTypeCode) {
-		
-		System.out.println("supplierType: " + supplierType);
-		System.out.println("facilityType: " + facilityType);
-		System.out.println("paidUpCapital: " + paidUpCapital);
-		System.out.println("bumiPercentage: " + bumiPercentage);
-		System.out.println("categoryType: " + categoryType);
-		System.out.println("businessTypeCode: " + businessTypeCode);
 		
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
@@ -528,14 +521,6 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			String supplierType, String facilityType, Integer paidUpCapital, 
 			Integer bumiPercentage, String categoryType, String businessTypeCode) {
 		
-		System.out.println("categoryL1Id: " + categoryL1Id);
-		System.out.println("supplierType: " + supplierType);
-		System.out.println("facilityType: " + facilityType);
-		System.out.println("paidUpCapital: " + paidUpCapital);
-		System.out.println("bumiPercentage: " + bumiPercentage);
-		System.out.println("categoryType: " + categoryType);
-		System.out.println("businessTypeCode: " + businessTypeCode);
-		
 		if(categoryL1Id == 0) {
 			return new ArrayList<SelectItem>();
 		}
@@ -593,15 +578,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			long categoryL2Id, 
 			String supplierType, String facilityType, Integer paidUpCapital, 
 			Integer bumiPercentage, String categoryType, String businessTypeCode) {
-		
-		System.out.println("categoryL2Id: " + categoryL2Id);
-		System.out.println("supplierType: " + supplierType);
-		System.out.println("facilityType: " + facilityType);
-		System.out.println("paidUpCapital: " + paidUpCapital);
-		System.out.println("bumiPercentage: " + bumiPercentage);
-		System.out.println("categoryType: " + categoryType);
-		System.out.println("businessTypeCode: " + businessTypeCode);
-		
+
 		if(categoryL2Id == 0) {
 			return new ArrayList<SelectItem>();
 		}
