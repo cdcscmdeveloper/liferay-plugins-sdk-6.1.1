@@ -10,7 +10,7 @@
 		header="Clone #{committeBackingBean.managedBean.headerTitle}"
 		widgetVar="clonecommittee" width="950" height="600" position="top"
 		styleClass="cloneMember">
-		<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
+		<p:panel id="clonesearchpnlid" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -119,7 +119,7 @@
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.status']}">
+				<p:column headerText="#{lbl['lbl.sc.status']}">
 					<h:outputText
 						value="#{committeBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 				</p:column>
@@ -136,32 +136,32 @@
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="#{lbl['lbl.so.bo.name']}">
+				<p:column headerText="#{lbl['lbl.sc.name']}">
 					<h:outputText value="#{member.memberName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
 					<h:outputText value="#{member.icPassport}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+				<p:column headerText="#{lbl['lbl.sc.designation']}">
 					<h:outputText value="#{member.designation}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.email']}">
+				<p:column headerText="#{lbl['lbl.sc.email']}">
 					<h:outputText
 						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+				<p:column headerText="#{lbl['lbl.sc.grade']}">
 					<h:outputText value="#{member.grade}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+				<p:column headerText="#{lbl['lbl.sc.pnp']}">
 					<h:outputText value="#{member.PNP ? 'Yes' : 'No'}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.role']}">
+				<p:column headerText="#{lbl['lbl.sc.role']}">
 					<h:outputText
 						value="#{committeBackingBean.getParameterDesc(member.memberRole)}" />
 				</p:column>

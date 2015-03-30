@@ -162,7 +162,7 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.status']}">
+					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
 							value="#{qTBusinessOwnerBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 					</p:column>
@@ -170,7 +170,7 @@
 			</p:panel>
 			<p:spacer height="3" />
 			<p:panel id="cloneCommitteMembers"
-				header="#{lbl['lbl.so.business.owner']}" toggleable="true">
+				header="#{lbl['lbl.sc.qt.business.owner']}" toggleable="true">
 				<p:dataTable id="businessownerlistid"
 					value="#{qTBusinessOwnerBackingBean.managedBean.cloneCommitteMemebers}"
 					var="member" rowKey="#{member}"
@@ -179,36 +179,36 @@
 
 					<p:column selectionMode="multiple" style="width:2%" />
 
-					<p:column headerText="#{lbl['lbl.so.bo.name']}">
+					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<h:outputText value="#{member.memberName}"
 							style="white-space: normal;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
 						<h:outputText value="#{member.icPassport}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+					<p:column headerText="#{lbl['lbl.sc.designation']}">
 						<h:outputText value="#{member.designation}"
 							style="white-space: normal;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.email']}">
+					<p:column headerText="#{lbl['lbl.sc.email']}">
 						<h:outputText
 							value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}"
 							style="white-space: normal;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+					<p:column headerText="#{lbl['lbl.sc.grade']}">
 						<h:outputText value="#{member.grade}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+					<p:column headerText="#{lbl['lbl.sc.pnp']}">
 						<h:outputText
 							value="#{lbl[member.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
+					<p:column headerText="#{lbl['lbl.sc.consolidate']}">
 						<h:outputText
 							value="#{lbl[member.consolidateValue ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 					</p:column>
