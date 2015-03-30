@@ -225,8 +225,8 @@
 								rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag}"
 								disabled="#{!typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null }"
 								action="#{ruleCatalogueBackingBean.cloneRuleTypeValue(index)}"
-								partialSubmit="true" process=":form:settingTabId"
-								update=":form:settingTabId">
+								partialSubmit="true" process=":form:settingTabId:ruleConfigId"
+								update=":form:settingTabId:ruleConfigId">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;"><p:commandLink
