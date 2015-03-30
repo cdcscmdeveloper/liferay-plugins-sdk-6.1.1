@@ -149,14 +149,14 @@
 				</div></td>
 			<td><div align="right" style="width: 99%">
 			 <c:if test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
+					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						actionListener="#{evaluationBackingBean.setTabValue('1','3')}"
 						action="#{evaluationBackingBean.updateSmAppl}"
 						iconPos="right" update=":form" />
 						</c:if>
 						
 						<c:if test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
+					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						actionListener="#{evaluationBackingBean.setTabValue('1','2')}"
 						action="#{evaluationBackingBean.updateSmAppl}"
 						iconPos="right" update=":form" />
