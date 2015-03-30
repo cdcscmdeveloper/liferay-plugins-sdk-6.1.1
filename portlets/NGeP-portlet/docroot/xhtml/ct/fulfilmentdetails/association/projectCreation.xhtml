@@ -90,7 +90,7 @@
 			      <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" onsuccess="dlgDel.show()"  />     
 			   </div>
 			 <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
-               resizable="false" modal="true" width="330">  
+              	modal="true" width="330">  
            <h:panelGrid columns="3">
             <p:graphicImage library="ep/images/design" name="exclamation.png"
 			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
@@ -106,7 +106,7 @@
        
          </p:panel>
 		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.search.contract']}" 
-		    widgetVar="dlg2" modal="true" width="800" height="425">
+		    widgetVar="dlg2" modal="true" styleClass="pop_up_top" width="800" height="425">
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">
                   <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />

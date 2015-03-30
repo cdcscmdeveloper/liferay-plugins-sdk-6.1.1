@@ -51,7 +51,7 @@
 			    onsuccess="delCtPersonDlg.show()" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>				
 		</div>
 		
-		<p:dialog id="delCtPersonDlg" resizable="false"
+		<p:dialog id="delCtPersonDlg" 
 		    styleClass="screen-title" widgetVar="delCtPersonDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -104,7 +104,7 @@
 			    </tr>
 			</table>
 		 </div>
-		<p:dialog id="delExemptedOrgDlg" resizable="false"
+		<p:dialog id="delExemptedOrgDlg"
 		    styleClass="screen-title" widgetVar="delExemptedOrgDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -145,7 +145,8 @@
 		</div>		
 	</p:panel>
 	
-	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" modal="true" width="550" height="350">
+	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
+		styleClass="pop_up_top" modal="true" width="550" height="350">
 		<p:panel id="circular">
 			<p:dataTable id="cancelledCclDt" var="cancelledCircularDlgVar" rowKey="#{cancelledCircularDlgVar}" rowIndexVar="index"
 				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" 

@@ -121,8 +121,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.buttonHideActive}" 
 			 rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	    </div>
-	    <p:dialog id="bulkUpdateDlg" header="#{lbl['lbl.ct.bulk.update']}" resizable="false"
-		    styleClass="screen-title" widgetVar="bulkUpdateDlg"  modal="true" width="300" height="120">  
+	    <p:dialog id="bulkUpdateDlg" header="#{lbl['lbl.ct.bulk.update']}" styleClass="pop_up_top"
+		    widgetVar="bulkUpdateDlg"  modal="true" width="300" height="120">  
             <h:panelGrid columns="3">
                <f:verbatim></f:verbatim>
               <p:outputLabel  value="#{lbl['lbl.ct.panel.coverage']}"/>
@@ -142,7 +142,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="bulkUpdateDlg.hide();" type="button" />
 		   </div>
         </p:dialog>
-		<p:dialog id="delItemDlg" resizable="false"
+		<p:dialog id="delItemDlg" 
 		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -156,7 +156,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		   </div>
         </p:dialog>
         <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
-	   		styleClass="screen-title" modal="true" width="700" height="450" resizable="false" position="top">
+	   		styleClass="pop_up_top" modal="true" width="700" height="450">
 	   		<h:panelGrid columns="1">
 	    		<p:outputLabel value="#{lbl['lbl.ct.item.name']}" >: #{panelBackingBean.managedBean.selectedItemForSpec.itemName}</p:outputLabel>
 	     	</h:panelGrid>
@@ -181,7 +181,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"  onclick="itemSpecDlg.hide();" />
 			</div>
    		</p:dialog>
-   		<p:dialog id="delPanelItemSpecDlg" resizable="false"
+   		<p:dialog id="delPanelItemSpecDlg"
 		    styleClass="screen-title" widgetVar="delPanelItemSpecDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -248,7 +248,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		     onsuccess="delZoneDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 	    </div>	
 	  </h:panelGroup>
-	  <p:dialog header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" modal="true" width="600" position="top" height="500">
+	  <p:dialog header="#{lbl['lbl.ct.add.location']}" widgetVar="ZoneGeneral" 
+	  	styleClass="pop_up_top" modal="true" width="600" height="500">
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
 				<tr>
@@ -291,7 +292,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</p:commandButton>
 	   </p:dialog>
 	   
-	   <p:dialog id="delZoneDlg" resizable="false"
+	   <p:dialog id="delZoneDlg"
 		    styleClass="screen-title" widgetVar="delZoneDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -369,7 +370,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			</table>
 	      </div>
 	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg"
-		   styleClass="screen-title" resizable="false" modal="true" width="330">  
+		   styleClass="screen-title" modal="true" width="330">  
            <h:panelGrid columns="3">
              <p:graphicImage library="ep/images/design" name="exclamation.png"
 			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>

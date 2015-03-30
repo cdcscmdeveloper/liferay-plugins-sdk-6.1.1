@@ -130,7 +130,7 @@
 				</table>
 	      		</div>
 		      	<p:dialog id="delAddressDlg" widgetVar="delAddressDlg"
-			   		styleClass="screen-title" resizable="false" modal="true" width="330">  
+			   		styleClass="screen-title" modal="true" width="330">  
 	           		<h:panelGrid columns="3">
 	             	<p:graphicImage library="ep/images/design" name="exclamation.png"
 				   		value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -148,7 +148,7 @@
 	    </p:outputPanel> 
 	  	    
         <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
-           resizable="false" modal="true" width="330">  
+           modal="true" width="330">  
            <h:panelGrid columns="3">
             <p:graphicImage library="ep/images/design" name="exclamation.png"
 			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
@@ -163,7 +163,8 @@
 		   </div>
         </p:dialog>  
 	   </p:panel>  
-		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" modal="true" width="700" height="500">
+		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" 
+			styleClass="pop_up_top" modal="true" width="700" height="500">
 			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
 		   <p:panel  id="agencyies">
@@ -301,7 +302,7 @@
 		</tr>
 	</table>
 
-	<p:dialog id="uploadDlg1" widgetVar="uploadDlg1" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="uploadDlg1" widgetVar="uploadDlg1" modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
@@ -314,7 +315,7 @@
 	</p:dialog>
 	
 	<p:dialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1"
-      	styleClass="screen-title" resizable="false" modal="true" width="330">  
+      	styleClass="screen-title" modal="true" width="330">  
       	<h:panelGrid columns="3">
  			<p:graphicImage library="ep/images/design" name="exclamation.png"
 		     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
