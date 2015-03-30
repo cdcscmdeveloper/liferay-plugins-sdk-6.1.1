@@ -15,7 +15,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu id="ppMinistry" value="#{reportBackingBean.commonMinistry}" style="margin-top:5px;width:300px;">										
 										<f:selectItems value="#{reportBackingBean.pmMinistryList}"></f:selectItems>	
-										<p:ajax event="change" listener="#{reportBackingBean.retrievePtjListByMinistryId()}" process="@this" partialSubmit="true" update="@all" />	
+										
 																																																																			
 									</p:selectOneMenu>	
 								  </c:if>
