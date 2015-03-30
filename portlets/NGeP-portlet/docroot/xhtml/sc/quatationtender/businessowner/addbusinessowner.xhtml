@@ -29,7 +29,7 @@
 			<p:panel id="newProfile">
 				<c:if
 					test="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel id="usersearchpnlids" header="#{lbl['lbl.so.searchbtn']}"
+					<p:panel id="usersearchpnlids" header="#{lbl['lbl.sc.search']}"
 						toggleable="true">
 						<table>
 							<tr>
@@ -61,11 +61,11 @@
 						</table>
 					</p:panel>
 					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{qTBusinessOwnerBackingBean.searchUserAction}"
 							update="existingsearch"
 							process="@this, usersearchpnlids" />
-						<p:commandButton value="#{lbl['lbl.so.reset']}"
+						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							action="#{qTBusinessOwnerBackingBean.reset}"
 							update="usersearchpnlids"  resetValues="true"
 							partialSubmit="true" process="@this" />

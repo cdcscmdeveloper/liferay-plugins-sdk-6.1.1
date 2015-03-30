@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 		id="qtsearchid">
 		<table>
 			<tr>
@@ -61,10 +61,10 @@
 			</tr>
 		</table>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
 				action="#{committeBackingBean.searchQTAction}" update="searchQTs"
 				process="@this, qtsearchid" />
-			<p:commandButton value="#{lbl['lbl.so.reset']}"
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				action="#{committeBackingBean.resetSearchDetails}"
 				update="qtsearchid" resetValues="true"
 				partialSubmit="true" process="@this" />

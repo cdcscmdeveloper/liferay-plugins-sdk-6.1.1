@@ -10,7 +10,7 @@
 		width="950" height="600" position="top"
 		styleClass="cloneCommitteMember">
 		<p:panel id="pnlid">
-			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.so.searchbtn']}"
+			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.sc.search']}"
 				toggleable="true">
 				<table>
 					<tr>
@@ -81,7 +81,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						action="#{qTCommitteBackingBean.cloneSearchQtAction}"
 						update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
-					<p:commandButton value="#{lbl['lbl.so.reset']}"
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTCommitteBackingBean.resetClone}" update="pnlid"
 						resetValues="true" partialSubmit="true"
 						process="@this" />
