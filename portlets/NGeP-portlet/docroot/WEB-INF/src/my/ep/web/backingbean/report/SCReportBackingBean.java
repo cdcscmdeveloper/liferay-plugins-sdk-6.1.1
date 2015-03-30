@@ -1,13 +1,16 @@
 package my.ep.web.backingbean.report;
 
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
@@ -568,10 +571,21 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
         return monthList;
 	}
 	public List<String> generateYearList(){
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
+		
+		Date currentDate = new Date();
+		Integer year = null;
+		String yearFrom=outputDateFormat.format(currentDate).substring(6, 10);
+		if(yearFrom!=null){
+			year = Integer.parseInt(yearFrom);
+		}
 		yearList = new ArrayList<String>();
-		 for (int i = 1950; i <= 2150; i++) {
+		if(year!=null){
+		 for (int i = year-7; i <= year; i++) {
 			 yearList.add(Integer.toString(i));
 		 }
+		}
 		 return yearList; 
 	}
 }
