@@ -10,12 +10,69 @@
 	<ui:define name="contentSection">
 		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
-
+		<ui:param name="isSupplierAckStatus" value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		
 		<ui:include src="/xhtml/sc/loi/loirequest/loiButtons.xhtml" />
-
 		<ui:include src="loiSupplierHeader.xhtml" />
-		<p:media value="#{lOIDetailBackingBean.loiLetterStreamContent}"
-			width="100%" height="450px" player="pdf" />
+
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						id="mainTabMenu"
+						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+						styleClass="sidemenu">
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.letter.of.intent']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.declaration']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.integrity.pact']}" update="@form">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
+
+					</p:tabMenu></td>
+				<td width="80%">
+						<c:if
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 0}">
+							<ui:include src="loiDetailsSupplierMenu.xhtml" />
+						</c:if>
+						<c:if
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 1}">
+							<ui:include src="loiLetterOfAcceptanceView.xhtml" />
+						</c:if>
+
+						<p:outputPanel autoUpdate="true"
+							rendered="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 2}">
+							<ui:include src="loiDeclarationMenu.xhtml" />
+						</p:outputPanel>
+						
+						<p:outputPanel autoUpdate="true"
+							rendered="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3}">
+							<ui:include src="loiIntegrityPactMenu.xhtml" />
+						</p:outputPanel>
+
+					</td>
+			</tr>
+		</table>
+
 	</ui:define>
 
 </ui:composition>
