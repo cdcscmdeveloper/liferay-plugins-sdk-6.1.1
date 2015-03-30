@@ -26,52 +26,55 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
 			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 
-		<div class="ppRightBtn">
-			<c:if
-				test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
-				<p:commandButton immediate="true" partialSubmit="true"
-					process="@this"
-					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
-					rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-					style="float:left;"
-					action="#{purchaseInDefaultBackingBean.backToPrevious}" />
+		<c:if
+			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
+			<table style="width: 100%">
+				<tr>
+					<td align="right">
+					   <p:commandButton immediate="true"
+							partialSubmit="true" process="@this"
+							value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+							style="float:left;"
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
+						<p:commandButton
+							immediate="true" value="#{lbl['lbl.btn.back']}"
+							partialSubmit="true" process="@this" style="float:left;"
+							rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
+						<p:commandButton
+							value="#{lbl['lbl.sc.common.submit']}"
+							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" process="@all" partialSubmit="true"
+							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
+					</td>
+				</tr>
+			</table>
+		</c:if>
+		<c:if
+			test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null}">
+			<table style="width: 100%">
+				<tr>
+					<td align="right">
+					   <ui:repeat var="bpmAction"
+							value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-				<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
-					partialSubmit="true" process="@this" style="float:left;"
-					rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
-					action="#{purchaseInDefaultBackingBean.backToPrevious}" />
+							<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
 
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
-					action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					update="@form" process="@all" partialSubmit="true"
-					rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
-			</c:if>
-		</div>
-		<div>
-			<c:if
-				test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null}">
-				<table style="width: 100%">
-					<tr>
-						<td align="right"><ui:repeat var="bpmAction"
-								value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
-								<ui:param name="buttonLabel"
-									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								styleClass="ui-button" update="#{isReject ? '@form' : ''}"
+								partialSubmit="true"
+								actionListener="#{purchaseInDefaultBackingBean.approverAction(bpmAction)}" />
 
-								<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
-
-								<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="ui-button" update="#{isReject ? '@form' : ''}"
-									partialSubmit="true"
-									actionListener="#{purchaseInDefaultBackingBean.approverAction(bpmAction)}" />
-
-							</ui:repeat></td>
-					</tr>
-				</table>
-			</c:if>
-		</div>
-		<br/>	
+						</ui:repeat></td>
+				</tr>
+			</table>
+		</c:if>
+		<p:spacer height="2px"></p:spacer>
 		<table style="border: 0px; align: center">
 			<tr>
 				<td>
@@ -81,6 +84,5 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				</td>
 			</tr>
 		</table>
-
 	</ui:define>
 </ui:composition>
