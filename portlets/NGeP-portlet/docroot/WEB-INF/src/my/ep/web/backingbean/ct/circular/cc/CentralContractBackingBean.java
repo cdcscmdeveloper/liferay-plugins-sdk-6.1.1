@@ -614,38 +614,46 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 				}*/
-			
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+					    throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
 				if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
+					throw new EpException(MessageConst.ERROR_100023, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.contract.list", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
 				if(getManagedBean().getApproverModel().getTarget().size()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+					throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
 				}
-			//}
+			}
 			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String remark = getManagedBean().getRemarkList().get(0).getRemark();
 	 			if((remark == null || remark.length() == 0)) {
-	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 				throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	 			}
 			}
 			
-			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
-			ContractReqDTO contractReqDTO = new ContractReqDTO();
-			for(CtCircularContract circularContrart : getManagedBean().getCircularVer().getCtCircularContracts()) {				
-				awardSupplierReqDTO.setQtId(circularContrart.getCtContract().getQuotationTender().getQtId());
-				AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOILOAListBySupplier(awardSupplierReqDTO);
-				
-				for(ScLoa scLoa : awardSupplierResDTO.getLoaResultBean().getResultList()) {
-					contractReqDTO.setLoaId(scLoa.getLoaId());
-					CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
-					if(ctContract==null || ctContract.getLatestContractVer()==null) { 
-						throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				for(CtCircularContract circularContrart : getManagedBean().getCircularVer().getCtCircularContracts()) {				
+					awardSupplierReqDTO.setQtId(circularContrart.getCtContract().getQuotationTender().getQtId());
+					AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOILOAListBySupplier(awardSupplierReqDTO);
+					
+					for(ScLoa scLoa : awardSupplierResDTO.getLoaResultBean().getResultList()) {
+						contractReqDTO.setLoaId(scLoa.getLoaId());
+						CtContract ctContract = contractSO.retrieveContractByLoaId(contractReqDTO).getContract();
+						if(ctContract==null || ctContract.getLatestContractVer()==null) { 
+							throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
+						}
 					}
 				}
 			}
