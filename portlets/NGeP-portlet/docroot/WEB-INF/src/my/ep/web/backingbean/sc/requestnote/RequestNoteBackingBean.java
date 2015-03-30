@@ -684,7 +684,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestNoteDtl.getJustificationType() != null){
 					getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType().getParameterCode());
 				}
-				if(scRequestNoteDtl.getProcurementType().getParameterCode() != null){
+				if(scRequestNoteDtl.getProcurementType() != null){
 					getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 				}
 
