@@ -190,7 +190,6 @@
 			<portlet id="SmApplRevisionView"></portlet>
 			<portlet id="SoftCertPayment"></portlet>
 			<portlet id="viewSupplierProfile"></portlet>
-			<portlet id="searchSupplierProfile"></portlet>
 			<portlet id="taskStatusSearch"></portlet>
 			<portlet id="smDeactivateAdmin"></portlet>
 		</category>
