@@ -1,7 +1,6 @@
 package my.ep.web.scheduler.job.notification;
 
 import my.ep.factory.EpLogger;
-import my.ep.web.integration.common.GfmasIntegration;
 
 import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
