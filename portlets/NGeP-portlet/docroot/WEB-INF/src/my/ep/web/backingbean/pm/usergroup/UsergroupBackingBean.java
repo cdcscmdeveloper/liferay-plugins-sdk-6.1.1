@@ -133,8 +133,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		 * @param searchBean
 		 */
 		private void populateSearchBean(ISearchBean<PmUserGroup> searchBean) {
-
-			if (getManagedBean().getUserName() != null
+			
+				if (getManagedBean().getUserName() != null
 					&& !"".equalsIgnoreCase(getManagedBean().getUserName())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
@@ -169,8 +169,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 					&& !"".equalsIgnoreCase(getManagedBean().getPtjCode())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
-				codesSearchBean
-						.setSearchField("pmOrgProfile.pmOrgValidity.orgCode");
+				codesSearchBean.setSearchField("pmOrgProfile.pmOrgValidity.orgCode");
 				codesSearchBean.setSearchValue(getManagedBean().getPtjCode());
 				codesSearchBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(codesSearchBean);
@@ -200,6 +199,28 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				codesSearchBean.setSearchField("recordStatusFlg");
 				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 				searchBean.getDataFilterBeans().add(codesSearchBean);
+			}
+			
+						
+		if (null!=new FacesScopes().getUserSessionBean()) {
+			
+			UserReqDTO reqDTO = new UserReqDTO();
+			IUserSO reqSO  =  (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			
+			UserReqDTO reqDTO1 = new UserReqDTO();
+			reqDTO1.setLoginId(pmUser.getLoginId());
+			UserResDTO resDTO = reqSO.retrieveOrgprofilebyUserId(reqDTO1);
+			if(resDTO.isSuccessful()){
+				SearchFilterBean orgProfileSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+				orgProfileSearchBean.setSearchField("pmOrgProfile.orgProfileId");
+				orgProfileSearchBean.setSearchValue(resDTO.getPmOrgProfile().getOrgProfileId().toString());
+				orgProfileSearchBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(orgProfileSearchBean);
+			}
+			
 			}
 			SearchFilterBean codesSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
@@ -235,6 +256,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String backToMainPages() {
 		this.getManagedBean().setLazy(true);
+		this.getManagedBean().setSelectGrp(false);
 		this.getManagedBean().setOrgProfileId(null);
 		debugLogger("backToMainPages");
 		return NAV_TO_MAIN;
@@ -250,7 +272,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	}
 
 	public void searchUserGroupAction() {
-			getUserGroupList().reloadData();
+		getUserGroupList().reloadData();
 	}
 
 	public void setUserGroupList(IPagingDataModel<PmUserGroup> userGroupList) {
@@ -355,6 +377,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		orgProfileId = this.getManagedBean().getUserGroup().getPmOrgProfile()
 				.getOrgProfileId();
 		this.getManagedBean().setOrgProfileId(orgProfileId);
+		this.getManagedBean().setSelectGrp(true);
+		
 		RequestContext.getCurrentInstance().update("usergrouping");
 	}
 
@@ -384,6 +408,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public String gotoMaintanance(PmUserGroup userGroup) {
 		debugLogger("gotoMaintanance");
+		this.getManagedBean().setSelectGrp(true);
 		getManagedBean().setBrandNew(false);
 		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
 		List<PmUserGroupUser> groupUserList = new ArrayList<PmUserGroupUser>();
@@ -477,7 +502,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_770091, new String[] {
+										MessageConst.ERR_900022, new String[] {
 												resDTO.getUserGroup()
 												.getGroupCode()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -487,7 +512,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_770092, new String[] {
+										MessageConst.ERR_900023, new String[] {
 												resDTO.getUserGroup()
 												.getGroupCode()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -500,6 +525,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			return "userGroupMaintenance";
 	}
 
+	
+	
 	public String constuctConditionFields() {
 		orgProfileId = this.getManagedBean().getOrgProfileId();
 		if (null != orgProfileId) {
@@ -509,6 +536,11 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		return "";
 	}
 
+	/*
+	 * Verifying duplicate record 
+	 * @Param PmUserGroup
+	 * @return boolean
+	*/
 	private void findDuplicateGroup(PmUserGroup userGroup) {
 		System.out.println("inside findDuplicateGroup");
 
@@ -531,9 +563,12 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
+	/*
+	 *  Setting update user and create user 
+	 */
 	public void setUserDetails(BaseEntity baseObject) {
 		
-		//PmUser user = new FacesScopes().getUserSessionBean();
+//		PmUser user = new FacesScopes().getUserSessionBean();
 		  if (baseObject.isBrandNew()) {
 		   baseObject.setCreatedBy(1L);
 		   baseObject
