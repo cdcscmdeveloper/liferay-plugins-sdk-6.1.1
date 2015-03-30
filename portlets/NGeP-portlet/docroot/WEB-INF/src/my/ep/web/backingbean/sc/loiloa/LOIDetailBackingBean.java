@@ -81,6 +81,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
@@ -145,6 +146,8 @@ import org.primefaces.model.StreamedContent;
  * The Class LOIDetailBackingBean.
  *
  * @author Viswanath
+ * 
+ * @author Sri
  */
 @ManagedBean(name = "lOIDetailBackingBean")
 @RequestScoped
@@ -217,7 +220,7 @@ public class LOIDetailBackingBean extends
 
 			getManagedBean()
 					.setRecommendDtlIds(awardDataType.getGroupkeyList());
-
+ 
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
@@ -338,6 +341,28 @@ public class LOIDetailBackingBean extends
 				scLoi.setScLoiLoaItems(scLoiLoaItems);
 			}
 			
+			// Supplier Witness
+			ScLoiLoaWitness loiSupplierWitness = null;
+			List<ScLoiLoaWitness> scLoiLoaWitnesses = scLoi.getScLoiLoaWitnesses();
+			for (ScLoiLoaWitness scLoiLoaWitness : scLoiLoaWitnesses) {
+				String partyType = scLoiLoaWitness.getPartyType();
+
+				if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
+						.equals(partyType)) {
+					loiSupplierWitness = scLoiLoaWitness;
+				}
+			}
+			if (loiSupplierWitness == null) {
+				loiSupplierWitness = new ScLoiLoaWitness();
+				loiSupplierWitness
+				.setPartyType(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER);
+				loiSupplierWitness.setScLoi(scLoi);
+
+				scLoiLoaWitnesses.add(loiSupplierWitness);
+			}
+			getManagedBean().setScLoiLoaWitness(loiSupplierWitness);
+			
+			generateDeclarationFromVelocity(scLoi, awardSupplierResDTO.getScQt());
 			getManagedBean().setScLoi(scLoi);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -348,6 +373,76 @@ public class LOIDetailBackingBean extends
 			handleException(e);
 		}
 	}
+	
+	
+	/**
+	 * Generate declaration from velocity.
+	 *
+	 * @param scLoa the sc loa
+	 * @param scQt the sc qt
+	 * @return the string
+	 * @throws Exception the exception
+	 */
+	private String generateDeclarationFromVelocity(ScLoi scLoi,ScQt scQt)
+			throws Exception {
+		PmUser pmUser = scLoi.getAckByUser();
+		ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+		VelocityContext context = new VelocityContext();
+		String procurementMode = null;
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoi.getScLoiLoa()
+				.getDocType())) {
+			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoi.getScLoiLoa()
+				.getDocType())) {
+			if (scQt != null) {
+				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
+						.getProcurementMode().getParameterCode())) {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+				} else {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+				}
+			}
+		}
+		String title = procurementMode !=null ? procurementMode + " " + scLoiLoa.getTitle() 
+				: scLoiLoa.getTitle();
+		context.put("title", title);
+
+		String userName = "&#60;supplier user name&#62;";
+		String icNo = "&#60;ic no&#62;";
+		if (pmUser != null) {
+			userName = pmUser.getUserName();
+			icNo = pmUser.getIdentificationNo();
+		}
+		context.put("userName", userName);
+		context.put("icNo", icNo);
+
+		context.put("supplierName", scLoiLoa.getSupplierName());
+		// show (MOF/PKK/CIDB/ROS/ROC/ROB) in declaration.
+		if(scLoiLoa.getSmSupplier() != null){
+			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+			if(smSupplier.getSmMofAccounts() != null && smSupplier.getSmMofAccounts().size()>0){
+				context.put("mofNo", smSupplier.getSmMofAccounts().get(0).getMofNo());
+			} else{
+				context.put("mofNo", smSupplier.getRegNo());
+			}
+		}
+		context.put("agency", pmOrgProfile.getOrgName());
+
+		String termsConditions = DocumentGenerator
+				.getInstance()
+				.getHtmlFromVelocity(SourcingConstants.LOI_DECLARATION, context);
+		getManagedBean().setTermsConditions(termsConditions);
+		
+		String integrityPact = DocumentGenerator
+				.getInstance()
+				.getHtmlFromVelocity(SourcingConstants.LOI_INTEGRITY_PACT, context);
+
+		getManagedBean().setIntegrityPact(integrityPact);
+
+		return termsConditions;
+	}
+	
 	
 	/**
 	 * Pre render page navigation to  multiple loi page based on task id
@@ -2064,6 +2159,9 @@ public class LOIDetailBackingBean extends
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 			
 			parseLOIDetails(scLoi, outcome);
+			
+			// Terms and Conditions validation for supplier responce
+			//validateLOIDetails(scLoi, outcome);
 		
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -2123,6 +2221,27 @@ public class LOIDetailBackingBean extends
 			//iqtAwardSO = null;
 		}
 		return awardSupplierResDTO;
+	}
+	
+	/**
+	 * Validate loi details.
+	 *
+	 * @param scLoi the sc loi
+	 * @param outcome the outcome
+	 */
+	private void validateLOIDetails(ScLoi scLoi, String outcome) {
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
+
+		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
+
+			if (!getManagedBean().isAgreeWithTermsConditions1()) {
+				throw new EpException(MessageConst.ERROR_750002);
+			}
+			if (!getManagedBean().isAgreeWithTermsConditions2()) {
+				throw new EpException(MessageConst.ERROR_750002);
+			}
+		}
 	}
 
 	/**
