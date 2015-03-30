@@ -321,7 +321,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      		rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				
 				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:27%;white-space:normal;">
-				           <p:outputLabel value="#{supVar.supplier.companyName}" style="float:left;"/>
+				           <p:commandLink update="@([id$=suppDtlPopUp])"
+									action="#{panelBackingBean.showSupplierDetails(supVar.supplier)}"
+									oncomplete="suppDtlWidgetVar.show();">
+									<h:outputText value="#{supVar.supplier.companyName}" />
+								</p:commandLink>
 			          </p:column>
 				
 				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;"> 
@@ -382,7 +386,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		        actionListener="#{panelBackingBean.deletePanelSupplier()}" onclick="delSupplierDlg.hide();"/>
 			 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="delSupplierDlg.hide();" type="button" />
 		  </div>
-        </p:dialog>  
+        </p:dialog>
+        <!-- Supplier Details PopUp -->
+		<ui:include src="/xhtml/ct/circular/panel/supplierDetailsPopUp.xhtml" />
 	    </h:panelGroup>	
 	  </p:outputPanel>
 	</p:panel>

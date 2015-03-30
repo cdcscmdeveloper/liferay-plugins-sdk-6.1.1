@@ -40,6 +40,10 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
@@ -127,6 +131,13 @@ public class PanelManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private boolean autoUpdate = true;
 	private String textBeforeSign;
+	
+	private String supplierBranch;
+	private SmSupplier smSupplier;
+	private SmCompanyBasic smCompanyBasic;
+	private SmPersonnel smPersonnel;
+	private SmAddress supplierAddress;
+	private SmMofAccount smMofAccount;
 	
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
@@ -937,6 +948,91 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setFromCircularNotice(boolean fromCircularNotice) {
 		this.fromCircularNotice = fromCircularNotice;
 	}
+		
+	/**
+	 * @return the supplierBranch
+	 */
+	public String getSupplierBranch() {
+		return supplierBranch;
+	}
+
+	/**
+	 * @param supplierBranch the supplierBranch to set
+	 */
+	public void setSupplierBranch(String supplierBranch) {
+		this.supplierBranch = supplierBranch;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+
+	/**
+	 * @return the smCompanyBasic
+	 */
+	public SmCompanyBasic getSmCompanyBasic() {
+		return smCompanyBasic;
+	}
+
+	/**
+	 * @param smCompanyBasic the smCompanyBasic to set
+	 */
+	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
+		this.smCompanyBasic = smCompanyBasic;
+	}
+
+	/**
+	 * @return the smPersonnel
+	 */
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
+	}
+
+	/**
+	 * @param smPersonnel the smPersonnel to set
+	 */
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public SmAddress getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(SmAddress supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	/**
+	 * @return the smMofAccount
+	 */
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+	/**
+	 * @param smMofAccount the smMofAccount to set
+	 */
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
+	}
+
 
 	/**
 	 * Pagination for panel circular search list 

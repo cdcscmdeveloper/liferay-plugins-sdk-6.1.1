@@ -40,6 +40,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -65,6 +66,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
@@ -92,6 +95,8 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -104,6 +109,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.panel.PanelManagedBean;
@@ -1060,6 +1066,62 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
+	
+	/**
+	 * Set the selected supplier details in managed bean
+	 * 
+	 * @param smSupplier  the selected supplier
+	 */
+	public void showSupplierDetails(SmSupplier smSupplier) {
+		QTSupplierResDTO qtSupplierResDTO = new QTSupplierResDTO();
+		MofAccountResDTO mofAccResDTO = new MofAccountResDTO();
+		IQTSupplierSO qtSupplierSO = null;
+		IMofAccountSO mofAccountSO = null;
+		
+		try {
+			if (smSupplier != null) {
+				qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
+				QTSupplierReqDTO qtSupplierReqDTO = new QTSupplierReqDTO();
+				qtSupplierReqDTO.setSupplierId(smSupplier.getSupplierId());
+				qtSupplierResDTO = qtSupplierSO.retrieveSupplierDetails(qtSupplierReqDTO);
+				smSupplier = qtSupplierResDTO.getSmSupplier();
+				getManagedBean().setSmSupplier(smSupplier);
+				
+				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+				MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
+				mofAccReqDTO.setSupplierId(smSupplier.getSupplierId());
+				mofAccResDTO = mofAccountSO.retrieveMofNoBySupplierId(mofAccReqDTO);
+				getManagedBean().setSmMofAccount(mofAccResDTO.getMofAccount());
+	
+				SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
+				getManagedBean().setSmCompanyBasic(smCompanyBasic);
+	
+				List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
+				for (SmPersonnel smPersonnel : smPersonnelList) {
+					if (smPersonnel.isContactPerson()) {
+						getManagedBean().setSmPersonnel(smPersonnel);
+						break;
+					}
+				}
+				for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+					if (AddressType.CONTACT_ADDRESS.value().equals(
+							smCompanyAddress.getAddressType())) {
+						getManagedBean().setSupplierBranch(
+								QTConstants.SUPPLIER_INFO_HQ);
+						getManagedBean().setSupplierAddress(
+								smCompanyAddress.getSmAddress());
+						break;
+					}
+				}
+			}
+		} finally {
+			qtSupplierSO = null;
+			mofAccountSO = null;
+		}
+	}
+	
 	
 	/**
 	 * Method used to display type of circular for user selection
