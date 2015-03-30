@@ -762,9 +762,9 @@ public class RuleCatalogueBackingBean extends
 							.get(j);
 					log.info(".............ruleType.getIsRangeValue() == "
 							+ ruleType.getIsRangeValue());
-					log.info(".............baseValueToCompare.isShowFlag()="
+					log.info(".............value.isShowFlag()="
 							+ value.isShowFlag());
-					if (value.getRecordStatusFlg() == 0 || (ruleType.getIsRangeValue() == 1 && !baseValueToCompare.isShowFlag())) {// if is inActive one
+					if (value.getRecordStatusFlg() == 0 || (ruleType.getIsRangeValue() == 1 && !value.isShowFlag())) {// if is inActive one
 															// go to next record
 					
 
