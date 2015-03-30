@@ -10,6 +10,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -40,6 +42,7 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.pm.general.settings.threshold.ThresholdReqDTO;
 import my.ep.dto.pm.general.settings.threshold.ThresholdResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -54,6 +57,7 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -63,6 +67,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RuleConfigHelper;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -117,46 +122,17 @@ public class RuleCatalogueBackingBean extends
 					.println("resDTO.getPmConfigGeneral().getFinancialYear()="
 							+ resDTO.getPmConfigGeneral().getFinancialYear());
 			// this.getManagedBean().setTabActiveIndex(0);
-
-			// /////////////////////////////////////////////////////////
-			// /getting general Rule///////////////////////
-			// IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-			// .getServiceObject("pm", IRuleSO.class);
-			// RuleReqDTO reqRDTO = new RuleReqDTO();
-			// FacesScopes fs = new FacesScopes();
-			// reqRDTO.setLanguageCode(fs.getUserLocale().getLanguage());
+			// for(PmConfigRule
+			// configRule:RuleConfigHelper.getInstance().getRuleTypeList()){
+			// PmConfigRule clone = (PmConfigRule)
+			// SerializationUtils.clone(configRule);
 			//
-			// RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
+			// }
+			  List<PmConfigRule> list = retriveConfigRuleFromDB();
+				this.getManagedBean().setConfigRuleList(list);
+				this.getManagedBean().setSelectedRuleType(list.get(0));
 
-			this.getManagedBean().setConfigRuleList(
-					RuleConfigHelper.getInstance().getRuleTypeList());
-			this.getManagedBean().setSelectedRuleType(
-					RuleConfigHelper.getInstance().getRuleTypeList().get(0));
-			// fill up ruleType's ruleValueList
-			for (PmConfigRule cRule : this.getManagedBean().getConfigRuleList()) {
-				cRule.setConfigRuleValues(RuleConfigHelper.getInstance()
-						.getRuleTypeValueListByRuleType(cRule.getRuleType()));
-			}
-			// fill up category display value
-			for (PmConfigRule rule : this.getManagedBean().getConfigRuleList()) {
-				if (rule.getRuleDataTypeId().getParameterCode()
-						.equalsIgnoreCase("c")) {
-					for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
-						PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
-						if (categoryL3 != null) {
-							String categoryL3Code = categoryL3
-									.getCategoryL3Code();
-							String categoryL2Code = categoryL3
-									.getPmCategoryL2().getCategoryL2Code();
-							String categoryL1Code = categoryL3
-									.getPmCategoryL2().getPmCategoryL1()
-									.getCategoryL1Code();
-							cRule.setCategoryDisplayValue(categoryL1Code
-									+ categoryL2Code + categoryL3Code);
-						}
-					}
-				}
-			}
+			
 			// ////////////getitng FeeExemption////////////////////////////
 			IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
 					.getInstance()
@@ -292,6 +268,67 @@ public class RuleCatalogueBackingBean extends
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	private List<PmConfigRule> retriveConfigRuleFromDB(){
+		List<PmConfigRule> configRules = new ArrayList<PmConfigRule>();
+		// get Rule config from DB
+		IRuleSO ruleSO;
+		try {
+			// get from db
+			ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IRuleSO.class);
+			RuleReqDTO reqRDTO = new RuleReqDTO();
+			String languageCode = new FacesScopes().getUserLocale()
+					.getLanguage();
+			reqRDTO.setLanguageCode(languageCode);
+			SearchBean<PmConfigRule> searchBean = new SearchBean<PmConfigRule>();
+			// Filter By - status
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatus",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			reqRDTO.setSearchBean(searchBean);
+			RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
+			configRules = resRDTO.getRuleTypeList();
+
+
+			// fill up ruleType's ruleValueList
+			for (PmConfigRule cRule : configRules) {
+				
+				reqRDTO.setRuleType(cRule.getRuleType());
+				resRDTO = ruleSO
+						.getRuleValuesByRuleType(reqRDTO);
+				List<PmConfigRuleValue> valuelist = resRDTO.getRuleValueList();
+				cRule.setConfigRuleValues(valuelist);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			ruleSO = null;
+		}
+		// fill up category display value
+		for (PmConfigRule rule : configRules) {
+			if (rule.getRuleDataTypeId().getParameterCode()
+					.equalsIgnoreCase("c")) {
+				for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
+					PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
+					if (categoryL3 != null) {
+						String categoryL3Code = categoryL3
+								.getCategoryL3Code();
+						String categoryL2Code = categoryL3
+								.getPmCategoryL2().getCategoryL2Code();
+						String categoryL1Code = categoryL3
+								.getPmCategoryL2().getPmCategoryL1()
+								.getCategoryL1Code();
+						cRule.setCategoryDisplayValue(categoryL1Code
+								+ categoryL2Code + categoryL3Code);
+					}
+				}
+			}
+		}
+		return configRules;
 	}
 
 	public void categoryCodesUpdate(int index,
@@ -746,12 +783,13 @@ public class RuleCatalogueBackingBean extends
 						+ ruleType.getIsRangeValue());
 				log.info(".............baseValueToCompare.isShowFlag()="
 						+ baseValueToCompare.isShowFlag());
-				if (baseValueToCompare.getRecordStatusFlg() == 0 || (ruleType.getIsRangeValue() == 1 && !baseValueToCompare.isShowFlag())) {// if is
-																	// inActive
-																	// one go to
-																	// next
-																	// record\
-	
+				if (baseValueToCompare.getRecordStatusFlg() == 0
+						|| (ruleType.getIsRangeValue() == 1 && !baseValueToCompare
+								.isShowFlag())) {// if is
+					// inActive
+					// one go to
+					// next
+					// record\
 
 					continue;
 				}
@@ -764,9 +802,10 @@ public class RuleCatalogueBackingBean extends
 							+ ruleType.getIsRangeValue());
 					log.info(".............value.isShowFlag()="
 							+ value.isShowFlag());
-					if (value.getRecordStatusFlg() == 0 || (ruleType.getIsRangeValue() == 1 && !value.isShowFlag())) {// if is inActive one
-															// go to next record
-					
+					if (value.getRecordStatusFlg() == 0
+							|| (ruleType.getIsRangeValue() == 1 && !value
+									.isShowFlag())) {// if is inActive one
+						// go to next record
 
 						continue;
 					}
@@ -810,35 +849,15 @@ public class RuleCatalogueBackingBean extends
 			// retrive updated list
 
 			RuleConfigHelper.getInstance().relodeRuleTypeValueMaps();
-			this.getManagedBean().setConfigRuleList(
-					RuleConfigHelper.getInstance().getRuleTypeList());
-			this.getManagedBean().setSelectedRuleType(
-					RuleConfigHelper.getInstance().getRuleTypeList().get(0));
-			// fill up ruleType's ruleValueList
-			for (PmConfigRule cRule : this.getManagedBean().getConfigRuleList()) {
-				cRule.setConfigRuleValues(RuleConfigHelper.getInstance()
-						.getRuleTypeValueListByRuleType(cRule.getRuleType()));
-			}
-			// fill up category display value
-			for (PmConfigRule rule : this.getManagedBean().getConfigRuleList()) {
-				if (rule.getRuleDataTypeId().getParameterCode()
-						.equalsIgnoreCase("c")) {
-					for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
-						PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
-						if (categoryL3 != null) {
-							String categoryL3Code = categoryL3
-									.getCategoryL3Code();
-							String categoryL2Code = categoryL3
-									.getPmCategoryL2().getCategoryL2Code();
-							String categoryL1Code = categoryL3
-									.getPmCategoryL2().getPmCategoryL1()
-									.getCategoryL1Code();
-							cRule.setCategoryDisplayValue(categoryL1Code
-									+ categoryL2Code + categoryL3Code);
-						}
-					}
-				}
-			}
+			
+//			this.getManagedBean().setConfigRuleList(
+//					RuleConfigHelper.getInstance().getRuleTypeList());
+//			this.getManagedBean().setSelectedRuleType(
+//					RuleConfigHelper.getInstance().getRuleTypeList().get(0));
+			  List<PmConfigRule> list = retriveConfigRuleFromDB();
+			  this.getManagedBean().setConfigRuleList(list);
+			this.getManagedBean().setSelectedRuleType(list.get(0));
+	
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
@@ -866,7 +885,9 @@ public class RuleCatalogueBackingBean extends
 			validationResult = !isDateOverlaped(firstRuleValue.getEffDate(),
 					firstRuleValue.getExpDate(), secondRuleValue.getEffDate(),
 					secondRuleValue.getExpDate());
-		} else if (validationType == '2' || validationType == '3') {// EffectiveDate +value validation
+		} else if (validationType == '2' || validationType == '3') {// EffectiveDate
+																	// +value
+																	// validation
 
 			if (RuleDataTypeId.getParameterCode().equalsIgnoreCase("c")) {
 				if (firstRuleValue.getCategoryDisplayValue().equals(
@@ -888,25 +909,26 @@ public class RuleCatalogueBackingBean extends
 				validationResult = true;
 			}
 
-//		} else {// validationType == '3' , //EffectiveDate + value + Range
-//				// validation
-//			if (firstRuleValue.getRuleValue().equals(
-//					secondRuleValue.getRuleValue())) {
-//				isValuesEqual = true;
-//			}
-//			if (isValuesEqual) {
-//				validationResult = !(isRangeOverlaped(
-//						firstRuleValue.getFromValue(),
-//						firstRuleValue.getToValue(),
-//						secondRuleValue.getFromValue(),
-//						secondRuleValue.getToValue()) && isDateOverlaped(
-//						firstRuleValue.getEffDate(),
-//						firstRuleValue.getExpDate(),
-//						secondRuleValue.getEffDate(),
-//						secondRuleValue.getExpDate()));
-//			} else {
-//				validationResult = true;
-//			}
+			// } else {// validationType == '3' , //EffectiveDate + value +
+			// Range
+			// // validation
+			// if (firstRuleValue.getRuleValue().equals(
+			// secondRuleValue.getRuleValue())) {
+			// isValuesEqual = true;
+			// }
+			// if (isValuesEqual) {
+			// validationResult = !(isRangeOverlaped(
+			// firstRuleValue.getFromValue(),
+			// firstRuleValue.getToValue(),
+			// secondRuleValue.getFromValue(),
+			// secondRuleValue.getToValue()) && isDateOverlaped(
+			// firstRuleValue.getEffDate(),
+			// firstRuleValue.getExpDate(),
+			// secondRuleValue.getEffDate(),
+			// secondRuleValue.getExpDate()));
+			// } else {
+			// validationResult = true;
+			// }
 		}
 		return validationResult;
 	}
@@ -1691,15 +1713,19 @@ public class RuleCatalogueBackingBean extends
 				.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.get(index).getGroupValueId());
 		log.info("markIndex=" + markIndex);
-		
-		if(this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-				.get(markIndex).getRuleValue() == null || this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-				.get(markIndex).getRuleValue().isEmpty()){
+
+		if (this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+				.get(markIndex).getRuleValue() == null
+				|| this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().get(markIndex).getRuleValue()
+						.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770162);
 		}
 		if (this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-				.get(markIndex).getToValue() != null && !this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-						.get(markIndex).getRuleValue().isEmpty()) {
+				.get(markIndex).getToValue() != null
+				&& !this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().get(markIndex).getRuleValue()
+						.isEmpty()) {
 			ruleValue.setFromValue(this.getManagedBean().getSelectedRuleType()
 					.getConfigRuleValues().get(markIndex).getToValue() + 1);
 			ruleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
@@ -1710,23 +1736,30 @@ public class RuleCatalogueBackingBean extends
 		}
 
 	}
-	
+
 	/**
-* update ToValue.
-* 
-* @param index
-*            (int index(mandatory))
-*/
-public void updateToValue(int index) {
-   log.info("................index="+index);
-   log.info("................this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size()="+this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size());
-if (index < this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size() - 1) {
-	PmConfigRuleValue rulevalue = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index + 1);
-	if (rulevalue.getGroupValueId() == this.getManagedBean()
-			.getSelectedRuleType().getConfigRuleValues().get(index).getGroupValueId())
-		rulevalue.setFromValue(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index).getToValue() + 1);
-  }
-}
+	 * update ToValue.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
+	public void updateToValue(int index) {
+		log.info("................index=" + index);
+		log.info("................this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size()="
+				+ this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().size());
+		if (index < this.getManagedBean().getSelectedRuleType()
+				.getConfigRuleValues().size() - 1) {
+			PmConfigRuleValue rulevalue = this.getManagedBean()
+					.getSelectedRuleType().getConfigRuleValues().get(index + 1);
+			if (rulevalue.getGroupValueId() == this.getManagedBean()
+					.getSelectedRuleType().getConfigRuleValues().get(index)
+					.getGroupValueId())
+				rulevalue.setFromValue(this.getManagedBean()
+						.getSelectedRuleType().getConfigRuleValues().get(index)
+						.getToValue() + 1);
+		}
+	}
 
 	/*
 	 * Adds the new ruleTypeValue.
@@ -1752,10 +1785,13 @@ if (index < this.getManagedBean().getSelectedRuleType().getConfigRuleValues().si
 					.getConfigRuleValues() != null
 					&& this.getManagedBean().getSelectedRuleType()
 							.getConfigRuleValues().size() > 0) {
-              int size = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size();
-              newRuleValue.setGroupValueId(this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(size-1).getGroupValueId() +1 );
+				int size = this.getManagedBean().getSelectedRuleType()
+						.getConfigRuleValues().size();
+				newRuleValue.setGroupValueId(this.getManagedBean()
+						.getSelectedRuleType().getConfigRuleValues()
+						.get(size - 1).getGroupValueId() + 1);
 			} else {
-				  newRuleValue.setGroupValueId(1);
+				newRuleValue.setGroupValueId(1);
 			}
 			newRuleValue.setFromValue(1d);
 		}
