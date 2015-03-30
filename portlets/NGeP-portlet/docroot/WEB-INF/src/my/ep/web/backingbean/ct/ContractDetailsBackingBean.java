@@ -927,7 +927,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  			String settingRemark = getManagedBean().getContractVer().getSettingRemarks().get(0).getRemark();
  			if ((remark == null || remark.length() == 0) 
  					&& (agencyRemark == null || agencyRemark.length() == 0) 
- 					&&  (zoneRemark == null || zoneRemark.length() == 0)
+ 					&& (zoneRemark == null || zoneRemark.length() == 0)
  					&& (itemRemark == null || itemRemark.length() == 0) 
  					&& (deductionRemark == null || deductionRemark.length() == 0)
  					&& (scheduleRemark == null || scheduleRemark.length() == 0) 
