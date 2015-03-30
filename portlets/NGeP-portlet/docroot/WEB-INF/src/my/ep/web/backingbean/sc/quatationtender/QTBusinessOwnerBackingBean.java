@@ -1135,6 +1135,9 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		scQt.setScQtCommittees(qtCommittees);
 		scQt.setScQtBriefings(null);
+		if (scQt.getQtTitle().equals("")) {
+			throw new EpException("Title is mandatory.");
+		}
 		// Constructing reqDto
 		/*
 		 * QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
