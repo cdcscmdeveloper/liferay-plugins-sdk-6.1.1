@@ -141,7 +141,7 @@
 								 <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
 								    onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
-								    rendered="#{requestNoteDtl.vCmSupplierItem ne null}"
+								    rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}"
 									update="@([id$=suppDetailsPopup])">
 									<p:graphicImage library="ep/images/design" name="evaluate.png"
 										style="vertical-align:middle" />
