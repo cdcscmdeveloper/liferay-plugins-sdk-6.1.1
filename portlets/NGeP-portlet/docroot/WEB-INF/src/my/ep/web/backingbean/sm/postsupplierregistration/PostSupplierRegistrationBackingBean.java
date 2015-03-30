@@ -334,6 +334,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	public void proceedToSupplierSelection() throws PortalException, SystemException, IOException{
 		SmSupplier supplier = getSupplierProfile();
 		if(supplier != null){
+			this.getManagedBean().setSmSupplier(supplier);
 			if(!supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
 					!supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
 /*				pageRedirect(DASHBOARD_PATH);
