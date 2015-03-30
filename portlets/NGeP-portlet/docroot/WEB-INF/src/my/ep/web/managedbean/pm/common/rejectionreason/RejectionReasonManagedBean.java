@@ -36,6 +36,9 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmSupplierReason> deleteAppTypeRestrictions;
 	private List <PmSupplierReason> deleteComTypeRestrictions;
 	private List <PmSupplierReason> deleteSuppTypeRestrictions;
+	private boolean suppAppCheck;
+	private boolean suppComCheck;
+	private boolean suppTypeCheck;
 
 
 	/**
@@ -186,6 +189,48 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	public void setDeleteSuppTypeRestrictions(
 			List<PmSupplierReason> deleteSuppTypeRestrictions) {
 		this.deleteSuppTypeRestrictions = deleteSuppTypeRestrictions;
+	}
+
+	/**
+	 * @return the suppAppCheck
+	 */
+	public boolean isSuppAppCheck() {
+		return suppAppCheck;
+	}
+
+	/**
+	 * @param suppAppCheck the suppAppCheck to set
+	 */
+	public void setSuppAppCheck(boolean suppAppCheck) {
+		this.suppAppCheck = suppAppCheck;
+	}
+
+	/**
+	 * @return the suppComCheck
+	 */
+	public boolean isSuppComCheck() {
+		return suppComCheck;
+	}
+
+	/**
+	 * @param suppComCheck the suppComCheck to set
+	 */
+	public void setSuppComCheck(boolean suppComCheck) {
+		this.suppComCheck = suppComCheck;
+	}
+
+	/**
+	 * @return the suppTypeCheck
+	 */
+	public boolean isSuppTypeCheck() {
+		return suppTypeCheck;
+	}
+
+	/**
+	 * @param suppTypeCheck the suppTypeCheck to set
+	 */
+	public void setSuppTypeCheck(boolean suppTypeCheck) {
+		this.suppTypeCheck = suppTypeCheck;
 	}
 
 
