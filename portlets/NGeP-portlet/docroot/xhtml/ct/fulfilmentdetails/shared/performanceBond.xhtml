@@ -106,8 +106,8 @@
 				</p:commandButton>
 			
 		</div>
-		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false"
-			resizable="false" width="700px" height="350" styleClass="pop_up_top"
+		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="true"
+			width="700px" height="350" styleClass="pop_up_top"
 			header="#{lbl['lbl.bpm.choose.file']}">
 			<p:ajax event="close" />
 			<p:fileUpload style="display:inline;" mode="advanced"
@@ -119,7 +119,7 @@
 		</p:dialog>
 		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
 			styleClass="screen-title"
-			resizable="false" modal="true" width="330">
+			modal="true" width="330">
 			<h:panelGrid columns="3">
 				<p:graphicImage library="ep/images/design" name="exclamation.png"
 					value="/css/images/design/exclamation.png"

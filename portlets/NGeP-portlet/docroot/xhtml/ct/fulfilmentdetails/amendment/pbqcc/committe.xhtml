@@ -94,7 +94,7 @@
 		     </div>
            
              <p:dialog id="dlgCommitteDetails"
-                 styleClass="screen-title"  widgetVar="dlgDel"   resizable="false" modal="true" width="330">  
+                 styleClass="screen-title"  widgetVar="dlgDel" modal="true" width="330">  
                
                  <h:panelGrid columns="3">
                       <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -113,7 +113,8 @@
              </p:dialog>
         </p:panel>
       
-         <p:dialog id="modelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlg2" modal="true" width="950" height="550">
+         <p:dialog id="modelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlg2" 
+         	styleClass="pop_up_top" modal="true" width="950" height="550">
 		         
 		           <p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true"   toggleSpeed="500">
 		              
