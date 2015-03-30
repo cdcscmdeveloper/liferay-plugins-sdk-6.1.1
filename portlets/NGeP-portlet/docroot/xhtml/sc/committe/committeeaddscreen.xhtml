@@ -30,7 +30,7 @@
 			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel id="userPnlid" header="#{lbl['lbl.so.searchbtn']}"
+					<p:panel id="userPnlid" header="#{lbl['lbl.sc.search']}"
 						toggleable="true">
 						<table>
 							<tr>
@@ -57,17 +57,17 @@
 							</tr>
 						</table>
 						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+							<p:commandButton value="#{lbl['lbl.btn.search']}"
 								action="#{committeBackingBean.searchUserAction}"
 								update="existingsearchid" 
 								process="@this, userPnlid" />
-							<p:commandButton value="#{lbl['lbl.so.reset']}"
+							<p:commandButton value="#{lbl['lbl.btn.reset']}"
 								action="#{committeBackingBean.reset}" update="userPnlid"
 								resetValues="true" partialSubmit="true"
 								process="@this" />
 						</div>
 					</p:panel>
-					<p:panel header="#{lbl['lbl.so.result']}" toggleable="true">
+					<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true">
 						<p:dataTable id="existingsearchid"
 							value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
 							selection="#{committeBackingBean.managedBean.selectedPmUser}"

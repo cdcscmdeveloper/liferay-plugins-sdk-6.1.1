@@ -29,7 +29,7 @@
 				style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel id="userSearchPnl" header="#{lbl['lbl.so.searchbtn']}"
+					<p:panel id="userSearchPnl" header="#{lbl['lbl.sc.search']}"
 						toggleable="true">
 						<table>
 							<tr>
@@ -56,17 +56,17 @@
 							</tr>
 						</table>
 						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+							<p:commandButton value="#{lbl['lbl.btn.search']}"
 								action="#{qTCommitteBackingBean.searchUserAction}"
 								update="existingcommitteeapproversearchid"
 								process="@this, userSearchPnl" />
-							<p:commandButton value="#{lbl['lbl.so.reset']}"
+							<p:commandButton value="#{lbl['lbl.btn.reset']}"
 								action="#{qTCommitteBackingBean.reset}" update="userSearchPnl"
 								resetValues="true" partialSubmit="true"
 								process="@this" />
 						</div>
 					</p:panel>
-					<p:panel header="#{lbl['lbl.so.result']}" toggleable="true">
+					<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true">
 						<p:dataTable id="existingcommitteeapproversearchid"
 							value="#{qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel}"
 							selection="#{qTCommitteBackingBean.managedBean.selectedPmUser}"
@@ -128,7 +128,7 @@
 				</c:if>
 				<c:if
 					test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'N'}">
-					<p:panel header="#{lbl['lbl.so.new.user']}" toggleable="true">
+					<p:panel header="#{lbl['lbl.sc.new.user']}" toggleable="true">
 						<table>
 							<tr>
 								<td><p:outputLabel
