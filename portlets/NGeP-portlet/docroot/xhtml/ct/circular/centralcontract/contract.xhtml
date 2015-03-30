@@ -62,7 +62,6 @@
 		           </div>
 
 		<p:dialog id="delCtContractDlg"
-			resizable="false"
 			styleClass="screen-title" widgetVar="delCtContractDlg" modal="true"
 			width="330">
 			<h:panelGrid columns="3">
@@ -193,7 +192,7 @@
 			</h:panelGroup>
 		</p:outputPanel>
 
-		<p:dialog id="itemZoneDlg" header="#{lbl['lbl.ct.panel.zone']}"
+		<p:dialog id="itemZoneDlg" header="#{lbl['lbl.ct.panel.zone']}" styleClass="pop_up_top"
 			widgetVar="itemZoneDlg" modal="true" width="350" height="200">
 			<p:outputPanel id="itemZoneId">
 				<p:treeTable id="itemZoneDt"
@@ -215,7 +214,7 @@
 			</p:outputPanel>
 		</p:dialog>
 
-		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}"
+		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}" styleClass="pop_up_top"
 			widgetVar="contractDlg" modal="true" width="800" height="450">
 			<p:messages id="agencyMsg" showSummary="false" 
 			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />

@@ -84,7 +84,7 @@
 			</p:dataTable>
 			
 			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" 
-			     header="#{lbl['lbl.ct.amend.max.qty']}" styleClass="screen-title" resizable="false" modal="true" width="550" height="200">
+			     header="#{lbl['lbl.ct.amend.max.qty']}" styleClass="pop_up_top" modal="true" width="550" height="200">
 			  	    <h:panelGrid columns="1">
 				    	<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{amendmentBackingBean.managedBean.selectedItem.itemName}</p:outputLabel>
 				     </h:panelGrid>
@@ -142,7 +142,7 @@
 		   	     </p:dialog>	
 				
 			     <p:dialog id="dlgDelItemMaxQty" widgetVar="dlgDelItemMaxQty" 
-			         modal="true" styleClass="screen-title" resizable="false"  width="330">
+			         modal="true" styleClass="screen-title" width="330">
 				      <h:panelGrid columns="3">
 					     <p:graphicImage library="ep/images/design" name="exclamation.png"
 					     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -274,7 +274,7 @@
 				        
 				        </p:dataTable>
 			          	<p:dialog id="dlgItemPrices" widgetVar="dlgItemPrices"  modal="true"
-			          	    styleClass="screen-title" resizable="false" width="330">
+			          	    styleClass="screen-title" width="330">
 					        <h:panelGrid columns="3">
 						         <p:graphicImage library="ep/images/design" name="exclamation.png"
 						          	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -345,7 +345,7 @@
 				</p:dataTable>
 			</h:panelGrid>
 			<p:dialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" styleClass="screen-title"
-				resizable="false" modal="true" width="330">
+				modal="true" width="330">
 				<h:panelGrid columns="3">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
 						value="/css/images/design/exclamation.png"
@@ -461,7 +461,7 @@
 					</p:column>
 				</p:dataTable>
 				<p:dialog id="dlgSvcItemPrices" widgetVar="dlgSvcItemPrices" styleClass="screen-title"
-					resizable="false" modal="true" width="330">
+					modal="true" width="330">
 					<h:panelGrid columns="3">
 						<p:graphicImage library="ep/images/design" name="exclamation.png"
 							value="/css/images/design/exclamation.png"

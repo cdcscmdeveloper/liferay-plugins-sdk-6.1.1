@@ -39,7 +39,8 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true"  onclick="delCancelCircular.show()"/>				
 		</div>				
 		</p:outputPanel>	
-		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
+		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" 
+			styleClass="pop_up_top" modal="true" width="700" height="350">
 			<p:panel id="circular">
 				<p:dataTable id="circularVerDt" var="data" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
@@ -63,7 +64,7 @@
 			</p:panel>
 		</p:dialog>	
 		 <p:dialog id="delCancelCircular" widgetVar="delCancelCircular" 
-		   styleClass="screen-title" resizable="false" modal="true" width="330">  
+		   styleClass="screen-title" modal="true" width="330">  
            <h:panelGrid columns="3">
                <p:graphicImage library="ep/images/design" name="exclamation.png"
 			      value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>

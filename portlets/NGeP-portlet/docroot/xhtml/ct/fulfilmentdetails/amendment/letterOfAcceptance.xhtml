@@ -65,7 +65,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"  icon="ui-icon-download" action="#{amendmentBackingBean.downloadAll()}" />
 		 </div>
 		 <p:dialog id="uploadLetterDlg" widgetVar="uploadLetterDlg" width="700px" 
-		      height="350" modal="false" resizable="false"  styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		      height="350" modal="true" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 			  <p:ajax event="close" />
 			  <p:fileUpload mode="advanced" fileUploadListener="#{amendmentBackingBean.contentLetterUpload}"
 			      sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
@@ -74,7 +74,7 @@
 			 </p:fileUpload>
 		 </p:dialog>
 		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="330"
-		     styleClass="screen-title" resizable="false">
+		     styleClass="screen-title">
 			 <h:panelGrid columns="3">
 				 <p:graphicImage library="ep/images/design" name="exclamation.png"
 					 value="/css/images/design/exclamation.png" styleClass="ui-icon-complain" />
