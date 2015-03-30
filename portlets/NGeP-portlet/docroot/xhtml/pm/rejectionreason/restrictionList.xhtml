@@ -12,34 +12,27 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			visible="#{rejectionReasonBackingBean.managedBean.suppReason}">
 			<p:tabView widgetVar="tvReasonRestriction" id="tvReasonRestriction" dynamic="false" cache="false" orientation="top">
 				<!-- Application Type -->
-				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}">  
+				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}" disabled="#{!rejectionReasonBackingBean.managedBean.suppAppCheck}">  
 					<br/>
 					<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 						value="#{rejectionReasonBackingBean.managedBean.appTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteAppTypeRestrictions}"
-						var="restrict" rowKey="#{restrict}">
+						var="restrict" rowKey="#{restrict}"
+						disabled="#{!rejectionReasonBackingBean.managedBean.suppAppCheck}"> 
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
-						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%" />
 				        <p:column>
 				          	<f:facet name="header">
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.application.type']}" />
 						    </f:facet>
-					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
+					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM" 
+					    	disabled="#{!rejectionReasonBackingBean.managedBean.suppAppCheck}"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.applicationTypeOptions()}"/>
 								<p:ajax event="change" update="somAppType" 
 									listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.supplierApplicationTypes)}"/>
-							</p:selectOneMenu>
-				        </p:column>  
-			          	<p:column>
-				          	<f:facet name="header">
-						     	<h:outputText value="* " styleClass="mandatory" />
-						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
-						    </f:facet>
-				         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}" disabled="#{restrict.brandNew}">
-								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
 				   	</p:dataTable>
@@ -47,31 +40,35 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtAppType"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
-							partialSubmit="true"/>
+							partialSubmit="true"
+							rendered="#{rejectionReasonBackingBean.managedBean.suppAppCheck}"/>
 						&#160;
 						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
 							partialSubmit="true"
-							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
+							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" 
+							rendered="#{rejectionReasonBackingBean.managedBean.suppAppCheck}"/> 
 					</div>
 				</p:tab>
 				<!-- Company Type -->
-				<p:tab id="tComType" title="#{lbl['lbl.pm.company.type']}">  
+				<p:tab id="tComType" title="#{lbl['lbl.pm.company.type']}" disabled="#{!rejectionReasonBackingBean.managedBean.suppComCheck}">  
 					<br/>
 					<p:dataTable id="dtComType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 						value="#{rejectionReasonBackingBean.managedBean.comTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteComTypeRestrictions}"
-						var="restrict" rowKey="#{restrict}">
+						var="restrict" rowKey="#{restrict}"
+						disabled="#{!rejectionReasonBackingBean.managedBean.suppComCheck}">
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						
-						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%" />
 						<p:column>
 				          	<f:facet name="header">
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.company.type']}" />
 						    </f:facet>
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
-								value="#{restrict.restrType.parameterId}">
+								value="#{restrict.restrType.parameterId}"
+								disabled="#{!rejectionReasonBackingBean.managedBean.suppComCheck}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.companyTypeOptions()}"
 									listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.financialOrgRegType)}"/>
 							</p:selectOneMenu>
@@ -90,30 +87,34 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtComType"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.financialOrgRegType)}"
-							partialSubmit="true"/>
+							partialSubmit="true"
+							rendered="#{rejectionReasonBackingBean.managedBean.suppComCheck}"/>
 						&#160;
 						<p:commandButton id="cbComDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtComType"
 							partialSubmit="true"
-							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.financialOrgRegType)}" /> 
+							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.financialOrgRegType)}" 
+							rendered="#{rejectionReasonBackingBean.managedBean.suppComCheck}"/> 
 					</div>
 				</p:tab>
 				<!-- Supplier Type -->
-				<p:tab id="tSuppType" title="#{lbl['lbl.pm.supplier.type']}">  
+				<p:tab id="tSuppType" title="#{lbl['lbl.pm.supplier.type']}" disabled="#{!rejectionReasonBackingBean.managedBean.suppTypeCheck}">  
 					<br/>
 					<p:dataTable id="dtSuppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 						value="#{rejectionReasonBackingBean.managedBean.suppTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteSuppTypeRestrictions}"
-						var="restrict" rowKey="#{restrict}">
+						var="restrict" rowKey="#{restrict}"
+						disabled="#{!rejectionReasonBackingBean.managedBean.suppTypeCheck}">
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
-						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%" />
 						<p:column>
 				          	<f:facet name="header">
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
 						    </f:facet>  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
-								value="#{restrict.restrType.parameterId}">
+								value="#{restrict.restrType.parameterId}"
+								disabled="#{!rejectionReasonBackingBean.managedBean.suppTypeCheck}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.supplierTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
@@ -132,11 +133,13 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtSuppType"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierTypes)}"
-							partialSubmit="true"/>
+							partialSubmit="true"
+							rendered="#{rejectionReasonBackingBean.managedBean.suppTypeCheck}"/>
 						&#160;
 						<p:commandButton id="cbSuppDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"  update="dtSuppType"
 							partialSubmit="true"
-							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierTypes)}" /> 
+							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierTypes)}"
+							rendered="#{rejectionReasonBackingBean.managedBean.suppTypeCheck}" /> 
 					</div>
 				</p:tab>
 			</p:tabView>
