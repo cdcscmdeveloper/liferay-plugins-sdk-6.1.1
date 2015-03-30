@@ -53,7 +53,7 @@
 		
 		<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
 			<p:spacer height="10px" />
-			<table style="width: 50%">
+			<table style="width: 100%">
 				<tr>
 					<td>
 						<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
@@ -62,7 +62,7 @@
 								<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
 								<f:param name="applicationType" value="#{backingBean.managedBean.revisionApplType}"/>
 								<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
-							</h:outputLink>
+							</h:outputLink>&#160;&#160;
 						</c:if>
 						<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank">
 							<h:outputLabel value="#{lbl['lbl.sm.view.original.appl']}" />
