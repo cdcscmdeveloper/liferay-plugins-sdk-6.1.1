@@ -737,13 +737,14 @@
 			<c:if
 				test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
 				<div align="right">
-					<ui:remove>
+					<div style="display:none;">
 						<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 							action="#{backingBean.assignNewCategoryCode}"
 							partialSubmit="true" process="@this"
 							update=":form:tt:regCatDialog"
 							disabled="#{backingBean.managedBean.smAppl.applCategoryType == null}" />
-					</ui:remove>
+						</div>
+					
 					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 						partialSubmit="true" process="@this"
 						oncomplete="catCodePopup.show();">
@@ -783,7 +784,7 @@
 		</p:panel>
 	</p:panel>
 
-	<ui:remove>
+	
 		<p:dialog width="1000px" header="#{lbl['lbl.sm.catCodes.diaHdr']}"
 			widgetVar="regCatDialog" resizable="false" showEffect="fade"
 			closable="false" hideEffect="fade" modal="true" id="regCatDialog">
@@ -880,7 +881,7 @@
 			<br />
 
 		</p:dialog>
-	</ui:remove>
+	
 	<p:confirmDialog id="typeConfirmationId"
 		message="#{backingBean.managedBean.regCatCodeConfirmMsg}"
 		header="#{backingBean.managedBean.regCatCodeConfirmHeader}"
