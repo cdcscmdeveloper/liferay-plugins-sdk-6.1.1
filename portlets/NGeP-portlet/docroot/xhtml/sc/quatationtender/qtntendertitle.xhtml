@@ -77,7 +77,7 @@
 			</ui:fragment>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.so.goso.list']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.qt.goso.list']}" toggleable="true"
 		rendered="#{!qTDetailBB.managedBean.qt.planned}">
 		<p:dataTable id="gosodoList"
 			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
@@ -89,7 +89,7 @@
 
 			<ac:paginator for="gosodoList" />
 
-			<p:column headerText="#{lbl['lbl.so.gocode']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.gocode']}">
 				<h:outputText value="#{gosodo.pmGo.goCode}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
@@ -108,7 +108,7 @@
 					<p:inputText value="#{gosodo.pmGo.goId}" disabled="true" />
 				</c:if>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.socode']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.socode']}">
 				<h:outputText value="#{gosodo.pmSo.soCode}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
@@ -127,7 +127,7 @@
 					<p:inputText value="#{gosodo.pmSo.soCode}" disabled="true" />
 				</c:if>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.goso.amount']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.goso.amount']}">
 				<h:outputText value="#{gosodo.budgetAmt}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">

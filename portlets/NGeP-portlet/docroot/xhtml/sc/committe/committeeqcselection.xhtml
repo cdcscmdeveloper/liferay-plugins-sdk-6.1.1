@@ -18,34 +18,34 @@
 
 			<ac:paginator for="committeMembersListId" />
 
-			<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsname']}">
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{committeemember.memberName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsicno']}"
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 				style="width: 10%">
 				<h:outputText value="#{committeemember.icPassport}" />
 			</p:column>
 
 			<p:column
-				headerText="#{lbl['lbl.sc.committe.sctable.details.desidnation']}"
+				headerText="#{lbl['lbl.sc.designation']}"
 				style="width: 30%">
 				<h:outputText value="#{committeemember.designation}" />
 			</p:column>
 
 			<p:column
-				headerText="#{lbl['lbl.sc.committe.sctable.details.email']}"
+				headerText="#{lbl['lbl.sc.email']}"
 				style="width: 15%">
 				<h:outputText value="#{committeemember.email}" />
 			</p:column>
 
 			<p:column
-				headerText="#{lbl['lbl.sc.committe.sctable.details.grade']}"
+				headerText="#{lbl['lbl.sc.grade']}"
 				style="width: 8%">
 				<h:outputText value="#{committeemember.grade}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.sctable.details.pp']}"
+			<p:column headerText="#{lbl['lbl.sc.pnp']}"
 				style="width: 5%">
 				<h:outputText value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
@@ -53,7 +53,7 @@
 			<c:if
 				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() ne 60202}">
 
-				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
+				<p:column headerText="#{lbl['lbl.sc.role']}"
 					style="width: 10%">
 					<h:outputText
 						value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" />
@@ -61,7 +61,7 @@
 			</c:if>
 			<c:if
 				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() eq 60202}">
-				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
+				<p:column headerText="#{lbl['lbl.sc.role']}"
 					style="width: 10%">
 					<ui:fragment rendered="#{committeemember.PNP}">
 						<h:outputText value="Chairperson"
