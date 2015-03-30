@@ -96,7 +96,7 @@ public class gpkiBackingBean {
 			debugLogger("=================================Same IC No");
 	        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
 		}else{
-			FacesContext.getCurrentInstance().addMessage("somekey", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Token's certificate IC number not match with signer."));	
+			FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Token's certificate IC number not match with signer."));	
 			debugLogger("=================================Not Same IC No ");
 		}
         return null; 	  
@@ -106,10 +106,7 @@ public class gpkiBackingBean {
 	public void showError() {
 	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
 	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
-	    FacesContext facesContext = FacesContext.getCurrentInstance();
-	    debugLogger("OriginalText====================================: "+statusCode);
-
-	FacesContext.getCurrentInstance().addMessage("somekey", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));	
+		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));	
 	}
 
 }
