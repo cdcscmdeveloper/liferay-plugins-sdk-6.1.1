@@ -2723,6 +2723,7 @@ public class ReportBackingBean extends
 	
 	private void retrieveMinistryList() {
 		pmMinistryList =new ArrayList<SelectItem>();
+		pmPtjList =new ArrayList<String>();
 		FacesScopes facesScopes = new FacesScopes();
 		Long userId = facesScopes.getUserSessionBean().getUserId();
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -2730,6 +2731,7 @@ public class ReportBackingBean extends
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 		PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
+		PmOrgProfile pmOrgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
@@ -2739,10 +2741,10 @@ public class ReportBackingBean extends
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgName());
 				selectItem.setValue(orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
-				pmMinistryList.add(selectItem);
-				/*for (PmOrgProfile ptj : orgProfileList) {
-					ptj.getOrgName();
-				}*/
+				pmMinistryList.add(selectItem);				
+			}
+			if(pmOrgProfile!=null) {				
+				pmPtjList.add(pmOrgProfile.getOrgName());				
 			}
 		
 		/*IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
@@ -2762,10 +2764,10 @@ public class ReportBackingBean extends
 	public void retrievePtjListByMinistryId() {
 		
 		pmPtjList =new ArrayList<String>();
-		Long lngMinId= null;
+		/*Long lngMinId= null;
 		if(this.getCommonMinistry()!=null){
 			lngMinId = Long.parseLong(this.getCommonMinistry());
-		}
+		}*/
 		if(ministryId!=null){
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgType(OrganizationType.DIVISION.value());
@@ -3124,9 +3126,9 @@ public class ReportBackingBean extends
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
 			
-			//lngUserId = (long)241765;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038;// 241997;//213972;// 220152;
+			lngUserId = (long)241765;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038;// 241997;//213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -4001,7 +4003,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 			}
 			retrieveMinistryList();
-			retrievePtjListByMinistryId();
+			//retrievePtjListByMinistryId();
 			retriveUserrloeByUserId(this.getModuleValue());
 			retrieveParameterCodeType();
 			retrieveParamCodeByUser();
