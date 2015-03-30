@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.fl.po;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -291,6 +292,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		reqDTO.setFlOrderId(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
 		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+		BigDecimal delAmtCal= BigDecimal.ZERO;
 		//String others="Justification Other";
 		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
@@ -299,6 +301,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
 				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
 				itemAddr.setDeliveredQty(remainOrderQty);
+				if(itemAddr.getDeliveredQty().intValue()>0){
+					if(itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+						BigDecimal unitPriceCal=itemAddr.getUnitPrice();
+						delAmtCal=unitPriceCal.multiply(itemAddr.getDeliveredQty());
+						itemAddr.setDeliveredAmt(delAmtCal.setScale(2, RoundingMode.HALF_UP));
+					}
+				}
 			}
 		}
 		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
