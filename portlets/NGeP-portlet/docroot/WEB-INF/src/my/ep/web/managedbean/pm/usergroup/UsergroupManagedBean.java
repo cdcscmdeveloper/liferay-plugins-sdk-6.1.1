@@ -32,6 +32,7 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private List<PmUserGroup> pmUserGroupList;
 	private String role;
 	private UsergroupSearchBean usergroupSearchBean = new UsergroupSearchBean();
+	private PmOrgProfile pmOrgProfile;
 
 	private String orgConditionField;
 	private PmOrgProfile orgProfile;
@@ -45,6 +46,8 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private String errorMessage;
 
 	private boolean brandNew = false;
+
+	private boolean selectGrp = false;
 
 	public PmUserGroup getUserGroup() {
 		return userGroup;
@@ -204,6 +207,22 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	public void setBrandNew(boolean brandNew) {
 		this.brandNew = brandNew;
+	}
+
+	public boolean getSelectGrp() {
+		return selectGrp;
+	}
+
+	public void setSelectGrp(boolean selectGrp) {
+		this.selectGrp = selectGrp;
+	}
+
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
 	}
 
 }
