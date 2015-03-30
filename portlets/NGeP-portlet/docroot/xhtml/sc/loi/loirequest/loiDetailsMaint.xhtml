@@ -26,6 +26,8 @@
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="afterNegotiation"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId > QTStatusConst.LOI_PENDING_NEGOTIATION}" />
+	     <ui:param name="isFulfillmentType"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen}" />
 
 		<ui:include src="loiButtons.xhtml" />
 
@@ -83,7 +85,7 @@
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-							update="@form" 	rendered="#{isPendingNegotiation}">
+							update="@form" 	rendered="#{isPendingNegotiation and !isFulfillmentType}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="5"  />
@@ -123,7 +125,7 @@
 							<ui:include src="loiDeductionPaymentMenu.xhtml" />
 						</c:if>
 						
-						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 5 and isPendingNegotiation and sss}">
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 5 and isPendingNegotiation and !isFulfillmentType}">
 							<ui:include src="loiFulfilmentSchedule.xhtml" />
 						</c:if>
 					</h:panelGroup></td>
