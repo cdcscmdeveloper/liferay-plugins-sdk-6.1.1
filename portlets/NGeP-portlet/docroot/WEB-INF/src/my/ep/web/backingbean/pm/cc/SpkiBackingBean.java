@@ -80,9 +80,7 @@ public class SpkiBackingBean {
 	private String challengeAns1;
 	private String password;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
- 
-	FacesScopes facesScope = new FacesScopes();
-
+	private FacesScopes facesScope = new FacesScopes();
 	private String signedData;
 
 	public SpkiBackingBean() {}
@@ -112,7 +110,6 @@ public class SpkiBackingBean {
 		// Create KMCClient with the property file
 		KMCClient client = KMCClientFactory.getInstance(f);
 		return client;
-		
 	}
 	
 	public void getChallengeQuestions(){ 
@@ -255,33 +252,7 @@ public class SpkiBackingBean {
 		}
 		return signedData;
 	}
-	public void spkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
-        String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("inputTextBeforeSign");
-	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
-	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
-//	    spkiSignTransaction();
-	    Long userId = (Long) MDC.get(LogKey.USER_ID);
-		Timestamp date = new Timestamp(System.currentTimeMillis());
-		
-		pmDigiSign.setCreatedBy(userId);
-        pmDigiSign.setCreatedDate(date);
-        pmDigiSign.setOrginalData(textBeforeSign);
-        pmDigiSign.setSignedData(signedText);
-//		obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign});
 
-	    debugLogger("textBeforeSign==================================: "+textBeforeSign);
-//	    debugLogger("reflectAction=====================================: "+ challsAnswer+ password);
-	}
-	public void signAction(my.ep.persistence.entity.pm.common.PmDigiSign pmDigiSign) {
-
-		    DigiSignReqDTO reqDTO = new DigiSignReqDTO();
-	        IDigiSignSO digiSignSO = (IDigiSignSO) EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IDigiSignSO.class);
-	        reqDTO.setPmDigiSign(pmDigiSign);
-	        digiSignSO.saveOrUpdateDigiSign(reqDTO);
-
-	    debugLogger("========================: "+pmDigiSign.getSignedData());
-
-	}
 	public void setChallengeQues1(String challengeQues1) {
 		this.challengeQues1 = challengeQues1;
 	}
