@@ -41,11 +41,16 @@
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smSupplier.regNo}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.taxRefNo']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" /></td>
-					
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.regno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td><ac:labelDate value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" styleClass="outputLabel-view"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.regdate']}" /></td>
+					<td><ac:labelDate value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationDate}" styleClass="outputLabel-view"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.taxRefNo']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" /></td>
 				</tr>
 				
 				<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses}">
