@@ -101,11 +101,11 @@
 			<tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No'}">
-					<td><p:outputLabel value="#{lbl['lbl.sc.spec.opn.for']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio required="true" id="openFor"
 							disabled="#{specificationBackingBean.managedBean.readOnly }"
-							label="#{lbl['lbl.sc.spec.opn.for']}"
+							label="#{lbl['lbl.sc.open.for']}"
 							value="#{specificationBackingBean.managedBean.scQt.openFor}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
