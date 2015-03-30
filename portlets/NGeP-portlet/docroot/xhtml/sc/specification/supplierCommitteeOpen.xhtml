@@ -66,7 +66,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 160px;"><p:outputLabel
-						value="#{lbl['lbl.so.paidup']}" /></td>
+						value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText disabled="true" size="30" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
@@ -121,7 +121,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 94px"><p:outputLabel
-						value="#{lbl['lbl.so.allstate']}"
+						value="#{lbl['lbl.sc.all.states']}"
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
 				<td><p:inputText disabled="true" value="No"
@@ -131,7 +131,7 @@
 			</tr>
 			<tr>
 				<td style="width: 160px;"><p:outputLabel
-						value="#{lbl['lbl.so.paidup']}" /></td>
+						value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText size="30" maxlength="18" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
@@ -183,13 +183,13 @@
 		<table>
 			<tr>
 				<td style="width: 160px;"><p:outputLabel
-						value="#{lbl['lbl.so.allstate']}" /></td>
+						value="#{lbl['lbl.sc.all.states']}" /></td>
 				<td><p:inputText
 						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						disabled="true" style="margin-right:5px;" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.paidup']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText maxlength="18" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
@@ -209,7 +209,7 @@
 						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
 				<td><p:inputText style="margin-right:5px;" disabled="true"
 						value="#{specificationBackingBean.managedBean.totalSuppliers}" />
-					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						update="specCommitteeTotalSuppliers"
 						action="#{specificationBackingBean.searchForSupplierCount}"
 						partialSubmit="true" process="@this" /></td>

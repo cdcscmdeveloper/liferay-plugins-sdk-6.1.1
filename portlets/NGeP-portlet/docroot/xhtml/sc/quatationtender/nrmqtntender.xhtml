@@ -73,7 +73,7 @@
 							columns="2" columnClasses="columnWidth20"
 							style="margin-left: 26px;"
 							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}">
-							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
+							<h:outputLabel value="#{lbl['lbl.sc.all.states']}"
 								style="width : 80px" />
 							<p:selectBooleanCheckbox
 								disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode eq '3' }"
@@ -92,7 +92,7 @@
 					rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}">
 					<tr>
 						<td style="width: 187px"><p:outputLabel
-								value="#{lbl['lbl.so.paidup']}"
+								value="#{lbl['lbl.sc.paidup']}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
 						<td><p:inputText size="30" maxlength="18" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
@@ -114,7 +114,7 @@
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 187px"><p:outputLabel
-								value="#{lbl['lbl.so.paidup']}" /></td>
+								value="#{lbl['lbl.sc.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"   disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
@@ -206,7 +206,7 @@
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 187px"><p:outputLabel
-								value="#{lbl['lbl.so.paidup']}" /></td>
+								value="#{lbl['lbl.sc.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"

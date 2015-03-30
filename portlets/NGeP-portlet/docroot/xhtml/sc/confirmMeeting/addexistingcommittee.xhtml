@@ -69,13 +69,13 @@
 							</tr>
 						</table>
 					</p:panel>
-					<p:commandButton value="#{lbl['lbl.so.reset']}"
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						style="float:right;"
 						action="#{evaluationMeetingBackingBean.reset}"
 						update="newCommitteeProfile" resetValues="true"
 						partialSubmit="true" process="@this" />
 
-					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						style="float:right;"
 						action="#{evaluationMeetingBackingBean.existingCommitteeSearchAction}"
 						update="@(.existingCommitteeResults)" partialSubmit="true"
