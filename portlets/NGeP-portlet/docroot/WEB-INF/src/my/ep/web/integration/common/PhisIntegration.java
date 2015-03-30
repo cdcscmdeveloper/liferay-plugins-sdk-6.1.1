@@ -35,7 +35,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
-import my.ep.persistence.entity.pm.common.PmProject;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.pm.AddressType;
 import my.ep.web.integration.phis.ItemType;
@@ -454,11 +454,11 @@ public class PhisIntegration {
 		ProjectSetiaResDTO resDTO = projectSetiaSO
 				.retrieveProjectByCreateDate(reqDTO);
 
-		List<PmProject> projectlist = resDTO.getProjectList();
+		List<PmSubSetia> projectlist = resDTO.getSubSetiaList();
 
 		List<PhisProject> programList = new ArrayList<PhisProject>();
 		PhisProject project;
-		for (PmProject pmProject : projectlist) {
+		for (PmSubSetia pmProject : projectlist) {
 			Date effdate = pmProject.getEffDate(); // your date
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(effdate);
@@ -466,9 +466,8 @@ public class PhisIntegration {
 			project = new PhisProject();
 			project.setCode(pmProject.getProjectCode());
 			project.setVotCode(pmProject.getPmVotFund().getVotFundCode());
-			project.setSetiaCode(pmProject.getPmSetias().get(0).getSetiaCode());
-			project.setSubSetiaCode(pmProject.getPmSetias().get(0)
-					.getPmSubSetias().get(0).getSubSetiaCode());
+			project.setSetiaCode(pmProject.getSetiaCode());
+			project.setSubSetiaCode(pmProject.getSubSetiaCode());
 			project.setDescription(pmProject.getDescription());
 			project.setYear(year);
 			project.setStatus("C");
