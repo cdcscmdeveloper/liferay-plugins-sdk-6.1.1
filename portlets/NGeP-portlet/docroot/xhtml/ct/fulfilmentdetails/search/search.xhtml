@@ -47,9 +47,13 @@
            <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
            <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
 		   <p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
-		   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctStatus}"	style="width:200px; margin-bottom:5px">
-				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
-		   </p:selectOneMenu>
+		   <h:panelGrid columns="3">
+			   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctStatus}"	style="width:200px; margin-bottom:5px">
+					<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
+			   </p:selectOneMenu>
+			   <p:spacer width="3" />
+			   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
+		   </h:panelGrid>
 		   <p:outputLabel value="#{lbl['lbl.ct.termination.type']}" />
 		   <p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.terminationTypeId}" style="width:200px; margin-bottom:5px">
 		   		<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
