@@ -3255,36 +3255,36 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (validCat) {
-			for (PmCategoryL1 catL1 : getManagedBean()
-					.getSupplierParentCatList()) {
-				if (catL1.getCategoryL1Id().equals(
-						getManagedBean().getSelectedCategory()
-								.getPmCategoryL1().getCategoryL1Id())) {
-					getManagedBean().getSelectedCategory().setPmCategoryL1(
-							catL1);
-					break;
-				}
-			}
-			for (PmCategoryL2 catL2 : getManagedBean()
-					.getSupplierChildCatList()) {
-				if (catL2.getCategoryL2Id().equals(
-						getManagedBean().getSelectedCategory()
-								.getPmCategoryL2().getCategoryL2Id())) {
-					getManagedBean().getSelectedCategory().setPmCategoryL2(
-							catL2);
-					break;
-				}
-			}
-			for (PmCategoryL3 catL3 : getManagedBean()
-					.getSupplierSubChildCatList()) {
-				if (catL3.getCategoryL3Id().equals(
-						getManagedBean().getSelectedCategory()
-								.getPmCategoryL3().getCategoryL3Id())) {
-					getManagedBean().getSelectedCategory().setPmCategoryL3(
-							catL3);
-					break;
-				}
-			}
+//			for (PmCategoryL1 catL1 : getManagedBean()
+//					.getSupplierParentCatList()) {
+//				if (catL1.getCategoryL1Id().equals(
+//						getManagedBean().getSelectedCategory()
+//								.getPmCategoryL1().getCategoryL1Id())) {
+//					getManagedBean().getSelectedCategory().setPmCategoryL1(
+//							catL1);
+//					break;
+//				}
+//			}
+//			for (PmCategoryL2 catL2 : getManagedBean()
+//					.getSupplierChildCatList()) {
+//				if (catL2.getCategoryL2Id().equals(
+//						getManagedBean().getSelectedCategory()
+//								.getPmCategoryL2().getCategoryL2Id())) {
+//					getManagedBean().getSelectedCategory().setPmCategoryL2(
+//							catL2);
+//					break;
+//				}
+//			}
+//			for (PmCategoryL3 catL3 : getManagedBean()
+//					.getSupplierSubChildCatList()) {
+//				if (catL3.getCategoryL3Id().equals(
+//						getManagedBean().getSelectedCategory()
+//								.getPmCategoryL3().getCategoryL3Id())) {
+//					getManagedBean().getSelectedCategory().setPmCategoryL3(
+//							catL3);
+//					break;
+//				}
+			//			}
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.add(getManagedBean().getSelectedCategory());
 
@@ -8883,13 +8883,13 @@ public class SmApplicationBackingBean extends
 		log.info("pmCategoryL3.getCategoryName(): "
 				+ pmCategoryL3.getCategoryName());
 
-		List<SmSupplierCategory> qtCategoryList = getManagedBean()
-				.getActiveCategoryList();
-
-		if (qtCategoryList == null) {
-			qtCategoryList = new ArrayList<SmSupplierCategory>();
-			this.getManagedBean().setActiveCategoryList(qtCategoryList);
-		}
+		// List<SmSupplierCategory> qtCategoryList = getManagedBean()
+		// .getActiveCategoryList();
+		//
+		// if (qtCategoryList == null) {
+		// qtCategoryList = new ArrayList<SmSupplierCategory>();
+		// this.getManagedBean().setActiveCategoryList(qtCategoryList);
+		// }
 
 		SmSupplierCategory categ = new SmSupplierCategory();
 		categ.setRevNo(1);
@@ -8907,8 +8907,9 @@ public class SmApplicationBackingBean extends
 		categ.setPmCategoryL3(pmCategoryL3);
 		categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
 		categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2().getPmCategoryL1());
-
-		getManagedBean().getActiveCategoryList().add(categ);
+		getManagedBean().setSelectedCategory(categ);
+		saveSelectedCategory();
+		// getManagedBean().getActiveCategoryList().add(categ);
 
 		log.info("getManagedBean().getActiveCategoryList(): "
 				+ getManagedBean().getActiveCategoryList());
