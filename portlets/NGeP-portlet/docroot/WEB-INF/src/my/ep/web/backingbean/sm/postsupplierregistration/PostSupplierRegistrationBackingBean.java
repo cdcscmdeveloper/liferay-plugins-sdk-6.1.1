@@ -55,10 +55,13 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSupplierRegistrationManagedBean>{
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
 	private static final String CATALOGUE_UPLOAD_PATH = "codification-search";
-	private static final String SUPPLIER_TYPE_SELECTION_PATH = "/xhtml/sm/postsupplierregistration/supplierTypeSelection.xhtml";
+	private static final String SUPPLIER_TYPE_SELECTION_PATH = "supplierRegistrationCont";
 	private static final String SOFT_CERT_PATH = "request-soft-cert";
 	private static final String MOF_REG_PATH = "mof-registration";
 	private static final String TASK_LIST_PATH = "task-list";
+	//private static final String DASHBOARD = "dashboard";
+	private static final String DASHBOARD_PATH = "welcome";
+	private static final String SUPPLIER_TYPE_SELECTION_XHTML = "/xhtml/sm/supplierregistrationcont/supplierTypeSelection.xhtml";
 	
 	public static Logger log = Logger.getLogger(PostSupplierRegistrationBackingBean.class);
 	
@@ -89,7 +92,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
 						supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
 					path = SUPPLIER_TYPE_SELECTION_PATH;
-					desc = "Supplier Type selection";
+					//desc = "Supplier Type selection";
 					desc = getLabelFromProperties("lbl.sm.basic.supplier.selection");
 				}else{
 					log.info("Supplier appl type===>" + supplier.getSmAppl().getApplType());
@@ -164,17 +167,17 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			String path = currentStatusAndPath(true);
 			log.info("******xhtml*******" + path);
 			
-			if(path.equalsIgnoreCase(SUPPLIER_TYPE_SELECTION_PATH)){
+			/*if(path.equalsIgnoreCase(SUPPLIER_TYPE_SELECTION_PATH)){
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, path);
 			}else{
-				try{
+				try{*/
 					pageRedirect(path);
-				}
+			/*	}
 				catch(Exception ex){
 					throw new Exception(ex.getMessage());
 				}
-			}
+			}*/
 		}
 		
 	}
@@ -212,7 +215,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				log.info("--------Supplier------------" + this.getManagedBean().getSmSupplier().getBusinessType());
 				
 				if(resDTO.isSuccessful()){
-					FacesContext fc = FacesContext.getCurrentInstance();
+					//FacesContext fc = FacesContext.getCurrentInstance();
 					if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 						//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, MOF_REG_PATH);
 						pageRedirect(MOF_REG_PATH);
@@ -326,6 +329,23 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		String label = ResourceBundleUtils.getMessage(labelStr, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		
 		return label;
+	}
+	
+	public void proceedToSupplierSelection() throws PortalException, SystemException, IOException{
+		SmSupplier supplier = getSupplierProfile();
+		if(supplier != null){
+			if(!supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
+					!supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
+/*				pageRedirect(DASHBOARD_PATH);
+				FacesScopes facesScope = new FacesScopes();
+				hemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope().WebKeys.THEME_DISPLAY);
+				PortletURL url = PortletURLFactoryUtil.create(request, this.getPortletName(), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);*/
+				
+			}else{
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SUPPLIER_TYPE_SELECTION_XHTML);
+			}
+		}
 	}
 	
 /*	private void initCatalogueBackingBean(){
