@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
 public class SalutationBackingBean extends
 		BaseBackingBean<SalutationManagedBean> { 
 	
-	private String NAV_TO_MAIN =  "salutationMain";
+	private static final String NAV_TO_MAIN =  "salutationMain";
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/salutation/salutationMaintenance";
 	
 	private static final Logger log = EpLogger
@@ -267,6 +267,8 @@ public class SalutationBackingBean extends
 		 validationMessage(salutation);
 		 
 		 if(salutation.isBrandNew()){
+			 System.err.println("***************************************TRUE");
+			 log.info("......TRUE......");
 		 setUserDetails(salutation);}
 		 
 		 SalutationReqDTO reqDTO = new SalutationReqDTO();
@@ -298,10 +300,10 @@ public class SalutationBackingBean extends
 											new FacesScopes().getUserLocale())));
 				}
 			}
-		if(this.getManagedBean().getPmSalutation().isBrandNew()){
-			return NAV_TO_MAIN;
+		if(!salutation.isBrandNew()){
+			return NAV_TO_MAINTAIN;
 		}else{
-		  return NAV_TO_MAINTAIN;
+		  return NAV_TO_MAIN;
 		}
 	 }
 	 /**
