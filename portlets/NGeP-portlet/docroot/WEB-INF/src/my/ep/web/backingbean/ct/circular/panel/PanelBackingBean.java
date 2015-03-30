@@ -479,7 +479,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		try {
 			
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			      validateCircular(action);
 			}
 			  circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
@@ -662,37 +662,54 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * A warning or error message will display on screen during validation as per rule
 	 * Function validate as per user action 
 	 */
-	public void validateCircular(String outcome) {		
+	public void validateCircular(String outcome) {
 			getManagedBean().setAutoUpdate(true);
 			/*if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
 			
-			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+			if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+					&& getManagedBean().getCircularVer().getCircularFileName()==null) {
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String circularRemark = getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark();
-				if((circularRemark == null || circularRemark.length() == 0)) {
-	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				String itemRemark = getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark();
+				
+				if((circularRemark == null || circularRemark.length() == 0)
+						&& (itemRemark == null || itemRemark.length() == 0)) {
+	 				throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	 			}
 			}
 			
 			if(getManagedBean().getCircularVer().getCtPanelItems().size()==0) {
-				throw new EpException(MessageConst.ERROR_100023, new String[]{"Panel Item"});
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					throw new EpException(MessageConst.ERROR_100023, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.panel.item", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
 			}
 			else {
 				for (CtPanelItem panelItem: getManagedBean().getCircularVer().getCtPanelItems()) {
 					if(panelItem.getZoneAllParamterId()==null) {
-						throw new EpException(MessageConst.ERROR_100022, new String[]{"Panel Coverage"});
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.panel.coverage", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					
 					if(panelItem.getCategoryParameterId() == null) {
-						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Category"});
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.category", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					else {
-						if(getItemGeneralCode(panelItem.getCategoryParameterId()).equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
+						if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+								&& getItemGeneralCode(panelItem.getCategoryParameterId()).equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
 							if(panelItem.getCtPanelItemSpecs() == null || panelItem.getCtPanelItemSpecs().isEmpty()) {
 								throw new EpException(MessageConst.ERROR_750029, new String[]{panelItem.getItemName()});
 							}
@@ -707,37 +724,53 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 					
 					if(panelItem.getItemName().length()==0) {
-						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Name"});
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.name", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					
 					if(panelItem.getPmUom().getUomId()==null) {
-						throw new EpException(MessageConst.ERROR_100022, new String[]{"UOM"});
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.uom", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 					
-					if(getItemGeneralCode(panelItem.getZoneAllParamterId()).equalsIgnoreCase(
-							ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
-						if(panelItem.getLocationLevelId().getParameterId()==null) {
-							throw new EpException(MessageConst.ERROR_100022, new String[]{"Location Level"});
-						}
-						
-						if(panelItem.getCtPanelZones().size()==0) {
-							throw new EpException(MessageConst.ERROR_100023, new String[]{"Zone"});
-						}
-						else {
-							for (CtPanelZone panelZone: panelItem.getCtPanelZones()) {
-								if(panelZone.getName().length()==0) {
-									throw new EpException(MessageConst.ERROR_100022, new String[]{"Zone Name"});
-								}
-								
-								if(panelZone.getCtPanelSuppliers().size()==0) {
-									throw new EpException(MessageConst.ERROR_100023, new String[]{"Supplier"});
+					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+						if(getItemGeneralCode(panelItem.getZoneAllParamterId()).equalsIgnoreCase(
+								ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
+							if(panelItem.getLocationLevelId().getParameterId()==null) {
+								throw new EpException(MessageConst.ERROR_100022, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.location.level", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+							
+							if(panelItem.getCtPanelZones().size()==0) {
+								throw new EpException(MessageConst.ERROR_100023, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.Zone", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+							else {
+								for (CtPanelZone panelZone: panelItem.getCtPanelZones()) {
+									if(panelZone.getName().length()==0) {
+										throw new EpException(MessageConst.ERROR_100022, 
+												new String[]{ResourceBundleUtils.getMessage("lbl.ct.zone.name", 
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+									}
+									
+									if(panelZone.getCtPanelSuppliers().size()==0) {
+										throw new EpException(MessageConst.ERROR_100023, 
+												new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier", 
+														ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+									}
 								}
 							}
 						}
-					}
-					else {					
-						if(panelItem.getCtPanelSuppliers().size()==0) {
-							throw new EpException(MessageConst.ERROR_100023, new String[]{"Supplier"});
+						else {					
+							if(panelItem.getCtPanelSuppliers().size()==0) {
+								throw new EpException(MessageConst.ERROR_100023, 
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.supplier", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
 						}
 					}
 				}
@@ -747,16 +780,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 			}*/
 		//}
-		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin()) ) {
-			throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});				
-		}
-			
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-			if(getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark().length()==0 &&
-				(getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark() == null || 
-					getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark().length()==0 )) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Details/Item Remark"});
-			}
+		if((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) 
+				&& getManagedBean().getApproverModel().getTarget().size()==0) {
+			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.			
 		}
 		
 		if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
