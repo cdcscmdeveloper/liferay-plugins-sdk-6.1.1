@@ -1,70 +1,30 @@
 package my.ep.web.backingbean.pm.cc;
 import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.bouncycastle.crypto.tls.Certificate;
-import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.util.encoders.Base64Encoder;
-
-import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
-import my.ep.dto.pm.common.digisign.DigiSignReqDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.logging.LogKey;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.integration.common.IntegrationConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import com.augtech.kmc.client.AccountInfo;
-import com.augtech.kmc.client.ContactDetail;
-import com.augtech.kmc.client.IKMCAPIRequest;
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
-import com.augtech.kmc.client.IUploadBundle;
 import com.augtech.kmc.client.KMCAPIException;
 import com.augtech.kmc.client.KMCClient;
 import com.augtech.kmc.client.KMCClientFactory;
 import com.augtech.kmc.client.KMCRequestBuilder;
-import com.augtech.kmc.client.OrganizationDetail;
-import com.augtech.kmc.client.PersonalDetail;
-import com.augtech.kmc.client.UploadBundle;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
 
 /**
  * @author Alvin
