@@ -121,7 +121,11 @@
 									<p:selectOneMenu value="#{reportBackingBean.ctGroupOne}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{lbl['lbl.rpt.allall']}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.cntrctno']}" itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>																			
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.crclrno']}" itemValue="#{lbl['lbl.rpt.crclrno']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsstatus']}" itemValue="#{lbl['lbl.rpt.capsstatus']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.capsprocurementmode']}" itemValue="#{lbl['lbl.rpt.capsprocurementmode']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.crclrname']}" itemValue="#{lbl['lbl.rpt.crclrname']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.panelcoverage']}" itemValue="#{lbl['lbl.rpt.panelcoverage']}"></f:selectItem>																		
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctGroupThreeView}">
@@ -149,7 +153,8 @@
 									<p:selectOneMenu value="#{reportBackingBean.ctProductService}" style="margin-top:5px;width:300px;">	
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>									
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.product']}" itemValue="#{lbl['lbl.rpt.product']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.service']}" itemValue="#{lbl['lbl.rpt.service']}"></f:selectItem>																				
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.service']}" itemValue="#{lbl['lbl.rpt.service']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.productservice']}" itemValue="#{lbl['lbl.rpt.productservice']}"></f:selectItem>																																							
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctLoanNoView}">
