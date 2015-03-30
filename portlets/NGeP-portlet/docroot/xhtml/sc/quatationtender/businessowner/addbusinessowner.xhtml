@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="newbusinessownerid" header="#{lbl['lbl.so.bo.new']}"
+	<p:dialog id="newbusinessownerid" header="#{lbl['lbl.sc.qt.new.bussiness.owner']}"
 		width="950" height="600" widgetVar="newbusinessowner" modal="true"
 		position="top">
 		<p:panel toggleable="true" styleClass="qtAddMember" id="bopanel">
@@ -71,7 +71,7 @@
 							partialSubmit="true" process="@this" />
 					</div>
 
-					<p:panel header="#{lbl['lbl.so.bo.search.result']}"
+					<p:panel header="#{lbl['lbl.sc.search.result']}"
 						toggleable="true">
 						<p:dataTable id="existingsearch"
 							value="#{qTBusinessOwnerBackingBean.managedBean.userSearchBusinessOwnerDataModel}"
@@ -83,32 +83,32 @@
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
-							<p:column headerText="#{lbl['lbl.so.bo.name']}"
+							<p:column headerText="#{lbl['lbl.sc.name']}"
 								style="width : 20%">
 								<h:outputText value="#{existuser.userName}" style="white-space: normal;" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+							<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 								style="width : 15%">
 								<h:outputText value="#{existuser.identificationNo}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.designation']}"
+							<p:column headerText="#{lbl['lbl.sc.designation']}"
 								style="width : 15%">
 								<h:outputText value="#{existuser.designation}" style="white-space: normal;" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.grade']}"
+							<p:column headerText="#{lbl['lbl.sc.grade']}"
 								style="width : 5%">
 								<h:outputText value="#{existuser.grade}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width : 6%">
+							<p:column headerText="#{lbl['lbl.sc.pnp']}" style="width : 6%">
 								<h:outputText
 									value="#{lbl[existuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.email']}"
+							<p:column headerText="#{lbl['lbl.sc.email']}"
 								style="width : 15%">
 								<h:outputText
 									value="#{existuser.email}" style="white-space: normal;" />
@@ -184,10 +184,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.designation']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.designation']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="designation" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.designation']}"
+										label="#{lbl['lbl.sc.designation']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.designation}"
 										size="30" maxlength="50" /> <p:message id="designationMsg"
 										for="designation" display="icon" /></td>
