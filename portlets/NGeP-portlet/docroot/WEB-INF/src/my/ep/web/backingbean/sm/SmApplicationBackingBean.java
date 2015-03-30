@@ -1931,12 +1931,14 @@ public class SmApplicationBackingBean extends
 		}
 		buildRoleList();
 		if (!getManagedBean().isRemoveEpRole()
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && getManagedBean()
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && (getManagedBean()
 						.getSelectedShareHolder().getEpRole()
-						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {
+						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getManagedBean()
+						.getSelectedShareHolder().getEpRole()
+						.equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value())))) {
 			SelectItem role = new SelectItem();
 			role.setLabel("Supplier Admin");
-			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			role.setValue(getManagedBean().getSelectedShareHolder().getEpRole());
 			getManagedBean().getePRoleList().add(role);
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
@@ -4219,7 +4221,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		if (shareHolderBean.getEpRole() != null
 				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
-						RoleCode.MOF_SUPPLIER_USER.value())
+						RoleCode.SUPPLIER_TEMP.value())
+						|| shareHolderBean.getEpRole().equalsIgnoreCase(
+								RoleCode.MOF_SUPPLIER_USER.value())
 						|| shareHolderBean.getEpRole().equalsIgnoreCase(
 								RoleCode.MOF_SUPPLIER_ADMIN.value()) || shareHolderBean
 						.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))) {
@@ -4280,13 +4284,15 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRemoveEpRole(false);
 		buildRoleList();
 		if (!getManagedBean().isRemoveEpRole()
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && getManagedBean()
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && (getManagedBean()
 						.getSelectedShareHolder().getEpRole()
-						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {
+						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getManagedBean()
+						.getSelectedShareHolder().getEpRole()
+						.equalsIgnoreCase(RoleCode.SUPPLIER_TEMP.value())))) {
 			SelectItem role = new SelectItem();
 			role.setLabel(SmCommonUtil.getMessage(
 					"lbl.sm.person.composition.suppAdmin", null));
-			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			role.setValue(getManagedBean().getSelectedShareHolder().getEpRole());
 			getManagedBean().getePRoleList().add(role);
 		}
 
@@ -4568,7 +4574,9 @@ public class SmApplicationBackingBean extends
 		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
 			if (shr.getEpRole() != null
 					&& (shr.getEpRole().equalsIgnoreCase(
-							RoleCode.MOF_SUPPLIER_ADMIN.value()) || shr
+							RoleCode.SUPPLIER_TEMP.value())
+							|| shr.getEpRole().equalsIgnoreCase(
+									RoleCode.MOF_SUPPLIER_ADMIN.value()) || shr
 							.getEpRole().equalsIgnoreCase(
 									RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 				throw new EpException(MessageConst.ERROR_722553);
@@ -8869,18 +8877,20 @@ public class SmApplicationBackingBean extends
 					.updateSupplierProfile(reqDTO);
 		}
 	}
-	
+
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
-		
-		log.info("pmCategoryL3.getCategoryName(): " + pmCategoryL3.getCategoryName());
-		
-		List<SmSupplierCategory> qtCategoryList = getManagedBean().getActiveCategoryList();
-		
+
+		log.info("pmCategoryL3.getCategoryName(): "
+				+ pmCategoryL3.getCategoryName());
+
+		List<SmSupplierCategory> qtCategoryList = getManagedBean()
+				.getActiveCategoryList();
+
 		if (qtCategoryList == null) {
 			qtCategoryList = new ArrayList<SmSupplierCategory>();
 			this.getManagedBean().setActiveCategoryList(qtCategoryList);
 		}
-		
+
 		SmSupplierCategory categ = new SmSupplierCategory();
 		categ.setRevNo(1);
 		// categ.setApprvrDecFlg(1);
@@ -8891,17 +8901,17 @@ public class SmApplicationBackingBean extends
 			categ.setSpecialCategory(true);
 		}
 		categ.setSmAppl(getManagedBean().getSmAppl());
-		categ.setSupplierType(getManagedBean().getSmAppl()
-				.getSupplierType());
+		categ.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
 		getManagedBean().setSelectedCategory(categ);
-		
+
 		categ.setPmCategoryL3(pmCategoryL3);
 		categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
 		categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2().getPmCategoryL1());
-		
+
 		getManagedBean().getActiveCategoryList().add(categ);
-		
-		log.info("getManagedBean().getActiveCategoryList(): " + getManagedBean().getActiveCategoryList());
-		
+
+		log.info("getManagedBean().getActiveCategoryList(): "
+				+ getManagedBean().getActiveCategoryList());
+
 	}
 }
