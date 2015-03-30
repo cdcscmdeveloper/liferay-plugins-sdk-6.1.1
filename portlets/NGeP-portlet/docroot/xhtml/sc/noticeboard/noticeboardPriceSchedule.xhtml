@@ -76,18 +76,18 @@
 					var="specificationcommittee" rowIndexVar="index" editable="true"
 					rowKey="#{specificationcommittee}">
 					
-					<p:column headerText="#{lbl['lbl.so.bo.name']}">
+					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<h:outputText value="#{specificationcommittee.memberName}"
 							style="white-space: normal;" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.so.bo.designation']}"
+					<p:column headerText="#{lbl['lbl.sc.designation']}"
 						style="widht: 15%">
 						<h:outputText value="#{specificationcommittee.designation}"
 							style="white-space: normal;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.role']}" style="width: 15%">
+					<p:column headerText="#{lbl['lbl.sc.role']}" style="width: 15%">
 						<h:outputText
 							value="#{noticeBoardBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
 					</p:column>

@@ -32,31 +32,31 @@
 
 
 
-			<p:column headerText="#{lbl['lbl.so.bo.name']}">
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{specificationcommittee.memberName}"
 					style="white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 				style="width: 10%">
 				<h:outputText value="#{specificationcommittee.icPassport}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+			<p:column headerText="#{lbl['lbl.sc.designation']}">
 				<h:outputText value="#{specificationcommittee.designation}"
 					style="white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.email']}">
+			<p:column headerText="#{lbl['lbl.sc.email']}">
 				<h:outputText value="#{specificationcommittee.email}"
 					style="white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.grade']}" style="width: 10%">
+			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 10%">
 				<h:outputText value="#{specificationcommittee.grade}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width: 5%">
+			<p:column headerText="#{lbl['lbl.sc.pnp']}" style="width: 5%">
 				<h:outputText
 					value="#{lbl[specificationcommittee.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
@@ -64,7 +64,7 @@
 			<p:column style="width: 15%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.so.role']}" />
+					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
 
 				<ui:fragment rendered="#{specificationcommittee.PNP}">
@@ -72,7 +72,7 @@
 						rendered="#{specificationcommittee.memberRole.parameterCode eq 'C'}"
 						disabled="#{QTStatusConst.CMT_COMPLETED == committe.committeStatus.statusId}" />
 						
-						<p:selectOneMenu  label="#{lbl['lbl.so.role']}" rendered="#{specificationcommittee.memberRole.parameterCode ne 'C'}"
+						<p:selectOneMenu  label="#{lbl['lbl.sc.role']}" rendered="#{specificationcommittee.memberRole.parameterCode ne 'C'}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;"
 						disabled="#{qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}">
@@ -86,7 +86,7 @@
 					</p:selectOneMenu>
 				</ui:fragment>
 				<ui:fragment rendered="#{!specificationcommittee.PNP}">
-					<p:selectOneMenu id="roleid" label="#{lbl['lbl.so.role']}"
+					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;"
 						disabled="#{qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}">

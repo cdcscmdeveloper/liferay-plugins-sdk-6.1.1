@@ -79,35 +79,35 @@
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
-							<p:column headerText="#{lbl['lbl.so.bo.name']}">
+							<p:column headerText="#{lbl['lbl.sc.name']}">
 								<h:outputText value="#{existcommitteeuser.userName}"
 									style="white-space: normal;" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+							<p:column headerText="#{lbl['lbl.sc.identification.no']}">
 								<h:outputText value="#{existcommitteeuser.identificationNo}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+							<p:column headerText="#{lbl['lbl.sc.designation']}">
 								<h:outputText value="#{existcommitteeuser.designation}"
 									style="white-space: normal;" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.email']}">
+							<p:column headerText="#{lbl['lbl.sc.email']}">
 								<h:outputText value="#{existcommitteeuser.email}"
 									style="white-space: normal;" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+							<p:column headerText="#{lbl['lbl.sc.grade']}">
 								<h:outputText value="#{existcommitteeuser.grade}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+							<p:column headerText="#{lbl['lbl.sc.pnp']}">
 								<h:outputText
 									value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.role']}">
+							<p:column headerText="#{lbl['lbl.sc.role']}">
 								<ui:fragment rendered="#{existcommitteeuser.PMP == true}">
 									<h:outputText value="Chairperson" />
 								</ui:fragment>
@@ -197,10 +197,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.designation']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.designation']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="designationsid" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.designation']}"
+										label="#{lbl['lbl.sc.designation']}"
 										value="#{committeBackingBean.managedBean.committeMember.designation}"
 										size="30" maxlength="50" /> <p:message id="designationsidMsg"
 										for="designationsid" display="icon" /></td>

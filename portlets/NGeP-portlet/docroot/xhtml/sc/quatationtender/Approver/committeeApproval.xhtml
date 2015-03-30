@@ -15,30 +15,30 @@
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
-			<p:column headerText="#{lbl['lbl.so.bo.name']}">
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{committeeapprover.memberName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 				style="width: 10%">
 				<h:outputText value="#{committeeapprover.icPassport}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+			<p:column headerText="#{lbl['lbl.sc.designation']}">
 				<h:outputText value="#{committeeapprover.designation}"
 					style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.email']}">
+			<p:column headerText="#{lbl['lbl.sc.email']}">
 				<h:outputText value="#{committeeapprover.email}"
 					style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.grade']}" style="width: 10%">
+			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 10%">
 				<h:outputText value="#{committeeapprover.grade}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width: 5%">
+			<p:column headerText="#{lbl['lbl.sc.pnp']}" style="width: 5%">
 				<h:outputText
 					value="#{lbl[committeeapprover.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
@@ -46,7 +46,7 @@
 			<p:column style="width: 15%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.so.role']}" />
+					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
 
 				<ui:fragment rendered="#{committeeapprover.PNP}">
@@ -55,7 +55,7 @@
 						disabled="#{committe.committeStatus.statusId eq 60202}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeapprover.PNP}">
-					<p:selectOneMenu id="roleid" label="#{lbl['lbl.so.role']}"
+					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 						value="#{committeeapprover.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;"
 						disabled="#{committe.committeStatus.statusId eq 60202}">
