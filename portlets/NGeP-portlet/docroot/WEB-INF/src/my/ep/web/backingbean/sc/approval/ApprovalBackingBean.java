@@ -66,6 +66,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.type.sc.CommitteType;
@@ -361,6 +362,13 @@ public class ApprovalBackingBean extends
 					approvalRequest.setApproverAction(new PmParameter());
 				} else {
 					approvalRequest.setApproverAction(new PmParameter());
+				}
+			}
+			if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+							.equalsIgnoreCase(this.getManagedBean().getQt().getQtType())) {
+				if (null != this.getManagedBean().getQt().getScQtSuppliers()) {
+					this.getManagedBean().setQtSupplierList(
+							this.getManagedBean().getQt().getScQtSuppliers());
 				}
 			}
 		} else if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE
