@@ -93,6 +93,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -342,9 +343,9 @@ public class LOADetailBackingBean extends
 			}
 
 			// Supplier Witness
-			ScLoaWitness loaSupplierWitness = null;
-			List<ScLoaWitness> scLoaWitnesses = scLoa.getScLoaWitnesses();
-			for (ScLoaWitness scLoaWitness : scLoaWitnesses) {
+			ScLoiLoaWitness loaSupplierWitness = null;
+			List<ScLoiLoaWitness> scLoaWitnesses = scLoa.getScLoiLoaWitnesses();
+			for (ScLoiLoaWitness scLoaWitness : scLoaWitnesses) {
 				String partyType = scLoaWitness.getPartyType();
 
 				if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
@@ -353,7 +354,7 @@ public class LOADetailBackingBean extends
 				}
 			}
 			if (loaSupplierWitness == null) {
-				loaSupplierWitness = new ScLoaWitness();
+				loaSupplierWitness = new ScLoiLoaWitness();
 				loaSupplierWitness
 						.setPartyType(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER);
 				loaSupplierWitness.setScLoa(scLoa);
@@ -556,9 +557,10 @@ public class LOADetailBackingBean extends
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
 		
-		// calculate performance bond amt
-		scLoa.setBondAmt(calcBondAmount(scLoa));
-
+		// calculate performance bond amt for S2
+		if (!ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+			scLoa.setBondAmt(calcBondAmount(scLoa));
+		}
 		// calc total award details
 		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
 			scLoa.setLoaAmt(calcTotalAmount(scLoa.getScLoiLoaItems()));
@@ -579,9 +581,9 @@ public class LOADetailBackingBean extends
 		}
 
 		// Agency & Supplier Witness
-		ScLoaWitness loaAgencyWitness = null;
-		ScLoaWitness loaSupplierWitness = null;
-		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+		ScLoiLoaWitness loaAgencyWitness = null;
+		ScLoiLoaWitness loaSupplierWitness = null;
+		for (ScLoiLoaWitness scLoaWitness : scLoa.getScLoiLoaWitnesses()) {
 			String partyType = scLoaWitness.getPartyType();
 			// scLoaWitness.setScLoa(scLoa);
 			if (ParameterConst.WITNESS_PARTY_TYPE_AGENCY.equals(partyType)) {
@@ -1577,8 +1579,8 @@ public class LOADetailBackingBean extends
 		String supplierWitnessFaxNo = "";
 		String supplierWitnessMobNo = "";
 		String supplierWitnessEmail = "";
-		ScLoaWitness supplierWitness = null;
-		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+		ScLoiLoaWitness supplierWitness = null;
+		for (ScLoiLoaWitness scLoaWitness : scLoa.getScLoiLoaWitnesses()) {
 			String partyType = scLoaWitness.getPartyType();
 
 			if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
@@ -2261,8 +2263,8 @@ public class LOADetailBackingBean extends
 
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-				ScLoaWitness scLoaWitness = null;
-				Iterator<ScLoaWitness> it = scLoa.getScLoaWitnesses()
+				ScLoiLoaWitness scLoaWitness = null;
+				Iterator<ScLoiLoaWitness> it = scLoa.getScLoiLoaWitnesses()
 						.iterator();
 				while (it.hasNext()) {
 					scLoaWitness = it.next();

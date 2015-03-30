@@ -13,7 +13,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -33,6 +33,8 @@ import org.primefaces.model.StreamedContent;
  * The Class LOADetailManagedBean.
  *
  * @author Viswanath
+ * 
+ * @author Sri
  */
 @ManagedBean(name = "lOADetailManagedBean")
 @SessionScoped
@@ -75,10 +77,10 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private SmPersonnel supplierHQPersonnel;
 	
 	/** The loa agency witness. */
-	private ScLoaWitness loaAgencyWitness;
+	private ScLoiLoaWitness loaAgencyWitness;
 	
 	/** The loa supplier witness. */
-	private ScLoaWitness loaSupplierWitness;
+	private ScLoiLoaWitness loaSupplierWitness;
 	
 	/** The selected sc qt deduction. */
 	private ScQtDeduction selectedScQtDeduction;
@@ -399,7 +401,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the loaAgencyWitness
 	 */
-	public ScLoaWitness getLoaAgencyWitness() {
+	public ScLoiLoaWitness getLoaAgencyWitness() {
 		return loaAgencyWitness;
 	}
 
@@ -408,7 +410,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param loaAgencyWitness the loaAgencyWitness to set
 	 */
-	public void setLoaAgencyWitness(ScLoaWitness loaAgencyWitness) {
+	public void setLoaAgencyWitness(ScLoiLoaWitness loaAgencyWitness) {
 		this.loaAgencyWitness = loaAgencyWitness;
 	}
 
@@ -417,7 +419,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the loaSupplierWitness
 	 */
-	public ScLoaWitness getLoaSupplierWitness() {
+	public ScLoiLoaWitness getLoaSupplierWitness() {
 		return loaSupplierWitness;
 	}
 
@@ -426,7 +428,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param loaSupplierWitness the loaSupplierWitness to set
 	 */
-	public void setLoaSupplierWitness(ScLoaWitness loaSupplierWitness) {
+	public void setLoaSupplierWitness(ScLoiLoaWitness loaSupplierWitness) {
 		this.loaSupplierWitness = loaSupplierWitness;
 	}
 
