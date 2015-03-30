@@ -33,6 +33,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -118,6 +119,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public String redirectToMaintainReason(Long id)throws Exception{
 		log.info("redirectToMaintainReason - Start");
 //		try{
+		renewSesionObject();
 			this.loadReasonCategoryMapper();
 			if(id!=null && id>0){
 				loadRejectReason(id);
@@ -154,6 +156,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public void initialRejectReason(){
 		log.info("initialRejectReason - Start");
+		
 		PmReason pmReason = new PmReason();
 		pmReason.setReasonCategoryCode(new PmParameter());
 		
@@ -236,16 +239,28 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			List <PmSupplierReason> comTypeRestrictions = new ArrayList<PmSupplierReason>();
 			List <PmSupplierReason> suppTypeRestrictions = new ArrayList<PmSupplierReason>();
 			for(PmSupplierReason pmSuppReason:pmReason.getPmSupplierReasons()){
-				if(pmSuppReason.getRestrType()!=null){
-					if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
-						appTypeRestrictions.add(pmSuppReason);
-					}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
-						comTypeRestrictions.add(pmSuppReason);
-					}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
-						suppTypeRestrictions.add(pmSuppReason);
+				if(pmSuppReason.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+					if(pmSuppReason.getRestrType()!=null){
+						if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
+							appTypeRestrictions.add(pmSuppReason);
+						}else if(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
+							comTypeRestrictions.add(pmSuppReason);
+						}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
+							suppTypeRestrictions.add(pmSuppReason);
+						}
 					}
 				}
 			}
+			if(!appTypeRestrictions.isEmpty()){
+				this.getManagedBean().setSuppAppCheck(Boolean.TRUE);
+			}
+			if(!comTypeRestrictions.isEmpty()){
+				this.getManagedBean().setSuppComCheck(Boolean.TRUE);
+			}
+			if(!suppTypeRestrictions.isEmpty()){
+				this.getManagedBean().setSuppTypeCheck(Boolean.TRUE);
+			}
+			
 			this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
 			this.getManagedBean().setComTypeRestrictions(comTypeRestrictions);
 			this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
@@ -753,6 +768,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmSupplierReason>());
 				}
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteAppTypeRestrictions()){
+					if(!suppReason.isBrandNew()){
+						suppReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					}
+					
 					this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
 				}
 				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
@@ -774,9 +793,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				}
 				
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteComTypeRestrictions()){
+					if(!suppReason.isBrandNew()){
+						suppReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					}
+					
 					this.getManagedBean().getComTypeRestrictions().remove(suppReason);
 				}
-				this.getManagedBean().getComTypeRestrictions().clear();
+				this.getManagedBean().getDeleteComTypeRestrictions().clear();
 	//			for(PmSupplierReason suppReason: this.getManagedBean().getComTypeRestrictions()){
 	//				if(suppReason.isDeleted()){
 	//					tempList.add(suppReason);	
@@ -795,9 +818,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				}
 				
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteSuppTypeRestrictions()){
+					if(!suppReason.isBrandNew()){
+						suppReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					}
 					this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
 				}
-				this.getManagedBean().getSuppTypeRestrictions().clear();
+				this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
 	//			for(PmSupplierReason suppReason: this.getManagedBean().getSuppTypeRestrictions()){
 	//				if(suppReason.isDeleted()){
 	//					tempList.add(suppReason);	
@@ -1074,5 +1100,4 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 		return this.docTypeSearchBean;
 	}
-	
 }
