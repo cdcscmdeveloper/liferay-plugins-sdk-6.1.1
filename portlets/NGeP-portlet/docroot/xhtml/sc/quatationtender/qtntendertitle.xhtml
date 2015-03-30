@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.so.general.info']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 190px;" valign="top"><p:outputLabel
@@ -21,11 +21,11 @@
 						id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.fileno']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><table>
 						<tr>
-							<td><p:inputText id="fileno" label="#{lbl['lbl.so.fileno']}"
+							<td><p:inputText id="fileno" label="#{lbl['lbl.sc.qt.fileno']}"
 									required="true" value="#{qTDetailBB.managedBean.qt.fileNo}"
 									size="30" maxlength="50"
 									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_FILE_NO)}" /></td>
@@ -51,7 +51,7 @@
 				<td />
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.estimated']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.eva.est.price']}" /></td>
 				<td><p:inputText id="estprice" style="text-align:right"
 						value="#{qTDetailBB.managedBean.qt.estimatedAmount}" size="30"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_ESTMT_AMT)}"
