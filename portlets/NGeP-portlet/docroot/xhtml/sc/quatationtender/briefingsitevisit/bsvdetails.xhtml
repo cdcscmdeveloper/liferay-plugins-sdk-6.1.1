@@ -90,7 +90,7 @@
 				<div align="right">
 					<h:panelGroup id="addtositebutton">
 						<p:commandButton id="addtositevisitid"
-							update="@([id$=sitevisitdtlid]),@([id$=briefingdtlid])"
+							update="@([id$=sitevisitdtlid])"
 							value="#{lbl['lbl.so.addtositevisit']}"
 							process="@this,briefingdtlid" partialSubmit="true"
 							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
