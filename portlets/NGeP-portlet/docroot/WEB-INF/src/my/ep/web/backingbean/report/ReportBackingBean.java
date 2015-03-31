@@ -3128,7 +3128,7 @@ public class ReportBackingBean extends
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
 			
-			//lngUserId = (long)241765;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038;// 241997;//213972;// 220152;
+			//lngUserId = (long)241997;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038;// 241997;//213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -4158,7 +4158,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			for (PmDistrict pmDistrict : districtResDTO.getDistrictList()) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(pmDistrict.getDistrictName());
-				selectItem.setValue(pmDistrict.getDistrictCode());
+				selectItem.setValue(pmDistrict.getDistrictId());
 				districtLst.add(selectItem);
 			}
 		}
