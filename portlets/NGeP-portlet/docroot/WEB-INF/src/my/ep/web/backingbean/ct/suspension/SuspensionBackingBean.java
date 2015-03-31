@@ -179,7 +179,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	        	       HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			           HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			        
-			           String taskId = originalServletRequest.getParameter("taskId");
+			           String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 			           String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
 			        
 			           /*Start if statement to check login user*/
@@ -442,7 +442,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				    	  setSuspensionContractVer(ctResDTO);
 				      }
 		   	     } else {
-						throw new EpException("Failed.");
+						throw new EpException(ContractConst.FAILED);
 				  }
 			  }catch (Exception e) {
 				log.error("Exception>>", e);
@@ -451,7 +451,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 					EpException ep = (EpException) e;
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				} else {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ContractConst.MESSAGE_NO, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				}
 			  }finally {
 				contractSO = null;
@@ -469,7 +469,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				  if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					 CtRemark remark = getManagedBean().getRemarkList().get(0);
 					 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
-						  throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
+						  throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); 
 					 }
 			      }
 				 

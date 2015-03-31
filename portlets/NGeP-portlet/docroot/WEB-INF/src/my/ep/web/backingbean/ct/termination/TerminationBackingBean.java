@@ -10,14 +10,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -106,8 +103,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	
 	private ContractBackingBean ctBB = null;
 	private CtTerminationReason[] selectedTerminationReasonsList;
-	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
-	
+
 	 /**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -192,7 +188,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-			String taskId = originalServletRequest.getParameter("taskId");
+			String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 			if(taskId==null) {
 				return;
 			}
@@ -238,7 +234,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	      } catch(Exception e){
 				e.printStackTrace();
 		  }
-
 	 }
 	
 	/**
@@ -398,19 +393,22 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
  			String remark = getManagedBean().getRemarkList().get(0).getRemark();
  			if((remark == null || remark.length() == 0)) {
- 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+ 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
  			}
  		}	
 				
 		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_100023, new String[]{"Termination Reason"});
+			throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.ct.reason.termination", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}	
 		
 		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
 				!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
 			  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
 				   if(reason.getClauseNo().length() == 0){
-					   throw new EpException(MessageConst.ERROR_100022, new String[]{"Termination clause"});
+					   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.termination", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				   }
 			  }
 		}
@@ -494,16 +492,13 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		VelocityContext context = null;
 		String vmFile = null;
 		String content = null;
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = new Date();
 		StringBuffer  ministryJabatan = new StringBuffer();
 		
 		try {
 			addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 			context = new VelocityContext();			
 			getManagedBean().setEditorValue("");
-			String imgUrl = getServerUrl()
-					+ "css/images/gov.png";
+			String imgUrl = getServerUrl()+ "css/images/gov.png";
 			if(getManagedBean().isTermination()) {				
 				vmFile = "/ct/termination/termination-notice.vm";
 			}else if(getManagedBean().isMutualTermination()) {
@@ -528,8 +523,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				   context.put("imgUrl",imgUrl);
 				}
 				context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-				ministryJabatan.append(getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup().getGroupName());
-				ministryJabatan.append(" / ");
+				if(getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup() != null) {
+				      ministryJabatan.append(getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup().getGroupName());
+				      ministryJabatan.append(" / ");
+				}
 			
 				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()!=null) {
 					ministryJabatan.append(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
@@ -557,7 +554,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					context.put("noticeDate", df.format(getManagedBean().getContractVer().getCtTermination().getNoticeDate()));
 				}	else {
 							getManagedBean().getContractVer().getCtTermination().setNoticeDate(new Date());
-							context.put("noticeDate",dateFormat.format(date));
+							context.put("noticeDate",df.format(new Date()));
 				}
 				context.put("supplierName",getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				SmAddress smAddress = getManagedBean().getContractVer().getCtContractValue().getSupplierAddress();
@@ -570,7 +567,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				}
 				context.put("contractNo",getManagedBean().getCtContract().getContractNo());
 			//	context.put("currentDate",dateFormat.format(date));
-			//	context.put("reasonDescMap",reasonDescMap );
 				context.put("reasonList", getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons());
 				
 				if(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()!=null) {
@@ -721,7 +717,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	    getManagedBean().setViewContract(true);
 	    getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
 	    setTerminationContractVer(resDTO);
-		
 		return PROCESS_TERMINATE_PAGE;
 	}
     
