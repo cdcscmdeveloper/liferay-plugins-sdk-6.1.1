@@ -71,6 +71,8 @@ import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.bea.common.ldap.exps.Val;
+
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
 public class RuleCatalogueBackingBean extends
@@ -639,9 +641,21 @@ public class RuleCatalogueBackingBean extends
 		// int indexOfSelectedRuleType =
 		// this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
 		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
-
-		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-				.remove(rowIndex);
+		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
+PmConfigRuleValue selectedValueToDel =this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(rowIndex);
+   if(selectedValueToDel.isShowFlag()){//if its parent record delete all child
+	   int groupIdOfParent = selectedValueToDel.getGroupValueId();
+	  for(PmConfigRuleValue value :this.getManagedBean().getSelectedRuleType().getConfigRuleValues()){
+		  if(value.getGroupValueId() == groupIdOfParent){
+			  removeList.add(value);
+		  }
+	  }
+	  this.getManagedBean().getSelectedRuleType().getConfigRuleValues().removeAll(removeList);
+    }else{
+    	 this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+			.remove(rowIndex);
+    }
+		
 		// merge selectedRuleType with changes in values into ConfigRuleTypes
 		// this.getManagedBean().getConfigRuleList().add(indexOfSelectedRuleType,
 		// this.getManagedBean().getSelectedRuleType());
@@ -846,7 +860,7 @@ public class RuleCatalogueBackingBean extends
 
 			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
-			// retrive updated list
+			// clear the catch and retrive updated list from DB
 
 			RuleConfigHelper.getInstance().relodeRuleTypeValueMaps();
 			
@@ -1744,6 +1758,7 @@ public class RuleCatalogueBackingBean extends
 	 *            (int index(mandatory))
 	 */
 	public void updateToValue(int index) {
+		log.info("......updateToValue........");
 		log.info("................index=" + index);
 		log.info("................this.getManagedBean().getSelectedRuleType().getConfigRuleValues().size()="
 				+ this.getManagedBean().getSelectedRuleType()
@@ -1759,6 +1774,28 @@ public class RuleCatalogueBackingBean extends
 						.getSelectedRuleType().getConfigRuleValues().get(index)
 						.getToValue() + 1);
 		}
+	}
+	/**
+	 * update Group Child Date.
+	 * 
+	 * @param index
+	 *            (int index(mandatory))
+	 */
+	public void updateGroupChildDate(int index){
+		log.info("....updateGroupChildDate.....");
+		log.info("................index=" + index);
+		PmConfigRuleValue ruleValue = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index);
+		Date effDate = ruleValue.getEffDate();
+		Date expDate = ruleValue.getExpDate();
+		
+		for(PmConfigRuleValue value :this.getManagedBean().getSelectedRuleType().getConfigRuleValues()){
+			if(value.getGroupValueId() == ruleValue.getGroupValueId()){
+				value.setEffDate(effDate);
+				value.setExpDate(expDate);
+			}
+		}
+		
+		
 	}
 
 	/*
