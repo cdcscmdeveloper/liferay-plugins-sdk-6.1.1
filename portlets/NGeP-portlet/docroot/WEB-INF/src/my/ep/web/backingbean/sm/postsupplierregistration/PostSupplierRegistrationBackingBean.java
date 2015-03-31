@@ -79,7 +79,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			log.info("Supplier is not null===>" + supplier.getSupplierId());
 			this.getManagedBean().setSmSupplier(supplier);
 
-			SmAppl appl = retrieveInProcessAppl(supplier);
+			SmAppl appl = retrieveInProcessAppl(supplier.getSupplierId());
 
 			if(appl != null){
 				log.info("*****In Progress*********");
@@ -305,11 +305,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		externalContext.redirect(commonUrl + "/" + url);
 	}
 	
-	private SmAppl retrieveInProcessAppl(SmSupplier supplier){
+	private SmAppl retrieveInProcessAppl(Long supplierId){
 		IMofRegistrationSO mofRegSO = SmServiceLookup.getMofRegistrationSO();
 		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
-		mofRegistrationReqDTO.setSmSupplier(supplier);
-		mofRegistrationReqDTO.setAppType(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+		/*mofRegistrationReqDTO.setSmSupplier(supplier);
+		mofRegistrationReqDTO.setAppType(ParameterConst.NEW_SM_APPLN_FOR_MOF);*/
+		mofRegistrationReqDTO.setSupplierId(supplierId);
+		
 		
 		MofRegistrationResDTO mofRegistrationResDTO = mofRegSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO);
 		
