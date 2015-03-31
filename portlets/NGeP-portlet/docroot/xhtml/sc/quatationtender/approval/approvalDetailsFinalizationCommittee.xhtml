@@ -25,7 +25,7 @@
 		<p:dataTable id="finalizationsecretaryid"
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
 			var="approverSettings">
-			<p:column headerText="#{lbl['lbl.so.finalization.committee']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.finalization.committee']}">
 				<p:selectOneMenu id="fcApprovalId"
 					value="#{approverSettings.committeType}"
 					style="width: 178px;margin-bottom: 5px;">
@@ -41,7 +41,7 @@
 				</p:selectOneMenu>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.secretary.name']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.secretary.name']}">
 				<h:panelGroup id="commTypes">
 					<p:selectOneMenu id="usersSecretaryId"
 						value="#{approverSettings.approver.userId}"

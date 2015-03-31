@@ -11,7 +11,7 @@
 			columns="2" columnClasses="columnWidth20">
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.circularno']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.circular.no']}" />
 			</h:column>
 			<h:column>
 				<p:inputText size="75"
@@ -19,7 +19,7 @@
 					disabled="true" />
 				<p:spacer width="5" />
 
-				<h:commandLink value="#{lbl['lbl.so.cirattach']}"
+				<h:commandLink value="#{lbl['lbl.sc.circular.attach']}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					style="margin-right:20px;"
 					process="@all,committeePanlrYesCircularList" partialSubmit="true"
@@ -30,7 +30,7 @@
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.circularname']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.circular.name']}" />
 			</h:column>
 
 			<h:column>
@@ -40,7 +40,7 @@
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.circularexp']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.circular.exp.date']}" />
 			</h:column>
 			<h:column>
 				<p:inputText

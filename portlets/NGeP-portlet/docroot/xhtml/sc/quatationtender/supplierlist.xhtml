@@ -17,7 +17,7 @@
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
-			<p:column headerText="#{lbl['lbl.so.suppliername']}">
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 				<p:commandLink update=":form:popupSuppDtl"
 					action="#{qTSupplierQulCriteriaBackingBean.showSupplierDetails(qtSupplier)}"
 					oncomplete="suppDetails.show();">
@@ -25,12 +25,12 @@
 				</p:commandLink>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mofno']}" style="width : 10%;">
+			<p:column headerText="#{lbl['lbl.sc.mofno']}" style="width : 10%;">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mofexp']}" style="width : 10%;">
+			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}" style="width : 10%;">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
 					<f:convertDateTime
@@ -45,7 +45,7 @@
 
 		</p:dataTable>
 		<br />
-		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
+		<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
 		<p:spacer width="5" />
 		<p:inputText
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSupplier}"
