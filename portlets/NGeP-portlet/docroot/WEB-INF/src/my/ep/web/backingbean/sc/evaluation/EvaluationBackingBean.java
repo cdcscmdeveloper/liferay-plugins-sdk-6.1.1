@@ -4940,6 +4940,10 @@ public class EvaluationBackingBean extends
 						}
 
 					}
+					if (!this.getManagedBean().isReadOnly()) {
+						checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());
+					}
 				}
 
 				else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -4961,6 +4965,8 @@ public class EvaluationBackingBean extends
 						}
 
 					}
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+							.getScQtMeetings());
 				}
 
 				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -4992,6 +4998,8 @@ public class EvaluationBackingBean extends
 							}
 						}
 					}
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+							.getScQtMeetings());
 				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())
@@ -5010,6 +5018,8 @@ public class EvaluationBackingBean extends
 						}
 
 					}
+					checkMeetingDetailsAndStatus(this.getManagedBean()
+							.getScQtMeetings());
 				}
 				/*
 				 * if
@@ -5046,21 +5056,28 @@ public class EvaluationBackingBean extends
 	}
 
 	// check meeting details status Done or not.
-	/*
-	 * private void checkMeetingDetailsAndStatus( List<ScQtMeeting>
-	 * meetingDetailsList) { if (null == meetingDetailsList ||
-	 * meetingDetailsList.isEmpty()) { throw new
-	 * EpException(MessageConst.ERROR_760253); } else { int i = 0; for
-	 * (ScQtMeeting meeting : meetingDetailsList) { if (null !=
-	 * meeting.getMeetingStatus() && null !=
-	 * meeting.getMeetingStatus().getStatusId() &&
-	 * QTStatusConst.MS_DONE.equals(meeting .getMeetingStatus().getStatusId()))
-	 * { i++;
-	 * 
-	 * } } if (i == 0) { throw new EpException(MessageConst.ERROR_760255); } }
-	 * 
-	 * }
-	 */
+
+	private void checkMeetingDetailsAndStatus(
+			List<ScQtMeeting> meetingDetailsList) {
+		if (null == meetingDetailsList || meetingDetailsList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760253);
+		} else {
+			int i = 0;
+			for (ScQtMeeting meeting : meetingDetailsList) {
+				if (null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting
+								.getMeetingStatus().getStatusId())) {
+					i++;
+
+				}
+			}
+			if (i == 0) {
+				throw new EpException(MessageConst.ERROR_760255);
+			}
+		}
+
+	}
 
 	// check attendance for opening committee.
 	private void checkCommitteeMembersAttendance(
