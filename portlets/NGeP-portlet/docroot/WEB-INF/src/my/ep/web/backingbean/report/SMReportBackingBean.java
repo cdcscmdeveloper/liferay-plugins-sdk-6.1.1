@@ -62,11 +62,16 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.retrieveCategoryLevOne1();				
 				rptGenBean.retrieveState();
 				rptGenBean.setSmMandatoryCategoryView(true);
-	        	rptGenBean.setSmMandatoryStateView(true);
+				rptGenBean.setSmStateView(true);
+				rptGenBean.setSmDistrictView(true);	        	
+	        	rptGenBean.setSmRegistrationStatusView(true);	        	
+	        	rptGenBean.setFromDateView(true);
+	        	
+	        	/*rptGenBean.setSmMandatoryStateView(true);
 	        	rptGenBean.setSmMandatoryDistrictView(true);	        	
 	        	rptGenBean.setSmMandatoryRegistrationStatusView(true);	        	
 	        	rptGenBean.setSmMandatoryFromDateView(true);
-	        	rptGenBean.setSmMandatoryDateView(true);
+	        	rptGenBean.setSmMandatoryDateView(true);*/
 	        break;
 		case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:	
 			    rptGenBean.generateYearList();
@@ -76,7 +81,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.retrieveCategoryLevOne1();				
 				rptGenBean.retrieveState();	
 				rptGenBean.setSmMandatoryCategoryView(true);
-	        	rptGenBean.setSmMandatoryStaticByStateView(true);
+	        	//rptGenBean.setSmMandatoryStaticByStateView(true);
+				rptGenBean.setSmStaticStateView(true);
 	        	rptGenBean.setSmExtraTwoColumnView(true);
             break;
 		 case ReportConst.SM_APPLICATION_VERIFICATION_RPT_VAL:		        	
@@ -205,13 +211,13 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.retrieveCategoryLevOne1();
 			    rptGenBean.retrieveState();
 				rptGenBean.setSmMandatoryCategoryView(true);
-	        	rptGenBean.setSmMandatoryZoneView(true);	        	
-	        	rptGenBean.setSmMandatoryCompanyNameView(true);
-	        	rptGenBean.setSmMandatoryFromDateView(true);
-	        	rptGenBean.setSmMandatoryDateView(true);
-	        	rptGenBean.setSmMandatoryStateView(true);
-	        	rptGenBean.setSmMandatoryDistrictView(true);
-	        	rptGenBean.setSmMandatoryApplicationNoView(true);
+	        	rptGenBean.setSmZoneView(true);	        	
+	        	rptGenBean.setSmCompanyNameView(true);
+	        	rptGenBean.setFromDateView(true);
+	        	//rptGenBean.setSmMandatoryDateView(true);
+	        	rptGenBean.setSmStateView(true);
+	        	rptGenBean.setSmDistrictView(true);
+	        	rptGenBean.setSmApplicationNoView(true);
 	            break;
 		 case ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL:
 			    rptGenBean.retrieveState();

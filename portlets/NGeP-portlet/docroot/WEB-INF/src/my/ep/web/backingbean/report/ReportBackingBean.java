@@ -880,7 +880,9 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;
-	private long lngUserId;
+	//private long lngUserId;
+	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	//private Long lngUserId = (long)241997;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038; 125254--FL and CM// 241997;//213972;// 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -1508,11 +1510,13 @@ public class ReportBackingBean extends
 		this.localToDateVar = localToDateVar;
 	}
 
-	public long getLngUserId() {
+	
+
+	public Long getLngUserId() {
 		return lngUserId;
 	}
 
-	public void setLngUserId(long lngUserId) {
+	public void setLngUserId(Long lngUserId) {
 		this.lngUserId = lngUserId;
 	}
 
@@ -2850,7 +2854,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveSubTypeList(){
 		ctSubTypeList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 240500;
         	if (null != this.getCtUserType()) {
         		String userTypeRoleCode = null;
@@ -2878,7 +2882,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> callfunction(){
 		ctSubTypeList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 240500;
         	
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -2898,7 +2902,7 @@ public class ReportBackingBean extends
 	public List<String> retrieveHighRoleCodeByUser(){
 		highRoleCodeList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 227446;        	
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -2916,7 +2920,7 @@ public class ReportBackingBean extends
 		rolecodeApproverList = new ArrayList<SelectItem>();
 		rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 241765;        	
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -2988,7 +2992,7 @@ public class ReportBackingBean extends
 	public List<String> retrieveParamCodeByUser(){
 		paramList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 227446;        	
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3129,9 +3133,9 @@ public class ReportBackingBean extends
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
 			
-			//lngUserId = (long)125254;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038;// 241997;//213972;// 220152;
+			//lngUserId = (long)125254;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038; 125254--FL and CM// 241997;//213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -3412,7 +3416,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveUPSSVOUser(){
 		smUPSSVOUserList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3430,7 +3434,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrievePTJ(){
 		scPtjList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3448,7 +3452,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveRequisitioner(){
 		scRequisitionerList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3467,7 +3471,7 @@ public class ReportBackingBean extends
 	public List<SelectItem> retrieveDescOfficer(){
 		scDescOfficerList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-        	lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+        	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
         	//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3487,7 +3491,7 @@ public class ReportBackingBean extends
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 			//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3585,7 +3589,7 @@ public class ReportBackingBean extends
 		ministryList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 			//lngUserId = (long) 220152;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3608,7 +3612,7 @@ public class ReportBackingBean extends
 		ptjList = new ArrayList<String>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 			//lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3644,7 +3648,7 @@ public class ReportBackingBean extends
     	ministryList = new ArrayList<SelectItem>();
 if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-	      lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	      //lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 	      
 	      //lngUserId = (long) 240500;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -3664,7 +3668,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 public List<SelectItem>  retrieveFMIMinistryList() {
 if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 		
 			//lngUserId = (long) 220152;
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
