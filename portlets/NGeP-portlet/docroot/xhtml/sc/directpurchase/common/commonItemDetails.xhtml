@@ -116,10 +116,10 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"/>
 					</f:facet>
 					
-				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;">	
+				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;" >	
 					   <p:row>
 			             <p:column  styleClass="ppPanelGrid" style="border:none !important;">
-			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="15"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="12"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
@@ -128,7 +128,7 @@
 									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
-							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="15"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
+							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="12"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.afterSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
@@ -137,7 +137,6 @@
 									 conditionField="requestNoteItem.requestNoteItemId^#{requestNoteDtl.requestItem.requestNoteItemId}"
 			                         rendered="#{!requestNoteDtl.brandNew}">    
 								</ac:lov>
-								<p:spacer width="1px"></p:spacer>
 								 <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
 								    onstart="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
@@ -159,7 +158,7 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
 					</f:facet>
 				
-					<h:selectOneMenu id="priceType" style="width:100px;"
+					<h:selectOneMenu id="priceType" style="width:90px;"
 						required="#{!requestNoteDtl.selected}" 
 						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
@@ -209,7 +208,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" />
 					</f:facet>
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
-					   disabled="true" size="10" style="margin-top: 8px;"  />
+					   disabled="true" size="8" style="margin-top: 8px;"  />
 				</p:column>
 				
 				<p:column style="width:12%; white-space: normal;">
@@ -242,14 +241,14 @@
 						</h:panelGroup>
 						
 					</f:facet>
-					<p:inputText style="width:25px;text-align:right;margin-top: 8px;margin-right: 1px;" 
+					<p:inputText style="width:15px;margin-top: 8px;margin-right: 1px;" 
 					   label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
 					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
-					<h:selectOneMenu  style="width:75px;margin-top: 8px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
+					<h:selectOneMenu  style="width:62px;margin-top: 8px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
 					    label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term.type']}"
 					    disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
 						value="#{requestNoteDtl.deliverTermTypeId}">
