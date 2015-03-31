@@ -18,8 +18,8 @@
 		<td>
 			<div>$supplierName</div>
 			<div>$supplierAddress</div>
-			<div>$telNo</div>
-			<div>$faxNo</div>
+			<div>Phone No.  $telNo</div>
+			<div>Fax No. $faxNo</div>
 		</td>
 		</tr>
 		</tbody>
