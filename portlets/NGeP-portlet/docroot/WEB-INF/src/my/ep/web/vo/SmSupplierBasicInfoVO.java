@@ -15,6 +15,8 @@ public class SmSupplierBasicInfoVO {
 	private String companyName;
 	private String addressLine;
 	private String postCodeStateCityCountry;
+	private String gstNum;
+	private String gstRegDate;
 	
 	public String getMofNo() {
 		return mofNo;
@@ -87,5 +89,17 @@ public class SmSupplierBasicInfoVO {
 	}
 	public void setPostCodeStateCityCountry(String postCodeStateCityCountry) {
 		this.postCodeStateCityCountry = postCodeStateCityCountry;
+	}
+	public String getGstNum() {
+		return gstNum;
+	}
+	public void setGstNum(String gstNum) {
+		this.gstNum = gstNum;
+	}
+	public String getGstRegDate() {
+		return gstRegDate;
+	}
+	public void setGstRegDate(String gstRegDate) {
+		this.gstRegDate = gstRegDate;
 	}
 }
