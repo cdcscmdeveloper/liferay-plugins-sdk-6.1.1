@@ -2597,7 +2597,7 @@ public class ReportsGenerateBean {
 				for(PmDistrict pmDistrict: districtResDTO.getDistrictList()){				
 					SelectItem selectItem= new SelectItem();
 					selectItem.setLabel(pmDistrict.getDistrictName());
-					selectItem.setValue(pmDistrict.getDistrictCode());
+					selectItem.setValue(pmDistrict.getDistrictId());
 					districtLst.add(selectItem);
 				}
 			}
