@@ -706,7 +706,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// Weather item product or server
 				scRequestNoteDtl.setProdAndServiceFlag(checkServiceOrProduct(scRequestNoteDtl));
 
-				scRequestNoteDtl = getPidForRequestItem(scRequestNoteDtl);
+				//scRequestNoteDtl = getPidForRequestItem(scRequestNoteDtl);
 
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),scRequestNoteDtl.getPriceType().getParameterId() ,
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getDeliverTermType().getParameterId());
@@ -1710,7 +1710,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					.retrieveOrgProfileListByOrgType(profileReqDTO);
 			if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
 				requestNote.setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
-				ptjNameEvent();
+				//ptjNameEvent();
 			}
 		}
 		
