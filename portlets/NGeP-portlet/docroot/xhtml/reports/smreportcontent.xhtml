@@ -572,6 +572,19 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smStaticStateView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.state']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smState}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems
+									value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
+								
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryStateView}">
 							<p:column>
 								<table style="width: 182px;">
@@ -777,7 +790,7 @@
 						</p:dataTable>
 						<p:spacer height="2px;" />
 						<div align="right">
-							<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+							<p:commandButton value="#{lbl['lbl.sm.button.add']}" disabled="#{reportBackingBean.enableValue}"
 								action="#{reportBackingBean.assignCategoryForCompExperience}"
 								update=":form:suppExpCatCodesDtWidVar" partialSubmit="true"
 								process=":form:compExpCatPanHdr" />
