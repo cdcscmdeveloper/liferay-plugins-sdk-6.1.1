@@ -618,6 +618,8 @@ public class LOIDetailBackingBean extends
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
 				getManagedBean().setLoiLoaBeans(
 						prepareLoiLoaList(resDTO.getLoiLoas()));
+			} else{
+				getManagedBean().setLoiLoaBeans(new ArrayList<LoiLoaBean>());
 			}
 		} catch (Exception ex) {
 			handleException(ex);
