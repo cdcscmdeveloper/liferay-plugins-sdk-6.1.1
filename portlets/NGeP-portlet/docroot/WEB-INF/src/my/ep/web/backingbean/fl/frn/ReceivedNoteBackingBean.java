@@ -179,19 +179,19 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 						noteNo = resDTO.getFulfilmentNoteNo();
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 						messageId = MessageConst.INFO_745002;
-						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+						noteNo = resDTO.getFulfilmentNoteNo();
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 						messageId = MessageConst.INFO_745003;
-						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+						noteNo = resDTO.getFulfilmentNoteNo();
 					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 						messageId = MessageConst.INFO_700009;
-						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+						noteNo = resDTO.getFulfilmentNoteNo();
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 						messageId = MessageConst.INFO_700008;
-						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+						noteNo = resDTO.getFulfilmentNoteNo();
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 						messageId = MessageConst.INFO_700005;
-						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+						noteNo = resDTO.getFulfilmentNoteNo();
 					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(messageId, 
@@ -358,6 +358,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setSelectedTabIndex(0);
 			
 			// Set evaluation
+			if(getUserRole().equalsIgnoreCase(RoleCode.FL_APPROVER.toString())){
+				getManagedBean().setDisableEvaluation(Boolean.TRUE);
+			}
 			if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
 				retrieveCriteriaList();
 			}
@@ -446,6 +449,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.score",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),getCriteriaDesc(supplierEvaluation.getPmCriteria())});
 			}
 		}
+		BigDecimal sumReceiveQty = new BigDecimal(0);
+		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+			sumReceiveQty = sumReceiveQty.add(frnItem.getReceivedQty());
+		}
+		if(sumReceiveQty.doubleValue() == 0){
+			throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		}
+		
 		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
 			frnItem.setRejectedQty(frnItem.getFlDelOrderItem().getDeliveredQty().subtract(frnItem.getReceivedQty()));
 			if(frnItem.getReceivedQty().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
