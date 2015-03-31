@@ -300,18 +300,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The terms conditions. */
 	private String termsConditions;
 	
-	/** The integrity pact. */
-	private String integrityPact;
-	
-	/** The agree with terms conditions1. */
-	private boolean agreeWithTermsConditions1;
-	
-	/** The agree with terms conditions2. */
-	private boolean agreeWithTermsConditions2;
-	
-	/** The loi loa witness. */
-	private ScLoiLoaWitness scLoiLoaWitness;
-	
 	/**
 	 * Gets the sc qt evaluation result.
 	 *
@@ -1788,77 +1776,4 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setTermsConditions(String termsConditions) {
 		this.termsConditions = termsConditions;
 	}
-
-	/**
-	 * Gets the integrity pact.
-	 *
-	 * @return the integrityPact
-	 */
-	public String getIntegrityPact() {
-		return integrityPact;
-	}
-
-	/**
-	 * Sets the integrity pact.
-	 *
-	 * @param integrityPact the integrityPact to set
-	 */
-	public void setIntegrityPact(String integrityPact) {
-		this.integrityPact = integrityPact;
-	}
-
-	/**
-	 * Gets the sc loi loa witness.
-	 *
-	 * @return the scLoiLoaWitness
-	 */
-	public ScLoiLoaWitness getScLoiLoaWitness() {
-		return scLoiLoaWitness;
-	}
-
-	/**
-	 * Sets the sc loi loa witness.
-	 *
-	 * @param scLoiLoaWitness the scLoiLoaWitness to set
-	 */
-	public void setScLoiLoaWitness(ScLoiLoaWitness scLoiLoaWitness) {
-		this.scLoiLoaWitness = scLoiLoaWitness;
-	}
-
-	/**
-	 * Checks if is agree with terms conditions1.
-	 *
-	 * @return the agreeWithTermsConditions1
-	 */
-	public boolean isAgreeWithTermsConditions1() {
-		return agreeWithTermsConditions1;
-	}
-
-	/**
-	 * Sets the agree with terms conditions1.
-	 *
-	 * @param agreeWithTermsConditions1 the agreeWithTermsConditions1 to set
-	 */
-	public void setAgreeWithTermsConditions1(boolean agreeWithTermsConditions1) {
-		this.agreeWithTermsConditions1 = agreeWithTermsConditions1;
-	}
-
-	/**
-	 * Checks if is agree with terms conditions2.
-	 *
-	 * @return the agreeWithTermsConditions2
-	 */
-	public boolean isAgreeWithTermsConditions2() {
-		return agreeWithTermsConditions2;
-	}
-
-	/**
-	 * Sets the agree with terms conditions2.
-	 *
-	 * @param agreeWithTermsConditions2 the agreeWithTermsConditions2 to set
-	 */
-	public void setAgreeWithTermsConditions2(boolean agreeWithTermsConditions2) {
-		this.agreeWithTermsConditions2 = agreeWithTermsConditions2;
-	}
-	
 }

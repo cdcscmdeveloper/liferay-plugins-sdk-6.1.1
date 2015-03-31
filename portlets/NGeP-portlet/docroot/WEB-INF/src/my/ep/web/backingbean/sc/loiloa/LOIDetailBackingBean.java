@@ -81,7 +81,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
@@ -341,27 +340,6 @@ public class LOIDetailBackingBean extends
 				scLoi.setScLoiLoaItems(scLoiLoaItems);
 			}
 			
-			// Supplier Witness
-			ScLoiLoaWitness loiSupplierWitness = null;
-			List<ScLoiLoaWitness> scLoiLoaWitnesses = scLoi.getScLoiLoaWitnesses();
-			for (ScLoiLoaWitness scLoiLoaWitness : scLoiLoaWitnesses) {
-				String partyType = scLoiLoaWitness.getPartyType();
-
-				if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
-						.equals(partyType)) {
-					loiSupplierWitness = scLoiLoaWitness;
-				}
-			}
-			if (loiSupplierWitness == null) {
-				loiSupplierWitness = new ScLoiLoaWitness();
-				loiSupplierWitness
-				.setPartyType(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER);
-				loiSupplierWitness.setScLoi(scLoi);
-
-				scLoiLoaWitnesses.add(loiSupplierWitness);
-			}
-			getManagedBean().setScLoiLoaWitness(loiSupplierWitness);
-			
 			generateDeclarationFromVelocity(scLoi, awardSupplierResDTO.getScQt());
 			getManagedBean().setScLoi(scLoi);
 
@@ -433,12 +411,6 @@ public class LOIDetailBackingBean extends
 				.getInstance()
 				.getHtmlFromVelocity(SourcingConstants.LOI_DECLARATION, context);
 		getManagedBean().setTermsConditions(termsConditions);
-		
-		String integrityPact = DocumentGenerator
-				.getInstance()
-				.getHtmlFromVelocity(SourcingConstants.LOI_INTEGRITY_PACT, context);
-
-		getManagedBean().setIntegrityPact(integrityPact);
 
 		return termsConditions;
 	}
@@ -2223,26 +2195,6 @@ public class LOIDetailBackingBean extends
 		return awardSupplierResDTO;
 	}
 	
-	/**
-	 * Validate loi details.
-	 *
-	 * @param scLoi the sc loi
-	 * @param outcome the outcome
-	 */
-	private void validateLOIDetails(ScLoi scLoi, String outcome) {
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
-
-		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
-				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
-
-			if (!getManagedBean().isAgreeWithTermsConditions1()) {
-				throw new EpException(MessageConst.ERROR_750002);
-			}
-			if (!getManagedBean().isAgreeWithTermsConditions2()) {
-				throw new EpException(MessageConst.ERROR_750002);
-			}
-		}
-	}
 
 	/**
 	 * Update bpm task action.
