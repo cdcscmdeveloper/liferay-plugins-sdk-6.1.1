@@ -39,7 +39,9 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private boolean suppAppCheck;
 	private boolean suppComCheck;
 	private boolean suppTypeCheck;
-
+	
+	private List <PmSupplierReason> deleteRestrictions;
+	private int selectedTabIndex;
 
 	/**
 	 * @return the reasonSearchBean
@@ -233,13 +235,26 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.suppTypeCheck = suppTypeCheck;
 	}
 
+	/**
+	 * @return the deleteRestrictions
+	 */
+	public List<PmSupplierReason> getDeleteRestrictions() {
+		return deleteRestrictions;
+	}
 
-	
+	/**
+	 * @param deleteRestrictions the deleteRestrictions to set
+	 */
+	public void setDeleteRestrictions(List<PmSupplierReason> deleteRestrictions) {
+		this.deleteRestrictions = deleteRestrictions;
+	}
 
-	
-	
-	
-	
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
 
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
 	
 }

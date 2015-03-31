@@ -66,34 +66,32 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					   	</p:dataTable>
 					</td>
 				</tr>
-				<p:panel id="restriction" rendered="#{rejectionReasonBackingBean.managedBean.suppReason}">
-					<tr>
-						<th><p:outputLabel value="Restriction" /></th>
-						<td>
-							<table>
-								<tr>
-									<td><p:selectBooleanCheckbox itemLabel="Application Type" value="#{rejectionReasonBackingBean.managedBean.suppAppCheck}">
-									<p:ajax event="change" update="pReasonRestriction" />
-									</p:selectBooleanCheckbox></td>
-								</tr>
-								<tr>
-									<td><p:selectBooleanCheckbox itemLabel="Company Type" value="#{rejectionReasonBackingBean.managedBean.suppComCheck}">
-									<p:ajax event="change" update="pReasonRestriction" /></p:selectBooleanCheckbox></td>
-								</tr>
-								<tr>
-									<td><h:inputHidden></h:inputHidden> </td>
-								</tr>
-								<tr>
-									<td><h:inputHidden></h:inputHidden> </td>
-								</tr>
-								<tr>
-									<td><p:selectBooleanCheckbox itemLabel="Supplier Type" value="#{rejectionReasonBackingBean.managedBean.suppTypeCheck}">
-									<p:ajax event="change" update="pReasonRestriction" /></p:selectBooleanCheckbox></td>
-								</tr>
-							</table>
+				<c:if test="#{rejectionReasonBackingBean.managedBean.suppReason}">				
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pm.document.restriction']}" /></th>
+					<td>
+						<p:selectBooleanCheckbox id="chkAppType" value="#{rejectionReasonBackingBean.managedBean.suppAppCheck}">
+						 	<p:ajax event="change" process="@this" update="pReasonRestriction" listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrApp)}"/>
+						</p:selectBooleanCheckbox>
+						<h:outputText value="#{lbl['lbl.pm.by.application.type']}"/>
+					 	<br/>								
+								
+						<p:selectBooleanCheckbox id="chkComType" value="#{rejectionReasonBackingBean.managedBean.suppComCheck}">
+							<p:ajax event="change" process="@this" update="pReasonRestriction" listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrComp)}" />
+						</p:selectBooleanCheckbox>
+						<h:outputText value="#{lbl['lbl.pm.by.company.type']}"/>
+					 	<br/>		
+								
+						<p:selectBooleanCheckbox id="chkSuppType" value="#{rejectionReasonBackingBean.managedBean.suppTypeCheck}">
+							<p:ajax event="change" process="@this" update="pReasonRestriction" listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrSupp)}" />
+						</p:selectBooleanCheckbox>
+						<h:outputText value="#{lbl['lbl.pm.by.supplier.type']}"/>
+					 	<br/>	
+							
 						</td>
 					</tr>
-				</p:panel>
+			
+				</c:if>
 				<tr>
 					<th>
 						<p:outputLabel value="#{lbl['lbl.pm.status']}"/>
