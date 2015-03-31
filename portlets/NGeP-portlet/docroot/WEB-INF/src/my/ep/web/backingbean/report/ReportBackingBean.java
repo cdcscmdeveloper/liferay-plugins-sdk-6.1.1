@@ -99,6 +99,7 @@ public class ReportBackingBean extends
 	private String reportName;
 	private String reportValue;
 	private ScQt scqt;
+	private boolean enableValue = false;
 	String parameterCodeType = new String();
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
 	private List<SelectItem> moduleList;
@@ -2730,6 +2731,7 @@ public class ReportBackingBean extends
 		userReqDTO.setUserId(userId);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		if(userResDTO.getUserOrgList()!=null&&userResDTO.getUserOrgList().size()>0){
 		PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
 		PmOrgProfile pmOrgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -2746,6 +2748,7 @@ public class ReportBackingBean extends
 			if(pmOrgProfile!=null) {				
 				pmPtjList.add(pmOrgProfile.getOrgName());				
 			}
+		}
 		
 		/*IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
@@ -3128,7 +3131,7 @@ public class ReportBackingBean extends
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {					
 			lngUserId = new FacesScopes().getUserSessionBean().getUserId();	//pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId
 			
-			//lngUserId = (long)241997;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038;// 241997;//213972;// 220152;
+			//lngUserId = (long)125254;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038;// 241997;//213972;// 220152;
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
@@ -3250,6 +3253,7 @@ public class ReportBackingBean extends
 		
 		SmSupplierCategory cat = new SmSupplierCategory();		
 		if ((this.getSelectedCatList().size()>9)) {
+			//this.setEnableValue(true);
 			throw new EpException(ReportConst.ERR_999000_MORTHAN_TEN);
 		}
 		
@@ -3269,6 +3273,14 @@ public class ReportBackingBean extends
 		this.getSelectedCatList().add(cat);
 	}
 	
+
+	public boolean isEnableValue() {
+		return enableValue;
+	}
+
+	public void setEnableValue(boolean enableValue) {
+		this.enableValue = enableValue;
+	}
 
 	/*
 	 * Retrieve module list
