@@ -14,18 +14,9 @@
 				rowKey="#{branchBean}" rowIndexVar="index">
 				<ac:paginator for="dt" />
 
-				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
-					<h:outputText value="#{branchBean.branchName}" /><br />
-					<table style="width: 100%; border: none !important; table-layout: fixed !important;">
-						<tr>
-							<td style="word-wrap: break-word"><h:outputText value="#{lbl['lbl.sm.gst.regno']}" /></td>
-							<td style="word-wrap: break-word"><h:outputText value=" : #{branchBean.gstRegistrationNo}" /></td>
-						</tr>
-						<tr>
-							<td style="word-wrap: break-word"><h:outputText value="#{lbl['lbl.sm.gst.regdate']}" /></td>
-							<td style="word-wrap: break-word"><h:outputText value=" : " /></td>
-						</tr>
-					</table>
+				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}" style="width :20%;white-space : normal">
+					<h:outputText value="#{branchBean.branchName}" /><br /><br />
+					<h:outputText value="#{lbl['lbl.sm.gst.regno']}" /><h:outputText value=" : #{branchBean.gstRegistrationNo}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}" style="width :50%;white-space : normal">
