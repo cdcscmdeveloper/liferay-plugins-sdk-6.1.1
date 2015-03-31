@@ -4032,6 +4032,11 @@ public class SupplierFinalizationBackingBean extends
 				.getParameterCode();
 		String selectionMode = QTConstants.SF_SINGLE;
 		String recommendByCode = getManagedBean().getRecommendBy();
+		
+		if (triggeredFromEvent) {
+			this.getManagedBean().setShortlistedSupplierList(
+									new ArrayList<ScQtEvaluationResultDtl>());
+		}
 
 		// Disable award by package when procurement category is medicine
 		if (getManagedBean().isProcCategoryMedicine()) {
