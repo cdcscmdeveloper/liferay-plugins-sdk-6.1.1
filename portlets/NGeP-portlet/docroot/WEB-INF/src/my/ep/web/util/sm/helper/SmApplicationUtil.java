@@ -974,7 +974,8 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722526);
 			}
 		}
-		if (appl.getSmCompanyBasic() != null && !appl.getSmCompanyBasic().isWithFederal()
+		if (appl.getSmCompanyBasic() != null
+				&& !appl.getSmCompanyBasic().isWithFederal()
 				&& !appl.getSmCompanyBasic().isWithGlc()
 				&& !appl.getSmCompanyBasic().isWithOthers()
 				&& !appl.getSmCompanyBasic().isWithState()
@@ -3854,7 +3855,23 @@ public class SmApplicationUtil {
 		if (smSupplierBasicInfoVO == null) {
 			smSupplierBasicInfoVO = new SmSupplierBasicInfoVO();
 		}
+		// gst details
+		if (bean.getSmAppl().getSmCompanyBasic() != null) {
+			if (StringUtils.isEmpty(bean.getSmAppl().getSmCompanyBasic()
+					.getGstRegistrationNo())) {
+				smSupplierBasicInfoVO.setGstNum(" --");
+			} else {
+				smSupplierBasicInfoVO.setGstNum(bean.getSmAppl()
+						.getSmCompanyBasic().getGstRegistrationNo());
+			}
 
+			smSupplierBasicInfoVO
+					.setGstRegDate(bean.getSmAppl().getSmCompanyBasic()
+							.getGstRegistrationDate() == null ? "--"
+							: DateUtils.dateToString("dd/MM/yyyy", bean
+									.getSmAppl().getSmCompanyBasic()
+									.getGstRegistrationDate()));
+		}
 		// mof account
 		if (bean.getSmSupplier() != null
 				&& bean.getSmSupplier().getSmMofAccounts() != null) {

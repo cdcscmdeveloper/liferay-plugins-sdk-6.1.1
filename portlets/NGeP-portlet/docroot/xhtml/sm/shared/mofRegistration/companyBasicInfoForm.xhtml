@@ -97,6 +97,46 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.gstNo']}" /></td>
+					<td><c:choose>
+							<c:when
+								test="#{(backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew) and backingBean.managedBean.supplierUser}">
+								<p:inputText label="#{lbl['lbl.sm.gstNo']}"
+									value="#{backingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}"
+									id="smGstRegistrationNo" size="35" maxlength="12" />
+								<p:message id="smgstRegistrationNoMsg" for="smGstRegistrationNo"
+									showSummary="true" showDetail="false" display="icon" />
+							</c:when>
+							<c:otherwise>
+								<p:inputText label="#{lbl['lbl.sm.gstNo']}"
+									value="#{backingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}"
+									id="smGstRegistrationNoRdOnly" size="35" maxlength="12"
+									readonly="true" disabled="true" />
+							</c:otherwise>
+						</c:choose></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.gstDate']}" /></td>
+					<td><c:choose>
+							<c:when
+								test="#{(backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew) and backingBean.managedBean.supplierUser}">
+								<p:calendar id="gstRegDate" showOn="button" navigator="true"
+									display="inline" label="#{lbl['lbl.sm.gstDate']}"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									yearRange="-99:+0" readonlyInput="true"
+									maxdate="#{CommonConstants.CURRENT_DATE}"
+									value="#{backingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationDate}" />
+							</c:when>
+							<c:otherwise>
+								<p:inputText
+									value="#{backingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationDate}"
+									readonly="true" size="35">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</p:inputText>
+							</c:otherwise>
+
+						</c:choose></td>
+				</tr>
+				<tr>
 					<td style="vertical-align: top;"><p:outputLabel
 							value="#{lbl['lbl.sm.companyaddress']}" style="padding-top :5px;" />
 						<p:outputLabel value="*" styleClass="mandatory"
