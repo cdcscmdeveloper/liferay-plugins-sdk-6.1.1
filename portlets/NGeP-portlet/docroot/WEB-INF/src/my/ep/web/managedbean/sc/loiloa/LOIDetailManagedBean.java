@@ -14,7 +14,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
