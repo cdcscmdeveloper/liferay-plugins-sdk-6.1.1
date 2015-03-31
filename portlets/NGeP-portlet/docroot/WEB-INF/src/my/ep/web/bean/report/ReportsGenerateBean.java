@@ -141,6 +141,7 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryRegistrationTypeView = false;
 		private boolean smMandatoryMonthlyRptByYearView = false;
 		private boolean smMandatoryStaticByStateView = false;
+		private boolean smStaticStateView = false;
 		private boolean smMandatoryApplicationNoView = false;
 		private boolean smSVOUserView = false;
 		private boolean smMandatoryReportTypeView = false;
@@ -214,6 +215,12 @@ public class ReportsGenerateBean {
 		private boolean flSupplierDropdownView = false;
 		private boolean flGroupSeventeenView = false;
 		
+		public boolean isSmStaticStateView() {
+			return smStaticStateView;
+		}
+		public void setSmStaticStateView(boolean smStaticStateView) {
+			this.smStaticStateView = smStaticStateView;
+		}
 		//CT
 		private boolean ctContractNoView = false;
 		private boolean ctAgreementView = false;
