@@ -2,10 +2,6 @@
    <head>
       <style>
          @page { size: A4 portrait;}
-         .footer {
-         display: block; text-align: center;
-         position: running(footer);
-         }
       </style>
    </head>
    <body>
@@ -18,8 +14,8 @@
 		<td>
 			<div>$supplierName</div>
 			<div>$supplierAddress</div>
-			<div>$telNo</div>
-			<div>$faxNo</div>
+			<div>Phone No. $telNo</div>
+			<div>Fax No. $faxNo</div>
 		</td>
 		</tr>
 		</tbody>
