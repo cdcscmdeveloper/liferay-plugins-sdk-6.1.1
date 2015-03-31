@@ -13,7 +13,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -77,10 +77,10 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private SmPersonnel supplierHQPersonnel;
 	
 	/** The loa agency witness. */
-	private ScLoiLoaWitness loaAgencyWitness;
+	private ScLoaWitness loaAgencyWitness;
 	
 	/** The loa supplier witness. */
-	private ScLoiLoaWitness loaSupplierWitness;
+	private ScLoaWitness loaSupplierWitness;
 	
 	/** The selected sc qt deduction. */
 	private ScQtDeduction selectedScQtDeduction;
@@ -401,7 +401,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the loaAgencyWitness
 	 */
-	public ScLoiLoaWitness getLoaAgencyWitness() {
+	public ScLoaWitness getLoaAgencyWitness() {
 		return loaAgencyWitness;
 	}
 
@@ -410,7 +410,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param loaAgencyWitness the loaAgencyWitness to set
 	 */
-	public void setLoaAgencyWitness(ScLoiLoaWitness loaAgencyWitness) {
+	public void setLoaAgencyWitness(ScLoaWitness loaAgencyWitness) {
 		this.loaAgencyWitness = loaAgencyWitness;
 	}
 
@@ -419,7 +419,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the loaSupplierWitness
 	 */
-	public ScLoiLoaWitness getLoaSupplierWitness() {
+	public ScLoaWitness getLoaSupplierWitness() {
 		return loaSupplierWitness;
 	}
 
@@ -428,7 +428,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param loaSupplierWitness the loaSupplierWitness to set
 	 */
-	public void setLoaSupplierWitness(ScLoiLoaWitness loaSupplierWitness) {
+	public void setLoaSupplierWitness(ScLoaWitness loaSupplierWitness) {
 		this.loaSupplierWitness = loaSupplierWitness;
 	}
 
