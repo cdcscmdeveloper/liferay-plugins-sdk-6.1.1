@@ -2730,9 +2730,9 @@ public class ReportBackingBean extends
 		pmMinistryList =new ArrayList<SelectItem>();
 		pmPtjList =new ArrayList<String>();
 		FacesScopes facesScopes = new FacesScopes();
-		Long userId = facesScopes.getUserSessionBean().getUserId();
+		//Long userId = facesScopes.getUserSessionBean().getUserId();
 		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setUserId(userId);
+		userReqDTO.setUserId(lngUserId);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
 		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 		if(userResDTO.getUserOrgList()!=null&&userResDTO.getUserOrgList().size()>0){
