@@ -140,7 +140,7 @@
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
 				<p:inputText value="#{typeValueObj.fromValue}" size="15"  maxlength="18"
-					id="fromValueId" disabled="#{!(typeValueObj.brandNew)}">
+					id="fromValueId" disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}">
 					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink])" />
 				</p:inputText>
 				<p:message id="fromValueMsg" for="fromValueId" display="icon" />
@@ -155,7 +155,7 @@
 			                	</f:facet>
 				<p:inputText value="#{typeValueObj.toValue}" size="15"  maxlength="18"
 					id="toValueId" disabled="#{!(typeValueObj.brandNew)}">
-					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateToValue(index)}" update="@(.fromValueId,[id$=cloneLink])" />
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateToValue(index)}" update=":form:settingTabId:ruleTypeValueTableID" />
 				</p:inputText>
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
@@ -184,6 +184,9 @@
 					value="#{typeValueObj.effDate}">
 					<p:ajax event="dateSelect" update="@([id$=ruleConfigExpDateId])"
 						process="@this" />
+				 <p:ajax event="dateSelect" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])"/>
+				 <p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])" />
+           
 				</p:calendar>
 			</p:column>
 
@@ -199,8 +202,9 @@
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.expDate}">
-					<p:ajax event="dateSelect" update="@([id$=cloneLink])"
-						process="@this" />
+					<p:ajax event="dateSelect" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])"/>
+				    <p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])" />
+           
 				</p:calendar>
 			</p:column>
 
@@ -225,8 +229,8 @@
 								rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag}"
 								disabled="#{!typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null }"
 								action="#{ruleCatalogueBackingBean.cloneRuleTypeValue(index)}"
-								partialSubmit="true" process=":form:settingTabId:ruleConfigId"
-								update=":form:settingTabId:ruleConfigId">
+								partialSubmit="true" process="@this"
+								update=":form:settingTabId:ruleTypeValueTableID">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;"><p:commandLink
@@ -240,15 +244,14 @@
 			</p:column>
 		</p:dataTable>
 		<br />
-		<h:panelGroup id="addBtnId">
 			<div style="text-align: right;">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" id="addTypeValueButton" style="float:right;"
 								action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
-								partialSubmit="true" process=":form:settingTabId:ruleConfigId"
-					            update=":form:settingTabId:ruleConfigId"></p:commandButton>
+								partialSubmit="true" process="@this"
+								update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 
 			</div>
-		</h:panelGroup>
+		
 	
 </p:panel>
 </ui:composition>

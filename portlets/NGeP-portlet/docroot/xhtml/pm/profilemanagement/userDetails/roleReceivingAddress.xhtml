@@ -41,20 +41,20 @@
 					
 					<p:column
 						headerText="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
-						width="15%">
+						width="25%">
 						
 						<p:inputText id="auLetterNo" styleClass="ppDisplayTextS"
 							value="#{role.letterNo}"
 							required="#{role.pmRole.roleCode eq 'FL_APPROVER'}"
 							label="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
-							disabled="#{!(role.pmRole.roleCode eq 'FL_APPROVER')}" maxlength="18">
+							disabled="#{!(role.pmRole.roleCode eq 'FL_APPROVER')}" maxlength="30">
 							<p:ajax event="change" process="@this" />
 						</p:inputText>
 						<p:message id="auLetterNoMsg" for="auLetterNo" display="icon" />
 					</p:column>
 					<p:column
 						headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"
-						width="15%">
+						width="8%">
 
 						<p:selectOneMenu value="#{role.recordStatusFlg}"
 							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
