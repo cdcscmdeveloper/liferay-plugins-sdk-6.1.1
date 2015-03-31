@@ -19,7 +19,7 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.rejection.reasons']}"
 						value="#{backingBean.managedBean.reasonId}"
-						style="height:200px;width:400px;">
+						style="height:200px;width:750px;">
 						<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
 							var="res" itemLabel="#{res.reasonDesc}"
 							itemValue="#{res.pmReason.reasonId}" />
@@ -30,9 +30,9 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}" />
 				<p:outputLabel value="*" styleClass="mandatory" /></td>
-			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+			<td style="padding-top: 5px;"><p:inputTextarea cols="121"
 					value="#{backingBean.managedBean.applnRejectionRemarks}"
-					id="rmrksForRejectTxtArea" rows="10"
+					id="rmrksForRejectTxtArea" rows="5"
 					validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 					label="#{lbl['lbl.sm.remarks.rejection']}"
 					required="#{backingBean.managedBean.valueReqd}" maxlength="1000">
