@@ -14,12 +14,12 @@
 				rowKey="#{branchBean}" rowIndexVar="index">
 				<ac:paginator for="dt" />
 
-				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}" style="width :20%;white-space : normal">
+				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}" style="white-space : normal">
 					<h:outputText value="#{branchBean.branchName}" /><br /><br />
 					<h:outputText value="#{lbl['lbl.sm.gst.regno']}" /><h:outputText value=" : #{branchBean.gstRegistrationNo}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.companyaddress']}" style="width :50%;white-space : normal">
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}" style="width :40%;white-space : normal">
 					<h:outputText
 						value="#{viewSmApplBackingBean.getFullAddress(branchBean.smAddress)}"
 						style="float : left" />
