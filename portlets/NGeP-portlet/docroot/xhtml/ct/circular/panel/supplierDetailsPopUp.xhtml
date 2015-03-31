@@ -139,16 +139,10 @@
 			</h:column>
 		</h:panelGrid>
 
-		<p:spacer height="10px" />
-		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton 
-						value="#{lbl['lbl.btn.close']}" 
-						onclick="suppDtlWidgetVar.hide();" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
-	</p:dialog>
-	
+		<p:spacer height="10" />
+		<div class="ppRightBtn">
+     		<p:commandButton value="#{lbl['lbl.btn.close']}" 
+				onclick="suppDtlWidgetVar.hide();" />
+  		 </div>		
+	</p:dialog>	
 </ui:composition>
