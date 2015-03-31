@@ -19,9 +19,13 @@
 </cc:interface>
 
 <cc:implementation>
+
+	<p:remoteCommand name="resetAllFields" action="#{categoryCodeSearchBackingBean.resetAllOnShow}" update="catCodePnl" />
+
 	<p:dialog id="catCodePopup"
 		header="#{lbl['lbl.pm.select.category']}"
-		widgetVar="catCodePopup" modal="true" width="680" position="top">
+		widgetVar="catCodePopup" modal="true" width="680" position="top"
+		onShow="resetAllFields();">
 
 		<p:messages id="catCodePopupMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
@@ -35,7 +39,7 @@
 				<td width="80%">
 					<p:selectOneRadio id="searchBy"
 						value="#{categoryCodeSearchBackingBean.managedBean.searchBy}">
-						<f:selectItems value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
+						<f:selectItems value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeDescriptionSearchBy)}" />
 						<p:ajax event="change" update="catCodePnl" />
 					</p:selectOneRadio>
 				</td>
@@ -91,7 +95,7 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td width="20%">
-						<p:outputLabel value="#{lbl['lbl.sc.category.description']} Code" />
+						<p:outputLabel value="#{lbl['lbl.pm.category.code']}" />
 					</td>
 					<td width="80%">
 						<p:inputText id="catCode" value="#{categoryCodeSearchBackingBean.managedBean.categoryCode}" 
