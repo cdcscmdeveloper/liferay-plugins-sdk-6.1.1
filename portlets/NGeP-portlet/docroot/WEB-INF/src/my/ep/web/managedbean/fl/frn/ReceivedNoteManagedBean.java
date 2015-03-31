@@ -87,6 +87,9 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	/** The doc maintain remarks. */
 	private boolean docMaintainRemarks = false;
 	
+	/** Disable evaluation. */
+	private boolean disableEvaluation = false;
+	
 	//gpki signing
 	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
@@ -517,6 +520,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setValidated(boolean validated) {
 		this.validated = validated;
+	}
+
+	/**
+	 * @return the disableEvaluation
+	 */
+	public boolean isDisableEvaluation() {
+		return disableEvaluation;
+	}
+
+	/**
+	 * @param disableEvaluation the disableEvaluation to set
+	 */
+	public void setDisableEvaluation(boolean disableEvaluation) {
+		this.disableEvaluation = disableEvaluation;
 	}
 
 
