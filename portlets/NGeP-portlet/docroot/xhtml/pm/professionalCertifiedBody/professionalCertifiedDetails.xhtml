@@ -13,7 +13,7 @@
 	  <tr>	  	
 		<td style="width:14%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText style="text-transform:uppercase" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
+		<td><p:inputText style="text-transform:uppercase;width:auto !important;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
 			  disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}" size="20" maxlength="12" />
 		</td>
 	  </tr>	
@@ -38,6 +38,15 @@
 	  		<h:outputText value="#{lbl['lbl.pm.pc.profBody']}" />&#160;&#160;&#160;
 	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" />
 	  		<h:outputText value="#{lbl['lbl.pm.pc.certBody']}" /></td>	  	
+	  </tr>
+	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.pc.glp']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+	  	<td>      
+	  		<p:selectOneRadio id="centraloptions" value="#{profcertifiedbodyBackingBean.managedBean.certBody.glp}">  
+				<f:selectItems value="#{profcertifiedbodyBackingBean.getYesNoOptions()}" />
+				<p:ajax process="@this" event="change" partialSubmit="true" update="@this" />
+           	</p:selectOneRadio> </td>	  	
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="Status " /></td>

@@ -396,4 +396,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		}
 		baseObject.setChangedBy(1L);
 	}
+
+	/**
+	 * get YES & NO options //TODO: to load dynamically
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getYesNoOptions() {
+		return PmCommonUtil.getYesNoBooleanOptions();
+	}
 }
