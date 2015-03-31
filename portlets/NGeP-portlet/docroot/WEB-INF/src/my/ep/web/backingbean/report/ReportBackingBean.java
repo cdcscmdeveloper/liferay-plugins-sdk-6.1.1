@@ -4751,7 +4751,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmMainCategory() != null) && (this
 						.getSmMainCategory() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSubCategory() != null) && (this
-						.getSmSubCategory() != ReportConst.EMPTY_VAL))
+						.getSmSubCategory() != ReportConst.EMPTY_VAL))//this.getSelectedCatList()
+				|| ((this.getSelectedCatList() != null) && (this
+						.getSelectedCatList().size()> 0))
 				|| ((this.getSmSubCategoryDivision() != null) && (this
 						.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationStatus() != null) && (this
