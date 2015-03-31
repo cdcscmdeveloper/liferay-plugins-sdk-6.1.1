@@ -19,10 +19,10 @@
 
 				</ui:fragment>
 
-				<p:commandButton value="#{lbl['lbl.so.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form"
 					update="@all" />
-				<p:commandButton value="#{lbl['lbl.so.submit']}"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{qTDetailBB.submitQtDetailsForApproval}" process="@form"
 					update="@all"
 					rendered="#{qTDetailBB.managedBean.currentStatusId ge QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.managedBean.outComes eq null}" />

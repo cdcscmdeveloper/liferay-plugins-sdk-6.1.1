@@ -134,7 +134,7 @@
 				var="scQtCategory" id="restrcatcode">
 				<ac:paginator for="restrcatcode" />
 
-				<p:column headerText="#{lbl['lbl.so.category']}"
+				<p:column headerText="#{lbl['lbl.sc.category.code']}"
 					style="width:10%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryL1Code}" />
 					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryL2Code}" />
@@ -156,7 +156,7 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.mandatory']}"
+				<p:column headerText="#{lbl['lbl.sc.mandatory']}"
 					style="width:5%;white-space: normal;">
 					<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
 						disabled="true" />
@@ -166,14 +166,14 @@
 			<c:if
 				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and !noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<br/>
-				<h:outputText value="#{lbl['lbl.so.locality']}"
+				<h:outputText value="#{lbl['lbl.sc.notice.board.locality']}"
 					style="font-weight:bold;text-align: left;font-size:14px;" />
 				<p:spacer height="10px"></p:spacer>
 
 				<p:dataTable
 					value="#{noticeBoardBackingBean.managedBean.locationNodes}"
 					var="locTree" style="width:100%">
-					<p:column headerText="#{lbl['lbl.so.location']}">
+					<p:column headerText="#{lbl['lbl.sc.location']}">
 						<p:tree value="#{locTree}" var="location">
 							<p:treeNode type="state">
 								<h:outputText value="#{location.pmState.stateName}" />

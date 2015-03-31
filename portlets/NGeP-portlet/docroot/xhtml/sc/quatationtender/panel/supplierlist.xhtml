@@ -15,7 +15,7 @@
 
 				<ac:paginator for="suppliersTbl" />
 
-				<p:column headerText="#{lbl['lbl.so.suppliername']}">
+				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					<p:commandLink oncomplete="suppDetails.show();"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.retriveSupplierDtls(qtSupplier)}"
 						update=":form:paneltabView:panelpopupSuppDtl" >
@@ -23,10 +23,10 @@
 					</p:commandLink>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.mofno']}">
+				<p:column headerText="#{lbl['lbl.sc.mofno']}">
 					<h:outputText value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.so.mofexp']}">
+				<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
 					<h:outputText
 						value="#{qtSupplier.supplier.smMofAccounts[0].expDate}">
 						<f:convertDateTime
@@ -43,7 +43,7 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
+		<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
 		<p:spacer width="5" />
 		<p:inputText
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSupplier}"

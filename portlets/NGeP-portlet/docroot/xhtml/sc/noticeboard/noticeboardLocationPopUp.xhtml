@@ -37,7 +37,7 @@
 			<p:dataTable
 				value="#{noticeBoardBackingBean.managedBean.locationNodes}"
 				var="locTree" style="width:100%">
-				<p:column headerText="#{lbl['lbl.so.location']}">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<p:tree value="#{locTree}" var="location">
 						<p:treeNode type="zone">
 							<h:outputText value="#{location.zoneName}" />

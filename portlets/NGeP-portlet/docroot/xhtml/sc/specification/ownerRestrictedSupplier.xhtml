@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="totalSupplier">
-		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
+		<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
 		<p:spacer width="5" />
 		<p:inputText
 			value="#{specificationBackingBean.managedBean.totalSuppliers}"
@@ -19,18 +19,18 @@
 				<p:treeTable id="suppliersTbl" var="supplierNode"
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppliersNode}">
 
-					<p:column headerText="#{lbl['lbl.so.suppliername']}">
+					<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 						<h:outputText value="#{supplierNode.object}"
 							rendered="#{supplierNode.type == 'zone'}" />
 						<h:outputText value="#{supplierNode.object.supplierName}"
 							rendered="#{supplierNode.type == 'supplier'}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofno']}">
+					<p:column headerText="#{lbl['lbl.sc.mofno']}">
 						<h:outputText
 							value="#{supplierNode.object.smMofAccounts[0].mofNo}"
 							rendered="#{supplierNode.type == 'supplier' and false}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofexp']}">
+					<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
 						<h:outputText
 							value="#{supplierNode.object.smMofAccounts[0].expDate}"
 							rendered="#{supplierNode.type == 'supplier' and false}" />
@@ -55,15 +55,15 @@
 
 					<!-- 	<p:column selectionMode="multiple" style="width:5%" /> -->
 
-					<p:column headerText="#{lbl['lbl.so.suppliername']}">
+					<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 						<h:outputText value="#{qtSupplier.supplier.companyName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofno']}">
+					<p:column headerText="#{lbl['lbl.sc.mofno']}">
 						<h:outputText
 							value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}"
 							 />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.mofexp']}">
+					<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
 						<h:outputText
 							value="#{qtSupplier.supplier.smMofAccounts[0].expDate}"
 							 />

@@ -15,7 +15,7 @@
 
 			<ac:paginator for="suppliersTblCommitteeRestricted" />
 
-			<p:column headerText="#{lbl['lbl.so.suppliername']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}"
 				style="white-space: normal;">
 				<p:commandLink
 					update=":form:paneltabViewComitteeRestricted:restrictedSupplierpopupSuppDtl"
@@ -25,14 +25,14 @@
 				</p:commandLink>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.mofno']}"
+			<p:column headerText="#{lbl['lbl.sc.mofno']}"
 				style="white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.retrieveSmMofAccount(qtSupplier, null).mofNo}">
 
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.mofexp']}"
+			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}"
 				style="white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.retrieveSmMofAccount(qtSupplier, null).expDate}">
@@ -49,7 +49,7 @@
 			</p:column>
 		</p:dataTable>
 		<br />
-		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
+		<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
 		<p:spacer width="5" />
 		<p:inputText style="text-align:right;"
 			value="#{specificationBackingBean.managedBean.totalSuppliers}"

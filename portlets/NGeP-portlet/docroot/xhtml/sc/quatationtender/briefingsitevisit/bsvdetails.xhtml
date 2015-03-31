@@ -9,7 +9,7 @@
 		<table style="width: 100%" border="0">
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
-						value="#{lbl['lbl.so.briefsamevisit']}" /></td>
+						value="#{lbl['lbl.sc.bsv.attendance.briefing.sameas.sv']}" /></td>
 				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
@@ -27,7 +27,7 @@
 			<ac:paginator for="briefingdtlid" />
 			<p:column selectionMode="multiple" style="width:2%"
 				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
-			<p:column headerText="#{lbl['lbl.so.desc']}"
+			<p:column headerText="#{lbl['lbl.sc.desc']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:panelGroup
 					rendered="#{QTStatusConst.BSV_COMPLETED eq briefingdtls.bsvStatus.statusId}">
@@ -43,7 +43,7 @@
 				</h:panelGroup>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.date']}"
+			<p:column headerText="#{lbl['lbl.sc.date.time']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{briefingdtls.bsvDate}">
 					<f:convertDateTime
@@ -51,22 +51,22 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.location']}"
+			<p:column headerText="#{lbl['lbl.sc.location']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{briefingdtls.location}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.coordinateofficer']}"
+			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{briefingdtls.coordinatingOfficer}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.maxattendance']}"
+			<p:column headerText="#{lbl['lbl.sc.qt.max.attendance']}"
 				style="width:14%;text-align: center;">
 				<h:outputText value="#{briefingdtls.maxNoOfAttendance}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.briefstatus']}"
+			<p:column headerText="#{lbl['lbl.sc.status']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:outputText
 					value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(briefingdtls.bsvStatus.statusId)}" />
@@ -145,7 +145,7 @@
 					<p:column selectionMode="multiple" style="width:2%"
 						disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
 
-					<p:column headerText="#{lbl['lbl.so.desc']}"
+					<p:column headerText="#{lbl['lbl.sc.desc']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:panelGroup
 							rendered="#{QTStatusConst.BSV_COMPLETED eq sitevisitdtls.bsvStatus.statusId}">
@@ -161,7 +161,7 @@
 						</h:panelGroup>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.date']}"
+					<p:column headerText="#{lbl['lbl.sc.date.time']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:outputText value="#{sitevisitdtls.bsvDate}">
 							<f:convertDateTime
@@ -169,22 +169,22 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.location']}"
+					<p:column headerText="#{lbl['lbl.sc.location']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:outputText value="#{sitevisitdtls.location}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.coordinateofficer']}"
+					<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:outputText value="#{sitevisitdtls.coordinatingOfficer}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.maxattendance']}"
+					<p:column headerText="#{lbl['lbl.sc.qt.max.attendance']}"
 						style="width:14%;text-align: center;">
 						<h:outputText value="#{sitevisitdtls.maxNoOfAttendance}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.briefstatus']}"
+					<p:column headerText="#{lbl['lbl.sc.status']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:outputText
 							value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(sitevisitdtls.bsvStatus.statusId)}" />

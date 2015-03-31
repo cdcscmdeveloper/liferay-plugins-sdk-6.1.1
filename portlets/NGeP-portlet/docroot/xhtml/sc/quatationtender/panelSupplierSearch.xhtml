@@ -11,28 +11,28 @@
 			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 			
 			<h:column>
-				<h:outputLabel  value="#{lbl['lbl.so.circularno']}" />
+				<h:outputLabel  value="#{lbl['lbl.sc.circular.no']}" />
 			</h:column>
 			<h:column>
 				<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"/>
 			</h:column>
 			
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.cirname']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.circular.name']}" />
 			</h:column>
 			<h:column>
 				<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularName}"/>
 			</h:column>
 			
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.itemname']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.item.name']}" />
 			</h:column>
 			<h:column>
 				<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.itemName}"/>
 			</h:column>
 			
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.circularcoverage']}"/>
+				<h:outputLabel value="#{lbl['lbl.sc.circular.coverage']}"/>
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularCoverage}">
@@ -63,15 +63,15 @@
 			var="supplierNode"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchPanelSuppliersNode}">
             
-			<p:column headerText="#{lbl['lbl.so.suppliername']}">
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 				<p:selectBooleanCheckbox value="#{supplierNode.selected}" rendered="#{supplierNode.type == 'zone'}" />
 				<h:outputText value="#{supplierNode.object.name}" rendered="#{supplierNode.type == 'zone'}" />
 				<h:outputText value="#{supplierNode.object.supplier.supplierName}" rendered="#{supplierNode.type == 'supplier'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.mofno']}">
+			<p:column headerText="#{lbl['lbl.sc.mofno']}">
 				<h:outputText value="#{supplierNode.object.supplier.smMofAccounts[0].mofNo}" rendered="#{supplierNode.type == 'supplier' and false}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.so.mofexp']}">
+			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
 				<h:outputText value="#{supplierNode.object.supplier.smMofAccounts[0].expDate}" rendered="#{supplierNode.type == 'supplier'} and false" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
@@ -80,7 +80,7 @@
 		</p:treeTable>
 	
 		<br />
-		<h:outputText value="#{lbl['lbl.so.totalsup']}"/>
+		<h:outputText value="#{lbl['lbl.sc.totalsup']}"/>
 		<p:spacer width="5" />  
 		<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSearchSupplier}" disabled="true"/>
 	</p:panel> 

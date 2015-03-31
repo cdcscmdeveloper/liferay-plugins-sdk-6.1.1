@@ -19,9 +19,9 @@
 	<p:panel header="#{lbl['lbl.so.schedule.dtls']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
+				<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
 						mindate="#{approvalBackingBean.managedBean.today}"
 						value="#{approvalBackingBean.managedBean.qt.publishDate}"
 						id="noticePublish" required="true"
@@ -47,14 +47,14 @@
 				</tr>
 			</c:if>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" /></td>
 				<td><p:inputText
 						value="#{approvalBackingBean.managedBean.qt.publishPeriod}"
 						readonly="true" id="publishingperiod" disabled="true" size="30"
 						style="margin-top:5px; text-align:right" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.closingdate']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.closing.date']}" /></td>
 				<td><p:inputText id="publishClosingDate"
 						value="#{approvalBackingBean.managedBean.qt.closingDate}"
 						readonly="true" disabled="true" style="margin-top:5px;" size="14">
@@ -67,9 +67,9 @@
 			<c:if
 				test="#{approvalBackingBean.managedBean.qt.sampleReq eq 'true'}">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.sampleclosingdate']}" />
+					<td><p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
+					<td><p:calendar label="#{lbl['lbl.sc.sample.closingdate']}"
 							value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}"
 							id="proposalPreparation" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
@@ -99,7 +99,7 @@
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.so.expectloadate']}" /></td>
+						value="#{lbl['lbl.sc.qt.expected.loa.date']}" /></td>
 				<td><p:calendar id="publicationLoaDate"
 						value="#{approvalBackingBean.managedBean.qt.expectedLoaDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
