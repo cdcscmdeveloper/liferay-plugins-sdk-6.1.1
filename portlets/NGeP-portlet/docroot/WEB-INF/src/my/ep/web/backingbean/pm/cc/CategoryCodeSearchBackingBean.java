@@ -86,6 +86,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		debugLogger("resetAction");
 		
 		getManagedBean().setCategoryDesciption(null);
+		getManagedBean().setCategoryCode(null);
 		getCategoryDataModel().resetData();
 	}
 	
@@ -630,4 +631,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		this.getManagedBean().setCategoryCodeIdLvl3(null);
 	}
 
+	public void resetAllOnShow() {
+		this.getManagedBean().setSearchBy(ParameterConst.CATEGORY_CODE_SEARCH_BY_CODE);
+		this.getManagedBean().setCategoryCodeIdLvl1(null);
+		resetL2L3CategoryCode();
+		categoryResetAction();
+	}
 }
