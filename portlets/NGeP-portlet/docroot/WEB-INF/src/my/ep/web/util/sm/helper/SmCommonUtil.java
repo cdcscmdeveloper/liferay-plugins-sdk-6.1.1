@@ -1594,6 +1594,8 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Generate velocity to PDF
+	 * 
 	 * @param velocityFilePath
 	 * @param outputPdfPath
 	 * @param context
@@ -1607,5 +1609,15 @@ public class SmCommonUtil {
 				velocityFilePath, context, os1);
 		os1.flush();
 		os1.close();
+	}
+
+	/**
+	 * Return base directory
+	 * 
+	 * @return String
+	 */
+	public static String getBaseDir() {
+		return EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	}
 }
