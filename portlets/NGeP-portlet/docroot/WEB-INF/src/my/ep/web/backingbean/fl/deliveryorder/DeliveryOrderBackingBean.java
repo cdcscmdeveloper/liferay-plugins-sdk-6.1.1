@@ -1079,4 +1079,55 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		return NAV_STOP_INSTRUCTION;
 	}
+	
+	/**
+	 * View invoice.
+	 */
+	public void viewDeliveryOrder() {
+		IDeliveryOrderSO doSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		String doId = originalServletRequest.getParameter("viewDoId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		if(doId!=null) {
+			reqDTO.setDeliveryOrderId(Long.valueOf(doId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+			renewSesionObject();
+			try {
+				resDTO = doSO.retrieveDeliveryOrderById(reqDTO);
+			} catch (EpException e) {
+				handleException(e);
+				return;
+			}
+			getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setButtonVal("View");
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setButtonVal("View");
+//			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_DO);
+			getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+			getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+			getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
+			getManagedBean().setDocMaintainRemarks(true);
+			
+			getManagedBean().getFulfilmentOrder().setStatus(doSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
+//			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+//			}
+			flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doBasePage?faces-redirect=true");
+		}
+	}	
 }
