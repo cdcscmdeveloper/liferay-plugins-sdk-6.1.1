@@ -35,18 +35,6 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.declaration']}"
-							update="@form">
-							<f:setPropertyActionListener
-								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="2" />
-						</p:menuitem>
-
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.integrity.pact']}" update="@form">
-							<f:setPropertyActionListener
-								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="3" />
-						</p:menuitem>
 
 					</p:tabMenu></td>
 				<td width="80%">
@@ -58,16 +46,6 @@
 							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 1}">
 							<ui:include src="loiLetterOfAcceptanceView.xhtml" />
 						</c:if>
-
-						<p:outputPanel autoUpdate="true"
-							rendered="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 2}">
-							<ui:include src="loiDeclarationMenu.xhtml" />
-						</p:outputPanel>
-						
-						<p:outputPanel autoUpdate="true"
-							rendered="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3}">
-							<ui:include src="loiIntegrityPactMenu.xhtml" />
-						</p:outputPanel>
 
 					</td>
 			</tr>
