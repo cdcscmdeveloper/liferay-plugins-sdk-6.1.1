@@ -1097,6 +1097,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setDeliveryOrderId(Long.valueOf(doId));
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+			reqDTO.setInvoiceLink(Boolean.TRUE);
 			renewSesionObject();
 			try {
 				resDTO = doSO.retrieveDeliveryOrderById(reqDTO);
@@ -1117,6 +1118,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			getManagedBean().setDocMaintainRemarks(true);
+			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			
 			getManagedBean().getFulfilmentOrder().setStatus(doSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 //			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
