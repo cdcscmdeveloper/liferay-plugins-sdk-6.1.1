@@ -79,11 +79,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	//Default value
 	public static final boolean SEARCH_DEFAULT = false;
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
+	
+	//Document Restriction Type
+	public static final int RESTR_APP = 1;
+	public static final int RESTR_COMP = 2;
+	public static final int RESTR_SUPP = 3;
 
 	public void preLoading(){
 		log.info("preLoading");
 		//load critical mappers
 		this.loadReasonCategoryMapper();
+		this.getManagedBean().setSelectedTabIndex(0);
 		this.resetReasonSearchBean();
 		this.reasonCategoryChange(true, null);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -176,7 +182,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setDeleteAppTypeRestrictions(null);
 		this.getManagedBean().setDeleteComTypeRestrictions(null);
 		this.getManagedBean().setDeleteSuppTypeRestrictions(null);
+		this.getManagedBean().setDeleteRestrictions(null);
 		this.reasonCategoryChange(false, null);
+		this.getManagedBean().setSelectedTabIndex(0);
 		log.info("initialRejectReason - End");
 	}
 	
@@ -217,6 +225,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setDeleteAppTypeRestrictions(null);
 			this.getManagedBean().setDeleteComTypeRestrictions(null);
 			this.getManagedBean().setDeleteSuppTypeRestrictions(null);
+			this.getManagedBean().setDeleteRestrictions(null);
 //			this.getManagedBean().setAppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, id));
 //			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE, id));
 //			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));
@@ -264,9 +273,27 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
 			this.getManagedBean().setComTypeRestrictions(comTypeRestrictions);
 			this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
+			
+			defaultTab();
 		}
 		log.info("loadRestriction - End");
 	}
+	
+	/**
+	 * set default tab
+	 * @param pmDocument
+	 */
+	public void defaultTab(){
+		log.info("defaultTab");
+		if(getManagedBean().isSuppAppCheck()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_APP-1);
+		}else if(getManagedBean().isSuppComCheck()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_COMP-1);
+		}else if(getManagedBean().isSuppTypeCheck()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_SUPP-1);
+		}
+	}
+	
 	/**
 	 * validate unique restr type
 	 * @param pmParam
@@ -329,7 +356,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	private void getAllRestrictions(){
 		log.info("getAllRestrictions");
 		try{
-			
+			PmSupplierReason supplierReason = null;
 			//for application type
 			if(this.getManagedBean().getAppTypeRestrictions()!=null && this.getManagedBean().getAppTypeRestrictions().size()>0){
 				this.getManagedBean().getSelectedReason().setByAppType(true);
@@ -345,7 +372,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}else{
 						if(!tempReason.isSelected()){
 							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
-								if(this.getManagedBean().getSelectedReason().getPmSupplierReasons().get(i).getSupplierReasonId()
+								supplierReason = this.getManagedBean().getSelectedReason().getPmSupplierReasons().get(i);
+								if(supplierReason.getSupplierReasonId() != null && supplierReason.getSupplierReasonId()
 										.equals(tempReason.getSupplierReasonId())){
 									this.getManagedBean().getSelectedReason().getPmSupplierReasons().set(i, tempReason);
 								}
@@ -373,7 +401,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}else{
 						if(!tempReason.isSelected()){
 							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
-								if(this.getManagedBean().getSelectedReason().getPmSupplierReasons().get(i).getSupplierReasonId()
+								supplierReason = this.getManagedBean().getSelectedReason().getPmSupplierReasons().get(i);
+								if(supplierReason.getSupplierReasonId() != null && supplierReason.getSupplierReasonId()
 										.equals(tempReason.getSupplierReasonId())){
 									this.getManagedBean().getSelectedReason().getPmSupplierReasons().set(i, tempReason);
 								}
@@ -402,7 +431,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}else{
 						if(!tempReason.isSelected()){
 							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
-								if(this.getManagedBean().getSelectedReason().getPmSupplierReasons().get(i).getSupplierReasonId()
+								supplierReason = this.getManagedBean().getSelectedReason().getPmSupplierReasons().get(i);
+								if(supplierReason.getSupplierReasonId() != null && supplierReason.getSupplierReasonId()
 										.equals(tempReason.getSupplierReasonId())){
 									this.getManagedBean().getSelectedReason().getPmSupplierReasons().set(i, tempReason);
 								}
@@ -415,6 +445,37 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}else{
 				this.getManagedBean().getSelectedReason().setBySupplierType(false);
 			}
+			
+			//for deleted Restrictions
+			if(this.getManagedBean().getDeleteRestrictions()!=null && this.getManagedBean().getDeleteRestrictions().size()>0){
+				this.getManagedBean().getSelectedReason().setBySupplierType(true);
+				for(PmSupplierReason tempReason:this.getManagedBean().getDeleteRestrictions()){
+					if(tempReason.isBrandNew()){
+						if(!tempReason.isSelected()){
+							if(this.getManagedBean().getSelectedReason().getPmSupplierReasons()==null){
+								this.getManagedBean().getSelectedReason().setPmSupplierReasons(new ArrayList<PmSupplierReason>());
+							}
+							this.getManagedBean().getSelectedReason().addPmSupplierReason(tempReason);
+							tempReason.setSelected(true);
+						}
+					}else{
+						if(!tempReason.isSelected()){
+							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
+								supplierReason = this.getManagedBean().getSelectedReason().getPmSupplierReasons().get(i);
+								if(supplierReason.getSupplierReasonId() != null && supplierReason.getSupplierReasonId()
+										.equals(tempReason.getSupplierReasonId())){
+									this.getManagedBean().getSelectedReason().getPmSupplierReasons().set(i, tempReason);
+								}
+							}
+							tempReason.setSelected(true);
+						}
+					}
+					
+				}
+			}else{
+				this.getManagedBean().getSelectedReason().setBySupplierType(false);
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770001, new String[]{e.getMessage()});
@@ -434,7 +495,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		try {
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonId(reasonId);
-			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
+			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 			ReasonResDTO resDTO = reqSO.retrieveReasonDtlById(reqDTO);
 			if(resDTO.isSuccessful()){
 				pmReason = resDTO.getPmReason();
@@ -541,7 +602,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		try{
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setPmReason(rejectReason);
-			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
+			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
 			ReasonResDTO resDTO = reqSO.createReason(reqDTO);
 			if(resDTO.isSuccessful()){
 //				loadRejectReason(resDTO.getPmReason().getReasonId());
@@ -572,10 +633,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setPmReason(rejectReason);
-			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
+			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
 			ReasonResDTO resDTO = reqSO.updateReason(reqDTO);
 			if(resDTO.isSuccessful()){
-//				loadRejectReason(resDTO.getPmReason().getReasonId());
+				loadRejectReason(resDTO.getPmReason().getReasonId());
 				log.info("updateRejectReason - successful");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
@@ -637,7 +698,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonDescSearchBean(searchBean);
 		reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
+		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
 		ReasonResDTO resDTO = reqSO.retrieveReasonDescBySearchBean(reqDTO);
 		if(resDTO.isSuccessful()&& resDTO.getReasonDescList()!=null && !resDTO.getReasonDescList().isEmpty()){ //&& resDTO.getPmReason().isRecordStatus()
 			isUnique = false;
@@ -1078,7 +1139,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				reqDTO.setAppTypeId(rSearchBean.getApplicationType());
 				reqDTO.setSuppTypeId(rSearchBean.getSupplierType());
 				reqDTO.setComTypeId(rSearchBean.getCompanyType());
-				IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);	
+				IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
 				ReasonResDTO resDTO = reqSO.retrieveReasonDescBySearchBean(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getReasonDescResultBean();
@@ -1100,4 +1161,128 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 		return this.docTypeSearchBean;
 	}
+	
+	
+	public void deleteRestrictions(int restrictionType,int rowIndex){
+		log.info("deleteRestrictions");
+		PmSupplierReason supplierReason = null;
+		if(restrictionType == RESTR_APP){
+			supplierReason = getManagedBean().getAppTypeRestrictions()
+					.get(rowIndex);
+			supplierReason.setDeleted(true);
+			getManagedBean().getAppTypeRestrictions().remove(supplierReason);		
+		}else if(restrictionType == RESTR_COMP){
+			supplierReason = getManagedBean().getComTypeRestrictions()
+					.get(rowIndex);
+			supplierReason.setDeleted(true);
+			getManagedBean().getComTypeRestrictions().remove(supplierReason);	
+			
+		}else if(restrictionType == RESTR_SUPP){
+			supplierReason = getManagedBean().getSuppTypeRestrictions()
+					.get(rowIndex);
+			supplierReason.setDeleted(true);
+			getManagedBean().getSuppTypeRestrictions().remove(supplierReason);
+			
+		}
+		
+		if(supplierReason != null && !supplierReason.isBrandNew()){
+			if(getManagedBean().getDeleteRestrictions() == null){
+				getManagedBean().setDeleteRestrictions(new ArrayList<PmSupplierReason>());
+			}
+			supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+			supplierReason.setDeleted(true);
+			getManagedBean().getDeleteRestrictions().add(supplierReason);
+		}
+	}
+	
+	/**
+	 * This method used to trigger uncheck action and set remove existing item in to list for update later.
+	 * @param index
+	 * **/
+	public void checkDocumentRestrictions(int index){
+		if(getManagedBean().getDeleteRestrictions() == null){
+			getManagedBean().setDeleteRestrictions(new ArrayList<PmSupplierReason>());
+		}
+		
+		int tabIndex = index - 1;		
+		if(tabIndex == 0 && !getManagedBean().isSuppAppCheck()){
+			if(getManagedBean().getAppTypeRestrictions() !=null &&
+					!getManagedBean().getAppTypeRestrictions().isEmpty()){
+				for(PmSupplierReason supplierReason : getManagedBean().getAppTypeRestrictions()){
+					if(!supplierReason.isBrandNew()){
+						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(supplierReason);
+					}
+				}
+				getManagedBean().getAppTypeRestrictions().clear();
+			}		
+		}else if(tabIndex == 1 && !getManagedBean().isSuppComCheck()){
+			if(getManagedBean().getComTypeRestrictions() !=null &&
+					!getManagedBean().getComTypeRestrictions().isEmpty()){
+				for(PmSupplierReason supplierReason : getManagedBean().getComTypeRestrictions()){
+					if(!supplierReason.isBrandNew()){
+						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(supplierReason);
+					}
+				}
+				getManagedBean().getComTypeRestrictions().clear();
+			}
+		}else if(tabIndex == 2 && !getManagedBean().isSuppTypeCheck()){
+			if(getManagedBean().getSuppTypeRestrictions() !=null &&
+					!getManagedBean().getSuppTypeRestrictions().isEmpty()){
+				for(PmSupplierReason supplierReason : getManagedBean().getSuppTypeRestrictions()){
+					if(!supplierReason.isBrandNew()){
+						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(supplierReason);
+					}
+				}
+				getManagedBean().getSuppTypeRestrictions().clear();
+			}
+		}
+		
+		updateTabSelectedIndex(index);
+	}
+	
+	
+	/**
+	 * update the tab index after for checkbox action
+	 * @param index
+	 * **/
+	public void updateTabSelectedIndex(int index){
+		defaultTab();		
+		int tabIndex = index - 1;
+		if(tabIndex == 0 && getManagedBean().isSuppAppCheck()){
+			getManagedBean().setSelectedTabIndex(tabIndex);			
+		}else if(tabIndex == 1 && getManagedBean().isSuppComCheck()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}else if(tabIndex == 2 && getManagedBean().isSuppTypeCheck()){
+			getManagedBean().setSelectedTabIndex(tabIndex);
+		}		
+	}
+
+
+	/**
+	 * @return the restrApp
+	 */
+	public int getRestrApp() {
+		return RESTR_APP;
+	}
+
+
+	/**
+	 * @return the restrComp
+	 */
+	public int getRestrComp() {
+		return RESTR_COMP;
+	}
+
+
+	/**
+	 * @return the restrSupp
+	 */
+	public int getRestrSupp() {
+		return RESTR_SUPP;
+	}
+	
+	
 }
