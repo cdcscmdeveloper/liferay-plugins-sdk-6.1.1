@@ -205,7 +205,8 @@
 				<h:panelGrid columns="2">
 					<p:selectOneMenu id="factoringId"
 						label="#{lbl['lbl.ct.factoring.company']}" required="true"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
 						style="width:360px;"
 						value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
 						<f:selectItems
@@ -228,7 +229,8 @@
 						maxlength="50" style="width:200px;"
 						label="#{lbl['lbl.ct.factoring.agreement.ref']}" id="authRefNo"
 						required="true"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}">
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}">
 						<p:ajax event="change" process="@this" update="notificationBtn" />
 					</p:inputText>
 					<p:message for="authRefNo" display="icon" />
@@ -256,7 +258,8 @@
 						value="#{supplierBackingBean.managedBean.factoring.effDate}"
 						mindate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate}"
 						maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
 						readonlyInput="true" navigator="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect" update="expdateCal, notificationBtn" />
@@ -272,7 +275,8 @@
 					<p:calendar id="expdateCal" size="25" required="true"
 						showOn="button" label="#{lbl['lbl.ct.end.date']}"
 						value="#{supplierBackingBean.managedBean.factoring.expDate}"
-						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly}"
+						disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.viewOnly
+							or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()}"
 						readonlyInput="true" navigator="true"
 						mindate="#{supplierBackingBean.managedBean.factoring.effDate}"
 						maxdate="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"
@@ -295,7 +299,7 @@
 							value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"  immediate="true"
 							update="factoringPanel, uploadFactoringDlg"
 							actionListener="#{supplierBackingBean.setUploadIndexValue(2)}"
-							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() 
+							disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or supplierBackingBean.isApproverRole()
 										or supplierBackingBean.managedBean.viewOnly or supplierBackingBean.managedBean.ctContract.loa.loaNo == null}" />
 						<p:spacer width="1" />
 				     	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.agreement']}" />
