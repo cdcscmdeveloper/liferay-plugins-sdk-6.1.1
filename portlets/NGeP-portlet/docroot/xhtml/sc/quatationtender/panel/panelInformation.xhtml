@@ -11,21 +11,21 @@
 				columns="2" columnClasses="columnWidth20">
 
 				<h:column>
-					<h:outputLabel value="#{lbl['lbl.so.circularno']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.circular.no']}" />
 				</h:column>
 				<h:column>
 					<p:inputText
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"
 						disabled="true" size="50" />
 					<p:spacer width="5" />
-					<p:commandLink value="#{lbl['lbl.so.cirattach']}" ajax="false"
+					<p:commandLink value="#{lbl['lbl.sc.circular.attach']}" ajax="false"
 						style="margin-right:20px;" process="@all,yesmainpanel"
 						partialSubmit="true" update="circularItemDetails"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.viewCircularAttachments}" />
 				</h:column>
 
 				<h:column>
-					<h:outputLabel value="#{lbl['lbl.so.circularname']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.circular.name']}" />
 				</h:column>
 				<h:column>
 					<p:inputText
@@ -34,7 +34,7 @@
 				</h:column>
 
 				<h:column>
-					<h:outputLabel value="#{lbl['lbl.so.circularexp']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.circular.exp.date']}" />
 				</h:column>
 				<h:column>
 					<p:inputText
@@ -48,7 +48,7 @@
 		</p:panel>
 
 		<p:panel id="circularItemDetails"
-			header="#{lbl['lbl.so.item.details']}" toggleable="true">
+			header="#{lbl['lbl.sc.qt.item.details']}" toggleable="true">
 
 			<p:dataTable id="itemdtlid" var="panelItem" rowIndexVar="index"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.selectpanelItem}"

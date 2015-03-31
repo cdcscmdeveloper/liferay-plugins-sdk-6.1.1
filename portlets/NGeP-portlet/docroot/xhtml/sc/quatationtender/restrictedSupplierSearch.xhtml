@@ -11,13 +11,13 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 160px;"><p:outputLabel value="#{lbl['lbl.so.suppliername']}" /></td>
+				<td style="width: 160px;"><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSearchBean.supplierName}"
 						size="30" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.mofno']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mofno']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSearchBean.mofAccountNo}"
 						size="30" /></td>
@@ -52,16 +52,16 @@
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
-			<p:column headerText="#{lbl['lbl.so.suppliername']}">
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 				<h:outputText value="#{smSupplier.companyName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mofno']}" style="width: 10%;">
+			<p:column headerText="#{lbl['lbl.sc.mofno']}" style="width: 10%;">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).mofNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mofexp']}" style="width: 10%;">
+			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}" style="width: 10%;">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate}">
 					<f:convertDateTime

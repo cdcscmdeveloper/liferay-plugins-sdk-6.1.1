@@ -14,11 +14,11 @@
 				style="float:left;" />
 			<c:if
 				test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
-				<p:commandButton value="#{lbl['lbl.so.save']}"
+				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
 					process="@all" update="@all" />
 
-				<p:commandButton value="#{lbl['lbl.so.submit']}"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
 					process="@all" update="@all" />

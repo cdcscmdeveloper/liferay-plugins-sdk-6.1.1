@@ -16,13 +16,13 @@
 
 			<ac:paginator for="#{criteriaPnlId}" />
 
-			<p:column headerText="#{lbl['lbl.so.category']}" />
+			<p:column headerText="#{lbl['lbl.sc.category.code']}" />
 
 			<p:column headerText="Main-Category" />
 			<p:column headerText="Sub-Category" />
 			<p:column headerText="Sub-Category Division" />
 			<p:column headerText="Category Type" />
-			<p:column headerText="#{lbl['lbl.so.mandatory']}">
+			<p:column headerText="#{lbl['lbl.sc.mandatory']}">
 				<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
 					disabled="#{!qTDetailBB.managedBean.editable}" />
 			</p:column>

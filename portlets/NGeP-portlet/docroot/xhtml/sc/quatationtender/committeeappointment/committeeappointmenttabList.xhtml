@@ -41,7 +41,7 @@
 					update="@(.scMemberDtl)" 
 					rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}" />
 
-				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
+				<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}"
 					process="@this, specificationcommitteeid"
 					update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
 					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"

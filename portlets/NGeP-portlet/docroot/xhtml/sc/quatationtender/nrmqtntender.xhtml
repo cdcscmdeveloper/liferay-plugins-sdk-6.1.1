@@ -41,7 +41,7 @@
 					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mandatory']}"
+			<p:column headerText="#{lbl['lbl.sc.mandatory']}"
 				style="text-align: center;">
 				<p:selectBooleanCheckbox value="#{cateGory.mandatory}" />
 			</p:column>
@@ -153,7 +153,7 @@
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.so.location']}" />
+								<h:outputText value="#{lbl['lbl.sc.location']}" />
 							</f:facet>
 							<p:tree value="#{zoneTree}" var="location"
 								selectionMode="checkbox">
@@ -246,7 +246,7 @@
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.so.location']}" />
+								<h:outputText value="#{lbl['lbl.sc.location']}" />
 							</f:facet>
 							<p:tree value="#{zoneTree}" var="location"
 								selectionMode="checkbox">
@@ -353,7 +353,7 @@
 		<table>
 			<tr>
 				<td style="width: 125px"><p:outputLabel
-						value="#{lbl['lbl.so.totalsup']}" /></td>
+						value="#{lbl['lbl.sc.totalsup']}" /></td>
 				<td style="width: 150px"><p:inputText style="margin-right:5px;"
 						disabled="true"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
