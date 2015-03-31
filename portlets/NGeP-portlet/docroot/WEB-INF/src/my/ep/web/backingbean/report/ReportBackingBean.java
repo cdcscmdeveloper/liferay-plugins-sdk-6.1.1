@@ -879,8 +879,7 @@ public class ReportBackingBean extends
 
 	private String localToDateVar;
 
-	private String userId;
-	//private long lngUserId;
+	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
 	//private Long lngUserId = (long)241997;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038; 125254--FL and CM// 241997;//213972;// 220152;
 	private String roleCode;
@@ -2879,7 +2878,7 @@ public class ReportBackingBean extends
         }
 		return ctSubTypeList;
 	}
-	public List<SelectItem> callfunction(){
+	/*public List<SelectItem> callfunction(){
 		ctSubTypeList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
@@ -2898,7 +2897,7 @@ public class ReportBackingBean extends
         	    
         }
 		return ctSubTypeList;
-	}
+	}*/
 	public List<String> retrieveHighRoleCodeByUser(){
 		highRoleCodeList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2925,7 +2924,7 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MIN_CONTRACT_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_CCA)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_PCA))){
+			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MIN_CONTRACT_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_FL_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_CCA)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_PCA))){
 				//List<String> ptLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
 				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){
 					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
@@ -2961,7 +2960,7 @@ public class ReportBackingBean extends
 					rolecodeRquisitionerList.add(selectItem);
 				}				
 			}
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_FL_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_CT_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_RN_APPROVER))){
+			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_CT_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_RN_APPROVER))){
 				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,highRoleCodeList.get(0));			
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
@@ -3517,8 +3516,8 @@ public class ReportBackingBean extends
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			userId = new FacesScopes().getUserSessionBean().getUserId()
 					.toString();
-			lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			//lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+			reqDTO.setUserId(lngUserId);
 			//reqDTO.setUserId((long) 240500);
 			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
 			UserResDTO userResDTO = userSO
@@ -3563,8 +3562,7 @@ public class ReportBackingBean extends
 			}
 			if (roleCode != null && roleCode != ReportConst.EMPTY_VAL) {
 				for (int i = 0; i < orgProfileList.size(); i++) {
-					reqDTO.setUserId(new FacesScopes().getUserSessionBean()
-							.getUserId());
+					reqDTO.setUserId(lngUserId);
 					// reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
 					reqDTO.setRoleCode(roleCode);
 					reqDTO.setOrgProfileId(Long.parseLong(orgProfileList.get(i)));
