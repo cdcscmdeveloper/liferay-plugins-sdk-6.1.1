@@ -1,6 +1,8 @@
 package my.ep.web.util.sm.helper;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
@@ -78,6 +80,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
@@ -85,7 +88,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 
 // TODO: Auto-generated Javadoc
@@ -1588,5 +1591,21 @@ public class SmCommonUtil {
 		}
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, page);
+	}
+
+	/**
+	 * @param velocityFilePath
+	 * @param outputPdfPath
+	 * @param context
+	 * @throws Exception
+	 */
+	public static void generateVelocityToPdf(String velocityFilePath,
+			String outputPdfPath, VelocityContext context) throws Exception {
+		File tempFile1 = new File(outputPdfPath);
+		OutputStream os1 = new FileOutputStream(tempFile1);
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				velocityFilePath, context, os1);
+		os1.flush();
+		os1.close();
 	}
 }
