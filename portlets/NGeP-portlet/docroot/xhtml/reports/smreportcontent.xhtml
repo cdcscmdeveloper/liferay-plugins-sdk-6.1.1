@@ -790,14 +790,14 @@
 						</p:dataTable>
 						<p:spacer height="2px;" />
 						<div align="right">
-							<p:commandButton value="#{lbl['lbl.sm.button.add']}" disabled="#{reportBackingBean.enableValue}"
+							<p:commandButton   value="#{lbl['lbl.sm.button.add']}" disabled="#{reportBackingBean.enableValue}"
 								action="#{reportBackingBean.assignCategoryForCompExperience}"
-								update=":form:suppExpCatCodesDtWidVar" partialSubmit="true"
+								update="@form" partialSubmit="true"
 								process=":form:compExpCatPanHdr" />
 
 							<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 								action="#{reportBackingBean.deleteSelectedCodes}"
-								update=":form:suppExpCatCodesDtWidVar" partialSubmit="true"
+								update="@form" partialSubmit="true"
 								process=":form:compExpCatPanHdr" />
 
 						</div>
