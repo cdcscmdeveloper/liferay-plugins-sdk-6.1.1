@@ -4424,27 +4424,30 @@ public class QTDetailBackingBean extends
 			}
 		}
 
-		List<ScQtApprovalRequest> approvalRequests = approval
-				.getScQtApprovalDtls();
-		if (!isApprovalRequestExists(approval, requestType)) {
-			return false;
-		}
-		if (CollectionUtils.isNotEmpty(approvalRequests)) {
-
-			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-				if (requestType.equalsIgnoreCase(approvalRequest
-						.getApprovalType().getParameterCode())) {
-					if (null == approvalRequest.getSubmissionDate()
-							|| (null != approvalRequest.getApproverAction() && "V"
-									.equalsIgnoreCase(approvalRequest
-											.getApproverAction()
-											.getParameterCode()))) {
-						return false;
-					}
-
-				}
+		if (approval != null) {
+			List<ScQtApprovalRequest> approvalRequests = approval
+					.getScQtApprovalDtls();
+			if (!isApprovalRequestExists(approval, requestType)) {
+				return false;
 			}
-		} 
+			if (CollectionUtils.isNotEmpty(approvalRequests)) {
+
+				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+					if (requestType.equalsIgnoreCase(approvalRequest
+							.getApprovalType().getParameterCode())) {
+						if (null == approvalRequest.getSubmissionDate()
+								|| (null != approvalRequest.getApproverAction() && "V"
+										.equalsIgnoreCase(approvalRequest
+												.getApproverAction()
+												.getParameterCode()))) {
+							return false;
+						}
+
+					}
+				}
+			} 
+		}
+		
 		return true;
 	}
 
