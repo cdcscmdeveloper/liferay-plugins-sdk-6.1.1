@@ -116,9 +116,9 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"/>
 					</f:facet>
 					
-				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;" >	
+				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;word-spacing: -1px" >	
 					   <p:row>
-			             <p:column  styleClass="ppPanelGrid" style="border:none !important;">
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;">
 			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="12"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
@@ -137,17 +137,18 @@
 									 conditionField="requestNoteItem.requestNoteItemId^#{requestNoteDtl.requestItem.requestNoteItemId}"
 			                         rendered="#{!requestNoteDtl.brandNew}">    
 								</ac:lov>
-								 <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
-								    onstart="blockWidget.show();"
-									oncomplete="blockWidget.hide();"
-								    rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}"
-									update="@([id$=suppDetailsPopup])">
-									<p:graphicImage library="ep/images/design" name="evaluate.png"
-										style="vertical-align:middle" />
-										<f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" target="#{supplierDetailBackingBean.smSupplier}" />
-								</p:commandLink>
 			             </p:column>
-			                
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important; padding-left: 2px;padding-right: 0px;vertical-align: super">
+						   <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
+						      onstart="blockWidget.show();"
+						      oncomplete="blockWidget.hide();"
+						      rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}"
+						     update="@([id$=suppDetailsPopup])">
+						    <p:graphicImage library="ep/images/design" name="evaluate.png"
+							  style="vertical-align:middle" />
+					        <f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" target="#{supplierDetailBackingBean.smSupplier}" />
+					     </p:commandLink>
+					  </p:column>
 			           </p:row>
 			          </p:panelGrid>
 			    </p:column>
@@ -232,7 +233,7 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column style="width:11%; white-space: normal;">
+			    <p:column style="width:20%; white-space: normal;">
 			        <f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
@@ -248,7 +249,7 @@
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
-					<h:selectOneMenu  style="width:62px;margin-top: 8px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
+					<h:selectOneMenu  style="width:76px;margin-top: 8px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
 					    label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term.type']}"
 					    disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
 						value="#{requestNoteDtl.deliverTermTypeId}">
