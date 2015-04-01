@@ -5,7 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
 	<p:panel id="itemListMainId">
 	  <h:panelGroup id="productListId" style="width: 100%;">
 		<ac:templateSpec 
@@ -13,30 +12,32 @@
 			editable ="#{simpleQuoteBackingBean.managedBean.editableFlag}"
 			newable ="#{simpleQuoteBackingBean.managedBean.newableFlag}"
 			title="#{lbl['lbl.sc.simple.quote.product.list']}" />
-			
-			<p:commandButton value="#{lbl['lbl.sc.sq.clone']}"  id="cloneButtonProduct"
-				action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
-				process="@this productListId" update="@([id$=cloneItemSpec])"
-				rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
-				partialSubmit="true">
-				<p:tooltip for="cloneButtonProduct">
-					<h:outputText value="#{lbl['lbl.sc.sq.clonebtn.tooltip']}"
-						escape="false" />
-				</p:tooltip>
 
-			</p:commandButton>
+			<div class="ppRightBtn" style="width: 100%">
+				<p:commandButton value="#{lbl['lbl.sc.sq.clone']}"
+					id="cloneButtonProduct"
+					action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
+					process="@this productListId" update="@([id$=cloneItemSpec])"
+					rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
+					partialSubmit="true">
+					<p:tooltip for="cloneButtonProduct">
+						<h:outputText value="#{lbl['lbl.sc.sq.clonebtn.tooltip']}"
+							escape="false" />
+					</p:tooltip>
 
+				</p:commandButton>
+			</div>
 		</h:panelGroup>
-     <p:spacer height="3px"></p:spacer>
-        
-	  <h:panelGroup  id="serviceListId" style="width: 100%;">
+      <br/>
+	 <h:panelGroup  id="serviceListId" style="width: 100%;">
 		 <ac:templateSpec
 		    editable ="#{simpleQuoteBackingBean.managedBean.editableFlag}"
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 			newable ="#{simpleQuoteBackingBean.managedBean.newableFlag}"
 			title="#{lbl['lbl.sc.simple.quote.service.list']}" />
-		
-		<p:commandButton value="#{lbl['lbl.sc.sq.clone']}"
+			
+		<div class="ppRightBtn" style="width: 100%">
+		  <p:commandButton value="#{lbl['lbl.sc.sq.clone']}"
 			id="cloneButtonService"
 			action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
 		    process="@this serviceListId"
@@ -47,7 +48,8 @@
 				<h:outputText value="#{lbl['lbl.sc.sq.clonebtn.tooltip']}" escape="false" />
 			</p:tooltip>
 		</p:commandButton>
-      </h:panelGroup>
+	   </div>
+     </h:panelGroup>
 
 	<ui:include src="/xhtml/sc/directpurchase/common/cloneItemSpecSearch.xhtml" />
 </p:panel>
