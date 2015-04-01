@@ -54,6 +54,7 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
@@ -75,6 +76,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReportReqDTO;
@@ -1378,22 +1381,58 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
+		IStatusSO statussO = null;
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			statussO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			// this.getManagedBean().getScQt().getQtId()
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 
 			reqDTO.setCompliance(null);
+
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			if (null != resDTO.getCheckListResultBean().getResultList()
+					&& !resDTO.getCheckListResultBean().getResultList()
+							.isEmpty()) {
+
+				for (ScQtCheckList checkList : resDTO.getCheckListResultBean()
+						.getResultList()) {
+					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+							.equalsIgnoreCase(checkList.getDefinationType()
+									.getParameterCode())
+							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+									.equalsIgnoreCase(checkList
+											.getDefinationType()
+											.getParameterCode())) {
+
+						if (null != checkList.getPmEvalStatus()
+								&& QTStatusConst.TS_PENDING_SUBMISSION
+										.equals(checkList.getPmEvalStatus()
+												.getStatusId())) {
+							StatusReqDTO statusreq = new StatusReqDTO();
+							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+							StatusResDTO statusres = statussO
+									.retrieveStatusByStatusId(statusreq);
+							checkList.setPmEvalStatus(statusres.getPmStatus());
+
+						}
+
+					}
+
+				}
+
+			}
 
 			this.getManagedBean().setComplianceTechnicalCheckList(
 					resDTO.getCheckListResultBean().getResultList());
 
 		} finally {
-
+			statussO = null;
+			evaluationSO = null;
 		}
 
 	}
@@ -1458,6 +1497,7 @@ public class EvaluationBackingBean extends
 	public void retriveComplianceFinancial() {
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
+		IStatusSO statussO = null;
 
 		try {
 			if (this.getManagedBean().getScQt().isSampleReq()) {
@@ -1468,17 +1508,51 @@ public class EvaluationBackingBean extends
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			statussO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			// this.getManagedBean().getScQt().getQtId()
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
+			if (null != resDTO.getCheckListResultBean().getResultList()
+					&& !resDTO.getCheckListResultBean().getResultList()
+							.isEmpty()) {
+				for (ScQtCheckList checkList : resDTO.getCheckListResultBean()
+						.getResultList()) {
+					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+							.equalsIgnoreCase(checkList.getDefinationType()
+									.getParameterCode())
+							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+									.equalsIgnoreCase(checkList
+											.getDefinationType()
+											.getParameterCode())) {
+
+						if (null != checkList.getPmEvalStatus()
+								&& QTStatusConst.TS_PENDING_SUBMISSION
+										.equals(checkList.getPmEvalStatus()
+												.getStatusId())) {
+							StatusReqDTO statusreq = new StatusReqDTO();
+							statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+							StatusResDTO statusres = statussO
+									.retrieveStatusByStatusId(statusreq);
+							checkList.setPmEvalStatus(statusres.getPmStatus());
+
+						}
+
+					}
+
+				}
+
+			}
+
 			this.getManagedBean().setCompliancefinancialCheckList(
 					resDTO.getCheckListResultBean().getResultList());
 
 		} finally {
 			evaluationSO = null;
+			statussO = null;
 		}
 
 	}
