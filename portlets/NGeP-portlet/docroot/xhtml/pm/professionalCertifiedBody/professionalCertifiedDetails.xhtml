@@ -50,7 +50,7 @@
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="Status " /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}"
+     	<td><p:selectOneMenu id="selectStatusId" style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}"
      			disabled="#{profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">   
 			  <f:selectItems value="#{profcertifiedbodyBackingBean.getCertStatusList()}" /> 
     	    </p:selectOneMenu></td>				
