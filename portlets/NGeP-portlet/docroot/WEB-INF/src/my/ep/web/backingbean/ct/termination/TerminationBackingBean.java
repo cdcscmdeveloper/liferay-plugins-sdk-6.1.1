@@ -4,7 +4,9 @@
 package my.ep.web.backingbean.ct.termination;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,6 +74,8 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.termination.TerminationManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
@@ -82,7 +86,9 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -413,10 +419,16 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			  }
 		}
 		
-		
-		// Mandatory to upload meeting minutes if the decision is Mutual Termination		
-		if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_750014);
+		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().isMutualTermination()) {
+			if (getManagedBean().getContractVer().getCtTermination().getFileName() == null 
+					|| getManagedBean().getContractVer().getCtTermination().getFileName().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.copy.mutual.termination.agreement", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}		
+			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
+			if(this.getManagedBean().getAttachmentList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_750014);
+			}
 		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -773,6 +785,29 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		out.flush();
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
+	}
+    
+    /**
+	 * The method used to upload performance bond file.
+	 * 
+	 * @param  event      the upload event for file upload from screen
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+    public void fileUpload(FileUploadEvent event) throws Exception {
+    	UploadedFile item = event.getFile();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();    
+
+		getManagedBean().getContractVer().getCtTermination().setFileName(item.getFileName());
+		getManagedBean().getContractVer().getCtTermination().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
     
     /**
