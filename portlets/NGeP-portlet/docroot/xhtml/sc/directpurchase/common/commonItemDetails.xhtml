@@ -118,7 +118,7 @@
 					
 				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;word-spacing: -1px" >	
 					   <p:row>
-			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;">
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;width: 130px;">
 			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="12"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
