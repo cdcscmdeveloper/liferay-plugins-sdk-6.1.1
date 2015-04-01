@@ -44,17 +44,15 @@
 			<table style="width: 100%">
 				<tr>
 					<td align="right"><c:if
-							test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}">
+							test="#{isPendingSubmissionStatus}">
 							<p:commandButton
 								value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 								process="@this" partialSubmit="true" style="float:left;"
 								immediate="true"
 								action="#{requestNoteBackingBean.backToPrevious}"
 								rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}" />
-						</c:if> <c:if
-							test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
-									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission 
-									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}">
+						</c:if> <c:if test="#{isPendingApprovalStatus or isPendingSubmissionStatus 
+									  or isPendingRevisionStatus}">
 							<p:commandButton value="#{lbl['lbl.sc.common.save']}"
 								action="#{requestNoteBackingBean.saveAction('Save')}"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
