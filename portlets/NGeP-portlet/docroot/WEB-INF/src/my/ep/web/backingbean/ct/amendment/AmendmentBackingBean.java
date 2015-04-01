@@ -649,6 +649,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 				getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			}
+			
+			if (getManagedBean().getTaskName() != null 
+	     			&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				   for(ScLoaWitness witness : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()){
+					        if(witness.getPartyType().equalsIgnoreCase(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER)){
+					        	getManagedBean().setScLoaWitness(witness);
+					        }
+				   }
+			}
+	     
 		  	getManagedBean().setSecretaryId(null);
 		  	if (getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 		  		getManagedBean().setSecretaryId(getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
@@ -844,12 +854,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	     			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
 	     		}
 	     	}
-	     	if (getManagedBean().getTaskName() != null 
-	     			&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-	     		if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().size() == 1) {
-	     			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
+	     		
+	     			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) &&
+	     				 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().size() == 1) {
+	     			     getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 	     		}
-	     	}	       
+	     		       
 	     	reqDTO.setUserRole(getUserRole());
 	     	reqDTO.setTaskName(getManagedBean().getTaskName());
 	     	reqDTO.setCtContract(getManagedBean().getCtContract());
