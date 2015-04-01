@@ -721,6 +721,9 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSmAppl().getSupplierType()
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				getManagedBean().getSmAppl().setApplCategoryType("N");
+			} else if (StringUtils.isEmpty(getManagedBean().getSmAppl()
+					.getApplCategoryType())) {
+				getManagedBean().getSmAppl().setApplCategoryType("N");
 			}
 			// TODO uncomment if necessary
 			// updateSmAppl(applicationType, "", "");
@@ -3255,36 +3258,36 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (validCat) {
-//			for (PmCategoryL1 catL1 : getManagedBean()
-//					.getSupplierParentCatList()) {
-//				if (catL1.getCategoryL1Id().equals(
-//						getManagedBean().getSelectedCategory()
-//								.getPmCategoryL1().getCategoryL1Id())) {
-//					getManagedBean().getSelectedCategory().setPmCategoryL1(
-//							catL1);
-//					break;
-//				}
-//			}
-//			for (PmCategoryL2 catL2 : getManagedBean()
-//					.getSupplierChildCatList()) {
-//				if (catL2.getCategoryL2Id().equals(
-//						getManagedBean().getSelectedCategory()
-//								.getPmCategoryL2().getCategoryL2Id())) {
-//					getManagedBean().getSelectedCategory().setPmCategoryL2(
-//							catL2);
-//					break;
-//				}
-//			}
-//			for (PmCategoryL3 catL3 : getManagedBean()
-//					.getSupplierSubChildCatList()) {
-//				if (catL3.getCategoryL3Id().equals(
-//						getManagedBean().getSelectedCategory()
-//								.getPmCategoryL3().getCategoryL3Id())) {
-//					getManagedBean().getSelectedCategory().setPmCategoryL3(
-//							catL3);
-//					break;
-//				}
-			//			}
+			// for (PmCategoryL1 catL1 : getManagedBean()
+			// .getSupplierParentCatList()) {
+			// if (catL1.getCategoryL1Id().equals(
+			// getManagedBean().getSelectedCategory()
+			// .getPmCategoryL1().getCategoryL1Id())) {
+			// getManagedBean().getSelectedCategory().setPmCategoryL1(
+			// catL1);
+			// break;
+			// }
+			// }
+			// for (PmCategoryL2 catL2 : getManagedBean()
+			// .getSupplierChildCatList()) {
+			// if (catL2.getCategoryL2Id().equals(
+			// getManagedBean().getSelectedCategory()
+			// .getPmCategoryL2().getCategoryL2Id())) {
+			// getManagedBean().getSelectedCategory().setPmCategoryL2(
+			// catL2);
+			// break;
+			// }
+			// }
+			// for (PmCategoryL3 catL3 : getManagedBean()
+			// .getSupplierSubChildCatList()) {
+			// if (catL3.getCategoryL3Id().equals(
+			// getManagedBean().getSelectedCategory()
+			// .getPmCategoryL3().getCategoryL3Id())) {
+			// getManagedBean().getSelectedCategory().setPmCategoryL3(
+			// catL3);
+			// break;
+			// }
+			// }
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.add(getManagedBean().getSelectedCategory());
 
