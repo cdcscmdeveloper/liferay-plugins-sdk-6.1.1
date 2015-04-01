@@ -281,6 +281,10 @@ public class QTBriefingSiteVisitBackingBean extends
 		String bsvType = this.getManagedBean().getBsvType();
 		BriefingZoneBean briefingBean = this.getManagedBean().getBsvDtlBean();
 		ScQtBsvDtl bsvDetail = this.getManagedBean().getQtBriefing();
+		// Checking Max attendance value is greater than zero.
+		if (bsvDetail.getMaxNoOfAttendance() < 1) {
+			throw new EpException("Max Attendance is greater than 0");
+		}
 		// Checking for duplication.. if it is add flow..
 		if (!bsvDetail.isSelected()) {
 			if (null != briefingBean.getBriefingList()
