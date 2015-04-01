@@ -16,7 +16,8 @@
 
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}" style="white-space : normal">
 					<h:outputText value="#{branchBean.branchName}" /><br /><br />
-					<h:outputText value="#{lbl['lbl.sm.gst.regno']}" /><h:outputText value=" : #{branchBean.gstRegistrationNo}" />
+					<h:outputText value="#{lbl['lbl.sm.gst.regno']}" /><h:outputText value=" : #{branchBean.gstRegistrationNo}" /><br />
+					<h:outputText value="#{lbl['lbl.sm.gst.regdate']}" /><ac:labelDate value=" : #{branchBean.gstRegistrationDate}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}" style="width :40%;white-space : normal">
