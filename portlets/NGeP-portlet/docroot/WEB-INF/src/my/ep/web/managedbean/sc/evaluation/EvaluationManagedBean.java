@@ -478,6 +478,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** check report download. */
 	private boolean checkReportDownload;
+	
+	private BigDecimal packageScore;
 
 	/**
 	 * Gets the today.
@@ -3119,6 +3121,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckReportDownload(boolean checkReportDownload) {
 		this.checkReportDownload = checkReportDownload;
+	}
+
+	/**
+	 * @return the packageScore
+	 */
+	public BigDecimal getPackageScore() {
+		return packageScore;
+	}
+
+	/**
+	 * @param packageScore the packageScore to set
+	 */
+	public void setPackageScore(BigDecimal packageScore) {
+		this.packageScore = packageScore;
 	}
 
 }
