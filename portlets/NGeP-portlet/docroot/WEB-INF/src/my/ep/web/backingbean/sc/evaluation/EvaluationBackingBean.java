@@ -2326,11 +2326,6 @@ public class EvaluationBackingBean extends
 				} else {
 					// rertriveFinSpecDtlsByChecklistId() withoutzone
 					// retriveProposalChecklistByzone() withzonespec
-					if (speczone.getComplianceResultBean().getTotalRecord() > 0) {
-						this.getManagedBean().setFinSpecSupplierList(
-								speczone.getComplianceResultBean()
-										.getResultList());
-					}
 					if (null != speczone.getScoreOfferPrices()) {
 						this.getManagedBean().setOfferPricePackage(
 								speczone.getScoreOfferPrices());
@@ -2338,6 +2333,12 @@ public class EvaluationBackingBean extends
 								speczone.getWithinVarieancePackage());
 
 					}
+					if (speczone.getComplianceResultBean().getTotalRecord() > 0) {
+						this.getManagedBean().setFinSpecSupplierList(
+								speczone.getComplianceResultBean()
+										.getResultList());
+					}
+
 					return "evaluationFinSpecWithOutzone.xhtml";
 				}
 
@@ -2418,9 +2419,13 @@ public class EvaluationBackingBean extends
 					 * .get(i), zoneResDTO.getComplianceResultBean()
 					 * .getResultList(), null, 0);
 					 */
-					this.getManagedBean().setFinSpecSupplierList(
-							zoneResDTO.getComplianceResultBean()
-									.getResultList());
+					calculateFinacialSpecSupplierPackageScore(zoneResDTO
+							.getComplianceResultBean().getResultList(),
+							speczone.getScoreOfferPrices());
+					/*
+					 * this.getManagedBean().setFinSpecSupplierList(
+					 * zoneResDTO.getComplianceResultBean() .getResultList());
+					 */
 				}
 
 				if (null != speczone.getScoreOfferPrices()
@@ -2640,17 +2645,18 @@ public class EvaluationBackingBean extends
 				} else {
 					// rertriveFinSpecDtlsByChecklistId() withoutzone
 					// retriveProposalChecklistByzone() withzonespec
-					if (speczone.getComplianceResultBean().getTotalRecord() > 0) {
-						this.getManagedBean().setFinSpecSupplierList(
-								speczone.getComplianceResultBean()
-										.getResultList());
-					}
 					if (null != speczone.getScoreOfferPrices()) {
 						this.getManagedBean().setOfferPricePackage(
 								speczone.getScoreOfferPrices());
 						this.getManagedBean().setWithInVarieance(
 								speczone.getWithinVarieancePackage());
 					}
+					if (speczone.getComplianceResultBean().getTotalRecord() > 0) {
+						calculateFinacialSpecSupplierPackageScore(speczone
+								.getComplianceResultBean().getResultList(),
+								speczone.getScoreOfferPrices());
+					}
+
 					return "evaluationFinSpecWithOutzone.xhtml";
 				}
 
@@ -2661,6 +2667,56 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
+
+	}
+
+	// set package score for each supplier in financial spec.
+	private void calculateFinacialSpecSupplierPackageScore(
+			List<ScQtProposalChecklist> proposalCheckList1,
+			ScQtScoreOfferPrice packageOfferPrice) {
+		for (ScQtProposalChecklist proposalCheckList : proposalCheckList1) {
+			if (null != proposalCheckList.getScQtProposal().getProposalAmount()
+					&& null != proposalCheckList.getScQtProposal()
+							.getProposalAmount().getProposalAmt()) {
+				if (null != this.getManagedBean().getPackageFromVarieance()
+						&& null != this.getManagedBean()
+								.getPackageToVarieance()) {
+					if (proposalCheckList.getScQtProposal().getProposalAmount()
+							.getProposalAmt().intValue() < this
+							.getManagedBean().getPackageFromVarieance()
+							.intValue()) {
+						if (null != packageOfferPrice) {
+							proposalCheckList.setPackageScore(packageOfferPrice
+									.getBelowScore());
+						}
+
+					} else if (proposalCheckList.getScQtProposal()
+							.getProposalAmount().getProposalAmt().intValue() >= this
+							.getManagedBean().getPackageFromVarieance()
+							.intValue()
+							&& proposalCheckList.getScQtProposal()
+									.getProposalAmount().getProposalAmt()
+									.intValue() <= this.getManagedBean()
+									.getPackageToVarieance().intValue()) {
+						proposalCheckList.setPackageScore(this.getManagedBean()
+								.getWithInVarieance());
+
+					} else if (proposalCheckList.getScQtProposal()
+							.getProposalAmount().getProposalAmt().intValue() > this
+							.getManagedBean().getPackageToVarieance()
+							.intValue()) {
+						if (null != packageOfferPrice) {
+							proposalCheckList.setPackageScore(packageOfferPrice
+									.getAboveScore());
+						}
+
+					}
+
+				}
+
+			}
+		}
+		this.getManagedBean().setFinSpecSupplierList(proposalCheckList1);
 
 	}
 
@@ -2749,10 +2805,14 @@ public class EvaluationBackingBean extends
 					if (null != zoneResDTO.getComplianceResultBean()
 							&& zoneResDTO.getComplianceResultBean()
 									.getTotalRecord() > 0) {
-
-						this.getManagedBean().setFinSpecSupplierList(
-								zoneResDTO.getComplianceResultBean()
-										.getResultList());
+						calculateFinacialSpecSupplierPackageScore(zoneResDTO
+								.getComplianceResultBean().getResultList(),
+								this.getManagedBean().getOfferPricePackage());
+						/*
+						 * this.getManagedBean().setFinSpecSupplierList(
+						 * zoneResDTO.getComplianceResultBean()
+						 * .getResultList());
+						 */
 						/*
 						 * specZoneDtl = new SummaryZoneBaen(getManagedBean()
 						 * .getSelectedZone(), zoneResDTO
@@ -3475,6 +3535,11 @@ public class EvaluationBackingBean extends
 						proposalCheckList.getScQtCheckList());
 				this.getManagedBean().setQtProposalChecklist(proposalCheckList);
 				reqDTO.setProposalChecklist(proposalCheckList);
+
+				if (null != proposalCheckList.getPackageScore()) {
+					this.getManagedBean().setPackageScore(
+							proposalCheckList.getPackageScore());
+				}
 				resDTO = evaluationSO
 						.retrieveSpecificationDetailsByProposal(reqDTO);
 
@@ -6352,6 +6417,12 @@ public class EvaluationBackingBean extends
 				financialSupplierEvaluate(evalResDTO.getProposalChecklist(),
 						index, getManagedBean().getCheckListType());
 				this.getManagedBean().getFinSpecSupplierList().remove(index);
+
+				this.getManagedBean()
+						.getQtProposalChecklist()
+						.setPackageScore(
+								this.getManagedBean().getPackageScore());
+
 				this.getManagedBean()
 						.getFinSpecSupplierList()
 						.add(index,
