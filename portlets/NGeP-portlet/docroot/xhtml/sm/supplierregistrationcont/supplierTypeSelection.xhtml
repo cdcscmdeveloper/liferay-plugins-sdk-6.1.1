@@ -31,10 +31,7 @@
 				<p:selectOneMenu required="true" value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType}" label="Supplier Type">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
-					
-					<ui:fragment rendered="#{!postSupplierRegBB.managedBean.smSupplier.businessType eq SupplierManagementConst.INDIVIDUAL_FLAG}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
-					</ui:fragment>
+
 				</p:selectOneMenu>
 			</p:panel>
 		</p:outputPanel>
