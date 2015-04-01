@@ -47,13 +47,9 @@
            <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
            <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
 		   <p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
-		   <h:panelGrid columns="3">
-			   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctStatus}"	style="width:200px; margin-bottom:5px">
-					<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
-			   </p:selectOneMenu>
-			   <p:spacer width="3" />
-			   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
-		   </h:panelGrid>
+		   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctStatus}"	style="width:200px; margin-bottom:5px">
+				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
+		   </p:selectOneMenu>
 		   <p:outputLabel value="#{lbl['lbl.ct.termination.type']}" />
 		   <p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.terminationTypeId}" style="width:200px; margin-bottom:5px">
 		   		<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
@@ -103,8 +99,12 @@
 					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.loaPhysicalNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.status']}"  style="width:8%; white-space:normal;">
-						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
+					<p:column style="width:8%; white-space:normal;">
+						<f:facet name="header">
+					   		<h:outputText value="#{lbl['lbl.ct.status']}"/>
+               		   		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
+               	    	</f:facet>
+						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />						
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}"  style="width:8%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" />
