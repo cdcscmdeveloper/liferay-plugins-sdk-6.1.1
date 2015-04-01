@@ -2874,9 +2874,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
-				|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
-				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+		if (!isRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
+				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateFulfilmentRequest(outcome);
 			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
@@ -2889,6 +2888,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		}else{
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
+					|| BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+				getManagedBean().setValidated(Boolean.FALSE);
+			}
 			return fulfillmentRequestAction(outcome);
 		}
 	}

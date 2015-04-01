@@ -3552,9 +3552,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+		if (!isRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
+				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateContractRequest(outcome);
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
@@ -3567,6 +3566,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		}else{
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+				getManagedBean().setValidated(Boolean.FALSE);
+			}
 			return submitAction(outcome);
 		}
 	}
