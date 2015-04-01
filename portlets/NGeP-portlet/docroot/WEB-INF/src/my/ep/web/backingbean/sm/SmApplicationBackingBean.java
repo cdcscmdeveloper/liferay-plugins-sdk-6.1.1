@@ -10,7 +10,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1971,23 +1970,17 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSmAppl().getSmCompanyBasic() != null
 					&& !getManagedBean().getSmAppl().getSmCompanyBasic()
 							.isWithFederal()) {
-				getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
 						0);
 			} else {
-				if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
-					getManagedBean().getSelectedShareHolder().setSoftcertFlg(
-							SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-				}
 				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
 						0);
 			}
 		} else if (!getManagedBean().getSelectedShareHolder().getEpRole()
 				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
-			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
-
+		setPersonnelSoftcertFlag(getManagedBean().getSelectedShareHolder());
 	}
 
 	/**
@@ -4023,7 +4016,6 @@ public class SmApplicationBackingBean extends
 		if (validShrHldr) {
 			if (getManagedBean().getSmAppl().getSmPersonnels()
 					.contains(getManagedBean().getSelectedShareHolder())) {
-
 				getManagedBean()
 						.getSmAppl()
 						.getSmPersonnels()
@@ -4127,6 +4119,31 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Set personnel soft certificate flag
+	 * @param smPersonnel
+	 */
+	private void setPersonnelSoftcertFlag(SmPersonnel smPersonnel) {
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			if (smPersonnel.getSoftcertFlg() == 0
+					&& (smPersonnel.getEpRole().equals(
+							RoleCode.MOF_SUPPLIER_ADMIN.value())
+							|| smPersonnel.getEpRole().equals(
+									RoleCode.MOF_SUPPLIER_USER.value()) || smPersonnel
+							.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()))) {
+				smPersonnel
+						.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+			} else {
+				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER)) {
+					smPersonnel.setSoftcertFlg(0);
+				}
+			}
+		} else {
+			smPersonnel.setSoftcertFlg(0);
 		}
 	}
 
