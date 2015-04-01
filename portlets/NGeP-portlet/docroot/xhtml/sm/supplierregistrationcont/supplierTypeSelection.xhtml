@@ -8,12 +8,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<p:panel header="#{lbl['lbl.sm.account.type.header']}">
 			<table>
 				<tr>
 					<td>#{lbl['lbl.sm.account.type.header']}</td>
 					<td>
-						<p:selectOneRadio value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType}" required="true">
+						<p:selectOneRadio value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType}" required="true" 
+						label="#{lbl['lbl.sm.account.type.header']}">
 				            <f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="#{SupplierManagementConst.STYPE_CONTRACTOR}" />
 				            <f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="#{SupplierManagementConst.STYPE_CONSULTANT}" 
 				            itemDisabled="#{postSupplierRegBB.managedBean.smSupplier.businessType eq SupplierManagementConst.INDIVIDUAL_FLAG}" />
@@ -26,7 +28,7 @@
 		
 		<p:outputPanel id="outPnlSuppTypeId" >
 			<p:panel header="Supplier Type" rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == SupplierManagementConst.STYPE_CONTRACTOR}">
-				<p:selectOneMenu required="true" value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType}">
+				<p:selectOneMenu required="true" value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType}" label="Supplier Type">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
 					
