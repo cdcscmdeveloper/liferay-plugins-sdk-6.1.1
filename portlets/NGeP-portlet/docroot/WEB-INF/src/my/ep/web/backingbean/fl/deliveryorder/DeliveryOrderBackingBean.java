@@ -545,7 +545,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		String orderId = originalServletRequest.getParameter("orderId");
-		System.out.println("preRenderView orderId: "+orderId);
 		if(orderId != null){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			//FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -740,6 +739,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		System.out.println("retrieveMofNo smSupplier.getSupplierId(): "+smSupplier.getSupplierId());
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
 		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
 		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
@@ -1122,7 +1122,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				flBB.getManagedBean().setHideRemarks(true);
 //			}
 			flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
-
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
