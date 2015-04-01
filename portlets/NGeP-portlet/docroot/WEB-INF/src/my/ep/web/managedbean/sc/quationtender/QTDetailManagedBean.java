@@ -1007,7 +1007,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtLocCriteria> supplierLocationList;
 
-	private List<ScQtApproval> qtApprovals;
+	
 	
 	/**
 	 * Sets the panel suppliers.
@@ -6332,12 +6332,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.amendMentBean = amendMentBean;
 	}
 
-	public List<ScQtApproval> getQtApprovals() {
-		return qtApprovals;
-	}
-
-	public void setQtApprovals(List<ScQtApproval> qtApprovals) {
-		this.qtApprovals = qtApprovals;
-	}
-
+	
 }

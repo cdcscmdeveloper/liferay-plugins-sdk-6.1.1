@@ -25,7 +25,7 @@
 			<p:pickList id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.approver.userName}"
-				disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}"
+				disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}"
 				itemValue="#{approverUser}" converter="approverPickListConverter">
 				<f:facet name="sourceCaption">Available </f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
@@ -57,10 +57,10 @@
 								<td></td>
 								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId eq null}"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" />
+										disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}" />
 									<h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
-										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}"
+										disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
 							</tr>
 						</table>
@@ -73,7 +73,7 @@
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="committeeAttachDlg.show()" icon="iconAttachment"
-									update="uploadsfileids" value="Attach Files" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" >
+									update="uploadsfileids" value="Attach Files" disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}" >
 									<f:setPropertyActionListener value="#{commiteApproverCategory}"
 										target="#{approvalBackingBean.managedBean.scQtApproval}" />
 								</p:commandButton></td>
@@ -101,9 +101,9 @@
 											<td><h:commandLink value="#{attachFile.fileName}"
 													styleClass="blue_font" immediate="true"
 													action="#{approvalBackingBean.downloadFile(attachFile)}"
-													disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}" />
+													disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}" />
 												<p:commandLink action="#{approvalBackingBean.deleteFile}"
-													disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_APPROVAL_WORKFLOW)}"
+													disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}"
 													immediate="true" update="@([id$=attachFileIds])">
 													<h:graphicImage library="ep/images/design"
 														name="icon_trash.png" styleClass="tasklist_title1" />
