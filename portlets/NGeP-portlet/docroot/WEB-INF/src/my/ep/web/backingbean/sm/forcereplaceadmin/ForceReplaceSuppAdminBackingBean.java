@@ -61,7 +61,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 		initIdentificationTypes();
 		initCountries();
 		initStatest();
-		SmCommonUtil.setMDCUserId();
 		SmCommonUtil.redirectToPage("forceReplaceAdmin.xhtml", "");
 	}
 
