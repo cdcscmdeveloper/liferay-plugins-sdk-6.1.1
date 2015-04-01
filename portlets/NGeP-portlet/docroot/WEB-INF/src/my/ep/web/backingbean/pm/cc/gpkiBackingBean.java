@@ -74,7 +74,7 @@ public class gpkiBackingBean {
 	    Long userId = facesScope.getUserSessionBean().getUserId();
 //	    Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-
+		debugLogger("getUserSessionBean().getUserId();=====================================: "+ facesScope.getUserSessionBean().getUserId());		
 		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
@@ -85,9 +85,10 @@ public class gpkiBackingBean {
 		debugLogger("subjectDN====================================: "+subjectDN);
 		debugLogger("userId====================================: "+subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")));
 		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
-		System.out.println("ContextualCompositeMethodExpression  2");
+		System.out.println("ContextualCompositeMethodExpression  2");  
 		debugLogger("reflectAction=====================================: "+obj);		
 		if(true){
+//		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
 			pmDigiSign.setCreatedBy(userId);
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOrginalData(textBeforeSign);
