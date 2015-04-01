@@ -263,18 +263,39 @@
 		   </h:panelGrid>
 		  
 		<h:panelGrid columns="2" style="float:right;" 
-		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
+		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}">
 			  <p:outputLabel value="*" styleClass="mandatory" />
 		      <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 		</h:panelGrid> 
 		 <h:panelGrid columns="2" 
-		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy}">
+		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}">
 		    <p:inputText id="fileRefNum" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
 		           disabled="#{terminationBackingBean.managedBean.viewContract}"
 		           style="width:170px;" maxlength="100"  required="true" label="#{lbl['lbl.ct.file.ref.no']}">
 		     </p:inputText>
 		     <p:message for="fileRefNum" display="icon"/>
-		 </h:panelGrid>
+		 </h:panelGrid>		 
+		 
+		 <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.mutualTermination}">
+			  <p:outputLabel value="*" styleClass="mandatory" style="padding-top:10px" />
+		      <p:outputLabel value="#{lbl['lbl.ct.copy.mutual.termination.agreement']}" style="padding-top:10px" />
+		</h:panelGrid> 
+		<h:panelGroup id="uploadTerminationPg" rendered="#{terminationBackingBean.managedBean.mutualTermination}">
+			<h:panelGrid columns="3">
+				<p:commandButton 
+					oncomplete="uploadTerminatinDlg.show();return false;"
+					value="#{lbl['lbl.btn.upload']}" icon="iconAttachment"  immediate="true"
+					rendered="#{!terminationBackingBean.managedBean.viewContract}" />
+				<p:spacer width="3" />
+				<h:commandLink
+					title="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileName}"
+					value="#{terminationBackingBean.getShortFileName(terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}"
+					style="float:left;padding-top:10px" styleClass="blue_font"
+					rendered="#{terminationBackingBean.managedBean.contractVer.ctTermination.filePath != null}"
+					action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.contractVer.ctTermination.filePath, 
+						terminationBackingBean.managedBean.contractVer.ctTermination.fileName)}" />
+			</h:panelGrid>
+		</h:panelGroup>
 		 
 		   <p:spacer rendered="#{terminationBackingBean.managedBean.remedy}" />
 		  <p:spacer rendered="#{terminationBackingBean.managedBean.remedy}" />       	
@@ -439,4 +460,16 @@
 	<p:dialog header="#{lbl['lbl.ct.notice']}" widgetVar="noticeDlg" modal="true" height="450" width="820" styleClass="pop_up_top">
 		<p:editor controls="print" id="editorDisplay" value="#{terminationBackingBean.managedBean.editorValue}" width="800" height="430" />
 	</p:dialog>
+	<p:dialog id="uploadTerminatinDlg" widgetVar="uploadTerminatinDlg"
+				modal="true" width="700px" height="350"
+				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+				<p:ajax event="close" />
+				<p:fileUpload style="display:inline;" mode="advanced"
+				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+					fileUploadListener="#{terminationBackingBean.fileUpload}"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+					update="uploadTerminationPg">
+				</p:fileUpload>
+			</p:dialog>
 </ui:composition>
