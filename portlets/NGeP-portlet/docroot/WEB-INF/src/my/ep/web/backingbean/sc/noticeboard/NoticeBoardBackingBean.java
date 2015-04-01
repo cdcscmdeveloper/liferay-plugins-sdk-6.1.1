@@ -1868,7 +1868,13 @@ public class NoticeBoardBackingBean extends
 
 		this.getManagedBean().setBriefingDtls(scQtBsvDtl);
 		List<ScQtBsvDtl> bsvDetails = zoneBean.getBriefingList();
+		if(bsvDetails.contains(scQtBsvDtl)){
 		bsvDetails.set(bsvDetails.indexOf(scQtBsvDtl), scQtBsvDtl);
+		}
+		List<ScQtBsvDtl> svDetails = zoneBean.getSitevisitList();
+		if(svDetails.contains(scQtBsvDtl)){
+		    svDetails.set(svDetails.indexOf(scQtBsvDtl), scQtBsvDtl);
+		}
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 	}
 
