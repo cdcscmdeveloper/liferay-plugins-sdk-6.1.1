@@ -55,7 +55,9 @@ public class QTFiledMapper {
 				QTFieldConst.FILED_QT_APPROVAL_WORKFLOW }), QT_PENDING_APPROVALS_CHECKLIST_SCORING(
 				QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
 
-				new String[] { QTFieldConst.FILED_QT_TITLE }),
+				new String[] { QTFieldConst.FILED_QT_TITLE,
+						QTFieldConst.FILED_QT_FILE_NO,
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION }),
 
 		QT_PENDING_SCHEDULE_DOCUMENT(
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
