@@ -116,7 +116,7 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"/>
 					</f:facet>
 					
-				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;word-spacing: -1px" >	
+				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;word-spacing: -1px;margin-top: 8px;" >	
 					   <p:row>
 			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;width: 130px;">
 			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="12"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
@@ -159,7 +159,7 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
 					</f:facet>
 				
-					<h:selectOneMenu id="priceType" style="width:90px;"
+					<h:selectOneMenu id="priceType" style="width:90px;margin-top: 8px;"
 						required="#{!requestNoteDtl.selected}" 
 						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
@@ -217,7 +217,7 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" />
 					</f:facet>
-					<h:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:115px;" 
+					<h:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:115px; margin-top: 8px;" 
 					   id="prepareBy" label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.loa.prepare.by']}" 
 					   disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 					   required="#{!requestNoteDtl.selected}">  
