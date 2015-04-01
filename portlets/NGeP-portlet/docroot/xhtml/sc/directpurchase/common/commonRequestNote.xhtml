@@ -15,6 +15,11 @@
 			<ac:title value="#{lbl['lbl.sc.request.note']}"/>
 	  </c:if>
    <p:messages showDetail="true" autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" showSummary="false" />
+									  
+	<ui:param name="isPendingSubmissionStatus" value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}" />
+	<ui:param name="isPendingRevisionStatus" value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}" />
+	<ui:param name="isPendingApprovalStatus" value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval}" />
+	
 	<p:outputPanel id="requestNoteId">
 			<ac:gpkiPopup textBeforeSign="#{requestNoteBackingBean.textBeforeSign}"
 			postSignAction="#{requestNoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
