@@ -14,11 +14,14 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
@@ -267,9 +270,20 @@ public class SalutationBackingBean extends
 		 validationMessage(salutation);
 		 
 		 if(salutation.isBrandNew()){
-			 System.err.println("***************************************TRUE");
-			 log.info("......TRUE......");
-		 setUserDetails(salutation);}
+			 if (isExistSalutationCode(salutation.getSalutationCode())) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(
+											MessageConst.ERROR_779003, new String[] {
+													salutation.getSalutationCode(),
+													salutation.getSalutationCode()},
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
+					return NAV_TO_MAINTAIN;
+				}
+		 setUserDetails(salutation);
+		 }
 		 
 		 SalutationReqDTO reqDTO = new SalutationReqDTO();
 		 reqDTO.setSalutation(salutation);
@@ -283,7 +297,7 @@ public class SalutationBackingBean extends
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.INFO_776001, new String[] {
+											MessageConst.INFO_779001, new String[] {
 													resDTO.getSalutation().getSalutationCode(),
 													resDTO.getSalutation().getSalutationCode()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -293,7 +307,7 @@ public class SalutationBackingBean extends
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.INFO_776002, new String[] {
+											MessageConst.INFO_779002, new String[] {
 													resDTO.getSalutation().getSalutationCode(),
 													resDTO.getSalutation().getSalutationCode()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -306,6 +320,19 @@ public class SalutationBackingBean extends
 		  return NAV_TO_MAIN;
 		}
 	 }
+	 public boolean isExistSalutationCode(String salutationCode) {
+		 ISalutationSO salutationSO = (ISalutationSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
+		 SalutationReqDTO reqDTO = new SalutationReqDTO();
+			reqDTO.setSalutationCode(salutationCode);
+			SalutationResDTO resDTO = salutationSO.retrieveSalutationBySalutationCode(reqDTO);
+
+			if (resDTO.getSalutation() != null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	 /**
 		 *  This method used for reset the search bean field and
 		 *  navigate to the search main page. 
