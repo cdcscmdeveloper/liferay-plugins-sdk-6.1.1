@@ -5015,7 +5015,7 @@
 	
 	<portlet>
 		<portlet-name>virtualCert</portlet-name>
-		<display-name>Virtual Certificate</display-name>
+		<display-name>View Virtual Certification</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
