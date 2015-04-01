@@ -1094,7 +1094,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		
+		System.out.println("viewDeliveryOrder doId: "+doId);
 		if(doId!=null) {
 			reqDTO.setDeliveryOrderId(Long.valueOf(doId));
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
