@@ -1083,7 +1083,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	/**
-	 * View invoice.
+	 * View delivery order.
 	 */
 	public void viewDeliveryOrder() {
 		IDeliveryOrderSO doSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
