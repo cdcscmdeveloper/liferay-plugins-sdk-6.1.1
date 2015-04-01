@@ -8,7 +8,7 @@
 	<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 		<table style="width: 100%" border="0">
 			<tr>
-				<td style="width: 185px;"><p:outputLabel
+				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.bsv.attendance.briefing.sameas.sv']}" /></td>
 				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}">
@@ -112,21 +112,24 @@
 		</p:panelGrid>
 		<table style="width: 100%" border="0">
 			<tr>
-				<td style="width: 160px;"><p:outputLabel
+				<td style="width: 130px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.attendance.brief']}" /></td>
 				<td style="width: 130px;"><p:selectOneRadio
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						value="#{bsvdtlbean.scQtBsv.allBriefingReq}">
-						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="true" />
 						<p:ajax event="click"
 							listener="#{qTBriefingSiteVisitBackingBean.briefingClickEvent}"
 							update="@([id$=minbsvattend])" />
 					</p:selectOneRadio></td>
-				<td><p:inputText id="minbsvattend" size="5"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-						value="#{bsvdtlbean.scQtBsv.minBriefingAttend}"
-						readonly="#{bsvdtlbean.scQtBsv.allBriefingReq}" /></td>
+				<td><h:panelGroup id="minbsvattend">
+						<ui:fragment rendered="#{bsvdtlbean.scQtBsv.allBriefingReq}">
+							<p:inputText id="minbsvattendsss" size="5"
+								value="#{bsvdtlbean.scQtBsv.minBriefingAttend}"
+								readonly="#{!bsvdtlbean.scQtBsv.allBriefingReq}" />
+						</ui:fragment>
+					</h:panelGroup></td>
 				<td />
 			</tr>
 		</table>
@@ -225,21 +228,24 @@
 				</p:panelGrid>
 				<table style="width: 100%" border="0">
 					<tr>
-						<td style="width: 165px;"><p:outputLabel
+						<td style="width: 140px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
 						<td style="width: 130px;"><p:selectOneRadio
 								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 								value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
-								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
-								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
+								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="false" />
+								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="true" />
 								<p:ajax event="click"
 									listener="#{qTBriefingSiteVisitBackingBean.siteVisitClickEvent}"
 									update="@([id$=minSiteVisitAtt])" />
 							</p:selectOneRadio></td>
-						<td><p:inputText id="minSiteVisitAtt" size="5"
-								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-								value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
-								readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" /></td>
+						<td><h:panelGroup id="minSiteVisitAtt">
+								<ui:fragment rendered="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
+									<p:inputText id="minSiteVisitAttss" size="5"
+										value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
+										readonly="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}" />
+								</ui:fragment>
+							</h:panelGroup></td>
 						<td />
 					</tr>
 				</table>
