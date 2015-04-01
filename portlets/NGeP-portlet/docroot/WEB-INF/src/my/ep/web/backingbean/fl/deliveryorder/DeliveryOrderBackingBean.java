@@ -1113,6 +1113,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 //			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_DO);
 			getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+			System.out.println("resDTO.getFlDeliveryOrder().getFlRequest(): "+resDTO.getFlDeliveryOrder().getFlRequest());
+			System.out.println("getSmSupplier "+resDTO.getFlDeliveryOrder().getFlRequest().getSmSupplier());
+			System.out.println("getSupplierId "+resDTO.getFlDeliveryOrder().getFlRequest().getSmSupplier().getSupplierId());
 			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			getManagedBean().setDocMaintainRemarks(true);
