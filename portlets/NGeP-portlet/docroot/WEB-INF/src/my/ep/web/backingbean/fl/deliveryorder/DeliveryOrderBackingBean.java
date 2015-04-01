@@ -1105,8 +1105,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				handleException(e);
 				return;
 			}
-			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal("View");
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
