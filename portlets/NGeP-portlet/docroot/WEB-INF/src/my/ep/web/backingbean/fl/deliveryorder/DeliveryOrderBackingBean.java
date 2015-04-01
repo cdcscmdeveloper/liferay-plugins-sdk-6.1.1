@@ -739,6 +739,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		System.out.println("retrieveMofNo smSupplier.getSupplierId(): "+smSupplier);
 		System.out.println("retrieveMofNo smSupplier.getSupplierId(): "+smSupplier.getSupplierId());
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
 		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
