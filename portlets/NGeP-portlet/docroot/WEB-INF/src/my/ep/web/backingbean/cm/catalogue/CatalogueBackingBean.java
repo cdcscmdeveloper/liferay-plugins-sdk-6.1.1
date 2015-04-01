@@ -120,6 +120,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -4548,6 +4549,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			throw new EpException(MessageConst.ERROR_715015);
 		}
+		
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			return "/xhtml/common/acknowledge.xhtml";
+		}
 		return "catalogMaintenanceFile";
 	}
 	
@@ -4664,6 +4669,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				catalogueSO = null;
 				supplierSearchSO = null;
 			}
+		
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			return "/xhtml/common/acknowledge.xhtml";
+		}
+		
 		return "catalogMaintenanceFile";
 	}
 
