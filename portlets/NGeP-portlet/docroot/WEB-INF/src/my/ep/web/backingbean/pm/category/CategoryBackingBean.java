@@ -33,6 +33,7 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -54,6 +55,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 
@@ -366,6 +368,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl2.xhtml";
 	}
 	
+	
+	
 	/**
 	 * Adds the sub category.
 	 * 
@@ -657,6 +661,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 				this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL3().getPmCategoryL2());
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
+				
 								
 				log.info("***editSubDivision - managed bean L3 - Category Name***" +this.getManagedBean().getPmCategoryL3().getCategoryName());
 			}
@@ -889,14 +894,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			
 			//check the duplicate restriction
-			if(!checkCategoryRestrDuplicateCompanyType()){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(MessageConst.ERROR_775006,																
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				return "/xhtml/pm/category/categoryl3.xhtml";
+			if(!checkCategoryRestrDuplicateCompanyType()){				
+				throw new EpException(MessageConst.ERROR_775006);
 		   }
 			
 			
@@ -1373,9 +1372,22 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 */
 	public void populateToSaveLOV() {
 		log.info("In populateToSaveLOV");
-		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		
 		if(this.getManagedBean().getSelectedLOV() != null && !this.getManagedBean().getSelectedLOV().isEmpty()) {
+
+			for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedLOV()) {
+
+				for(PmBasicCategory pmBasicCategory :getManagedBean().getPmCategoryL3().getPmBasicCategory()){
+
+					if(StringUtils.equals(pmBasicCategory.getBasicCategoryL3desc(),pmCategoryL3.getCategoryName())){
+						resetLOV();
+						throw new EpException(MessageConst.ERROR_770165);
+					}
+
+				}
+			}
+
 			//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory()==null){
 				//if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()==0){
@@ -1387,7 +1399,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				PmBasicCategory pmBasicCategory = new PmBasicCategory();
 				
-				//pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				
 				
 				pmBasicCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				pmBasicCategory.setBasicCategoryL3(pmCategoryL3.getCategoryL3Id());
@@ -1404,7 +1416,25 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						pmCategoryL3.getPmCategoryL2().getCategoryL2Code()+
 						pmCategoryL3.getCategoryL3Code());
 				
+				
+				
+				/*CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setPmBasicCategoryId(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
+				reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
+				reqDTO.setCategoryL2Id(pmBasicCategory.getBasicCategoryL2());
+				reqDTO.setCategoryL1Id(pmBasicCategory.getBasicCategoryL1());
+				
+				
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmBasicCategoryByIds(reqDTO);
+				
+				
+				if (resDTO.getPmBasicCategory() != null) {
+					pmBasicCategory = resDTO.getPmBasicCategory();
+					pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}*/
+				
 				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(pmBasicCategory);
+				
 				//reqDTO.setPmBasicCategory(pmBasicCategory);
 				//CategoryCodeResDTO resDTO = categoryCodeSO.saveBasicCategory(reqDTO);
 				
@@ -1427,6 +1457,21 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		if(this.getManagedBean().getSelectedpmMachine() != null && !this.getManagedBean().getSelectedpmMachine().isEmpty()) {
 			//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			 
+			for(PmMachine pmMachine1: this.getManagedBean().getSelectedpmMachine()) {
+
+				for(PmMachineCategory pmMachineCategory :getManagedBean().getPmCategoryL3().getPmMachineCategory()){
+
+					if(StringUtils.equals(pmMachineCategory.getPmMachine().getMachineCode(),pmMachine1.getMachineCode())){
+						resetPmMachineLOV();
+						throw new EpException(MessageConst.ERROR_770164);
+					}
+
+
+
+				}
+			}
+
 			if(this.getManagedBean().getPmCategoryL3().getPmMachineCategory()==null){
 				//if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()==0){
 					this.getManagedBean().getPmCategoryL3().setPmMachineCategory(new ArrayList<PmMachineCategory>());
@@ -1434,6 +1479,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			
 			for(PmMachine pmMachine: this.getManagedBean().getSelectedpmMachine()) {
+			
+			
 				
 				PmMachineCategory pmMachineCategory = new PmMachineCategory();
 				//pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
@@ -1452,7 +1499,32 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				pmMachineCategory.setCategoryL2id(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
 				pmMachineCategory.setPmMachine(pmMachine);
 				
+				
+				
+				
+				/*// Check if the pmMachineCategory already exists in DB with categoryL1id, categoryL2id, categoryL3id, machineId
+				// If an object is return then add that object to below machine category list
+				
+				
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setPmMachineId(pmMachine.getMachineId());
+				reqDTO.setCategoryL1Id(pmMachineCategory.getCategoryL1id());
+				reqDTO.setCategoryL2Id(pmMachineCategory.getCategoryL2id());
+				reqDTO.setCategoryL3Id(pmMachineCategory.getPmCategoryL3().getCategoryL3Id());
+				
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmMachineByCategoryIds(reqDTO);
+				
+				
+				if (resDTO.getPmMachine() != null) {					
+					pmMachineCategory = resDTO.getPmMachineCategory();
+					pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}*/
+				
+				
 				this.getManagedBean().getPmCategoryL3().getPmMachineCategory().add(pmMachineCategory);
+				
+				
+			
 				
 				/*PmBasicCategory pmBasicCategory = new PmBasicCategory();
 				pmBasicCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
@@ -1471,9 +1543,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						pmMachine.getCategoryL3Code());
 				
 				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(pmBasicCategory);*/
-			}
+			
+					}
 		}
-		
 		resetPmMachineLOV();
 		
 	}
@@ -1793,7 +1865,31 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		restr.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 		restr.setCompanyTypeId(new PmParameter());
-		//restr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+		
+		
+		
+		//ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		
+
+
+
+		/*CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setPmBasicCategoryId(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
+		reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
+		reqDTO.setCategoryL2Id(pmBasicCategory.getBasicCategoryL2());
+		reqDTO.setCategoryL1Id(pmBasicCategory.getBasicCategoryL1());
+		
+		
+		CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmCategoryRestrByIds(reqDTO);
+		
+		
+		if (resDTO.getPmBasicCategory() != null) {
+			pmBasicCategory = resDTO.getPmBasicCategory();
+			pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+		}*/
+			
+		
+		
 		
 		this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().add(restr);
 		
@@ -1857,7 +1953,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		if(this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs() != null && this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().size() > 0){
 			List<String> companyTypeLs = new ArrayList<String>();
 			for(PmCategoryRestr catRestr : this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()){
-				String paramId = catRestr.getCompanyTypeId().getParameterId().toString();
+				String paramId = catRestr.getCompanyTypeId().getParameterId().toString();				
 				if(companyTypeLs.contains(paramId)){
 					return false;
 				}
