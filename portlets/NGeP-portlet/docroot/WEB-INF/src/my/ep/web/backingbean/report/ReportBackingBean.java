@@ -3250,14 +3250,22 @@ public class ReportBackingBean extends
 			this.getSelectedCatList().remove(cat);
 
 		}
+		if ((this.getSelectedCatList().size()>9)) {
+			this.setEnableValue(true);
+			//throw new EpException(ReportConst.ERR_999000_MORTHAN_TEN);
+		}else{
+			this.setEnableValue(false);
+		}
 	}
 
 	public void assignCategoryForCompExperience() {
 		
 		SmSupplierCategory cat = new SmSupplierCategory();		
-		if ((this.getSelectedCatList().size()>9)) {
-			//this.setEnableValue(true);
-			throw new EpException(ReportConst.ERR_999000_MORTHAN_TEN);
+		if ((this.getSelectedCatList().size()>8)) {
+			this.setEnableValue(true);
+			//throw new EpException(ReportConst.ERR_999000_MORTHAN_TEN);
+		}else{
+			this.setEnableValue(false);
 		}
 		
 		
