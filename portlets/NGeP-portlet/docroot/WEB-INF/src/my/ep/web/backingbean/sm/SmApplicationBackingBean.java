@@ -1980,7 +1980,8 @@ public class SmApplicationBackingBean extends
 				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
-		setPersonnelSoftcertFlag(getManagedBean().getSelectedShareHolder());
+		setPersonnelSoftcertFlagOnSelectEpRole(getManagedBean()
+				.getSelectedShareHolder());
 	}
 
 	/**
@@ -4123,28 +4124,62 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Set personnel soft certificate flag
+	 * Set personnel soft certificate flag when selecting eprole
+	 * 
 	 * @param smPersonnel
 	 */
-	private void setPersonnelSoftcertFlag(SmPersonnel smPersonnel) {
+	private void setPersonnelSoftcertFlagOnSelectEpRole(SmPersonnel smPersonnel) {
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			if (smPersonnel.getSoftcertFlg() == 0
-					&& (smPersonnel.getEpRole().equals(
-							RoleCode.MOF_SUPPLIER_ADMIN.value())
-							|| smPersonnel.getEpRole().equals(
-									RoleCode.MOF_SUPPLIER_USER.value()) || smPersonnel
-							.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()))) {
-				smPersonnel
-						.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+			if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER)) {
+					smPersonnel.setSoftcertFlg(0);
+				} else {
+					for (SmPersonnel prevApprovedPersonnel : getManagedBean()
+							.getPrevApprovedPersonnels()) {
+						if (prevApprovedPersonnel.getPersonnelId().compareTo(
+								smPersonnel.getPersonnelId()) == 0
+								&& prevApprovedPersonnel.getEpRole().equals(
+										RoleCode.MOF_SUPPLIER_USER)) {
+							smPersonnel.setSoftcertFlg(prevApprovedPersonnel
+									.getSoftcertFlg());
+							break;
+						}
+					}
+				}
 			} else {
 				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER)) {
 					smPersonnel.setSoftcertFlg(0);
+				} else {
+					smPersonnel
+							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 				}
 			}
 		} else {
 			smPersonnel.setSoftcertFlg(0);
 		}
+	}
+
+	/**
+	 * To check whether need to disable ep role drop down
+	 * 
+	 * @param smPersonnel
+	 * @return boolean
+	 */
+	public boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
+		boolean retVal = false;
+		if (smPersonnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| smPersonnel.getEpRole().equals(
+						RoleCode.SUPPLIER_TEMP.value())) {
+			retVal = true;
+		} else if (smPersonnel.getEpRole().equals(
+				RoleCode.MOF_SUPPLIER_USER.value())
+				&& smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel
+						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
+			retVal = true;
+		}
+		return retVal;
 	}
 
 	/**
