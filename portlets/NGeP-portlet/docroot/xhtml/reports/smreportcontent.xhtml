@@ -62,6 +62,7 @@
 													itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
 													itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="rptZoneMsg" for="Zone" display="icon"  showDetail="false"/>
 										</td>
@@ -109,6 +110,7 @@
 													itemValue="#{lbl['lbl.rpt.bumiptr']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptrfrmhome']}"
 													itemValue="#{lbl['lbl.rpt.bumiptrfrmhome']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu>
 										</td>
 										<td><p:message id="smManRegStatusMsg"
@@ -156,6 +158,7 @@
 													itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
 													itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="supplierTypeMsg" for="SupplierType"
 												display="icon" showDetail="false"/></td>
@@ -190,6 +193,7 @@
 													itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.both']}"
 													itemValue="#{lbl['lbl.rpt.both']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="BothSupplierTypeMsg"
 												for="BothSupplierType" display="icon" showDetail="false"/></td>
@@ -225,6 +229,7 @@
 												label="#{lbl['lbl.rpt.cmpName']}" id="CompanyName"
 												maxlength="400" value="#{reportBackingBean.smCompanyName}"
 												required="true" style="margin-top:5px;width:290px;">
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="CompanyNameMsg" for="CompanyName"
 												display="icon" showDetail="false"/></td>
@@ -262,6 +267,7 @@
 												label="#{lbl['lbl.rpt.mofRegNo']}" id="MOFRegNo"
 												maxlength="12" value="#{reportBackingBean.smMofRegNo}"
 												required="true" style="margin-top:5px;width:290px;">
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="MOFRegNoMsg" for="MOFRegNo"
 												display="icon" showDetail="false"/></td>
@@ -299,6 +305,7 @@
 												label="#{lbl['lbl.rpt.applicationNo']}" id="smApplicationNo"
 												maxlength="16" value="#{reportBackingBean.smApplicationNo}"
 												required="true" style="margin-top:5px;width:290px;">
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="smApplicationNoMsg"
 												for="smApplicationNo" display="icon" showDetail="false"/></td>
@@ -329,6 +336,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItems value="#{reportBackingBean.smUPSSVOUserList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="smSVOUserMsg" for="smSVOUser"
 												display="icon" showDetail="false"/></td>
@@ -382,6 +390,7 @@
 													itemValue="#{lbl['lbl.rpt.pendrpt']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.cmpltdrpt']}"
 													itemValue="#{lbl['lbl.rpt.cmpltdrpt']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="appStatusMsg" for="ApplicationStatus"
 												display="icon" showDetail="false"/></td>
@@ -460,6 +469,7 @@
 													itemValue="#{lbl['lbl.rpt.rpttypeapproved']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperejected']}"
 													itemValue="#{lbl['lbl.rpt.rpttyperejected']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="smReportTypeMsg" for="ReportType"
 												display="icon" showDetail="false"/></td>
@@ -516,7 +526,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
 													itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
                                                 <p:ajax event="change" listener="#{reportBackingBean.changeDateBasedOnRegType}" process="@this"
-					 			                      partialSubmit="true" update="@all"/>
+					 			                      partialSubmit="true" update="@all,@([id$=Msg])"/>
 											</p:selectOneMenu></td>
 										<td><p:message id="RegistrationTypeMsg"
 												for="RegistrationType" display="icon" showDetail="false"/></td>
@@ -549,6 +559,7 @@
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItems
 													value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="smManStatByStateMsg"
 												for="smManStatByState" display="icon"  showDetail="false"/></td>
@@ -610,7 +621,8 @@
 													value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
 												<p:ajax event="change"
 													listener="#{reportBackingBean.retrieveDistrict}"
-													process="@this" partialSubmit="true" update="ManDistrict" />
+													process="@this" partialSubmit="true" update="ManDistrict,@([id$=Msg])" />
+													
 											</p:selectOneMenu></td>
 										<td><p:message id="ManStateMsg" for="ManState"
 												display="icon" showDetail="false"/></td>
@@ -656,6 +668,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItems value="#{reportBackingBean.districtLst}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="ManDistrictMsg" for="ManDistrict"
 												display="icon" showDetail="false"/></td>
@@ -683,6 +696,7 @@
 												value="#{reportBackingBean.smMonthlyRptByYear}"
 												required="true" style="margin-top:5px;width:300px;">
 												<f:selectItems value="#{reportBackingBean.scYearList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="MonthlyRptByYearMsg"
 												for="MonthlyRptByYear" display="icon"  showDetail="false"/></td>
@@ -739,7 +753,7 @@
 										listener="#{reportBackingBean.populateExperienceChildCategoryByParent(expCategoryBean.pmCategoryL1.categoryL1Id,
 								expCategoryBean.pmCategoryL2,
 								expCategoryBean.pmCategoryL3)}"
-										update="conslChild,conslSubChild" />
+										update="conslChild,conslSubChild,@([id$=Msg])" />
 								</p:selectOneMenu>
 								<p:message id="consultProjParCatCodeMsg"
 									for="consultProjParCatCode"  showDetail="false" display="icon" />
@@ -761,7 +775,7 @@
 										itemValue="#{conslChild.categoryL2Id}" />
 									<p:ajax event="change"
 										listener="#{reportBackingBean.populateExperienceSubChildCategoryByChild(expCategoryBean.pmCategoryL2.categoryL2Id,expCategoryBean.pmCategoryL3)}"
-										update="conslSubChild" />
+										update="conslSubChild,@([id$=Msg])" />
 								</p:selectOneMenu>
 								<p:message id="conslChildMsg" for="conslChild"
 									showDetail="false" display="icon"  />
@@ -782,7 +796,7 @@
 										itemValue="#{conslSubChild.categoryL3Id}" />
 									<p:ajax event="change"
 										listener="#{reportBackingBean.checkDuplicateCategoryForProject(expCategoryBean)}"
-										update="conslSubChild" />
+										update="conslSubChild,@([id$=Msg])" />
 								</p:selectOneMenu>
 								<p:message id="conslSubChildMsg" for="conslSubChild"
 									 showDetail="false" display="icon" />
@@ -841,7 +855,7 @@
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							partialSubmit="true" process="@form">
+							partialSubmit="true" process="@form" >
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryFromDateMsg"
 							for="MandatoryFromDate" display="icon"  showDetail="false"/></TD>
@@ -852,7 +866,7 @@
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.toDate}" required="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							partialSubmit="true" process="@form">
+							partialSubmit="true" process="@form" >
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryToDateMsg" for="MandatoryToDate"
 							display="icon"  showDetail="false"/></TD>
@@ -875,6 +889,7 @@
 							style="margin-top:5px;width:80px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 						</p:selectOneMenu></TD>
 					<TD><p:message id="MandatoryFromYearMsg"
 							for="MandatoryFromYear" display="icon"  showDetail="false"/></TD>
@@ -886,6 +901,7 @@
 							required="true" style="margin-top:5px;width:80px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 						</p:selectOneMenu></TD>
 					<TD><p:message id="MandatoryToYearMsg" for="MandatoryToYear"
 							display="icon"  showDetail="false"/></TD>
@@ -907,7 +923,7 @@
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							partialSubmit="true" process="@form">
+							partialSubmit="true" process="@form" >
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryCreatedFromDateMsg"
 							for="MandatoryCreatedFromDate" display="icon"  showDetail="false"/></TD>
@@ -918,7 +934,7 @@
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.toDate}" required="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							partialSubmit="true" process="@form">
+							partialSubmit="true" process="@form" >
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryCreatedToDateMsg" for="MandatoryCreatedToDate"
 							display="icon"  showDetail="false"/></TD>
@@ -940,7 +956,7 @@
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							partialSubmit="true" process="@form">
+							partialSubmit="true" process="@form" >
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryReceivedFromDateMsg"
 							for="MandatoryReceivedFromDate" display="icon"  showDetail="false"/></TD>
@@ -951,7 +967,7 @@
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.toDate}" required="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							partialSubmit="true" process="@form">
+							partialSubmit="true" process="@form" >
 						</p:calendar></TD>
 					<TD><p:message id="MandatoryReceivedToDateMsg" for="MandatoryReceivedToDate"
 							display="icon"  showDetail="false"/></TD>
