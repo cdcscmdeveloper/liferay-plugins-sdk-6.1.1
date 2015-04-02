@@ -301,10 +301,12 @@ public class LOADetailBackingBean extends
 				bondPercentage = new BigDecimal(percentage).divide(new BigDecimal("100"), mc);
 			}
 
-			if(scLoa.getContractDuration() != null && bondPercentage.intValue()>0){
+			if(scLoa.getContractDuration() != null){
+				DecimalFormat df = new DecimalFormat("#.00"); 
 				contractDuration = scLoa.getContractDuration();
 				BigDecimal  duration = contractDuration.divide(new BigDecimal(12), mc); 
-				bondAmt  = loaAmt.divide(duration, mc).multiply(bondPercentage);
+				double total  = loaAmt.divide(duration, mc).multiply(bondPercentage).doubleValue();
+				bondAmt  = new BigDecimal(df.format(total));
 			}
 		}
 
