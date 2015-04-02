@@ -127,6 +127,7 @@ import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -656,8 +657,13 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
-				// getManagedBean().getSmAppl().getSmCompanyBasic().setWithFederal(true);
-				// }
+				
+//				if (getManagedBean().getSmAppl().getSupplierType()
+//						.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+//					getManagedBean().getSmAppl().getSmCompanyBasic()
+//							.setWithFederal(true);
+//				}
+
 			} else {
 				if (!StringUtils.isEmpty(getManagedBean().getCurrentStatus())) {
 					log.info("*** Current Status Value Retrieved from BPM (set in common appl backing bean)****** "
@@ -1075,6 +1081,11 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setPrevBasicStateId(
 						comAdd.getSmAddress().getPmState().getStateId());
 			}
+		} else if (currentPageType
+				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+				&& getManagedBean().isSupplierUser()) {
+			SmApplicationUtil.validateBasicInfoGstData(true, getManagedBean(),
+					currentTab);
 		}
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		saveSupplierBusinesType(currentPageType);
@@ -2149,11 +2160,62 @@ public class SmApplicationBackingBean extends
 	// }
 
 	// -- Process Branches Start
+
+	/**
+	 * Assign Basic Company Gst Details For Selected Branch. (Ajax call to set
+	 * or reset the values based on the check box selection)
+	 * 
+	 * @param SmSupplierBranch
+	 *            - branch
+	 */
+	public void assignCompanyGstDetailsForSelectedBranch(SmSupplierBranch branch) {
+		if (branch.isSameGstRegNo()) {
+			if (getManagedBean().getSmAppl().getSmCompanyBasic() != null) {
+				if (StringUtils.isEmpty(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getGstRegistrationNo())) {
+					branch.setGstRegistrationNo(" --");
+				} else {
+					branch.setGstRegistrationNo(getManagedBean().getSmAppl()
+							.getSmCompanyBasic().getGstRegistrationNo());
+				}
+
+				branch.setGstRegistrationDate(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getGstRegistrationDate() == null ? null
+						: getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getGstRegistrationDate());
+			}
+		} else {
+			branch.setGstRegistrationNo("");
+			branch.setGstRegistrationDate(null);
+		}
+	}
+
 	/**
 	 * Add or update selected branch info to SmSupplierBranch list of the
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
+		if (!StringUtils.isEmpty(getManagedBean().getSelectedBranch()
+				.getGstRegistrationNo())
+				&& getManagedBean().getSelectedBranch().getGstRegistrationNo()
+						.length() != 12) {
+			throw new EpException(MessageConst.ERROR_722603,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.sm.gstNo",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+		}
+		if (!StringUtils.isEmpty(getManagedBean().getSelectedBranch()
+				.getGstRegistrationNo())
+				&& getManagedBean().getSelectedBranch()
+						.getGstRegistrationDate() == null) {
+			throw new EpException(MessageConst.ERROR_722604);
+		} else if (StringUtils.isEmpty(getManagedBean().getSelectedBranch()
+				.getGstRegistrationNo())
+				&& getManagedBean().getSelectedBranch()
+						.getGstRegistrationDate() != null) {
+			throw new EpException(MessageConst.ERROR_722605);
+		}
 		if (getManagedBean().getSmAppl().getSmSupplierBranches()
 				.contains(getManagedBean().getSelectedBranch())) {
 			retriveLatestApplAfterUpdate("", "");
@@ -2224,6 +2286,7 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setSelectedBranch(branchBean);
 		assignValReqdToTrue();
+		SmApplicationUtil.setDisableBranchGst(getManagedBean());
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 
 	}
@@ -2246,6 +2309,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setBranchCompanyDistricts(new ArrayList<PmDistrict>());
 		getManagedBean().setBranchCompanyCities(new ArrayList<PmCity>());
 		getManagedBean().setSelectedBranch(br);
+		SmApplicationUtil.setDisableBranchGst(getManagedBean());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 	}
@@ -3197,16 +3261,16 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedCategory().getPmCategoryL1() != null
 				&& getManagedBean().getSelectedCategory().getPmCategoryL1()
 						.getCategoryL1Id() != null) {
-			for (PmCategoryL1 catL1 : getManagedBean()
-					.getSupplierParentCatList()) {
-				if (catL1.getCategoryL1Id().equals(
-						getManagedBean().getSelectedCategory()
-								.getPmCategoryL1().getCategoryL1Id())) {
-					getManagedBean().getSelectedCategory().setPmCategoryL1(
-							catL1);
-					break;
-				}
-			}
+			// for (PmCategoryL1 catL1 : getManagedBean()
+			// .getSupplierParentCatList()) {
+			// if (catL1.getCategoryL1Id().equals(
+			// getManagedBean().getSelectedCategory()
+			// .getPmCategoryL1().getCategoryL1Id())) {
+			// getManagedBean().getSelectedCategory().setPmCategoryL1(
+			// catL1);
+			// break;
+			// }
+			// }
 			if (getManagedBean().getSelectedCategory().getPmCategoryL1()
 					.getCategoryL1Code() != null
 					&& getManagedBean()

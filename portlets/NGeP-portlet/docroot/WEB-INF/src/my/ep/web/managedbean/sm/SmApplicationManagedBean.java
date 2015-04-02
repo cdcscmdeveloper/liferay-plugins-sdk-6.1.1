@@ -347,6 +347,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disabledCompanyName;
 	private boolean disabledBusinessType;
 	private boolean disableWithFedralTransaction;
+	private boolean disableBranchGst;
 	
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -2663,6 +2664,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisableWithFedralTransaction(boolean disableWithFedralTransaction) {
 		this.disableWithFedralTransaction = disableWithFedralTransaction;
+	}
+
+	public boolean isDisableBranchGst() {
+		return disableBranchGst;
+	}
+
+	public void setDisableBranchGst(boolean disableBranchGst) {
+		this.disableBranchGst = disableBranchGst;
 	}
 
 }
