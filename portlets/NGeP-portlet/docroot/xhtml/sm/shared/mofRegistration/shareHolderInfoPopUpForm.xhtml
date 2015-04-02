@@ -254,7 +254,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change"
-							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip4,tooltip5"
+							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio>					
 					</td><td>
@@ -275,7 +275,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
 						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'SUPPLIER_TEMP' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '1') or (backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONSULTANT)}"
+						disabled="#{backingBean.disableEpRoleDropDown(backingBean.managedBean.selectedShareHolder)}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.getAuthorizedPersonnelValidEpRoles()}" />
@@ -296,33 +296,27 @@
 						disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser or backingBean.managedBean.selectedShareHolder.recordStatus}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}"
-						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}" /></td>
-				<td><p:selectOneRadio
-						value="#{backingBean.managedBean.selectedShareHolder.softcertFlg}"
-						disabled="#{(backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')
-									or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}"
-						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="2" />
-						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-						<f:selectItem itemLabel="#{lbl['lbl.txt.issued']}" itemValue="1"
-							itemDisabled="true" />							
-						<p:ajax event="change" update="shrPrivPanel"
-							listener="#{backingBean.assignShareHolderPrivilege}" />
-					</p:selectOneRadio>					
-					</td><td>
-					 <p:graphicImage id="tooltip4" library="ep/images/design" 
-					 rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-					 and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}"									 
-					 name="tooltips.png" /> <p:tooltip id="toolinfo4" for="tooltip4" >
-										<p:outputLabel escape="false" 
-											value="#{lbl['tt.sm.registration.equity.owner.authorized.soft.cert']}" />
-									</p:tooltip></td>					
-					
-			</tr>
+			<p:outputPanel rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+							and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+							and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.composition.pending.request']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '4'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.composition.processing']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '3'}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.composition.requested']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
+						<p:outputLabel value="#{lbl['lbl.sm.person.composition.issued']}" styleClass="outputLabel-view"
+							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
+					</td>
+					<td></td>						
+				</tr>
+			</p:outputPanel>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
