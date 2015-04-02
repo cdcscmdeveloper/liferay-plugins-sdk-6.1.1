@@ -11,7 +11,7 @@
 		<p:spacer height="3" />
 		<div style="width: 100%">
 			<p:pickList id="publicationapproverid"
-				disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"
+				disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}"
 				value="#{qTDetailBB.managedBean.publicationApprovals}"
 				var="publicationUser" showTargetControls="true"
 				itemLabel="#{publicationUser.approver.userName}"
@@ -44,11 +44,11 @@
 								<td></td>
 								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId eq null}"
-										disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
+										disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}" />
 									<h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
 										style="display: inline-block; width:220px;word-wrap: break-word;"
-										disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" /></td>
+										disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.publicationApproval)}" /></td>
 							</tr>
 						</table>
 					</p:dataGrid></td>
