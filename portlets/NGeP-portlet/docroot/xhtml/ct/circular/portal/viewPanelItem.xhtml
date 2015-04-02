@@ -16,11 +16,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"   />	
 		  
 			  <p:column headerText="#{lbl['lbl.ct.panel.coverage']}" style="white-space:pre-line;width:6%;">
-			       <p:outputLabel value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" style="width:95%;" />
+			        <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" style="width:95%;" />
 			   </p:column>
 			 
 			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%">
-			         <p:outputLabel value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}" style="width:95%;" />
+			         <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}" style="width:95%;" />
 		      </p:column>
 		 	
               <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:10%;">
@@ -32,7 +32,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			
 			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width: 11%;">
-			               <p:outputLabel value="#{panelItemsVar.pmUom.uomName}" style="width:95%;" />
+			                <h:outputText value="#{panelItemsVar.pmUom.uomName}" style="width:95%;" />
 		      </p:column>
 			  
 			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:8%;">
@@ -104,7 +104,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    <p:ajax event="rowSelect" update=":form:itemSupplier"   process="@this" 
 			            onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
 					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%">
-				    	<p:outputLabel value="#{panelZoneVar.name}" style="float:left;"/>	
+				    	 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%">
                       <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"   disabled="#{true}" style="width:100px;">

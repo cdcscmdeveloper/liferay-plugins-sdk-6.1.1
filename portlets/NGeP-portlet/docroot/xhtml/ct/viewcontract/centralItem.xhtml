@@ -25,10 +25,10 @@
 							           <h:outputText id="centralInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-		           <p:outputLabel value="#{data.itemName}" style="float:left;" /> 
+		            <h:outputText value="#{data.itemName}" style="float:left;" /> 
 		       </p:column>       
 		       <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%;">
-		           <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/> 
+		            <h:outputText value="#{data.uom.uomName}" style="float:left;"/> 
 		       </p:column>        
 		
 		        <p:column style="text-align: right;width:15%;">
@@ -56,14 +56,14 @@
 			            <h:outputText value="#{lbl['lbl.ct.type.of.goods']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.type.of.goods']}"/>
 	               	</f:facet>
-	             	<h:outputLabel rendered="#{data.itemOrigin.parameterCode == 'L'}" 
+	             	 <h:outputText rendered="#{data.itemOrigin.parameterCode == 'L'}" 
 	                 	value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" style="float:left;"/>
 	             	<p:commandLink rendered="#{data.itemOrigin.parameterCode == 'I'}" styleClass="blue_font" 
 	                  	value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" onclick="importedDlg.show();return false;" />	               	
 		        </p:column> 
 		   
 		       <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-		            <p:outputLabel value="#{data.chkStatus ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;" />
+		             <h:outputText value="#{data.chkStatus ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;" />
 		        </p:column> 
 		                         
     	 </p:dataTable> 
