@@ -17,6 +17,76 @@
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
+			<td colspan="2">
+				<table style="width: 100%">
+					<tr>
+						<td style="padding-right: 2px; width: 10%; padding-left: 142px;"><p:selectBooleanCheckbox
+								value="#{backingBean.managedBean.selectedBranch.sameGstRegNo}"
+								id="brSameGstRegNo"
+								disabled="#{backingBean.managedBean.disableBranchGst}">
+								<p:ajax update="smBrnGstNumPan,smBrnGstDatePan" event="change"
+									process="@this"
+									listener="#{backingBean.assignCompanyGstDetailsForSelectedBranch(backingBean.managedBean.selectedBranch)}" />
+							</p:selectBooleanCheckbox></td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.brnch.gstSame']}" /></td>
+					</tr>
+				</table>
+			</td>
+
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.gstNo']}" /></td>
+			<td><p:outputPanel id="smBrnGstNumPan">
+					<c:choose>
+						<c:when
+							test="#{! backingBean.managedBean.selectedBranch.sameGstRegNo and ! backingBean.managedBean.disableBranchGst}">
+							<p:inputText label="#{lbl['lbl.sm.gstNo']}"
+								value="#{backingBean.managedBean.selectedBranch.gstRegistrationNo}"
+								id="smBrnGstRegistrationNo" size="35" maxlength="12"
+								validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
+								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							</p:inputText>
+							<p:message id="smBrnGstRegistrationNoMsg"
+								for="smBrnGstRegistrationNo" showSummary="true"
+								showDetail="false" display="icon" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText label="#{lbl['lbl.sm.gstNo']}"
+								value="#{backingBean.managedBean.selectedBranch.gstRegistrationNo}"
+								id="smBrnGstRegistrationNoRdOnly" size="35" maxlength="12"
+								readonly="true" disabled="true" />
+						</c:otherwise>
+					</c:choose>
+				</p:outputPanel></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.gstDate']}" /></td>
+			<td><p:outputPanel id="smBrnGstDatePan">
+					<c:choose>
+						<c:when
+							test="#{! backingBean.managedBean.selectedBranch.sameGstRegNo and ! backingBean.managedBean.disableBranchGst}">
+							<p:calendar id="gstBrnRegDate" showOn="button" navigator="true"
+								display="inline" label="#{lbl['lbl.sm.gstDate']}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0" readonlyInput="true"
+								maxdate="#{CommonConstants.CURRENT_DATE}"
+								value="#{backingBean.managedBean.selectedBranch.gstRegistrationDate}" />
+						</c:when>
+						<c:otherwise>
+							<p:inputText
+								value="#{backingBean.managedBean.selectedBranch.gstRegistrationDate}"
+								readonly="true" disabled="true" size="35">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText>
+						</c:otherwise>
+
+					</c:choose>
+				</p:outputPanel></td>
+		</tr>
+
+		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
 			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
@@ -130,34 +200,33 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td>
-				<p:outputPanel id="postCodeBranchPanelId">
-					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+			<td><p:outputPanel id="postCodeBranchPanelId">
+					<p:outputPanel
+						rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
 						<p:inputText maxlength="5"
-								required="#{backingBean.managedBean.valueReqd}"
-								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeMy"
-								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
-								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-								size="35" >
-								<f:validator validatorId="postcodeValidator" />
-								</p:inputText>
-								<p:message id="branchPostCodeMyMsg"
-								for="branchPostCodeMy" showSummary="true" showDetail="false"
-								display="icon" />
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeMy"
+							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
+							validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+							size="35">
+							<f:validator validatorId="postcodeValidator" />
+						</p:inputText>
+						<p:message id="branchPostCodeMyMsg" for="branchPostCodeMy"
+							showSummary="true" showDetail="false" display="icon" />
 					</p:outputPanel>
-					<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+					<p:outputPanel
+						rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
 						<p:inputText maxlength="10"
-								required="#{backingBean.managedBean.valueReqd}"
-								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
-								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
-								size="35" >
-								</p:inputText>
-								<p:message id="branchPostCodeForeignMsg"
-								for="branchPostCodeForeign" showSummary="true" showDetail="false"
-								display="icon" />
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
+							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
+							size="35">
+						</p:inputText>
+						<p:message id="branchPostCodeForeignMsg"
+							for="branchPostCodeForeign" showSummary="true" showDetail="false"
+							display="icon" />
 					</p:outputPanel>
-				</p:outputPanel>
-			</td>
+				</p:outputPanel></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -181,8 +250,9 @@
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.poc']}" />
-				<p:outputLabel value="*" styleClass="mandatory" /></td>
+			<td><p:outputLabel
+					value="#{lbl['lbl.sm.person.composition.poc']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.person.composition.poc']}" id="brnPerVal"
