@@ -900,7 +900,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)241997;//72799;//--ct 241997;//--SM 112612;//--FL 240610;//241765;//--pp 147038; 125254--FL and CM// 241997;//213972;// 220152;
+	//private Long lngUserId = (long)240526;//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3644,9 +3644,21 @@ public class ReportBackingBean extends
 			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ))){
 				retrieveFPJMinistryList();
 				retrieveFPJPTJList();
-				
+				if(getManagedBean().getRptGenBean().isFlSupplierView()){
+					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
+				}
 			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))){
 				retrieveFMIMinistryList();
+				if(getManagedBean().getRptGenBean().isFlSupplierView()){
+					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
+				}
+			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
+				retrieveSupplierCompName();
+				
+			}else{
+				if(getManagedBean().getRptGenBean().isFlSupplierView()){
+					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
+				}
 			}
 		}		
 	}
@@ -4063,7 +4075,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			retrieveMinistryList();
 			//retrievePtjListByMinistryId();
 			retriveUserrloeByUserId(this.getModuleValue());
-			retrieveParameterCodeType();
+			
 			retrieveParamCodeByUser();
 			retrieveHighRoleCodeByUser();
 			roleCodeUsersSetup();
@@ -4109,7 +4121,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			retrieveDates();
 			getManagedBean().setRptGenBean(rptGenBean);
 			madatoryIndicator();
-			retrieveSupplierCompName();
+			retrieveParameterCodeType();
+			//retrieveSupplierCompName();
 			enableCriteriaMenu();
 			
 			
