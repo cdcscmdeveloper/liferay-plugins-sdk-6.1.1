@@ -99,8 +99,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.gstNo']}" /></td>
 					<td><c:choose>
-							<c:when
-								test="#{(backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew) and backingBean.managedBean.supplierUser}">
+							<c:when test="#{backingBean.managedBean.supplierUser}">
 								<p:inputText label="#{lbl['lbl.sm.gstNo']}"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}"
 									id="smGstRegistrationNo" size="35" maxlength="12"
@@ -120,7 +119,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.gstDate']}" /></td>
 					<td><c:choose>
 							<c:when
-								test="#{(backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew) and backingBean.managedBean.supplierUser}">
+								test="#{backingBean.managedBean.supplierUser}">
 								<p:calendar id="gstRegDate" showOn="button" navigator="true"
 									display="inline" label="#{lbl['lbl.sm.gstDate']}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"

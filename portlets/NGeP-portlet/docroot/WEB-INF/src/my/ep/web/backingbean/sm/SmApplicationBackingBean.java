@@ -657,7 +657,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
-				
+
 				if (getManagedBean().getSmAppl().getSupplierType()
 						.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 					getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -1631,6 +1631,13 @@ public class SmApplicationBackingBean extends
 			rqDto.setCategoryL3Ids(catL3Ids);
 			log.info(" **** Total categories sent to Doc So ***"
 					+ rqDto.getCategoryL3Ids().size());
+		}
+		if (getManagedBean().getSmAppl().getSmCompanyBasic() != null
+				&& !StringUtils.isEmpty(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getGstRegistrationNo())) {
+			rqDto.setGst(true);
+		} else {
+			rqDto.setGst(false);
 		}
 		System.out.println("*** The certs size ********* "
 				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
