@@ -19,7 +19,8 @@
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 10%;"><p:outputLabel
-							value="#{lbl['lbl.pm.bn.level']}" /></td>
+							value="#{lbl['lbl.pm.bn.level']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="busLv"
 							value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}"
 							style="width:178px;margin-bottom:5px;" disabled="true">
@@ -245,8 +246,8 @@
 
 		</p:panel>
 		<c:if test="#{!businessNatureBackingBean.managedBean.newcategory}">
-			<p:panel header="#{lbl['lbl.pm.detail.category']}" id="detailCategory"
-				toggleable="true"
+			<p:panel header="#{lbl['lbl.pm.detail.category']}"
+				id="detailCategory" toggleable="true"
 				rendered="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel != '50'}">
 				<p:dataTable id="detailCatId" var="detailCategory" rows="10"
 					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.childBusinessNatures}">
