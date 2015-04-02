@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -232,7 +233,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(
-												MessageConst.ERR_900016, new String[] {"State ",
+												MessageConst.ERR_900016, new String[] {ResourceBundleUtils.getMessage(
+														"lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														new FacesScopes().getUserLocale()),
 														this.getManagedBean().getState()
 														.getStateName()},
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -243,7 +246,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.ERR_900017, new String[] {"State ",
+											MessageConst.ERR_900017, new String[] {ResourceBundleUtils.getMessage(
+													"lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()),
 													this.getManagedBean().getState()
 													.getStateName()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -283,7 +288,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 									null,
 									new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 											MessageUtils.getMessage(
-													MessageConst.ERR_900016, new String[] {"Division ",
+													MessageConst.ERR_900016, new String[] {ResourceBundleUtils.getMessage(
+															"lbl.pm.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+															new FacesScopes().getUserLocale()),
 															this.getManagedBean().getDivision().getDivisionName()
 															},
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -294,7 +301,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(
-												MessageConst.ERR_900017, new String[] {"Division ",
+												MessageConst.ERR_900017, new String[] {ResourceBundleUtils.getMessage(
+														"lbl.pm.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														new FacesScopes().getUserLocale()),
 														this.getManagedBean().getDivision().getDivisionName()},
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
@@ -348,7 +357,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 									null,
 									new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 											MessageUtils.getMessage(
-													MessageConst.ERR_900016, new String[] {"District ",
+													MessageConst.ERR_900016, new String[] {ResourceBundleUtils.getMessage(
+															"lbl.pm.district", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+															new FacesScopes().getUserLocale()),
 															this.getManagedBean().getDistrict().getDistrictName()},
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes().getUserLocale())));
@@ -358,7 +369,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(
-												MessageConst.ERR_900017, new String[] {"District :",
+												MessageConst.ERR_900017, new String[] {ResourceBundleUtils.getMessage(
+														"lbl.pm.district", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														new FacesScopes().getUserLocale()),
 														this.getManagedBean().getDistrict().getDistrictName()},
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
@@ -399,7 +412,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(
-												MessageConst.ERR_900016, new String[] {"City ",
+												MessageConst.ERR_900016, new String[] {ResourceBundleUtils.getMessage(
+														"lbl.pm.city", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+														new FacesScopes().getUserLocale()),
 														this.getManagedBean().getCity().getCityName()},
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
@@ -409,7 +424,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(
-											MessageConst.ERR_900017, new String[] {"City ",
+											MessageConst.ERR_900017, new String[] {ResourceBundleUtils.getMessage(
+													"lbl.pm.city", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()),
 													this.getManagedBean().getCity().getCityName()},
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
