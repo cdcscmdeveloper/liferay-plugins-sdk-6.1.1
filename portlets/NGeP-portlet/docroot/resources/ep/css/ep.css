@@ -5028,6 +5028,12 @@ table.rptTbl {
 .ui-messages-info {
 	height : auto;
 }
+.ui-widget-content .ui-datalist-content{
+    border: none;
+    background: transparent;
+    background-image: none;
+}
+
 
 /*--------------------------       Left Right Button - Start      ---------------------------- */
 .rowBthWrap{
