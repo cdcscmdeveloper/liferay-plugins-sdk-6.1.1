@@ -658,11 +658,11 @@ public class SmApplicationBackingBean extends
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 				
-//				if (getManagedBean().getSmAppl().getSupplierType()
-//						.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-//					getManagedBean().getSmAppl().getSmCompanyBasic()
-//							.setWithFederal(true);
-//				}
+				if (getManagedBean().getSmAppl().getSupplierType()
+						.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.setWithFederal(true);
+				}
 
 			} else {
 				if (!StringUtils.isEmpty(getManagedBean().getCurrentStatus())) {
