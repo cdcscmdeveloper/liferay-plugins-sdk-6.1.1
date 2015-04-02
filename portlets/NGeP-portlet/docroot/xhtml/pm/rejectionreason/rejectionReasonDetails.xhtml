@@ -68,7 +68,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</tr>
 				<c:if test="#{rejectionReasonBackingBean.managedBean.suppReason}">				
 				<tr>
-					<th><p:outputLabel value="#{lbl['lbl.pm.document.restriction']}" /></th>
+					<th><p:outputLabel value="#{lbl['lbl.pm.restriction']}" /></th>
 					<td>
 						<p:selectBooleanCheckbox id="chkAppType" value="#{rejectionReasonBackingBean.managedBean.suppAppCheck}">
 						 	<p:ajax event="change" process="@this" update="pReasonRestriction" listener="#{rejectionReasonBackingBean.checkDocumentRestrictions(supportDocBackingBean.restrApp)}"/>
