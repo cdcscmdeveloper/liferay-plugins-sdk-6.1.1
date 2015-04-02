@@ -551,7 +551,14 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						IUserGroupSO.class);
 		boolean response = groupSO.checkDuplicateGroup(reqDTO);
 		if (response) {
-			throw new EpException(MessageConst.ERR_900001);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.ERR_900001, new String[] {
+											userGroup.getGroupCode()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 		}
 	}
 
