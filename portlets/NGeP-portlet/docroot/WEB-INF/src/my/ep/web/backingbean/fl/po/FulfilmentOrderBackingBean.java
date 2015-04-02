@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -73,6 +75,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
@@ -80,6 +83,7 @@ import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -159,7 +163,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}else{
 				reqDTO.setContractRequest(false);
 			}
-			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getFulfilmentOrder().getDocNo());
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_PURCHASE_ORDER,paramMap)+ "'>"+getManagedBean().getFulfilmentOrder().getDocNo()+"</a>");
+			}
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
@@ -242,6 +251,21 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
+				if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
+					Map<String, String> paramMap = new HashMap<String, String>();
+					paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getOrderNo());
+					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+					CommonBackingBean commonBackingBean = new CommonBackingBean();
+					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_PURCHASE_ORDER);
+					if(!getManagedBean().isContractRequest()){
+						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.flPurchaseOrderNo",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+					}else{
+						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.rpt.flContractOrder",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+					}
+					
+					commonBackingBean.getManagedBean().setParamMap(paramMap);
+					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+				}
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}	
 			else {
