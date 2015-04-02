@@ -1348,6 +1348,7 @@ public class NoticeBoardBackingBean extends
 				SmSupplier supplier = this.getManagedBean().getSmSupplier();
 				String mofNumber = this.getManagedBean().getMofNumber();
 				String companyName = this.getManagedBean().getCompanyName();
+				int tabIndex = this.getManagedBean().getSelectedZoneTabIndex();
 				renewSesionObject();
 				this.getManagedBean().setScQt(currentQt);
 				this.getManagedBean().setSmSupplier(supplier);
@@ -1355,6 +1356,7 @@ public class NoticeBoardBackingBean extends
 				retriveBsvDetails(currentQt.getQtId());
 				this.getManagedBean().setMofNumber(mofNumber);
 				this.getManagedBean().setCompanyName(companyName);
+				this.getManagedBean().setSelectedZoneTabIndex(tabIndex);
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -1778,12 +1780,13 @@ public class NoticeBoardBackingBean extends
 
 		List<ScQtBsvDtl> bsvDetails = this.getManagedBean().getNormalBsvBean()
 				.getBriefingList();
-		if(bsvDetails.contains(bsvDtl)){
+		if(null != bsvDetails && bsvDetails.contains(bsvDtl)){
 			bsvDetails.set(bsvDetails.indexOf(bsvDtl), bsvDtl);
 		}
+		
 		List<ScQtBsvDtl> svDetails = this.getManagedBean().getNormalBsvBean()
 				.getSitevisitList();
-		if(svDetails.contains(bsvDtl)){
+		if(null != svDetails && svDetails.contains(bsvDtl)){
 			svDetails.set(svDetails.indexOf(bsvDtl), bsvDtl);
 		}
 	}
@@ -1874,11 +1877,11 @@ public class NoticeBoardBackingBean extends
 
 		this.getManagedBean().setBriefingDtls(scQtBsvDtl);
 		List<ScQtBsvDtl> bsvDetails = zoneBean.getBriefingList();
-		if(bsvDetails.contains(scQtBsvDtl)){
+		if(null != bsvDetails && bsvDetails.contains(scQtBsvDtl)){
 		bsvDetails.set(bsvDetails.indexOf(scQtBsvDtl), scQtBsvDtl);
 		}
 		List<ScQtBsvDtl> svDetails = zoneBean.getSitevisitList();
-		if(svDetails.contains(scQtBsvDtl)){
+		if(null != svDetails && svDetails.contains(scQtBsvDtl)){
 		    svDetails.set(svDetails.indexOf(scQtBsvDtl), scQtBsvDtl);
 		}
 		this.getManagedBean().setNormalBsvBean(zoneBean);
