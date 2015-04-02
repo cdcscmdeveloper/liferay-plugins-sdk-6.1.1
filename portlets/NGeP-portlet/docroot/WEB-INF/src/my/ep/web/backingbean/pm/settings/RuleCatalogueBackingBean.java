@@ -77,9 +77,10 @@ public class RuleCatalogueBackingBean extends
 		BaseBackingBean<RuleCatalogueManageBean> {
 	private static Logger log = Logger
 			.getLogger(RuleCatalogueBackingBean.class);
-
+    
 	private ISearchBean<PmParameterDesc> parameterSearchBean;
-
+//    private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
+    
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
 		if (this.parameterSearchBean == null) {
 			this.parameterSearchBean = super.createSearchBean(
@@ -93,6 +94,10 @@ public class RuleCatalogueBackingBean extends
 
 	}
 
+//	public List<SortMeta> getPreSortOrder() {
+//		return preSortOrder;
+//	}
+
 	public boolean isValidDateRange(Date effDate, Date ExpDate) {
 		log.info("...............isValidDateRange...............");
 		if (ExpDate != null && (ExpDate.getTime() < effDate.getTime())) {
@@ -100,7 +105,29 @@ public class RuleCatalogueBackingBean extends
 		}
 		return true;
 	}
-
+    /*
+     * method to build initial sort order for multisort
+     */
+//    private void buildSortOrder() {
+//    	log.info("...............buildSortOrder...............");
+//        UIViewRoot viewRoot =  FacesContext.getCurrentInstance().getViewRoot();
+//        UIComponent column1 = viewRoot.findComponent("ruleTypeValueTableID:fromValueColumnId"); 
+//        UIComponent column2 = viewRoot.findComponent("ruleTypeValueTableID:effDateColumnId"); 
+//
+//        SortMeta sm1 = new SortMeta();
+//        sm1.setSortBy((UIColumn) column1);
+//        sm1.setSortField("fromValueColumnId");
+//        sm1.setSortOrder(SortOrder.ASCENDING);
+//        preSortOrder.add(sm1);  
+//        
+//        SortMeta sm2 = new SortMeta();
+//        sm2.setSortBy((UIColumn) column2);
+//        sm2.setSortField("effDateColumnId");
+//        sm2.setSortOrder(SortOrder.ASCENDING);
+//        preSortOrder.add(sm2);  
+//        log.info(".............end of..buildSortOrder...............");
+//    }
+    
 	public String preRenderView() {
 		log.info("...........preRenderView............");
 		getManagedBean().setTabActiveIndex(0);
@@ -258,7 +285,7 @@ public class RuleCatalogueBackingBean extends
 			System.out
 					.println("...................resTDTO.getThresholdList().size()="
 							+ resTDTO.getThresholdList().size());
-
+//			buildSortOrder();
 			// ///////////////////////////////
 			// ///////////////////////////////
 			FacesContext fc = FacesContext.getCurrentInstance();
