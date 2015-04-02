@@ -437,7 +437,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setSoftcertFlg(SupplierManagementConst.REG_SOFTCERT);
 		//smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
-		smPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
 		smPersonnel.setClerical(true);
 		
 		//set personnel bumi flag or muslim flag 
@@ -509,10 +509,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		/* set the temporary default value to supplier and appl type,
 		 * will change force the user to select upon activation
-		 *  
-		 
+		 */  		 
 		smAppl.setApplType(SupplierManagementConst.TEMP_TYPE);
-		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);*/
+		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);
 		
 		/*
 		 * Add all related objects to Parent SmSupplier
