@@ -900,7 +900,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)240526;//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
+	//private Long lngUserId = (long)72799;//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -6224,6 +6224,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCtComplete(null);
 		this.setCtGroupOne(null);
 		this.setCtGroupTwo(null);
+		this.setCtGroupThree(null);
 		this.setCtProductService(null);
 		this.setCtLoanNo(null);
 		this.setCtLOAPhysicalNo(null);
