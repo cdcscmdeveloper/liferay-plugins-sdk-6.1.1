@@ -26,31 +26,31 @@
 							<h:outputText id="serviceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-		         <p:outputLabel value="#{data.itemName}" style="float:left;"/>
+		          <h:outputText value="#{data.itemName}" style="float:left;"/>
 		      </p:column>       
 		      
 		      <p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
-		        	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;"/>
+		        	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;"/>
 		      </p:column>  
 		    
 		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:11%; white-space:normal;">
-		        <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/>
+		         <h:outputText value="#{data.uom.uomName}" style="float:left;"/>
 		      </p:column>        
 		      
 		      <p:column headerText="#{lbl['lbl.sc.frequency.per.uom']}" style="width:8%; white-space:normal;">
-		        	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomFrequency}" />
+		        	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomFrequency}" />
 		      </p:column> 
 		      
 		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.day']}"  style="text-align: right;width:8%; white-space:normal;">
-		          	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+		          	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerDay}" />
 		      </p:column>
 		      
 		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.month']}"  style="text-align: right;width:8%; white-space:normal;">
-		          	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+		          	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
 		      </p:column>
 		      
 		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.year']}"  style="text-align: right;width:8%; white-space:normal;">
-		          	<p:outputLabel value="#{data.scRequestItem.tplSpecQuestion.clUomPerYear}" />
+		          	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerYear}" />
 		      </p:column>
 		      
 		      <p:column headerText="#{lbl['lbl.ct.quantity']}"  style="text-align: right; width:10%; white-space:normal;">
@@ -60,7 +60,7 @@
 		      </p:column>  
 		      
 		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:7%; white-space:normal;">
-		            <p:outputLabel value="#{data.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		             <h:outputText value="#{data.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		      </p:column>   
 		        
     	   </p:dataTable> 

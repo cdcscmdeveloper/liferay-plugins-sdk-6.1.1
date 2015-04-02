@@ -29,11 +29,11 @@
 							<h:outputText id="productInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-		              <p:outputLabel value="#{ctItemVar.itemName}" style="float:left;"/>
+		               <h:outputText value="#{ctItemVar.itemName}" style="float:left;"/>
 		         </p:column>       
 		     
 		         <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:15%; white-space:normal;">
-		              <p:outputLabel value="#{ctItemVar.uom.uomName}" style="float:left;"/>
+		               <h:outputText value="#{ctItemVar.uom.uomName}" style="float:left;"/>
 		         </p:column>        
 		  
 		         <p:column style="text-align: right;width:14%; white-space:normal;">
@@ -61,14 +61,14 @@
 			            <h:outputText value="#{lbl['lbl.ct.type.of.goods']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.type.of.goods']}"/>
 	               	</f:facet>
-	             	<h:outputLabel rendered="#{ctItemVar.itemOrigin.parameterCode == 'L'}" 
+	             	 <h:outputText rendered="#{ctItemVar.itemOrigin.parameterCode == 'L'}" 
 	                 	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;"/>
 	             	<p:commandLink rendered="#{ctItemVar.itemOrigin.parameterCode == 'I'}" styleClass="blue_font" 
 	                  	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" onclick="importedDlg.show();return false;" />	
 		          </p:column> 
 		    
 		          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%; white-space:normal;">
-		               <p:outputLabel value="#{ctItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		                <h:outputText value="#{ctItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		           </p:column>  
 		                
     	      </p:dataTable> 

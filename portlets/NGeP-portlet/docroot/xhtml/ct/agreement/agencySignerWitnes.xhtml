@@ -24,7 +24,7 @@
 		               <p:column selectionMode="multiple" style="width:5%;"/>  
 		        
 		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}">
-		                  <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
+		                   <h:outputText value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
 		               </p:column>
         
                         <p:column style="width:30%;" headerText="#{lbl['lbl.ct.ptj']}" >
@@ -39,7 +39,7 @@
 					              </ac:lov>
 					         </h:panelGroup>
 					         <h:panelGroup  rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile == null}">
-					              <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" style="float:left;"/>
+					               <h:outputText value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" style="float:left;"/>
 					         </h:panelGroup>
 					     </p:column>
 			
@@ -54,11 +54,11 @@
                          </p:column>  
         
                          <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.ic.no']}">
-                             <p:outputLabel id="agOfId" value="#{agSignerVar.officerIc}" style="float:left;"/>
+                              <h:outputText id="agOfId" value="#{agSignerVar.officerIc}" style="float:left;"/>
                          </p:column>         
                
                          <p:column style="width:20%; white-space:normal;" headerText="#{lbl['lbl.ct.designation']}">
-                             <p:outputLabel id="agOfPosition" value="#{agSignerVar.officerPosition}" style="float:left;"/>
+                              <h:outputText id="agOfPosition" value="#{agSignerVar.officerPosition}" style="float:left;"/>
                          </p:column> 
                  </p:dataTable>
            </h:panelGrid>
