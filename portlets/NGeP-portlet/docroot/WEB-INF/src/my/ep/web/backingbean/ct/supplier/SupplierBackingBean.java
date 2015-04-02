@@ -735,7 +735,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
      */
 	public String factoringRequestSignAction(String outcome) throws Exception {
     	StringBuilder sb = null;
-    	if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) && !isSupplierRole()) {
+    	if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_ENDORSE.equals(outcome)) 
+    			&& !isSupplierRole()) {
     		validateFactoringRequest(outcome);
 			sb = new StringBuilder();
 			sb.append(getManagedBean().getCtContract().getContractNo());
