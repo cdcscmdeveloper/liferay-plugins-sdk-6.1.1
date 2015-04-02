@@ -34,7 +34,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -83,18 +82,17 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			if(appl != null){
 				log.info("*****In Progress*********");
+				
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
-				//desc = workFlowStatus.getPmStatus().getPmStatusDescs();
-				//desc = workFlowStatus.getPmStatus().getPmStatusDescs().get(0).getStatusName();
 				desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
+		
+				showHyperlink(workFlowStatus.getPmStatus().getStatusId());
 				path = TASK_LIST_PATH;
-				
-				
 			}else{
+				this.getManagedBean().setHyperlink(true);
 				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
 						supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
 					path = SUPPLIER_TYPE_SELECTION_PATH;
-					//desc = "Supplier Type selection";
 					desc = getLabelFromProperties("lbl.sm.basic.supplier.selection");
 				}else{
 					log.info("Supplier appl type===>" + supplier.getSmAppl().getApplType());
@@ -145,6 +143,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 
 			}
+			
 			if(isPath){
 				return path;
 			}else{
@@ -341,16 +340,49 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			this.getManagedBean().setSmSupplier(supplier);
 			if(!supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
 					!supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
-/*				pageRedirect(DASHBOARD_PATH);
-				FacesScopes facesScope = new FacesScopes();
+				//pageRedirect(DASHBOARD_PATH);
+				/*FacesScopes facesScope = new FacesScopes();
 				hemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope().WebKeys.THEME_DISPLAY);
 				PortletURL url = PortletURLFactoryUtil.create(request, this.getPortletName(), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);*/
+				//BridgeContextImpl.getCurrentInstance().redirect(DASHBOARD_PATH);
 				
+				//FacesContext fc = FacesContext.getCurrentInstance();
+				//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SUPPLIER_TYPE_SELECTION_XHTML);
 			}else{
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SUPPLIER_TYPE_SELECTION_XHTML);
 			}
 		}
+	}
+	
+	private void showHyperlink(Long statusCode){
+		Integer sc = statusCode.intValue();
+		
+		switch(sc){
+		case 20100 : 
+			getManagedBean().setHyperlink(true);
+			break;
+
+		case 20114 :
+			getManagedBean().setHyperlink(true);
+			break;
+
+		case 20200 :
+			getManagedBean().setHyperlink(true);
+			break;
+
+		case 20251 :
+			getManagedBean().setHyperlink(true);
+			break;
+			
+		case 20107 :
+			getManagedBean().setHyperlink(true);
+			break;
+
+		default :
+			getManagedBean().setHyperlink(false);
+			break;
+		}	
 	}
 	
 /*	private void initCatalogueBackingBean(){
