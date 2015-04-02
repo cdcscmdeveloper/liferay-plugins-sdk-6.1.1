@@ -83,15 +83,7 @@
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
-							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" size="50"
-									value="#{backingBean.managedBean.currentStatus}"
-									disabled="true" /></td>
-
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.po.apprvrRmrk']}" /></td>
 							<td><p:outputLabel value="   : " /></td>
 							<td><p:inputTextarea cols="70" disabled="true"
 									value="#{backingBean.managedBean.poSecReview.remarkToApprover}" /></td>
@@ -105,7 +97,7 @@
 							<tr>
 								<td><h:outputText
 										value="#{backingBean.managedBean.bumiRecommendationNote}"
-										style="color: green;font-weight: bold;float:left;" /></td>
+										styleClass="splNotesFonts" /></td>
 							</tr>
 						</table>
 					</c:if>
@@ -113,7 +105,7 @@
 					<p:separator />
 					<div>
 						<h:outputText value="#{lbl['lbl.sm.apprvr.splNotes']}"
-							style="float :left;" escape="false" />
+							styleClass="splNotesFonts" escape="false" />
 					</div>
 					<!-- <div align="center">
 			<p:splitButton value="Select Decision">

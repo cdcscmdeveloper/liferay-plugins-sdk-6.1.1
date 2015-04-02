@@ -3480,3 +3480,8 @@ table.rptTbl {
 	background: transparent;
 
 	}
+.splNotesFonts{
+	color: rgb(79, 0, 255);
+	font-weight: bold;
+	float: left
+}
