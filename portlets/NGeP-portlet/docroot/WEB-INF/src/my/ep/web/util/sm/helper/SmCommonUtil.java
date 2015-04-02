@@ -66,6 +66,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
@@ -1619,5 +1620,154 @@ public class SmCommonUtil {
 	public static String getBaseDir() {
 		return EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+	}
+
+	/**
+	 * Set newly added personnel permanent and mail address
+	 * 
+	 * @param smPersonnel
+	 * @param mailAddress
+	 * @param permAddress
+	 */
+	public static void setNewPersonnelPermAndMailAddress(
+			SmPersonnel smPersonnel, SmPersonnelAddress mailAddress,
+			SmPersonnelAddress permAddress) {
+		SmAddress permanent = permAddress.getSmAddress();
+
+		PmCity city = permanent.getPmCity();
+		PmDistrict district = permanent.getPmDistrict();
+		PmState state = permanent.getPmState();
+		PmCountry country = permanent.getPmCountry();
+
+		Long cityId = city.getCityId();
+		Long districtId = district.getDistrictId();
+		Long stateId = state.getStateId();
+		Long countryId = country.getCountryId();
+
+		CountryReqDTO reqCountryDTO = new CountryReqDTO();
+		reqCountryDTO.setCountryId(countryId);
+		CountryResDTO resCountryDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryById(reqCountryDTO);
+		PmCountry newCountry = resCountryDTO.getPmCountry();
+
+		permanent.setPmCountry(newCountry);
+
+		StateReqDTO reqStateDTO = new StateReqDTO();
+		reqStateDTO.setStateId(stateId);
+		StateResDTO resStateDTO = SmServiceLookup.getStateSO()
+				.retriveStateByID(reqStateDTO);
+		PmState newState = resStateDTO.getPmState();
+
+		permanent.setPmState(newState);
+
+		DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
+		reqDistrictDTO.setDistrictId(districtId);
+		DistrictResDTO resDistrictDTO = SmServiceLookup.getDistrictSO()
+				.retriveDistrictByID(reqDistrictDTO);
+		PmDistrict newDistrict = resDistrictDTO.getPmDistrict();
+
+		permanent.setPmDistrict(newDistrict);
+
+		CityReqDTO reqCityDTO = new CityReqDTO();
+		reqCityDTO.setCityId(cityId);
+		CityResDTO resCityDTO = SmServiceLookup.getCitySO().retriveCityById(
+				reqCityDTO);
+		PmCity newCity = resCityDTO.getPmCity();
+
+		permanent.setPmCity(newCity);
+
+		if (mailAddress.isSameAsPerm()) {
+			SmAddress address = cloneAddress(mailAddress.getSmAddress());
+			mailAddress.setSmAddress(address);
+		} else {
+			SmAddress s2 = mailAddress.getSmAddress();
+
+			city = s2.getPmCity();
+			district = s2.getPmDistrict();
+			state = s2.getPmState();
+			country = s2.getPmCountry();
+
+			cityId = city.getCityId();
+			districtId = district.getDistrictId();
+			stateId = state.getStateId();
+			countryId = country.getCountryId();
+
+			reqCountryDTO = new CountryReqDTO();
+			reqCountryDTO.setCountryId(countryId);
+			resCountryDTO = SmServiceLookup.getCountrySO().retrieveCountryById(
+					reqCountryDTO);
+			newCountry = resCountryDTO.getPmCountry();
+
+			s2.setPmCountry(newCountry);
+
+			reqStateDTO = new StateReqDTO();
+			reqStateDTO.setStateId(stateId);
+			resStateDTO = SmServiceLookup.getStateSO().retriveStateByID(
+					reqStateDTO);
+			newState = resStateDTO.getPmState();
+
+			s2.setPmState(newState);
+
+			reqDistrictDTO = new DistrictReqDTO();
+			reqDistrictDTO.setDistrictId(districtId);
+			resDistrictDTO = SmServiceLookup.getDistrictSO()
+					.retriveDistrictByID(reqDistrictDTO);
+			newDistrict = resDistrictDTO.getPmDistrict();
+
+			s2.setPmDistrict(newDistrict);
+
+			reqCityDTO = new CityReqDTO();
+			reqCityDTO.setCityId(cityId);
+			resCityDTO = SmServiceLookup.getCitySO()
+					.retriveCityById(reqCityDTO);
+			newCity = resCityDTO.getPmCity();
+
+			s2.setPmCity(newCity);
+		}
+
+		List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
+		smPersonnelAddresses.add(permAddress);
+		smPersonnelAddresses.add(mailAddress);
+		smPersonnel.setSmPersonnelAddresses(smPersonnelAddresses);
+	}
+
+	/**
+	 * Copy address to new address object
+	 * 
+	 * @param SmAddress
+	 *            refAddress
+	 * @return SmAddress
+	 */
+	private static SmAddress cloneAddress(SmAddress refAddress) {
+		SmAddress address = new SmAddress();
+		if (refAddress.getAddress1() != null)
+			address.setAddress1(new String(refAddress.getAddress1().toString()));
+		if (refAddress.getAddress2() != null)
+			address.setAddress2(new String(refAddress.getAddress2().toString()));
+		if (refAddress.getAddress3() != null)
+			address.setAddress3(new String(refAddress.getAddress3().toString()));
+		if (refAddress.getAddress4() != null)
+			address.setAddress4(new String(refAddress.getAddress4().toString()));
+		if (refAddress.getPostcode() != null)
+			address.setPostcode(new String(refAddress.getPostcode().toString()));
+
+		PmCountry country = new PmCountry();
+		PmState state = new PmState();
+		PmDistrict district = new PmDistrict();
+		PmCity city = new PmCity();
+
+		country.setCountryId(refAddress.getPmCountry().getCountryId());
+		address.setPmCountry(country);
+
+		state.setStateId(refAddress.getPmState().getStateId());
+		address.setPmState(state);
+
+		district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
+		address.setPmDistrict(district);
+
+		city.setCityId(refAddress.getPmCity().getCityId());
+		address.setPmCity(city);
+
+		return address;
 	}
 }
