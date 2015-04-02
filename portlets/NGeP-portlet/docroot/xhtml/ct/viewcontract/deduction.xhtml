@@ -48,7 +48,7 @@
 						            <h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}"/>
 				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	</f:facet>
-                                <p:outputLabel value="#{data.clauseDescription}" 
+                                 <h:outputText value="#{data.clauseDescription}" 
                                    rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
         	                       ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
                                  <h:outputText value="#{data.clauseDescription}" 

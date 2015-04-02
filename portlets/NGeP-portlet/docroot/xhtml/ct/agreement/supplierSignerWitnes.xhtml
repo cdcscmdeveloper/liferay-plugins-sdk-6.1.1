@@ -22,13 +22,13 @@
 			       <p:column selectionMode="multiple" style="width:5%"/> 
                   
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}">
-                       <p:outputLabel style="float:left;"
+                        <h:outputText style="float:left;"
                             value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
                    </p:column> 
                  
                    <p:column style="width:25%;">
                         <f:facet name="header">
-					        <h:outputText value="#{lbl['lbl.ct.contract.signer']}"/>
+					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}"/>
 					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
 				        </f:facet>
                  
@@ -41,11 +41,11 @@
                      </p:column>  
              
                      <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
-                         <p:outputLabel id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
+                          <h:outputText id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
                      </p:column> 	
                
                       <p:column style="width:30%;" headerText="#{lbl['lbl.ct.designation']}" >
-                          <p:outputLabel id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
+                           <h:outputText id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
                       </p:column>  	
                 </p:dataTable>
 		    </h:panelGrid>

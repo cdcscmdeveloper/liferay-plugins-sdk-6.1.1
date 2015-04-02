@@ -21,7 +21,7 @@
 			            <h:outputText value="#{lbl['lbl.ct.deduction.type']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.type']}"/>
 	           		</f:facet>
-	        	    <p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
+	        	    <h:outputText value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 	              </p:column> 
 		       
 		          <p:column headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
@@ -51,7 +51,7 @@
 						            <h:outputText value="#{lbl['lbl.ct.deduction.clause.desc']}"/>
 				               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.clause']}"/>
 				               	</f:facet>
-                                <p:outputLabel value="#{data.clauseDescription}" 
+                                 <h:outputText value="#{data.clauseDescription}" 
                                    rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
         	                       ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
                                  <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="1" style="width:450px;"

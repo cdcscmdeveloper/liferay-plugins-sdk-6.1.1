@@ -219,7 +219,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" 
 			        process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />	
 					<p:column headerText="#{lbl['lbl.ct.location']}" style="width:60%">
-				    	<p:outputLabel value="#{panelZoneVar.name}" style="float:left;"/>	
+				    	 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%">
                       <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"  
