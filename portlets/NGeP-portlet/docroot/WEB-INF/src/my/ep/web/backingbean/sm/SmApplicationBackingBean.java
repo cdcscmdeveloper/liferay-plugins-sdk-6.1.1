@@ -4196,23 +4196,21 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER)) {
+				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
 					smPersonnel.setSoftcertFlg(0);
 				} else {
-					for (SmPersonnel prevApprovedPersonnel : getManagedBean()
-							.getPrevApprovedPersonnels()) {
-						if (prevApprovedPersonnel.getPersonnelId().compareTo(
-								smPersonnel.getPersonnelId()) == 0
-								&& prevApprovedPersonnel.getEpRole().equals(
-										RoleCode.MOF_SUPPLIER_USER)) {
-							smPersonnel.setSoftcertFlg(prevApprovedPersonnel
-									.getSoftcertFlg());
-							break;
-						}
+					if (SmApplicationUtil.isPersonnelAlreadyRequestSoftcert(
+							getManagedBean().getSmSupplier().getSupplierId(),
+							smPersonnel.getPmUser().getUserId())) {
+						smPersonnel
+								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_ISSUED);
+					} else {
+						smPersonnel
+								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 					}
 				}
 			} else {
-				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER)) {
+				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
 					smPersonnel.setSoftcertFlg(0);
 				} else {
 					smPersonnel
