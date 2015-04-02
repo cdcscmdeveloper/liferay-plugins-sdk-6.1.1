@@ -3488,6 +3488,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void qtDetailsTabChange(Integer activeIndex) {
 		int priviousIndex = this.getManagedBean().getActiveIndex();
+		getManagedBean().getQt().setOtherApproval(false);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
