@@ -869,6 +869,34 @@ public class SmApplicationUtil {
 		return i;
 	}
 
+	public static void validateBasicInfoGstData(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab) {
+		Locale locale = new FacesScopes().getUserLocale();
+		SmAppl appl = managedBean.getSmAppl();
+		if (!StringUtils.isEmpty(appl.getSmCompanyBasic()
+				.getGstRegistrationNo())
+				&& appl.getSmCompanyBasic().getGstRegistrationNo().length() != 12) {
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_722603,
+					new String[] { ResourceBundleUtils.getMessage(
+							"lbl.sm.gstNo",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+		}
+		
+		if(!StringUtils.isEmpty(appl.getSmCompanyBasic()
+				.getGstRegistrationNo()) && appl.getSmCompanyBasic().getGstRegistrationDate() == null){
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_722604);
+		}else if(StringUtils.isEmpty(appl.getSmCompanyBasic()
+				.getGstRegistrationNo()) && appl.getSmCompanyBasic().getGstRegistrationDate() != null){
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_722605);
+		}
+	}
+
 	/**
 	 * Validate sm company basic info before saving the application.
 	 * 
@@ -5042,6 +5070,18 @@ public class SmApplicationUtil {
 			}
 		}
 		return retVal;
+	}
+
+	public static void setDisableBranchGst(SmApplicationManagedBean managedBean) {
+		if (managedBean.getSmAppl().getSmCompanyBasic()
+				.getGstRegistrationDate() == null
+				|| StringUtils.isEmpty(managedBean.getSmAppl()
+						.getSmCompanyBasic().getGstRegistrationNo())) {
+			managedBean.setDisableBranchGst(true);
+		} else {
+			managedBean.setDisableBranchGst(false);
+		}
+
 	}
 
 	/**
