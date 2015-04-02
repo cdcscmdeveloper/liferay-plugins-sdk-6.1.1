@@ -434,12 +434,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				
 				if (getManagedBean().getPtjCodeName() != null
 						&& (getManagedBean().getPtjCodeNameSearchValues() != null || getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
-					if (getManagedBean().getPtjCodeName().equalsIgnoreCase("Code")) {
+					if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
 						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
 						filterBean.setCaseInsensitive(true);
 					    searchBean.getDataFilterBeans().add(filterBean);
 					
-					} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase("Name")) {
+					} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
 						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
 						filterBean.setCaseInsensitive(true);
 					    searchBean.getDataFilterBeans().add(filterBean);

@@ -179,8 +179,8 @@
                  </p:selectOneMenu>
                  <p:selectOneMenu for="ptjcodename" 
                     value="#{contractDetailsBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
-                       <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="Code"/>
-            	      <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="Name"/>
+                       <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
                  <p:inputText id="ptjCodeVaue"  style="width:300px;" 

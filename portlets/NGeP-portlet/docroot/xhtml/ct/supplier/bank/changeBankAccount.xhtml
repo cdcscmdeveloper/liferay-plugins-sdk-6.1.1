@@ -317,13 +317,13 @@
 		<p:dialog id="contractLoaDlg"  header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.ct.contract.no']}" widgetVar="contractLoaDlg" 
 			styleClass="pop_up_top" modal="true" width="700" height="500">
 			<p:panel  id="contractLoa">
-			<p:panel header="#{lbl['lbl.cm.search']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
 	 			<h:panelGrid columns="3">
 	         		<p:selectOneMenu id="contractLoaSelectMenu"
 	          			value="#{supplierBackingBean.managedBean.contractLoa}"  style="width:150px;">
 	          			<p:ajax event="change" update="contractLoaSelectMenu" />
-	        			<f:selectItem itemLabel="#{lbl['lbl.ct.contract.no']}" itemValue="contract"/>
-	     				<f:selectItem itemLabel="#{lbl['lbl.ct.loa.no']}" itemValue="loa"/>
+	        			<f:selectItem itemLabel="#{lbl['lbl.ct.contract.no']}" itemValue="#{CtConst.contractTypes}"/>
+	     				<f:selectItem itemLabel="#{lbl['lbl.ct.loa.no']}" itemValue="#{CtConst.loaTypes}"/>
 	          		</p:selectOneMenu>
 					<p:spacer height="1"/>
 	             	<p:inputText id="contractLoaValue"  style="width:300px;" 
@@ -340,7 +340,7 @@
 		  		</div>
 				<p:spacer height="2"/>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.fl.result']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.ct.search.result']}" toggleable="true">
 				<p:dataTable id="tableContractLoa" var="contractVar"					
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{supplierBackingBean.managedBean.contractList}"
