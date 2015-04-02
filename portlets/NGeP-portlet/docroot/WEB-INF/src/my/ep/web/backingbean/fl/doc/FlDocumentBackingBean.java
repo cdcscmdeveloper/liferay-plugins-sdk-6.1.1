@@ -583,6 +583,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			pmBB.getManagedBean().setSelectedTabIndex(0);
 			pmBB.getManagedBean().setButtonVal(buttonVal);
 			pmBB.getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
+			pmBB.getManagedBean().setDelOrderList(resDTO.getPaymentAdvice().getFulfilmentOrder().getFlDeliveryOrders());
+			pmBB.getManagedBean().setFulfilmentNoteList(resDTO.getPaymentAdvice().getFlRequest().getFlFulfilmentNotes());
 			pmBB.setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 			pmBB.setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());
 			pmBB.populateChargeLineData();

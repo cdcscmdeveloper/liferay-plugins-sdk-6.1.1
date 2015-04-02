@@ -9,14 +9,11 @@
 	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 124px;"><p:outputLabel
+				<td style="width: 145px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td ><p:inputText size="66"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
-				<td ><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}"
-						 action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeDebitAdjustmentNote)}"/> </td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
@@ -24,9 +21,6 @@
 				<td><p:inputText size="66" id="ptjGroup"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
 						disabled="true" /></td>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
-				<td style="width: 146px;"><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}"
-						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeCreditAdjustmentNote)}"/> </td>	
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
@@ -34,10 +28,6 @@
 				<td><p:inputText size="66" id="controlOff"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
 						disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo}"
-						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeStopDelivery)}"/> </td>		
-				<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.inst.no']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
@@ -46,10 +36,6 @@
 					<p:spacer width="5" /> <p:inputText size="50" id="preparedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
-				<td style="width: 117px;"><p:outputLabel
-						value="#{lbl['lbl.fl.contract.no']}" /></td>
-				<td style="width: 25px;"><p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
-						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.contract)}"/></td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -58,12 +44,6 @@
 					<p:spacer width="5" /> <p:inputText size="50" id="issuePtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
-				<td><p:selectBooleanCheckbox
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.mto}"
-						disabled="true" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mto']}"/></td>
 			</tr>			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
@@ -72,10 +52,6 @@
 					<p:spacer width="5" /> <p:inputText size="50" id="chargedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgName}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" />
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
@@ -91,6 +67,53 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.support.info.doc']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}"
+						 action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeDebitAdjustmentNote)}"/> </td>
+				<td style="width:390px;"><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}"
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeCreditAdjustmentNote)}"/> </td>		 	
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo}"
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeStopDelivery)}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.inst.no']}"/> </td>		
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.contract.no']}" /></td>
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.contract)}"/></td>	
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
+				<td><p:selectBooleanCheckbox
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.mto}"
+						disabled="true" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mto']}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
+				<td><p:selectBooleanCheckbox disabled="true"
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" />
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>		
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.frn.do.no']}" /></td>
+				<td><p:dataList value="#{paymentMatchBackingBean.managedBean.delOrderList}" var="doList" type="ordered">
+        				<p:commandLink value="#{doList.deliveryOrderNo}" rendered="#{doList.recordStatusFlg==1}" 
+					 		action="#{paymentMatchBackingBean.navigateDelOrder(doList)}" />
+    				</p:dataList></td>
+    			<td><p:outputLabel value="#{lbl['lbl.fl.frn.no']}" /></td>
+				<td><p:dataList value="#{paymentMatchBackingBean.managedBean.fulfilmentNoteList}" var="frnList" >
+        				<p:commandLink value="#{frnList.fulfilmentNoteNo}" rendered="#{frnList.recordStatusFlg==1}"
+					 		action="#{paymentMatchBackingBean.navigateFulfilmentNote(frnList)}"/>
+    				</p:dataList></td>	
+			</tr>
+		</table>
+			
+	</p:panel>		
 	<p:panel header="#{lbl['lbl.fl.payment.match.payment.desc']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>

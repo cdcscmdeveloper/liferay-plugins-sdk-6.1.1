@@ -106,6 +106,9 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	/** The validated. */
 	private boolean validated = false;
 	
+	/** The from page url. */
+	private String fromPageUrl;
+	
 	/**
 	 * Gets the fl remark.
 	 *
@@ -534,6 +537,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setDisableEvaluation(boolean disableEvaluation) {
 		this.disableEvaluation = disableEvaluation;
+	}
+
+	/**
+	 * @return the fromPageUrl
+	 */
+	public String getFromPageUrl() {
+		return fromPageUrl;
+	}
+
+	/**
+	 * @param fromPageUrl the fromPageUrl to set
+	 */
+	public void setFromPageUrl(String fromPageUrl) {
+		this.fromPageUrl = fromPageUrl;
 	}
 
 

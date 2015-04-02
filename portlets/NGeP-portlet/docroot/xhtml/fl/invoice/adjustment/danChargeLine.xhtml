@@ -98,41 +98,44 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
+					<td><p:inputText size="17" disabled="true" 
+							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.assetInd, danBackingBean.managedBean.assetIndCode)}"/></td>
+					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.votFundCode}" size="9"
-							disabled="true" />
-							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
-					<td><p:inputText size="9" disabled="true"
-							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.assetInd, danBackingBean.managedBean.assetIndCode)}" /></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.gosodo']}" /></td>
-					<td><p:inputText size="9" disabled="true" value="#{danBackingBean.managedBean.glAccountCode}" />
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
+							disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
-					<td><p:inputText
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
+					<td ><p:inputText
 							value="#{danBackingBean.managedBean.prgActivityCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td>
+				</tr>
+				<tr>
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.projectCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td> 
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.setiaCode}" size="9"
-							disabled="true" /></td>
-					<td><p:inputText
-							value="#{danBackingBean.managedBean.subSetiaCode}" size="9"
-							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td>
-					<td><p:inputText
+							disabled="true" />
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td> 
+					<td>
+						<p:inputText
 							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.financingType,danBackingBean.managedBean.financingTypeCode)}"
-							size="9" disabled="true" /></td>
+							size="9" disabled="true" />
+					</td>		
 				</tr>
-			</table>
+				<tr>
+					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
+					<td><p:inputText size="9" disabled="true" value="#{danBackingBean.managedBean.glAccountCode}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
+				</tr>
+			</table>	
 		</h:panelGroup>
 	</p:panel>
 </ui:composition>
