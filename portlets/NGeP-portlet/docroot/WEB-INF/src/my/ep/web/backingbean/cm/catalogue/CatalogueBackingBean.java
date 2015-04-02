@@ -4161,6 +4161,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			catalogueSO = null;
 			supplierSearchSO = null;
 		}
+		
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			log.info("******IS Supplier Temp*******");
+			return "/xhtml/common/acknowledge.xhtml";
+		}
 
 		return "catalogMaintenanceFile";
 	}
@@ -4551,6 +4556,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			log.info("******IS Supplier Temp*******");
 			return "/xhtml/common/acknowledge.xhtml";
 		}
 		return "catalogMaintenanceFile";
@@ -4671,6 +4677,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			log.info("******IS Supplier Temp*******");
 			return "/xhtml/common/acknowledge.xhtml";
 		}
 		
