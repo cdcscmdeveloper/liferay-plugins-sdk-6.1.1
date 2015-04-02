@@ -4424,7 +4424,7 @@ public class QTDetailBackingBean extends
 			}
 		}
 
-		if (approval != null) {
+		if (null != approval) {
 			List<ScQtApprovalRequest> approvalRequests = approval
 					.getScQtApprovalDtls();
 			if (!isApprovalRequestExists(approval, requestType)) {
@@ -4445,9 +4445,8 @@ public class QTDetailBackingBean extends
 
 					}
 				}
-			} 
+			}
 		}
-		
 		return true;
 	}
 

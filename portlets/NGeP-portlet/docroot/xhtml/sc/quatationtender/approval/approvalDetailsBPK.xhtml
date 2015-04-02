@@ -31,8 +31,8 @@
 				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
-				<c:if test="#{approvalDtlsList.approverId ne null}">
-					<h:outputText value="#{approvalDtlsList.approverId.userName}" />
+				<c:if test="#{requestdetails.approverId ne null}">
+					<h:outputText value="#{requestdetails.approverId.userName}" />
 				</c:if>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
@@ -40,7 +40,7 @@
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approverAction)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
-				<h:outputText value="#{approvalDtlsList.approverActionDate}">
+				<h:outputText value="#{requestdetails.approverActionDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 				</h:outputText>
