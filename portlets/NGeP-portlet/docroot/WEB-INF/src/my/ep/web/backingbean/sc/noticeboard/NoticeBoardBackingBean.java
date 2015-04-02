@@ -1778,8 +1778,14 @@ public class NoticeBoardBackingBean extends
 
 		List<ScQtBsvDtl> bsvDetails = this.getManagedBean().getNormalBsvBean()
 				.getBriefingList();
-		bsvDetails.set(bsvDetails.indexOf(bsvDtl), bsvDtl);
-
+		if(bsvDetails.contains(bsvDtl)){
+			bsvDetails.set(bsvDetails.indexOf(bsvDtl), bsvDtl);
+		}
+		List<ScQtBsvDtl> svDetails = this.getManagedBean().getNormalBsvBean()
+				.getSitevisitList();
+		if(svDetails.contains(bsvDtl)){
+			svDetails.set(svDetails.indexOf(bsvDtl), bsvDtl);
+		}
 	}
 
 	/**
