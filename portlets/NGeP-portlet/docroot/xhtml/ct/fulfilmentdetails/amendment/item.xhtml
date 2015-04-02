@@ -382,31 +382,31 @@
 							<h:outputText id="amendServiceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-					<p:outputLabel value="#{serviceItemVar.itemName}" style="float:left;" />
+					<h:outputText value="#{serviceItemVar.itemName}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
-					<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;" />
+					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:15%;white-space:normal;">
-					<p:outputLabel value="#{serviceItemVar.uom.uomName}" style="float:left;" />
+					<h:outputText value="#{serviceItemVar.uom.uomName}" style="float:left;" />
 				</p:column>
 		      <p:column headerText="#{lbl['lbl.sc.frequency.per.uom']}" style="width:15%; white-space:normal;">
-		        	<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" />
+		        	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" />
 		      </p:column>				
 		      	<p:column headerText="#{lbl['lbl.sc.no.uom.per.day']}"  style="text-align: right;width:15%; white-space:normal;">
-		          	<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerDay}" />
 		      	</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.uom.per.month']}" style="width:15%; white-space:normal;text-align: right;">
-					<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
 				</p:column>
 		      <p:column headerText="#{lbl['lbl.sc.no.uom.per.year']}"  style="text-align: right;width:15%; white-space:normal;">
-		          	<p:outputLabel value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
+		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
 		      </p:column>				
 				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;text-align:right;">
-					<p:outputLabel value="#{serviceItemVar.minimumOrderQty}" />
+					<h:outputText value="#{serviceItemVar.minimumOrderQty}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;">
-		            <p:outputLabel value="#{serviceItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>
+		            <h:outputText value="#{serviceItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>
 		        </p:column> 
 			</p:dataTable>
 		</h:panelGrid>
