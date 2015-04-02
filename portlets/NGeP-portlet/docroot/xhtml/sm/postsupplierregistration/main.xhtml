@@ -11,8 +11,11 @@
 	<ui:define name="contentSection">
 		<f:event listener="#{postSupplierRegBB.preRender}" type="preRenderView" />
 		<p:outputLabel>
-			#{postSupplierRegBB.managedBean.statusDesc} -
-			<p:commandLink  value="click here to continue" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+			#{postSupplierRegBB.managedBean.statusDesc} 
+			<p:commandLink  value="- click here to continue"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+			<ui:remove>
+				<p:commandLink  value="- Testing In Progress" rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+			</ui:remove>
 		</p:outputLabel>
 		<br /><br />
 	</ui:define>
