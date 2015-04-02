@@ -66,7 +66,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmDistrictView(true);	        	
 	        	rptGenBean.setSmRegistrationStatusView(true);	        	
 	        	rptGenBean.setFromDateView(true);
-	        	
+	        	rptGenBean.setSmExtraTwoColumnView(true);
 	        	/*rptGenBean.setSmMandatoryStateView(true);
 	        	rptGenBean.setSmMandatoryDistrictView(true);	        	
 	        	rptGenBean.setSmMandatoryRegistrationStatusView(true);	        	
@@ -119,8 +119,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmMandatoryDateView(true);
 				rptGenBean.setSmMandatoryCreatedFromYearView(true);				
 	            break;
-		 case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:				
-				rptGenBean.setSmYearTextView(true);
+		 case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:
+				//rptGenBean.setSmYearTextView(true);
+			    rptGenBean.setSmMandatoryMonthlyRptByYearView(true);
 				rptGenBean.setSmExtraTwoColumnView(true);					
 	            break;
 		 case ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL:	
@@ -152,7 +153,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmStateView(true);
 	        	rptGenBean.setSmDistrictView(true);
 	        	rptGenBean.setSmZoneView(true);
-	        	
+	        	rptGenBean.setSmExtraTwoColumnView(true);
 	            break;
 		 case ReportConst.SM_QUESTIONAIRE_RPT_VAL:	
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	

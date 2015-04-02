@@ -1,7 +1,9 @@
 package my.ep.web.bean.report;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
@@ -2628,48 +2630,7 @@ public class ReportsGenerateBean {
 			levOneCatLst1 = retrieveCategoryLevOne();
 		}
 		
-		/*public void retrieveCategoryLevTwo(String mainCategory){
-			levTwoCatLst = new ArrayList<SelectItem>();		
-			ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
-			CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
-			if(mainCategory!=null&&mainCategory!=""){	
-				catCodeReqDTO.setCategoryL1Id(Long.parseLong(mainCategory));
-				CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL2ListByL1Id(catCodeReqDTO);
-				for(PmCategoryL2 catTwo: catCodeResDTO.getCategoryL2List()){			
-					SelectItem selectItem= new SelectItem();
-					selectItem.setLabel(catTwo.getCategoryL2Code()+" - "+catTwo.getCategoryName());
-					selectItem.setValue(catTwo.getCategoryL2Id());
-					levTwoCatLst.add(selectItem);			
-				}
-			}
-		}
-		public void retrieveCategoryLevThree(String subCategory){
-			levThreeCatLst = new ArrayList<SelectItem>();		
-			ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
-			CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
-			if(subCategory!=null&&subCategory!=""){	
-				catCodeReqDTO.setCategoryL2Id(Long.parseLong(subCategory));
-				CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL3ListByL2Id(catCodeReqDTO);
-				for(PmCategoryL3 catThree: catCodeResDTO.getCategoryL3List()){			
-					SelectItem selectItem= new SelectItem();
-					selectItem.setLabel(catThree.getCategoryL3Code()+" - "+catThree.getCategoryName());
-					selectItem.setValue(catThree.getCategoryL3Id());
-					levThreeCatLst.add(selectItem);			
-				}
-			}
-		}*/
-		/*public List<String> retriveStatus(){					
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
-			StatusResDTO statusResDTO= reportSO.retriveStatus();
-			List<PmStatusDesc> stasLst = statusResDTO.getStatusDescList();
-			if (null != stasLst) {
-				statusLst=stasLst.toArray();
-				for (int i = 0; i < stasLst.size(); i++) {					
-					stsLst.add(stasLst.get(i)+"");				
-				}
-			}		
-			return stsLst;
-		}*/
+		
 		public List<String> generateYearList(){
 			yearList = new ArrayList<String>();
 			 for (int i = 1950; i <= 2150; i++) {
@@ -2677,17 +2638,22 @@ public class ReportsGenerateBean {
 			 }
 			 return yearList; 
 		}
-		/*public void retriveSVOfficerUser(){
-			if (null != new FacesScopes().getUserSessionBean().getUserId()) {				
-				lngUserId  = new FacesScopes().getUserSessionBean().getUserId();
+		public List<String> generateCommonYearList(){
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
+			
+			Date currentDate = new Date();
+			Integer year = null;
+			String yearFrom=outputDateFormat.format(currentDate).substring(6, 10);
+			if(yearFrom!=null){
+				year = Integer.parseInt(yearFrom);
 			}
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);		
-			List<String>  svoUser= reportSO.retriveSVOfficerUser(lngUserId);
-			stateLst = new ArrayList<SelectItem>();		
-			if (svoUser.size()>0) {			
-				for (int i = 0; i < svoUser.size(); i++) {					
-					log.info("SVOUSER LIST #########################"+svoUser.get(i));				
-				}
+			yearList = new ArrayList<String>();
+			if(year!=null){
+			 for (int i = year-7; i <= year; i++) {
+				 yearList.add(Integer.toString(i));
+			 }
 			}
-		}*/
+			 return yearList; 
+		}
 }
