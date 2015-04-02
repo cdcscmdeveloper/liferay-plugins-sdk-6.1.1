@@ -127,6 +127,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -5039,6 +5040,29 @@ public class SmApplicationUtil {
 				retVal = true;
 				break;
 			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * Check whether personnel already request for soft certificate with
+	 * Digicert
+	 * 
+	 * @param supplierId
+	 * @param userId
+	 * @return boolean
+	 */
+	public static boolean isPersonnelAlreadyRequestSoftcert(Long supplierId,
+			Long userId) {
+		boolean retVal = false;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		reqDTO.setUserId(userId);
+		SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO)
+				.getSoftcertRequest();
+		if (softcertRequest != null) {
+			retVal = true;
 		}
 		return retVal;
 	}
