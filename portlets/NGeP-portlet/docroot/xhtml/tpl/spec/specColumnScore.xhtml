@@ -30,11 +30,11 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
 		</f:facet>
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring}">
-			<p:inputText id="userScore" style="min-width:0px !important;width:20px;" styleClass="ppNumericAlign"
+			<p:inputText id="userScore" style="min-width:0px !important;width:30px;" styleClass="ppNumericAlign"
 				value="#{tplSpecAnswer.userScore}"
-				required="true" maxlength="3"
+				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}">
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg" />
