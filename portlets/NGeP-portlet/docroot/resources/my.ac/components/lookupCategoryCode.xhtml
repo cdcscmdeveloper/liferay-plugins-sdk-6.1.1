@@ -91,7 +91,11 @@
 			</table>
 			
 			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByDescription}">
-			<p:panel header="#{lbl['lbl.pm.search.category']}" toggleable="true">
+			<p:panel toggleable="true">
+			<f:facet name="header">
+				<h:outputText style="float : left"
+					value="#{lbl['lbl.pm.search.category']}" />
+			</f:facet>
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td width="20%">
@@ -128,7 +132,11 @@
 				</table>
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.pm.category.result']}" toggleable="true">
+			<p:panel toggleable="true" >
+				<f:facet name="header">
+					<h:outputText style="float : left"
+						value="#{lbl['lbl.pm.category.result']}" />
+				</f:facet>
 				<p:dataTable id="catDescrTbl"
 					value="#{categoryCodeSearchBackingBean.categoryDataModel}"
 					selectionMode="single"
