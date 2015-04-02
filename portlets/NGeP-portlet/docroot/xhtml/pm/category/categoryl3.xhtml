@@ -180,7 +180,7 @@
 						</p:selectOneMenu>
 
 						<h:panelGroup style="float: right">
-							<h:outputText value="#{lbl['lbl.pm.category.restriction']}" />
+							<h:outputText value="#{lbl['lbl.pm.category.company.restriction']}" />
 						</h:panelGroup>
 						<p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
@@ -286,7 +286,7 @@
 						</p:selectOneMenu></td>
 
 					<td><p:outputLabel
-							value="#{lbl['lbl.pm.category.restriction']}" /></td>
+							value="#{lbl['lbl.pm.category.company.restriction']}" /></td>
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 							<p:ajax event="change" update="outpnlCatRes" />
@@ -714,11 +714,11 @@
 		</p:dialog>
 
 		<p:outputPanel id="outpnlCatRes">
-			<p:panel header="#{lbl['lbl.pm.category.restriction']}"
+			<p:panel header="#{lbl['lbl.pm.company.type.restriction']}"
 				toggleable="true" id="catRestrictionId"
 				rendered="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 				<p:tabView>
-					<p:tab title="Company"
+					<p:tab title="#{lbl['lbl.pm.company.type.tab']}"
 						rendered="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 						<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex"
 							rowKey="#{pmCategoryRestr}"
@@ -738,18 +738,6 @@
 										itemLabel="#{compType.codeName}" />
 								</p:selectOneMenu>
 							</p:column>
-							<p:column headerText="#{lbl['lbl.pm.company.type']}" width="50%" rendered="false">
-								<p:selectOneMenu
-									value="#{pmCategoryRestr.companyTypeId.parameterId}"
-									required="true" label="#{lbl['lbl.pm.company.type']}">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems
-										value="#{categoryBackingBean.getPopulateCompanyTypeList()}"
-										var="compType" itemValue="#{compType.pmParameter.parameterId}"
-										itemLabel="#{compType.codeName}" />
-								</p:selectOneMenu>
-							</p:column>
-
 							<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
 								<p:commandLink partialSubmit="true" process="@this"
 									action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
