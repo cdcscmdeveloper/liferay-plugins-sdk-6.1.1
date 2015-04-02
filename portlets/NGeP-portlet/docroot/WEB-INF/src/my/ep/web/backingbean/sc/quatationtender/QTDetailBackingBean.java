@@ -3312,17 +3312,7 @@ public class QTDetailBackingBean extends
 
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
 				.get(selectedApprovalTabIndex);
-		/*
-		 * if
-		 * (approvalTabBean.getScQtApproval().getApprovalType().equals(QTConstants
-		 * .OTHERS_APPROVAL)) { for (ScQtApprovalRequest approvalRequest :
-		 * approvalTabBean.getScQtApproval().getScQtApprovalDtls()) { if (null
-		 * == approvalRequest.getApproverAction()) {
-		 * approvalRequest.setApproverAction(new PmParameter()); } if
-		 * (approvalRequest.getAppRequestRemark() == null) {
-		 * approvalRequest.setAppRequestRemark(new ScQtAppRequestRemark()); } }
-		 * }
-		 */
+	
 		this.getManagedBean().setSelectedApprovalTabIndex(
 				selectedApprovalTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
@@ -4393,64 +4383,70 @@ public class QTDetailBackingBean extends
 	 */
 	public boolean enableFieldByStatus(String fieldName) {
 		Long statusId = this.getManagedBean().getCurrentStatusId();
+
+		Boolean isFieldToBeEnabled = enableFieldByStatusNFiledName(fieldName);
+
 		List<ScQtApproval> approvals = this.getManagedBean().getQt()
 				.getScQtApprovals();
 		ScQtApproval approval = null;
-
 		String requestType = null;
+		if (!isFieldToBeEnabled) {
+			if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(statusId) > 0) {
+				if (QTFieldConst.FILED_QT_PUBLISH_PERIOD
+						.equalsIgnoreCase(fieldName)) {
+					approval = getQtApprovalByCategory(approvals,
+							ParameterConst.APPROVAL_CATEGORY_BPK);
+					requestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD;
+				} else if (QTFieldConst.FILED_QT_VALIDITY_PERIOD
+						.equalsIgnoreCase(fieldName)) {
+					approval = getQtApprovalByCategory(approvals,
+							ParameterConst.APPROVAL_CATEGORY_BPK);
+					requestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD;
+				}
 
-		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(statusId) > 0) {
-			if (QTFieldConst.FILED_QT_PUBLISH_PERIOD
-					.equalsIgnoreCase(fieldName)) {
-				approval = getQtApprovalByCategory(approvals,
-						ParameterConst.APPROVAL_CATEGORY_BPK);
-				requestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD;
-			} else if (QTFieldConst.FILED_QT_VALIDITY_PERIOD
-					.equalsIgnoreCase(fieldName)) {
-				approval = getQtApprovalByCategory(approvals,
-						ParameterConst.APPROVAL_CATEGORY_BPK);
-				requestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD;
-			}
-
-		} else {
-			if (!QTFieldConst.FILED_QT_VALIDITY_PERIOD
-					.equalsIgnoreCase(fieldName)) {
-				approval = getQtApprovalByCategory(approvals,
-						ParameterConst.APPROVAL_CATEGORY_PTJ);
-				requestType = ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE;
 			} else {
-				approval = getQtApprovalByCategory(approvals,
-						ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
-				requestType = ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD;
-			}
-		}
-
-		if (null != approval) {
-			List<ScQtApprovalRequest> approvalRequests = approval
-					.getScQtApprovalDtls();
-			if (!isApprovalRequestExists(approval, requestType)) {
-				return false;
-			}
-			if (CollectionUtils.isNotEmpty(approvalRequests)) {
-
-				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-					if (requestType.equalsIgnoreCase(approvalRequest
-							.getApprovalType().getParameterCode())) {
-						if (null == approvalRequest.getSubmissionDate()
-								|| (null != approvalRequest.getApproverAction() && "V"
-										.equalsIgnoreCase(approvalRequest
-												.getApproverAction()
-												.getParameterCode()))) {
-							return false;
-						}
-
-					}
+				if (!QTFieldConst.FILED_QT_VALIDITY_PERIOD
+						.equalsIgnoreCase(fieldName)) {
+					approval = getQtApprovalByCategory(approvals,
+							ParameterConst.APPROVAL_CATEGORY_PTJ);
+					requestType = ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE;
+				} else {
+					approval = getQtApprovalByCategory(
+							approvals,
+							ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+					requestType = ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD;
 				}
 			}
-		}else{
-			return false;
+			if (null != approval) {
+				List<ScQtApprovalRequest> approvalRequests = approval
+						.getScQtApprovalDtls();
+				if (!isApprovalRequestExists(approval, requestType)) {
+					return false;
+				}
+				if (CollectionUtils.isNotEmpty(approvalRequests)) {
+
+					for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+						if (requestType.equalsIgnoreCase(approvalRequest
+								.getApprovalType().getParameterCode())) {
+							if (null == approvalRequest.getSubmissionDate()
+									|| (null != approvalRequest
+											.getApproverAction() && "V"
+											.equalsIgnoreCase(approvalRequest
+													.getApproverAction()
+													.getParameterCode()))) {
+								return false;
+							}
+
+						}
+					}
+				}
+			} else {
+				return false;
+			}
 		}
+
 		return true;
+
 	}
 
 	public boolean approvalDtlsEditable(ScQtApproval approval) {
