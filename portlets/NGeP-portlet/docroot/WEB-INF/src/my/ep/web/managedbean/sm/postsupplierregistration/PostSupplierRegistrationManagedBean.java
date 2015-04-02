@@ -17,6 +17,8 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	
 	private SmSupplier smSupplier;
 	private String statusDesc;
+	
+	private boolean hyperlink;
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -32,5 +34,13 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 
 	public void setStatusDesc(String statusDesc) {
 		this.statusDesc = statusDesc;
+	}
+
+	public boolean isHyperlink() {
+		return hyperlink;
+	}
+
+	public void setHyperlink(boolean hyperlink) {
+		this.hyperlink = hyperlink;
 	}
 }
