@@ -2459,10 +2459,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			prInquirySO = null;
 		}
 	}
-
-	/**
-	 * showSimpleQuote method to  show Simple Quote  in Request Note Header Icon.
-	 */
 	
 	/**
 	 * when Simple Quote  to request note, request note shows icon for Simple Quote to view.
@@ -2622,7 +2618,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				e.printStackTrace();
 			}
 
-			procurementTypeEvent();
+			//procurementTypeEvent();
 			// title checker
 			simpleQuoteBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
 
