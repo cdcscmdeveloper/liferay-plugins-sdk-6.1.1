@@ -1455,9 +1455,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			}
 			if (outputValue.equalsIgnoreCase("SDEC")) {
 				getManagedBean().setSelectedTabIndex(3);
-			} if (outputValue.equalsIgnoreCase("SREM")) {
-				getManagedBean().setSelectedTabIndex(4);
-			}	    		 
+			}		 
 		}
 	}
 	
