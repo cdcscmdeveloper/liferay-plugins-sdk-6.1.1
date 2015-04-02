@@ -618,7 +618,7 @@
 					<property name="columnName" value="pmAddress.pmState.stateName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.state" />
+					<property name="bundleKey" value="lbl.pm.address.state" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmAddress.pmDistrict.districtName" />
