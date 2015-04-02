@@ -703,4 +703,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
+	
+	/**
+	 * Back to document.
+	 *
+	 * @return the string
+	 */
+	public String backAction() {
+		return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
+	}
+	
 }

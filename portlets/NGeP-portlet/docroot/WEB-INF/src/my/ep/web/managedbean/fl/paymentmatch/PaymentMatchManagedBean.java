@@ -13,6 +13,8 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
+import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -228,6 +230,10 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	
 	/** The validated. */
 	private boolean validated = false;
+	
+	
+	private List<FlDeliveryOrder> delOrderList;
+	private List<FlFulfilmentNote> fulfilmentNoteList;
 
 	/**
 	 * Gets the doc type.
@@ -1348,5 +1354,33 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setInvoiceDate(String newDate) {
 		this.invoiceDate = newDate;
+	}
+
+	/**
+	 * @return the delOrderList
+	 */
+	public List<FlDeliveryOrder> getDelOrderList() {
+		return delOrderList;
+	}
+
+	/**
+	 * @param delOrderList the delOrderList to set
+	 */
+	public void setDelOrderList(List<FlDeliveryOrder> delOrderList) {
+		this.delOrderList = delOrderList;
+	}
+
+	/**
+	 * @return the fulfilmentNoteList
+	 */
+	public List<FlFulfilmentNote> getFulfilmentNoteList() {
+		return fulfilmentNoteList;
+	}
+
+	/**
+	 * @param fulfilmentNoteList the fulfilmentNoteList to set
+	 */
+	public void setFulfilmentNoteList(List<FlFulfilmentNote> fulfilmentNoteList) {
+		this.fulfilmentNoteList = fulfilmentNoteList;
 	}
 }
