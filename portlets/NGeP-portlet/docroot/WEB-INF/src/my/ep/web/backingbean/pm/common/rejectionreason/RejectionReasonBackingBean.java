@@ -341,9 +341,19 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	private void validateRestrictions(PmReason pmReason){
 		log.info("validateRestrictions");
 		//validate required field
-		validateRestriction(this.getManagedBean().getAppTypeRestrictions(), ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
-		validateRestriction(this.getManagedBean().getComTypeRestrictions(), ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
-		validateRestriction(this.getManagedBean().getSuppTypeRestrictions(), ParameterTypeConst.SUPPLIER_TYPES);
+		if(getManagedBean().isSuppAppCheck()){
+			validateRestriction(this.getManagedBean().getAppTypeRestrictions(), ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
+		}
+		
+		if(getManagedBean().isSuppComCheck()){
+			validateRestriction(this.getManagedBean().getComTypeRestrictions(), ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
+		}
+		
+		if(getManagedBean().isSuppTypeCheck()){
+			validateRestriction(this.getManagedBean().getSuppTypeRestrictions(), ParameterTypeConst.SUPPLIER_TYPES);
+		}
+		
+		
 		
 		//validate unique field
 		validateUniqueRestrType(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
