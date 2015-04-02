@@ -56,7 +56,30 @@
 				<p:column selectionMode="multiple" width="5%" />
 
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
-					<h:outputText value="#{branchBean.branchName}" />
+					<table style="width: 100%">
+						<tr>
+							<td colspan="2" style="border-style: none !important;"><h:outputText
+									value="#{branchBean.branchName}" /></td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important; width: 40%;"><h:outputText
+									value="#{lbl['lbl.sm.gstNo']}" /></td>
+							<td style="border-style: none !important; width: 5%;">:</td>
+							<td style="border-style: none !important;; width: 55%;"><h:outputText
+									value="#{branchBean.gstRegistrationNo}" /></td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{lbl['lbl.sm.gstDate']}" /></td>
+							<td style="border-style: none !important;">:</td>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{branchBean.gstRegistrationDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText></td>
+						</tr>
+					</table>
+
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"

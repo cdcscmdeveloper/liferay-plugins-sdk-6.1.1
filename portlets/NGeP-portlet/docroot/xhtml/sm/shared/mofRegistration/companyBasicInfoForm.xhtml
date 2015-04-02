@@ -103,7 +103,10 @@
 								test="#{(backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew) and backingBean.managedBean.supplierUser}">
 								<p:inputText label="#{lbl['lbl.sm.gstNo']}"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}"
-									id="smGstRegistrationNo" size="35" maxlength="12" />
+									id="smGstRegistrationNo" size="35" maxlength="12"
+									validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
+									<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+								</p:inputText>
 								<p:message id="smgstRegistrationNoMsg" for="smGstRegistrationNo"
 									showSummary="true" showDetail="false" display="icon" />
 							</c:when>
