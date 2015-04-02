@@ -876,6 +876,25 @@ public class ReportBackingBean extends
 	public void setPtjList(List<String> ptjList) {
 		this.ptjList = ptjList;
 	}
+	private List<String> addingStateList = new ArrayList<String>();
+	private List<String> addingDistrictList = new ArrayList<String>();
+	
+	
+	public List<String> getAddingStateList() {
+		return addingStateList;
+	}
+
+	public void setAddingStateList(List<String> addingStateList) {
+		this.addingStateList = addingStateList;
+	}
+
+	public List<String> getAddingDistrictList() {
+		return addingDistrictList;
+	}
+
+	public void setAddingDistrictList(List<String> addingDistrictList) {
+		this.addingDistrictList = addingDistrictList;
+	}
 
 	private String localToDateVar;
 
@@ -1073,8 +1092,26 @@ public class ReportBackingBean extends
 	private String ppYear;
 	private String ppMinistry;
 	private String ppPTJ;	
-
+	private long[] lngStateId;
+	private long[] lngDistrictId;
 	
+
+	public long[] getLngDistrictId() {
+		return lngDistrictId;
+	}
+
+	public void setLngDistrictId(long[] lngDistrictId) {
+		this.lngDistrictId = lngDistrictId;
+	}
+
+	public long[] getLngStateId() {
+		return lngStateId;
+	}
+
+	public void setLngStateId(long[] lngStateId) {
+		this.lngStateId = lngStateId;
+	}
+
 	public String getPpYear() {
 		return ppYear;
 	}
@@ -2724,6 +2761,13 @@ public class ReportBackingBean extends
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
 	}
+	public boolean isEnableValue() {
+		return enableValue;
+	}
+
+	public void setEnableValue(boolean enableValue) {
+		this.enableValue = enableValue;
+	}
 	
 	private void retrieveMinistryList() {
 		pmMinistryList =new ArrayList<SelectItem>();
@@ -3284,14 +3328,6 @@ public class ReportBackingBean extends
 		this.getSelectedCatList().add(cat);
 	}
 	
-
-	public boolean isEnableValue() {
-		return enableValue;
-	}
-
-	public void setEnableValue(boolean enableValue) {
-		this.enableValue = enableValue;
-	}
 
 	/*
 	 * Retrieve module list
@@ -3897,7 +3933,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			brandList.add(selectItem);
 		}
 	}
-
+	
 	public void retrieveExtType() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -4035,6 +4071,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			retrievePTJ();
 			retrieveRequisitioner();
 			retrieveDescOfficer();
+			generateYearList();
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))) {
 				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean,
@@ -4044,7 +4081,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					|| (this.getModuleValue()
 							.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				generateMonthList();
-				generateYearList();
+				
 				scReportBackingBean.enableCriteriaVariablesByReportBySC(
 						rptGenBean, authoriztionList,approverNayakTarafList);
 			} else if ((this.getModuleValue()
@@ -4151,6 +4188,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	public void retrieveState() {
 		stateLst = new ArrayList<SelectItem>();
+		districtLst = new ArrayList<SelectItem>();
+		addingStateList = new ArrayList<String>();
+		addingDistrictList = new ArrayList<String>();
 		IStateSO stateSO = (IStateSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject(ReportConst.PM_MODULE_SER_OBJ, IStateSO.class);
@@ -4168,6 +4208,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 	public void retrieveDistrict() {
 		districtLst = new ArrayList<SelectItem>();
+		addingStateList = new ArrayList<String>();
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.PM_MODULE_SER_OBJ,
 						IDistrictSO.class);
@@ -4301,7 +4342,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 
 	public List<String> generateYearList() {
-		scYearList = scReportBackingBean.generateYearList();
+		scYearList = rptGenBean.generateCommonYearList();
 		return scYearList;
 	}
 
@@ -4756,6 +4797,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else if (((this.getSmYearText() != null) && (this.getSmYearText() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationType() != null) && (this
 						.getSmApplicationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMonthlyRptByYear() != null) && (this
+						.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaymentType() != null) && (this
 						.getSmPaymentType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmCompanyName() != null) && (this
@@ -4903,6 +4946,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setSmYearTextVar(ReportConst.AMP_SM_YEAR_EQ
 						+ this.getSmYearText());
 			}
+			if ((this.getSmMonthlyRptByYear() != null)
+					&& (this.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmMonthlyRptByYearVar(ReportConst.AMP_SM_YEAR_EQ
+						+ this.getSmMonthlyRptByYear());
+			}
 			StringBuffer maincategory = new StringBuffer();
 			StringBuffer subcategory = new StringBuffer();
 			StringBuffer subcategorydivision = new StringBuffer();
@@ -4961,6 +5009,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+subcategorydivision
 						+ rptGenBean.getApplicationStatusTotVar()
 						+ rptGenBean.getSmYearTextVar()
+						+ rptGenBean.getSmMonthlyRptByYearVar()
 						+ rptGenBean.getPaymentTypeTotVar()
 						+ rptGenBean.getApplicationTypeTotVar()
 						+ rptGenBean.getStateTotVar()
