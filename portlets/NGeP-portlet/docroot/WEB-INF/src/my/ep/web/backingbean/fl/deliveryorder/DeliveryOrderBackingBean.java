@@ -727,6 +727,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 * @return the string
 	 */
 	public String backAction() {
+		System.out.println("getManagedBean().getFromPageUrl(): "+getManagedBean().getFromPageUrl());
 		return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
 	}
 	
@@ -739,8 +740,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	public String retrieveMofNo(SmSupplier smSupplier) {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-		System.out.println("retrieveMofNo smSupplier.getSupplierId(): "+smSupplier);
-		System.out.println("retrieveMofNo smSupplier.getSupplierId(): "+smSupplier.getSupplierId());
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
 		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
 		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
@@ -1094,7 +1093,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		System.out.println("viewDeliveryOrder doId: "+doId);
 		if(doId!=null) {
 			reqDTO.setDeliveryOrderId(Long.valueOf(doId));
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
@@ -1110,17 +1108,14 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal("View");
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);
 //			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_DO);
 			getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
-			System.out.println("resDTO.getFlDeliveryOrder().getFlRequest(): "+resDTO.getFlDeliveryOrder().getFlRequest());
-			System.out.println("getSmSupplier "+resDTO.getFlDeliveryOrder().getFlRequest().getSmSupplier());
-			System.out.println("getSupplierId "+resDTO.getFlDeliveryOrder().getFlRequest().getSmSupplier().getSupplierId());
 			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			getManagedBean().setDocMaintainRemarks(true);
-			
 			getManagedBean().getFulfilmentOrder().setStatus(doSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 //			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
@@ -1128,7 +1123,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
-			getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "doBasePage?faces-redirect=true");
 		}
 	}	
