@@ -169,14 +169,6 @@
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
-							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" size="50"
-									value="#{backingBean.managedBean.currentStatus}"
-									disabled="true" /></td>
-
-						</tr>
-						<tr>
 							<c:if test="#{backingBean.managedBean.smAppl.applType eq 'C'}">
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.remark.cancellation']}" /></td>
@@ -194,7 +186,7 @@
 							<tr>
 								<td><h:outputText
 										value="#{backingBean.managedBean.bumiRecommendationNote}"
-										style="color: green;font-weight: bold;float:left;" /></td>
+										styleClass="splNotesFonts" /></td>
 							</tr>
 						</table>
 					</c:if>
@@ -205,22 +197,22 @@
 							<c:when
 								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
 								<h:outputText value="#{lbl['lbl.sm.po.splNotes1']}"
-									style="float :left;" escape="false" />
+									styleClass="splNotesFonts" escape="false" />
 
 							</c:when>
 							<c:when
 								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
 								<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
-									style="float :left;" escape="false" />
+									styleClass="splNotesFonts" escape="false" />
 							</c:when>
 							<c:when
 								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 								<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
-									style="float :left;" escape="false" />
+									styleClass="splNotesFonts" escape="false" />
 							</c:when>
 							<c:otherwise>
 								<h:outputText value="#{lbl['lbl.sm.po.splNotes']}"
-									style="float :left;" escape="false" />
+									styleClass="splNotesFonts" escape="false" />
 							</c:otherwise>
 						</c:choose>
 					</div>
