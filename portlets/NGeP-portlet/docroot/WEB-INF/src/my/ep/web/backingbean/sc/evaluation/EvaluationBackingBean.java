@@ -7681,17 +7681,20 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(qt.getQtId());
 			reqDTO.setCommitteType(this.getManagedBean().getCommitteeType());
 			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
-			scQtMeetings = resDTO.getMeetingDtls();
+			//scQtMeetings = resDTO.getMeetingDtls();
+			for (ScQtMeeting meeting : resDTO.getMeetingDtls()) {
+				if (QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())) {
+					meeting.setMeetDateStr(dateSDF.format(meeting.getMeetingDate()));
+					DateFormat formatter = DateFormat.getInstance();
+					formatter = DateFormat.getTimeInstance(); // time only
+					meeting.setMeetTimeStr(formatter.format(meeting.getMeetingDate()));
+					scQtMeetings.add(meeting);
+				}
+			}
+			context.put("scQtMeetings", scQtMeetings);
 		} finally {
 			meetingSO = null;
 		}
-		for (ScQtMeeting meeting : scQtMeetings) {
-			meeting.setMeetDateStr(dateSDF.format(meeting.getMeetingDate()));
-			DateFormat formatter = DateFormat.getInstance();
-			formatter = DateFormat.getTimeInstance(); // time only
-			meeting.setMeetTimeStr(formatter.format(meeting.getMeetingDate()));
-		}
-		context.put("scQtMeetings", scQtMeetings);
 
 		boolean commType = false;
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
