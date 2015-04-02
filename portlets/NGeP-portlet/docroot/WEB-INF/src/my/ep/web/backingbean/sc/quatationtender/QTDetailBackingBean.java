@@ -4446,6 +4446,8 @@ public class QTDetailBackingBean extends
 					}
 				}
 			}
+		}else{
+			return false;
 		}
 		return true;
 	}
