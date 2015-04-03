@@ -90,11 +90,11 @@
 		<h:panelGroup>
 			<div class="ppRightBtn">
 				<p:commandButton id="quotationcommitteeadd"
-					value="#{lbl['lbl.so.addbtn']}" process="@this"
+					value="#{lbl['lbl.btn.add']}" process="@this"
 					action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 					oncomplete="screen3.show();" update="@(.addQCMember)" />
 
-				<p:commandButton value="#{lbl['lbl.so.delete']}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, fcMembers"
 					action="#{committeBackingBean.deleteCommitteeAction}"
 					update="fcMembers" />
