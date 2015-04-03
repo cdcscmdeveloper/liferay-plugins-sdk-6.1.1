@@ -4473,9 +4473,11 @@ public class SmApplicationBackingBean extends
 				&& StringUtils.isNotBlank(smPersonnel.getEpRole())
 				&& smPersonnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 
-			if (SmApplicationUtil.isLatestApprovedPersonnelAlreadyAuthorized(
-					smPersonnel.getIdentificationNo(),
-					smSupplier.getSupplierId())) {
+			if (smPersonnel.getPersonnelId() != null
+					&& SmApplicationUtil
+							.isLatestApprovedPersonnelAlreadyAuthorized(
+									smPersonnel.getIdentificationNo(),
+									smSupplier.getSupplierId())) {
 				accStatus = SmCommonUtil.getMessage(
 						"lbl.sm.activation.status.activated", null);
 			} else {
