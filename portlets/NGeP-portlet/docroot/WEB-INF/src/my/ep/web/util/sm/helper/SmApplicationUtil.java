@@ -883,14 +883,16 @@ public class SmApplicationUtil {
 							"lbl.sm.gstNo",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 		}
-		
-		if(!StringUtils.isEmpty(appl.getSmCompanyBasic()
-				.getGstRegistrationNo()) && appl.getSmCompanyBasic().getGstRegistrationDate() == null){
+
+		if (!StringUtils.isEmpty(appl.getSmCompanyBasic()
+				.getGstRegistrationNo())
+				&& appl.getSmCompanyBasic().getGstRegistrationDate() == null) {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722604);
-		}else if(StringUtils.isEmpty(appl.getSmCompanyBasic()
-				.getGstRegistrationNo()) && appl.getSmCompanyBasic().getGstRegistrationDate() != null){
+		} else if (StringUtils.isEmpty(appl.getSmCompanyBasic()
+				.getGstRegistrationNo())
+				&& appl.getSmCompanyBasic().getGstRegistrationDate() != null) {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722605);
@@ -2334,23 +2336,33 @@ public class SmApplicationUtil {
 	 * @param managedBean
 	 *            - SmApplicationManagedBean object
 	 */
-	public static void assignActiveCategoryList(
+	public static void assignActiveAndApprovedCategoryList(
 			SmApplicationManagedBean managedBean) {
 		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0
 					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 				catList.add(cat);
+			} else if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				apprvList.add(cat);
+
 			}
 		}
 		if (managedBean.getActiveCategoryList() != null
 				&& !managedBean.getActiveCategoryList().isEmpty()) {
 			managedBean.getActiveCategoryList().clear();
 		}
+		if (managedBean.getApprovedCategoryList() != null
+				&& !managedBean.getApprovedCategoryList().isEmpty()) {
+			managedBean.getApprovedCategoryList().clear();
+		}
 		managedBean.setActiveCategoryList(catList);
+		managedBean.setApprovedCategoryList(apprvList);
 	}
 
 	/**

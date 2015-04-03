@@ -127,7 +127,6 @@ import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1259,7 +1258,7 @@ public class SmApplicationBackingBean extends
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 					SmApplicationUtil
-							.assignActiveCategoryList(getManagedBean());
+							.assignActiveAndApprovedCategoryList(getManagedBean());
 					if (getManagedBean().getSmAppl().getApplCategoryType()
 							.equalsIgnoreCase("N")) {
 						getManagedBean()
@@ -3238,7 +3237,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		saveOrUpdateAppl();
-		SmApplicationUtil.assignActiveCategoryList(getManagedBean());
+		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 	}
 
 	/**
@@ -3369,7 +3368,7 @@ public class SmApplicationBackingBean extends
 				// "smCatCodesRenewApplDtWidVar.paginator.endLink.click()");
 			}
 			saveOrUpdateAppl();
-			SmApplicationUtil.assignActiveCategoryList(getManagedBean());
+			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 			assignValReqdToFalse();
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
