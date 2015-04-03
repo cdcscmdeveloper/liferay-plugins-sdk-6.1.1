@@ -855,10 +855,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	     		}
 	     	}
 	     		
-	     			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) &&
-	     				 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().size() == 1) {
-	     			     getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
-	     		}
+	     	if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+	     			&& getManagedBean().getTaskName() != null 
+	     			&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
+	     			&& getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().size() == 1) {
+	     		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
+	     	}
 	     		       
 	     	reqDTO.setUserRole(getUserRole());
 	     	reqDTO.setTaskName(getManagedBean().getTaskName());
