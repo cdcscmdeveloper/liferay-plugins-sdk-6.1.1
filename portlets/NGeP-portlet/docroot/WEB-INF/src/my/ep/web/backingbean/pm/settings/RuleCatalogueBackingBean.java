@@ -70,17 +70,17 @@ import my.ep.web.util.pm.helper.RuleConfigHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
 public class RuleCatalogueBackingBean extends
 		BaseBackingBean<RuleCatalogueManageBean> {
 	private static Logger log = Logger
 			.getLogger(RuleCatalogueBackingBean.class);
-    
+
 	private ISearchBean<PmParameterDesc> parameterSearchBean;
-//    private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
-    
+
+	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
+
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
 		if (this.parameterSearchBean == null) {
 			this.parameterSearchBean = super.createSearchBean(
@@ -94,9 +94,9 @@ public class RuleCatalogueBackingBean extends
 
 	}
 
-//	public List<SortMeta> getPreSortOrder() {
-//		return preSortOrder;
-//	}
+	// public List<SortMeta> getPreSortOrder() {
+	// return preSortOrder;
+	// }
 
 	public boolean isValidDateRange(Date effDate, Date ExpDate) {
 		log.info("...............isValidDateRange...............");
@@ -105,29 +105,32 @@ public class RuleCatalogueBackingBean extends
 		}
 		return true;
 	}
-    /*
-     * method to build initial sort order for multisort
-     */
-//    private void buildSortOrder() {
-//    	log.info("...............buildSortOrder...............");
-//        UIViewRoot viewRoot =  FacesContext.getCurrentInstance().getViewRoot();
-//        UIComponent column1 = viewRoot.findComponent("ruleTypeValueTableID:fromValueColumnId"); 
-//        UIComponent column2 = viewRoot.findComponent("ruleTypeValueTableID:effDateColumnId"); 
-//
-//        SortMeta sm1 = new SortMeta();
-//        sm1.setSortBy((UIColumn) column1);
-//        sm1.setSortField("fromValueColumnId");
-//        sm1.setSortOrder(SortOrder.ASCENDING);
-//        preSortOrder.add(sm1);  
-//        
-//        SortMeta sm2 = new SortMeta();
-//        sm2.setSortBy((UIColumn) column2);
-//        sm2.setSortField("effDateColumnId");
-//        sm2.setSortOrder(SortOrder.ASCENDING);
-//        preSortOrder.add(sm2);  
-//        log.info(".............end of..buildSortOrder...............");
-//    }
-    
+
+	/*
+	 * method to build initial sort order for multisort
+	 */
+	// private void buildSortOrder() {
+	// log.info("...............buildSortOrder...............");
+	// UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
+	// UIComponent column1 =
+	// viewRoot.findComponent("ruleTypeValueTableID:fromValueColumnId");
+	// UIComponent column2 =
+	// viewRoot.findComponent("ruleTypeValueTableID:effDateColumnId");
+	//
+	// SortMeta sm1 = new SortMeta();
+	// sm1.setSortBy((UIColumn) column1);
+	// sm1.setSortField("fromValueColumnId");
+	// sm1.setSortOrder(SortOrder.ASCENDING);
+	// preSortOrder.add(sm1);
+	//
+	// SortMeta sm2 = new SortMeta();
+	// sm2.setSortBy((UIColumn) column2);
+	// sm2.setSortField("effDateColumnId");
+	// sm2.setSortOrder(SortOrder.ASCENDING);
+	// preSortOrder.add(sm2);
+	// log.info(".............end of..buildSortOrder...............");
+	// }
+
 	public String preRenderView() {
 		log.info("...........preRenderView............");
 		getManagedBean().setTabActiveIndex(0);
@@ -155,11 +158,10 @@ public class RuleCatalogueBackingBean extends
 			// SerializationUtils.clone(configRule);
 			//
 			// }
-			  List<PmConfigRule> list = retriveConfigRuleFromDB();
-				this.getManagedBean().setConfigRuleList(list);
-				this.getManagedBean().setSelectedRuleType(list.get(0));
+			List<PmConfigRule> list = retriveConfigRuleFromDB();
+			this.getManagedBean().setConfigRuleList(list);
+			this.getManagedBean().setSelectedRuleType(list.get(0));
 
-			
 			// ////////////getitng FeeExemption////////////////////////////
 			IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
 					.getInstance()
@@ -285,7 +287,7 @@ public class RuleCatalogueBackingBean extends
 			System.out
 					.println("...................resTDTO.getThresholdList().size()="
 							+ resTDTO.getThresholdList().size());
-//			buildSortOrder();
+			// buildSortOrder();
 			// ///////////////////////////////
 			// ///////////////////////////////
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -296,15 +298,15 @@ public class RuleCatalogueBackingBean extends
 		}
 		return "";
 	}
-	
-	private List<PmConfigRule> retriveConfigRuleFromDB(){
+
+	private List<PmConfigRule> retriveConfigRuleFromDB() {
 		List<PmConfigRule> configRules = new ArrayList<PmConfigRule>();
 		// get Rule config from DB
 		IRuleSO ruleSO;
 		try {
 			// get from db
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IRuleSO.class);
+			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+					"pm", IRuleSO.class);
 			RuleReqDTO reqRDTO = new RuleReqDTO();
 			String languageCode = new FacesScopes().getUserLocale()
 					.getLanguage();
@@ -319,13 +321,11 @@ public class RuleCatalogueBackingBean extends
 			RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
 			configRules = resRDTO.getRuleTypeList();
 
-
 			// fill up ruleType's ruleValueList
 			for (PmConfigRule cRule : configRules) {
-				
+
 				reqRDTO.setRuleType(cRule.getRuleType());
-				resRDTO = ruleSO
-						.getRuleValuesByRuleType(reqRDTO);
+				resRDTO = ruleSO.getRuleValuesByRuleType(reqRDTO);
 				List<PmConfigRuleValue> valuelist = resRDTO.getRuleValueList();
 				cRule.setConfigRuleValues(valuelist);
 			}
@@ -342,13 +342,11 @@ public class RuleCatalogueBackingBean extends
 				for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
 					PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
 					if (categoryL3 != null) {
-						String categoryL3Code = categoryL3
-								.getCategoryL3Code();
-						String categoryL2Code = categoryL3
-								.getPmCategoryL2().getCategoryL2Code();
-						String categoryL1Code = categoryL3
-								.getPmCategoryL2().getPmCategoryL1()
-								.getCategoryL1Code();
+						String categoryL3Code = categoryL3.getCategoryL3Code();
+						String categoryL2Code = categoryL3.getPmCategoryL2()
+								.getCategoryL2Code();
+						String categoryL1Code = categoryL3.getPmCategoryL2()
+								.getPmCategoryL1().getCategoryL1Code();
 						cRule.setCategoryDisplayValue(categoryL1Code
 								+ categoryL2Code + categoryL3Code);
 					}
@@ -667,21 +665,27 @@ public class RuleCatalogueBackingBean extends
 		// this.getManagedBean().getConfigRuleList().indexOf(this.getManagedBean().getSelectedRuleType());
 		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
-PmConfigRuleValue selectedValueToDel =this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(rowIndex);
+		PmConfigRuleValue selectedValueToDel = this.getManagedBean()
+				.getSelectedRuleType().getConfigRuleValues().get(rowIndex);
 
-if(this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1 && selectedValueToDel.isShowFlag()){//if its range and parent record, delete all child
-	   Integer groupIdOfParent = selectedValueToDel.getGroupValueId();
-	  for(PmConfigRuleValue value :this.getManagedBean().getSelectedRuleType().getConfigRuleValues()){
-		  if(value.getGroupValueId() == groupIdOfParent){
-			  removeList.add(value);
-		  }
-	  }
-	  this.getManagedBean().getSelectedRuleType().getConfigRuleValues().removeAll(removeList);
-    }else{
-    	 this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-			.remove(rowIndex);
-    }
-		
+		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1
+				&& selectedValueToDel.isShowFlag()) {// if its range and parent
+														// record, delete all
+														// child
+			Integer groupIdOfParent = selectedValueToDel.getGroupValueId();
+			for (PmConfigRuleValue value : this.getManagedBean()
+					.getSelectedRuleType().getConfigRuleValues()) {
+				if (value.getGroupValueId() == groupIdOfParent) {
+					removeList.add(value);
+				}
+			}
+			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+					.removeAll(removeList);
+		} else {
+			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+					.remove(rowIndex);
+		}
+
 		// merge selectedRuleType with changes in values into ConfigRuleTypes
 		// this.getManagedBean().getConfigRuleList().add(indexOfSelectedRuleType,
 		// this.getManagedBean().getSelectedRuleType());
@@ -889,15 +893,15 @@ if(this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1 && selecte
 			// clear the catch and retrive updated list from DB
 
 			RuleConfigHelper.getInstance().relodeRuleTypeValueMaps();
-			
-//			this.getManagedBean().setConfigRuleList(
-//					RuleConfigHelper.getInstance().getRuleTypeList());
-//			this.getManagedBean().setSelectedRuleType(
-//					RuleConfigHelper.getInstance().getRuleTypeList().get(0));
-			  List<PmConfigRule> list = retriveConfigRuleFromDB();
-			  this.getManagedBean().setConfigRuleList(list);
+
+			// this.getManagedBean().setConfigRuleList(
+			// RuleConfigHelper.getInstance().getRuleTypeList());
+			// this.getManagedBean().setSelectedRuleType(
+			// RuleConfigHelper.getInstance().getRuleTypeList().get(0));
+			List<PmConfigRule> list = retriveConfigRuleFromDB();
+			this.getManagedBean().setConfigRuleList(list);
 			this.getManagedBean().setSelectedRuleType(list.get(0));
-	
+
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
@@ -1801,27 +1805,33 @@ if(this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1 && selecte
 						.getToValue() + 1);
 		}
 	}
+
 	/**
 	 * update Group Child Date.
 	 * 
 	 * @param index
 	 *            (int index(mandatory))
 	 */
-	public void updateGroupChildDate(int index){
+	public void updateGroupChildDate(int index) {
 		log.info("....updateGroupChildDate.....");
 		log.info("................index=" + index);
-		PmConfigRuleValue ruleValue = this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(index);
-		Date effDate = ruleValue.getEffDate();
-		Date expDate = ruleValue.getExpDate();
-		
-		for(PmConfigRuleValue value :this.getManagedBean().getSelectedRuleType().getConfigRuleValues()){
-			if(value.getGroupValueId() == ruleValue.getGroupValueId()){
-				value.setEffDate(effDate);
-				value.setExpDate(expDate);
+
+		PmConfigRuleValue ruleValue = this.getManagedBean()
+				.getSelectedRuleType().getConfigRuleValues().get(index);
+		if (this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1
+				&& ruleValue.isShowFlag()) {
+			Date effDate = ruleValue.getEffDate();
+			Date expDate = ruleValue.getExpDate();
+
+			for (PmConfigRuleValue value : this.getManagedBean()
+					.getSelectedRuleType().getConfigRuleValues()) {
+				if (value.getGroupValueId() == ruleValue.getGroupValueId()) {
+					value.setEffDate(effDate);
+					value.setExpDate(expDate);
+				}
 			}
 		}
-		
-		
+
 	}
 
 	/*
