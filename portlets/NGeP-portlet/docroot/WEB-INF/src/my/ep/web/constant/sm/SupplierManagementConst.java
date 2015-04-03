@@ -24,7 +24,8 @@ public class SupplierManagementConst {
 	// public static final String PROCEED_UPDATE_MOF_APPLN =
 	// "updateMofSmUser_BaseWizardPage";
 	public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategoryBasePage";
-	//public static final String PROCEED_ADDTNLCAT_APPLN_SIDEMENU = "smAddtnlCatApplnSideMenu_BasePage";
+	// public static final String PROCEED_ADDTNLCAT_APPLN_SIDEMENU =
+	// "smAddtnlCatApplnSideMenu_BasePage";
 	public static final String PROCEED_ADDTNLCAT_APPLN_SIDEMENU = "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml";
 	public static final String PROCEED_ADDTNLCAT_APPLN_TNC_PAGE = "/xhtml/sm/addAdditionalCategoryCodes/additionalCategoryCodeTermsAndConditionPage.xhtml";
 	// public static final String PROCEED_ADDTNLCAT_MOF_APPLN =
@@ -144,6 +145,7 @@ public class SupplierManagementConst {
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	public static final int DELETED_RECORD_STATUS = 9;
+	public static final int PENDING_RE_APPROVAL_STATUS = 6;
 	public static final String TEMP_TYPE = "T";
 
 	public static final String SECTION_REV_ROLE_PO = "P";
@@ -210,13 +212,12 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_PAYMENT = "SPY";
 	public static final String PM_PAYMENT_MODE = "SPM";
 	public static final String PM_PAYMENT_ITEM = "SPI";
-	
-	//soft cert status
+
+	// soft cert status
 	public static final int IS_SOFTCERT_REQ = 2;
 	public static final int SOFT_CERT_PROCESSING = 3;
 	public static final int SOFT_CERT_PENDING_REQ = 4;
 	public static final int SOFT_CERT_ISSUED = 1;
-	
 
 	public static final long PM_STAT_PENDING_PAYMENT = 20401;
 	public static final long PM_STAT_FAILED_PAYMENT = 20402;
@@ -289,7 +290,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN = "K";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI = "L";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = "M";
-	
+
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
 					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
@@ -380,7 +381,7 @@ public class SupplierManagementConst {
 	public static final String PREVIOUS_APPLICATION = "P";
 
 	// Site Visit
-	//public static final String SVO_FIN_CHECKLIST = "FCL";
+	// public static final String SVO_FIN_CHECKLIST = "FCL";
 	public static final String MALAYSIA_CODE = "MY";
 	public static final String SABAH_CODE = "SA";
 	public static final String SARAWAK_CODE = "13";
@@ -430,20 +431,19 @@ public class SupplierManagementConst {
 	public static final String APPROVER_APPROVE_APPL = "Application approved by Approver";
 	public static final String PO_SEND_INQUIRY_SUPP = "PO sent inquiry to supplier";
 	public static final String PO_ESCALATE_APPROVER = "PO esclated the application to Approver for final decision";
-	
+
 	public static final String SDO_SUBMIT_APPL = "SDO submitted supporting document checklist";
 	public static final String SDO_SEND_INQUIRY = "SDO sent inquiry to supplier";
 	public static final String SUPP_SEND_INQUIRY_SDO = "Supplier sent response to SDO";
 	public static final String SVC_ASSIGN_SITEVISIT = "SVC assigned site visit task to SVO";
 	public static final String SVO_SUBMIT_REPORT = "SVO submitted site visit report";
-	
+
 	public static final String SM_STATE_NAME_SABAH = "SABAH";
 	public static final String SM_STATE_NAME_SARAWAK = "SARAWAK";
 	public static final String SM_STATE_NAME_SEMENANJUNG = "SEMENANJUNG";
-	
+
 	public static final String SM_SUPPLIER_CERT_TYPE_GLP = "GLP";
 	public static final String SM_SUPPLIER_PARAM_TYPE_CRT = "CRT";
-	
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
 
@@ -852,5 +852,9 @@ public class SupplierManagementConst {
 	public String getSupplierBusinessType() {
 		return SUPPLIER_BUSINESS_TYPE;
 	}
-	
+
+	public int getPENDING_RE_APPROVAL_STATUS() {
+		return PENDING_RE_APPROVAL_STATUS;
+	}
+
 }
