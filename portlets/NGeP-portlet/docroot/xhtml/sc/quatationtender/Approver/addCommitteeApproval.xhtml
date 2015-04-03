@@ -226,12 +226,12 @@
 				</c:if>
 			</p:panel>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					process="@this, newCommitteeApproverProfile, committeApproverPnlId"
 					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
 					update="@(.scmemberdtls, committeApproverPnlId)" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="apply_button" process="@this"
 					oncomplete="newspecificationcommittee.hide();" />
 			</div>

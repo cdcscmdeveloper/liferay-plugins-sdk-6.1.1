@@ -42,8 +42,8 @@
 	<p:dialog id="suppPopup" header="Search Supplier" widgetVar="suppdlg" modal="false" appendToBody="false" width="800" height="400">
 		<ui:include src="panelSupplierSearch.xhtml" />
 		<div>           
-			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" oncomplete="suppdlg.hide()" />
-			<p:commandButton value="#{lbl['lbl.so.okbtn']}" 
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" style="float:right;" oncomplete="suppdlg.hide()" />
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 				style="float:right;" 
 				update="suppQualPnl, supplierlist"
 				action="#{qTSupplierQulCriteriaBackingBean.addPanelToSupplierListAction}"  

@@ -23,7 +23,7 @@
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
 					process="@all" update="@all" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@all"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@all"
 					style="float:right;margin-right: 12px;" 
 					rendered="#{!qTDetailBB.managedBean.qt.brandNew}"
 					onclick="cancelBODlg.show()" />
