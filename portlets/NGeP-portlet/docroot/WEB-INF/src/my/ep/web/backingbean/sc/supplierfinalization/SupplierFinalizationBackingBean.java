@@ -79,6 +79,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -171,6 +172,7 @@ public class SupplierFinalizationBackingBean extends
 	public static final int ACTIVE_INDEX_REPORT = 1;
 	public static final int ACTIVE_INDEX_SUPP_FINALIZATION = 2;
 	public static final int ACTIVE_INDEX_ENDORSEMENT = 3;
+	public static final int ACTIVE_INDEX_RESULTS = 4;
 
 	public static final int PREPARE_ACTIVE_INDEX_MEETING = 0;
 	public static final int PREPARE_ACTIVE_INDEX_COMMITTEE = 1;
@@ -283,6 +285,9 @@ public class SupplierFinalizationBackingBean extends
 			break;
 		case 3:
 			navigateToCommitteeEndorsementTab();
+			break;
+		case 4:
+			navigateToResultsTab();			
 		}
 	}
 
@@ -337,6 +342,10 @@ public class SupplierFinalizationBackingBean extends
 	private void navigateToCommitteeEndorsementTab() {
 		this.getManagedBean().setActiveIndex(ACTIVE_INDEX_ENDORSEMENT);
 	}
+	
+	private void navigateToResultsTab() {
+		this.getManagedBean().setActiveIndex(ACTIVE_INDEX_RESULTS);
+	}	
 
 	/*
 	 * private void onTabMenuValidationChangeAction(Integer previousIndex){
@@ -4693,14 +4702,27 @@ public class SupplierFinalizationBackingBean extends
 								recommendBy = pmParameter.getParameterCode();
 							}
 						} else if (scQtRecommend.getAwardSupplierList().size() > 1) {
+							int activeSupplCount = 0;
+							for (ScQtRecommendDtl recommendDtl : 
+										scQtRecommend.getRecommendDtls()) {
+								if (recommendDtl.getRecordStatusFlg().equals(
+											DbValueConst.RECORD_STATUS_ACTIVE)) {
+									++activeSupplCount;
+									if (activeSupplCount == 2) {
+										break;
+									}
+								}
+							}
+							
 							// If its price type tier/tariff, should clear the
 							// recommend by,
 							// user need to select multiple LOI or online
 							// bidding
 							if (pmParameter == null
-									|| pmParameter
+									|| (pmParameter
 											.getParameterCode()
-											.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) {
+											.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD) && 
+												activeSupplCount == 2)) {
 								recommendBy = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI;
 								pmParameter = getPmParameterByTypeAndCode(
 										parameterType, recommendBy);
@@ -4723,10 +4745,21 @@ public class SupplierFinalizationBackingBean extends
 								recommendBy = pmParameter.getParameterCode();
 							}
 						} else if (scQtRecommend.getAwardSupplierList().size() > 1) {
+							int activeSupplCount = 0;
+							for (ScQtRecommendDtl recommendDtl : 
+									scQtRecommend.getRecommendDtls()) {
+								if (recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+									++activeSupplCount;
+									if (activeSupplCount == 2) {
+										break;
+									}
+								}
+							}
 							if (pmParameter == null
-									|| pmParameter
+									|| (pmParameter
 											.getParameterCode()
-											.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) {
+											.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD) && 
+												activeSupplCount == 2)) {
 								recommendBy = ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD;
 								pmParameter = getPmParameterByTypeAndCode(
 										parameterType, recommendBy);
