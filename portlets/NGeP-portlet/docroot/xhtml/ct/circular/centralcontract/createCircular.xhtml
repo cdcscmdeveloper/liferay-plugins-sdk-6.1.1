@@ -7,10 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="ccc" header="#{lbl['lbl.ct.panel.central.contract.circular']}" toggleable="true" toggleSpeed="500">
-		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer == null}">
+		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer == null
+		or panelBackingBean.managedBean.viewContract}">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
-		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer != null}">
+		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.circular.latestCircularVer != null and !panelBackingBean.managedBean.viewContract}">
 			<ui:include src="updateCircularDetail.xhtml" />
 		</h:panelGroup>		
 	</p:panel>
