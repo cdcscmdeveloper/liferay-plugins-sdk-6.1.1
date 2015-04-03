@@ -1632,6 +1632,8 @@ public class SmCommonUtil {
 	public static void setNewPersonnelPermAndMailAddress(
 			SmPersonnel smPersonnel, SmPersonnelAddress mailAddress,
 			SmPersonnelAddress permAddress) {
+		permAddress.setSmPersonnel(smPersonnel);
+		mailAddress.setSmPersonnel(smPersonnel);
 		SmAddress permanent = permAddress.getSmAddress();
 
 		PmCity city = permanent.getPmCity();
@@ -1677,7 +1679,7 @@ public class SmCommonUtil {
 		permanent.setPmCity(newCity);
 
 		if (mailAddress.isSameAsPerm()) {
-			SmAddress address = cloneAddress(mailAddress.getSmAddress());
+			SmAddress address = cloneAddress(permAddress.getSmAddress());
 			mailAddress.setSmAddress(address);
 		} else {
 			SmAddress s2 = mailAddress.getSmAddress();
