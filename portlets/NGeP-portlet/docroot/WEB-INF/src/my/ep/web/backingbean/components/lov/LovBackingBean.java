@@ -531,7 +531,7 @@ public class LovBackingBean implements Serializable {
 	private void prepareColumnTitle(LovBean lovBean) {
 		ResourceBundle bundle = null;
 		for(LovColumnBean column : lovBean.getColumns()) {
-			bundle = ResourceBundle.getBundle(column.getBundleFile());
+			bundle = ResourceBundle.getBundle(column.getBundleFile(), new FacesScopes().getUserLocale());
 			column.setColumnTitle(bundle.getString(column.getBundleKey()));
 		}
 	}
