@@ -95,7 +95,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.frn.do.no']}" /></td>
-				<td><p:dataList value="#{paymentMatchBackingBean.managedBean.delOrderList}" var="doList" type=definition>
+				<td><p:dataList value="#{paymentMatchBackingBean.managedBean.delOrderList}" var="doList" type="definition">
         				<p:commandLink value="#{doList.deliveryOrderNo}" rendered="#{doList.recordStatusFlg==1}" 
 					 		action="#{paymentMatchBackingBean.navigateDelOrder(doList)}" />
     				</p:dataList></td>
