@@ -3294,6 +3294,14 @@ table.rptTbl {
 	display: none;
 }
 
+.ui-widget-content .ui-datalist-content{
+    border: none;
+    background: transparent;
+    background-image: none;
+}
+
+
+
 .show-column-names table thead tr {
 	display: table-row;
 }
