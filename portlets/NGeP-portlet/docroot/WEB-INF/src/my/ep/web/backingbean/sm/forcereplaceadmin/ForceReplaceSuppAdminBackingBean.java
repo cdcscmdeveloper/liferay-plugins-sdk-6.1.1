@@ -99,6 +99,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 						.getNewIdentificationType());
 		getManagedBean().getNewAdmin().setIdentificationNo(
 				getManagedBean().getReactivateBasic().getNewIdentificationNo());
+		SmCommonUtil.setNewPersonnelPermAndMailAddress(getManagedBean()
+				.getNewAdmin(), getManagedBean().getMailAddr(),
+				getManagedBean().getPermAddr());
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
 		redirectToSuccessPage(resDto);
@@ -414,11 +417,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		getManagedBean().setPermAddr(perm);
 		getManagedBean().setMailAddr(mail);
-
-		getManagedBean().getNewAdmin().getSmPersonnelAddresses()
-				.add(getManagedBean().getPermAddr());
-		getManagedBean().getNewAdmin().getSmPersonnelAddresses()
-				.add(getManagedBean().getMailAddr());
 	}
 
 	/**
@@ -434,13 +432,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 				DbValueConst.RECORD_STATUS_ACTIVE);
 		getManagedBean().getNewAdmin().setBumiFlg(1);
 		getManagedBean().getNewAdmin().setMuslimFlg(1);
+		getManagedBean().getNewAdmin().setRecordStatusFlg(
+				DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 
 		PmCountry country = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		getManagedBean().getNewAdmin().setPmCountry(country);
-		getManagedBean().getNewAdmin().setPmRace(new PmRace());
-		getManagedBean().getNewAdmin().setSmPersonnelAddresses(
-				new ArrayList<SmPersonnelAddress>());
 	}
 
 	/**
