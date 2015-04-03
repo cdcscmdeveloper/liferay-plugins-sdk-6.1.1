@@ -614,6 +614,7 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setCompanyName(
 				this.getManagedBean().getSmSupplier().getCompanyName());
 		this.getManagedBean().setActiveTabIndex(0);
+		this.getManagedBean().setSelectedZoneTabIndex(0);
 		this.getManagedBean().setBriefingDtls(null);
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
 	}
@@ -1765,7 +1766,9 @@ public class NoticeBoardBackingBean extends
 
 				bsvDtl.setToBeattand(bsvDtl.getToBeattand() + 1);
 			} else {
-				bsvDtl.setToBeattand(bsvDtl.getToBeattand() - 1);
+				if(bsvDtl.getToBeattand()!= 0){
+					bsvDtl.setToBeattand(bsvDtl.getToBeattand() - 1);
+				}
 			}
 			if (bsvDtl.getToBeattand() > bsvDtl.getMaxNoOfAttendance()) {
 
