@@ -4584,9 +4584,11 @@ public class SupplierFinalizationBackingBean extends
 				PmParameter pmParameter = scQtRecommend.getRecommendBy();
 
 				// Reset selection
-				if (StringUtils.isBlank(scQtRecommend.getRecommendByStr())) {
+				if (StringUtils.isBlank(scQtRecommend.getRecommendByStr())
+						|| pmParameter == null) {
 					recommendBySelectionFlag = false;
 				} else {
+					scQtRecommend.setRecommendByStr(pmParameter.getParameterCode());
 					scQtRecommend.setSelected(false);
 				}
 				scQtRecommend
@@ -5005,15 +5007,28 @@ public class SupplierFinalizationBackingBean extends
 		String itemName = scQtRecommend.getRequestItem().getItemName();
 		List<ScQtRecommendDtl> recommendDtlList = scQtRecommend
 				.getRecommendDtls();
+		
+		int activeSupplCount = 0;
+		if (CollectionUtils.isNotEmpty(recommendDtlList)) {
+			for (ScQtRecommendDtl dtl : recommendDtlList) {
+				if (dtl.getRecordStatusFlg().equals(
+						DbValueConst.RECORD_STATUS_ACTIVE)) {
+					++activeSupplCount;
+					if (activeSupplCount == 2) {
+						break;
+					}
+				}
+			}
+		}		
 		if (StringUtils.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD,
 				scQtRecommend.getRecommendByStr())
-				&& (recommendDtlList == null || recommendDtlList.size() != 1)) {
+				&& (activeSupplCount != 1)) {
 			setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
 			throw new EpException(MessageConst.ERROR_760213);
 		}
 		if (StringUtils.equals(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD,
 				recommendByCode)) {
-			if (recommendDtlList == null || recommendDtlList.size() < 2) {
+			if (activeSupplCount < 2) {
 				setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_760223, new String[] {
 						itemName, recommendByDesc });
@@ -5022,14 +5037,17 @@ public class SupplierFinalizationBackingBean extends
 						.getQuantity();
 				BigDecimal tempQuantity = new BigDecimal(0.0);
 				for (ScQtRecommendDtl recommendDtl : recommendDtlList) {
-					BigDecimal quantityAwarded = recommendDtl.getAwardQty();
-					if (quantityAwarded == null
-							|| quantityAwarded.compareTo(totalQuantity) >= 0) {
-						setZoneAndTabIndexOnException(scQtRecommend
-								.getTplSpecZoneDtl());
-						throw new EpException(MessageConst.ERROR_760214);
+					if (recommendDtl.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_ACTIVE)) {
+						BigDecimal quantityAwarded = recommendDtl.getAwardQty();
+						if (quantityAwarded == null
+								|| quantityAwarded.compareTo(totalQuantity) >= 0) {
+							setZoneAndTabIndexOnException(scQtRecommend
+									.getTplSpecZoneDtl());
+							throw new EpException(MessageConst.ERROR_760214);
+						}
+						tempQuantity = tempQuantity.add(quantityAwarded);
 					}
-					tempQuantity = tempQuantity.add(quantityAwarded);
 				}
 				if (totalQuantity.compareTo(tempQuantity) != 0) {
 					setZoneAndTabIndexOnException(scQtRecommend
@@ -5042,7 +5060,7 @@ public class SupplierFinalizationBackingBean extends
 				recommendByCode)
 				|| StringUtils.equals(ParameterConst.RECOMMEND_BY_MULTIPLE_LOI,
 						recommendByCode)) {
-			if (recommendDtlList == null || recommendDtlList.size() < 2) {
+			if (activeSupplCount < 2) {
 				setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_760223, new String[] {
 						itemName, recommendByDesc });
