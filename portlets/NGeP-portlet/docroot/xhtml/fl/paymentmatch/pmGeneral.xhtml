@@ -88,12 +88,6 @@
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.contract)}"/></td>	
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
-				<td><p:selectBooleanCheckbox
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.mto}"
-						disabled="true" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mto']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" />
