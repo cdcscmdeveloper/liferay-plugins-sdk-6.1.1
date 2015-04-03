@@ -6,12 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<style type="text/css">
-			.custTextbox input {
-				width: 185px !important;
-			}
-	</style>
-
 	<p:dialog widgetVar="createOwnerSpec" modal="true" width="950"
 		id="bocreateSpec" height="600" position="top" header="#{lbl['lbl.sc.spec.create.specification']}">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.business.owner']}"></ac:title> -->
@@ -121,7 +115,7 @@
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									id="crdateFrom" showOn="button" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="crdateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.sc.creatdtto']}" /></td>
@@ -131,7 +125,7 @@
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}"
 									readonlyInput="true"
 									required="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate ne null or !specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate eq ''}"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<f:attribute name="startDate"
 										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromCreatedDate}" />
 								</p:calendar></td>
@@ -142,7 +136,7 @@
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
 									id="pbdateFrom" showOn="button"  readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="pbdateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
@@ -150,7 +144,7 @@
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toPublishDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}"
 									readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<f:attribute name="startDate"
 										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromPublishDate}" />
 									<f:validator validatorId="dateRangeValidator" />
@@ -162,7 +156,7 @@
 							<td><p:calendar
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
 									id="cldateFrom" showOn="button" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="cldateTo" />
 								</p:calendar></td>
 							<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
@@ -170,7 +164,7 @@
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.toClosingDate}"
 									mindate="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}"
 									readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" styleClass="custTextbox">
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<f:attribute name="startDate"
 										value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.fromClosingDate}" />
 									<f:validator validatorId="dateRangeValidator" />
