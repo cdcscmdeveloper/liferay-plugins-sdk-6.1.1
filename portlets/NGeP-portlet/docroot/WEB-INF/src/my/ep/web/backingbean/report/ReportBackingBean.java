@@ -4327,7 +4327,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 
-	public void loadReportWithParams(List paramLst) {
+	public void loadReportWithParams(List<String> paramLst) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_PREV_URL));
