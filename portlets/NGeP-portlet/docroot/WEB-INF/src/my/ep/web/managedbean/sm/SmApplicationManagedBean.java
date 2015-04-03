@@ -98,6 +98,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> deleteCategoryList;
 	private List<SmSupplierCategory> deleteNewApplCategoryList;
 	private List<SmSupplierCategory> activeCategoryList;
+	private List<SmSupplierCategory> approvedCategoryList;
 	private List<SmSupplierCategory> splCategoryList;
 	private List<SmAssociationBody> nonPersonnelProfBodyList;
 	private List<PmCategoryL1> supplierParentCatList;
@@ -348,7 +349,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disabledBusinessType;
 	private boolean disableWithFedralTransaction;
 	private boolean disableBranchGst;
-	
+
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -2662,7 +2663,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return disableWithFedralTransaction;
 	}
 
-	public void setDisableWithFedralTransaction(boolean disableWithFedralTransaction) {
+	public void setDisableWithFedralTransaction(
+			boolean disableWithFedralTransaction) {
 		this.disableWithFedralTransaction = disableWithFedralTransaction;
 	}
 
@@ -2672,6 +2674,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisableBranchGst(boolean disableBranchGst) {
 		this.disableBranchGst = disableBranchGst;
+	}
+
+	public List<SmSupplierCategory> getApprovedCategoryList() {
+		return approvedCategoryList;
+	}
+
+	public void setApprovedCategoryList(
+			List<SmSupplierCategory> approvedCategoryList) {
+		this.approvedCategoryList = approvedCategoryList;
 	}
 
 }
