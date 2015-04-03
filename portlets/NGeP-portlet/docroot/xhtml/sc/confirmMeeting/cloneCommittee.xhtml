@@ -193,9 +193,9 @@
 			</p:dataTable>
 			<p:spacer height="30"></p:spacer>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					style="float:right;" onclick="screen2.hide();" />
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					process="@this,committeedtlsid" partialSubmit="true"
 					actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 					oncomplete="prepareCommittee.paginator.endLink.click();"

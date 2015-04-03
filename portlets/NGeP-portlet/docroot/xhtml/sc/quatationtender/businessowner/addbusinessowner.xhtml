@@ -211,12 +211,12 @@
 				</c:if>
 			</p:panel>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					process="@this, newProfile, bopanel"
 					action="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}"
 					ajax="true" update="businessownerId, bopanel" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 					oncomplete="newbusinessowner.hide();" />
 			</div>
 		</p:panel>
