@@ -368,11 +368,20 @@ public class LOADetailBackingBean extends
 				getManagedBean().setScQt(resDTO.getScQt());
 			}
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+			
+			scLoa.setBondAmt(calcBondAmount(scLoa));
+			
+			if (scLoa.getBondAmt() != null) {
+				getManagedBean().setBondAmountWord(
+						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			}
 
 			generateDeclarationFromVelocity(scLoa,scQt);
 			
 			getManagedBean().setSelectedSupplierBranchName(
 					scLoa.getSupplierBranch());
+			
+			
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -1388,9 +1397,7 @@ public class LOADetailBackingBean extends
 	 */
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa, ScQt scQt) throws Exception {
-
 		populateAttachmentDetails(attachment);
-
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		PmUser ackByUser = scLoa.getAckBy();
@@ -1570,7 +1577,15 @@ public class LOADetailBackingBean extends
 		context.put("supplierUser", supplierUser);
 		context.put("supplierIcNo", supplierIcNo);
 		context.put("supplierDesignation", supplierDesignation);
-
+		
+		// with LOI and without LOI content for LOA to display in acceptance letter
+		if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getScLois() != null 
+				&& scLoa.getScLoiLoa().getScLois().size()>0){
+			context.put("loiContentFlag", true);
+		} else{
+			context.put("loiContentFlag", false);
+		}
+		
 		// Supplier Witness
 		String supplierWitnessUser = "";
 		String supplierWitnessIcNo = "";
