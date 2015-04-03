@@ -41,17 +41,10 @@
 		              value="#{centralContractBackingBean.managedBean.circularVer.startDate}">
 				    <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 				
-				  <p:outputLabel value="#{lbl['lbl.ct.extension.period']}" />
-		           <h:panelGrid columns="3">
-		           <p:inputText id="extendPeriod"  style="text-align:right;width:65px;" 
-		           	  disabled="#{centralContractBackingBean.managedBean.viewContract}"
-		              label="#{lbl['lbl.ct.extension.period']}" value="#{centralContractBackingBean.managedBean.circularVer.extendPeriod}">
-		             <p:ajax event="blur" process="@this" 
-				        listener="#{centralContractBackingBean.extendStartEndDate()}" update=":form:popupButtonCal5,:form:popupButtonCal6"></p:ajax>
-		           </p:inputText>
-		           <p:spacer width="2" /> 
-		           <p:outputLabel value="#{lbl['lbl.ct.months']}"/>
-		        </h:panelGrid>
+				  <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
+			   	        <p:selectBooleanCheckbox id="extensionId" value="#{centralContractBackingBean.managedBean.circularExtension}">
+			                 <p:ajax event="change" update=":form:ccc" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> 
+			           </p:selectBooleanCheckbox>
 		        
 				<h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 		        <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal4" 
@@ -59,23 +52,23 @@
 				        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 				
 			
-		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" /> 
-		         <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" id="popupButtonCal5" 
-			             style="width:115px;" disabled="true">
-			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
-		        <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" />
-		       <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" id="popupButtonCal6" 
-			             style="width:115px;" disabled="true">
-			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
-		     
-		     	<h:outputLabel value="#{lbl['lbl.ct.warranty.period']}" />
-				<h:panelGroup>
-					<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.warrantyPeriod}" 
-						disabled="#{centralContractBackingBean.managedBean.viewContract}"
-					  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
-					<p:spacer width="5" />
-					<h:outputText value="#{lbl['lbl.ct.months']}" />
-				</h:panelGroup>
+		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" rendered="#{centralContractBackingBean.managedBean.circularExtension}" />
+			    <p:calendar  value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
+			         maxdate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
+			         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
+			         rendered="#{centralContractBackingBean.managedBean.circularExtension}"  size="10"  id="popupButtonCal5" showOn="button"
+				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+		       </p:calendar>
+		       
+		       
+		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"  rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
+		   <p:calendar size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
+		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
+				   rendered="#{centralContractBackingBean.managedBean.circularExtension}" 
+				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
+				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
+				</p:calendar>
+				
 		   </h:panelGrid>
 		   <h:panelGrid columns="2">
 				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
