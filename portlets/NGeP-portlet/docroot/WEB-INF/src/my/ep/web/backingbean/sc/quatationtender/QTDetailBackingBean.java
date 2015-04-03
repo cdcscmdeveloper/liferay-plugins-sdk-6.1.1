@@ -841,6 +841,14 @@ public class QTDetailBackingBean extends
 			scQt.setScQtSupplierCriteria(this.getManagedBean()
 					.getSupplierCriteria());
 		}
+		if (!scQt.isPanel() && scQt.isZonal()) {
+			if (null != scQt.getScQtSupplierCriteria()) {
+				if (null != scQt.getScQtSupplierCriteria().getQtZoneCriterias()) {
+					scQt.getScQtSupplierCriteria().getQtZoneCriterias().setScQtSupplierCriteria(this.getManagedBean()
+				.getSupplierCriteria());
+				}
+			}
+		}
 		// Setting the Restricted Supplier List to Qtdetails
 		List<ScQtSupplier> qtSupplierList = this.getManagedBean()
 				.getQtSupplierList();
