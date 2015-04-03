@@ -597,7 +597,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 
 		} else {
+			this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
 			this.getManagedBean().setZoneTrees(null);
+
 		}
 	}
 	
