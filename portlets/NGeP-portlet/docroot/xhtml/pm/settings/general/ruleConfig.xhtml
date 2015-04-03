@@ -90,7 +90,7 @@
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="Value is mandatory" style="width:250px;">
 					<f:selectItems
-						value="#{ruleCatalogueBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.financialOrgRegType, ruleCatalogueBackingBean.parameterSearchBean)}" />
+						value="#{ruleCatalogueBackingBean.getDropdownCodeValuesBySearchBean(ruleCatalogueBackingBean.managedBean.selectedRuleType.parameterType, ruleCatalogueBackingBean.parameterSearchBean)}" />
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectOneMenu>
 				<p:message id="parameterCodeValueMsg" for="parameterCodeValueId"
