@@ -303,7 +303,7 @@ public class UnitOfMeasurementBackingBean extends
 		if (resDTO.isSuccessful()) {
 			if(resDTO.getMeasurementSearchResultBean()!=null && resDTO.getMeasurementSearchResultBean().getResultList()!=null 
 					&& !resDTO.getMeasurementSearchResultBean().getResultList().isEmpty()){
-				throw new EpException(MessageConst.ERR_900012);
+				  throw new EpException(MessageConst.ERR_900012,new String[]{uomCode});
 			}
 		}
 	}
