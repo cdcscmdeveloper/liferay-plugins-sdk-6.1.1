@@ -80,15 +80,15 @@
 		<h:panelGroup
 			rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.clone']}"
 					action="#{committeBackingBean.cloneCommitteMembersAcition(committeBackingBean.managedBean.headerTitle)}"
 					oncomplete="clonecommittee.show();" process="@this"
 					update="@(.cloneMember)" />
-				<p:commandButton id="committeeadd" value="#{lbl['lbl.so.addbtn']}"
+				<p:commandButton id="committeeadd" value="#{lbl['lbl.btn.add']}"
 					process="@this"
 					action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 					oncomplete="newcommittees.show();" update="@(.addCommitteeMember)" />
-				<p:commandButton value="#{lbl['lbl.so.delete']}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, committeMembersListId"
 					action="#{committeBackingBean.deleteCommitteeAction}"
 					update="committeMembersListId" />

@@ -91,18 +91,18 @@
 					<h:panelGroup id="addtositebutton">
 						<p:commandButton id="addtositevisitid"
 							update="@([id$=sitevisitdtlid])"
-							value="#{lbl['lbl.so.addtositevisit']}"
+							value="#{lbl['lbl.sc.qt.addtositevisit']}"
 							process="@this,briefingdtlid" partialSubmit="true"
 							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
 							rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle' and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
 					</h:panelGroup>
-					<p:commandButton id="briefingaddid" value="#{lbl['lbl.so.addbtn']}"
+					<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
 						process="@this"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-					<p:commandButton value="#{lbl['lbl.so.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this,briefingdtlid" partialSubmit="true"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
@@ -213,11 +213,11 @@
 
 							<p:commandButton id="addsitevisitid"
 								rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-								value="#{lbl['lbl.so.addbtn']}" process="@this"
+								value="#{lbl['lbl.btn.add']}" process="@this"
 								action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
 								oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-							<p:commandButton value="#{lbl['lbl.so.delete']}"
+							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 								process="@this, sitevisitdtlid" partialSubmit="true"
 								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"

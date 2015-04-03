@@ -14,17 +14,17 @@
 		<ui:include src="committeeApproval.xhtml" />
 
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.clone']}"
 				actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
 				oncomplete="screen2.show();" process="@this"
 				update="@([id$=cloneid])" />
 			<p:commandButton id="committeeapproveradd"
-				value="#{lbl['lbl.so.addbtn']}" process="@this"
+				value="#{lbl['lbl.btn.add']}" process="@this"
 				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 				oncomplete="newspecificationcommittee.show();"
 				update="@([id$=cloneid])" />
 
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, committeeapprovalId"
 				actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
 				update="committeeapprovalId" />

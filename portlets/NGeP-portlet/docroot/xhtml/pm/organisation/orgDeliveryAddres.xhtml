@@ -49,10 +49,10 @@
 		</p:dataTable>
 		<p:spacer height="15"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 				oncomplete="addressPopup.show();" update="@([id$=deliveryAddressDialog])"	
 				actionListener="#{organisationBackingBean.addDeliveryAddr}" />
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				actionListener="#{organisationBackingBean.deleteSelectedAdddress}"
 				update="deliveryAddressId,deliveryAddressDialog" process="@this,deliveryAddressId"
 				partialSubmit="true" />
