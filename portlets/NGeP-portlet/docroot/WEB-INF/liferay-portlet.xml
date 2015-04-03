@@ -1717,7 +1717,7 @@
 		<css-class-wrapper>pm-ruleconfigure-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>pmFactoringCompanies</portlet-name>
+		<portlet-name>factoring-Companies</portlet-name>
 
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
