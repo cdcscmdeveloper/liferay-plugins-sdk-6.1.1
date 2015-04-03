@@ -141,11 +141,11 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}">
 			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				actionListener="#{qTDetailBB.deleteGoSoDoAction}"
 			 	update="gosodoList"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_GOSODO)}" />

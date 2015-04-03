@@ -175,13 +175,13 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 				process="@all"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
 				update="@([id$=nonFedExpPanel])" />
 
-			<p:commandButton value="#{lbl['lbl.so.delete']}" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true"
 				process="@this"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				update="@([id$=nonFedExpPanel])"

@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.so.schedule']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel
@@ -117,7 +117,7 @@
 	</p:panel>
 	<c:if
 		test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
-		<p:panel id="samplezoneid" header="#{lbl['lbl.so.sample.submission']}"
+		<p:panel id="samplezoneid" header="#{lbl['lbl.sc.qt.sample.submission']}"
 			toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}"
 			styleClass="sampleSubmitionUpdate">
@@ -148,14 +148,14 @@
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.schedule.same.address']}"
+				<p:commandButton value="#{lbl['lbl.sc.qt.btn.same.address']}"
 					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 					process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
 					update="@(.sampleSubmitionUpdate)" />
 			</div>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.so.sample.submission']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.sc.qt.sample.submission']}" toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
 			<table style="width: 100%">
 				<tr>
@@ -304,7 +304,7 @@
 			</table>
 		</p:panel>
 	</c:if>
-	<p:panel header="#{lbl['lbl.so.contact.person']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.contact.person']}" toggleable="true">
 		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
 			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
@@ -316,39 +316,39 @@
 
 			<ac:paginator for="cpersondetailsid" />
 
-			<p:column headerText="#{lbl['lbl.so.name']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.name']}">
 				<h:inputText value="#{contactpersondetails.name}"
 					style="width: 200px;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.phone']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.phone']}">
 				<h:inputText value="#{contactpersondetails.phoneNo}"
 					style="width: 120px;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.fax']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.fax']}">
 				<h:inputText value="#{contactpersondetails.faxNo}"
 					style="width: 120px;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mail']}">
+			<p:column headerText="#{lbl['lbl.sc.mail']}">
 				<h:inputText value="#{contactpersondetails.email}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="1" />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				process="@this,cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
 				update="cpersondetailsid" />
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				action="#{qTScheduleDetailBackingBean.deleteContactPerson}"
 				update="cpersondetailsid" />
 		</div>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.so.desk.officer.admin']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}" toggleable="true">
 		<p:dataTable id="doaaid" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
@@ -373,12 +373,12 @@
 		</p:dataTable>
 		<p:spacer height="1" />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				process="@this, doaaid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
 				update="doaaid" />
-			<p:commandButton value="#{lbl['lbl.so.delete']}" update="doaaid"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="doaaid"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 				action="#{qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant}" />
 		</div>

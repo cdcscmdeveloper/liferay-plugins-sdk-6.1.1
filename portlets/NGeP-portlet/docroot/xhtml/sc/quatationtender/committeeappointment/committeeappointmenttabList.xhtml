@@ -30,12 +30,12 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton id="specificationcommitteeadd"
-					value="#{lbl['lbl.so.addbtn']}" process="@this"
+					value="#{lbl['lbl.btn.add']}" process="@this"
 					rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}"
 					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
 					oncomplete="newspecificationcommittee.show();" update="@(.scAddMember)"/>
 
-				<p:commandButton value="#{lbl['lbl.so.delete']}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, specificationcommitteeid"
 					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
 					update="@(.scMemberDtl)" 
