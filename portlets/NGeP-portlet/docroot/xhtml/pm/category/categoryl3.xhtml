@@ -24,10 +24,11 @@
 						update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
 				</td>
-				<td><p:commandButton
+			   	<td><p:commandButton
 						value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
-						action="#{categoryBackingBean.saveSubDivision}" update=":form"
-						style="float:right;" /></td>
+						action="#{categoryBackingBean.saveSubDivision}" update=":form"						
+						style="float:right;" />
+						</td>
 			</tr>
 
 
@@ -717,7 +718,7 @@
 			<p:panel header="#{lbl['lbl.pm.company.type.restriction']}"
 				toggleable="true" id="catRestrictionId"
 				rendered="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
-				<p:tabView>
+				<p:tabView id="tabCatId">
 					<p:tab title="#{lbl['lbl.pm.company.type.tab']}"
 						rendered="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 						<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex"
@@ -727,17 +728,82 @@
 							width="100%" var="pmCategoryRestr">
 
 							<ac:paginator for="dtlCategoryRestrId"></ac:paginator>
-							<p:column headerText="#{lbl['lbl.pm.company.type']}" width="50%">
-								<p:selectOneMenu
-									value="#{pmCategoryRestr.companyTypeId.parameterId}"
-									required="true" label="#{lbl['lbl.pm.company.type']}">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems
-										value="#{categoryBackingBean.getPopulateCompanyTypeList()}"
-										var="compType" itemValue="#{compType.pmParameter.parameterId}"
-										itemLabel="#{compType.codeName}" />
-								</p:selectOneMenu>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.pm.company.type']}" />
+								</f:facet>
+								<ui:fragment rendered="#{!pmCategoryRestr.brandNew}">
+									<h:outputText value="#{lbl['lbl.pm.company.individu']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'A'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.llp']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'B'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.rob.perkongsian']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'C'}" />
+
+									<h:outputText
+										value="#{lbl['lbl.pm.company.pendaftaran.sabah']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'D'}" />
+
+									<h:outputText
+										value="#{lbl['lbl.pm.company.pendaftaran.sarawak']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'E'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.rob.perseorangan']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'F'}" />
+
+									<h:outputText
+										value="#{lbl['lbl.pm.company.pendaftaran.sabah']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'G'}" />
+
+									<h:outputText
+										value="#{lbl['lbl.pm.company.pendaftaran.sarawak']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'H'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.roc.sdn']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'I'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.roc.bhd']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'J'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.ros.pertubuhan']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'K'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.ros.skm.koperasi']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'L'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.ros.persatuan']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'M'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.ros.pertubuhan']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'O'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.ros.koperasi']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'P'}" />
+
+									<h:outputText value="#{lbl['lbl.pm.company.ros.ngo']}"
+										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'N'}" />								
+								</ui:fragment>
+								
+								<ui:fragment rendered="#{pmCategoryRestr.brandNew}">
+									<p:selectOneMenu
+										value="#{pmCategoryRestr.companyTypeId.parameterId}"
+										required="true" label="#{lbl['lbl.pm.company.type']}">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="" />
+										<f:selectItems
+											value="#{categoryBackingBean.getPopulateCompanyTypeList()}"
+											var="compType"
+											itemValue="#{compType.pmParameter.parameterId}"
+											itemLabel="#{compType.codeName}" />
+											<p:ajax partialSubmit="true" update="@this" process="@this"/>
+									</p:selectOneMenu>  
+								
+								</ui:fragment>
+
 							</p:column>
+
 							<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
 								<p:commandLink partialSubmit="true" process="@this"
 									action="#{categoryBackingBean.deleteCategoryRestr(pmCategoryRestr)}"
@@ -750,6 +816,7 @@
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
 								action="#{categoryBackingBean.addCategoryRestr()}"
+								process="@this,dtlCategoryRestrId" 
 								update="dtlCategoryRestrId" />
 
 						</div>
