@@ -1568,6 +1568,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			throw new EpException(MessageConst.ERROR_730028);
 		}
 		
+		if(ppPlan.isBrandNew() && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){ 
+            if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+                    if(this.getManagedBean().getVerifierModel().getTarget()==null || this.getManagedBean().getVerifierModel().getTarget().isEmpty()){
+                            throw new EpException(MessageConst.ERROR_730017);
+                    }
+                    if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
+                            throw new EpException(MessageConst.ERROR_730018);
+                    }
+            }else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+                    if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
+                            throw new EpException(MessageConst.ERROR_730018);
+                    }
+            }
+		}
 		
 		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 			validatePpItem();
