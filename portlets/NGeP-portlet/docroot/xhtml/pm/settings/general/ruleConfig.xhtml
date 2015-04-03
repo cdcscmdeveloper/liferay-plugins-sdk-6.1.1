@@ -21,7 +21,7 @@
 		</div>
 
 		<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"
-			var="ruleTypeObj" row="10" 
+			var="ruleTypeObj" row="10"
 			value="#{ruleCatalogueBackingBean.managedBean.configRuleList}"
 			selection="#{ruleCatalogueBackingBean.managedBean.selectedRuleType}"
 			rowKey="#{ruleTypeObj}" rowIndexVar="rowIndex" selectionMode="single">
@@ -68,9 +68,10 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="20"  maxlength="20"
-					id="amountValueId" disabled="#{!(typeValueObj.brandNew)}"
-					required="true" requiredMessage="Value is mandatory"
+				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+					maxlength="20" id="amountValueId"
+					disabled="#{!(typeValueObj.brandNew)}" required="true"
+					requiredMessage="Value is mandatory"
 					validator="#{webappBean.checkIntegerField}"
 					validatorMessage="Value Of Amount Type should be a Digit!">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
@@ -102,11 +103,13 @@
 					                 #{lbl['lbl.pm.value']}
 				           </f:facet>
 
-				<p:inputText value="#{typeValueObj.ruleValue}" size="20" maxlength="20"
-					id="percentageValueId" disabled="#{!(typeValueObj.brandNew)}"
-					required="true" requiredMessage="Value is mandatory"
+				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+					maxlength="20" id="percentageValueId"
+					disabled="#{!(typeValueObj.brandNew)}" required="true"
+					requiredMessage="Value is mandatory"
 					validator="#{webappBean.validatePercentageNumber}">
-					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink])" />
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this, @([id$=cloneLink])" />
 				</p:inputText>
 				<p:message id="percentageValueMsg" for="percentageValueId"
 					display="icon" />
@@ -132,30 +135,37 @@
 			</p:column>
 
 			<p:column width="15%" id="fromValueColumnId"
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
-				validator="#{webappBean.checkFloatField}"
-				validatorMessage="Value of FromValue should be a Float!">
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
-				<p:inputText value="#{typeValueObj.fromValue}" size="15"  maxlength="18"
-					id="fromValueId" disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}">
-					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink])" />
+				<p:inputText value="#{typeValueObj.fromValue}" size="15"
+					maxlength="18" id="fromValueId"
+					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}"
+					validator="#{webappBean.checkIntegerField}"
+					validatorMessage="Value Of fromValue Type should be a Digit!">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this, @([id$=cloneLink])" />
 				</p:inputText>
 				<p:message id="fromValueMsg" for="fromValueId" display="icon" />
 			</p:column>
 
 			<p:column width="15%"
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}"
-				validator="#{webappBean.checkFloatField}"
-				validatorMessage="Value of ToValue should be a Float!">
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'M' or ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'P') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
 				<f:facet name="header">
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
-				<p:inputText value="#{typeValueObj.toValue}" size="15"  maxlength="18"
-					id="toValueId" disabled="#{!(typeValueObj.brandNew)}">
-					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateToValue(index)}" update=":form:settingTabId:ruleTypeValueTableID" />
+				<p:inputText value="#{typeValueObj.toValue}" size="15"
+					maxlength="18" id="toValueId"
+					disabled="#{!(typeValueObj.brandNew)}"
+					validator="#{webappBean.checkIntegerField}"
+					validatorMessage="Value Of toValue Type should be a Digit!">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@this, @([id$=cloneLink])" />
+					<p:ajax event="change"
+						listener="#{ruleCatalogueBackingBean.updateToValue(index)}"
+						update=":form:settingTabId:ruleTypeValueTableID" />
 				</p:inputText>
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
@@ -184,9 +194,13 @@
 					value="#{typeValueObj.effDate}">
 					<p:ajax event="dateSelect" update="@([id$=ruleConfigExpDateId])"
 						process="@this" />
-				 <p:ajax event="dateSelect" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])"/>
-				 <p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])" />
-           
+					<p:ajax event="dateSelect"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+					<p:ajax event="change"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+
 				</p:calendar>
 			</p:column>
 
@@ -202,9 +216,13 @@
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					value="#{typeValueObj.expDate}">
-					<p:ajax event="dateSelect" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])"/>
-				    <p:ajax event="change" listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}" update="@([id$=cloneLink])" />
-           
+					<p:ajax event="dateSelect"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+					<p:ajax event="change"
+						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
+						update="@([id$=cloneLink])" />
+
 				</p:calendar>
 			</p:column>
 
@@ -243,15 +261,14 @@
 				</table>
 			</p:column>
 		</p:dataTable>
-		<br />
-			<div style="text-align: right;">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" id="addTypeValueButton" style="float:right;"
-								action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
-								partialSubmit="true" process="@this"
-								update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-
-			</div>
 		
-	
-</p:panel>
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				id="addTypeValueButton" style="float:right;"
+				action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
+				partialSubmit="true" process="@this"
+				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
+
+
+    <br/>
+	</p:panel>
 </ui:composition>

@@ -668,8 +668,9 @@ public class RuleCatalogueBackingBean extends
 		// this.getManagedBean().getConfigRuleList().remove(indexOfSelectedRuleType);
 		List<PmConfigRuleValue> removeList = new ArrayList<PmConfigRuleValue>();
 PmConfigRuleValue selectedValueToDel =this.getManagedBean().getSelectedRuleType().getConfigRuleValues().get(rowIndex);
-   if(selectedValueToDel.isShowFlag()){//if its parent record delete all child
-	   int groupIdOfParent = selectedValueToDel.getGroupValueId();
+
+if(this.getManagedBean().getSelectedRuleType().getIsRangeValue() == 1 && selectedValueToDel.isShowFlag()){//if its range and parent record, delete all child
+	   Integer groupIdOfParent = selectedValueToDel.getGroupValueId();
 	  for(PmConfigRuleValue value :this.getManagedBean().getSelectedRuleType().getConfigRuleValues()){
 		  if(value.getGroupValueId() == groupIdOfParent){
 			  removeList.add(value);
