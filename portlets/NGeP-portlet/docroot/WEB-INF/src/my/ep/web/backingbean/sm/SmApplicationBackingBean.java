@@ -4202,26 +4202,42 @@ public class SmApplicationBackingBean extends
 	private void setPersonnelSoftcertFlagOnSelectEpRole(SmPersonnel smPersonnel) {
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
-					smPersonnel.setSoftcertFlg(0);
-				} else {
-					if (SmApplicationUtil.isPersonnelAlreadyRequestSoftcert(
-							getManagedBean().getSmSupplier().getSupplierId(),
-							smPersonnel.getPmUser().getUserId())) {
-						smPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_ISSUED);
-					} else {
-						smPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-					}
-				}
-			} else {
+			if (smPersonnel.getPersonnelId() == null) {
 				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
 					smPersonnel.setSoftcertFlg(0);
 				} else {
 					smPersonnel
 							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+				}
+			} else {
+				if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (smPersonnel.getEpRole()
+							.equals(RoleCode.CM_USER.value())) {
+						smPersonnel.setSoftcertFlg(0);
+					} else {
+						if (smPersonnel.getPmUser() != null
+								&& SmApplicationUtil
+										.isPersonnelAlreadyRequestSoftcert(
+												getManagedBean()
+														.getSmSupplier()
+														.getSupplierId(),
+												smPersonnel.getPmUser()
+														.getUserId())) {
+							smPersonnel
+									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_ISSUED);
+						} else {
+							smPersonnel
+									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+						}
+					}
+				} else {
+					if (smPersonnel.getEpRole()
+							.equals(RoleCode.CM_USER.value())) {
+						smPersonnel.setSoftcertFlg(0);
+					} else {
+						smPersonnel
+								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+					}
 				}
 			}
 		} else {
