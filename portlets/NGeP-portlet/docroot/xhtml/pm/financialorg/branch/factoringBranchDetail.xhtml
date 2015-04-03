@@ -83,12 +83,12 @@
 
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,financialBranchAccId" partialSubmit="true"
 				action="#{financialOrgBackingBean.addFinancialBranchAcc}"
 				update="financialBranchAccId" />
 
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				update="financialBranchAccId" process="@this,financialBranchAccId"
 				partialSubmit="true"
 				action="#{financialOrgBackingBean.deleteFinancialBranchAcc}" />
