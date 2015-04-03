@@ -1268,6 +1268,7 @@ public class TemplateSpecBackingBean extends
 	public BigDecimal calcGrandTotalEstAmount(TemplateSpecBean templateSpecBean) {
 		BigDecimal totalEstAmount = new BigDecimal(0);
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
+		TplSpecZoneDtl specZoneDtl = templateSpecBean.getTplSpecZoneDtl();
 		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
 
 		if (TemplateSpecConst.CONTENT_TYPE_SCORE.equals(templateSpecBean
@@ -1281,8 +1282,17 @@ public class TemplateSpecBackingBean extends
 				if (!specQuestionIds.contains(specQuestion.getSpecQuestionId())
 						&& specQuestion.getTplSpecEstimations() != null) {
 
-					specEstimations
-							.addAll(specQuestion.getTplSpecEstimations());
+					if (specZoneDtl != null) {
+						for (TplSpecEstimation specEstimation : specQuestion.getTplSpecEstimations()) {
+							if (specZoneDtl.getSpecZoneId().equals(specEstimation.getTplSpecZoneDtl().getSpecZoneId())) {
+								specEstimations.add(specEstimation);
+								break;
+							}
+						}
+						
+					} else {
+						specEstimations.addAll(specQuestion.getTplSpecEstimations());	
+					}
 
 					specQuestionIds.add(specQuestion.getSpecQuestionId());
 				}
