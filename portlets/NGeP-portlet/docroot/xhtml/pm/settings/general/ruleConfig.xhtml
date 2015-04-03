@@ -261,14 +261,16 @@
 				</table>
 			</p:column>
 		</p:dataTable>
-		
+		<div style="text-align: right; min-height: 30px;"
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				id="addTypeValueButton" style="float:right;"
 				action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-
-
-    <br/>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<br />
 	</p:panel>
 </ui:composition>
