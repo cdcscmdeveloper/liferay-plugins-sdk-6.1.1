@@ -164,7 +164,7 @@
 			</p:dataTable>
 			
 			<c:if
-				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and !noticeBoardBackingBean.managedBean.scQt.zonal}">
+				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 				<br/>
 				<h:outputText value="#{lbl['lbl.sc.notice.board.locality']}"
 					style="font-weight:bold;text-align: left;font-size:14px;" />
@@ -175,39 +175,6 @@
 					var="locTree" style="width:100%">
 					<p:column headerText="#{lbl['lbl.sc.location']}">
 						<p:tree value="#{locTree}" var="location">
-							<p:treeNode type="state">
-								<h:outputText value="#{location.pmState.stateName}" />
-							</p:treeNode>
-							<p:treeNode type="division">
-								<h:outputText value="#{location.pmDivision.divisionName}" />
-							</p:treeNode>
-							<p:treeNode type="district">
-								<h:outputText value="#{location.pmDistrict.districtName}" />
-							</p:treeNode>
-							<p:treeNode type="city">
-								<h:outputText value="#{location.pmCity.cityName}" />
-							</p:treeNode>
-						</p:tree>
-					</p:column>
-				</p:dataTable>
-
-			</c:if>
-
-			<c:if
-				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and noticeBoardBackingBean.managedBean.scQt.zonal}">
-				<br/>
-				<h:outputText value="#{lbl['lbl.sc.nb.zone.details']}"
-					style="font-weight:bold;text-align: left;font-size: 14px;" />
-				<p:spacer height="10px"></p:spacer>
-
-				<p:dataTable
-					value="#{noticeBoardBackingBean.managedBean.locationNodes}"
-					var="locTree" style="width:100%">
-					<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.Zone']}">
-						<p:tree value="#{locTree}" var="location">
-							<p:treeNode type="zone">
-								<h:outputText value="#{location.zoneName}" />
-							</p:treeNode>
 							<p:treeNode type="state">
 								<h:outputText value="#{location.pmState.stateName}" />
 							</p:treeNode>
@@ -236,7 +203,7 @@
 				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 		</c:if>
 		<c:if
-			test="#{noticeBoardBackingBean.managedBean.scQt.zonal and noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
+			test="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="nbZones.xhtml" />
 		</c:if>
 
