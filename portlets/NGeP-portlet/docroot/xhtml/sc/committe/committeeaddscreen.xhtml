@@ -237,12 +237,12 @@
 			</p:panel>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					onclick="newcommittees.hide();" update="@(.committeMemberDtl)"
 					process="@this, newCommitteeProfile"
 					actionListener="#{committeBackingBean.okCommitteeAction}" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 					oncomplete="newcommittees.hide();"/>
 			</div>
 		</p:panel>

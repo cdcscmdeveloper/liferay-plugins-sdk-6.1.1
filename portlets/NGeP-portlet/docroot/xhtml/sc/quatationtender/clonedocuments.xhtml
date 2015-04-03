@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="documentcloneid" header="#{lbl['lbl.so.clone.document']}"
+	<p:dialog id="documentcloneid" header="#{lbl['lbl.sc.qt.clone.document']}"
 		widgetVar="screen2" width="950" height="600" position="top"
 		styleClass="clonedocument">
 		<p:panel id="documentclonepnlid">
@@ -162,13 +162,13 @@
 			</p:panel>
 			<p:spacer height="3" />
 			<p:panel id="cloneDocumentList"
-				header="#{lbl['lbl.so.document.list']}" toggleable="true">
+				header="#{lbl['lbl.sc.document.list']}" toggleable="true">
 				<p:dataTable id="documentlistid" value="#{qTDocumentsBackingBean.managedBean.cloneScQtDocReports}" var="doclist" rowKey="#{doclist}"
 					selection="#{qTDocumentsBackingBean.managedBean.selectedCloneScQtDocReports}" styleClass="cloneResults,cloneDocumentList">
 
 					<p:column selectionMode="multiple" style="width:2%" />
 
-					<p:column headerText="#{lbl['lbl.so.document']}">
+					<p:column headerText="#{lbl['lbl.sc.qt.document']}">
 						<h:outputText value="#{doclist.title}" />
 					</p:column>
 				</p:dataTable>

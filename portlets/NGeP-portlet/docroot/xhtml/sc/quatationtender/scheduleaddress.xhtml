@@ -14,10 +14,10 @@
 				src="/xhtml/sc/quatationtender/briefingsitevisit/samplesubmission.xhtml" />
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}" update="@([id$=sampleid])"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@([id$=sampleid])"
 					process="@this, @(.sampleDetails)" 
 					action="#{qTScheduleDetailBackingBean.okSubmission}" />
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					 action="#{qTScheduleDetailBackingBean.closeSampleAddressPopUp}" />
 			</div>
 		</c:if>

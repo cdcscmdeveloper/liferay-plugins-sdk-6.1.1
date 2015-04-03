@@ -232,12 +232,12 @@
 				</c:if>
 			</p:panel>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					 process="@this, newProfile"
 					update="@(.committeMemberDtls)"
 					actionListener="#{committeBackingBean.okQCCommitteeAction}" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 					oncomplete="screen3.hide();"/>
 			</div>
 		</p:panel>
