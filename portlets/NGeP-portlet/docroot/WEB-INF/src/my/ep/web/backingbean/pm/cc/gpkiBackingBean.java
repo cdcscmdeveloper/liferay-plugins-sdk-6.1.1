@@ -23,6 +23,7 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
 
 
 @ManagedBean(name = "gpkiBackingBean")
@@ -87,13 +88,13 @@ public class gpkiBackingBean {
 		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
 		System.out.println("ContextualCompositeMethodExpression  2");  
 		debugLogger("reflectAction=====================================: "+obj);		
-		if(true){
-//		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
+//		if(true){
+		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
 			pmDigiSign.setCreatedBy(userId);
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOrginalData(textBeforeSign);
 	        pmDigiSign.setSignedData(signedText);
-
+			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 			debugLogger("=================================Same IC No");
 	        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
 		}else{
