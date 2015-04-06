@@ -98,6 +98,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean disabledCompanyNameInMaintenance;
 	private boolean disabledBusinessTypeInMaintenance;
 	
+	private boolean gstFlag;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -545,6 +547,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setDisabledBusinessTypeInMaintenance(
 			boolean disabledBusinessTypeInMaintenance) {
 		this.disabledBusinessTypeInMaintenance = disabledBusinessTypeInMaintenance;
+	}
+
+	public boolean isGstFlag() {
+		return gstFlag;
+	}
+
+	public void setGstFlag(boolean gstFlag) {
+		this.gstFlag = gstFlag;
 	}
 	
 }
