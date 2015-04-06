@@ -323,7 +323,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The spec name. */
 	private String specName;
-	
+
 	/** The status id. */
 	private Long statusId;
 
@@ -733,14 +733,19 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The templatespec Newable. */
 	private boolean specNewable = true;
-	
-	/** For Create Specification  Screen. */
+
+	/** For Create Specification Screen. */
 	private QtnTenderSearchBean qtnTendertemplateSearchBean;
-	
-	 /** The temp zone name. */
-    private String  tempZoneName;
-    
-    private boolean isCheckAllList = false;
+
+	/** The temp zone name. */
+	private String tempZoneName;
+
+	private boolean isCheckAllList = false;
+
+	/** The financial Item score setting. */
+	private ScQtScoreSetting finacialItemScoreSetting;
+
+	private BigDecimal financialItemScore;
 
 	/**
 	 * Checks if is spec complete.
@@ -4895,7 +4900,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qtnTendertemplateSearchBean the qtnTendertemplateSearchBean to set
+	 * @param qtnTendertemplateSearchBean
+	 *            the qtnTendertemplateSearchBean to set
 	 */
 	public void setQtnTendertemplateSearchBean(
 			QtnTenderSearchBean qtnTendertemplateSearchBean) {
@@ -4910,7 +4916,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tempZoneName the tempZoneName to set
+	 * @param tempZoneName
+	 *            the tempZoneName to set
 	 */
 	public void setTempZoneName(String tempZoneName) {
 		this.tempZoneName = tempZoneName;
@@ -4924,10 +4931,41 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isCheckAllList the isCheckAllList to set
+	 * @param isCheckAllList
+	 *            the isCheckAllList to set
 	 */
 	public void setCheckAllList(boolean isCheckAllList) {
 		this.isCheckAllList = isCheckAllList;
+	}
+
+	/**
+	 * @return the finacialItemScoreSetting
+	 */
+	public ScQtScoreSetting getFinacialItemScoreSetting() {
+		return finacialItemScoreSetting;
+	}
+
+	/**
+	 * @param finacialItemScoreSetting
+	 *            the finacialItemScoreSetting to set
+	 */
+	public void setFinacialItemScoreSetting(
+			ScQtScoreSetting finacialItemScoreSetting) {
+		this.finacialItemScoreSetting = finacialItemScoreSetting;
+	}
+
+	/**
+	 * @return the financialItemScore
+	 */
+	public BigDecimal getFinancialItemScore() {
+		return financialItemScore;
+	}
+
+	/**
+	 * @param financialItemScore the financialItemScore to set
+	 */
+	public void setFinancialItemScore(BigDecimal financialItemScore) {
+		this.financialItemScore = financialItemScore;
 	}
 
 }
