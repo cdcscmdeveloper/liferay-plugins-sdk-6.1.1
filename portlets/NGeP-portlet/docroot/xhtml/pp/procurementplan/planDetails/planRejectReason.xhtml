@@ -11,7 +11,7 @@
 		widgetVar="dlRejectReasonWv" dynamic="true" width="700" height="200" closable="false">
 		<p:ajax event="close" listener="#{pPlanBackingBean.closeRejectReason}" update="dgReason"/>
 		<p:remoteCommand name="confirmCmd" action="#{pPlanBackingBean.confirmReasonCloseDialog}" update="dgReason" oncomplete="dlRejectReasonWv.hide()" />
-		<p:remoteCommand name="cancelCmd"  update="dgReason"  oncomplete="dlRejectReasonWv.hide()" />
+		<p:remoteCommand name="cancelCmdRjt"  update="dgReason"  oncomplete="dlRejectReasonWv.hide()" />
 		<p:outputPanel id="opRejectReason">
 		<!-- Validation Message -->
 		<p:messages id="messagesReason" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -53,7 +53,7 @@
 		<br/>  
  		<div class="ppRightBtn">
 		  <p:commandButton id="cmdReasonOk" value="#{lbl['lbl.btn.ok']}"  immediate="true" oncomplete="confirmCmd();" />
-		  <p:commandButton id="cmdReasonCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="cancelCmd();" />		
+		  <p:commandButton id="cmdReasonCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="cancelCmdRjt();" />		
 		</div>      
 		</p:outputPanel>
 	</p:dialog>
