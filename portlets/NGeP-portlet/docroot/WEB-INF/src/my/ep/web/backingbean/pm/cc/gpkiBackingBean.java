@@ -88,8 +88,8 @@ public class gpkiBackingBean {
 		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
 		System.out.println("ContextualCompositeMethodExpression  2");  
 		debugLogger("reflectAction=====================================: "+obj);		
-//		if(true){
-		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
+		if(true){
+//		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
 			pmDigiSign.setCreatedBy(userId);
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOrginalData(textBeforeSign);
