@@ -36,12 +36,12 @@
 					<!-- 	<ui:param name="pjtDelivered" value="#{zonePnlList.zoneName}"></ui:param> -->
 					<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
 					<div align="right">
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							process="@this" partialSubmit="true" update=":form:searDelivery"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							actionListener="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
 							onclick="deliveryAddress.show();" />
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+						<p:commandButton value="#{lbl['lbl.btn.delete']}"
 							process="@this,pjtDelivered" partialSubmit="true" update="@form"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							actionListener="#{specificationBackingBean.deleteDeliveryZone(zoneName)}" />
@@ -59,11 +59,11 @@
 				value="#{specificationBackingBean.managedBean.selectDeliveryList}"></ui:param>
 			<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this" partialSubmit="true"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					update=":form:searDelivery" oncomplete="deliveryAddress.show();" />
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					update="@form" process="@this,pjtDelivered"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					partialSubmit="true"

@@ -29,7 +29,7 @@
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel>
+					<td><h:outputLabel value="#{lbl['lbl.sc.title']}"></h:outputLabel>
 					</td>
 					<td><p:inputTextarea style="width: 100%;"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
@@ -72,12 +72,12 @@
 						value="#{lbl['lbl.sc.spec.score.training']}"></ui:param>
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
 							oncomplete="scoreWidget.paginator.endLink.click();"
 							update="#{scoringPnlId}"
 							action="#{specificationBackingBean.addTrainingScoring}" />
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+						<p:commandButton value="#{lbl['lbl.btn.delete']}"
 							action="#{specificationBackingBean.deleteScoring}"
 							update="#{scoringPnlId}" />
 					</div>

@@ -21,17 +21,17 @@
 				immediate="true" action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 
 
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				style="float:right;" onclick="createTechnicalDialog.show();"
 				immediate="true"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"></p:commandButton>
 
-			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				style="float:right;"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
@@ -107,7 +107,7 @@
 				<table>
 					<tr>
 						<td align="center"><p:outputLabel
-								value="All data will be Cancel, are you sure to Cancel?" /></td>
+								value="#{lbl['lbl.sc.dialog.cancel.message']}" /></td>
 					</tr>
 				</table>
 				<p:spacer height="1" />
