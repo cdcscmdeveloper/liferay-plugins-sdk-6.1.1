@@ -62,7 +62,7 @@
 
 				<td><p:outputPanel id="equiPerDtlIdenTypeLblPan">
 						<p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-							id="equiPerIcNumLbl" />							
+							id="equiPerIcNumLbl" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</p:outputPanel></td>
 
@@ -74,7 +74,7 @@
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
-							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />							
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 						</p:inputText>
 						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
 							showSummary="true" showDetail="false" display="icon" />
@@ -88,10 +88,11 @@
 								listener="#{backingBean.trimPersonnelPassportValue}" />
 						</p:inputText>
 						   &#160; <p:graphicImage id="tooltip1" library="ep/images/design"
-										name="tooltips.png" /> <p:tooltip id="toolinfo1" for="tooltip1">
-										<p:outputLabel escape="false"
-											value="#{lbl['tt.sm.registration.identification.no']}" />
-									</p:tooltip>&#160;
+							name="tooltips.png" />
+						<p:tooltip id="toolinfo1" for="tooltip1">
+							<p:outputLabel escape="false"
+								value="#{lbl['tt.sm.registration.identification.no']}" />
+						</p:tooltip>&#160;
 						<p:message id="equiPerPasptNumMsg" for="equiPerPasptNum"
 							showSummary="true" showDetail="false" display="icon" />
 					</p:outputPanel></td>
@@ -138,9 +139,14 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.exp']}"
 						id="equiExper" required="true"
+						validatorMessage="#{lbl['lbl.sm.person.exp']} - #{lbl['lbl.sm.expRange.validMsg']}"
 						value="#{backingBean.managedBean.selectedShareHolder.workExperienceYear}"
-						size="35" maxlength="2">
-						<f:validateLongRange minimum="0" maximum="99" />
+						size="35" maxlength="5">
+						<f:validateDoubleRange for="equiExper"
+							minimum="#{SupplierManagementConst.MIN_EXP_RANGE}"
+							maximum="#{SupplierManagementConst.MAX_EXP_RANGE}" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText> <p:message id="equiExperMsg" for="equiExper" showSummary="true"
 						showDetail="false" display="icon" /></td>
 
@@ -256,14 +262,12 @@
 						<p:ajax event="change"
 							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
-					</p:selectOneRadio>					
-					</td><td>
-					<p:graphicImage id="tooltip3" library="ep/images/design"
-										name="tooltips.png" /> <p:tooltip id="toolinfo3" for="tooltip3">
-										<p:outputLabel escape="false"
-											value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
-									</p:tooltip>
-					</td>
+					</p:selectOneRadio></td>
+				<td><p:graphicImage id="tooltip3" library="ep/images/design"
+						name="tooltips.png" /> <p:tooltip id="toolinfo3" for="tooltip3">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
+					</p:tooltip></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}"
@@ -278,7 +282,8 @@
 						disabled="#{backingBean.disableEpRoleDropDown(backingBean.managedBean.selectedShareHolder)}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{backingBean.getAuthorizedPersonnelValidEpRoles()}" />
+						<f:selectItems
+							value="#{backingBean.getAuthorizedPersonnelValidEpRoles()}" />
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" />
 					</p:selectOneMenu> <p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
@@ -296,13 +301,14 @@
 						disabled="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser or backingBean.managedBean.selectedShareHolder.recordStatus}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.justificationReqd}" /></td>
 			</tr>
-			<p:outputPanel rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+			<p:outputPanel
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 							and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
 							and (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER')}">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
-					<td>
-						<p:outputLabel styleClass="outputLabel-view"
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{lbl['lbl.sm.person.composition.pending.request']}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '4'}" />
 						<p:outputLabel styleClass="outputLabel-view"
@@ -311,10 +317,11 @@
 						<p:outputLabel styleClass="outputLabel-view"
 							value="#{lbl['lbl.sm.person.composition.requested']}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
-						<p:outputLabel value="#{lbl['lbl.sm.person.composition.issued']}" styleClass="outputLabel-view"
+						<p:outputLabel value="#{lbl['lbl.sm.person.composition.issued']}"
+							styleClass="outputLabel-view"
 							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
 					</td>
-					<td></td>						
+					<td></td>
 				</tr>
 			</p:outputPanel>
 			<tr>
@@ -327,19 +334,22 @@
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-					</p:selectOneRadio>					
-					</td><td> <p:graphicImage id="tooltip5" library="ep/images/design"  
-					                rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+					</p:selectOneRadio></td>
+				<td><p:graphicImage id="tooltip5" library="ep/images/design"
+						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}"
-									name="tooltips.png" /> <p:tooltip id="toolinfo5" for="tooltip5" >
-										<p:outputLabel escape="false" 
-											value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
-									</p:tooltip></td>
+						name="tooltips.png" /> <p:tooltip id="toolinfo5" for="tooltip5">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
+					</p:tooltip></td>
 			</tr>
-			<p:outputPanel rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and not empty backingBean.managedBean.selectedShareHolder.epRole}">
+			<p:outputPanel
+				rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and not empty backingBean.managedBean.selectedShareHolder.epRole}">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.activation.status']} :"/></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.getAuthorizedPersonnelAccountStatus(backingBean.managedBean.selectedShareHolder,backingBean.managedBean.smSupplier)}" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.activation.status']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{backingBean.getAuthorizedPersonnelAccountStatus(backingBean.managedBean.selectedShareHolder,backingBean.managedBean.smSupplier)}" /></td>
 				</tr>
 			</p:outputPanel>
 		</table>

@@ -4035,7 +4035,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& getManagedBean().getSelectedShareHolder()
-						.getWorkExperienceYear() < 5
+						.getWorkExperienceYear().compareTo(new BigDecimal(5)) < 0
 				&& getManagedBean().getSelectedShareHolder().isEquityOwner()) {
 
 			validShrHldr = false;

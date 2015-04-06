@@ -708,9 +708,9 @@ public class SmApplicationUtil {
 			int prfCnt = 0;
 			int semPrfCnt = 0;
 			for (SmPersonnel per : appl.getSmPersonnels()) {
-				if (per.isProf() && per.getWorkExperienceYear() >= 5) {
+				if (per.isProf() && per.getWorkExperienceYear().compareTo(new BigDecimal(5)) >= 0) {
 					prfCnt = prfCnt + 1;
-				} else if (per.isSemiProf() && per.getWorkExperienceYear() >= 5) {
+				} else if (per.isSemiProf() && per.getWorkExperienceYear().compareTo(new BigDecimal(5)) >= 0) {
 					semPrfCnt = semPrfCnt + 1;
 				}
 				if (prfCnt > 0 && semPrfCnt > 0) {
