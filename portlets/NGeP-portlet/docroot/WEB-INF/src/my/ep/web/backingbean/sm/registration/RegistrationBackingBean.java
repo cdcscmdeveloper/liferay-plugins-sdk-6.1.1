@@ -226,6 +226,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String proceedToFirstUserRegistration() {
 		log.info("****proceedToFirstUserRegistration******");
 		
+		//Validate GST No
+		validateGstRegNo();
+		if(this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
+				StringUtils.isBlank(this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
+			this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().setGstRegistrationDate(null);
+		}
 		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			throw new EpException(MessageConst.ERROR_721011);
