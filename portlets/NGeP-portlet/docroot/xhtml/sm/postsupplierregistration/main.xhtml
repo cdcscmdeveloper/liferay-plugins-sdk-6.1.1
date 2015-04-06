@@ -10,14 +10,17 @@
 
 	<ui:define name="contentSection">
 		<f:event listener="#{postSupplierRegBB.preRender}" type="preRenderView" />
-		<p:outputLabel>
-			#{postSupplierRegBB.managedBean.statusDesc} 
+		
+			<h:outputText value="Congratulations!!" style="font-size:30;" /><br />
+			<h:outputText value="You have successfully activated the eP account." /><br />
+			<h:outputText value="Please proceed to the following step to complete the registration." /><br />
+			<br />
+			<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" /> 
 			<p:commandLink  value="- click here to continue"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 			<ui:remove>
 				<p:commandLink  value="- Testing In Progress" rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 			</ui:remove>
-		</p:outputLabel>
-		<br /><br />
+		
 	</ui:define>
 
 </ui:composition>
