@@ -43,7 +43,9 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private String externalPageUrl;
 	private String fileDirectory;
 	private String textBeforeSign;
-	private String buttonAction;	
+	private String buttonAction;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValue;
 
 	private boolean disciplinaryValue;
 	private boolean termination;
@@ -421,5 +423,33 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
+	}
+
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	/**
+	 * @param ptjCodeName the ptjCodeName to set
+	 */
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	/**
+	 * @return the ptjCodeNameSearchValue
+	 */
+	public String getPtjCodeNameSearchValue() {
+		return ptjCodeNameSearchValue;
+	}
+
+	/**
+	 * @param ptjCodeNameSearchValue the ptjCodeNameSearchValue to set
+	 */
+	public void setPtjCodeNameSearchValue(String ptjCodeNameSearchValue) {
+		this.ptjCodeNameSearchValue = ptjCodeNameSearchValue;
 	}
 }
