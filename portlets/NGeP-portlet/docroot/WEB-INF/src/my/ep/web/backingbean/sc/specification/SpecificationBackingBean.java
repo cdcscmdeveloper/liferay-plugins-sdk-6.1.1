@@ -1904,6 +1904,8 @@ public class SpecificationBackingBean extends
 		checkFinancialSpecStatus(this.getManagedBean().getScQt());
 		technicalWeightageCalculate();
 		financialWeightageCalculate();
+		financialItemScoreCalculate(this.getManagedBean()
+				.getFinacialItemScoreSetting());
 
 		// this.getManagedBean().setActiveIndex(0);
 
@@ -2935,6 +2937,7 @@ public class SpecificationBackingBean extends
 			}
 			List<Integer> settinglist = new ArrayList<Integer>();
 			settinglist.add(2);
+			settinglist.add(6);
 
 			// reqDTO.setSpecType("T");
 			reqDTO.setSettingTypes(settinglist);
@@ -2943,7 +2946,7 @@ public class SpecificationBackingBean extends
 			SpecificationResDTO resDTO = specSo
 					.retrieveScoreSettingDtls(reqDTO);
 
-			if (resDTO.getScoreSettingResultBean().getResultList() != null
+			if (null != resDTO.getScoreSettingResultBean().getResultList()
 					&& resDTO.getScoreSettingResultBean().getResultList()
 							.isEmpty()) {
 				if (null == this.getManagedBean().getFinancialScoreSetting()) {
@@ -2951,15 +2954,57 @@ public class SpecificationBackingBean extends
 					this.getManagedBean()
 							.setFinancialScoreSetting(scoreSetting);
 				}
+				if (null == this.getManagedBean().getFinacialItemScoreSetting()) {
+					ScQtScoreSetting scoreSetting = constructScoreSetting(6);
+					this.getManagedBean().setFinacialItemScoreSetting(
+							scoreSetting);
+				}
 
 			} else {
-				for (ScQtScoreSetting scoreSttting : resDTO
-						.getScoreSettingResultBean().getResultList()) {
-					if (null == this.getManagedBean()
-							.getFinancialScoreSetting()) {
-						this.getManagedBean().setFinancialScoreSetting(
-								scoreSttting);
+				if (resDTO.getScoreSettingResultBean().getResultList().size() == 2) {
+					for (ScQtScoreSetting scoreSttting : resDTO
+							.getScoreSettingResultBean().getResultList()) {
+						if (scoreSttting.getSettingType() == 2) {
+							if (null == this.getManagedBean()
+									.getFinancialScoreSetting()) {
+								this.getManagedBean().setFinancialScoreSetting(
+										scoreSttting);
+							}
+						}
+						if (scoreSttting.getSettingType() == 6) {
+							if (null == this.getManagedBean()
+									.getFinacialItemScoreSetting()) {
+								this.getManagedBean()
+										.setFinacialItemScoreSetting(
+												scoreSttting);
+								calculateFinancialItemScore(this
+										.getManagedBean()
+										.getFinacialItemScoreSetting());
+							}
+
+						}
 					}
+				} else if (resDTO.getScoreSettingResultBean().getResultList()
+						.size() == 1) {
+					for (ScQtScoreSetting scoreSttting : resDTO
+							.getScoreSettingResultBean().getResultList()) {
+						if (scoreSttting.getSettingType() == 2) {
+							if (null == this.getManagedBean()
+									.getFinancialScoreSetting()) {
+								this.getManagedBean().setFinancialScoreSetting(
+										scoreSttting);
+							}
+						}
+
+						if (null == this.getManagedBean()
+								.getFinacialItemScoreSetting()) {
+							ScQtScoreSetting scoreSetting = constructScoreSetting(6);
+							this.getManagedBean().setFinacialItemScoreSetting(
+									scoreSetting);
+						}
+
+					}
+
 				}
 
 			}
@@ -8736,6 +8781,76 @@ public class SpecificationBackingBean extends
 	}
 
 	/**
+	 * Calculate Financial Item score.calculate Item Financial Scores in
+	 * FinancialScoring Menu.
+	 * 
+	 * @param financial
+	 *            (ScQtScoreSetting financialItem).
+	 */
+	public void calculateFinancialItemScore(ScQtScoreSetting financialItem) {
+		try {
+			if (null != financialItem) {
+				if (null == financialItem.getOverallFin()) {
+					financialItem.setOverallFin(new BigDecimal(0));
+				}
+				if (null == financialItem.getOverallOtherFin()) {
+					financialItem.setOverallOtherFin(new BigDecimal(0));
+				}
+				int local = financialItem.getOverallFin().intValue()
+						+ financialItem.getOverallOtherFin().intValue();
+				this.getManagedBean().setFinancialItemScore(
+						new BigDecimal(local));
+				if ((null != this.getManagedBean().getFinancialItemScore())
+						&& this.getManagedBean().getFinancialItemScore()
+								.intValue() > 100) {
+					throw new EpException(MessageConst.ERROR_760257);
+
+				}
+			}
+
+		} finally {
+
+		}
+	}
+
+	/**
+	 * Calculate Financial Item score.calculate Item Financial Scores in
+	 * FinancialScoring Menu.
+	 * 
+	 * @param financial
+	 *            (ScQtScoreSetting financialItem).
+	 */
+	private void financialItemScoreCalculate(ScQtScoreSetting financialItem) {
+		try {
+			if (null != financialItem) {
+				if (null == financialItem.getOverallFin()) {
+					financialItem.setOverallFin(new BigDecimal(0));
+				}
+				if (null == financialItem.getOverallOtherFin()) {
+					financialItem.setOverallOtherFin(new BigDecimal(0));
+				}
+				int local = financialItem.getOverallFin().intValue()
+						+ financialItem.getOverallOtherFin().intValue();
+				this.getManagedBean().setFinancialItemScore(
+						new BigDecimal(local));
+				if (null == this.getManagedBean().getFinancialItemScore()) {
+					throw new EpException(MessageConst.ERROR_760256);
+				}
+				if ((null != this.getManagedBean().getFinancialItemScore())
+						&& (this.getManagedBean().getFinancialItemScore()
+								.intValue() < 100 || this.getManagedBean()
+								.getFinancialItemScore().intValue() > 100)) {
+					throw new EpException(MessageConst.ERROR_760257);
+
+				}
+			}
+
+		} finally {
+
+		}
+	}
+
+	/**
 	 * Compare checklist value current year.check checklist year greater than
 	 * current year.
 	 * 
@@ -11348,6 +11463,16 @@ public class SpecificationBackingBean extends
 			scQt.setScQtScoreSettings(scoreSetting);
 
 		}
+		ScQtScoreSetting financialItemScoreSetting = this.getManagedBean()
+				.getFinacialItemScoreSetting();
+		if (null != financialItemScoreSetting
+				&& financialItemScoreSetting.getSettingType() == 6) {
+			if (null == financialItemScoreSetting.getPassingScore()) {
+				financialItemScoreSetting.setPassingScore(new BigDecimal(0));
+			}
+			scoreSetting.add(financialItemScoreSetting);
+			scQt.setScQtScoreSettings(scoreSetting);
+		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
 		if (null != packageScoreSetting
@@ -11628,6 +11753,8 @@ public class SpecificationBackingBean extends
 					specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
 					specReqDTO.setScQt(scoring);
 					financialWeightageCalculate();
+					financialItemScoreCalculate(this.getManagedBean()
+							.getFinacialItemScoreSetting());
 					specSO.validateSCScoreSettings(specReqDTO);
 					specSO.validateSpecOfferPrice(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -11736,6 +11863,8 @@ public class SpecificationBackingBean extends
 					specSO.validateSCScoreSettings(specReqDTO);
 					specSO.validateSpecOfferPrice(specReqDTO);
 					financialWeightageCalculate();
+					financialItemScoreCalculate(this.getManagedBean()
+							.getFinacialItemScoreSetting());
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
