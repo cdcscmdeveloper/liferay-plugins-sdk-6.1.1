@@ -16,7 +16,7 @@
 
 			<ac:paginator for="templateTechSpecification" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
+			<p:column headerText="#{lbl['lbl.sc.title']}"
 				style="width:50%">
 				<h:outputText value="#{technicalSpec.title}" size="50" />
 			</p:column>
@@ -31,7 +31,7 @@
 					value="#{qTDetailBB.retriveUserName(technicalSpec.createdBy)}"
 					size="50" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:10%">
 				<p:commandLink ajax="false"
 					action="#{qTDetailBB.technicalSpecEditAction(technicalSpec)}">

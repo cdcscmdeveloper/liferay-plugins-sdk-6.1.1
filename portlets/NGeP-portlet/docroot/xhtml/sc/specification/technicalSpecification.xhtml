@@ -16,12 +16,12 @@
 			rowKey="#{technicalSpec}">
 			<ac:paginator for="templateTechSpecification" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
+			<p:column headerText="#{lbl['lbl.sc.title']}"
 				style="width:50%;white-space: normal;">
 				<h:outputText value="#{technicalSpec.title}" size="50"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.status']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:10%">
 				<h:outputText
 					value="#{specificationBackingBean.getStatusDescById(technicalSpec.pmStatus.statusId)}"
 					size="50"></h:outputText>
@@ -32,7 +32,7 @@
 					value="#{specificationBackingBean.retriveUserName(technicalSpec.createdBy)}"
 					size="50"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:10%;text-align: center;">
 				<p:commandLink ajax="false"
 					action="#{specificationBackingBean.specEditAction(technicalSpec,index,'T')}">

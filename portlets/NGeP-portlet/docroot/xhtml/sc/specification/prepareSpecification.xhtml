@@ -16,12 +16,12 @@
 			rowKey="#{financialSpec}">
 			<ac:paginator for="financialSpecification" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
+			<p:column headerText="#{lbl['lbl.sc.title']}"
 				style="width:50%;white-space: normal;">
 				<h:outputText value="#{financialSpec.title}" size="50"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.status']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:10%">
 				<h:outputText
 					value="#{specificationBackingBean.getStatusDescById(financialSpec.pmStatus.statusId)}"
 					size="50"></h:outputText>
@@ -32,7 +32,7 @@
 					value="#{specificationBackingBean.retriveUserName(financialSpec.createdBy)}"
 					size="50"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:10%;text-align: center;">
 				<p:commandLink process="@this" partialSubmit="true"
 					action="#{specificationBackingBean.committeeSpecEditAction(index,financialSpec,'T')}">

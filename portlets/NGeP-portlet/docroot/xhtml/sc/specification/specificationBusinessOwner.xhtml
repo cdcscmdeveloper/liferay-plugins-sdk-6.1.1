@@ -184,12 +184,12 @@
 			<tr>
 
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.peocure.category']}" /> <p:outputLabel
+						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procCategory" required="true"
 						style="margin-bottom:5px;"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						label="#{lbl['lbl.sc.peocure.category']}"
+						label="#{lbl['lbl.sc.procurement.category']}"
 						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
