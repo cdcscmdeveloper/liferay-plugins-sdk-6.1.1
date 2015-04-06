@@ -1490,7 +1490,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				
 				
-				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				/*CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setPmBasicCategoryId(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
 				reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
 				reqDTO.setCategoryL2Id(pmBasicCategory.getBasicCategoryL2());
@@ -1503,7 +1503,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				if (resDTO.getPmBasicCategory() != null) {
 					pmBasicCategory = resDTO.getPmBasicCategory();
 					pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-				}
+				}*/
 				
 				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(pmBasicCategory);
 				
