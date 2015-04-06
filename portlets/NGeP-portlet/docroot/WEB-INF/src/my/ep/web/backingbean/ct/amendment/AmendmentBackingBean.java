@@ -849,10 +849,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	     		if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses() == null) {
 	     			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaWitnesses(new ArrayList<ScLoaWitness>());
 	     			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
-	     			int contractDuration = getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() 
-	     					+ getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
-	     			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
 	     		}
+	     		int contractDuration = getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() 
+     					+ getManagedBean().getContractVer().getCtContractValue().getContractPeriod();
+     			getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractDuration(new BigDecimal(contractDuration));
 	     	}
 	     		
 	     	if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
