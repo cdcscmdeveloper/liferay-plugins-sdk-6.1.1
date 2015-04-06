@@ -559,11 +559,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String updateOnlineAccount() {
+		validateGstRegNo();
 
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
+		
+		//set GST date to null if gst no is null
+		if(smSupp.getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
+				StringUtils.isBlank(smSupp.getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
+			smSupp.getSmAppl().getSmCompanyBasic().setGstRegistrationDate(null);
+		}
+		
 		if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmPermenantAdd());
 		}else{
@@ -1176,7 +1184,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
 				this.retrieveProfBody();
 			}
-			//this.retrieveBusinessNatureL5Map();
+			
+			//set gstFlag to true, if value is not null
+			if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() != null){
+				this.getManagedBean().setGstFlag(true);
+			}
+			
 			retrieveIdentityTypeMap();
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
@@ -1993,6 +2006,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	public void validateGstRegNo(){
+		String gstNo = this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo();
+		if(gstNo != null && gstNo.length() > 0){
+			if(!SmCommonUtil.validateGstRegNo(gstNo)){
+				this.getManagedBean().setGstFlag(false);
+				throw new EpException(MessageConst.ERROR_721027);
+			}else{
+				this.getManagedBean().setGstFlag(true);
+			}
+		}else{
+			this.getManagedBean().setGstFlag(false);
+		}
+	}
 }
 
 
