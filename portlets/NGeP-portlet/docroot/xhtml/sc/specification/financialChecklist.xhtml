@@ -60,7 +60,7 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
+			<p:column headerText="#{lbl['lbl.sc.title']}"
 				style="width:42%;white-space: normal;">
 
 
@@ -70,7 +70,7 @@
 				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
 					<p:inputText value="#{stageTwofunctional.title}" size="30"
 						maxlength="1000" required="true" id="finChecklistTitle"
-						label="#{lbl['lbl.sc.spec.stage.title']}">
+						label="#{lbl['lbl.sc.title']}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialCheckListtitle"
 							listener="#{specificationBackingBean.financialCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
@@ -310,7 +310,7 @@
 						rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.spec.stage.action']}" />
+					<h:outputText value="#{lbl['lbl.sc.action']}" />
 				</f:facet>
 
 				<h:panelGroup id="actionView">
@@ -348,14 +348,14 @@
 				oncomplete="stageTwoFinance.show();"
 				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
 				update="stageTwoFinPopup" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this,financeProposaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.addFinancialCheckList}"
 				update="@all,financeProposaltwo" />
 
 
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList, specificationBackingBean.managedBean.markDeletedFinChecklist)}"
