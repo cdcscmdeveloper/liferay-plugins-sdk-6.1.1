@@ -81,8 +81,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			SmAppl appl = retrieveInProcessAppl(supplier.getSupplierId());
 
 			if(appl != null){
-				log.info("*****In Progress*********");
-				
+				log.info("*****In Progress*********");			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
 				desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
 		
@@ -206,6 +205,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}else{
 					appl.setApplType(ParameterConst.NEW_SM_APPLN_FOR_MOF);
 				}
+				
+				appl.setSupplierType(SupplierManagementConst.STYPE_CONTRACTOR);
 			}
 			
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
