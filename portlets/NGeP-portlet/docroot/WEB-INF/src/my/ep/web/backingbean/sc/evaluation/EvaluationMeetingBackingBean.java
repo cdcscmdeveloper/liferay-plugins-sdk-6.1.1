@@ -146,7 +146,7 @@ public class EvaluationMeetingBackingBean extends
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+		recommendList.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
