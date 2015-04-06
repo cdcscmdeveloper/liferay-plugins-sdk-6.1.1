@@ -574,13 +574,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 getManagedBean().setRemedy(false);
 		 getManagedBean().setMutualTermination(false);
 	 }
-	 
-	 public void resetEndDate() {
-		 if (getManagedBean().getContractVer().getCtTermination().getRemedyEndDate() != null)
-			 if (getManagedBean().getContractVer().getCtTermination().getRemedyEndDate().before(
-					 getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()))
-			 getManagedBean().getContractVer().getCtTermination().setRemedyEndDate(null);
-	 }
 	
 	 /**
 		 * This method is used to generate notice letter
@@ -832,6 +825,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 * The method used to reset the search criteria for recommended agency.
 	 */
 	public void resetSearchAgency() {
+		setSelectedRecommendedAgency(null);
 		getManagedBean().setPtjCodeName(null);		
 		getManagedBean().setPtjCodeNameSearchValue(null);
 		agencyDataModel.resetData();
