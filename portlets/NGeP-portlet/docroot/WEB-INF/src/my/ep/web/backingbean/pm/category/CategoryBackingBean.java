@@ -1576,7 +1576,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				// If an object is return then add that object to below machine category list
 				
 				
-				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				/*CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setPmMachineId(pmMachine.getMachineId());
 				reqDTO.setCategoryL1Id(pmMachineCategory.getCategoryL1id());
 				reqDTO.setCategoryL2Id(pmMachineCategory.getCategoryL2id());
@@ -1588,7 +1588,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				if (resDTO.getPmMachine() != null) {					
 					pmMachineCategory = resDTO.getPmMachineCategory();
 					pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-				}
+				}*/
 				
 				
 				this.getManagedBean().getPmCategoryL3().getPmMachineCategory().add(pmMachineCategory);
