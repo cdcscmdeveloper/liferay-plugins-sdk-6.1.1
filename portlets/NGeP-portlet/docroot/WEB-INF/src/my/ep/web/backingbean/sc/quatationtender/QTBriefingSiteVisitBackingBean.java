@@ -393,6 +393,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		BSVAttendanceBackingBean attendanceBackingBean= new BSVAttendanceBackingBean();
 		attendanceBackingBean.registerSupplier(scQtBriefing);
 		attendanceBackingBean.getManagedBean().setScQt(this.getManagedBean().getQt());
+		attendanceBackingBean.getManagedBean().setMaintanceFlow(true);
 		return NAV_TO_BSV_ATTENDANCE_PAGE + "?faces-redirect=true";
 	}
 

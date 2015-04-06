@@ -1829,6 +1829,7 @@ public class NoticeBoardBackingBean extends
 				bsvRegistration.setBsvDtl(scQtBsvDtl);
 				bsvRegistration.setSupplier(this.getManagedBean()
 						.getSmSupplier());
+				
 			} else {
 				bsvRegistration = briefingResDTO.getBriefingRegResultBean()
 						.getResultList().get(0);
@@ -2125,5 +2126,12 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void setDisplayImage(boolean displayImage) {
 		this.displayImage = displayImage;
+	}
+	
+	public boolean isAttandanceEditable(ScQtBsvDtl bsvDtl){
+		if(bsvDtl.getBsvDate().compareTo(new Date()) > 0 ){
+			return false;
+		}
+		return true;
 	}
 }

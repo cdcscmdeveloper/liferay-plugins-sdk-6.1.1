@@ -53,6 +53,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	
 	private List<SmMofAccount> mofAccounts;
 	private String bsvZoneindx="0";
+	private boolean maintanceFlow;
 	
 	private List<ScQtBsvRegistration> toBeDeletedRegistartions;
 
@@ -297,6 +298,14 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setToBeDeletedRegistartions(
 			List<ScQtBsvRegistration> toBeDeletedRegistartions) {
 		this.toBeDeletedRegistartions = toBeDeletedRegistartions;
+	}
+
+	public boolean isMaintanceFlow() {
+		return maintanceFlow;
+	}
+
+	public void setMaintanceFlow(boolean maintanceFlow) {
+		this.maintanceFlow = maintanceFlow;
 	}
 	
 }

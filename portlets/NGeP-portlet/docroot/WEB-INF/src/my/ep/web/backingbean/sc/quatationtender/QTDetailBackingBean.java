@@ -127,7 +127,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalCategory;
-import my.ep.type.sc.ApprovalType;
 import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -844,8 +843,10 @@ public class QTDetailBackingBean extends
 		if (!scQt.isPanel() && scQt.isZonal()) {
 			if (null != scQt.getScQtSupplierCriteria()) {
 				if (null != scQt.getScQtSupplierCriteria().getQtZoneCriterias()) {
-					scQt.getScQtSupplierCriteria().getQtZoneCriterias().setScQtSupplierCriteria(this.getManagedBean()
-				.getSupplierCriteria());
+					scQt.getScQtSupplierCriteria()
+							.getQtZoneCriterias()
+							.setScQtSupplierCriteria(
+									this.getManagedBean().getSupplierCriteria());
 				}
 			}
 		}
@@ -3320,7 +3321,7 @@ public class QTDetailBackingBean extends
 
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
 				.get(selectedApprovalTabIndex);
-	
+
 		this.getManagedBean().setSelectedApprovalTabIndex(
 				selectedApprovalTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
@@ -3681,12 +3682,14 @@ public class QTDetailBackingBean extends
 			List<ScQtBsvDtl> siteVisit = bsvDtlBean.getSitevisitList();
 			if (scQtBsv.isAllBriefingReq()) {
 				if (scQtBsv.getMinBriefingAttend() < 1) {
-					throw new EpException("Min Briefing Attendance is greater than 0");
+					throw new EpException(
+							"Min Briefing Attendance is greater than 0");
 				}
 			}
 			if (scQtBsv.isAllSiteVisitReq()) {
 				if (scQtBsv.getMinSiteVisitAttend() < 1) {
-					throw new EpException("Min sitevisit Attendance is greater than 0");
+					throw new EpException(
+							"Min sitevisit Attendance is greater than 0");
 				}
 			}
 			if (!scQtBsv.isSameBsv()) {
@@ -3780,6 +3783,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
+			// TODO this code need to be verified ....
 			if (null == qtDetails.getScQtApprovals()) {
 				retrieveApprovalTabDtl();
 				List<TabBean> tabList = this.getManagedBean().getTabList();
@@ -4198,6 +4202,16 @@ public class QTDetailBackingBean extends
 				amendMentBean.setNewValidityPeriodDays((Integer) newValue);
 			}
 
+		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
+
+			if (-1 == amendMentBean.getOldPublishPeriodDays()) {
+				amendMentBean.setOldPublishPeriodDays((Integer) oldValue);
+
+			}
+			if (amendMentBean.getOldPublishPeriodDays() != (Integer) newValue) {
+				amendMentBean.setNewPublishPeriodDays((Integer) newValue);
+			}
+
 		}
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 	}
@@ -4236,7 +4250,7 @@ public class QTDetailBackingBean extends
 		PmStatus pmStatus = scQt.getQtStatus();
 		if (null != pmStatus) {
 			Long qtStatus = pmStatus.getStatusId();
-			if (qtStatus > QTStatusConst.QT_PENDING_QT_SUBMISSION
+			if (qtStatus > QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
 					&& qtStatus < QTStatusConst.QT_BRIEFING_SITE_VISIT) {
 				return true;
 			}
@@ -4247,38 +4261,6 @@ public class QTDetailBackingBean extends
 
 	public void publishPeriodDaysChanged(ValueChangeEvent changeEvent) {
 		Long currentStatus = this.getManagedBean().getCurrentStatusId();
-		List<ScQtApproval> approvals = this.getManagedBean().getQt()
-				.getScQtApprovals();
-		ScQtApproval approval = null;
-		Integer existingValue = (Integer) changeEvent.getOldValue();
-		Integer newValue = (Integer) changeEvent.getNewValue();
-
-		String approvalRequestType = null;
-		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) > 0) {
-
-			approval = getQtApprovalByCategory(approvals,
-					ParameterConst.APPROVAL_CATEGORY_BPK);
-			if (existingValue.compareTo(newValue) > 0) {
-
-				approvalRequestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD;
-			}
-		} else {
-			approval = getQtApprovalByCategory(approvals,
-					ParameterConst.APPROVAL_CATEGORY_PTJ);
-
-			if (existingValue.compareTo(newValue) < 0) {
-				approvalRequestType = ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE;
-
-			} else {
-				approvalRequestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD;
-			}
-		}
-		if (isApprovalRequestExists(approval, approvalRequestType)) {
-			this.getManagedBean().getQt().setPublishPeriod(existingValue);
-			throw new EpException(MessageConst.ERROR_760254,
-					new String[] { ApprovalType
-							.getDisplayName(approvalRequestType) });
-		}
 
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
 			updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
@@ -4293,9 +4275,7 @@ public class QTDetailBackingBean extends
 	public void proposalValidityChanged(ValueChangeEvent changeEvent) {
 
 		Long currentStatus = this.getManagedBean().getCurrentStatusId();
-		List<ScQtApproval> approvals = this.getManagedBean().getQt()
-				.getScQtApprovals();
-		ScQtApproval approval = null;
+
 		Integer existingValue = (Integer) changeEvent.getOldValue();
 		Integer newValue = (Integer) changeEvent.getNewValue();
 		if (newValue.compareTo(existingValue) > 0) {
@@ -4318,33 +4298,6 @@ public class QTDetailBackingBean extends
 
 			}
 
-		}
-		String approvalRequestType = null;
-		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) > 0) {
-
-			approval = getQtApprovalByCategory(approvals,
-					ParameterConst.APPROVAL_CATEGORY_BPK);
-			if (existingValue.compareTo(newValue) > 0) {
-
-				approvalRequestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD;
-			}
-		} else {
-			approval = getQtApprovalByCategory(approvals,
-					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
-
-			if (existingValue.compareTo(newValue) < 0) {
-				approvalRequestType = ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD;
-
-			} else {
-				approvalRequestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD;
-			}
-
-		}
-		if (isApprovalRequestExists(approval, approvalRequestType)) {
-			this.getManagedBean().getQt().setQtValidityPeriod(existingValue);
-			throw new EpException(MessageConst.ERROR_760254,
-					new String[] { ApprovalType
-							.getDisplayName(approvalRequestType) });
 		}
 
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
@@ -4370,14 +4323,23 @@ public class QTDetailBackingBean extends
 
 			if (CollectionUtils.isNotEmpty(approvalRequests)) {
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+
 					if (requestType.equalsIgnoreCase(approvalRequest
 							.getApprovalType().getParameterCode())) {
+						if (null == approvalRequest.getSubmissionDate()
+								|| (null != approvalRequest.getApproverAction() && "V"
+										.equalsIgnoreCase(approvalRequest
+												.getApproverAction()
+												.getParameterCode()))) {
+							return true;
+						}
 
-						return true;
 					}
 
 				}
+
 			}
+
 		}
 		return false;
 	}
@@ -4426,34 +4388,16 @@ public class QTDetailBackingBean extends
 				}
 			}
 			if (null != approval) {
-				List<ScQtApprovalRequest> approvalRequests = approval
-						.getScQtApprovalDtls();
-				if (!isApprovalRequestExists(approval, requestType)) {
-					return false;
-				}
-				if (CollectionUtils.isNotEmpty(approvalRequests)) {
 
-					for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-						if (requestType.equalsIgnoreCase(approvalRequest
-								.getApprovalType().getParameterCode())) {
-							if (null == approvalRequest.getSubmissionDate()
-									|| (null != approvalRequest
-											.getApproverAction() && "V"
-											.equalsIgnoreCase(approvalRequest
-													.getApproverAction()
-													.getParameterCode()))) {
-								return false;
-							}
+				return isApprovalRequestExists(approval, requestType);
 
-						}
-					}
-				}
 			} else {
 				return false;
 			}
+
 		}
 
-		return true;
+		return isFieldToBeEnabled;
 
 	}
 
