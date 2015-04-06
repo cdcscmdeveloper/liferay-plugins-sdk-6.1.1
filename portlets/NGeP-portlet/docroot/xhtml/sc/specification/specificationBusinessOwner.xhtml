@@ -11,7 +11,7 @@
 		<table style="width: 100%" border="0">
 			<tr>
 				<td valign="top" style="width: 250px;"><h:outputLabel
-						value="#{lbl['lbl.sc.spec.stage.title']}s" /></td>
+						value="#{lbl['lbl.sc.title']}s" /></td>
 				<td colspan="3"><p:inputTextarea readonly="true" rows="2"
 						cols="143" style="margin-bottom:5px;width: 80%;"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"></p:inputTextarea></td>
@@ -184,12 +184,12 @@
 			<tr>
 
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.peocure.category']}" /> <p:outputLabel
+						value="#{lbl['lbl.sc.peocure.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procCategory" required="true"
 						style="margin-bottom:5px;"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						label="#{lbl['lbl.sc.spec.peocure.category']}"
+						label="#{lbl['lbl.sc.peocure.category']}"
 						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
@@ -273,7 +273,7 @@
 							</p:treeNode>
 						</p:tree>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:10%">
 						<p:commandLink
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -296,7 +296,7 @@
 					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					actionListener="#{specificationBackingBean.showGeneralZonesPopup}" />
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					action="#{specificationBackingBean.deleteTreeNode}"
 					update="zoneGeneralDataTable" />
