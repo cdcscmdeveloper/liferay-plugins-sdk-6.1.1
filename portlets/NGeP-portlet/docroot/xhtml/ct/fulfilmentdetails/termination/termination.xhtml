@@ -76,7 +76,7 @@
 	     	             	<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%" />
 	                  	</h:panelGrid>
 					</td> 
-					<td><p:inputText id="dperiod" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" required="true" style="width:45px;"
+					<td><p:inputText id="dperiod" styleClass="ppRightBtn" style="width:45px;"
 		              		maxlength="4" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true" />
                 		<p:spacer width="3"/>
                 		<h:outputText value="#{lbl['lbl.ct.days']}" />
@@ -246,8 +246,7 @@
 			  <p:message for="menuSelectionId" display="icon"/>
 			  <p:spacer width="2" />
 			  <p:commandLink value="#{lbl['lbl.ct.view.notice']}" update="editorDisplay" action="#{terminationBackingBean.previewNoticeAction}"
-			  	rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}" 
-			  	oncomplete="if (args &amp;&amp; !args.validationFailed) noticeDlg.show()"/>
+			  	rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}" />
 		  </h:panelGrid>
 		  
 		  <h:panelGrid columns="2" style="float:right;">
@@ -257,7 +256,7 @@
 		   <h:panelGrid columns="2">
              <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionDate}"
           		disabled="#{terminationBackingBean.managedBean.viewContract}"
-          		readonlyInput="true" required="true" label="#{lbl['lbl.ct.decision.date']}" navigator="true"
+          		readonlyInput="true" navigator="true"
                 id="calItem1" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>                              
 		      <p:message for="calItem1" display="icon"/>
 		   </h:panelGrid>
@@ -271,7 +270,7 @@
 		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}">
 		    <p:inputText id="fileRefNum" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
 		           disabled="#{terminationBackingBean.managedBean.viewContract}"
-		           style="width:170px;" maxlength="100"  required="true" label="#{lbl['lbl.ct.file.ref.no']}">
+		           style="width:170px;" maxlength="100">
 		     </p:inputText>
 		     <p:message for="fileRefNum" display="icon"/>
 		 </h:panelGrid>		 
@@ -305,7 +304,7 @@
 		       <p:outputLabel value="#{lbl['lbl.ct.remedy.start.date']}" />
 		  </h:panelGrid>
 		   <h:panelGrid columns="2"  rendered="#{terminationBackingBean.managedBean.remedy}">
-                <p:calendar id="calItem3"  readonlyInput="true"  required="true" label="#{lbl['lbl.ct.remedy.start.date']}" navigator="true"
+                <p:calendar id="calItem3"  readonlyInput="true" navigator="true"
                     disabled="#{terminationBackingBean.managedBean.viewContract}"
                     value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="20"
                      showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -319,7 +318,7 @@
 		        <p:outputLabel value="#{lbl['lbl.ct.remedy.end.date']}" />
 		  </h:panelGrid>
           <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.remedy}">
-             <p:calendar id="calItem4"  readonlyInput="true" required="true" label="#{lbl['lbl.ct.remedy.end.date']}" navigator="true"
+             <p:calendar id="calItem4"  readonlyInput="true" navigator="true"
                  disabled="#{terminationBackingBean.managedBean.viewContract}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
           		 mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="24" 
@@ -340,7 +339,7 @@
 		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
            <p:inputText id="lastRemedyFileNo" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" 
              disabled="#{terminationBackingBean.managedBean.viewContract}"
-             style="width:170px;" maxlength="100" required="true" label="#{lbl['lbl.ct.last.remedy.file.no']}">
+             style="width:170px;" maxlength="100">
               </p:inputText>
                 <p:message for="lastRemedyFileNo" display="icon"/>
 		  </h:panelGrid>
@@ -353,7 +352,7 @@
 		   <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar id="calItem6" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyDate}"
                 disabled="#{terminationBackingBean.managedBean.viewContract}"
-                showOn="button" readonlyInput="true" required="true" label="#{lbl['lbl.ct.last.remedy.notice.date']}" navigator="true"
+                showOn="button" readonlyInput="true" navigator="true"
                  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
 		         <p:message for="calItem6" display="icon"/>
 		    </h:panelGrid>
@@ -363,7 +362,7 @@
 		      <p:outputLabel value="#{lbl['lbl.ct.last.remedy.start.date']}" />
 		   </h:panelGrid>
 		   <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
-              <p:calendar  id="calItem7" readonlyInput="true" required="true" label="#{lbl['lbl.ct.last.remedy.start.date']}"  navigator="true"
+              <p:calendar  id="calItem7" readonlyInput="true" navigator="true"
           		  disabled="#{terminationBackingBean.managedBean.viewContract}"
           		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="20" 
           		  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -377,7 +376,7 @@
 		  <p:outputLabel value="#{lbl['lbl.ct.last.remedy.end.date']}" />
 		 </h:panelGrid>
 		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
-             <p:calendar id="calItem8" readonlyInput="true"  required="true" label="#{lbl['lbl.ct.last.remedy.end.date']}"
+             <p:calendar id="calItem8" readonlyInput="true"
                  disabled="#{terminationBackingBean.managedBean.viewContract}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}" navigator="true"
                  mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="24" 
@@ -392,11 +391,16 @@
 			<p:outputLabel value="*" styleClass="mandatory" />
 		  <p:outputLabel value="#{lbl['lbl.ct.recommended.agency']}" />
 		 </h:panelGrid>
-		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
+		    <h:panelGrid columns="4" rendered="#{terminationBackingBean.managedBean.termination}">
 		       <p:inputTextarea id="recomendAgency" rows="3"  style="width:170px;" 
-		           autoResize="false" maxlength="255" required="true" label="#{lbl['lbl.ct.recommended.agency']}"
-                 disabled="#{terminationBackingBean.managedBean.viewContract}"
-                 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}"/>
+					autoResize="false" maxlength="255"
+                 	disabled="true"
+                 	value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}"/>
+                 	<p:spacer width="3" />
+					<p:commandLink action="#{terminationBackingBean.resetSearchAgency()}" 
+						disabled="#{terminationBackingBean.managedBean.viewContract}"
+						process="@this"	update=":form:searchAgencyPanel" oncomplete="searchAgencyDlg.show();">
+					<p:graphicImage library="ep/images/design" name="magnifier_zoom_in.png" /></p:commandLink>
                   <p:message for="recomendAgency" display="icon"/>
 		     </h:panelGrid>
 		     
@@ -407,7 +411,7 @@
 		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar id="calItem9" size="24"  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgencyDate}"
                   disabled="#{terminationBackingBean.managedBean.viewContract}"
-                  showOn="button" readonlyInput="true" required="true" label="#{lbl['lbl.ct.recommended.agency.date']}" navigator="true"
+                  showOn="button" readonlyInput="true" navigator="true"
                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>		
                    <p:message for="calItem9" display="icon"/>  
 		     </h:panelGrid>
@@ -461,15 +465,66 @@
 		<p:editor controls="print" id="editorDisplay" value="#{terminationBackingBean.managedBean.editorValue}" width="800" height="430" />
 	</p:dialog>
 	<p:dialog id="uploadTerminatinDlg" widgetVar="uploadTerminatinDlg"
-				modal="true" width="700px" height="350"
-				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-				<p:ajax event="close" />
-				<p:fileUpload style="display:inline;" mode="advanced"
-				    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-					fileUploadListener="#{terminationBackingBean.fileUpload}"
-					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-					update="uploadTerminationPg">
-				</p:fileUpload>
-			</p:dialog>
+		modal="true" width="700px" height="350"
+		styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" mode="advanced"
+		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			fileUploadListener="#{terminationBackingBean.fileUpload}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+			update="uploadTerminationPg">
+		</p:fileUpload>
+	</p:dialog>
+	<p:dialog id="searchAgencyDlg"  header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.ct.recommended.agency']}" widgetVar="searchAgencyDlg" 
+		styleClass="pop_up_top" modal="true" width="700" height="500">
+		<p:panel id="searchAgencyPanel">
+		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
+			<h:panelGrid columns="3">
+          		<p:selectOneMenu id="ptjCodeName" 
+             		value="#{terminationBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
+           			<f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            		<f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+      			</p:selectOneMenu>
+				<p:spacer height="1"/>
+             	<p:inputText id="ptjCodeNameValue"  style="width:300px;" 
+            		value="#{terminationBackingBean.managedBean.ptjCodeNameSearchValue}">
+         		</p:inputText>
+			</h:panelGrid>
+			<div class="ppRightBtn">
+     			<p:commandButton id="searchBtn" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
+       		 		action="#{terminationBackingBean.searchRecommendedAgency}" 
+       				onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
+				<p:commandButton id="resetBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
+					action="#{terminationBackingBean.resetSearchAgency}" update=":form:searchAgencyPanel"   />
+			</div>
+			<p:spacer height="2"/>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.ct.search.result']}" toggleable="true">
+	     	<p:dataTable id="tableAgency"  value="#{terminationBackingBean.agencyDataModel}" 
+	       		rowIndexVar="rowIndex" var="agencyVar" rowKey="#{agencyVar}" 
+	       		selectionMode="single" lazy="true"
+	       		selection="#{terminationBackingBean.selectedRecommendedAgency}" >
+	        	<p:ajax event="rowSelect" update="@([id$=selectBtn])" />     
+	        	<ac:paginator for="tableAgency"/>
+				<p:column headerText="#{lbl['lbl.ct.ptj.code']}">
+	      			#{agencyVar.orgProfile.orgCode}
+				</p:column>
+	   			<p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
+	       			#{agencyVar.orgProfile.orgName}
+				</p:column>
+		 	</p:dataTable>
+	 	</p:panel>
+		<p:blockUI widgetVar="blkAgencyTable" trigger="searchBtn"  block=":form:searchAgencyPanel">  
+			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		</p:blockUI> 
+		<f:facet name="footer">
+			<h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
+				<p:commandButton id="selectBtn" value="#{lbl['lbl.btn.select']}" process="@form" update=":form:recomendAgency" 
+					disabled="#{terminationBackingBean.selectedRecommendedAgency == null}"
+					action="#{terminationBackingBean.setSelectedRecommendedAgency}" onclick="searchAgencyDlg.hide();"/>
+			</h:panelGrid>
+		</f:facet>
+ 		</p:panel>
+	</p:dialog>
 </ui:composition>
