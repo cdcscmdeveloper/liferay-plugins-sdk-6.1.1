@@ -490,12 +490,12 @@ public class QTCommitteBackingBean extends
 	 */
 	public List<PmParameterDesc> getRoleTypeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+		//List<String> recommendList = new ArrayList<String>();
+		//recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 
-		searchBean.getDataFilterBeans().add(
+		/*searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));*/
 
 		return retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);

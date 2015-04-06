@@ -176,12 +176,27 @@
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory"></h:outputText>
 					<p:spacer width="5"></p:spacer>
-					<h:outputText value="#{lbl['lbl.sc.role']}"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
 				</f:facet>
+				<ui:fragment
+					rendered="#{committeeMember.memberRole.parameterCode eq 'S'}">
+					<h:outputText value="Secretary"
+						rendered="#{committeeMember.memberRole.parameterCode eq 'S'}" />
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{committeeMember.memberRole.parameterCode ne 'S'}">
 
-				<h:outputText
-					value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}" />
-
+					<p:selectOneMenu id="meetingRoleId" required="true"
+						label="#{lbl['lbl.sc.eva.committee.role']}"
+						value="#{committeeMember.memberRole.parameterId}"
+						style="width: 110px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{evaluationMeetingBackingBean.chnageMemberRole(index,evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"></p:ajax>
+					</p:selectOneMenu>
+					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+				</ui:fragment>
 			</p:column>
 
 
