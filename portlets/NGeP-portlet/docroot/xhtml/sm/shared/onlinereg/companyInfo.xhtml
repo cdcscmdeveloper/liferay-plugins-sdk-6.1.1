@@ -103,6 +103,41 @@
 					<p:message id="ownerNameIdMsg" for="ownerNameId" display="icon" />
 				</td>
 			</tr>
+			
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" />
+				</td>
+				
+				<td class="tdContent">
+					<p:inputText id="gstRegNo"  maxlength="12"
+						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}"
+						size="40" label="#{lbl['lbl.sm.gst.regno']}">
+						<p:ajax event="blur" update="gstRegDateCalId" listener="#{registrationBackingBean.validateGstRegNo}" />
+					</p:inputText>
+				</td>
+				
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.gst.regdate']}" />
+				</td>
+				
+				<td class="tdContent">
+					<p:calendar id="gstRegDateCalId"
+						navigator="true" required="#{registrationBackingBean.managedBean.gstFlag}" label="#{lbl['lbl.sm.gst.regdate']}"
+						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  
+						disabled="#{!registrationBackingBean.managedBean.gstFlag}"
+						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}">
+					</p:calendar>
+				</td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
 
 			<tr>
 				<td class="tdTitle">
