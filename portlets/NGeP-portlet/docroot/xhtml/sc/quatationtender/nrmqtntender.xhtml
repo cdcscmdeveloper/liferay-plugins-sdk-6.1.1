@@ -270,7 +270,7 @@
 								</p:treeNode>
 							</p:tree>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+						<p:column headerText="#{lbl['lbl.sc.action']}"
 							style="width:10%">
 							<p:commandLink  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
@@ -286,7 +286,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 						update="@([id$=zonePopupPanel])"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
-					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}"
 						update="zoneyesDataTable" />
 				</div>

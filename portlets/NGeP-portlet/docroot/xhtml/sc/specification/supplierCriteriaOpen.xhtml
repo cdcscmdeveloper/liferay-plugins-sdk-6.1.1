@@ -214,7 +214,7 @@
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
-					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						update="zoneLocationDataTable"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}" />
@@ -296,7 +296,7 @@
 
 							</p:tree>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+						<p:column headerText="#{lbl['lbl.sc.action']}"
 							style="width:10%">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -321,7 +321,7 @@
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
-					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}"
 						update="zoneyesDataTable" />

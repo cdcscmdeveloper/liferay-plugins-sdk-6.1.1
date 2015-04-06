@@ -123,9 +123,9 @@
 
 		</p:panel>
 
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 			style="float:right;" onclick="deliveryAddress.hide();"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+		<p:commandButton value="#{lbl['lbl.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
 			update="@(.deliveryUpdate)"
 			oncomplete="deliveryService.paginator.endLink.click();"

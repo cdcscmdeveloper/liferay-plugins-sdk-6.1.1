@@ -29,7 +29,7 @@
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
 				</tr>
 			</table>
@@ -65,12 +65,12 @@
 			<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.score.tot.warranty']}"></ui:param>
 			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this,#{scoringPnlId}" partialSubmit="true"
 					oncomplete="scoreWidget.paginator.endLink.click();"
 					update="#{scoringPnlId}"
 					actionListener="#{specificationBackingBean.addScoringWaranty}" />
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 							action="#{specificationBackingBean.deleteScoring}"
 							update="#{scoringPnlId}" />
 			</div>
