@@ -12,6 +12,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
 
@@ -62,12 +66,13 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.qt.bsv.requestor']}" /></td>
+
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.retriveUserName(qTScheduleDetailBackingBean.managedBean.qt.createdBy)}"
 							disabled="true" readonly="true" size="80" /></td>
 					<td style="width: 250px;"><p:outputLabel value="Request Date" /></td>
 					<td><p:inputText
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.createdDate}"
+							value="#{qTScheduleDetailBackingBean.managedBean.scQtApproval.requestDate}"
 							disabled="true" readonly="true" size="30">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -93,6 +98,17 @@
 			</table>
 		</p:panel>
 
+		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+			<p:dataTable id="publicrequestdtlid"
+				value="#{qTScheduleDetailBackingBean.managedBean.scQtApproval.scQtApprovalDtls}"
+				var="publicapproval" rowIndexVar="index" editable="true"
+				rowKey="#{publicapproval}">
+				<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+					<h:outputText
+						value="#{qTScheduleDetailBackingBean.getParameterDesc(publicapproval.approvalType)}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
 
 		<p:panel header="Briefing/Site Visit Details" toggleable="true">
 			<!-- <h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
@@ -162,24 +178,26 @@
 
 			</p:dataTable>
 		</p:panel>
-		<p:panel header="Remarks" toggleable="true">
-			<table style="width: 100%">
+		<p:panel header="Remark and Supporting Document" toggleable="true"
+			id="bpkremarksupDtls">
+			<table style="width: 100%" id="bpkremarksupDtlslist">
 				<tr>
-					<td class="TableFieldLeft" width="24%"><h:outputLabel
-							value="Remark" /></td>
-					<td class="TableFieldRight"><p:dataGrid
-							value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.bsvRemarks}"
+					<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
+							value="#{lbl['lbl.sc.qt.remark']}" /></td>
+					<td class="TableFieldRight"><p:dataGrid id="bpkremarklist"
+							value="#{qTScheduleDetailBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-
 							<table>
 								<tr>
-									<td rowspan="2" valign="top"><h:graphicImage
-											value="#{qTScheduleDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-											height="30" width="30" /></td>
+									<td rowspan="2" valign="top">
+										<!-- <h:graphicImage
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										height="30" width="30" /> -->
+									</td>
 									<td width="5"></td>
 									<td><h:outputText
-											value="#{remarkVar.createdUser.userName}"></h:outputText>, <h:outputText
-											value="#{remarkVar.changedDate}">
+											value="#{remarkVar.createdUser.userName}" />, <h:outputText
+											id="remarkDates" value="#{remarkVar.changedDate}">
 											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 										</h:outputText></td>
 								</tr>
@@ -189,13 +207,14 @@
 											rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
 											value="#{remarkVar.remark}"
 											rendered="#{remarkVar.remarkId ne null}"
-											style="display: inline-block; width:220px;word-wrap: break-word;" />
-									</td>
+											style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
 								</tr>
 							</table>
 						</p:dataGrid></td>
+
 				</tr>
 			</table>
 		</p:panel>
+
 	</ui:define>
 </ui:composition>
