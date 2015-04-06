@@ -404,6 +404,8 @@ public class SupplierManagementConst {
 
 	public static final double MIN_AMT_RANGE = 0.01;
 	public static final double MAX_AMT_RANGE = 99999999999999.99;
+	public static final double MIN_EXP_RANGE = 0.00;
+	public static final double MAX_EXP_RANGE = 99.11;
 
 	// PM Cert body
 	public static final String PM_CERT_BODY_OTHERS = "LL";
@@ -855,6 +857,14 @@ public class SupplierManagementConst {
 
 	public int getPENDING_RE_APPROVAL_STATUS() {
 		return PENDING_RE_APPROVAL_STATUS;
+	}
+
+	public double getMIN_EXP_RANGE() {
+		return MIN_EXP_RANGE;
+	}
+
+	public double getMAX_EXP_RANGE() {
+		return MAX_EXP_RANGE;
 	}
 
 }
