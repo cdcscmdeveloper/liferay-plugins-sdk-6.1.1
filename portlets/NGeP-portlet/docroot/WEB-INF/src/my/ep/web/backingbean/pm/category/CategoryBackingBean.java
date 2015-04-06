@@ -666,37 +666,28 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				
 				this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL3().getPmCategoryL2());
-				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
+				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());				
 				
-				
-				if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmBasicCategory()!=null){
-					for(PmBasicCategory pmBasicCategory :this.getManagedBean().getPmCategoryL3().getPmBasicCategory()){
-						if(pmBasicCategory.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
-
+				/*if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmBasicCategory()!=null){
+					  for(PmBasicCategory pmBasicCategory :this.getManagedBean().getPmCategoryL3().getPmBasicCategory()){
+						if(!pmBasicCategory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+							pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(pmBasicCategory);
-
 						}
+
 					}
 				}
+
 				if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmMachineCategory()!=null){
 					for(PmMachineCategory pmMachineCategory :this.getManagedBean().getPmCategoryL3().getPmMachineCategory()){
-						if(pmMachineCategory.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
-
+						if(!pmMachineCategory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+							pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							this.getManagedBean().getPmCategoryL3().getPmMachineCategory().add(pmMachineCategory);
-
 						}
-					}
-				}
-				if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null){
-					for(PmCategoryRestr pmCategoryRestrs:this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()){
-						if(pmCategoryRestrs.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
 
-							this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs().add(pmCategoryRestrs);
-
-						}
 					}
-				}
-				
+				}*/
+
 								
 				log.info("***editSubDivision - managed bean L3 - Category Name***" +this.getManagedBean().getPmCategoryL3().getCategoryName());
 			}
