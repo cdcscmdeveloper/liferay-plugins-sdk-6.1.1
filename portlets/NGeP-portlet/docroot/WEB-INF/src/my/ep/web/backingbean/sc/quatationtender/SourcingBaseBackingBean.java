@@ -1363,22 +1363,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * FacesContext.getCurrentInstance().addMessage(null, message);
 		 */
 	}
-	
-	public boolean isApprovalRequestApproved(String reqType,ScQtApproval approval){
-		
-		if(null != approval){
-		List<ScQtApprovalRequest> approvalRequests= approval.getScQtApprovalDtls();
-		if(CollectionUtils.isNotEmpty(approvalRequests)){
-		for(ScQtApprovalRequest approvalRequest : approvalRequests){
-			if(reqType.equalsIgnoreCase(approvalRequest.getApprovalType().getParameterCode())){
-				return true;
+
+	public boolean isApprovalRequestApproved(String reqType,
+			ScQtApproval approval) {
+
+		if (null != approval) {
+			List<ScQtApprovalRequest> approvalRequests = approval
+					.getScQtApprovalDtls();
+			if (CollectionUtils.isNotEmpty(approvalRequests)) {
+				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+					if (reqType.equalsIgnoreCase(approvalRequest
+							.getApprovalType().getParameterCode())) {
+						return true;
+					}
+				}
 			}
 		}
-		}
-		}
 		return false;
-		}
+	}
+
+	public ScQtApproval getApprovalByQtIdNRequestType(Long qtId,String requestType,Long requestId) {
+
 		
-	
+		return null;
+	}
 
 }

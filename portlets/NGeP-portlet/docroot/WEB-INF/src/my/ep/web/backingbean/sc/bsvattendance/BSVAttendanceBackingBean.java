@@ -972,8 +972,7 @@ public class BSVAttendanceBackingBean extends
 				if (flag) {
 					registration.setAttended(true);
 					if (null == registration.getBsvRegistrationId()) {
-						registration
-								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						registration.setPostRegistered(true);
 					}
 				} else {
 					throw new EpException(MessageConst.ERROR_760043,

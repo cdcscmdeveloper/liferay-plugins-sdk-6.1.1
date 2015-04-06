@@ -34,7 +34,6 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
@@ -61,6 +60,8 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
@@ -616,21 +617,29 @@ public class QTScheduleDetailBackingBean extends
 
 		if (SCProcessNameConst.APPROVE_SUPPLIER_ADD.equalsIgnoreCase(this
 				.getManagedBean().getTaskName())) {
+
 			IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 			briefingReqDTO.setQtId(payLoad.getQtId());
+			briefingReqDTO.setApprovalReqId(null);
+
 			BriefingResDTO briefingResDTO = briefingSO
 					.retrieveRegistartionDtlsByQt(briefingReqDTO);
+
+			ScQtApproval approval = briefingResDTO.getApproval();
+
+			approval.setScQtApprovalRemarks(initializeRemarks(approval, null,
+					approval.getScQtApprovalRemarks(), ScQtApprovalRemark.class));
+			this.getManagedBean().setScQtApproval(approval);
+
 			this.getManagedBean().setQt(briefingResDTO.getScQt());
 			this.getManagedBean().setBriefingRegistrationList(
 					briefingResDTO.getBriefingRegResultBean().getResultList());
 			this.getManagedBean().setQtBriefing(
 					briefingResDTO.getScQtBriefing());
-			initializeRemarks(briefingResDTO.getScQtBriefing().getScQtBsv(),
-					null, briefingResDTO.getScQtBriefing().getScQtBsv()
-							.getBsvRemarks(), ScQtBSVRemark.class);
+
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -674,12 +683,19 @@ public class QTScheduleDetailBackingBean extends
 			}
 			briefingReqDTO.setBriefingReqDtls(registrations);
 			briefingReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			briefingReqDTO.setScQt(this.getManagedBean().getQt());
 			briefingReqDTO.setToken(ctxToken);
 			briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			briefingReqDTO.setPayLoad(res.getPojo());
 			briefingReqDTO.setOutcome(outcome);
 			briefingReqDTO.setTplSpecZoneDtl(this.getManagedBean()
 					.getQtBriefing().getScQtBsv().getTplSpecZoneDtl());
+			if (null != this.getManagedBean().getScQtApproval()) {
+				finalizeRemarks(this.getManagedBean().getScQtApproval()
+						.getScQtApprovalRemarks());
+				briefingReqDTO.setApproval(this.getManagedBean()
+						.getScQtApproval());
+			}
 			briefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 
@@ -711,7 +727,7 @@ public class QTScheduleDetailBackingBean extends
 		} finally {
 			briefingSO = null;
 		}
-		return "";
+		return null;
 	}
 
 	/**
