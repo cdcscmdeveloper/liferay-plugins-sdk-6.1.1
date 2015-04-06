@@ -62,6 +62,7 @@ public class WebappBean {
     }
     
     public void checkIntegerField(FacesContext ctx, UIComponent fieldName, Object obj){
+    	System.out.println("..checkIntegerField.....");
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
         if(!inputValue.isEmpty()){
@@ -74,12 +75,14 @@ public class WebappBean {
     }
     
     public void checkFloatField(FacesContext ctx, UIComponent fieldName, Object obj){
-        String inputValue=(String)obj;
-        inputValue=inputValue==null? "":inputValue;
-        if(!inputValue.isEmpty()){
+    	System.out.println("..checkFloatField.....");
+    	Double inputValue=(Double)obj;
+    	String strValue = Double.toString(inputValue);
+        inputValue=inputValue==null? 0:inputValue;
+        if(!strValue.isEmpty()){
            String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.integer.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
            String pattern="[0-9]*\\.?[0-9]+";  
-          if(!inputValue.matches(pattern)){
+          if(!strValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
           }
         }
