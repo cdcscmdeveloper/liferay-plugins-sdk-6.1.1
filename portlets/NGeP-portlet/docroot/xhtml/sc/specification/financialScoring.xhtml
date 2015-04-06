@@ -117,8 +117,7 @@
 		</h:panelGroup>
 	</p:panel>
 	<h:panelGroup id="offeredPrice">
-		<p:panel
-			header="#{lbl['lbl.sc.spec.fin.score.scoring.offered.price']}"
+		<p:panel header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
 			toggleable="true">
 			<table>
 				<tr>
@@ -235,7 +234,7 @@
 
 				<p:column colspan="1" style="font-weight: bold;">
 					<p:inputText style="text-align:right" maxlength="5"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallFin}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -250,7 +249,7 @@
 
 				<p:column colspan="1" style="font-weight: bold;">
 					<p:inputText style="text-align:right" maxlength="5"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallOtherFin}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
