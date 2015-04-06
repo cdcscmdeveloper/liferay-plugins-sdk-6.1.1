@@ -49,12 +49,12 @@
 					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
 
-				<ui:fragment rendered="#{committeeapprover.PNP}">
+				<!-- <ui:fragment rendered="#{committeeapprover.PNP}">
 					<h:outputText value="Chairperson"
 						rendered="#{committeeapprover.memberRole.parameterCode eq 'C'}"
 						disabled="#{committe.committeStatus.statusId eq 60202}" />
 				</ui:fragment>
-				<ui:fragment rendered="#{!committeeapprover.PNP}">
+				<ui:fragment rendered="#{!committeeapprover.PNP}"> -->
 					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 						value="#{committeeapprover.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;"
@@ -68,7 +68,7 @@
 							itemValue="#{role.pmParameter.parameterId}" />
 					</p:selectOneMenu>
 					<p:message id="roleidMsg" for="roleid" display="icon" />
-				</ui:fragment>
+				<!-- </ui:fragment> -->
 			</p:column>
 
 		</p:dataTable>
