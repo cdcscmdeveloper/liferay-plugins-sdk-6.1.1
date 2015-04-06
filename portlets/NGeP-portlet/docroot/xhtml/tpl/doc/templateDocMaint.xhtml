@@ -25,12 +25,12 @@
 			<table width="100%">
 				<tr>
 					<td class="TableFieldLeft" style="width: 120px">
-						<h:outputLabel value="#{lbl['lbl.tpl.doc.category']}" />
+						<h:outputLabel value="#{lbl['lbl.sc.procurement.category']}" />
 					</td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu id="procCat" style="width:289px" 
 							value="#{templateDocBackingBean.managedBean.selectedTemplate.procurementCategory.parameterId}"
-							required="true"	label="#{lbl['lbl.tpl.spec.procurement.category']}" 
+							required="true"	label="#{lbl['lbl.sc.procurement.category']}" 
 							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" >
 							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>

@@ -15,7 +15,7 @@
 			rowKey="#{financialSpec}">
 			<ac:paginator for="financialSpecification" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
+			<p:column headerText="#{lbl['lbl.sc.title']}"
 				style="width:50%">
 				<h:outputText value="#{financialSpec.title}" size="50" />
 			</p:column>
@@ -31,7 +31,7 @@
 					value="#{qTDetailBB.retriveUserName(financialSpec.createdBy)}"
 					size="50" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:10%">
 				<p:commandLink
 					action="#{qTDetailBB.financialSpecEditAction(financialSpec)}">

@@ -58,14 +58,14 @@
 				</tr>	
 				<tr>
 					<td class="TableFieldLeft">
-						<p:outputLabel value="#{lbl['lbl.tpl.spec.procurement.category']}" />
+						<p:outputLabel value="#{lbl['lbl.sc.procurement.category']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="TableFieldRight" colspan="3">
 						<p:selectOneMenu id="procCat" style="width:289px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.procurementCategory.parameterId}"
 							required="true"
-							label="#{lbl['lbl.tpl.spec.procurement.category']}">
+							label="#{lbl['lbl.sc.procurement.category']}">
 							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 						<p:message id="procCatMsg" for="procCat" display="icon" />

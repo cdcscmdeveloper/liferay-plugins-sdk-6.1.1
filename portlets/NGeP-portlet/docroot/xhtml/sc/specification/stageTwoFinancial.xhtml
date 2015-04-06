@@ -23,15 +23,15 @@
 				<ac:paginator for="stageTwoFinPopup"></ac:paginator>
 				<p:column selectionMode="multiple"
 					style="width:2%;text-align:center;" />
-				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
+				<p:column headerText="#{lbl['lbl.sc.title']}">
 					<h:outputText value="#{compilance.docName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
 		</h:panelGroup>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 			style="float:right;" onclick="stageTwoFinance.hide();"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+		<p:commandButton value="#{lbl['lbl.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
 			action="#{specificationBackingBean.addFinancialComplianceList}"
 			update="financeProposaltwo"></p:commandButton>
