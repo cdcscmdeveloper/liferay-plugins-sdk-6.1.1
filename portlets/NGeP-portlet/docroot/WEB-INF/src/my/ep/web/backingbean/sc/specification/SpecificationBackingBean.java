@@ -2783,7 +2783,9 @@ public class SpecificationBackingBean extends
 	 */
 	private ScQtScoreSetting constructScoreSetting(int settingType) {
 		ScQtScoreSetting scQtScoreSetting = new ScQtScoreSetting();
-		scQtScoreSetting.setPassingScore(new BigDecimal(0));
+		if (settingType == 3 || settingType == 4 || settingType == 5) {
+			scQtScoreSetting.setPassingScore(new BigDecimal(0));
+		}
 		scQtScoreSetting.setOverallFin(new BigDecimal(0));
 		scQtScoreSetting.setOverallOtherFin(new BigDecimal(0));
 		scQtScoreSetting.setOverallTechnical(new BigDecimal(0));
@@ -11356,14 +11358,15 @@ public class SpecificationBackingBean extends
 			if (!this.getManagedBean().isReadOnly()) {
 
 				if (null == technicalScoreSetting.getPassingScore()) {
-					if (scQt.getEvaluationType().equalsIgnoreCase(
-							QTConstants.EVALUATION_TWO_TIER)) {
-						this.getManagedBean().setActiveIndex(4);
-						throw new EpException(MessageConst.ERROR_760192);
-					} else {
-						technicalScoreSetting
-								.setPassingScore(new BigDecimal(0));
-					}
+					/*
+					 * if (scQt.getEvaluationType().equalsIgnoreCase(
+					 * QTConstants.EVALUATION_TWO_TIER)) {
+					 * this.getManagedBean().setActiveIndex(4); throw new
+					 * EpException(MessageConst.ERROR_760192); } else {
+					 * technicalScoreSetting .setPassingScore(new
+					 * BigDecimal(0)); }
+					 */
+					throw new EpException(MessageConst.ERROR_760192);
 				} else {
 					if (scQt.getEvaluationType().equalsIgnoreCase(
 							QTConstants.EVALUATION_TWO_TIER)) {
@@ -11400,14 +11403,22 @@ public class SpecificationBackingBean extends
 			if (!this.getManagedBean().isReadOnly()) {
 
 				if (null == financialScoreSetting.getPassingScore()) {
+					/*
+					 * if (scQt.getEvaluationType().equalsIgnoreCase(
+					 * QTConstants.EVALUATION_TWO_TIER)) {
+					 * this.getManagedBean().setActiveIndex(5); throw new
+					 * EpException(MessageConst.ERROR_760193); } else {
+					 * financialScoreSetting .setPassingScore(new
+					 * BigDecimal(0)); }
+					 */
 					if (scQt.getEvaluationType().equalsIgnoreCase(
-							QTConstants.EVALUATION_TWO_TIER)) {
-						this.getManagedBean().setActiveIndex(5);
-						throw new EpException(MessageConst.ERROR_760193);
+							QTConstants.EVALUATION_ONE_TIER)
+							&& !scQt.isTechEvaluationReq()) {
+						this.getManagedBean().setActiveIndex(4);
 					} else {
-						financialScoreSetting
-								.setPassingScore(new BigDecimal(0));
+						this.getManagedBean().setActiveIndex(5);
 					}
+					throw new EpException(MessageConst.ERROR_760193);
 				} else {
 
 					if (financialScoreSetting.getPassingScore().intValue() < 0) {
@@ -11468,7 +11479,15 @@ public class SpecificationBackingBean extends
 		if (null != financialItemScoreSetting
 				&& financialItemScoreSetting.getSettingType() == 6) {
 			if (null == financialItemScoreSetting.getPassingScore()) {
-				financialItemScoreSetting.setPassingScore(new BigDecimal(0));
+				// financialItemScoreSetting.setPassingScore(new BigDecimal(0));
+				if (scQt.getEvaluationType().equalsIgnoreCase(
+						QTConstants.EVALUATION_ONE_TIER)
+						&& !scQt.isTechEvaluationReq()) {
+					this.getManagedBean().setActiveIndex(4);
+				} else {
+					this.getManagedBean().setActiveIndex(5);
+				}
+				throw new EpException(MessageConst.ERROR_760258);
 			}
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
