@@ -13,10 +13,10 @@
 			<p:column headerText="#{lbl['lbl.sc.activities']}">
 				#{qtActivityBean.activityCode.codeName}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.activity.assigned']}">
+			<p:column headerText="#{lbl['lbl.sc.assigned.to']}">
 				#{qtActivityBean.assignedTo}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.activity.status']}">
+			<p:column headerText="#{lbl['lbl.sc.status']}">
 				#{qTDetailBB.getStatusDescById(qtActivityBean.statusId)}
 			</p:column>
 		</p:dataTable>
