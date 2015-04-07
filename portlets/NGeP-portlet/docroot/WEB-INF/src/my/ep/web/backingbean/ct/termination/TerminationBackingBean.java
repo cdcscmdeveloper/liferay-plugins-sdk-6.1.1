@@ -544,7 +544,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 public void changeField() {
 		try {
 			flush();
-			getManagedBean().getContractVer().getCtTermination().setRemedyStartDate(null);
+			//getManagedBean().getContractVer().getCtTermination().setRemedyStartDate(null);
 		    String parameterCode = retrieveParameterById(new Long(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()));
 			if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
 				  getManagedBean().setRemedy(true);
