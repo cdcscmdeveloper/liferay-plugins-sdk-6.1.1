@@ -128,7 +128,7 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" /></td>
 					<td class="tdContent">
-						<p:outputLabel styleClass="outputLabel-view" value="#{sdoReviewBackingBean.getBusinessType(sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType)}" />
+						<p:outputLabel styleClass="outputLabel-view" value="#{sdoReviewBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType, sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType)}" />
 					</td>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businessregno']}" /></td>
 					<td class="tdContent"><p:inputText
@@ -137,10 +137,10 @@
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
 					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
-							disabled="true" size="40" /></td>
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}" disabled="true" size="40" /></td>
+					
 
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td class="tdContent"><p:inputText
@@ -150,13 +150,7 @@
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 						</p:inputText></td>
 				</tr>
-				
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
-					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}" disabled="true" size="40" /></td>
-				</tr>
-				
+								
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.regdate']}" /></td>
 					<td class="tdContent">
@@ -164,6 +158,13 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 					</td>
+				</tr>
+				
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
+					<td class="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
+							disabled="true" size="40" /></td>
 				</tr>
 
 				<tr>
