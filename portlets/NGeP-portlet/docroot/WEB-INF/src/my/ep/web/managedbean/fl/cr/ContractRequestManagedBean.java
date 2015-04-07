@@ -37,8 +37,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
-import my.ep.persistence.entity.pm.common.PmProject;
-import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
@@ -149,8 +147,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		
 	// charge Line dropdown lists
 	private List<PmVotFund> votFundList;
-	private List<PmProject> projectList;
-	private List<PmSetia> setiaList;
 	private List<PmSubSetia> subSetiaList;
 	private List<PmPrgActivity> prgActivityList;
 	private List<SelectItem> manualAddrList;
@@ -221,8 +217,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private PmVotFund pmVoteFund;
 	private PmGlAccount gosodo;
 	private PmPrgActivity pmPrgActivity;
-	private PmProject pmProject;
-	private PmSetia pmSetia;
 	private PmSubSetia pmSubSetia;
 	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
 	
@@ -1028,39 +1022,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.votFundList = votFundList;
 	}
 
-
-	/**
-	 * @return the projectList
-	 */
-	public List<PmProject> getProjectList() {
-		return projectList;
-	}
-
-
-	/**
-	 * @param projectList the projectList to set
-	 */
-	public void setProjectList(List<PmProject> projectList) {
-		this.projectList = projectList;
-	}
-
-
-	/**
-	 * @return the setiaList
-	 */
-	public List<PmSetia> getSetiaList() {
-		return setiaList;
-	}
-
-
-	/**
-	 * @param setiaList the setiaList to set
-	 */
-	public void setSetiaList(List<PmSetia> setiaList) {
-		this.setiaList = setiaList;
-	}
-
-
 	/**
 	 * @return the subSetiaList
 	 */
@@ -1839,20 +1800,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the pmProject
-	 */
-	public PmProject getPmProject() {
-		return pmProject;
-	}
-
-	/**
-	 * @return the pmSetia
-	 */
-	public PmSetia getPmSetia() {
-		return pmSetia;
-	}
-
-	/**
 	 * @return the pmSubSetia
 	 */
 	public PmSubSetia getPmSubSetia() {
@@ -1913,20 +1860,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmPrgActivity(PmPrgActivity pmPrgActivity) {
 		this.pmPrgActivity = pmPrgActivity;
-	}
-
-	/**
-	 * @param pmProject the pmProject to set
-	 */
-	public void setPmProject(PmProject pmProject) {
-		this.pmProject = pmProject;
-	}
-
-	/**
-	 * @param pmSetia the pmSetia to set
-	 */
-	public void setPmSetia(PmSetia pmSetia) {
-		this.pmSetia = pmSetia;
 	}
 
 	/**
