@@ -181,7 +181,7 @@ public class SpkiBackingBean {
 	
 			System.out.println("SIGN" + getChallengeQues1() + getChallengeAns1() + getPassword());
 			// Request service to signData based on the answered challenges and data 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),getSupplierEpNo(), pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),"eP-1008I348f", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 			
 			
 			switch(res.getStatusCode())
@@ -244,7 +244,7 @@ public class SpkiBackingBean {
 	public static void main(String[] args) {
 		try{
 			// Create property file
-			File f = new File("kmc.properties");
+			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
 			// Create KMCClient with the property file
 			KMCClient client = KMCClientFactory.getInstance(f);
 
