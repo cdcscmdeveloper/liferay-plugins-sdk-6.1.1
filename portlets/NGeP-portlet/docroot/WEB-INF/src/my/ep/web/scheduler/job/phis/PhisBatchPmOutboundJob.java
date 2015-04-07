@@ -9,13 +9,11 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-
-
 @DisallowConcurrentExecution
 public class PhisBatchPmOutboundJob implements Job {
-	
+
 	public static Logger log = EpLogger.getLogger(PhisBatchPmOutboundJob.class);
-	
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -25,15 +23,15 @@ public class PhisBatchPmOutboundJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		
-	  log.info("PM PHIS Servrice");
-       PhisIntegration phisIntegration = new PhisIntegration();       
-       phisIntegration.votFund();
-      phisIntegration.votFundDana();
-     //  phisIntegration.glAccount();
-      phisIntegration.programActivity();
-       phisIntegration.project();
-		
+
+		log.info("PM PHIS Servrice");
+		PhisIntegration phisIntegration = new PhisIntegration();
+		phisIntegration.votFund();
+		phisIntegration.votFundDana();
+		phisIntegration.glAccount();
+		phisIntegration.programActivity();
+		phisIntegration.project();
+
 	}
 
 }
