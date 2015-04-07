@@ -206,7 +206,7 @@ public class SpkiBackingBean {
 				break;
 
 			default:
-				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Token's certificate not match with signer identity."));	
+				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
 				//throw new EpException(MessageConst.ERROR_776052);
 				signedData = "DEFAULT SIGNED TEXT";
