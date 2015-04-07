@@ -234,8 +234,9 @@ public class LovBackingBean implements Serializable {
 			lovBean.setSelectionMode(selectionMode);
 			
 //			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
-			lovBean.setClientId("@(:input[id*=" + StringUtils.replace(clientId.substring(clientId.indexOf(":") + 1).concat(":").concat(componentId), ":", "\\\\:") + "])");
-
+			if(lovBean.getSelectionMode().equals("single")) {
+				lovBean.setClientId("@(:input[id*=" + StringUtils.replace(clientId.substring(clientId.indexOf(":") + 1).concat(":").concat(componentId), ":", "\\\\:") + "])");
+			}
 			debugLogger("client id: " + lovBean.getClientId());
 			
 			prepareColumnTitle(lovBean);
