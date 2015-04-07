@@ -784,6 +784,7 @@ public class GfmasIntegration {
 						ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 						parameterReqDTO.setParameterCode(project
 								.getPembiayaan());
+						parameterReqDTO.setParameterType(ParameterTypeConst.FINANCING_TYPE);
 						ParameterResDTO parameterResDTO = parameterSO
 								.retrieveParameterByTypeAndCode(parameterReqDTO);
 						subSitia.setFinancingType(parameterResDTO
@@ -955,8 +956,8 @@ public class GfmasIntegration {
 					prtReqDTO.setPtjGroupCode(orgProfile.getPtjCode());
 					PtjGroupResDTO dto = ptgGroupSO
 							.retrievePtjGroupByCode(prtReqDTO);
-					PmPtjGroup ptjGroup = new PmPtjGroup();
-					ptjGroup = dto.getPmPtjGroup();
+					
+					PmPtjGroup ptjGroup = dto.getPmPtjGroup();
 					pmOrgProfile.setPmPtjGroup(ptjGroup);
 					AgOfficeReqDTO agOfficeReqDTO = new AgOfficeReqDTO();
 					AgOfficeReqDTO agCtrOfficeReqDTO = new AgOfficeReqDTO();
@@ -964,23 +965,12 @@ public class GfmasIntegration {
 							.getCtrOfficerCode());
 					agOfficeReqDTO.setAgOfficerCode(orgProfile
 							.getAgOfficeCode());
-					AgOfficeResDTO agOfficers = agOfficeSO
+					AgOfficeResDTO agOfficeResDTO = agOfficeSO
 							.retrieveAgOfficerByOfficerCode(agCtrOfficeReqDTO);
-					AgOfficeResDTO agOfficee = agOfficeSO
+					AgOfficeResDTO agOfficerResDTO = agOfficeSO
 							.retrieveAgOfficeByOfficeCode(agOfficeReqDTO);
-
-					List<PmAgCtrlOfficer> agOfficer = agOfficers
-							.getAgControlOfficerList();
-					List<PmAgOffice> agOffice = agOfficee.getAgOfficeList();
-
-					// System.out.println("AgOfficerID:"+
-					// agOfficer.get(0).getAgCtrlOfficerId());
-					// System.out.println("AgOfficeid"+
-					// agOffice.get(0).getOfficeName());
-					// agOfficer = agOfficers.getAgControlOfficer();
-					// System.out.println("AgOfficerID :::"+agOfficers.getAgControlOfficer().getAgCtrlOfficerId());
-					// orgProfile.setPmAgCtrlOfficer(agOfficer);
-					// orgProfile.setPmAgOffice(agOffice);
+					pmOrgProfile.setPmAgOffice(agOfficeResDTO.getAgOffice());
+					pmOrgProfile.setPmAgCtrlOfficer(agOfficerResDTO.getAgControlOfficer());
 
 					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 					parameterReqDTO
@@ -1040,7 +1030,7 @@ public class GfmasIntegration {
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									IParameterSO.class);
 					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-					// parameterReqDTO.setParameterType(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE);
+					parameterReqDTO.setParameterType(ParameterTypeConst.BANK_SERVICES);
 					parameterReqDTO
 							.setParameterCode(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
 					ParameterResDTO parameterResDTO = parameterSO
