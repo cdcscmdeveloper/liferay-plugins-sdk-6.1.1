@@ -342,10 +342,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			          value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
 		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" >
 			          <ac:paginator for="itemSupplierDt" />
-				      <p:column selectionMode="multiple" style="width:3%" 
+				      <p:column selectionMode="multiple" style="width:2%" 
 				      		rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 				
-				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:27%;white-space:normal;">
+				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:25%;white-space:normal;">
 				           <p:commandLink update="@([id$=suppDtlPopUp])"
 									action="#{panelBackingBean.showSupplierDetails(supVar.supplier)}"
 									oncomplete="suppDtlWidgetVar.show();">
@@ -360,12 +360,23 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      <p:column headerText="#{lbl['lbl.ct.mof.no']}"  style="width:10%;">
 				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" />
 				      </p:column>
-				   
-				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;">
+				      
+				       <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;">
+				               <p:selectOneMenu id="accountId" required="true" style="width:250px;margin-bottom: 5px;"
+						           value="#{supVar.bankAccountNo}" label="#{lbl['lbl.ct.bank.account.name']}">
+						          <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						          <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
+						          <p:ajax event="change" process="@form"
+							          onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							           listener="#{panelBackingBean.changeAccountActionListener(supVar, index)}" />
+					         </p:selectOneMenu>
+					     </p:column>
+				        
+				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:30%;white-space:normal;">
 					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"/>
 				      </p:column>
 				   
-				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%;">
 				         <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
                              disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:70px;">
 				             <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
