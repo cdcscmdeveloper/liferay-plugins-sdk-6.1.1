@@ -78,6 +78,8 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
+
+
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -326,12 +328,15 @@ public class ApprovalBackingBean extends
 		String taskName = getManagedBean().getTaskName();
 
 		Long qtId = null;
+		List<String> paramTypes = null;
 		if (obj instanceof SCCommitteeDataType) {
 			qtId = ((SCCommitteeDataType) obj).getQtId().longValue();
+			paramTypes=getRequestTypes(((SCCommitteeDataType) obj).getXflagCommittee());
 		} else if (obj instanceof SCEvaluationDataType) {
 			qtId = ((SCEvaluationDataType) obj).getQtId().longValue();
 		} else {
 			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
+			
 		}
 		this.getManagedBean().setQuotationTenderDataType(obj);
 
@@ -342,16 +347,17 @@ public class ApprovalBackingBean extends
 					ApprovalCategory.BUDGET_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_BUDGET,
-					ParameterConst.DOCTYPE_BGT_APPROVAL);
+					ParameterConst.DOCTYPE_BGT_APPROVAL,paramTypes);
 
 		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.BPK_APPROVE_QT_CHANGE
 						.equalsIgnoreCase(taskName)) {
+			paramTypes=getRequestTypes(((SCQuotationTenderDataType) obj).getXflagBpk());
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_BPK,
-					ParameterConst.DOCTYPE_BPK_APPROVAL);
+					ParameterConst.DOCTYPE_BPK_APPROVAL,paramTypes);
 			scQtApproval.setApproverSettings(null);
 
 			for (ScQtApprovalRequest approvalRequest : scQtApproval
@@ -371,11 +377,12 @@ public class ApprovalBackingBean extends
 			}
 		} else if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE
 				.equalsIgnoreCase(taskName)) {
+			paramTypes=getRequestTypes(((SCQuotationTenderDataType) obj).getXflagPublication());
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.PTJ_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
-					ParameterConst.DOCTYPE_QUOTATION);
+					ParameterConst.DOCTYPE_QUOTATION,paramTypes);
 
 			for (ScQtApprovalRequest approvalRequest : scQtApproval
 					.getScQtApprovalDtls()) {
@@ -387,12 +394,13 @@ public class ApprovalBackingBean extends
 			}
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
 				.equalsIgnoreCase(taskName)) {
+			paramTypes=getRequestTypes(((SCQuotationTenderDataType) obj).getXflagFinalization());
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.FINALIZATION_COMMITTEE_APPROVAL
 							.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
-					ParameterConst.DOCTYPE_QUOTATION);
+					ParameterConst.DOCTYPE_QUOTATION,paramTypes);
 
 			for (ScQtApprovalRequest approvalRequest : scQtApproval
 					.getScQtApprovalDtls()) {
@@ -403,11 +411,12 @@ public class ApprovalBackingBean extends
 				}
 			}
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
+			paramTypes=getRequestTypes(((SCQuotationTenderDataType) obj).getXflagBpk());
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_BPK,
-					ParameterConst.DOCTYPE_BPK_APPROVAL);
+					ParameterConst.DOCTYPE_BPK_APPROVAL,paramTypes);
 			scQtApproval.setApproverSettings(null);
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
@@ -421,7 +430,7 @@ public class ApprovalBackingBean extends
 
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT,
-					ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+					ParameterConst.DOCTYPE_COMMITTE_APROVAL,paramTypes);
 
 			List<Long> cmtStatus = new ArrayList<Long>(3);
 			cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
@@ -475,12 +484,12 @@ public class ApprovalBackingBean extends
 			}
 		} else if (SCProcessNameConst.APPROVE_PUBLICATION
 				.equalsIgnoreCase(taskName)) {
-
+			paramTypes=getRequestTypes(((SCQuotationTenderDataType) obj).getXflagPublication());
 			this.getManagedBean().setApprovalType(
 					QTConstants.PUBLICATION_APPROVAL);
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
-					ParameterConst.DOCTYPE_QUOTATION);
+					ParameterConst.DOCTYPE_QUOTATION,paramTypes);
 			Date clsDate = null;
 			if (null != this.getManagedBean().getQt().getLatestBsvDate()) {
 
@@ -499,12 +508,13 @@ public class ApprovalBackingBean extends
 							.getQtValidityPeriod()));
 
 		} else if (SCProcessNameConst.APPROVE_PCB.equalsIgnoreCase(taskName)) {
+			paramTypes=getRequestTypes(((SCQuotationTenderDataType) obj).getXflagFinalization());
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.FINALIZATION_COMMITTEE_APPROVAL
 							.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
-					ParameterConst.DOCTYPE_PCB_APPROVAL);
+					ParameterConst.DOCTYPE_PCB_APPROVAL,paramTypes);
 
 		} else if (SCProcessNameConst.APPROVE_CANCELATION
 				.equalsIgnoreCase(taskName)) {
@@ -513,7 +523,7 @@ public class ApprovalBackingBean extends
 							.dispalyName());
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE,
-					ParameterConst.DOCTYPE_PCB_APPROVAL);
+					ParameterConst.DOCTYPE_PCB_APPROVAL,paramTypes);
 
 		}
 
@@ -918,11 +928,12 @@ public class ApprovalBackingBean extends
 	 * @return the ScQtApproval
 	 */
 	private ScQtApproval getApproval(Long qtId, String approvalType,
-			String docType) {
+			String docType,List<String> reqTypes) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setApprovalType(approvalType);
 		tenderReqDTO.setQtId(qtId);
 		tenderReqDTO.setDocType(docType);
+		tenderReqDTO.setApprovalReqTypes(reqTypes);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
