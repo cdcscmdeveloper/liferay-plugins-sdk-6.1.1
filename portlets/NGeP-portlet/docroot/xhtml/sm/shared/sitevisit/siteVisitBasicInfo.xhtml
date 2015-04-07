@@ -30,6 +30,25 @@
 			</tr>
 			
 			<tr>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.gst.regno']}" /></td>
+				<td class="header-info-text"><h:outputText value="#{applInfo.smCompanyBasic.gstRegistrationNo}" /></td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+				
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.gst.regdate']}" /></td>
+				<td class="header-info-text">
+					<h:outputText value="#{applInfo.smCompanyBasic.gstRegistrationDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</td>
+				<td>&#160;</td>
+				<td>&#160;</td>
+			</tr>
+			
+			<tr>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.contact.person.name']}" /></td>
 				<td class="header-info-text"><h:outputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.name}" /></td>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.contact.person.designation']}" /></td>
