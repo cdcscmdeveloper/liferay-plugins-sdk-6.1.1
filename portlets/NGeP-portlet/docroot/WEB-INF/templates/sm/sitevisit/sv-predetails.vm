@@ -28,6 +28,16 @@
 	        <td>$businessRegistrationNo</td>
     	</tr>
     	
+    	<tr>
+    		 <td width="35%"><b>GST Registration No.</b></td>
+	        <td>$!gstRegNo</td>
+    	</tr>
+    	
+    	<tr>
+    		 <td width="35%"><b>GST Registration Date.</b></td>
+	        <td>$smVmUtil.formatDate($gstRegDate)</td>
+    	</tr>
+    	
     	#if($svAddresses.size() > 0)
     		#foreach($svAdd in $svAddresses)
 	    		<tr>
