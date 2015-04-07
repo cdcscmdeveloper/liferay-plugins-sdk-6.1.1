@@ -22,7 +22,6 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
@@ -946,7 +945,7 @@ public class BSVAttendanceBackingBean extends
 	public String saveBsvRegistarionFromMaintanceFlow() {
 		
 		IQTBriefingSO qTBriefingSO = null;
-		String url = null;
+		
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);

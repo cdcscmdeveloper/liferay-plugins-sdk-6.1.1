@@ -62,7 +62,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
@@ -623,7 +622,8 @@ public class QTScheduleDetailBackingBean extends
 							IQTBriefingSO.class);
 			BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 			briefingReqDTO.setQtId(payLoad.getQtId());
-			briefingReqDTO.setApprovalReqId(null);
+			briefingReqDTO.setApprovalReqId(Long.valueOf(payLoad
+					.getXflagPublication()));
 
 			BriefingResDTO briefingResDTO = briefingSO
 					.retrieveRegistartionDtlsByQt(briefingReqDTO);
