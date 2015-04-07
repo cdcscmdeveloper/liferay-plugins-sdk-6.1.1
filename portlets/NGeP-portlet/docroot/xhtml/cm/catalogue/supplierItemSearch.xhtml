@@ -225,24 +225,37 @@
 							#{supplierItem.uomName}
 							</p:column>
 
-								<p:column width="8%" style="white-space: normal">
+							<p:column width="8%">
 
-									<f:facet name="header">
-										<h:outputText value="#{lbl['lbl.cm.best.price']}" />
-										<p:graphicImage id="uidti"
-											value="/css/images/design/tooltips.png" />
-										<p:tooltip id="uidtt" for="uidti">
-											<p:outputLabel escape="false"
-												value="#{lbl['lbl.cm.tooltip.best.price']}" />
-										</p:tooltip>
-										<!--  <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/> -->
-									</f:facet>
-
-									<h:outputLabel value="#{supplierItem.bestPrice}"
-										rendered="#{supplierItem.bestPrice>0}">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.cm.best.price']}" />
+								 <p:graphicImage id="uidti"
+									value="/css/images/design/tooltips.png" />
+								<p:tooltip id="uidtt" for="uidti">
+								<p:outputLabel escape="false"
+									value="#{lbl['lbl.cm.tooltip.best.price']}" />
+								</p:tooltip>
+								<!--  <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/> -->
+								</f:facet>
+		                         <h:panelGroup rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
+                                       <h:outputLabel value="#{supplierItem.bestPrice}" rendered="#{supplierItem.bestPrice>0}">
 										<f:convertNumber pattern="#,###0.00" />
-									</h:outputLabel>
-
+									</h:outputLabel> 
+									<p:spacer height="30px"></p:spacer>
+									 <p:commandLink id="recentPrice" 
+										   value="#{lbl['lbl.sc.recent.price']}"
+										  rendered="#{supplierItem.bestPrice>0}"
+										   action="#{requestNoteBackingBean.showRecentPrice(null, supplierItem)}"
+										   oncomplete="recentPricePopup.show()" />
+									    <p:tooltip for="recentPrice">
+										      <h:outputText value="#{lbl['lbl.sc.recentprice.tooltip']}"
+											 escape="false" />
+									</p:tooltip>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null }">
+                                       <h:outputLabel value="#{supplierItem.bestPrice}" rendered="#{supplierItem.bestPrice>0}">
+										<f:convertNumber pattern="#,###0.00" />
+									</h:outputLabel></h:panelGroup>
 								</p:column>
 
 								<p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
@@ -392,6 +405,7 @@
 		</p:dialog> -->
 	</h:panelGroup>
 	<ui:include src="/xhtml/sc/directpurchase/common/addToCartPopup.xhtml" />
+	<ui:include src="/xhtml/sc/directpurchase/common/recentPricePopup.xhtml" />
 
 
 </ui:composition>
