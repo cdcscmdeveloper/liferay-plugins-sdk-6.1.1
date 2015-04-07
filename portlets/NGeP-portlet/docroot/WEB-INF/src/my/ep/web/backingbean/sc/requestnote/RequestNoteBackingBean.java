@@ -3386,9 +3386,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 *
 	 * @param cmSupplierItem the cm supplier item
 	 */
-	public void showRecentPrice(CmSupplierItem cmSupplierItem) {
+	public void showRecentPrice(CmSupplierItem cmSupplierItem, VCmSupplierItem vCmSupplierItem) {
 		debugLogger("showRecentPrice");
-		getManagedBean().setCmSupplierItem(cmSupplierItem);
+		if(cmSupplierItem != null){
+			getManagedBean().setCmSupplierItem(cmSupplierItem);
+		}
+		if(vCmSupplierItem != null){
+			getManagedBean().setvCmSupplierItem(vCmSupplierItem);
+		}
 		getManagedBean().setRecentPriceDuration(ParameterConst.RECENT_PRICE_DURATION);
 	}
 	
@@ -3400,27 +3405,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void viewRecentPrice() throws IOException {
 		debugLogger("viewRecentPrice");
-		
+		long itemId = 0 ;
+		long supplierId ;
+		long cmSuppItemId = 0;
+		long uomId = 0;
+		FacesScopes facesScopes = new FacesScopes();
 		if (getManagedBean().getCmSupplierItem() != null) {
-			FacesScopes facesScopes = new FacesScopes();
-			long itemId = this.getManagedBean().getCmSupplierItem().getCmItem().getItemId();
-			long supplierId = this.getManagedBean().getCmSupplierItem().getSmSupplier().getSupplierId();
-			long cmSuppItemId = this.getManagedBean().getCmSupplierItem().getSupplierItemId();
-			long uomId = this.getManagedBean().getCmSupplierItem().getPmUom().getUomId();
-			String noDays = this.getManagedBean().getRecentPriceDuration();
-			String reportName = ReportConst.SC_RECENT_PRICE_RPT_JSP;
-			
-			Map<String, String> paramMap = new HashMap<String, String>();
-			paramMap.put(ReportConst.PARAM_KEY_ITEM_ID, itemId + "");
-			paramMap.put(ReportConst.PARAM_KEY_CM_SUPPLIER_ITEM_ID, cmSuppItemId + "");
-			paramMap.put(ReportConst.PARAM_KEY_UOM_ID, uomId + "");
-			paramMap.put(ReportConst.PARAM_KEY_NO_OF_DAYS, noDays + "");
-			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
-			
-			generateReport(reportName, paramMap);
+			CmSupplierItem cmSupplierItem = getManagedBean().getCmSupplierItem();
+			itemId = cmSupplierItem.getCmItem().getItemId();
+			supplierId = cmSupplierItem.getSmSupplier().getSupplierId();
+			cmSuppItemId = cmSupplierItem.getSupplierItemId();
+			uomId = cmSupplierItem.getPmUom().getUomId();
 		}
+		if (getManagedBean().getvCmSupplierItem() != null) {
+			VCmSupplierItem vCmSupplierItem = getManagedBean().getvCmSupplierItem();
+			itemId = vCmSupplierItem.getItemId();
+			cmSuppItemId = vCmSupplierItem.getDocId();
+			uomId = vCmSupplierItem.getUomId();
+		}
+
+		String noDays = this.getManagedBean().getRecentPriceDuration();
+		String reportName = ReportConst.SC_RECENT_PRICE_RPT_JSP;
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_KEY_ITEM_ID, itemId + "");
+		paramMap.put(ReportConst.PARAM_KEY_CM_SUPPLIER_ITEM_ID, cmSuppItemId + "");
+		paramMap.put(ReportConst.PARAM_KEY_UOM_ID, uomId + "");
+		paramMap.put(ReportConst.PARAM_KEY_NO_OF_DAYS, noDays + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
+
+		generateReport(reportName, paramMap);
 	}
-	
+
 	/**
 	 * View market research.
 	 * to view market report in request note page.
