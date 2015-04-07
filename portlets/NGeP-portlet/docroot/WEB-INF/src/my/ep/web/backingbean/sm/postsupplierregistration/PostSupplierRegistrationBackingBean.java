@@ -223,7 +223,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, MOF_REG_PATH);
 						pageRedirect(MOF_REG_PATH);
 					}else{
-						pageRedirect(CATALOGUE_MAINT);
+						pageRedirect(CATALOGUE_UPLOAD_PATH);
 						//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CATALOGUE_UPLOAD_PATH);
 					}
 				}
