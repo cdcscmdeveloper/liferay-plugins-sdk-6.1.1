@@ -493,7 +493,7 @@
          		</p:inputText>
 			</h:panelGrid>
 			<div class="ppRightBtn">
-     			<p:commandButton id="searchBtn" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
+     			<p:commandButton id="searchBtn" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency, selectBtn"  
        		 		action="#{terminationBackingBean.searchRecommendedAgency}" 
        				onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
 				<p:commandButton id="resetBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
