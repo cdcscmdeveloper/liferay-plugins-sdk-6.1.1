@@ -92,9 +92,9 @@ background: none;
 					<td><p:inputTextarea readonly="true" style="width: 195px !important;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea>
 						<p:spacer width="5" />
-						<p:commandLink rendered="#{catalogueBackingBean.managedBean.itemSpec != null}"
+						<p:commandLink rendered="#{fn:length(catalogueBackingBean.managedBean.itemSpec) > 0}"
 							update=":form:itemSpecDlg" oncomplete="itemSpecDlg.show();">
-							<p:graphicImage library="ep/images/design" name="icon_info.png" title="#{lbl['lbl.ct.specification']}" />
+							<p:graphicImage library="ep/images/design" name="document.png" title="#{lbl['lbl.ct.specification']}" />
 						</p:commandLink>
 					</td>
 				</tr>
@@ -152,15 +152,20 @@ background: none;
 			</table>
 		</p:panel>
 		<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
-	   		styleClass="screen-title" modal="true" width="700" height="450" resizable="false" position="top">
+	   		styleClass="pop_up_top" modal="true" width="700" height="450">
 	   		<h:panelGrid columns="1">
 	    		<p:outputLabel value="#{lbl['lbl.cm.item.name']}" >: #{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}</p:outputLabel>
 	     	</h:panelGrid>
 	     	<p:spacer  height="5"/>
 	     	<p:dataTable id="itemSpecDt" var="data" value="#{catalogueBackingBean.managedBean.itemSpec}" rowIndexVar="index">
 				<ac:paginator for="itemSpecDt" />
-				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:95%; white-space:normal">
-					#{data}
+				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:45%; white-space:normal">
+					<p:inputTextarea value="#{data.specification}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+							disabled="true" />
+				</p:column>	
+				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:45%; white-space:normal">
+					<p:inputTextarea value="#{data.description}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+							disabled="true" />
 				</p:column>	
 			</p:dataTable>
 			<p:spacer height="2" />

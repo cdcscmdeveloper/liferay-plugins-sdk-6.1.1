@@ -49,7 +49,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
                   	<p:spacer width="5" />
                   	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
-						<p:graphicImage library="ep/images/design" name="edit.png" title="#{lbl['lbl.ct.specification']}" />
+						<p:graphicImage library="ep/images/design" name="document.png" title="#{lbl['lbl.ct.specification']}" />
 					</p:commandLink>
               </p:column>
 			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width: 10%;">

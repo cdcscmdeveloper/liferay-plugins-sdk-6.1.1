@@ -1696,7 +1696,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
-			reqDTO.setLanguageCode("EN");
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			return resDTO.getPmParameter().getParameterCode();

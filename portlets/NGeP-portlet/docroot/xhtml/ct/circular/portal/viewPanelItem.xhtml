@@ -23,16 +23,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			         <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}" style="width:95%;" />
 		      </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:10%;">
-                  <p:inputText value="#{panelItemsVar.itemName}" style="width:95%;" maxlength="100" disabled="true"/>
+              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:20%;">
+                  <p:inputText value="#{panelItemsVar.itemName}" style="width:85%;" maxlength="100" disabled="true"/>
+                  <p:spacer width="5" />
+   	   			  <p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
+             		disabled="#{panelItemsVar.itemCategoryId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}">
+					<p:graphicImage library="ep/images/design" name="document.png" title="#{lbl['lbl.ct.specification']}" />
+				  </p:commandLink>
               </p:column>
-              
-			  <p:column headerText="#{lbl['lbl.ct.specification']}" style="width:11%;">
-			     <p:inputText id="spec" value="#{panelItemsVar.specification}"   style="width:95%;" maxlength="200" disabled="true"/>
-			  </p:column>
 			
-			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width: 11%;">
-			                <h:outputText value="#{panelItemsVar.pmUom.uomName}" style="width:95%;" />
+			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="white-space:pre-line; width:6%;">
+			 		<h:outputText value="#{panelItemsVar.pmUom.uomName}" style="width:95%;" />
 		      </p:column>
 			  
 			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:8%;">
@@ -79,6 +80,28 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>	
 			  												
 		    </p:dataTable>
+		    <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
+	   			styleClass="pop_up_top" modal="true" width="700" height="450">
+		   		<h:panelGrid columns="1">
+		    		<p:outputLabel value="#{lbl['lbl.ct.item.name']}" >: #{panelBackingBean.managedBean.selectedItemForSpec.itemName}</p:outputLabel>
+		     	</h:panelGrid>
+		     	<p:spacer  height="5"/>
+		     	<p:dataTable id="itemSpecDt" var="data" value="#{panelBackingBean.managedBean.selectedItemForSpec.ctPanelItemSpecs}" rowIndexVar="index">
+					<ac:paginator for="itemSpecDt" />
+					<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:45%; white-space:normal">
+						<p:inputTextarea value="#{data.specification}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+							disabled="true" />
+					</p:column>	
+					<p:column headerText="#{lbl['lbl.ct.description']}" style="width:45%; white-space:normal">
+						<p:inputTextarea value="#{data.description}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+							disabled="true" />
+					</p:column>	
+				</p:dataTable>
+				<p:spacer height="2" />
+				<div class="ppRightBtn"> 
+					<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="itemSpecDlg.hide();" />
+				</div>	
+	   		</p:dialog>
 	 </h:panelGrid>
 		
 		<p:spacer height="2" />

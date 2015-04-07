@@ -52,6 +52,7 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -223,7 +224,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<String> compareLabel;
 	
 	/** The item specification. */
-	private List<String> itemSpec;
+	private List<CtPanelItemSpec> itemSpec;
 
 	/** The selected lov uom. */
 	private PmUom selectedLovUom;
@@ -993,7 +994,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the  item specification
 	 */
-	public List<String> getItemSpec() {
+	public List<CtPanelItemSpec> getItemSpec() {
+		if (itemSpec == null) {
+			itemSpec = new ArrayList<CtPanelItemSpec>();
+		}
 		return itemSpec;
 	}
 
@@ -1003,7 +1007,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @param itemSpec
 	 *            the new item specification
 	 */
-	public void setItemSpec(List<String>  itemSpec) {
+	public void setItemSpec(List<CtPanelItemSpec>  itemSpec) {
 		this.itemSpec = itemSpec;
 	}
 
