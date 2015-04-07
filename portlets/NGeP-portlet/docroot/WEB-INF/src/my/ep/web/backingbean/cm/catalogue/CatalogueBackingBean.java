@@ -1187,14 +1187,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				cmSupplierItem.setPmUom(ctPanelItem.getPmUom());
 				cmSupplierItem.setMinOrder(Double.valueOf(ctPanelItem.getMinimumOrderQty()).intValue());
-				//cmSupplierItem.setItemDesc(ctPanelItem.getSpecification());
+				// Set the panel item specification
 				if (ctPanelItem.getItemCategoryId().getParameterId() == getParameterByTypeAndCode(ParameterTypeConst.ITEM_CATEGORY_TYPE, 
-						ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC).getParameterId()) {
-					List<String> specList = new ArrayList<String>();
+						ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC).getParameterId()) {					
 					for (CtPanelItemSpec ctPanelItemSpec : ctPanelItem.getCtPanelItemSpecs()) {
-						specList.add(ctPanelItemSpec.getSpecification());
+						this.getManagedBean().getItemSpec().add(ctPanelItemSpec);					
 					}
-					this.getManagedBean().setItemSpec(specList);
 				}
 				
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
