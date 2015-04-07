@@ -37,14 +37,14 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.creatdtfrom']}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 						<td><p:calendar id="crdateFrm" showOn="button"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
 								size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
 								<p:ajax event="dateSelect" update="createdtTo" />
 							</p:calendar></td>
-							<td><p:outputLabel value="#{lbl['lbl.sc.creatdtto']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 						<td><p:calendar id="createdtTo" showOn="button"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toCreatedDate}"
 								mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
@@ -134,7 +134,7 @@
 						<h:outputText value="#{qTDocumentsBackingBean.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.crtdt']}">
+					<p:column headerText="#{lbl['lbl.sc.created.date']}">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
