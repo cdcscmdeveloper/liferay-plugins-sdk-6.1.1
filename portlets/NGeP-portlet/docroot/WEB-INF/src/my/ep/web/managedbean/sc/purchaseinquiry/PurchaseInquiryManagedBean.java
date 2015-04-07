@@ -96,12 +96,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	/** The pri status. */
 	private PmStatus priStatus;
 	
-	/** The requisitioner flag. */
-	private boolean requisitionerFlag;
-	
-	/** The supplier flag. */
-	private boolean supplierFlag;
-	
 	/** The stock available. */
 	private Integer stockAvailable;
 	
@@ -485,42 +479,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setPriStatus(PmStatus priStatus) {
 		this.priStatus = priStatus;
-	}
-
-	/**
-	 * Checks if is requisitioner flag.
-	 *
-	 * @return the requisitionerFlag
-	 */
-	public boolean isRequisitionerFlag() {
-		return requisitionerFlag;
-	}
-
-	/**
-	 * Sets the requisitioner flag.
-	 *
-	 * @param requisitionerFlag the requisitionerFlag to set
-	 */
-	public void setRequisitionerFlag(boolean requisitionerFlag) {
-		this.requisitionerFlag = requisitionerFlag;
-	}
-
-	/**
-	 * Checks if is supplier flag.
-	 *
-	 * @return the supplierFlag
-	 */
-	public boolean isSupplierFlag() {
-		return supplierFlag;
-	}
-
-	/**
-	 * Sets the supplier flag.
-	 *
-	 * @param supplierFlag the supplierFlag to set
-	 */
-	public void setSupplierFlag(boolean supplierFlag) {
-		this.supplierFlag = supplierFlag;
 	}
 
 	/**
