@@ -584,7 +584,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 		this.getManagedBean().getQt().getScQtSupplierCriteria()
 				.setAllState(state);
-
+		this.getManagedBean().setPaidupcapital(true);
 		if (!state) {
 			if (null != this.getManagedBean().getZoneTrees()
 					&& this.getManagedBean().getZoneTrees().isEmpty()) {
@@ -1707,4 +1707,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 		log.info("retrievLocationDtls - END");
 	}
 
+	public void validatePaidupcapital() {
+		debugLogger("validatePaidupcapital");
+		this.getManagedBean().setPaidupcapital(true);
+	}
 }
