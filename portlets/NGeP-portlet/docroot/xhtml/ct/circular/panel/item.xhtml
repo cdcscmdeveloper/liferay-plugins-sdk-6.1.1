@@ -362,8 +362,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      </p:column>
 				      
 				       <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;">
-				               <p:selectOneMenu id="accountId" required="true" style="width:250px;margin-bottom: 5px;"
-						           value="#{supVar.bankAccountNo}" label="#{lbl['lbl.ct.bank.account.name']}">
+				               <p:selectOneMenu id="accountId" style="width:250px;margin-bottom: 5px;"
+						           value="#{supVar.bankAccountNo}">
 						          <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						          <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
 						          <p:ajax event="change" process="@form"
