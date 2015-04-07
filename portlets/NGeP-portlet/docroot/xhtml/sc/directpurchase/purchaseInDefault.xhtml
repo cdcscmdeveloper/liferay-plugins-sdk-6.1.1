@@ -112,8 +112,7 @@
 	
 	<!-- Panel Item details -->
 	<p:panel header="#{lbl['lbl.sc.purchase.in.default.panel.item.detail']}" toggleable="true" rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
-	<p:spacer height="4px" />
-	  	 <table>
+	  <table>
 	  	 <tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -200,9 +199,8 @@
 		
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.pid.reason.instruction']}">
 		</h:outputText>
-	   <p:spacer height="3px"/>
 	      <h:panelGroup>
-			<table style="width:100%">
+			<table style="width:100%;margin-top: 8px;">
 			<tr>
 			   <td style="width: 22.5%;">
 			   <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.just']}" />  <p:outputLabel value="*" styleClass="mandatory" /></td>
