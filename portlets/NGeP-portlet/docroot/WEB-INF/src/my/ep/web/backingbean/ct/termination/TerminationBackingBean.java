@@ -714,6 +714,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 								vmFile, context);
 					}				
 					getManagedBean().setEditorValue(content);
+					RequestContext.getCurrentInstance().execute("noticeDlg.show()");
 				}
 			}
 		} finally {
@@ -769,13 +770,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		
 		if (!isViewNoticeFlag()) {
 			throw new EpException(MessageConst.ERROR_750031);
-		}
-	}
-	
-	
-	public void viewNoticeDlg() {
-		if (isViewNoticeFlag()) {
-			RequestContext.getCurrentInstance().execute("noticeDlg.show()");
 		}
 	}
 	
