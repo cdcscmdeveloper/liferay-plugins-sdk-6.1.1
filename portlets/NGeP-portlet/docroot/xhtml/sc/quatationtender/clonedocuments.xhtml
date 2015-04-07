@@ -17,7 +17,7 @@
 				<table width="900px">
 					<tr>
 						<td valign="top"><p:outputLabel
-								value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
+								value="#{lbl['lbl.sc.title']}" /></td>
 						<td colspan="3"><p:inputText
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtTitle}"
 								style="width:650px;" maxlength="100" /></td>
@@ -25,11 +25,11 @@
 					
 					<tr>
 						<td style="width:165px;"><p:outputLabel
-								value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+								value="#{lbl['lbl.sc.qtn.no']}" /></td>
 						<td style="width:285px;"><p:inputText style="width:210px;" maxlength="21"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtNo}" /></td>
 								<td style="width:165px;"><p:outputLabel
-								value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
+								value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 						<td style="width:285px;"><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.procurementMode}">
 								<f:selectItems
@@ -95,7 +95,7 @@
 				</tr>
 					<tr>
 						<td><p:outputLabel
-								value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+								value="#{lbl['lbl.sc.status']}" /></td>
 						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtStatus}">
 								<f:selectItems
@@ -122,7 +122,7 @@
 					<p:ajax event="rowSelect" update=":form:documentlistid"
 						listener="#{qTDocumentsBackingBean.onRowCloneAction}" />
 
-					<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
 						<h:outputText value="#{scQt.qtNo}" />
 					</p:column>
 
@@ -130,7 +130,7 @@
 						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.procmode']}">
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText value="#{qTDocumentsBackingBean.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
