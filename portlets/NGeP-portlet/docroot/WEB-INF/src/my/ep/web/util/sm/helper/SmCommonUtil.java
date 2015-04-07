@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -52,6 +54,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -1771,5 +1774,32 @@ public class SmCommonUtil {
 		address.setPmCity(city);
 
 		return address;
+	}
+	
+	public static boolean validateGstRegNo(String value){
+		String gstNoPattern = "\\d+";
+		Pattern pattern; 
+		Matcher matcher;
+		
+		pattern = Pattern.compile(gstNoPattern);
+
+		if(value != null){
+			String gstNo = value.toString();
+
+			if(gstNo.length() > 0){
+				if(gstNo.length() != 12){
+					return false;
+				}
+
+				matcher = pattern.matcher(value.toString());
+				if(!matcher.matches()){
+					return false;
+				}
+				
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
