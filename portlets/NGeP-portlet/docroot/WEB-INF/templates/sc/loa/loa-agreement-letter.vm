@@ -90,7 +90,9 @@
 					#if ( $insWarrantyReq == 'true' )
 					<p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">* 3.2 Sekiranya pembekal mendepositkan kepada Kerajaan Polisi Insurans. Pembekal hendaklah mengemukakan resit-resit premium yang telah dibayar bagi tujuan pemeriksaan.</span></p>
 					#end
-					<p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">* 3.3 Apa-apa kegagalan dalam mematuhi kehendak-kehendak para 3 ini dalam tempoh masa yang dinyatakan, kecuali jika diabaikan dengan nyata oleh Kerajaan, akan menyebabkan penerimaan SST** ini terbatal dan selepas itu Kerajaan tidaklah dengan apa-apa cara juga bertanggungjawab kepada tuan. </span></p>
+					<p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+					#if ( $insWarrantyReq == 'true' )* 3.3 #end #if ( $insWarrantyReq == 'false' )* 3.2 #end 
+					 Apa-apa kegagalan dalam mematuhi kehendak-kehendak para 3 ini dalam tempoh masa yang dinyatakan, kecuali jika diabaikan dengan nyata oleh Kerajaan, akan menyebabkan penerimaan SST** ini terbatal dan selepas itu Kerajaan tidaklah dengan apa-apa cara juga bertanggungjawab kepada tuan. </span></p>
 				</li>
 				<li><p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tarikh permulaan sebagaimana yang disebutkan dalam syarat-syarat kontrak adalah pada $contractEffDate.</span></p></li>
 				<li><p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Penyetujuan/penolakan surat setuju terima ini hendaklah dibuat secara atas talian dalam tempoh 14 hari dari tarikh surat ini. Sekiranya pihak kerajaan tidak menerima maklum balas surat setuju terima ini dalam tempoh yang dinyatakan maka tawaran ini dengan sendirinya terbatal.</span></p></li>
