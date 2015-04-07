@@ -12,7 +12,7 @@
 		<p:panel header="#{lbl['lbl.sm.account.type.header']}">
 			<table>
 				<tr>
-					<td>#{lbl['lbl.sm.account.type.header']}</td>
+					<td width="100px">Supplier Type</td>
 					<td>
 						<p:selectOneRadio value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType}" required="true" 
 						label="#{lbl['lbl.sm.account.type.header']}">
@@ -24,19 +24,28 @@
 					</td>
 				</tr>
 			</table>
-		</p:panel>
-		
-		<p:outputPanel id="outPnlSuppTypeId" >
-			<p:panel header="Supplier Type" rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == SupplierManagementConst.STYPE_CONTRACTOR}">
-				<p:selectOneMenu required="true" value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType}" label="Supplier Type">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
-					<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
-				</p:selectOneMenu>
-			</p:panel>
-		</p:outputPanel>
-		
-	
+			<p:outputPanel id="outPnlSuppTypeId" >
+				<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == SupplierManagementConst.STYPE_CONTRACTOR}">
+				<table>	
+					<tr>
+						<td width="100px">
+							#{lbl['lbl.sm.account.type.header']}
+						</td>
+						<td>							
+							<p:selectOneRadio 
+								required="true" 
+								value="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType}" 
+								label="Supplier Type">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
+							</p:selectOneRadio>
+							
+						</td>
+					</tr>
+				</table>
+				</p:outputPanel>
+			</p:outputPanel>
+	</p:panel>
 		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.next']}" action="#{postSupplierRegBB.saveSupplierAccountType}">
