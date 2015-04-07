@@ -77,7 +77,7 @@ public class SpkiBackingBean {
 			KMCClient client = getClient();
 			
 			// Request service for user selected question for authentication
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("890823108979", 1));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(getDigiCertUserId(), 1));
 //			List<String> challs = null;
 			switch(res.getStatusCode())
 			{
@@ -181,7 +181,7 @@ public class SpkiBackingBean {
 	
 			System.out.println("SIGN" + getChallengeQues1() + getChallengeAns1() + getPassword());
 			// Request service to signData based on the answered challenges and data 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823108979","eP-1008N0001", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),getSupplierEpNo(), pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 			
 			
 			switch(res.getStatusCode())
