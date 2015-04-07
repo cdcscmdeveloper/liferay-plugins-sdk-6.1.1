@@ -482,6 +482,7 @@ public class ReportConst {
 	//	
 	public static final String EMPTY_VAL = "";
 	public static final String ZERO_VAL = "0";
+	public static final String ONE_VAL = "1";
 	
 	public static final String AMP_REPORT_NAME = "&report=";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";

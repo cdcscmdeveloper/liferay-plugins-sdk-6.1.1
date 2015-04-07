@@ -894,7 +894,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)122768; //122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
+	//private Long lngUserId = (long)241997; //122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4263,9 +4263,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				}
 			}
 			if (((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL))&&(((getManagedBean().getReportValue() == "SC_008")
-							&& (getManagedBean().getReportValue().equals("SC_008")))||((getManagedBean().getReportValue() == "SC_028")
-									&& (getManagedBean().getReportValue().equals("SC_028"))))) {
+					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL))&&(((getManagedBean().getReportValue() == ReportConst.TECSPEC_TEC_RPT_VAL)
+							&& (getManagedBean().getReportValue().equals(ReportConst.TECSPEC_TEC_RPT_VAL)))||((getManagedBean().getReportValue() == ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL)
+									&& (getManagedBean().getReportValue().equals(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL))))) {
 				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 								IPMReportSO.class);
@@ -4274,26 +4274,26 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				if(weitageReq.size()>0) {					
 					wtgReqVal = highRoleCodeList.get(0);
 				}
-				if(getManagedBean().getReportValue().equals("SC_028")){
+				if(getManagedBean().getReportValue().equals(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL)){
 				if(wtgReqVal!=null){
-					if(wtgReqVal.equals("0")){
+					if(wtgReqVal.equals(ReportConst.ZERO_VAL)){
 						rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-								+ "SC_028");
-					}else if(wtgReqVal.equals("1")){
+								+ ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL);
+					}else if(wtgReqVal.equals(ReportConst.ONE_VAL)){
 						rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-								+ "SC_029");
-						getManagedBean().setReportJsp("SC_EC_TECH_SPEC_WEI.jsp");
+								+ ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL);
+						getManagedBean().setReportJsp(ReportConst.SC_EC_TECH_SPEC_WEI);
 					}
 				}
-				}else if(getManagedBean().getReportValue().equals("SC_008")){
+				}else if(getManagedBean().getReportValue().equals(ReportConst.TECSPEC_TEC_RPT_VAL)){
 					if(wtgReqVal!=null){
-						if(wtgReqVal.equals("0")){
+						if(wtgReqVal.equals(ReportConst.ZERO_VAL)){
 							rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-									+ "SC_008");
-						}else if(wtgReqVal.equals("1")){
+									+ ReportConst.TECSPEC_TEC_RPT_VAL);
+						}else if(wtgReqVal.equals(ReportConst.ONE_VAL)){
 							rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-									+ "SC_009");
-							getManagedBean().setReportJsp("SC_TEC_TECH_SPEC_WEI.jsp");
+									+ ReportConst.PSDAK_TEC_RPT_VAL);
+							getManagedBean().setReportJsp(ReportConst.SC_TEC_TECH_SPEC_WEI);
 						}
 					}
 					}
