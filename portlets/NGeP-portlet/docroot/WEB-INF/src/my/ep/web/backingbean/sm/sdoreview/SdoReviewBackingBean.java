@@ -125,6 +125,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	/**
+	 * @deprecated
 	 * Get Business Type Description
 	 * @param String - businessType
 	 * @return String
