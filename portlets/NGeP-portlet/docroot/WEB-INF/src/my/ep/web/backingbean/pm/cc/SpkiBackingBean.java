@@ -12,6 +12,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -198,7 +200,7 @@ public class SpkiBackingBean {
 //				fos.close();
 //				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
 				
-				
+				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				signedData = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
 				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				break;
