@@ -90,19 +90,18 @@ public class PhisIntegration {
 	IAddressSO addressSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAddressSO.class);
+	ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+			.getInstance().getServiceObject("cm", ICodificationSO.class);
 	
 	// method to create file for pharmaniaga for Class,Brand,Measrement,ItemType,Color
 	
 	public void createFilesforPHIS() {
 		System.out.println("inside phis...");
 
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
-
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "25-02-2006";
+		String dateInString = "30-03-2015";
 		Date date = null;
 		try {
 			date = sdf.parse(dateInString);
@@ -111,9 +110,8 @@ public class PhisIntegration {
 		}
 
 		reqDTO.setCreateDate(date);
-		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
-		CodificationResDTO resDTO = codificationSO
-				.searchItemByCreateDate(reqDTO);
+		//reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
+		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			
@@ -292,7 +290,6 @@ public class PhisIntegration {
 				}
 				
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -533,13 +530,12 @@ public class PhisIntegration {
 	
 	public void masterDataMaterialInfoPHIS(){
 
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "12-03-2015";
+		String dateInString = "30-03-2015";
 		Date date = null;
 		try {
 			date = sdf.parse(dateInString);
@@ -548,7 +544,7 @@ public class PhisIntegration {
 		}
 
 		reqDTO.setCreateDate(date);
-		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
+		//reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
 		CodificationResDTO resDTO = codificationSO
 				.searchItemByCreateDate(reqDTO);
 		
