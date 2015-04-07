@@ -82,7 +82,7 @@ public class FileUtility {
 					line.append(formatStringField(
 							mclass.getMaterialClassCode(), 8, "L"));
 					line.append(formatStringField(
-							mclass.getMaterialClassDescription(), 2000, "L"));
+							mclass.getMaterialClassDescription(), 200, "L"));
 					line.append(formatStringField(
 							mclass.getMaterialClassAction(), 3, "L"));
 					line.append(formatStringField(
@@ -534,7 +534,6 @@ public class FileUtility {
 
 					afCtrOffice.setYear(fileUtility.getValue(line,0 ,4 ));
 					afCtrOffice.setCode(fileUtility.getValue(line, 4, 2));
-					afCtrOffice.setCode(fileUtility.getValue(line, 4, 2));
 					afCtrOffice.setDescription(fileUtility.getValue(line, 6, 255));
 					afCtrOffice.setStatus(fileUtility.getValue(line,261, 1));
 					agCtrOfficeList.add(afCtrOffice);
@@ -566,8 +565,8 @@ public class FileUtility {
 				    vot.setVotFundType(fileUtility.getValue(line,4 ,1));
 					vot.setCode(fileUtility.getValue(line, 4, 3));
 					vot.setPtjCode(fileUtility.getValue(line,7 ,2));
-					vot.setDescription(fileUtility.getValue(line, 9, 264));
-					vot.setStatus(fileUtility.getValue(line, 264,265));
+					vot.setDescription(fileUtility.getValue(line, 9, 255));
+					vot.setStatus(fileUtility.getValue(line, 264,1));
 					votList.add(vot);
 
 				}
