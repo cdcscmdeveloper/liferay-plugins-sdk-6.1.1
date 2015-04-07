@@ -141,6 +141,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 		IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
+		getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 		//TODO check contract item or panel item
 		if(vCmSupplierItem.getContractNo() !=null){
 			// contract item
@@ -237,11 +238,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 
 		initialInformation(scPurchaseInDefault);
 		scPurchaseInDefault.setCreatedBy(user.getUserId());
-		getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
+		
 		// by default value as cheaper price
-		PmReason reason = new PmReason();
-		reason.setReasonCode(ParameterConst.PID_CP);
-		getManagedBean().getPurchaseInDefault().setReasonType(reason);
+		 //PmReason reason = new PmReason();
+		 scPurchaseInDefault.setReasonType(new PmReason());
+		//getManagedBean().getPurchaseInDefault().setReasonType(reason);
 
 		return "purchaseInDefaultMain";
 	}	
@@ -706,29 +707,38 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   reqDTO.setLanguage("BM");
 	   IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 	   ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
-
-	   List<PmReasonDesc>  pmReasonDescs = new ArrayList<PmReasonDesc>();
+	  
 	   if(resDTO.getReasonDescList() != null && resDTO.getReasonDescList().size()>0){
+		   List<PmReasonDesc>  results = new ArrayList<PmReasonDesc>();
+		   if(getManagedBean().getPurchaseInDefault() != null && getManagedBean().getPurchaseInDefault().getPanelItem() != null){
+			   for (PmReasonDesc pmReasonDesc : resDTO.getReasonDescList()) {
+				   if(!pmReasonDesc.getPmReason().getReasonCode().equals(ParameterConst.PID_CP)){
+					   results.add(pmReasonDesc);
+				   }
+			   }
+		   }else{
+			   results = resDTO.getReasonDescList();
+		   }
 
 		   if(isExceedProcAmt){
-			   getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
+			   getManagedBean().setJustifications(getDropdownCodeValues(results));
 		   } else {
-			   for (PmReasonDesc pmReasonDesc : resDTO.getReasonDescList()) {
-					   if(pmReasonDesc.getPmReason().getReasonCode().equals(ParameterConst.PID_OT)){
-						   pmReasonDescs.add(pmReasonDesc);   
-					   }
+			   List<PmReasonDesc>   pmReasonDescs = new ArrayList<PmReasonDesc>();
+			   for (PmReasonDesc pmReasonDesc : results) {
+				   if(pmReasonDesc.getPmReason().getReasonCode().equals(ParameterConst.PID_OT)){
+					   pmReasonDescs.add(pmReasonDesc);   
+				   }
 
-					   if(pmReasonDesc.getPmReason().getReasonCode().equals(ParameterConst.PID_QR)){
-						   pmReasonDescs.add(pmReasonDesc);   
-					   }
+				   if(pmReasonDesc.getPmReason().getReasonCode().equals(ParameterConst.PID_QR)){
+					   pmReasonDescs.add(pmReasonDesc);   
+				   }
+			   }
+			   if(pmReasonDescs != null && pmReasonDescs.size()>0){
+				   getManagedBean().setJustifications(getDropdownCodeValues(pmReasonDescs));  
 			   }
 		   }
-
-		   if(pmReasonDescs.size()>0){
-			   getManagedBean().setJustifications(getDropdownCodeValues(pmReasonDescs));  
-		   }
 	   }
-	   getManagedBean().setPmReason(resDTO.getReasonDescList().get(0).getPmReason());
+	  // getManagedBean().setPmReason(resDTO.getReasonDescList().get(0).getPmReason());
    }
 
   

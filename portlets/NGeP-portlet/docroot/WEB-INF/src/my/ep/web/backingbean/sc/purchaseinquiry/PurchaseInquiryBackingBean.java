@@ -1079,18 +1079,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
  	 */
  	public void  getCurrentStatus(PmStatus pmStatus) {
 		 getManagedBean().setPriStatus(pmStatus);
-		 
-		 Long statusId = pmStatus.getStatusId();
-		 if(DPStatusConstants.PRI_PENDING_SUBMISSION.equals(statusId)){
-		 	getManagedBean().setRequisitionerFlag(false);
-		 	getManagedBean().setSupplierFlag(true);
-		 } else if(DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE.equals(statusId)){
-		 	getManagedBean().setRequisitionerFlag(true);
-		 	getManagedBean().setSupplierFlag(false);
-		 } else{
-		 	getManagedBean().setRequisitionerFlag(true);
-		 	getManagedBean().setSupplierFlag(true);
-		 }
 	  }
 	
 	/**
