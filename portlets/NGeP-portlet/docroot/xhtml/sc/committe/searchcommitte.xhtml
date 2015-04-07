@@ -11,7 +11,7 @@
 		<table>
 			<tr>
 				<td valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.committe.title']}" /></td>
+						value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtTitle}"
 						cols="115" rows="2" style=" margin-bottom:5px;width: 100%;"
@@ -19,7 +19,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.committe.qtntenderno']}" /></td>
+						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtNo}"
 						size="30" maxlength="21" /></td>
@@ -28,7 +28,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.committe.datecreated']}" /></td>
+						value="#{lbl['lbl.sc.created.date']}" /></td>
 				<td><p:calendar
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.fromCreatedDate}"
 						id="crdateFrm" showOn="button" size="30" readonlyInput="true"
@@ -38,7 +38,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.committe.recordstatus']}" /></td>
+						value="#{lbl['lbl.sc.status']}" /></td>
 				<td><p:selectOneMenu
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtStatus}"
 						style="width: 178px;margin-bottom: 5px;">
@@ -49,7 +49,7 @@
 				<td />
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.committe.comtyep']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.committe.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.committeeType}"
 						style="width: 178px;margin-bottom: 5px;">
@@ -79,24 +79,24 @@
 			<ac:paginator for="searchQTs" />
 
 			<p:column
-				headerText="#{lbl['lbl.sc.committe.resulttable.qtntenderno']}"
+				headerText="#{lbl['lbl.sc.qtn.no']}"
 				style="width:100px;">
 				<h:outputText value="#{scqtcommittee.scQt.qtNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.title']}">
+			<p:column headerText="#{lbl['lbl.sc.title']}">
 				<h:outputText value="#{scqtcommittee.scQt.qtTitle}"
 					style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.comtype']}"
+			<p:column headerText="#{lbl['lbl.sc.committe.type']}"
 				style="width:100px;">
 				<h:outputText
 					value="#{committeBackingBean.getParameterDesc(scqtcommittee.scCommittee.committeeType)}" />
 			</p:column>
 
 			<p:column
-				headerText="#{lbl['lbl.sc.committe.resulttable.datecreated']}"
+				headerText="#{lbl['lbl.sc.created.date']}"
 				style="width:80px;">
 				<h:outputText value="#{scqtcommittee.scQt.createdDate}">
 					<f:convertDateTime
@@ -105,13 +105,13 @@
 			</p:column>
 
 			<p:column
-				headerText="#{lbl['lbl.sc.committe.resulttable.recstatus']}"
+				headerText="#{lbl['lbl.sc.status']}"
 				style="width:200px">
 				<h:outputText
 					value="#{committeBackingBean.getStatusDescById(scqtcommittee.scCommittee.committeStatus.statusId)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}"
+			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:6%">
 				<p:commandLink
 					action="#{committeBackingBean.editAction(scqtcommittee)}"

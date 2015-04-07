@@ -22,11 +22,11 @@
 							 maxlength="100" style="width:750px"/></td>
 				</tr>
 				<tr>
-					<td style="width: 165px;"><h:outputLabel for="qtnno" value="#{lbl['lbl.sc.qtnno']}" /></td>
+					<td style="width: 165px;"><h:outputLabel for="qtnno" value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td style="width:385px"><p:inputText id="qtnno"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtNo}"
 							maxlength="21" style="width:210px;"/></td>
-					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procmode']}" /></td>
+					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 					<td style="width:385px"><p:selectOneMenu id="procurementid"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
 							style="width:212px;margin-bottom: 5px;">
@@ -35,16 +35,16 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.creatdtfrom']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 					<td><p:calendar
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}"
 							id="crdateFrom" showOn="button" readonlyInput="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 							<p:ajax event="dateSelect" update="crdateTo" />
 						</p:calendar></td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.creatdtto']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 					<td><p:calendar id="crdateTo" showOn="button"
-							label="#{lbl['lbl.sc.creatdtto']}"
+							label="#{lbl['lbl.sc.created.date.to']}"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toCreatedDate}"
 							mindate="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}"
 							readonlyInput="true" required="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate ne null or !qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate eq ''}"
@@ -120,7 +120,7 @@
 
 					<ac:paginator for="searchQTs" />
 
-					<p:column headerText="#{lbl['lbl.sc.qtnno']}" style="width:100px;">
+					<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
 						<h:outputText value="#{scQt.qtNo}" />
 					</p:column>
 
@@ -128,13 +128,13 @@
 						<h:outputText value="#{scQt.qtTitle}" 
 							style="white-space: normal;word-wrap: break-word;"/>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.procmode']}"
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
 						style="width:100px;">
 						<h:outputText
 							value="#{qTDetailBB.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.crtdt']}" style="width:80px;">
+					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />

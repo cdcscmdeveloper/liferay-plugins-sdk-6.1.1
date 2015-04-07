@@ -107,12 +107,12 @@
 						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.procmode']}">
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText
 							value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.crtdt']}">
+					<p:column headerText="#{lbl['lbl.sc.created.date']}">
 						<h:outputText value="#{scQt.createdDate}">
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />

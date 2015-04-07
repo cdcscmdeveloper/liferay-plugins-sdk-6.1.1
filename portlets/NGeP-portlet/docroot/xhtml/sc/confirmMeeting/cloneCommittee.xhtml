@@ -117,13 +117,13 @@
 				</p:column>
 
 				<p:column style="width:10%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.procmode']}">
+					headerText="#{lbl['lbl.sc.procurement.mode']}">
 					<h:outputText
 						value="#{evaluationMeetingBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
 				<p:column style="width:10%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.crtdt']}">
+					headerText="#{lbl['lbl.sc.created.date']}">
 					<h:outputText value="#{scQt.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />

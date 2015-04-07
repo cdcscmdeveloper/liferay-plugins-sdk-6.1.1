@@ -10,7 +10,7 @@
 			value="#{committeBackingBean.managedBean.scCommittee.scQtCommittees}"
 			var="qt">
 
-			<p:column headerText="#{lbl['lbl.sc.qtnno']}" style="width:15%">
+			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:15%">
 				<h:outputText value="#{qt.scQt.qtNo}" />
 			</p:column>
 
@@ -20,12 +20,12 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.procmode']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.procurement.mode']}" style="width:10%">
 				<h:outputText
 					value="#{committeBackingBean.getParameterDesc(qt.scQt.procurementMode)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.crtdt']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:10%">
 				<h:outputText value="#{qt.scQt.createdDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />

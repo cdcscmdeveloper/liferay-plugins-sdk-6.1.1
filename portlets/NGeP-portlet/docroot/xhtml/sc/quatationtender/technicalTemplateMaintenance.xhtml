@@ -20,21 +20,21 @@
 		<p:spacer height="25" />
 		<br />
 		<br />
-		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true"
 			style="width:100%;">
 			<table>
 				<tr>
 					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.tpl.main.title']}" /></td>
+							value="#{lbl['lbl.sc.title']}" /></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							style="margin-bottom:5px;" maxlength="200" disabled="true"
 							value="#{qTDetailBB.managedBean.qtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.item.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qtDoc.tplSpecMaster.itemTypeCode)}" /></td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.specification.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qtDoc.tplSpecMaster.specTypeCode)}" /></td>
 				</tr>
@@ -45,7 +45,7 @@
 				</tr>
 				<tr>
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
+							value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.qtCheckList.pmStatus.statusId)}" /></td>
 				</tr>
