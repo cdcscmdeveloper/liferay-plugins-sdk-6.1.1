@@ -894,7 +894,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)72799;//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
+	//private Long lngUserId = (long)122768; //122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2947,8 +2947,7 @@ public class ReportBackingBean extends
 					selectItem.setLabel(object[0].toString());
 					selectItem.setValue(object[1]);
 					rolecodeApproverList.add(selectItem);
-				}
-				
+				}				
 			}
 			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_RECEIVING_OFFICER))){
 				List<Object[]> recoffLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER);			
@@ -3038,7 +3037,6 @@ public class ReportBackingBean extends
 				selectedCatsList = new ArrayList<SmSupplierCategory>();
 			}
 			selectedCatsList.add(this.getSelectedCatList().get(index));
-
 		} else {
 
 			if (selectedCatsList.contains(this.getSelectedCatList().get(index))) {
@@ -3063,7 +3061,6 @@ public class ReportBackingBean extends
 				selectedCatsList = new ArrayList<SmSupplierCategory>();
 			}
 			selectedCatsList.add(this.getSelectedCatList().get(index));
-
 		} else {
 			if (selectedCatsList.contains(this.getSelectedCatList().get(index))) {
 				selectedCatsList.remove(this.getSelectedCatList().get(index));
@@ -3323,7 +3320,6 @@ public class ReportBackingBean extends
 	}
 	public List<SelectItem> retriveReportListByModule(String module) {
 		reportList = new ArrayList<SelectItem>();
-
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IPMReportSO.class);
@@ -3332,7 +3328,6 @@ public class ReportBackingBean extends
 		PMReportResDTO rptResDTO = reportSO.retriveReportByModule(reqDTO);
 		List<PMReport> rptLst = rptResDTO.getPmReportList();
 		if (null != rptLst) {
-
 			for (PMReport pmReport : rptLst) {
 				SelectItem selectItem = new SelectItem();
 				String label = ReportConst.EMPTY_VAL;
@@ -3491,6 +3486,8 @@ public class ReportBackingBean extends
 				roleCode = ReportConst.APPROVER_NAIK_TARAF;
 			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)) {
 				roleCode = ReportConst.RN_APPROVER;
+			}else if (authoriztionList.contains(ReportConst.BPK_APPROVER)) {
+				roleCode = ReportConst.BPK_APPROVER;
 			}
 			if (roleCode != null && roleCode != ReportConst.EMPTY_VAL) {
 				for (int i = 0; i < orgProfileList.size(); i++) {
@@ -4093,9 +4090,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 		return levOneCatLst;
 	}
-
 	
-
 	public List<SelectItem> retrieveCategoryLevTwo(String mainCategory) {
 		levTwoCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
@@ -4116,9 +4111,6 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 		return levTwoCatLst;
 	}
-
-	
-
 	public List<SelectItem> retrieveCategoryLevThree(String subCategory) {
 		levThreeCatLst = new ArrayList<SelectItem>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
@@ -4139,9 +4131,6 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 		return levThreeCatLst;
 	}
-
-	
-
 	public void enableRegistrationType() {
 		this.setCmEpNumber(null);
 		this.setCmIcNumber(null);
@@ -4273,11 +4262,47 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 									.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}
-			if ((getManagedBean().getReportValue() != null)
+			if (((getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL))&&(((getManagedBean().getReportValue() == "SC_008")
+							&& (getManagedBean().getReportValue().equals("SC_008")))||((getManagedBean().getReportValue() == "SC_028")
+									&& (getManagedBean().getReportValue().equals("SC_028"))))) {
+				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+								IPMReportSO.class);
+				List<String> weitageReq = reportSO.retrieveWeightageReq(lngUserId);
+				String wtgReqVal=null;
+				if(weitageReq.size()>0) {					
+					wtgReqVal = highRoleCodeList.get(0);
+				}
+				if(getManagedBean().getReportValue().equals("SC_028")){
+				if(wtgReqVal!=null){
+					if(wtgReqVal.equals("0")){
+						rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
+								+ "SC_028");
+					}else if(wtgReqVal.equals("1")){
+						rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
+								+ "SC_029");
+						getManagedBean().setReportJsp("SC_EC_TECH_SPEC_WEI.jsp");
+					}
+				}
+				}else if(getManagedBean().getReportValue().equals("SC_008")){
+					if(wtgReqVal!=null){
+						if(wtgReqVal.equals("0")){
+							rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
+									+ "SC_008");
+						}else if(wtgReqVal.equals("1")){
+							rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
+									+ "SC_009");
+							getManagedBean().setReportJsp("SC_TEC_TECH_SPEC_WEI.jsp");
+						}
+					}
+					}
+			}else if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
 						+ getManagedBean().getReportValue());
 			}
+			
 			if ((((PmUser) new FacesScopes().getUserSessionBean()).getUserId() != null)
 					&& (new FacesScopes().getUserSessionBean().getUserId()
 							.toString() != ReportConst.EMPTY_VAL)) {
@@ -5164,10 +5189,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			String userRoleLogin = ReportConst.EMPTY_VAL;
 			if (approverNayakTarafList.size()>0) {
 				userRoleLogin = ReportConst.APPROVERNT;
-			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)&&(this.getModuleValue().equalsIgnoreCase(
+			} else if ((authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.RN_APPROVER))&&(this.getModuleValue().equalsIgnoreCase(
 					ReportConst.DP_MOD_VAL))) {
 				userRoleLogin = ReportConst.APPROVER;
-			} else if ((authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER))&&((this.getModuleValue().equalsIgnoreCase(
+			} else if ((authoriztionList.contains(ReportConst.BUDGET_APPROVER)||authoriztionList.contains(ReportConst.DESK_OFFICER)||authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER))&&((this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.SUPPLIER_SELECTION)))) {
+				userRoleLogin = ReportConst.APPROVER;
+			}else if (authoriztionList.contains(ReportConst.DESK_OFFICER)&&((this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)))) {
 				userRoleLogin = ReportConst.DESKOFFR;
 			} else if (authoriztionList.contains(ReportConst.REQUISITIONER)&&(this.getModuleValue().equalsIgnoreCase(
