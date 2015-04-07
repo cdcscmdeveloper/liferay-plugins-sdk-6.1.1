@@ -101,6 +101,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String searchItemCode;
 	private String searchItemName;
 	private boolean isFlRequestLink = false;
+	private boolean agencyAddress = false;
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
@@ -2446,6 +2447,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setCtQuantity(BigDecimal ctQuantity) {
 		this.ctQuantity = ctQuantity;
+	}
+
+	/**
+	 * @return the agencyAddress
+	 */
+	public boolean isAgencyAddress() {
+		return agencyAddress;
+	}
+
+	/**
+	 * @param agencyAddress the agencyAddress to set
+	 */
+	public void setAgencyAddress(boolean agencyAddress) {
+		this.agencyAddress = agencyAddress;
 	}
 
 }

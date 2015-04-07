@@ -45,8 +45,11 @@ public class CtActiveContractVO  {
     
     private List<CtActiveContractVO> activeContractSubList;
     
-    public CtActiveContractVO(String contractNo, String scheduleNo, String phaseNo, String circularNo,Date startEffective,Date endEffective,PmParameter fulfilmentType,PmParameter contractType,String BusinessRegNo,String mofNo, String supplierName,Long contractId) {
+    private String contractName;
+    
+    public CtActiveContractVO(String contractNo,String contractName, String scheduleNo, String phaseNo, String circularNo,Date startEffective,Date endEffective,PmParameter fulfilmentType,PmParameter contractType,String BusinessRegNo,String mofNo, String supplierName,Long contractId) {
         this.contractNo = contractNo;
+        this.contractName = contractName;
         this.scheduleNo = scheduleNo;
         this.phaseNo = phaseNo;
         this.circularNo = circularNo;
@@ -234,6 +237,20 @@ public class CtActiveContractVO  {
 
 	public void setActiveContractSubList(List<CtActiveContractVO> activeContractSubList) {
 		this.activeContractSubList = activeContractSubList;
+	}
+
+	/**
+	 * @return the contractName
+	 */
+	public String getContractName() {
+		return contractName;
+	}
+
+	/**
+	 * @param contractName the contractName to set
+	 */
+	public void setContractName(String contractName) {
+		this.contractName = contractName;
 	}
     
 
