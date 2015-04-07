@@ -118,6 +118,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -405,6 +406,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 		
+		SmSupplier smSupplier = null;
+		
 		try{
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 	
@@ -413,14 +416,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
-	
+			
 			if(smResDTO.getResultBean().getResultList().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_721017);
 			}
 			
 			log.info("getSmSupplier: "
 					+ smResDTO.getResultBean().getResultList().get(0));
-	
+			smSupplier = smResDTO.getResultBean().getResultList().get(0);
+			
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 	
@@ -460,10 +464,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					codeReqDTO.setTypeId(obj.getTypeId());
 					codeReqDTO.setColorId(obj.getColorId());
 	
-					System.out.println("........obj.getBrandId()="+obj.getBrandId());
-					System.out.println("........obj.obj.getMeasurementId()="+obj.getMeasurementId());
-					System.out.println("........obj.getTypeId()="+obj.getTypeId());
-					System.out.println("........obj.getColorId()="+obj.getColorId());
+					log.info("........obj.getBrandId()="+obj.getBrandId() + 
+								"\n ........obj.obj.getMeasurementId()="+obj.getMeasurementId() +
+								"\n ........obj.getTypeId()="+obj.getTypeId() +
+								"\n ........obj.getColorId()="+obj.getColorId());
 					
 					CodificationResDTO codeResDTO = codificationSO
 							.searchItem(codeReqDTO);
@@ -552,14 +556,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully",
 			// ""));
 	
-			facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-							.getMessage(MessageConst.INFO_710007, new String[] { ""
-									+ bb.getManagedBean().getExtensionVoList()
-											.size() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+				retrieveSupplierItemsBySupplierId(catalogueSO, smSupplier.getSupplierId());
+			} else {
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(MessageConst.INFO_710007, new String[] { ""
+										+ bb.getManagedBean().getExtensionVoList()
+												.size() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
 //		} catch (Exception e) {
 //			e.printStackTrace();
 		}finally {
@@ -568,6 +576,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			codificationSO = null;
 		}
 
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			return navigateToCatalogDet(0);
+		}
+		
 		return "../catalogue/preRenderCatalogueMaintenanceFile.xhtml";
 	}
 
@@ -3718,6 +3730,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			supplierSearchSO = null;
 		}
 
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
+			log.info("******IS Supplier Temp*******");
+			return "/xhtml/common/acknowledge.xhtml";
+		}
+		
 		log.info("Exit saveCatalogItem");
 
 		return "catalogMaintenanceFile";
@@ -4975,7 +4992,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		try{
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 	
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
@@ -4983,29 +4999,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
 	
-			System.out.println("getSmSupplier"
-					+ smResDTO.getResultBean().getResultList().get(0));
-	
+			log.info("Sm Supplier" + smResDTO.getResultBean().getResultList().get(0).getCompanyName());
+			
+			/*CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 					.getSupplierId());
 			reqDTO.setItemStatus("D");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-			
-			/*
-			 * for(CmSupplierItem supplierItem: resDTO.getSupplierItemList()){
-			 * 
-			 * if(supplierItem.getzStdPrices()==null ||
-			 * supplierItem.getzStdPrices().isEmpty()){ CmZonalStandardPricing zone
-			 * = new CmZonalStandardPricing(); zone.setCmSupplierItem(supplierItem);
-			 * 
-			 * supplierItem.getzStdPrices().add(zone); } }
-			 */
 	
 			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
 
 			CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);	
 			log.info("zone size:" + resDTO2.getSupplierZoneLs().size());	
-			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());
+			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());*/
+			
+			retrieveSupplierItemsBySupplierId(catalogueSO, smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 			
 //		} catch (Exception e) {
 //			e.printStackTrace();
@@ -5022,6 +5030,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	private void retrieveSupplierItemsBySupplierId(ICatalogueSO catalogueSO, Long supplierId) {
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		reqDTO.setItemStatus("D");
+		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+
+		CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);	
+		log.info("zone size:" + resDTO2.getSupplierZoneLs().size());	
+		this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());
+	}
+	
 	/**
 	 * back To Previous.
 	 * 
