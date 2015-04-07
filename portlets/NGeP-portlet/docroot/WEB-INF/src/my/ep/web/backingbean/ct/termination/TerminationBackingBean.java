@@ -655,7 +655,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 						context.put("ptjAddress", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 						context.put("telNo", pmAddressType.getPmAddress().getPhoneNo());
 						context.put("faxNo", pmAddressType.getPmAddress().getFaxNo());
-						context.put("email", pmAddressType.getPmAddress().getEmail());
+						if(pmAddressType.getPmContacts()!=null && pmAddressType.getPmContacts().size()>0) {
+							context.put("email", pmAddressType.getPmContacts().get(0).getEmail());	
+						} else {
+							context.put("email","-");
+						}
 					}
 					if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
 						context.put("fileRefNo", getManagedBean().getContractVer().getCtTermination().getFileRefNo());
