@@ -21,6 +21,7 @@ import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -1382,9 +1383,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 
-	public ScQtApproval getApprovalByQtIdNRequestType(Long qtId,String requestType,Long requestId) {
-
-		
+	public List<String> getRequestTypes(String paramaterTypes){
+		if(StringUtils.isNotEmpty(paramaterTypes)){
+			String[] paramTypes = paramaterTypes.split(",");
+			return Arrays.asList(paramTypes);
+		}
 		return null;
 	}
 
