@@ -77,17 +77,20 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.fl.btn.ptj.address']}" 
-				action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
-				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
-				disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
-				oncomplete="addDeliveryAddr.show();" 
-				title="#{lbl['lbl.fl.tooltip.ptj.address']}"/>
+			<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE_FL"
+						postUpdateListener="purchaseRequestBackingBean.updateDeliveryAddrDt()"
+						headerText="#{lbl['lbl.ct.delivery.address']}" 
+						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
+						selectionMode="multiple" 
+						saveObject="purchaseRequestBackingBean.managedBean.selectedPmDelAddrList"
+						conditionField="recordStatus^1|addressType^#{purchaseRequestBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}"
+						update=":form:addressDataTable,:form:itemDetPanelGroup"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
-				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) "
+				update="addManualDelAddrPnl,@(.orderSummaryChange) "
 				disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
-				process="@this,delAddr" oncomplete="addManualDeliveryAddr.show();"
+				process="@this" oncomplete="addManualDeliveryAddr.show();"
 				title="#{lbl['lbl.fl.tooltip.other.address']}">
 				<f:setPropertyActionListener
 					target="#{purchaseRequestBackingBean.managedBean.required}"
@@ -190,35 +193,6 @@
 			</p:dataTable>
 		</p:panel>
 	</h:panelGroup>
-	<p:dialog id="addDelAddrDialog" header="#{lbl['lbl.fl.add.delivery.address']}"
-		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
-		modal="true"  width="600" resizable="false">
-		<p:dataTable id="delAddr" var="delAddr"
-			value="#{purchaseRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr.addressTypeId}"
-			selection="#{purchaseRequestBackingBean.managedBean.selectedPmDelAddrList}">
-			<p:ajax event="rowSelect" update=":form:delAddr" />
-			<ac:paginator for="delAddr" />
-			<p:column selectionMode="multiple" style="width:2%;text-align:center">
-				<f:facet name="header" >
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.address.selectall']}"/>	
-				</f:facet>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.supp.address']}" style="white-space:normal;">
-				<h:outputText
-					value="#{purchaseRequestBackingBean.getFullAddress(delAddr.pmAddress)}"
-					escape="false" />
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" 
-				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
-				oncomplete="addDeliveryAddr.hide();"
-				update=":form:itemDetPanelGroup,addressDataTable,@(.orderSummaryChange) ">
-			</p:commandButton>
-		</div>
-	</p:dialog>
 
 	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.ptj.list']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
