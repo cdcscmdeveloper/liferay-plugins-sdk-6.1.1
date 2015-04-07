@@ -228,9 +228,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//Validate GST No
 		validateGstRegNo();
-		if(this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
-				StringUtils.isBlank(this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
-			this.getManagedBean().getSmSupp().getSmAppl().getSmCompanyBasic().setGstRegistrationDate(null);
+		if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
+				StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
+			this.getManagedBean().getSmAppl().getSmCompanyBasic().setGstRegistrationDate(null);
 		}
 		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
