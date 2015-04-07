@@ -56,12 +56,12 @@
 			style="font-weight: bold;" />
 		<p:spacer height="20px" />
 		<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"
-			row="5"
+			rows="5"
 			value="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues}"
 			var="typeValueObj" rowKey="#{typeValueObj}" rowIndexVar="index">
 
 			<ac:paginator for="ruleTypeValueTableID" />
-			<p:column width="25%"
+			<p:column width="20%"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'A')}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -78,7 +78,7 @@
 				</p:inputText>
 				<p:message id="amountValueMsg" for="amountValueId" display="icon" />
 			</p:column>
-			<p:column width="25%"
+			<p:column width="20%"
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M'}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -88,7 +88,7 @@
 				<p:selectOneMenu id="parameterCodeValueId"
 					value="#{typeValueObj.ruleValue}"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
-					requiredMessage="Value is mandatory" style="width:250px;">
+					requiredMessage="Value is mandatory" style="width:230px;">
 					<f:selectItems
 						value="#{ruleCatalogueBackingBean.getDropdownCodeValuesBySearchBean(ruleCatalogueBackingBean.managedBean.selectedRuleType.parameterType, ruleCatalogueBackingBean.parameterSearchBean)}" />
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
@@ -96,7 +96,7 @@
 				<p:message id="parameterCodeValueMsg" for="parameterCodeValueId"
 					display="icon" />
 			</p:column>
-			<p:column width="25%"
+			<p:column width="20%"
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'P'}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -115,7 +115,7 @@
 					display="icon" />
 			</p:column>
 
-			<p:column width="25%"
+			<p:column width="15%"
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C'}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -124,7 +124,7 @@
 
 				<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3"
 					disabled="#{!(typeValueObj.brandNew)}"
-					update=":form:settingTabId:ruleTypeValueTableID" size="20"
+					update=":form:settingTabId:ruleTypeValueTableID" size="15"
 					headerText="Category" readonly="true"
 					label="#{lbl['lbl.pm.category']}"
 					postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
@@ -225,17 +225,17 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column width="10%">
+			<p:column width="7%">
 				<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
 				<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
-					disabled="#{typeValueObj.brandNew}" style="width:128px;">
+					disabled="#{typeValueObj.brandNew}" style="width:100px;">
 					<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column width="10%">
+			<p:column width="7%">
 				<f:facet name="header">
 
 				</f:facet>
