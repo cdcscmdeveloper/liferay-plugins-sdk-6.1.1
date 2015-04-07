@@ -13,7 +13,7 @@
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
 				var="ctZones" rowIndexVar="index" dynamic="true">
 
-				<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
+				<p:column headerText="#{lbl['lbl.sc.zone']}"
 					style="width:90%">
 					<p:tree value="#{ctZones}" var="location" selectionMode="single">
 						<p:ajax event="select" update=":form:paneltabView:totalSupplierid"
