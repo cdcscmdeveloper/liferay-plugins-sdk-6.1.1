@@ -35,8 +35,6 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
-import my.ep.persistence.entity.pm.common.PmProject;
-import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
@@ -308,12 +306,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The gl account list. */
 	private List<PmGlAccount> glAccountList;
 	
-	/** The project list. */
-	private List<PmProject> projectList;
-	
-	/** The setia list. */
-	private List<PmSetia> setiaList;
-	
 	/** The sub setia list. */
 	private List<PmSubSetia> subSetiaList;
 	
@@ -447,12 +439,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	/** The pm prg activity. */
 	private PmPrgActivity pmPrgActivity;
-	
-	/** The pm project. */
-	private PmProject pmProject;
-	
-	/** The pm setia. */
-	private PmSetia pmSetia;
 	
 	/** The pm sub setia. */
 	private PmSubSetia pmSubSetia;
@@ -1728,42 +1714,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the project list.
-	 *
-	 * @return the projectList
-	 */
-	public List<PmProject> getProjectList() {
-		return projectList;
-	}
-
-	/**
-	 * Sets the project list.
-	 *
-	 * @param projectList the projectList to set
-	 */
-	public void setProjectList(List<PmProject> projectList) {
-		this.projectList = projectList;
-	}
-
-	/**
-	 * Gets the setia list.
-	 *
-	 * @return the setiaList
-	 */
-	public List<PmSetia> getSetiaList() {
-		return setiaList;
-	}
-
-	/**
-	 * Sets the setia list.
-	 *
-	 * @param setiaList the setiaList to set
-	 */
-	public void setSetiaList(List<PmSetia> setiaList) {
-		this.setiaList = setiaList;
-	}
-
-	/**
 	 * Gets the sub setia list.
 	 *
 	 * @return the subSetiaList
@@ -2758,42 +2708,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmPrgActivity(PmPrgActivity pmPrgActivity) {
 		this.pmPrgActivity = pmPrgActivity;
-	}
-
-	/**
-	 * Gets the pm project.
-	 *
-	 * @return the pmProject
-	 */
-	public PmProject getPmProject() {
-		return pmProject;
-	}
-
-	/**
-	 * Sets the pm project.
-	 *
-	 * @param pmProject the pmProject to set
-	 */
-	public void setPmProject(PmProject pmProject) {
-		this.pmProject = pmProject;
-	}
-
-	/**
-	 * Gets the pm setia.
-	 *
-	 * @return the pmSetia
-	 */
-	public PmSetia getPmSetia() {
-		return pmSetia;
-	}
-
-	/**
-	 * Sets the pm setia.
-	 *
-	 * @param pmSetia the pmSetia to set
-	 */
-	public void setPmSetia(PmSetia pmSetia) {
-		this.pmSetia = pmSetia;
 	}
 
 	/**
