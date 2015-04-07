@@ -96,8 +96,13 @@
             	<p:rowToggler rendered="#{not empty contractTreeNode.activeContractSubList}" />
         	</p:column>
 			<p:column headerText="Contract No" style="width:142px">
+					<p:commandLink value="#{contractTreeNode.contractNo}" 
+				action="#{contractRequestBackingBean.navigateDocument(contractTreeNode.contractId)}"/>
+				
+			</p:column>
+			<p:column headerText="Contract Name" style="width:142px;white-space:normal">
 				<h:outputText
-					value="#{contractTreeNode.contractNo}" />
+					value="#{contractTreeNode.contractName}" />
 			</p:column>
 			<p:column headerText="Schedule/ Phase No" style="width:70px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}" />

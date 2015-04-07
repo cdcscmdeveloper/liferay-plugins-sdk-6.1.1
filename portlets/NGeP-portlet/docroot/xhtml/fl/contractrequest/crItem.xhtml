@@ -93,16 +93,30 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.fl.btn.ptj.address']}" 
-				action="#{contractRequestBackingBean.flDeliveryAddrList}"
-				disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
-				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
-				title="#{lbl['lbl.fl.tooltip.ptj.address']}"
-				oncomplete="addDeliveryAddr.show();" />
+			<ac:lov id="agencyAddressId" lovId="CT_AGENCY_ADDRESS"
+						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt()"
+						headerText="#{lbl['lbl.ct.delivery.address']}" 
+						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
+						selectionMode="multiple"
+						saveObject="contractRequestBackingBean.managedBean.selectedAddrTypeList"
+						conditionField="recordStatus^1|ctAgency.ctContractVer.contractVerId^#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.contractVerId}|ctAgency.orgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
+						update=":form:addressDataTable,:form:itemDetPanelGroup"
+						rendered="#{contractRequestBackingBean.managedBean.agencyAddress}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"/>
+			<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE_FL"
+						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt()"
+						headerText="#{lbl['lbl.ct.delivery.address']}" 
+						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
+						selectionMode="multiple" 
+						saveObject="contractRequestBackingBean.managedBean.selectedAddrTypeList"
+						conditionField="recordStatus^1|addressType^#{contractRequestBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
+						update=":form:addressDataTable,:form:itemDetPanelGroup"
+						rendered="#{!contractRequestBackingBean.managedBean.agencyAddress}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" 
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
 				disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
-				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) " process="@this,delAddr"
+				update="addManualDelAddrPnl,@(.orderSummaryChange) " process="@this"
 				title="#{lbl['lbl.fl.tooltip.other.address']}"
 				oncomplete="addManualDeliveryAddr.show();" >
 				<f:setPropertyActionListener
@@ -234,34 +248,6 @@
 			</div>
 		</p:confirmDialog>		
 	</p:panel>
-	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
-		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
-		modal="true" width="600" resizable="false">
-		<p:dataTable id="delAddr" var="delAddr"
-			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr}"
-			selection="#{contractRequestBackingBean.managedBean.selectedAddrTypeList}">
-			<ac:paginator for="delAddr" />
-			<p:column selectionMode="multiple" style="width:2%;text-align:center">
-				<f:facet name="header" >
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.address.selectall']}"/>	
-				</f:facet>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.supp.address']}" style="white-space:normal;">
-				<h:outputText
-					value="#{contractRequestBackingBean.getFullAddress(delAddr.pmAddress)}"
-					escape="false" />
-			</p:column>
-			
-		</p:dataTable>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" 
-				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
-				oncomplete="addDeliveryAddr.hide();" update="addressDataTable,itemDetPanelGroup">
-			</p:commandButton>
-		</div>
-	</p:dialog>
 	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.ptj.list']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		 modal="true" width="900px"
