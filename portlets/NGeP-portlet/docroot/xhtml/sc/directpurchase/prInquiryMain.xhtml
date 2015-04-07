@@ -16,10 +16,14 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
  </p:blockUI>
   <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
+  <ui:param name="isPendingSubmissionStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}" />
+  <ui:param name="isPendingSupplierRespStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}" />
+  <ui:param name="isPendingRnCreationStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq  DPStatusConstants.priPendingRnCreation}" />
+  
 
 		<div class="ppRightBtn">
 			<c:if
-				test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}">
+				test="#{isPendingSubmissionStatus}">
 				<p:commandButton immediate="true"
 					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 					partialSubmit="true" process="@this" style="float:left;"
@@ -40,11 +44,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 							rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
 							action="#{purchaseInquiryBackingBean.backToPrevious}" /> <c:choose>
-							<c:when
-								test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
-								<c:if
-									test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingRnCreation}">
-
+							<c:when test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
+								<c:if test="#{isPendingRnCreationStatus}">
 									<c:if
 										test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 										<p:commandButton
@@ -68,8 +69,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-									<c:if
-										test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}">
+									<c:if test="#{isPendingSupplierRespStatus}">
 
 										<ac:spkiPopup id="spkiPopup"
 											password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
