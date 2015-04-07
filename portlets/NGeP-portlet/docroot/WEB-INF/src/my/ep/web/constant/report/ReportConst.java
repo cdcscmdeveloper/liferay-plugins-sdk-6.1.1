@@ -765,6 +765,7 @@ public class ReportConst {
 	public static final String APPROVER_LBL="Approver";
 	public static final String PARAM_CODE_TYPE_FPJ="FPJ";
 	public static final String PARAM_CODE_TYPE_FMI="FMI";
+	public static final String BUDGET_APPROVER = "BUDGET_APPROVER";
 	//ERROR N EXCEPTIONS
 	public static final String ERR_999000_MORTHAN_TEN= "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
