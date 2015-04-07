@@ -1007,7 +1007,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtLocCriteria> supplierLocationList;
 
-	
+	private boolean paidupcapital;
 	
 	/**
 	 * Sets the panel suppliers.
@@ -6332,5 +6332,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.amendMentBean = amendMentBean;
 	}
 
-	
+	/**
+	 * @return the paidupcapital
+	 */
+	public boolean isPaidupcapital() {
+		return paidupcapital;
+	}
+
+	/**
+	 * @param paidupcapital the paidupcapital to set
+	 */
+	public void setPaidupcapital(boolean paidupcapital) {
+		this.paidupcapital = paidupcapital;
+	}
+
 }
