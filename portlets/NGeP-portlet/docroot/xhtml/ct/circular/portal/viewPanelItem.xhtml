@@ -184,10 +184,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      <p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;">
 					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"/>
 				      </p:column>
+				      
+				      <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;">
+				           <p:selectOneMenu id="accountId"   disabled="true"
+				                  style="width:250px;margin-bottom: 5px;"  value="#{supVar.bankAccountNo}">
+						          <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						          <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
+					         </p:selectOneMenu>
+					  </p:column>
 				   
 				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
 				         <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
-                             disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:70px;">
+                             disabled="true" style="width:70px;">
 				             <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 			                 <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 			          </p:selectOneMenu>

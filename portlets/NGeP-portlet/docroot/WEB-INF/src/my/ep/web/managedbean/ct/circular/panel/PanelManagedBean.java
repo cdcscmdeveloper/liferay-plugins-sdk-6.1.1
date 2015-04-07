@@ -45,6 +45,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -126,6 +127,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
 	private List<SmSupplier> supplierList; 
+	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	
 	//gpki signing
 	private PmDigiSign pmDigiSign;
@@ -181,6 +183,23 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedCancelCircular(CtCancelCircular selectedCancelCircular) {
 		this.selectedCancelCircular = selectedCancelCircular;
+	}
+	
+	/**
+	 * @return the supplierBankAccountMap
+	 */
+	public Map<String, SmSupplierBank> getSupplierBankAccountMap() {
+		if (supplierBankAccountMap == null) {
+			supplierBankAccountMap = new HashMap<String, SmSupplierBank>();
+		}
+		return supplierBankAccountMap;
+	}
+	
+	/**
+	 * @param supplierBankAccountMap the supplierBankAccountMap to set
+	 */
+	public void setSupplierBankAccountMap(Map<String, SmSupplierBank> supplierBankAccountMap) {
+		this.supplierBankAccountMap = supplierBankAccountMap;
 	}
 
 	/**

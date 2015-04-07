@@ -42,6 +42,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -70,6 +71,8 @@ import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
@@ -98,6 +101,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -1063,18 +1067,25 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()){
 					   if(panelItem.isSelectedCheckBox()){
 						   List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
+						   if(panelItem.getPanelCoverageId() == null || panelItem.getPanelCoverageId().getParameterCode() == null){
+							   panelCoverageICode = getItemGeneralCode(panelItem.getZoneAllParamterId()); 
+						   } else {
+							   panelCoverageICode = panelItem.getPanelCoverageId().getParameterCode();
+						   }
+						   
+						   
+							 /*  if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE) 
+									   && getManagedBean().getSelectedPanelZone() == null){
+										   throw new EpException(MessageConst.ERROR_100022, 
+												new String[]{"Create panel zone"});
+						 	   }
+							   */
 						   for (SmSupplier smSupplier : supplierList) {
 								      CtPanelSupplier panelSupplier = new CtPanelSupplier();
 								      panelSupplier.setSupplier(smSupplier);
 								      panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
 								      panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());					
 								      panelSupplierList.add(panelSupplier);
-						   }
-						   
-						   if(panelItem.getPanelCoverageId() == null || panelItem.getPanelCoverageId().getParameterCode() == null){
-							   panelCoverageICode = getItemGeneralCode(panelItem.getZoneAllParamterId()); 
-						   } else {
-							   panelCoverageICode = panelItem.getPanelCoverageId().getParameterCode();
 						   }
 						  
 						    if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
@@ -1119,6 +1130,55 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
+	}
+	
+	/**
+	 * The method used to retrieve and display the bank and account information
+	 * with the selected bank for change bank request.
+	 */
+	public void changeAccountActionListener(CtPanelSupplier  panelSupplier, int index) {
+			
+	    SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(panelSupplier.getBankAccountNo());
+		if (supplierBank != null) {
+			if(getManagedBean().isSelectionOfZone()) {
+				     CtPanelSupplier supplier = getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().get(index);
+				     supplier.setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+				     getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().remove(index);
+				     getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().add(index, supplier); 
+				} else {
+					  CtPanelSupplier supplier = getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().get(index);
+					  supplier.setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+					  getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().remove(index);
+					  getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().add(index, supplier); 
+			    }
+		  }
+	}	
+	
+	public List<SelectItem> populateBankAccountList(SmSupplier smSupplier) {		
+		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
+		 ISupplierSearchSO supplierSearchSO = null;
+	     SupplierSearchReqDTO supplierReqDTO = null;
+	     SupplierSearchResDTO supplierResDTO = null;
+	     supplierReqDTO = new SupplierSearchReqDTO();
+	     supplierReqDTO.setSupplierId(smSupplier.getSupplierId());
+		 supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+	     supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+    	if (supplierResDTO.getSmSupplierBankList() != null) {
+				for (SmSupplierBank smSupplierBank : supplierResDTO.getSmSupplierBankList()) {
+					if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						String account = smSupplierBank.getAccountNo();
+						if (smSupplierBank.getPmFinancialOrg() != null 
+								&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
+							       account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
+						}
+						populateBankAccountList.add(new SelectItem(smSupplierBank.getAccountNo(), account));
+						if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
+						}
+					}
+				}
+			}
+		return populateBankAccountList;
 	}
 	
 	/**
