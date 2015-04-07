@@ -3128,4 +3128,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public String backToDocument() {
 		return getManagedBean().getBackToDocument();
 	}
+	
+	/**
+	 * The method used to retrieve the delivery address type.
+	 * 
+	 * @return delivery address type
+     */
+	public String getDeliveryAddressType() {
+		return AddressType.DELIVERY_ADDRESS.value();
+	}
 }

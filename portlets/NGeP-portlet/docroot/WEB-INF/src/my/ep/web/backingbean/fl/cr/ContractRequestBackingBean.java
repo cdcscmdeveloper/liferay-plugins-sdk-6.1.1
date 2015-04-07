@@ -1190,8 +1190,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if(getManagedBean().getFlRequest().isBrandNew()){
 			getManagedBean().getFlRequest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
-		
-		
+		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		ContractAmendmentReqDTO amendReq = new ContractAmendmentReqDTO();
+		amendReq.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+		amendReq.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+		ContractAmendmentResDTO amendRes = ctAmendmentSO.checkAgencyAddressExist(amendReq);
+		getManagedBean().setAgencyAddress(amendRes.isAgencyAddressExist());
 	}
 
 	private void setFlSupplierDtl(FlFulfilmentRequest flRequest) {
@@ -2789,13 +2793,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(contractTree.containsKey(vCtActiveContract.getContract().getContractId())){
 				parent = contractTree.get(vCtActiveContract.getContract().getContractId());
 					new DefaultTreeNode(
-						new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
+						new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
 			}else{
 				parent = new DefaultTreeNode(
-						new CtActiveContractVO(vCtActiveContract.getContractNo(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId()),root);
+						new CtActiveContractVO(vCtActiveContract.getContractNo(),vCtActiveContract.getContract().getContractName(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId()),root);
 				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 					new DefaultTreeNode(
-							new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
+							new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
 				}
 				
 				contractTree.put(vCtActiveContract.getContract().getContractId(),parent);
@@ -2816,16 +2820,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if(activeContract.getActiveContractSubList() == null){
 					activeContract.setActiveContractSubList(new ArrayList<CtActiveContractVO>());
 				}
-				subActiveContract = new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
+				subActiveContract = new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
 				activeContract.getActiveContractSubList().add(subActiveContract);
 			}else{
 				activeContract = 
-					new CtActiveContractVO(vCtActiveContract.getContractNo(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId());
+					new CtActiveContractVO(vCtActiveContract.getContractNo(),vCtActiveContract.getContract().getContractName(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId());
 				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 					if(activeContract.getActiveContractSubList() == null){
 						activeContract.setActiveContractSubList(new ArrayList<CtActiveContractVO>());
 					}
-					subActiveContract = new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
+					subActiveContract = new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
 					activeContract.getActiveContractSubList().add(subActiveContract);				
 				}
 				getManagedBean().getContractListTable().add(activeContract);
@@ -3890,5 +3894,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 */
 	public String backToDocument() {
 		return getManagedBean().getBackToDocument();
+	}
+	
+	/**
+	 * The method used to retrieve the delivery address type.
+	 * 
+	 * @return delivery address type
+     */
+	public String getDeliveryAddressType() {
+		return AddressType.DELIVERY_ADDRESS.value();
 	}
 }
