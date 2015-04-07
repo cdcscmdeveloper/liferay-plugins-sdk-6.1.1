@@ -152,7 +152,7 @@ public class SupplierManagementConst {
 	public static final String SECTION_REV_ROLE_APP = "A";
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
-	public static String SUPPLIER_BUSINESS_TYPE = "SBT";
+	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
 
 	// SDO BPM Action
 	public static final String BPM_INQUIRY = "INQUIRY";
@@ -160,8 +160,8 @@ public class SupplierManagementConst {
 	public static final String BPM_VERIFY = "VERIFY";
 
 	// Supporting Doc Type
-	public static String SUPPORTING_DOC_ONLINE = "S";
-	public static String SUPPORTING_DOC_OFFLINE = "H";
+	public static final String SUPPORTING_DOC_ONLINE = "S";
+	public static final String SUPPORTING_DOC_OFFLINE = "H";
 
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
