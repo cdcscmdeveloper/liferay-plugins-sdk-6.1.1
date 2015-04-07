@@ -73,12 +73,43 @@
 					#{qtLOABackingBean.getStatusDescById(loiloa.status.statusId)}
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
-						<p:commandButton title="edit" icon="ui-icon-edit" rendered="#{loiloa.type eq 'LOI'}"
-						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-						action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}" />
-					<p:commandButton  title="edit" icon="ui-icon-edit" rendered="#{loiloa.type eq 'LOA'}"
-						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-						action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
+										
+					<h:panelGroup rendered="#{loiloa.type eq 'LOI'}">
+
+						<p:commandButton title="edit" icon="ui-icon-edit"
+							rendered="#{loiloa.status.statusId eq QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
+							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}" />
+
+						<p:commandLink
+							rendered="#{loiloa.status.statusId ne QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
+							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}"
+							process="@this">
+
+							<p:graphicImage  library="ep/images/design"
+								name="document.png" value="/css/images/design/document.png" />
+							<p:spacer width="5"></p:spacer>
+						</p:commandLink>
+
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{loiloa.type eq 'LOA'}">
+						<p:commandButton title="edit" icon="ui-icon-edit"
+							rendered="#{loiloa.status.statusId eq QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
+							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+							action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
+
+						<p:commandLink
+							rendered="#{loiloa.status.statusId ne QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
+							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}"
+							process="@this">
+
+							<p:graphicImage  library="ep/images/design"
+								name="document.png" value="/css/images/design/document.png" />
+							<p:spacer width="5"></p:spacer>
+						</p:commandLink>
+					</h:panelGroup>
+
 				</p:column>
 			</p:dataTable>
 		</p:panel>
