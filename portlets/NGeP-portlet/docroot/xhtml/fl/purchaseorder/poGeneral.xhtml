@@ -82,10 +82,10 @@
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" rendered="false"/></td>
 				<td><p:inputText size="25"
 						value="#{flOrderBB.managedBean.flRequest.financialYear}"
-						disabled="true" /></td>
+						disabled="true" rendered="false"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
