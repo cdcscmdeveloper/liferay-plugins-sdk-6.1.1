@@ -184,7 +184,7 @@ public class SpkiBackingBean {
  
 			String pin = getPassword();
 	
-			System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword());
+			System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
 			// Request service to signData based on the answered challenges and data 
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),"eP-1008I348f", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 			
