@@ -337,9 +337,6 @@
 				</tr>
 			</table>
 		</p:panel>
-
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
 		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
 			id="catParent">
 			<table style="width: 100%;">
@@ -355,8 +352,7 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryName}"
 							size="100" disabled="true" readonly="true" /></td>
 				</tr>
-				<th>&#160;</th>
-				<td>&#160;</td>
+								
 				<tr>
 					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.pm.main.category.code']}" /></td>
@@ -372,10 +368,7 @@
 				</tr>
 
 			</table>
-		</p:panel>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
+		</p:panel>	
 
 		<p:panel id="groupdetails" header="#{lbl['lbl.pm.category.grouping']}"
 			toggleable="true"
@@ -386,7 +379,6 @@
 				width="100%" var="pmBasicCategory">
 
 				<ac:paginator for="groupdetailsId"></ac:paginator>
-
 
 				<p:column>
 					<f:facet name="header">
@@ -422,16 +414,13 @@
 				</p:column>
 
 			</p:dataTable>
-			<p>&nbsp;</p>
+					
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					action="#{categoryBackingBean.addBasicCategory()}"
 					oncomplete="lovPopupCategory.show();" update="lovPopupCategory" />
-
 			</div>
-
 		</p:panel>
-
 
 		<p:panel header="#{lbl['lbl.pm.special.equipment']}"
 			id="machineDetails"
@@ -463,9 +452,7 @@
 						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 					</p:commandLink>
 				</p:column>
-
-			</p:dataTable>
-			<p>&nbsp;</p>
+			</p:dataTable>	
 
 			<ui:remove>
 				<div class="ppRightBtn">
@@ -485,18 +472,12 @@
 				</div>
 				<ac:lovPopup />
 			</ui:remove>
-
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
 					action="#{categoryBackingBean.addPmMachine()}"
 					oncomplete="lovPopupPmMachine.show();" update="lovPopupPmMachine" />
-
 			</div>
-
 		</p:panel>
-
-
-
 		<p:remoteCommand name="updateCategory"
 			update="groupdetails,resultPanel"
 			action="#{categoryBackingBean.populateToSaveLOV}" />
@@ -526,7 +507,7 @@
 							value="#{categoryBackingBean.managedBean.searchValue[0]}"
 							style="margin-top:6px;" />
 
-						<p:selectOneMenu
+						<!-- <p:selectOneMenu
 							value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
@@ -554,7 +535,7 @@
 						</p:selectOneMenu>
 						<p:inputText
 							value="#{categoryBackingBean.managedBean.searchValue[2]}"
-							style="margin-top:6px;" />
+							style="margin-top:6px;" /> -->
 
 					</h:panelGrid>
 
@@ -645,7 +626,7 @@
 							value="#{categoryBackingBean.managedBean.searchValue[0]}"
 							style="margin-top:6px;" />
 
-						<p:selectOneMenu
+						<!-- <p:selectOneMenu
 							value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
@@ -658,7 +639,7 @@
 						</p:selectOneMenu>
 						<p:inputText
 							value="#{categoryBackingBean.managedBean.searchValue[1]}"
-							style="margin-top:6px;" />
+							style="margin-top:6px;" /> -->
 
 
 					</h:panelGrid>
@@ -811,7 +792,7 @@
 								</p:commandLink>
 							</p:column>
 						</p:dataTable>
-						<p>&nbsp;</p>
+						
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
 								action="#{categoryBackingBean.addCategoryRestr()}"
