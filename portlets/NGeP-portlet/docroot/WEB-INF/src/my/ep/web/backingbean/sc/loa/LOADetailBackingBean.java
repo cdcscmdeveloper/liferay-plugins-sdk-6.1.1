@@ -38,8 +38,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -65,10 +63,6 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
-import my.ep.dto.sc.quationtender.QTSupplierResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -210,15 +204,9 @@ public class LOADetailBackingBean extends
 	 */
 	public String editLOAAction(ScLoa scLoa) {
 		debugLogger("editLOAAction");
-
-		IQTAwardSO qtAwardSO = null;
-
 		try {
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoad();
-
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			String language = new FacesScopes().getUserLocale().getLanguage();
 
@@ -226,7 +214,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setLanguageCode(language);
 
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
 
 			if (scLoa != null
@@ -268,7 +256,7 @@ public class LOADetailBackingBean extends
 			}
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 
 		return QTConstants.LOA_PAGE;
@@ -320,17 +308,11 @@ public class LOADetailBackingBean extends
 	 */
 	public void editSupplierLOAAction(Long loaId) {
 		debugLogger("editSupplierLOAAction");
-
-		IQTAwardSO qtAwardSO = null;
-
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
 
-			AwardSupplierResDTO resDTO = qtAwardSO
+			AwardSupplierResDTO resDTO = getQtAwardSO()
 					.retrieveSupplierLOADtl(reqDTO);
 
 			ScLoa scLoa = resDTO.getScLoa();
@@ -390,7 +372,7 @@ public class LOADetailBackingBean extends
 		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 
@@ -400,7 +382,6 @@ public class LOADetailBackingBean extends
 	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
-		IQTAwardSO qtAwardSO = null;
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
@@ -415,12 +396,9 @@ public class LOADetailBackingBean extends
 			ScLoa scLoa = new ScLoa();
 			// scLoa.setLoaId(loaId);
 
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
-			AwardSupplierResDTO resDTO = qtAwardSO
+			AwardSupplierResDTO resDTO =getQtAwardSO()
 					.retrieveLOADtlByLoaId(reqDTO);
 			if (resDTO.getScLoa() != null) {
 				scLoa = resDTO.getScLoa();
@@ -1784,15 +1762,13 @@ public class LOADetailBackingBean extends
 	 */
 	private void retrieveBondDtls(ScLoa scLoa) {
 		debugLogger("retrieveBondDtls");
-		IQTAwardSO qtAwardSO = null;
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			ScLoa loa = new ScLoa();
 			loa.setLoaId(scLoa.getLoaId());
 			reqDTO.setScLoa(loa);
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveBondDtls(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveBondDtls(reqDTO);
 
 			List<ScPerformanceBond> bondDtl = resDTO.getBondDtls();
 			System.out.println("Bond Details : " + bondDtl.size());
@@ -2114,11 +2090,7 @@ public class LOADetailBackingBean extends
 	public void saveAction() {
 		debugLogger("saveAction");
 
-		IQTAwardSO qtAwardSO = null;
-
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
@@ -2137,7 +2109,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 
-			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
@@ -2172,7 +2144,7 @@ public class LOADetailBackingBean extends
 			}
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 	}
 	
@@ -2186,12 +2158,8 @@ public class LOADetailBackingBean extends
 	public String submitAction() {
 		debugLogger("submitAction");
 
-		IQTAwardSO qtAwardSO = null;
 
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
@@ -2217,7 +2185,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 
-			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
@@ -2247,7 +2215,7 @@ public class LOADetailBackingBean extends
 			}
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 
 		return null;
@@ -2263,12 +2231,8 @@ public class LOADetailBackingBean extends
 	private AwardSupplierResDTO updateBPMTask(String outcome, PmDigiSign digiSign) {
 		debugLogger("updateBPMTask");
 
-		IQTAwardSO qtAwardSO = null;
 		AwardSupplierResDTO resDTO = null;
-
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
@@ -2304,7 +2268,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-		    resDTO = qtAwardSO.saveLOADtl(reqDTO);
+		    resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
@@ -2347,7 +2311,7 @@ public class LOADetailBackingBean extends
 			}
 
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 
 		
@@ -2495,15 +2459,12 @@ public class LOADetailBackingBean extends
 		String contractType = scLoa.getContractType().getParameterCode();
 
 		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			IQTAwardSO qtAwardSO;
 			try {
-				qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IQTAwardSO.class);
 
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoa(scLoa);
 
-				AwardSupplierResDTO resDTO = qtAwardSO
+				AwardSupplierResDTO resDTO = getQtAwardSO()
 						.retrieveMinistryAgencyList(reqDTO);
 
 				getManagedBean().setAgencyProfileDDList(
@@ -2524,7 +2485,7 @@ public class LOADetailBackingBean extends
 				
 
 			} finally {
-				qtAwardSO = null;
+				//qtAwardSO = null;
 			}
 		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -3521,10 +3482,7 @@ public class LOADetailBackingBean extends
 	 * @return the string
 	 */
 	public String goQtEditLoaAction(SuppLoiLoaBean suppLoiLoaBean) {
-		IQTAwardSO qtAwardSO = null;
 		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 			String language = new FacesScopes().getUserLocale().getLanguage();
 
@@ -3534,10 +3492,10 @@ public class LOADetailBackingBean extends
 
 			if (suppLoiLoaBean.getScLoa() != null) {
 				reqDTO.setScLoa(suppLoiLoaBean.getScLoa());
-				resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+				resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			} else if (suppLoiLoaBean.getScLoi() != null) {
 				reqDTO.setScLoi(suppLoiLoaBean.getScLoi());
-				resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+				resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 			}
 
 			if (resDTO != null) {
@@ -3551,7 +3509,7 @@ public class LOADetailBackingBean extends
 		} catch (Exception e) {
 			throw new EpException(e.toString());
 		} finally {
-			qtAwardSO = null;
+			//qtAwardSO = null;
 		}
 		return "";
 	}
@@ -3939,7 +3897,8 @@ public class LOADetailBackingBean extends
 	 */
 	public void preRenderDirectNegoView() {
 		debugLogger("preRenderDirectNegoView");
-
+        renewSesionObject();
+    	IStatusSO statusSO = null;
 		ScLoa scLoa = new ScLoa();
 		PmParameter pmParameter = new PmParameter();
 		scLoa.setContractType(pmParameter);
@@ -3948,9 +3907,34 @@ public class LOADetailBackingBean extends
 		scLoiLoa.setSmSupplier(new SmSupplier());
 		scLoa.setScLoiLoa(scLoiLoa);
 		scLoa.setContractAdmin(new PmUser());
+		scLoa.setContractAgency(new PmOrgProfile());
 		scLoa.setPmOrgProfile(new PmOrgProfile());
 		
+		try {
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(QTStatusConst.LOA_PENDING_SUBMISSION);
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			scLoa.setPmStatus(statusResDTO.getPmStatus());
+		} catch (Exception e) {
+			throw new EpException(e.toString());
+		} finally {
+			statusSO = null;
+		}
+		
 		getManagedBean().setScLoa(scLoa);
+		
+		// witness
+		ScLoaWitness scLoaWitness = new ScLoaWitness();
+		getManagedBean().setLoaAgencyWitness(scLoaWitness);
+		
+		// award details
+		getManagedBean().getTplSpecMaster().setItemOriginCode(new PmParameter());
+		
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
@@ -3970,26 +3954,15 @@ public class LOADetailBackingBean extends
 		getManagedBean().getScLoa().getScLoiLoa().setMofNo(mofAccount.getMofNo());
 		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(mofAccount.getSmSupplier().getCompanyName());
 		
-		
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierSearchSO.class);
-		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
-		suppSearchReqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
-		SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
-
-
-		QTSupplierResDTO resDTO = new QTSupplierResDTO();
-		IQTSupplierSO qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, 
-				IQTSupplierSO.class);
-		QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+		AwardSupplierReqDTO reqDTO  = new AwardSupplierReqDTO();
 		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
-		resDTO = qtSupplierSO.retrieveSupplierDetails(reqDTO);
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSmPersonnelBySupplierId(reqDTO);
 		// to get smpersonal
+		getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
+		getManagedBean().setSelectedSupplierBranchName("HQ");
 		
-		
-		//handleBranchDetailsChanged();
+	    handleBranchDetailsChanged();
 
 	}
 	
@@ -4041,7 +4014,7 @@ public class LOADetailBackingBean extends
 		if (null != orgProfileList) {
 			for (PmOrgProfile pmOrgProfile : orgProfileList) {
 				if (pmOrgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-					getManagedBean().getScLoa().setPmOrgProfile(pmOrgProfile);
+					getManagedBean().getScLoa().getScLoiLoa().setPmOrgProfile(pmOrgProfile);
 				}
 			}
 		} else {
@@ -4049,5 +4022,77 @@ public class LOADetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Retrieve parameter desc by type.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @returnList<PmParameterDesc>
+	 */
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
+	}
 	
+	/**
+	 * Gets the local goods radio values.display Local goods (Local/Import)
+	 * radio values in template spec.
+	 * 
+	 * @param itemType
+	 *            (String itemType)
+	 * @return SelectItem[].
+	 */
+	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
+
+		List<String> types = new ArrayList<String>();
+		types.add(ParameterConst.LOCAL_GOODS);
+		types.add(ParameterConst.IMPORTED_GOODS);
+
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[types.size()];
+			int i = 0;
+			for (String location : types) {
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterCode()
+							.equals(location)) {
+
+						items[i++] = new SelectItem(paramDesc.getPmParameter()
+								.getParameterId(), paramDesc.getCodeName());
+
+					}
+				}
+			}
+		} finally {
+		}
+		return items;
+	}
+	
+	/**
+	 * Get item type values from pmParameter
+	 * @return list of dropdown item values.
+	 */
+	public SelectItem[] getItemTypeValues(){
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		String recommend = ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE;
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
+
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
+		return items;
+	}
+	
+	/**
+	 * Gets the qt award so.
+	 *
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
 }

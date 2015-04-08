@@ -24,6 +24,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.StreamedContent;
@@ -209,6 +211,17 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The ptj dropdown list. */
 	private List<PmOrgProfile> ptjDropdownList; // direct nego
+	
+	/** The product template spec bean. */
+	private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
+	
+	/** The service template spec bean. */
+	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
+	
+	/** The item type id. */
+	private long itemTypeId = 1;// Item type Id
+	
+	private TplSpecMaster tplSpecMaster  = new TplSpecMaster(); // temp
 
 	/**
 	 * Instantiates a new LOA detail managed bean.
@@ -1206,5 +1219,75 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setPtjDropdownList(List<PmOrgProfile> ptjDropdownList) {
 		this.ptjDropdownList = ptjDropdownList;
 	}
+
+	/**
+	 * @return the tplSpecMaster
+	 */
+	public TplSpecMaster getTplSpecMaster() {
+		return tplSpecMaster;
+	}
+
+	/**
+	 * @param tplSpecMaster the tplSpecMaster to set
+	 */
+	public void setTplSpecMaster(TplSpecMaster tplSpecMaster) {
+		this.tplSpecMaster = tplSpecMaster;
+	}
+
+	/**
+	 * Gets the product template spec bean.
+	 *
+	 * @return the productTemplateSpecBean
+	 */
+	public TemplateSpecBean getProductTemplateSpecBean() {
+		return productTemplateSpecBean;
+	}
+
+	/**
+	 * Sets the product template spec bean.
+	 *
+	 * @param productTemplateSpecBean the productTemplateSpecBean to set
+	 */
+	public void setProductTemplateSpecBean(TemplateSpecBean productTemplateSpecBean) {
+		this.productTemplateSpecBean = productTemplateSpecBean;
+	}
+
+	/**
+	 * Gets the service template spec bean.
+	 *
+	 * @return the serviceTemplateSpecBean
+	 */
+	public TemplateSpecBean getServiceTemplateSpecBean() {
+		return serviceTemplateSpecBean;
+	}
+
+	/**
+	 * Sets the service template spec bean.
+	 *
+	 * @param serviceTemplateSpecBean the serviceTemplateSpecBean to set
+	 */
+	public void setServiceTemplateSpecBean(TemplateSpecBean serviceTemplateSpecBean) {
+		this.serviceTemplateSpecBean = serviceTemplateSpecBean;
+	}
+
+	/**
+	 * Gets the item type id.
+	 *
+	 * @return the item type id
+	 */
+	public long getItemTypeId() {
+		return itemTypeId;
+	}
+
+	/**
+	 * Sets the item type id.
+	 *
+	 * @param itemTypeId the new item type id
+	 */
+	public void setItemTypeId(long itemTypeId) {
+		this.itemTypeId = itemTypeId;
+	}
+	
+	
 	
 }
