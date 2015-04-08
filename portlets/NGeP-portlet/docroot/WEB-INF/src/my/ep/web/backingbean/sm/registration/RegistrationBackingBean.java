@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.registration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -66,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -93,6 +95,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -443,7 +446,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setSoftcertFlg(SupplierManagementConst.REG_SOFTCERT);
 		//smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
-		smPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
 		smPersonnel.setClerical(true);
 		
 		//set personnel bumi flag or muslim flag 
@@ -515,10 +518,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		/* set the temporary default value to supplier and appl type,
 		 * will change force the user to select upon activation
-		 *  
+		 *  */
 		 
 		smAppl.setApplType(SupplierManagementConst.TEMP_TYPE);
-		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);*/
+		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);
 		
 		/*
 		 * Add all related objects to Parent SmSupplier
@@ -2023,6 +2026,30 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}else{
 			this.getManagedBean().setGstFlag(false);
+		}
+	}
+	
+	public void handleFileUpload(FileUploadEvent event) throws Exception {
+		if (event.getFile() != null) {
+			log.info("***** File attached *******"+ event.getFile().getFileName());
+			if (getManagedBean().getSmAppl().getSmApplSupportDocs().contains("")) {
+				log.info("******* Contains selected file ****");
+				//SmApplSupportDoc doc = getManagedBean().getSupportDoc();
+				// StringUtils.replace(event.getFile().getFileName(), " ", "-");
+/*				doc.getSmApplDocFiles().get(0).setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+				getManagedBean().getSmAppl().getSmApplSupportDocs().set(getManagedBean().getSmAppl().getSmApplSupportDocs().indexOf(getManagedBean().getSupportDoc()),
+				getManagedBean().getSupportDoc());*/
+				
+				String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + getManagedBean().getSmAppl().getApplNo()+ "/SD/";
+				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
+						.getSmApplSupportDocs()) {
+					log.info(" *** The name is ****"
+							+ docs.getSmApplDocFiles().get(0).getFileName());
+					docs.getSmApplDocFiles().get(0).setFilePath(filePath);
+				}
+
+				commonUploadFile(event, filePath);
+			}
 		}
 	}
 }
