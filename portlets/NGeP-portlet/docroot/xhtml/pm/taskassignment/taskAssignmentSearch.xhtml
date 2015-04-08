@@ -12,7 +12,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<table class="ppTwoTable">
 			<tr>
 				<th width="15%">
-					<p:outputLabel value="#{lbl['lbl.pm.ta.org.type.name']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.ta.org.type']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td width="55%" style="white-space:nowrap;">
 					<p:selectOneMenu value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}" 
@@ -21,7 +22,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<f:selectItems value="#{taskAssignBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, taskAssignBackingBean.orgTypeSearchBean)}" />   
 				     	<p:ajax event="change" listener="#{taskAssignBackingBean.changeOrgType()}" 
 				     		update=":form:pTaskAssignSearch"/> 
-		            </p:selectOneMenu>	
+		            </p:selectOneMenu>	            	
+				</td>
+				<td width="30%">
+					
+				</td>
+			</tr>
+			<tr>
+				<th width="15%">
+					<p:outputLabel value="#{lbl['lbl.pm.ta.org.name']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</th>
+				<td width="55%" style="white-space:nowrap;">					
 	            	<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="55" 
 						disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskAssignBackingBean.managedBean.orgProfileRequired}"
@@ -34,20 +46,76 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td width="30%">
 					
 				</td>
-			</tr>			
+			</tr>
+						
 			<tr>
 				<th width="10%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td width="55%">
-					<ac:lov id="lovUser" lovId="PM_USER_ID" size="50"  
+					<ac:lov id="lovUser" lovId="PM_USER_ID" size="55"  
 						disabled="#{!(taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
-						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null)}"
+						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null
+						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgName !='')}"
 		            	update=":form:pTaskAssignSearch" readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.loginId} &#160; #{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userName}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user"
-						conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId}|recordStatus^1"/>
+						conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId}|recordStatus^1"
+						postUpdateListener ="#{taskAssignBackingBean.onChangeUser()}"/>
+				</td>
+				
+				<td width="30%">
+					
+				</td>
+			</tr>
+			<tr>
+				<th width="10%">
+					<p:outputLabel value="#{lbl['lbl.pm.ta.role']}"/>
+				</th>
+				<td width="55%">
+					<div style="overflow-y: scroll; height:100px; width:400px;border: 1px solid ; ">
+						<p:selectManyCheckbox id="rolecheckboxes" value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.selectedRoles}" layout="pageDirection" >
+	            			<f:selectItems value="#{taskAssignBackingBean.getRoleList()}" />
+	            			<p:ajax event="change" process="@this"  partialSubmit ="true" update="@this"/> 
+	       				 </p:selectManyCheckbox>
+       				</div>
+				</td>
+				
+				<td width="30%">
+					
+				</td>
+			</tr>
+			<tr>
+				<th width="10%">
+					<p:outputLabel value="#{lbl['lbl.pm.ta.process.doctype']}"/>
+				</th>
+				<td width="55%">
+					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="55" 
+						disabled="#{!(taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user!=null
+						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
+						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')}" 
+		            	update="@this" readonly="true" 
+						headerText="#{lbl['lbl.pm.ta.document.type']}"
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docType.codeDesc}"
+						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docType"
+						conditionField="#{taskAssignBackingBean.constuctConditionFields()}"/>
+				</td>
+				
+				<td width="30%">
+					
+				</td>
+			</tr>
+				<tr>
+				<th width="10%">
+					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
+				</th>
+				<td width="55%">
+					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
+							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="80"
+							value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
+							size="30" />
 				</td>
 				
 				<td width="30%">
