@@ -12,18 +12,20 @@
 			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
 		</f:facet>
         <ac:lovPopup />
-	   <table>
+	   <table style="width:100%;margin-top: 10px;">
 	         <tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel
+				<td style="width:12%"><p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="46" id="title" required="true"
+				<td><p:inputText size="80" id="title" required="true"
 						maxlength="100" label="#{lbl['lbl.sc.title']}" disabled="#{!isPendingSubmissionStatus}"
 						value="#{requestNoteBackingBean.managedBean.requestNote.title}"
-						style="margin-bottom: 5px;" /> 
+						style="margin-bottom: 5px;">
+						 <p:ajax event="blur" partialSubmit="true" process="@this" /> 
+						</p:inputText>
 						<p:message id="titleMsg" for="title" display="icon" /></td>
 			</tr>
 	   </table>
-	 <p:spacer height="3px"></p:spacer>
+	 
 	 <h:panelGrid width="100%" style="margin-top:10px" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl" style="white-space: normal;"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
