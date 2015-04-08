@@ -23,12 +23,6 @@
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				
 			<c:choose>
-				<c:when test="#{isPendingSubmissionStatus}">
-					<p:commandButton value="#{lbl['lbl.so.submit']}"
-						action="#{lOADetailBackingBean.submitAction}" process="@form"
-						update="@form" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" />
-				</c:when>
 				<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
 					<ui:repeat var="bpmAction"
 						value="#{lOADetailBackingBean.managedBean.outComes}">

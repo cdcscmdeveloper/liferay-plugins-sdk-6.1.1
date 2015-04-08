@@ -121,7 +121,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="suppEmail" size="97" style=" margin-bottom:5px;"
+				<p:inputText id="suppEmail" size="90" style=" margin-bottom:5px;"
 				    disabled="true"
 					value="#{lOADetailBackingBean.managedBean.scLoa.supplierEmail}"/>
 			</td>
@@ -134,7 +134,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="18%"><h:outputLabel
-						value="#{lbl['lbl.sc.select.ptj']}" /> <p:outputLabel value="*"
+						value="#{lbl['lbl.sc.ptj']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td style="white-space: nowrap;"><p:selectOneMenu style="margin-bottom: 5px;"
 						id="ptjselect" required="true" label="#{lbl['lbl.sc.select.ptj']}"
@@ -155,7 +155,7 @@
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
 			<td colspan="3" width="82%">
-				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="97"
+				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="90"
 					label="#{lbl['lbl.sc.loiloa.loa.title']}"
 					maxlength="100" />
 				<p:message id="titleMsg" for="title" display="icon" />
@@ -179,7 +179,7 @@
 		
 		<tr>
 			<td>
-				<p:outputLabel value="LOA type" />
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.type']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
 				<td><p:selectOneMenu id="loatypeId"
@@ -209,7 +209,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.off.price']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.est.price']}" />
 			</td>
 			<td colspan="3">
 				<p:inputText styleClass="ppNumericAlign"
@@ -340,7 +340,7 @@
 				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 			</td>
 			<td colspan="3">
-				<p:inputText styleClass="ppNumericAlign"
+				<p:inputText styleClass="ppNumericAlign" id="contractDuration"
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration}"
 					 size="30" />
 			</td>
@@ -360,7 +360,7 @@
 					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 					label="#{lbl[lbleffDate]}"
 					size="25" >
-					<p:ajax event="dateSelect" listener="#{lOADetailBackingBean.contractEffDateChanged()}" update="expdate" />
+					<p:ajax event="dateSelect" process="@this contractDuration" partialSubmit="true" listener="#{lOADetailBackingBean.contractEffDateChanged()}" update="expdate" />
 				</p:calendar>
 				<p:message id="effdateMsg" for="effdate" display="icon" />
 			</td>
@@ -442,7 +442,7 @@
 			</td>
 			<td rowspan="3" width="32%">
 				<p:inputTextarea id="address"
-					cols="50" rows="5"
+					cols="52" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
 					style=" margin-bottom:5px;"
 					
