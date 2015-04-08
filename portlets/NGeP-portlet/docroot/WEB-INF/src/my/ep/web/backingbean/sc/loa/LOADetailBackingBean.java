@@ -2525,7 +2525,7 @@ public class LOADetailBackingBean extends
 			String contractType = scLoa.getContractType().getParameterCode();
 			List<PmUser> userList = null;
 
-			if (scLoa.getContractAgency().getOrgProfileId() != null || getManagedBean().getSelectedContractAgency() !=null) {
+			if (scLoa.getContractAgency() != null || getManagedBean().getSelectedContractAgency() !=null) {
 				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
@@ -3907,7 +3907,6 @@ public class LOADetailBackingBean extends
 		scLoiLoa.setSmSupplier(new SmSupplier());
 		scLoa.setScLoiLoa(scLoiLoa);
 		scLoa.setContractAdmin(new PmUser());
-		scLoa.setContractAgency(new PmOrgProfile());
 		scLoa.setPmOrgProfile(new PmOrgProfile());
 		
 		try {
@@ -3924,6 +3923,10 @@ public class LOADetailBackingBean extends
 		} finally {
 			statusSO = null;
 		}
+		
+		
+		//generate loa number
+		scLoa.setLoaNo(getQtAwardSO().generateDirectLoaNo());
 		
 		getManagedBean().setScLoa(scLoa);
 		
@@ -3958,14 +3961,14 @@ public class LOADetailBackingBean extends
 		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
 
 		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSmPersonnelBySupplierId(reqDTO);
-		// to get smpersonal
-		getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
-		getManagedBean().setSelectedSupplierBranchName("HQ");
 		
-	    handleBranchDetailsChanged();
-
+		// smPersonnel
+		if(resDTO.getSupplierHQPersonnel() != null){
+			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());	
+			getManagedBean().setSelectedSupplierBranchName("HQ");
+			handleBranchDetailsChanged();
+		}
 	}
-	
 	
 	/**
 	 * Supplier listener.
@@ -3974,8 +3977,23 @@ public class LOADetailBackingBean extends
 	 */
 	public void supplierListener(SmSupplier suSmSupplier) {
 		debugLogger("supplierListener");
-		System.out.println("supplier : "+suSmSupplier.getCompanyName());
 		
+		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(suSmSupplier);
+		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(suSmSupplier.getCompanyName());
+		
+		AwardSupplierReqDTO reqDTO  = new AwardSupplierReqDTO();
+		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSmPersonnelBySupplierId(reqDTO);
+		
+		// mof nor
+		getManagedBean().getScLoa().getScLoiLoa().setMofNo(resDTO.getSmSupplier().getSmMofAccounts().get(0).getMofNo());
+		
+		// smPersonnel
+		if(resDTO.getSupplierHQPersonnel() != null){
+			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());	
+			getManagedBean().setSelectedSupplierBranchName("HQ");
+			handleBranchDetailsChanged();
+		}
 	}
 	
 	/**
