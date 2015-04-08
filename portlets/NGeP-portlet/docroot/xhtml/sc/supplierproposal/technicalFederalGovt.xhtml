@@ -82,17 +82,22 @@
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{checklistScoreType eq '1'}"></p:inputText> <p:inputText
+						id="technicalGovernmentNoofContractsUserScoreId"
+						label="#{lbl['lbl.sc.eva.s1.user.score']}"
 						disabled="#{pageDisable}" value="#{noOfContracts.userScore}"
-						maxlength="18" style="text-align:right"
+						required="true" maxlength="18" style="text-align:right"
 						rendered="#{ checklistScoreType eq '2'}">
-							<ac:validateNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-								maxIntegerDigits="14" integerOnly="true" />
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="14" integerOnly="true" />
 						<f:attribute name="min" value="0" />
 						<f:attribute name="max" value="#{contractUserScore}" />
 					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
 						value="/#{contractUserScore}"
-						rendered="#{ checklistScoreType eq '2'}" /></td>
+						rendered="#{ checklistScoreType eq '2'}" /> <p:message
+						id="technicalGovernmentNoofContractsUserScoreMessage"
+						for="technicalGovernmentNoofContractsUserScoreId" display="icon"></p:message>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
@@ -114,16 +119,21 @@
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfYears.autoScore}" style="text-align:right"
 						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
-						maxlength="18" style="text-align:right" disabled="#{pageDisable}"
-						value="#{noOfYears.userScore}"
+						id="technicalGovernmentNoofYearsUserScoreId" maxlength="18"
+						label="#{lbl['lbl.sc.eva.s1.user.score']}"
+						style="text-align:right" disabled="#{pageDisable}"
+						value="#{noOfYears.userScore}" required="true"
 						rendered="#{companyScoreType eq '2'}">
-							<ac:validateNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-								maxIntegerDigits="14" integerOnly="true" />
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="14" integerOnly="true" />
 						<f:attribute name="min" value="0" />
 						<f:attribute name="max" value="#{yearsUserScore}" />
 					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
-						value="/#{yearsUserScore} " rendered="#{companyScoreType eq '2'}" /></td>
+						value="/#{yearsUserScore} " rendered="#{companyScoreType eq '2'}" />
+					<p:message id="technicalGovernmentNoofYearsUserScoreMessage"
+						for="technicalGovernmentNoofYearsUserScoreId" display="icon"></p:message>
+				</td>
 			</tr>
 		</table>
 

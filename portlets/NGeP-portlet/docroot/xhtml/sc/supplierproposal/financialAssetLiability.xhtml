@@ -62,7 +62,9 @@
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-						value="#{noOfContracts.userScore}" maxlength="18"
+						id="financialAssetsAndLiabilityUserScoreId"
+						label="#{lbl['lbl.sc.eva.s1.user.score']}"
+						value="#{noOfContracts.userScore}" maxlength="18" required="true"
 						disabled="#{pageDisable}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '2'}">
 						<ac:validateNumber
@@ -72,7 +74,10 @@
 						<f:attribute name="max" value="#{contractUserScore}" />
 					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
 						value="/#{contractUserScore}"
-						rendered="#{ checklistScoreType eq '2'}" /></td>
+						rendered="#{ checklistScoreType eq '2'}" /> <p:message
+						id="financialAssetsAndLiabilityUserScoreMessage"
+						for="financialAssetsAndLiabilityUserScoreId" display="icon">
+					</p:message></td>
 			</tr>
 		</table>
 	</p:panel>
