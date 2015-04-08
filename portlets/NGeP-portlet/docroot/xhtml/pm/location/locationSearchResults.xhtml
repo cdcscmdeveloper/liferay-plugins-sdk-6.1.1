@@ -12,7 +12,7 @@
 			lazy="true">
 			<ac:paginator for="searchLocations"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.pm.location.type']}"
-				style="width :10%">
+				style="width :5%">
 				<h:outputText value="#{lbl['lbl.pm.state']}"
 					rendered="#{location.locationType == 'ST'}" />
 				<h:outputText value="#{lbl['lbl.pm.division']}"
@@ -23,11 +23,11 @@
 					rendered="#{location.locationType == 'CT'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.location.code']}"
-				style="width :15%">
+				style="width :10%">
 				<h:outputText value="#{location.locationCode}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.location.name']}"
-				style="width :40%">
+				style="width :35%">
 				<h:outputText value="#{location.locationName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.district']}" style="width :15%">
@@ -35,6 +35,9 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.state']}" style="width :15%">
 				<h:outputText value="#{location.state}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.status']}" style="width :15%">
+				#{(location.status==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}  
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
 				<p:commandLink
