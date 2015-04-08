@@ -29,7 +29,7 @@
 	</div>
 	<p:spacer height="10px"></p:spacer>
 	
-	<p:panel header="Check Supplier Qualification" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" toggleable="true">
 		<div class="clear"></div>
 		<table style="margin: 0 auto;">
 
@@ -37,7 +37,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.sc.mof.no']}"></h:outputLabel>
 				</td>
 				<td><p:inputText value="#{noticeBoardBackingBean.mofNo}"></p:inputText></td>
-				<td><p:commandButton value="Check"
+				<td><p:commandButton value="#{lbl['lbl.btn.check']}"
 						id="nbCheckSupplierQualification"
 						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
 						update="@form,table-wrapper" onstart="blockWidget.show();"
@@ -51,23 +51,23 @@
 	<h:panelGroup id="table-wrapper"
 		rendered="#{noticeBoardBackingBean.visible}">
 		<p:panel id="qualificationCriteria"
-			header="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
+			header="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 			style="margin-bottom:5px;" toggleable="true">
 			<p:dataTable id="supplierQulification"
 				value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
 				var="qulificationBean" styleClass="test" tyle="width:70%;">
 
-				<p:column headerText="Criteria" style="width:30%;">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.criteria']}" style="width:30%;">
 					<h:outputText value="#{qulificationBean.criteria}" />
 				</p:column>
-				<p:column headerText="Requirement" style="width:50%;">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.requirement']}" style="width:50%;">
 					<h:outputText
 						value="#{fn:replace(qulificationBean.qtRequirement,':','&lt;/br&gt;')}"
 						size="50" escape="false" />
 				</p:column>
 				
 				
-				<p:column headerText="Qualification Status" style="width:20%;">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.qualification.status']}" style="width:20%;">
 				<ui:fragment rendered="#{qulificationBean.categoryCodeStatus eq null}">
 					<p:graphicImage library="ep/images/design" name="tick.png"
 						value="/resources/ep/images/design/tick.png"
@@ -96,11 +96,11 @@
 
 			<p:spacer height="20px"></p:spacer>
 			<div style="text-align: center;">
-				<h:outputText value="#{lbl['lbl.nb.supplier.criteria.qualify']}"
+				<h:outputText value="#{lbl['lbl.sc.notice.board.supplier.criteria.qualify']}"
 					style="font-size:18px;" escape="false"
 					rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 
-				<h:outputText value="#{lbl['lbl.nb.supplier.criteria.disqualify']}"
+				<h:outputText value="#{lbl['lbl.sc.notice.board.supplier.criteria.disqualify']}"
 					style="font-size:18px;" escape="false"
 					rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 			</div>

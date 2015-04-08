@@ -11,7 +11,7 @@
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
 			columns="2" columnClasses="columnWidth20,columnWidth30">
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.pdate']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.publish.date']}"></h:outputLabel>
 			</h:column>
 
 			<p:column>
@@ -42,25 +42,25 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 				<ac:paginator for="briefingDeails" />
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.desc']}"
+				<p:column headerText="#{lbl['lbl.sc.description']}"
 					style="width:100%">
 					<h:outputText value="#{scQtBriefing.briefingDesc}"
 						style="width:100%" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.datetime']}">
+				<p:column headerText="#{lbl['lbl.sc.date.time']}">
 					<h:outputText value="14/11/2013" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.location']}">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<h:outputText value="#{scQtBriefing.location}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.sc.notice.board.coord.officer']}">
+					headerText="#{lbl['lbl.sc.coordinate.officer']}">
 					<h:outputText value="#{scQtBriefing.coordinatingOfficer}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.attendance']}">
+				<p:column headerText="#{lbl['lbl.sc.attendance']}">
 					<h:outputText value="#{scQtBriefing.attendanceType}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.zone.name']}">
+				<p:column headerText="#{lbl['lbl.sc.zone']}">
 					<p:commandLink onclick="popQtn.show();">
 						<h:outputText value="Zone Name" />
 					</p:commandLink>
@@ -80,25 +80,25 @@
 				<ac:paginator for="sitevisitdetails" />
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.desc']}"
+				<p:column headerText="#{lbl['lbl.sc.description']}"
 					style="width:100%">
 					<h:outputText value="#{scQtsitevisit.briefingDesc}"
 						style="width:100%" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.datetime']}">
+				<p:column headerText="#{lbl['lbl.sc.date.time']}">
 					<h:outputText value="04/09/2013 04:44" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.location']}">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<h:outputText value="#{scQtsitevisit.location}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.sc.notice.board.coord.officer']}">
+					headerText="#{lbl['lbl.sc.coordinate.officer']}">
 					<h:outputText value="#{scQtsitevisit.coordinatingOfficer}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.attendance']}">
+				<p:column headerText="#{lbl['lbl.sc.attendance']}">
 					<h:outputText value="#{scQtsitevisit.attendanceType}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.zone.name']}">
+				<p:column headerText="#{lbl['lbl.sc.zone']}">
 					<p:commandLink onclick="popQtn.show();">
 						<h:outputText value="Zone Name" />
 					</p:commandLink>
@@ -165,19 +165,19 @@
 		<h:panelGroup style="width:100%;">
 			<p:dataTable value="" var="">
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.name']}">
+				<p:column headerText="#{lbl['lbl.sc.name']}">
 					<h:outputText readonly="true" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.tel.no']}">
+				<p:column headerText="#{lbl['lbl.sc.tel.no']}">
 					<h:outputText readonly="true" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.fax.no']}">
+				<p:column headerText="#{lbl['lbl.sc.fax.no']}">
 					<h:outputText readonly="true" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.email']}">
+				<p:column headerText="#{lbl['lbl.sc.email']}">
 					<h:outputText readonly="true" />
 				</p:column>
 			</p:dataTable>

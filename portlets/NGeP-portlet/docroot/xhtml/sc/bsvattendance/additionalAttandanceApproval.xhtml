@@ -41,7 +41,7 @@
 			<table>
 				<tr>
 					<td style="width: 150px;"><p:outputLabel
-							value="#{lbl['lbl.qt.nb.ministry']}" /></td>
+							value="#{lbl['lbl.sc.ministry']}" /></td>
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
 							disabled="true" readonly="true" size="80" /></td>
@@ -49,7 +49,7 @@
 					<td />
 				</tr>
 				<!-- <tr>
-				<td><p:outputLabel value="#{lbl['lbl.qt.nb.jabatan']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.jabatan']}" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" readonly="true" size="80" /></td>
@@ -57,7 +57,7 @@
 				<td />
 			</tr> -->
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.qt.nb.ptj']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.qt.pmOrgProfile.orgName}"
 							disabled="true" readonly="true" size="80" /></td>
@@ -65,7 +65,7 @@
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.qt.bsv.requestor']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.requestor']}" /></td>
 
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.retriveUserName(qTScheduleDetailBackingBean.managedBean.qt.createdBy)}"
@@ -79,7 +79,7 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.qtnno']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.qt.qtNo}"
 							disabled="true" readonly="true" size="30" /></td>
@@ -112,7 +112,7 @@
 
 		<p:panel header="Briefing/Site Visit Details" toggleable="true">
 			<!-- <h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-				<h:outputText value="* All Attandence required for Briefing"
+				<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
 					rendered="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
@@ -127,11 +127,11 @@
 				value="#{qTScheduleDetailBackingBean.managedBean.qtBriefing}"
 				style="width:100%">
 
-				<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+				<p:column headerText="#{lbl['lbl.sc.description']}"
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+				<p:column headerText="#{lbl['lbl.sc.date.time']}"
 					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
 						<f:convertDateTime
@@ -145,11 +145,11 @@
 					<h:outputText value="#{brfsitdtl.location}" />
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+				<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
 					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+				<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
 					style="width:5%;white-space: normal;">
 					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
 				</p:column>
@@ -169,7 +169,7 @@
 			<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
 				value="#{qTScheduleDetailBackingBean.managedBean.briefingRegistrationList}">
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
+				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 
 					<h:outputText value="#{scQtBriefReg.supplier.companyName}" />
 				</p:column>

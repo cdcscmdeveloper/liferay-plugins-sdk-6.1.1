@@ -20,7 +20,7 @@
 
 
 
-			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}"
 				filterBy="#{scQtBriefReg.supplier.companyName}">
 
 				<h:outputText value="#{scQtBriefReg.supplier.companyName}" />
@@ -70,7 +70,7 @@
 
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
+					<p:column headerText="#{lbl['lbl.sc.name']}">
 
 					</p:column>
 					<p:column
@@ -79,20 +79,20 @@
 					</p:column>
 
 					<p:column
-						headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
+						headerText="#{lbl['lbl.sc.identification.no']}">
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
+					<p:column headerText="#{lbl['lbl.sc.contact.no']}">
 
 					</p:column>
 
 
-					<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
+					<p:column headerText="#{lbl['lbl.sc.email']}">
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.qt.bsc.attendance']}">
+					<p:column headerText="#{lbl['lbl.sc.attendance']}">
 
 					</p:column>
 				</p:row>
@@ -152,14 +152,14 @@
 
 		<div align="right">
 			<p:commandButton id="attandanceaddBtn"
-				value="#{lbl['lbl.sc.bsv.attendance.add']}"
+				value="#{lbl['lbl.btn.add']}"
 				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow and !scQtBriefAttendace.preRegisterd}"
 				process="@this,attendanceDetailstbl" partialSubmit="true"
 				update="attendanceDetailstbl"
 				action="#{bsvAttendanceBackingBean.addAttendanceForBSV}" />
 
 			<p:commandButton id="attandanceDeleteBtn"
-				value="#{lbl['lbl.sc.action.delete']}"
+				value="#{lbl['lbl.btn.delete']}"
 				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow and !scQtBriefAttendace.preRegisterd}"
 				process="@this,attendanceDetailstbl" partialSubmit="true"
 				update="attendanceDetailstbl"

@@ -7,13 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.qt.nb.searchCriteria']}" id="nbpanel">
+	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel">
 
 		<ac:lovPopup />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td style="width: 125px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qtnno']}" /></td>
+						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
 						value="#{noticeBoardBackingBean.managedBean.qtNo}" size="30" /></td>
 			</tr>
@@ -23,7 +23,7 @@
 						value="#{noticeBoardBackingBean.managedBean.title}" size="30" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.category.code']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.category.code']}" /></td>
 				<td>						
 					<p:inputText id="catCodeTxt" 
 						value="#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{noticeBoardBackingBean.managedBean.categoryL3.pmCategoryL2.categoryL2Code}#{noticeBoardBackingBean.managedBean.categoryL3.categoryL3Code}"
@@ -44,7 +44,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.notice.board.ministry']}" /></td>
+						value="#{lbl['lbl.sc.ministry']}" /></td>
 
 				<td><ac:lov id="minstryPtj" lovId="PM_ORG_PROFILE_MINSTRY"
 						headerText="MinistryOrgProfile Lov" update="@form"
@@ -136,7 +136,7 @@
 
 				<p:column
 					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
-					<h:outputText value="#{lbl['lbl.qt.nb.fromdate']}" />
+					<h:outputText value="#{lbl['lbl.sc.notice.board.fromdate']}" />
 				</p:column>
 
 				<p:column
@@ -151,7 +151,7 @@
 				
 				<p:column
 					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
-					<h:outputText value="#{lbl['lbl.qt.nb.to']}" />
+					<h:outputText value="#{lbl['lbl.sc.notice.board.to']}" />
 				</p:column>
 				<p:column
 					rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
@@ -164,7 +164,7 @@
 				</p:column>
 			</h:panelGrid>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.bsv.attendance.location']}"
+		<p:panel header="#{lbl['lbl.sc.location']}"
 			toggleable="true" collapsed="true">
 			<p:ajax event="toggle"
 				listener="#{noticeBoardBackingBean.retriveLocationByStates}"
@@ -233,7 +233,7 @@
 
 
 
-		<p:panel header="#{lbl['lbl.qt.nb.briefingDate']}" id="briefingdtls"
+		<p:panel header="#{lbl['lbl.sc.notice.board.briefingDate']}" id="briefingdtls"
 			toggleable="true" collapsed="true">
 			<h:panelGroup id="recentBriefDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
@@ -300,7 +300,7 @@
 
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.qt.nb.sitevisitdate']}" id="sitevisitdtls"
+		<p:panel header="#{lbl['lbl.sc.notice.board.sitevisitdate']}" id="sitevisitdtls"
 			toggleable="true" collapsed="true">
 			<h:panelGroup id="recentSiteVisitDatePG">
 				<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
@@ -373,7 +373,7 @@
 		<p:panel header="#{lbl['lbl.sc.closing.date']}" toggleable="true" collapsed="true">
 
 			<h:panelGrid columns="2" width="100%" columnClasses="nbColumnHeight">
-				<h:outputText value="#{lbl['lbl.qt.nb.fromdate']}" />
+				<h:outputText value="#{lbl['lbl.sc.notice.board.fromdate']}" />
 				<p:column>
 					<p:calendar id="clsFromDt" showOn="button"
 						value="#{noticeBoardBackingBean.managedBean.clsDataBean.fromDate}"
@@ -383,7 +383,7 @@
 						<p:ajax event="dateSelect" update="clsToDt" />
 					</p:calendar>
 				</p:column>
-				<h:outputText value="#{lbl['lbl.qt.nb.to']}" />
+				<h:outputText value="#{lbl['lbl.sc.notice.board.to']}" />
 				<p:column>
 				<p:calendar id="clsToDt" showOn="button"
 						value="#{noticeBoardBackingBean.managedBean.clsDataBean.toDate}"
