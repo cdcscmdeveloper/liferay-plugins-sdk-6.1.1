@@ -107,7 +107,7 @@
 			<p:column headerText="Schedule/ Phase No" style="width:70px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}" />
 			</p:column>
-			<p:column headerText="Circular" style="width:250px;white-space:normal">
+			<p:column headerText="Circular" style="width:100px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.circularNo}" />
 			</p:column>
 			<p:column headerText="Period (Start)" style="width:97px">
@@ -152,10 +152,12 @@
 					</p:column>
 					<p:column style="width:142px">
 					</p:column>
+					<p:column style="width:142px">
+					</p:column>
 					<p:column style="width:70px;text-align:center">
 						<h:outputText value="#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}" />
 					</p:column>
-					<p:column style="width:250px">
+					<p:column style="width:100px">
 					</p:column>
 					<p:column style="width:97px;">
 						<h:outputText value="#{contractExpansion.startEffective}" >
