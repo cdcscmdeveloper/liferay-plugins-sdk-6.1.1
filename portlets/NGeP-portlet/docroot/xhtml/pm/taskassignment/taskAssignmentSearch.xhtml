@@ -76,7 +76,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td width="55%">
 					<div style="overflow-y: scroll; height:100px; width:400px;border: 1px solid ; ">
-						<p:selectManyCheckbox id="rolecheckboxes" value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.selectedRoles}" layout="pageDirection" >
+						<p:selectManyCheckbox id="rolecheckboxes" 
+						    value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.selectedRoles}" 
+						    layout="pageDirection" 
+					    disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo !=null 
+						    and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''}">
 	            			<f:selectItems value="#{taskAssignBackingBean.getRoleList()}" />
 	            			<p:ajax event="change" process="@this"  partialSubmit ="true" update="@this"/> 
 	       				 </p:selectManyCheckbox>
@@ -95,7 +99,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="55" 
 						disabled="#{!(taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user!=null
 						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
-						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')}" 
+						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
+						or (taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''
+						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo != null)}" 
 		            	update="@this" readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.document.type']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docType.codeDesc}"
@@ -115,7 +121,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:inputText id="docNo"  styleClass="ppDisplayTextL"
 							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="80"
 							value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
-							size="30" />
+							size="30" >
+						<p:ajax event="blur" listener="#{taskAssignBackingBean.onChangeUser()}" 
+				     		update=":form:pTaskAssignSearch"/> 
+					</p:inputText>
 				</td>
 				
 				<td width="30%">
