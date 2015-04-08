@@ -222,43 +222,57 @@
 							</p:column>
 
 							<p:column width="5%" headerText="#{lbl['lbl.cm.uom']}" style="white-space: normal">
-							#{supplierItem.uomName}
+							   #{supplierItem.uomName}
 							</p:column>
 
-							<p:column width="8%">
+						    <p:column width="8%">
+							    <f:facet name="header">
+									<h:outputText value="#{lbl['lbl.cm.best.price']}" />
+									<p:graphicImage id="uidti"
+											value="/css/images/design/tooltips.png" />
+									  <p:tooltip id="uidtt" for="uidti">
+									  <p:outputLabel escape="false" value="#{lbl['lbl.cm.tooltip.best.price']}" />
+											</p:tooltip>
+											<!--  <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/> -->
+								 </f:facet>
+								<h:panelGroup rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
+								    <table width="100%" border="0"
+										 style="white-space: normal; text-align: end; border: none !important;">
+										   <tr>
+												<td style="text-align: end; border: none !important; padding-bottom: 0px;">
+													<h:outputLabel value="#{supplierItem.bestPrice}"
+														rendered="#{supplierItem.bestPrice>0}">
+														<f:convertNumber pattern="#,###0.00" />
+													</h:outputLabel>
 
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.cm.best.price']}" />
-								 <p:graphicImage id="uidti"
-									value="/css/images/design/tooltips.png" />
-								<p:tooltip id="uidtt" for="uidti">
-								<p:outputLabel escape="false"
-									value="#{lbl['lbl.cm.tooltip.best.price']}" />
-								</p:tooltip>
-								<!--  <ac:iconTooltip value="#{lbl['lbl.cm.tooltip.best.price']}"/> -->
-								</f:facet>
-		                         <h:panelGroup rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
-                                       <h:outputLabel value="#{supplierItem.bestPrice}" rendered="#{supplierItem.bestPrice>0}">
-										<f:convertNumber pattern="#,###0.00" />
-									</h:outputLabel> 
-									<p:spacer height="30px"></p:spacer>
-									 <p:commandLink id="recentPrice" 
-										   value="#{lbl['lbl.sc.recent.price']}"
-										  rendered="#{supplierItem.bestPrice>0}"
-										   action="#{requestNoteBackingBean.showRecentPrice(null, supplierItem)}"
-										   oncomplete="recentPricePopup.show()" />
-									    <p:tooltip for="recentPrice">
-										      <h:outputText value="#{lbl['lbl.sc.recentprice.tooltip']}"
-											 escape="false" />
-									</p:tooltip>
+												</td>
+											</tr>
+											<tr>
+												<td style="text-align: end; border: none !important;padding-top: 0px;">
+													<p:commandLink id="recentPrice"
+														value="#{lbl['lbl.sc.recent.price']}"
+														rendered="#{supplierItem.bestPrice>0}"
+														action="#{requestNoteBackingBean.showRecentPrice(null, supplierItem)}"
+														oncomplete="recentPricePopup.show()" /> <p:tooltip
+														for="recentPrice">
+														<h:outputText value="#{lbl['lbl.sc.recentprice.tooltip']}"
+															escape="false" />
+													</p:tooltip>
+												</td>
+											</tr>
+										</table>
 									</h:panelGroup>
-									<h:panelGroup rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null }">
-                                       <h:outputLabel value="#{supplierItem.bestPrice}" rendered="#{supplierItem.bestPrice>0}">
-										<f:convertNumber pattern="#,###0.00" />
-									</h:outputLabel></h:panelGroup>
+
+									<h:panelGroup
+										rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null }">
+										<h:outputLabel value="#{supplierItem.bestPrice}"
+											rendered="#{supplierItem.bestPrice>0}">
+											<f:convertNumber pattern="#,###0.00" />
+										</h:outputLabel>
+									</h:panelGroup>
 								</p:column>
 
-								<p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
+							 <p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
 								<h:outputLabel value="#{catalogueBackingBean.getPriceType(supplierItem.docId, supplierItem.contractNo)}" />
 							</p:column>
 
