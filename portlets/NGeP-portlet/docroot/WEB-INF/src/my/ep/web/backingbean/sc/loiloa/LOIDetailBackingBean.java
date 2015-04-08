@@ -577,8 +577,8 @@ public class LOIDetailBackingBean extends
 						LoiLoaBean loiLoaBean = new LoiLoaBean();
 						loiLoaBean.setScLoa(scLoa);
 						loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-						loiLoaBean.setLoiLoaStatus(getLoiLoaStatus(null,
-								scLoa.getScLoaWorkFlowStatuses()));
+						loiLoaBean.setLoiLoaStatus(getStatusDescById(
+								scLoa.getPmStatus().getStatusId()));
 						loiloaBeans.add(loiLoaBean);
 					}
 				}
@@ -613,6 +613,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
 			reqDTO.setDocId(scLoiLoa.getDocId());
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
+			reqDTO.setViewSupplierLoiLoa(true);
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
@@ -802,27 +803,6 @@ public class LOIDetailBackingBean extends
 		if (statusId != null) {
 			getManagedBean().setStatus(getStatusDescById(statusId));
 		}
-	}
-
-	/**
-	 * Gets the loi loa status.
-	 *
-	 * @param loiStatus the loi status
-	 * @param loaStatus the loa status
-	 * @return the loi loa status
-	 */
-	private String getLoiLoaStatus(List<ScLoiWorkFlowStatus> loiStatus,
-			List<ScLoaWorkFlowStatus> loaStatus) {
-		String loiLoaStatus = "";
-		if (loiStatus != null && loiStatus.size() > 0) {
-			loiLoaStatus = getStatusDescById(loiStatus.get(0).getPmStatus()
-					.getStatusId());
-		}
-		if (loaStatus != null && loaStatus.size() > 0) {
-			loiLoaStatus = getStatusDescById(loaStatus.get(0).getPmStatus()
-					.getStatusId());
-		}
-		return loiLoaStatus;
 	}
 
 	/**
