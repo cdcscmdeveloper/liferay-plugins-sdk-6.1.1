@@ -37,8 +37,10 @@
 					<tr>
 
 						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}" /></td>
-						<td><p:inputText
+						<td><p:inputText id="sampleaddressUserScoreId"
+								label="#{lbl['lbl.sc.eva.s1.user.score']}"
 								disabled="#{evaluationBackingBean.managedBean.readOnly}"
+								required="true"
 								value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
 								maxlength="18" style="text-align:right">
 								<ac:validateNumber
@@ -48,7 +50,9 @@
 								<f:attribute name="max"
 									value="#{evaluationBackingBean.managedBean.userScores}" />
 							</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
-								value="/#{evaluationBackingBean.managedBean.userScores}" /></td>
+								value="/#{evaluationBackingBean.managedBean.userScores}" /> <p:message
+								id="sampleaddressUserScoreMessage"
+								for="sampleaddressUserScoreId" display="icon"></p:message></td>
 					</tr>
 
 
