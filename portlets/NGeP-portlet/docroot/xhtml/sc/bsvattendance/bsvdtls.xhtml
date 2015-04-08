@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:fragment rendered="#{bsvDetails.scQtBsv.sameBsv}">
-		<p:panel header="Briefing And Site Visit Details" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
 			<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
 				<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
 					rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
@@ -51,12 +51,12 @@
 					style="width:5%;white-space: normal;">
 					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:9%;white-space: normal;">
 					<h:outputText
 						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:5%;white-space: normal;">
 
 					<p:commandLink
@@ -123,12 +123,12 @@
 					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:9%;white-space: normal;">
 					<h:outputText
 						value="#{bsvAttendanceBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:5%;white-space: normal;">
 					<p:commandLink
 						rendered="#{bsvAttendanceBackingBean.showRegistrationIcon(brfsitdtl)}"
@@ -189,7 +189,7 @@
 					<h:outputLabel value="#{sitevisitDtls.maxNoOfAttendance}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:9%;white-space: normal;">
 
 					<h:outputText
