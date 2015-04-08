@@ -74,7 +74,7 @@
 				<ac:paginator for="nbsummaryID"/>
 			
 
-			<p:column headerText="#{lbl['lbl.sc.notice.board.title']}"
+			<p:column headerText="#{lbl['lbl.sc.title']}"
 					style="width:15%">
 					<p:commandLink action="#{noticeBoardBackingBean.qtnTenderDetails}">
 						<f:setPropertyActionListener value="#{scqt}"
@@ -83,7 +83,7 @@
 					</p:commandLink>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}">
+				<p:column headerText="#{lbl['lbl.sc.publish.date']}">
 					<h:outputText value="#{scqt.publishDate}" id="publdate"
 						readonly="true" />
 				</p:column>
@@ -103,7 +103,7 @@
 					style="width:30%">
 					<p:commandLink
 						action="tenderSelfRegistration.xhtml?faces-redirect=true">
-						<h:outputText value="#{lbl['lbl.sc.notice.board.self.reg']}" />
+						<h:outputText value="#{lbl['lbl.sc.notice.board.self.registration']}" />
 					</p:commandLink>
 				</p:column>
 

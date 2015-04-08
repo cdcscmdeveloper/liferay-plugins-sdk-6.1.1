@@ -9,7 +9,7 @@
 
 	<p:dialog id="planInforDialog" widgetVar="procurePlanPopup"
 		styleClass="planDailog" modal="true" style="width: 464px; height: 333px; left: 425.5px; top: 66.375px; "
-		header="#{lbl['lbl.pp.updatenotificcationdays']}">
+		header="#{lbl['lbl.sc.pp.update.notificcation.days']}">
 
 
 		<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
@@ -38,7 +38,7 @@
 			<p:inputText disabled="true"
 				value="#{procurementPlanBackingBean.managedBean.currentPlan.pmStatus.pmStatusDescs.statusName}" />
 
-			<p:outputLabel value="#{lbl['lbl.qt.pp.purchasereqstdate']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.start.date']}" />
 
 			<p:inputText disabled="true"
 				value="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}">
@@ -55,7 +55,7 @@
 					update="notificationDays" process="@this" />
 			</p:calendar>
 
-			<p:outputLabel value="#{lbl['lbl.qt.pp.notificationdays']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.pp.notificationdays']}" />
 			<p:inputText id="notificationDays"
 				value="#{procurementPlanBackingBean.managedBean.currentPlan.notificationDays}">
 				<p:ajax event="blur" update="notificationDaysSelection"
