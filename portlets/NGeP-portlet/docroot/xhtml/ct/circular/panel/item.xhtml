@@ -42,18 +42,29 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			           <p:ajax event="change" update="spec" process="@this" listener="#{panelBackingBean.changeItemCategoryListner(panelItemsVar)}" /> 
 			      </p:selectOneMenu>
 			  </p:column>
+			  
+			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:10%;">
+			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="8" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
+						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
+						saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
+						disabled="#{panelBackingBean.managedBean.viewContract}">
+			       </ac:lov>
+			   </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:20%;">
-                  <p:inputText value="#{panelItemsVar.itemName}" style="width:85%;" maxlength="100" 
+              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;">
+                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:80%;" autoResize="false"
                   	disabled="#{panelBackingBean.managedBean.viewContract}"/>
-                  	<p:spacer width="5" />
+                  	<p:spacer width="3" />
                   	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
 						<p:graphicImage library="ep/images/design" name="document.png" title="#{lbl['lbl.ct.specification']}" />
 					</p:commandLink>
               </p:column>
-			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width: 10%;">
-			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8" headerText="UOM Lov" readonly="true" 
+			  <p:column>
+				  	<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.uom']}" style="white-space:pre-line;width:8%;" />
+	               	</f:facet>
+			       <ac:lov id="uomLovId" lovId="PM_UOM" size="5" headerText="#{lbl['lbl.ct.uom']}" readonly="true" 
 				         value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom"
 				       disabled="#{panelBackingBean.managedBean.viewContract}">
@@ -98,7 +109,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  	<p:selectBooleanCheckbox value="#{panelItemsVar.qt}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			  </p:column>
 			  
-			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;">
+			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:5%;">
 		           <p:selectOneMenu  value="#{panelItemsVar.recordStatusFlg}" 
 		           		disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:95%;">
 				       <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
@@ -107,7 +118,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>	
 			  												
 		    </p:dataTable>
-	 </h:panelGrid>
+	 </h:panelGrid>	 
+		<p:spacer height="2" />
 		<div>
 		   	<table style="width: 100%">
 				<tr><td class="TableFieldLeft" width="53%"></td>
@@ -262,7 +274,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						  value="/css/images/design/edit.png" />
 					  </p:commandLink>
 					</p:column>
-			</p:dataTable>
+			</p:dataTable>			
+		   <p:spacer height="2" />
 		   <div class="ppRightBtn">
 		   <p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this" update="@([id$=zonePopupGeneral])"
@@ -384,7 +397,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			          </p:selectOneMenu>
 				    </p:column>
 		
-			</p:dataTable>
+			</p:dataTable>			
+		<p:spacer height="2" />
 		   <div>
 		   	<table style="width: 100%">
 				<tr><td class="TableFieldLeft" width="80%"></td>
