@@ -153,14 +153,14 @@
 		<div align="right">
 			<p:commandButton id="attandanceaddBtn"
 				value="#{lbl['lbl.btn.add']}"
-				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow and !scQtBriefAttendace.preRegisterd}"
+				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow}"
 				process="@this,attendanceDetailstbl" partialSubmit="true"
 				update="attendanceDetailstbl"
 				action="#{bsvAttendanceBackingBean.addAttendanceForBSV}" />
 
 			<p:commandButton id="attandanceDeleteBtn"
 				value="#{lbl['lbl.btn.delete']}"
-				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow and !scQtBriefAttendace.preRegisterd}"
+				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow}"
 				process="@this,attendanceDetailstbl" partialSubmit="true"
 				update="attendanceDetailstbl"
 				action="#{bsvAttendanceBackingBean.deleteBsvAttandances}" />
