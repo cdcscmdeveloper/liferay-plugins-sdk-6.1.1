@@ -7,13 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -23,6 +26,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
@@ -44,6 +48,8 @@ import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
@@ -55,8 +61,10 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
@@ -195,7 +203,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			throw new EpException(MessageConst.ERROR_770091);
 		}
 		if(!(this.getManagedBean().getTaskAssignmentSearchBean().getUser()!=null 
-				&& this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId()!=null)){
+				&& this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId()!=null 
+				&& this.getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId().length() > 0)){
 			throw new EpException(MessageConst.ERROR_770092);
 		}
 		this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
@@ -303,6 +312,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().setOrgName("");
 			this.getManagedBean().getTaskAssignmentSearchBean().getUser().setUserName("");
 			this.getManagedBean().getTaskAssignmentSearchBean().getUser().setLoginId("");
+			this.getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
 			
 			if(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId()!=null){
 				PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId());
@@ -324,8 +334,6 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				}
 			}
 		}
-		
-		
 	}
 	
 		
@@ -454,15 +462,24 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 * @return
 	 */
 	private List<Integer> retrieveAvailableStatusId(){
-		log.info("retrieveAvailableRoles");
+		log.info("retrieveAvailableStatusId");
 		List<Integer> statusIds = new ArrayList<Integer>();
 		try {
 			StatusReqDTO reqDTO = new StatusReqDTO();
+			if(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles() != null && !getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().isEmpty()){		
+				reqDTO = new StatusReqDTO();
+				reqDTO.setRoleCodeList(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles());
+			}else if(getManagedBean().getRoleCodes() != null && !getManagedBean().getRoleCodes().isEmpty()){
+				reqDTO = new StatusReqDTO();
+				reqDTO.setRoleCodeList(getManagedBean().getRoleCodes());
+			}
+			
+			
 			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			StatusResDTO resDTO = statusSO.retrieveStatusRoleStatusId(reqDTO);
+			StatusResDTO resDTO = statusSO.retrieveStatusRoleListByRoleCode(reqDTO);
 			if(resDTO.isSuccessful()){
-				for(int i=0; i<resDTO.getStatusIds().size(); i++){
-					statusIds.add((int) (long)resDTO.getStatusIds().get(i));
+				for(int i=0; i<resDTO.getStatusRoleList().size(); i++){
+					statusIds.add(resDTO.getStatusRoleList().get(i).getPmStatus().getStatusId().intValue());
 				}
 			}
 			
@@ -872,7 +889,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 				loginId = taskSearchBean.getUser()!=null? taskSearchBean.getUser().getLoginId() : null;
 				
-				if(loginId!=null){
+				if(loginId!=null && loginId.length() > 0){
 					statusIds = retrieveAvailableStatusId();
 //					token = getFacesScopes().getBPMAuthenticationCtxToken();
 					
@@ -897,6 +914,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 					reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 			        reqDTO.setStatusList(statusIds);
 			        reqDTO.setUserId(loginId);
+			        reqDTO.setDocNumber(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+			        
+			        if(getManagedBean().getTaskAssignmentSearchBean().getDocType() !=null && getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter() !=null ){
+			        	reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());
+			        }
+			        
 
 					// Invoke BPM 
 					responseDTO = bpmSO.getReassignedItems(reqDTO);
@@ -966,4 +989,118 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 	}
 	
+	public SelectItem[] getRoleList() {
+		IUserSO userSO =null;
+		SelectItem[] items =  null;
+		try{
+			if(getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() != null 
+					&& 	getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId().length() > 0
+					&&	getManagedBean().getTaskAssignmentSearchBean().getUser().getUserName() != null
+					&& 	getManagedBean().getTaskAssignmentSearchBean().getUser().getUserName().length() > 0){
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				List<Long> users = new ArrayList<Long>();
+				users.add(getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId());
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserIds(users);
+				
+				List<PmUserRole> userRoles = ( userSO
+						.retrieveUserRoleListByUserIdsAndRoleCodes(userReqDTO))
+						.getUserRoleList();	
+				
+				List<String> tempRoleCodeList = new ArrayList<String>();
+				for(PmUserRole userRole : userRoles){							
+					tempRoleCodeList.add(userRole.getPmRole().getRoleCode());
+				}
+				//get unique role code
+				Set<String> tempRoleCodeSet = new HashSet<String>(tempRoleCodeList);				
+				items =  new SelectItem[tempRoleCodeSet.size()];
+				String userRole = null;
+				getManagedBean().setRoleCodes( new ArrayList<String>(tempRoleCodeSet));
+				
+				for(int i=0; i<getManagedBean().getRoleCodes().size(); i++){
+					userRole = getManagedBean().getRoleCodes().get(i);
+					items[i] = new SelectItem(userRole, 
+							PmCommonUtil.getRoleDescByRoleCode(userRole));					
+				}
+		
+			}
+		}catch(Exception e){
+			
+		}finally{
+			userSO = null;		
+		}
+		return items;
+	}
+	
+	
+	/**
+	 * This method used for construct condition fields for LOV (Lov Id :
+	 * PM_STATUS_ROLE)
+	 **/
+	public String constuctConditionFields() {
+		IStatusSO statusSO = null;
+		StringBuilder sb = null;
+		try{
+			sb = new StringBuilder();
+			StatusReqDTO reqDTO = null;
+			if(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles() != null && !getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().isEmpty()){		
+				reqDTO = new StatusReqDTO();
+				reqDTO.setRoleCodeList(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles());
+			}else if(getManagedBean().getRoleCodes() != null && !getManagedBean().getRoleCodes().isEmpty()){
+				reqDTO = new StatusReqDTO();
+				reqDTO.setRoleCodeList(getManagedBean().getRoleCodes());
+			}
+			
+			if(reqDTO != null){
+				statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				StatusResDTO resDTO =statusSO.retrieveStatusRoleListByRoleCode(reqDTO);
+				
+				if(resDTO.isSuccessful()){
+					List<String> tempDocTypeList = new ArrayList<String>();
+					for(PmStatusRole statusRole : resDTO.getStatusRoleList()){							
+						tempDocTypeList.add(statusRole.getPmStatus().getDocType());
+					}
+					//get unique doc type
+					Set<String> tempDocTypeSet = new HashSet<String>(tempDocTypeList);
+					
+					sb.append("pmParameter.parameterType^");
+					sb.append(ParameterTypeConst.DOCUMENT_TYPES);
+					sb.append("|pmParameter.parameterCode^");
+					
+					int count = 0;
+					for(String docType : tempDocTypeSet){
+						if(count != 0){
+							sb.append(",");
+						}
+						sb.append(docType);
+						count ++;
+					}					
+					
+					sb.append("^9");
+					sb.append("|languageCode^");
+					sb.append(new FacesScopes().getUserLocale().getLanguage());
+					sb.append("|pmParameter.recordStatusFlg^");
+					sb.append(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
+			}
+		}catch(Exception e){
+			
+		}finally{
+			statusSO = null;		
+		}
+
+		return sb.toString();
+	}
+	
+	/**
+	 * Reset Fields 
+	 * **/
+	public void onChangeUser(){
+		if(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles() != null && !getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().isEmpty()){
+			getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().clear();
+		}
+		
+		getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
+	}
+		
 }

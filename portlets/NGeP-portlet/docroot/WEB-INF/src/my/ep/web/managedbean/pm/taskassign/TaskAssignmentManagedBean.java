@@ -35,7 +35,7 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	
 	private PmUser resultUser;
 	private PmOrgProfile resultOrgProfile;
-	
+	private List<String> roleCodes;
 
 	/**
 	 * @return the currentActiveOrg
@@ -165,6 +165,22 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	public void setFilterOrgCondition(String filterOrgCondition) {
 		this.filterOrgCondition = filterOrgCondition;
 	}
+
+	/**
+	 * @return the roleCodes
+	 */
+	public List<String> getRoleCodes() {
+		return roleCodes;
+	}
+
+	/**
+	 * @param roleCodes the roleCodes to set
+	 */
+	public void setRoleCodes(List<String> roleCodes) {
+		this.roleCodes = roleCodes;
+	}
+
+
 
 	
 
