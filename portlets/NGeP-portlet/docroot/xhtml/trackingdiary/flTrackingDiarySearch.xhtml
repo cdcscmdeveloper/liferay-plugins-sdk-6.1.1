@@ -19,7 +19,7 @@
 			
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 <!-- 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/> -->
-			<table>
+		<table>
 			<tr>
 				<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.td.transaction.type']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -31,9 +31,9 @@
 						<p:ajax event="change" update="searchPanel"
 							listener="#{flTrackingDiaryBackingBean.selectedOrderType}" />
 					</p:selectOneMenu></td>
-				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.td.order.no']}" /></td>
-				<td><p:inputText size="28" maxlength="17" 
-						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+<!-- 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.td.order.no']}" /></td> -->
+<!-- 				<td><p:inputText size="28" maxlength="17"  -->
+<!-- 						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderNo}"></p:inputText></td> -->
 			</tr>
 			<tr>
 			<td style="width: 190px;"><p:outputLabel value="#{lbl['lbl.td.doc.type']}"	/></td>
@@ -42,24 +42,21 @@
 						<f:selectItems
 							value="#{flTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
 						<p:ajax event="change"
-							update="docStatusSearch"
 							listener="#{flTrackingDiaryBackingBean.selectedDoctype}" />
-					</p:selectOneMenu></td>
-			<td><p:outputLabel value="#{lbl['lbl.td.doc.no']}" /></td>
-			<td><p:inputText size="28"
-						value="#{flTrackingDiaryBackingBean.managedBean.searchDocNo}"></p:inputText>	</td>
-						</tr>
-			</table>
-			<h:panelGroup id="docStatusSearch">
-				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-					<p:outputLabel value="#{lbl['lbl.td.doc.status']}" />
-					<p:selectOneMenu id="statusId"
-						value="#{flTrackingDiaryBackingBean.managedBean.statusDescId}"
-						style="width: 314px;">
-						<f:selectItems value="#{flTrackingDiaryBackingBean.getStatusDropdownValues('FL',flTrackingDiaryBackingBean.managedBean.searchDocType)}" />
-					</p:selectOneMenu>
-				</h:panelGrid>
-			</h:panelGroup>
+					</p:selectOneMenu></td></tr>
+			<tr><td><p:outputLabel value="#{lbl['lbl.td.doc.no']}" /></td>
+				<td><p:inputText size="50"
+						value="#{flTrackingDiaryBackingBean.managedBean.searchDocNo}"></p:inputText></td>	</tr>
+<!-- 			<h:panelGroup id="docStatusSearch"> -->
+<!-- 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" > -->
+<!-- 					<p:outputLabel value="#{lbl['lbl.td.doc.status']}" /> -->
+<!-- 					<p:selectOneMenu id="statusId" -->
+<!-- 						value="#{flTrackingDiaryBackingBean.managedBean.statusDescId}" -->
+<!-- 						style="width: 314px;"> -->
+<!-- 						<f:selectItems value="#{flTrackingDiaryBackingBean.getStatusDropdownValues('FL',flTrackingDiaryBackingBean.managedBean.searchDocType)}" /> -->
+<!-- 					</p:selectOneMenu> -->
+<!-- 				</h:panelGrid> -->
+<!-- 			</h:panelGroup> -->
 <!-- 			<h:panelGroup id="docDoStatusSearch"> -->
 <!-- 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"> -->
 <!-- 					<p:outputLabel -->
@@ -79,9 +76,10 @@
 <!-- 			</h:panelGroup> -->
 			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
-				<p:inputText size="45"
+				<p:inputText size="50"
 					value="#{flTrackingDiaryBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
+		</table>
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
