@@ -5,57 +5,65 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
-		toggleable="true">
+		toggleable="false">
 		<table>
 			<tr>
 				<td valign="top"><h:outputLabel
 						value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
-				<td colspan="3"><p:inputTextarea rows="2" cols="95"
-						style="margin-bottom:5px;" maxlength="200"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
+				<td colspan="3"><p:inputText size="98"
+						style="margin-bottom:5px;" 
+						value="#{lOADetailBackingBean.managedBean.tplSpecMaster.specName}" /></td>
 			</tr>
-
 			<tr>
-				<td style="width: 10%"><h:outputLabel
-						value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
-				<td><p:inputText  size="30"
-						value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" /></td>
+				<td style="width: 10%">
+				<h:outputLabel
+						value="#{lbl['lbl.sc.tpl.search.item']}" /> 
+				<p:outputLabel value="*" styleClass="mandatory"  /></td>
+				<td><p:selectOneMenu id="itemType"
+						value="#{lOADetailBackingBean.managedBean.itemTypeId}"
+						style="width: 178px;margin-bottom: 5px;"
+						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
+						<f:selectItems
+							value="#{lOADetailBackingBean.itemTypeValues}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"  update="productAndServiceId"/>
+					</p:selectOneMenu>
+				</td>
+					
 				<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
-				<td><p:inputText disabled="true" size="30"
-						value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
-
+				<td><p:inputText disabled="true" size="30" /></td>
 			</tr>
-
 			<tr>
-
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 				<td><p:selectOneRadio
-						value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
+						value="#{lOADetailBackingBean.managedBean.tplSpecMaster.weightageReq}">
 						<f:selectItems
-							value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+							value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
                 <td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.template.status']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
-				<td><p:selectOneRadio
-						value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
-						<f:selectItems
-							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-
-						<p:ajax event="change" partialSubmit="true" process="@this"
-							listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
-
-					</p:selectOneRadio></td>
+				<td><p:inputText disabled="true"></p:inputText></td>
 			</tr>
 
 		</table>
+	</p:panel>
+
+	<p:panel header="Specification Content" toggleable="true" id="productAndServiceId">
+		<h:panelGroup id="productListId" style="width: 100%;" rendered="#{lOADetailBackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeProduct}">
+			<ac:templateSpec
+				templateSpecBean="#{lOADetailBackingBean.managedBean.productTemplateSpecBean}"
+				title="#{lbl['lbl.txt.product']}" />
+
+		</h:panelGroup>
+		<h:panelGroup id="serviceListId" style="width: 100%;" rendered="#{lOADetailBackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeService}">
+			<ac:templateSpec
+				templateSpecBean="#{lOADetailBackingBean.managedBean.serviceTemplateSpecBean}"
+				title="#{lbl['lbl.txt.service']}" />
+
+		</h:panelGroup>
+
 	</p:panel>
 
 	<c:if test="#{isZonal}">
