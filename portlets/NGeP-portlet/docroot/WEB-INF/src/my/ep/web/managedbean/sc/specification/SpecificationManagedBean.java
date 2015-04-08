@@ -746,6 +746,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private ScQtScoreSetting finacialItemScoreSetting;
 
 	private BigDecimal financialItemScore;
+	
+	private BigDecimal totalScore = new BigDecimal(0);
 
 	/**
 	 * Checks if is spec complete.
@@ -4966,6 +4968,21 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setFinancialItemScore(BigDecimal financialItemScore) {
 		this.financialItemScore = financialItemScore;
+	}
+
+	/**
+	 * @return the totalScore
+	 */
+	public BigDecimal getTotalScore() {
+		return totalScore;
+	}
+
+	/**
+	 * @param totalScore 
+	 * 				the totalScore to set
+	 */
+	public void setTotalScore(BigDecimal totalScore) {
+		this.totalScore = totalScore;
 	}
 
 }
