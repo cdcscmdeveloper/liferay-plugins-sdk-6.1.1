@@ -520,8 +520,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		 * will change force the user to select upon activation
 		 *  */
 		 
-		smAppl.setApplType(SupplierManagementConst.TEMP_TYPE);
-		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);
+/*		smAppl.setApplType(SupplierManagementConst.TEMP_TYPE);
+		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);*/
 		
 		/*
 		 * Add all related objects to Parent SmSupplier
