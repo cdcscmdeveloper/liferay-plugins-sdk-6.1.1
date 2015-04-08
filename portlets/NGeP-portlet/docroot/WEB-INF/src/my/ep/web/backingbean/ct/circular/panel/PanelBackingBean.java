@@ -733,6 +733,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						}
 					}
 					
+					if(panelItem.getCtPanelItemGroup() == null) {
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.group", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+					
 					if(panelItem.getItemName().length()==0) {
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.item.name", 

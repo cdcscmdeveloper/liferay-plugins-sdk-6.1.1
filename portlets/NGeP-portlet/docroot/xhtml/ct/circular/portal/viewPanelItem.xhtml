@@ -22,9 +22,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%">
 			         <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}" style="width:95%;" />
 		      </p:column>
+		      
+		      <p:column headerText="#{lbl['lbl.ct.item.group']}" style="white-space:pre-line;width:10%">
+			         <h:outputText value="#{panelItemsVar.ctPanelItemGroup.groupName}" style="width:95%;" />
+		      </p:column>
 		 	
-              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:20%;">
-                  <p:inputText value="#{panelItemsVar.itemName}" style="width:85%;" maxlength="100" disabled="true"/>
+              <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;">
+                  <p:inputTextarea value="#{panelItemsVar.itemName}" maxlength="100" rows="2" style="width:80%;" autoResize="false" disabled="true"/>
                   <p:spacer width="5" />
    	   			  <p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
              		disabled="#{panelItemsVar.itemCategoryId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}">
