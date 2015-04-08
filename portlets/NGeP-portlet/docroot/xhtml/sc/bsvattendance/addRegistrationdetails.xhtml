@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Supplier List" toggleable="true" id="attRegPnl">
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true" id="attRegPnl">
 		<ac:lovPopup />
 		<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
 			value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
@@ -40,12 +40,12 @@
 										lovId="SM_SUPPLIER_MOFNO"
 										postUpdateListener="bsvAttendanceBackingBean.bsvRegistationListner(bsvAttendanceBackingBean.managedBean.mofAccounts)"
 										headerText="Supplier MOF No Lov"
-										buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
+										buttonLabel="#{lbl['lbl.btn.add']}"
 										selectionMode="multiple"
 										saveObject="bsvAttendanceBackingBean.managedBean.mofAccounts"
 										update="@form" /></td>
 								<td><p:commandButton id="regDelteBtn"
-										value="#{lbl['lbl.sc.action.delete']}"
+										value="#{lbl['lbl.btn.delete']}"
 										disabled="#{bsvAttendanceBackingBean.managedBean.maintanceFlow and !bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew}"
 										process="@this,complisttbl" partialSubmit="true" update="@all"
 										action="#{bsvAttendanceBackingBean.deleteSupplierDetails}" /></td>
@@ -61,7 +61,7 @@
 	</p:panel>
 
 
-	<p:panel header="Supplier Attendence List" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supplier.attendene.list']}" toggleable="true">
 		<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
 			value="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.bsvAttendance}"
 			rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
