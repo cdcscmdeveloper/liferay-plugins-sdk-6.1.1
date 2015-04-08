@@ -87,7 +87,10 @@
 					<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}"
 						style="width:15%">
 						<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
+							id="technicaluploadNoActionUserScoreId"
+							label="#{lbl['lbl.sc.eva.tech.user.score']}"
 							style="text-align:right;" size="40" maxlength="18"
+							required="true"
 							disabled="#{evaluationBackingBean.managedBean.readOnly}">
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -99,6 +102,8 @@
 						<p:spacer width="5"></p:spacer>
 						<h:outputText
 							value="/#{evaluationBackingBean.managedBean.userScores}" />
+						<p:message id="technicaluploadNoActionUserScoreMessage"
+							for="technicaluploadNoActionUserScoreId" display="icon"></p:message>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"

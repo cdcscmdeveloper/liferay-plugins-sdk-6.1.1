@@ -77,17 +77,22 @@
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-							value="#{noOfContracts.userScore}" maxlength="18"
+							id="financialBankStatementsUserScoreId"
+							label="#{lbl['lbl.sc.eva.s1.user.score']}"
+							value="#{noOfContracts.userScore}" maxlength="18" required="true"
 							disabled="#{pageDisable}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '2'}">
-								<ac:validateNumber
+							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="14" integerOnly="true" />
 							<f:attribute name="min" value="0" />
 							<f:attribute name="max" value="#{contractUserScore}" />
 						</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
 							value="/#{contractUserScore}"
-							rendered="#{ checklistScoreType eq '2'}" /></td>
+							rendered="#{ checklistScoreType eq '2'}" /> <p:message
+							id="financialBankStatementsUserScoreMessage"
+							for="financialBankStatementsUserScoreId" display="icon">
+						</p:message></td>
 				</tr>
 			</table>
 		</h:panelGroup>
