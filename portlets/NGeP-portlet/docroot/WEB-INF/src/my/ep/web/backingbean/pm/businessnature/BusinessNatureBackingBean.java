@@ -115,6 +115,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	
 	public String createBusinessNature(PmBusinessNature pmBusinessNature) {
 		
+		getManagedBean().setNewcategory(true);
 		PmBusinessNature pmBusinessNature2 = new PmBusinessNature();
 		
 		IBusinessNatureSO businessNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
