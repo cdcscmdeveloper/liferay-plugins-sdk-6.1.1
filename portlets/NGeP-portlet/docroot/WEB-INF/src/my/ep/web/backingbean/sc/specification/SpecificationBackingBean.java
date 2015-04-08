@@ -8751,7 +8751,13 @@ public class SpecificationBackingBean extends
 					+ technical.getOverallOtherTechnical().intValue();
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-
+			
+			int financialScore = 0;
+			if (null != getManagedBean().getRecommendfinancialScore()) {
+				financialScore = getManagedBean().getRecommendfinancialScore().intValue();
+			}
+			this.getManagedBean().setTotalScore(new BigDecimal(local + financialScore));
+			
 		} finally {
 
 		}
@@ -8776,6 +8782,12 @@ public class SpecificationBackingBean extends
 					+ financial.getOverallOtherFin().intValue();
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
+			
+			int technicalScore = 0;
+			if (null != getManagedBean().getRecommendTechnicalScore()) {
+				technicalScore = getManagedBean().getRecommendTechnicalScore().intValue();
+			}			
+			this.getManagedBean().setTotalScore(new BigDecimal(local + technicalScore));
 
 		} finally {
 
