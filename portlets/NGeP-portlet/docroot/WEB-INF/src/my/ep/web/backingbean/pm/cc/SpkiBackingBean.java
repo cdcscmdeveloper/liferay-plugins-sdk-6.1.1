@@ -184,7 +184,7 @@ public class SpkiBackingBean {
  
 			String pin = getPassword();
 	
-			System.out.println("SIGN" + getChallengeQues1() + getChallengeAns1() + getPassword());
+			System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword());
 			// Request service to signData based on the answered challenges and data 
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),"eP-1008I348f", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 			
@@ -247,45 +247,89 @@ public class SpkiBackingBean {
 		return res.getResultBean().getResultList().get(0).getEpNo();	
 	}
 	
+//	public static void main(String[] args) {
+//		try{
+//			// Create property file
+//			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
+//			// Create KMCClient with the property file
+//			KMCClient client = KMCClientFactory.getInstance(f);
+//
+//			// Request service for user selected question for authentication
+//			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
+////			List<String> challs = null;
+//			switch(res.getStatusCode())
+//			{
+//			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+//				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+//				// show to the user to allow user answer the challenge
+////				setChallengeQues1(challs.get(0));
+//				for(int i = 0 ; i < challs.size() ; i ++)
+//				{
+//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
+//				}
+//				
+//				break;
+//
+//				default:
+//				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+//				return;
+//			}
+//
+//			if(challs.size() == 0)
+//			{
+//				System.err.println("No challanges found for the user! Data signing failed!");
+//				return;
+//			}
+//				
+//		} catch (Exception ex)
+//		{
+//			ex.printStackTrace();
+//		}
+//	}
+	
 	public static void main(String[] args) {
-		try{
-			// Create property file
-			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
-			// Create KMCClient with the property file
-			KMCClient client = KMCClientFactory.getInstance(f);
+	try{
+		String signedData ;
+		// Create property file
+		String challengeQues1;
+		String challengeAns1;
+		File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
+		// Create KMCClient with the property file
+		KMCClient client = KMCClientFactory.getInstance(f);
+		// Simulate user selected the question and answer accordingly
+		Map<Object, Object> challenges = new HashMap<Object, Object>();
+//		challenges.put(challengeQues1, challengeAns1);
 
-			// Request service for user selected question for authentication
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
-//			List<String> challs = null;
-			switch(res.getStatusCode())
-			{
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-				// show to the user to allow user answer the challenge
-//				setChallengeQues1(challs.get(0));
-				for(int i = 0 ; i < challs.size() ; i ++)
-				{
-					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
-				}
-				
-				break;
+		// Simulate the data ready to sign
+		String dataForSigning = "originalText";
+		
+		String pin = "originalText";
 
-				default:
-				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-				return;
-			}
-
-			if(challs.size() == 0)
-			{
-				System.err.println("No challanges found for the user! Data signing failed!");
-				return;
-			}
-				
-		} catch (Exception ex)
+//		System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword());
+		// Request service to signData based on the answered challenges and data 
+		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("eP-1008I348f","eP-1008I348f", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+		
+		
+		switch(res.getStatusCode())
 		{
-			ex.printStackTrace();
-		}
+		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+			RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
+			signedData = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
+			System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
+			break;
+
+		default:
+			FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+			System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
+			//throw new EpException(MessageConst.ERROR_776052);
+//			signedData = "DEFAULT SIGNED TEXT";
 	}
+		
+	} catch (Exception ex)
+	{
+		ex.printStackTrace();
+	}
+}
 
 	public String getChallengeQues1() {
 		return challengeQues1;
