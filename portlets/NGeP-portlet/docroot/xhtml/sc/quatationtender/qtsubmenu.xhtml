@@ -12,52 +12,52 @@
 					styleClass="sidemenu"
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"
 					style="display : table-caption;">
-					<p:menuitem value="#{lbl['lbl.qt.qtdetails']}"
+					<p:menuitem value="#{lbl['lbl.sc.qt.qtn.details']}"
 						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
 						process="@form" />
 					<p:menuitem value="#{lbl['lbl.sc.qt.committee.appointment']}"
 						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
 						process="@form" />
-					<p:menuitem value="#{lbl['lbl.qt.supplierqulificationcriteria']}"
+					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
 						process="@form" />
-					<p:menuitem value="#{lbl['lbl.qt.approval']}"
+					<p:menuitem value="#{lbl['lbl.sc.approval']}"
 						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
 						process="@form" />
-					<p:menuitem value="#{lbl['lbl.qt.tecnical.spec']}"
+					<p:menuitem value="#{lbl['lbl.sc.technical.specification']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-					<p:menuitem value="#{lbl['lbl.qt.finanial.spec']}"
+					<p:menuitem value="#{lbl['lbl.sc.spec.financial.specification']}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-					<p:menuitem value="#{lbl['lbl.qt.activities']}"
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 
-					<p:menuitem value="#{lbl['lbl.qt.bsv.sample']}"
+					<p:menuitem value="#{lbl['lbl.sc.qt.briefing.sv']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-					<p:menuitem value="#{lbl['lbl.qt.schedule.contact']}"
+					<p:menuitem value="#{lbl['lbl.sc.qt.schedule.contact']}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						style="white-space: normal;" process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-					<p:menuitem value="#{lbl['lbl.qt.deduction.payment']}"
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
 						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-					<p:menuitem value="#{lbl['lbl.qt.documents']}"
+					<p:menuitem value="#{lbl['lbl.sc.qt.documents']}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-					<p:menuitem value="#{lbl['lbl.qt.activities']}"
+					<p:menuitem value="#{lbl['lbl.sc.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
-					<p:menuitem value="#{lbl['lbl.qt.public.approval']}"
+					<p:menuitem value="#{lbl['lbl.sc.qt.public.approval']}"
 						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />

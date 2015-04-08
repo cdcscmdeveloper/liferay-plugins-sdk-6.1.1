@@ -13,7 +13,7 @@
 			columns="4"
 			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']} " />
+				<h:outputLabel value="#{lbl['lbl.sc.ministry']} " />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -33,7 +33,7 @@
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.jabatan']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.jabatan']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -54,7 +54,7 @@
 
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ptj']} " />
+				<h:outputLabel value="#{lbl['lbl.sc.ptj']} " />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -72,7 +72,7 @@
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.title']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.title']}" />
 			</h:column>
 			<h:column>
 				<p:inputText
@@ -99,7 +99,7 @@
 
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.state']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.state']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -117,7 +117,7 @@
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.district']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.district']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -134,7 +134,7 @@
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.category.code']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -192,7 +192,7 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.notice.board.searchbtn']}"
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						style="float:right;"
 						action="#{noticeBoardBackingBean.searchNoticeBoard}"
 						update=":form:nbqtsummary"/>

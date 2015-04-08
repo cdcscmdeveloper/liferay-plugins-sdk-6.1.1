@@ -12,7 +12,7 @@
 			columns="2" columnClasses="columnWidth20,columnWidth80">
           
 			<p:column>
-				<p:outputLabel value="#{lbl['lbl.sc.notice.board.title']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.title']}"></p:outputLabel>
 			</p:column>
 
 			<p:column>
@@ -22,7 +22,7 @@
 
 		<h:panelGrid styleClass="noBorders tr,noBorders td" >
 			<p:column>
-				<p:outputLabel value="#{lbl['lbl.sc.notice.board.qtno']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.notice.board.qtn.no']}"></p:outputLabel>
 			</p:column>
 
 			<p:column>
@@ -30,7 +30,7 @@
 			</p:column>
 
 			<p:column>
-				<p:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.ministry']}"></p:outputLabel>
 			</p:column>
 
 			<p:column>
@@ -38,7 +38,7 @@
 			</p:column>
 
 			<p:column>
-				<p:outputLabel value="#{lbl['lbl.sc.notice.board.department']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.department']}"></p:outputLabel>
 			</p:column>
 
 			<p:column>
@@ -46,7 +46,7 @@
 			</p:column>
 
 			<p:column>
-				<p:outputLabel value="#{lbl['lbl.sc.notice.board.division']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.division']}"></p:outputLabel>
 			</p:column>
 
 			<p:column>
@@ -74,11 +74,11 @@
 			 var="catCode" rowKey="#{catCode.qtCategoryId}" rowIndexVar="index">
 			 <ac:paginator for="catcodelist" />
 		
-				<p:column headerText="#{lbl['lbl.sc.notice.board.catcode']}">
+				<p:column headerText="#{lbl['lbl.sc.category.code']}">
 					<h:outputText value="#{catCode.qtCategoryId}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.mandatory']}">
+				<p:column headerText="#{lbl['lbl.sc.mandatory']}">
 					<h:outputText value="#{catCode.pmCategoryL1 }" />
 				</p:column>
 			</p:dataTable>
@@ -99,7 +99,7 @@
 
 
 				<p:column>
-					<p:outputLabel value="#{lbl['lbl.sc.notice.board.all.states']}"></p:outputLabel>
+					<p:outputLabel value="#{lbl['lbl.sc.all.states']}"></p:outputLabel>
 				</p:column>
 
 				<p:column>
@@ -119,7 +119,7 @@
 			  var="locCriteria" rowKey="#{locCriteria.qtLocCriteriaId}" rowIndexVar="index">
 			  <ac:paginator for="loclist" />
 			
-				<p:column headerText="#{lbl['lbl.sc.notice.board.location']}">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<p:commandLink onclick="popQtn.show();">
 						<h:outputText value="#{locCriteria.scQtZoneCriteria.zoneName}" />
 					</p:commandLink>

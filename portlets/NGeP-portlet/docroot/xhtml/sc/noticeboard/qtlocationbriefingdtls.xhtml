@@ -9,15 +9,15 @@
 	
 	<c:if test="#{noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
 		<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
-			<p:panel header="Briefing And Site Visit Details" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
 
 				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-					<h:outputText value=" All Attandence required for Briefing"
+					<h:outputText value="#{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
 						rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
 						style="font-weight:bold;text-align: left;" />
 
 					<h:outputText
-						value=" At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
+						value=" At Least #{bsvDetails.scQtBsv.minBriefingAttend} #{lbl['lbl.sc.attendance.required.for.briefiing.sv']}"
 						rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
 						style="font-weight:bold;text-align: left;" />
 				</h:panelGroup>
@@ -26,11 +26,11 @@
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:30%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+					<p:column headerText="#{lbl['lbl.sc.date.time']}"
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDate}">
 							<f:convertDateTime
@@ -46,11 +46,11 @@
 							<h:outputText value="#{brfsitdtl.location}" />
 						</p:commandLink>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+					<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+					<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
 						style="width:5%;white-space: normal;">
 						<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
 					</p:column>
@@ -66,15 +66,15 @@
 		</c:if>
 		<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
 
-			<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true">
 				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-					<h:outputText value="All Attandence required for Briefing"
+					<h:outputText value="#{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
 						rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
 						style="font-weight:bold;text-align: left;" />
 
 
 					<h:outputText
-						value="At Least #{bsvDetails.scQtBsv.minBriefingAttend} Attandence required for Briefing"
+						value="At Least #{bsvDetails.scQtBsv.minBriefingAttend} #{lbl['lbl.sc.attendance.required.for.briefiing']}"
 						rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
 						style="font-weight:bold;text-align: left;" />
 
@@ -82,11 +82,11 @@
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:30%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+					<p:column headerText="#{lbl['lbl.sc.date.time']}"
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDate}">
 							<f:convertDateTime
@@ -102,11 +102,11 @@
 							<h:outputText value="#{brfsitdtl.location}" />
 						</p:commandLink>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+					<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.coordinatingOfficer}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+					<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
 						style="width:5%;white-space: normal;">
 						<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
 					</p:column>
@@ -121,16 +121,16 @@
 
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true">
 
 				<h:panelGroup rendered="#{!bsvDetails.sitevisitList.isEmpty()}">
-					<h:outputText value="* All Attandence required for SiteVisit"
+					<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.sv']}"
 						rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}"
 						style="font-weight:bold;text-align: left;" />
 
 
 					<h:outputText
-						value="At Least #{bsvDetails.scQtBsv.minSiteVisitAttend} Attandence required for SiteVisit"
+						value="At Least #{bsvDetails.scQtBsv.minSiteVisitAttend} #{lbl['lbl.sc.attendance.required.for.sv']}"
 						rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}"
 						style="font-weight:bold;text-align: left;" />
 
@@ -139,11 +139,11 @@
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
 					style="width:100%">
 					<ac:paginator for="sitevisitDtls"></ac:paginator>
-					<p:column headerText="#{lbl['lbl.qt.nb.description']}"
+					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:30%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
+					<p:column headerText="#{lbl['lbl.sc.date.time']}"
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDate}">
 							<f:convertDateTime
@@ -160,11 +160,11 @@
 						</p:commandLink>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.co']}"
+					<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}"
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.coordinatingOfficer}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.maxAttened']}"
+					<p:column headerText="#{lbl['lbl.sc.max.attendence']}"
 						style="width:5%;white-space: normal;">
 						<h:outputLabel value="#{sitevisitDtls.maxNoOfAttendance}" />
 					</p:column>

@@ -25,42 +25,42 @@
 				</p:row>
 			</p:panelGrid>
 		
-		<p:panel header="#{lbl['lbl.qt.nb.pricingheader']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.notice.board.pricingheader']}" toggleable="true">
 			<h:panelGrid border="0" width="100%" columns="2"
 				columnClasses="columnWidth20">
 
-				<h:outputLabel value="#{lbl['lbl.qt.nb.ministry']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.ministry']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgName}"
 					readonly="true" />
 
-				<h:outputLabel value="#{lbl['lbl.qt.nb.jabatan']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.jabatan']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgName}"
 					readonly="true" />
 
-				<h:outputLabel value="#{lbl['lbl.qt.nb.ptj']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.ptj']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}"
 					readonly="true" />
 
 
-				<h:outputLabel value="#{lbl['lbl.qt.nb.qtNo']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.qtn']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}"
 					readonly="true" />
 
-				<h:outputLabel value="#{lbl['lbl.qt.nb.closingDate']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.closingDate']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}"
 					readonly="true">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 
-				<h:outputLabel value="#{lbl['lbl.qt.nb.openingdate']} " />
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.openingdate']} " />
 				<h:outputText value="" readonly="true" />
 
-				<h:outputLabel value="#{lbl['lbl.qt.nb.title']}">
+				<h:outputLabel value="#{lbl['lbl.sc.title']}">
 				</h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}"

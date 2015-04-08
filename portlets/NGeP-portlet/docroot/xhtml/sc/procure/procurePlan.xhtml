@@ -90,12 +90,12 @@
 				<h:outputText
 					value="#{procurementPlanBackingBean.getStatusDescById(ppPlan.pmStatus.statusId)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.pp.purchasereqstdate']}">
+			<p:column headerText="#{lbl['lbl.sc.start.date']}">
 				<h:outputText value="#{ppPlan.ppPlanActivities[0].planStartDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.pp.notificationdays']}">
+			<p:column headerText="#{lbl['lbl.sc.pp.notificationdays']}">
 				<h:outputLabel value="#{ppPlan.notificationDays}"></h:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">

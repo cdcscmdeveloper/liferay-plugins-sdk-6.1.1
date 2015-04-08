@@ -7,15 +7,15 @@
 
 	      <p:panel>
 			<p:dataTable value="" >
-		       <p:column headerText="#{lbl['lbl.sc.notice.board.qtno']}">
+		       <p:column headerText="#{lbl['lbl.sc.notice.board.qtn.no']}">
 					<h:outputText value="1232"  readonly="true" />
 				</p:column>
 
-			    <p:column headerText="#{lbl['lbl.sc.notice.board.title']}">
+			    <p:column headerText="#{lbl['lbl.sc.title']}">
 						<h:outputText value="Title"  readonly="true"/>
 				</p:column>
 
-                <p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
+                <p:column headerText="#{lbl['lbl.sc.action']}">
 					<p:commandLink onclick="popupPriceSchedule.show();">
 						 <h:outputText value="Price Schedule" />
 					</p:commandLink>
@@ -34,7 +34,7 @@
 			  <p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="PRINT PDF" />
-					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.close']}" onclick="popupPriceSchedule.hide()"/>
+					<p:commandButton value="#{lbl['lbl.btn.close']}" onclick="popupPriceSchedule.hide()"/>
 				</p:column>
 			  </p:row>
 		  </p:panelGrid>

@@ -13,7 +13,7 @@
 			columns="2" columnClasses="columnWidth20,columnWidth30">
 			<h:column>
 				<h:outputLabel
-					value="#{lbl['lbl.sc.bsv.attendance.briefing.sameas.sv']}"></h:outputLabel>
+					value="#{lbl['lbl.sc.briefing.sameas.sv']}"></h:outputLabel>
 			</h:column>
 
 			<p:column>
@@ -31,25 +31,25 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 				<ac:paginator for="briefingDeails" />
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.desc']}"
+				<p:column headerText="#{lbl['lbl.sc.description']}"
 					style="width:100%">
 						<h:outputText value="#{scQtBriefing.briefingDesc}"
 							style="width:100%" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.date']}">
+				<p:column headerText="#{lbl['lbl.sc.date.time']}">
 					<h:outputText value="14/11/2013" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.location']}">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<h:outputText value="#{scQtBriefing.location}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.sc.bsv.attendance.coordinating.officer']}">
+					headerText="#{lbl['lbl.sc.coordinate.officer']}">
 					<h:outputText value="#{scQtBriefing.coordinatingOfficer}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.attendance']}">
+				<p:column headerText="#{lbl['lbl.sc.attendance']}">
 					<h:outputText value="#{scQtBriefing.attendanceType}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.zone.name']}">
+				<p:column headerText="#{lbl['lbl.sc.zone']}">
 				 <p:commandLink onclick="popQtn.show();">
 					 <h:outputText value="Zone Name" />
 				</p:commandLink>
@@ -68,25 +68,25 @@
 				<ac:paginator for="sitevisitdetails" />
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.desc']}"
+				<p:column headerText="#{lbl['lbl.sc.description']}"
 					style="width:100%">
 						<h:outputText value="#{scQtsitevisit.briefingDesc}"
 							style="width:100%" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.date']}">
+				<p:column headerText="#{lbl['lbl.sc.date.time']}">
 					<h:outputText value="04/09/2013 04:44" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.location']}">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<h:outputText value="#{scQtsitevisit.location}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.sc.bsv.attendance.coordinating.officer']}">
+					headerText="#{lbl['lbl.sc.coordinate.officer']}">
 					<h:outputText value="#{scQtsitevisit.coordinatingOfficer}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.attendance']}">
+				<p:column headerText="#{lbl['lbl.sc.attendance']}">
 					<h:outputText value="#{scQtsitevisit.attendanceType}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.zone.name']}">
+				<p:column headerText="#{lbl['lbl.sc.zone']}">
 				  <p:commandLink onclick="popQtn.show();">
 					 <h:outputText value="Zone Name" />
 				</p:commandLink>
@@ -102,7 +102,7 @@
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
 				<h:column>
-					<h:outputLabel value="#{lbl['lbl.sc.notice.board.mof.no']}"></h:outputLabel>
+					<h:outputLabel value="#{lbl['lbl.sc.mof.no']}"></h:outputLabel>
 				</h:column>
 				<h:column>
 					<p:inputText value="47200"></p:inputText>
@@ -124,7 +124,7 @@
 			rows="10" rowKey="#{ScQtBriefAttendace.qtBriefingAttendanceId}"
 			rowIndexVar="rowIndex">
 
-			<p:column headerText="#{lbl['lbl.sc.notice.board.name']}">
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<p:inputText value="#{ScQtBriefAttendace.name}" />
 			</p:column>
 
@@ -143,12 +143,12 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.notice.board.email']}">
+			<p:column headerText="#{lbl['lbl.sc.email']}">
 				<p:inputText value="#{ScQtBriefAttendace.email}" />
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.notice.board.action']}">
+			<p:column headerText="#{lbl['lbl.sc.action']}">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -164,7 +164,7 @@
 
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,regiInfoId" partialSubmit="true"
 				action="#{bsvAttendanceBackingBean.addRegistration}"
 				update=":form:regiInfoId" />
