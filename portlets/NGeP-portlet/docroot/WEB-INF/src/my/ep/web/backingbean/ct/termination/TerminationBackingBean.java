@@ -488,24 +488,28 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
-		}
+		}		
 		
-		
-				
-		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.ct.reason.termination", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}	
-		
-		if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
-				!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
-				   if(reason.getClauseNo().length() == 0){
-					   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				   }
-			  }
-		}
+		//if (!getManagedBean().isMutualTermination()) {
+			if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.ct.reason.termination", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}	
+			
+			if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
+					!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+				  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
+					   if(reason.getClauseNo().length() == 0){
+						   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					   }
+					   if(reason.getDescription().length() == 0){
+						   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					   }
+				  }
+			}
+		//}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
@@ -730,7 +734,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			setViewNoticeFlag(false);
 		}
 		
-		if (!isViewNoticeFlag() && this.getManagedBean().isTermination()) {
+		if (isViewNoticeFlag() && this.getManagedBean().isTermination()) {
 			if (getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo() == null
 					|| getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().isEmpty()
 					|| getManagedBean().getContractVer().getCtTermination().getLastRemedyDate() == null
@@ -741,7 +745,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			}
 		}
 		
-		if (!isViewNoticeFlag()) {
+		if (isViewNoticeFlag() && !this.getManagedBean().isMutualTermination()) {
 			if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null
 					|| getManagedBean().getContractVer().getCtTermination().getRemedyEndDate() == null) {
 				setViewNoticeFlag(false);
@@ -752,20 +756,22 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					throw new EpException(MessageConst.ERROR_760164);
 				}
 			}
-		}
-		
-		if (!isViewNoticeFlag() && getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			setViewNoticeFlag(false);
-		}	
-		
-		if (!isViewNoticeFlag() && getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null
-				&& !getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-			for (CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
-				   if (reason.getClauseNo().length() == 0) {
-					   setViewNoticeFlag(false);
-					   break;
-				   }
-			  }
+			
+			if (getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() == null
+					|| getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+				setViewNoticeFlag(false);
+			} else {
+				for (CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
+					if (reason.getClauseNo().length() == 0) {
+						setViewNoticeFlag(false);
+						break;
+					}
+					if (reason.getDescription().length() == 0) {
+						setViewNoticeFlag(false);
+						break;
+					}
+				}
+			}
 		}
 		
 		if (!isViewNoticeFlag()) {

@@ -430,7 +430,11 @@
 		              <p:inputTextarea id="cluseId" value="#{data.clauseNo}"  rows="2" style="width:95%;" autoResize="false"
 		              maxlength="200" disabled="#{terminationBackingBean.managedBean.viewContract}"/>
                  </p:column>
-		        <p:column  style="width:65%;"   headerText="#{lbl['lbl.ct.termination.desc']}">
+		        <p:column  style="width:65%;">
+		            <f:facet name="header">
+					        <h:outputText value="* " styleClass="mandatory" />
+					       <h:outputText value="#{lbl['lbl.ct.termination.desc']}"  />
+				        </f:facet>
 		           <p:inputTextarea id="descId" value="#{data.description}" rows="2" style="width:95%;" autoResize="false"
 		              maxlength="500" disabled="#{terminationBackingBean.managedBean.viewContract}"/>
 		        </p:column> 
