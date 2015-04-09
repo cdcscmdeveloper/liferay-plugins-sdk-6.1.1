@@ -82,7 +82,7 @@
 							<h:outputLabel value="#{lbl['lbl.sc.all.states']}"
 								style="width : 80px" />
 							<p:selectBooleanCheckbox
-								disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.allStateCode eq '3' }"
+								disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.allStateCode.value() eq 'Peninsular' }"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 								<f:selectItem
 									itemValue="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}" />
