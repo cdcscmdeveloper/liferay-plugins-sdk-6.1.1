@@ -77,7 +77,7 @@
 					<h:panelGroup rendered="#{loiloa.type eq 'LOI'}">
 
 						<p:commandButton title="edit" icon="ui-icon-edit"
-							rendered="#{loiloa.status.statusId eq QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
+							rendered="#{loiloa.status.statusId eq QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT or loiloa.status.statusId eq LOI_PENDING_SUBMISSION}"
 							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}" />
 
@@ -95,7 +95,7 @@
 
 					<h:panelGroup rendered="#{loiloa.type eq 'LOA'}">
 						<p:commandButton title="edit" icon="ui-icon-edit"
-							rendered="#{loiloa.status.statusId eq QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
+							rendered="#{loiloa.status.statusId eq QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT or loiloa.status.statusId eq LOA_PENDING_SUBMISSION}"
 							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 							action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
 
