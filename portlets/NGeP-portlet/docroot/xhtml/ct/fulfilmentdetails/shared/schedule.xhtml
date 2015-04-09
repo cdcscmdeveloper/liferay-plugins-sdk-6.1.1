@@ -84,9 +84,7 @@
                                  <p:ajax process="@this"/>
                                </p:selectOneMenu> 
 		                 </p:column>
-		            </p:dataTable>  
-	      
-	                <p:spacer height="2"  />
+		            </p:dataTable> 
 		               <div class="ppRightBtn"> 
 		                   <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}"  update=":form:payScheduleTableId"
 		                        action="#{contractDetailsBackingBean.addScheduleDetails}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
@@ -195,9 +193,7 @@
 		                             <p:tooltip for="percentValidationId" showEffect="fade" value="#{lbl['lbl.ct.validation.progressive.percentage']}"/> 
 		                        </h:panelGroup>
                              </p:column>
-		             </p:dataTable>  
-			      <p:spacer height="2" />
-		       
+		             </p:dataTable>
 		        <div class="ppRightBtn"> 
 		           <p:commandButton id="proAddButtionId" value="#{lbl['lbl.btn.add']}" 
 		                partialSubmit="true" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"

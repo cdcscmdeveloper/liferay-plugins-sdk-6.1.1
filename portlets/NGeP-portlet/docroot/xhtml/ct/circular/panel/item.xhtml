@@ -168,7 +168,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
 			     </p:selectOneMenu>
 			  </h:panelGrid>
-			  <p:spacer height="15"/>
            <div class="ppRightBtn">
 		     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=panelItemDt])"
 		       process="@all" actionListener="#{panelBackingBean.bulkUpdateRow()}" onclick="bulkUpdateDlg.hide();"/>
@@ -208,7 +207,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						disabled="#{panelBackingBean.managedBean.viewContract}" />
 				</p:column>
 			</p:dataTable>
-			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 					action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" 
@@ -274,8 +272,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						  value="/css/images/design/edit.png" />
 					  </p:commandLink>
 					</p:column>
-			</p:dataTable>			
-		   <p:spacer height="2" />
+			</p:dataTable>
 		   <div class="ppRightBtn">
 		   <p:commandButton value="#{lbl['lbl.btn.add']}"
 					process="@this" update="@([id$=zonePopupGeneral])"

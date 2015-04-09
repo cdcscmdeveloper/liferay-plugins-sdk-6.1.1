@@ -33,7 +33,6 @@
 				<h:outputText value="#{data.circularVer.name}" />
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true"  onclick="delCancelCircular.show()"/>				

@@ -132,8 +132,6 @@
 						        </p:commandLink>
 				  	       </p:column>					
 				     </p:dataTable>
-				
-				     <p:spacer height="10"/>
 				     <div class="ppRightBtn">
 					       <p:commandButton value="#{lbl['lbl.btn.ok']}"  update=":form:itemTable" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}"
 					          process="@form" action="#{amendmentBackingBean.setNewMaxQty()}" onclick="dlgItemMaxQty.hide();" />
