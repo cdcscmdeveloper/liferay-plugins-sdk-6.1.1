@@ -81,24 +81,7 @@
 						value="#{purchaseRequestBackingBean.getParameterDesc(flOrderBB.managedBean.flRequest.procurementType)}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/></td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" rendered="false"/></td>
-				<td><p:inputText size="25"
-						value="#{flOrderBB.managedBean.flRequest.financialYear}"
-						disabled="true" rendered="false"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="25" disabled="true"
-						value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" /> <p:spacer
-						width="5" /> <p:inputText size="2" value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.pmUom)}" disabled="true" /></td>
+			<tr>		
 				<td><p:outputLabel value="#{lbl['lbl.fl.approved.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.approvedDate}">
@@ -107,12 +90,11 @@
 					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.approver.date']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
-				<td><p:inputText size="25" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.startDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><p:inputText size="12" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" /> <p:spacer
+						width="5" /> <p:inputText size="2" value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.pmUom)}" disabled="true" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel styleClass="highlight-mark" value="#{lbl['lbl.fl.po.factored']} " /></td>
 				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null or flOrderBB.managedBean.fulfilmentOrder.status.statusId eq FulfilmentStatusCont.poPendingRejAck or flOrderBB.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" 
 						value="#{flOrderBB.managedBean.factoringCheck}">
@@ -122,11 +104,31 @@
 							listener="#{flOrderBB.factoringChecked}" update="@(.factStyle)"
 							partialSubmit="true" />
 					</p:selectOneRadio></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.startDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.endDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" rendered="false"/></td>
+				<td><p:inputText size="25"
+						value="#{flOrderBB.managedBean.flRequest.financialYear}"
+						disabled="true" rendered="false"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" rendered="false"/></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}" rendered="false">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
