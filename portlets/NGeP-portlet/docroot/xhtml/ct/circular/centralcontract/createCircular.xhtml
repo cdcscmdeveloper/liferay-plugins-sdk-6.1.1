@@ -77,14 +77,8 @@
 				#{exemptedOrgsVar.orgProfile.orgName}
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2" />		
-		<div>
-			<table style="width: 100%">
-				<tr><td class="TableFieldLeft" width="80%"></td>
-			 	<td>
-			   	<table><tr>
-			   		<td>
-		   			<ac:lov id="ministryId" lovId="PM_ORG_PROFILE"
+		 <div class="ppRightBtn">
+		 	<ac:lov id="ministryId" lovId="PM_ORG_PROFILE"
 						postUpdateListener="centralContractBackingBean.addExemptedOrg(centralContractBackingBean.managedBean.orgProfiles)"
 						headerText="#{lbl['lbl.ct.ministry']}" 
 						buttonLabel="#{lbl['lbl.btn.add']}"
@@ -92,17 +86,10 @@
 						saveObject="centralContractBackingBean.managedBean.orgProfiles"
 						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" update="@form"
 						rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-					</td>
-					<td>
-					  <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
 						  partialSubmit="true" 
 						  onsuccess="delExemptedOrgDlg.show()"
 						  rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-					</td>
-					</tr></table>
-				</td>
-			    </tr>
-			</table>
 		 </div>
 		<p:dialog id="delExemptedOrgDlg"
 		    styleClass="screen-title" widgetVar="delExemptedOrgDlg"  modal="true" width="330">  
