@@ -88,6 +88,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.PTJLocalityCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -1101,7 +1102,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		this.getManagedBean().setAllStateCode(orgResDto.getStateStatusId());
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCATION_LEVEL_STATE);
-		if (this.getManagedBean().getAllStateCode() == 2) {
+		if (this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_SARAWAK) {
 			types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
 		}
 		types.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
@@ -1230,7 +1231,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (estimatedAmt >= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 			// value > 500k - always get the
 			// scQtSupplierCriteria.getLocationLevel()
-			if (getManagedBean().getAllStateCode() != 3
+			if (getManagedBean().getAllStateCode() != PTJLocalityCode.STATE_PENINSULAR
 					&& !scQtSupplierCriteria.isAllState()) {
 				if (null != scQtSupplierCriteria
 						&& null != scQtSupplierCriteria.getLocationLevel()) {

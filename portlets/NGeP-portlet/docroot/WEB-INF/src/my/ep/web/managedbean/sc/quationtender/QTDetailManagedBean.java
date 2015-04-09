@@ -84,6 +84,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -496,7 +497,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean durationField = true;
 
 	/** The all state code. */
-	private int allStateCode;
+	private PTJLocalityCode allStateCode;
 	
 	/** The Local level code. */
 	private String LocalLevelCode;
@@ -4996,7 +4997,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 *
 	 * @return the all state code
 	 */
-	public int getAllStateCode() {
+	public PTJLocalityCode getAllStateCode() {
 		return allStateCode;
 	}
 
@@ -5005,7 +5006,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 *
 	 * @param allStateCode the new all state code
 	 */
-	public void setAllStateCode(int allStateCode) {
+	public void setAllStateCode(PTJLocalityCode allStateCode) {
 		this.allStateCode = allStateCode;
 	}
 

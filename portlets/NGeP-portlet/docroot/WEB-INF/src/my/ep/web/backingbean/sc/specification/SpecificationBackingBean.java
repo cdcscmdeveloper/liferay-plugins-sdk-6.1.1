@@ -161,6 +161,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.PTJLocalityCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
@@ -1959,7 +1960,7 @@ public class SpecificationBackingBean extends
 					if (scQt.getEstimatedAmount().intValue() > 500000
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())
-							&& this.getManagedBean().getAllStateCode() == 3
+							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
@@ -2028,7 +2029,7 @@ public class SpecificationBackingBean extends
 					if (scQt.getEstimatedAmount().intValue() > 500000
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())
-							&& this.getManagedBean().getAllStateCode() == 3
+							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
@@ -4166,7 +4167,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setAllStateCode(orgResDto.getStateStatusId());
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCATION_LEVEL_STATE);
-		if (this.getManagedBean().getAllStateCode() == 2) {
+		if (this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_SARAWAK) {
 			types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
 		}
 		types.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
@@ -5864,7 +5865,7 @@ public class SpecificationBackingBean extends
 			if (SourcingConstants.QT_TYPE_OPEN.equalsIgnoreCase(scQt
 					.getQtType())) {
 				if (scQt.getEstimatedAmount().intValue() > 500000
-						&& this.getManagedBean().getAllStateCode() == 3
+						&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 						&& null != scQt.getScQtSupplierCriteria()
 						&& !scQt.getScQtSupplierCriteria().isAllState()) {
 					scQt.getScQtSupplierCriteria().setAllState(true);
@@ -14109,7 +14110,7 @@ public class SpecificationBackingBean extends
 		ScQt scQt = getManagedBean().getScQt();
 		int estimatedAmt = scQt.getEstimatedAmount().intValue();
 		if (estimatedAmt >= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
-			if (getManagedBean().getAllStateCode() != 3
+			if (getManagedBean().getAllStateCode() != PTJLocalityCode.STATE_PENINSULAR
 					&& !scQtSupplierCriteria.isAllState()) {
 				if (null != scQtSupplierCriteria
 						&& null != scQtSupplierCriteria.getLocationLevel()) {
