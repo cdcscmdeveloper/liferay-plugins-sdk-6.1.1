@@ -72,7 +72,7 @@
 		   	         <h:outputText id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
 		       </p:column>
 			</p:dataTable> 
-       	<div class="ppRightBtn" style="padding-top:8px;">
+       	<div class="ppRightBtn">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
        	         partialSubmit="true" process="@this"	action="#{contractDetailsBackingBean.resetAgencyDetails}" 
        	        update=":form:agencyies" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">

@@ -22,7 +22,6 @@
 				<p:inputText value="#{data.name}" style="width:200px;" />
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="false" icon="ui-icon-add"
 				action="#{panelBackingBean.addCircularZone()}" update="circularZoneDt" />
@@ -63,8 +62,6 @@
 						conditionField="recordStatus^1" /> 					
 				</p:column>
 			</p:dataTable>
-			
-			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
 					disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}"

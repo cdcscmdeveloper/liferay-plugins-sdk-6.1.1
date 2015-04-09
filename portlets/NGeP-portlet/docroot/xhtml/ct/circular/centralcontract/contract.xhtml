@@ -50,7 +50,6 @@
 				           </p:selectOneMenu>
 			          </p:column>
 		         </p:dataTable>
-		         <p:spacer height="2" />
 		         <div class="ppRightBtn">
 			           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 				           oncomplete="contractDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"
@@ -251,7 +250,6 @@
 							value="#{contractListVar.latestContractVer.ctContractValue.supplierName}" />
 					</p:column>
 				</p:dataTable>
-				<p:spacer height="2" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						process="contractDlg" 
