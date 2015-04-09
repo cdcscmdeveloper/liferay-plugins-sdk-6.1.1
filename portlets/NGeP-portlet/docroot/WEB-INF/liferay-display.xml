@@ -193,6 +193,7 @@
 			<portlet id="viewSupplierProfile"></portlet>
 			<portlet id="taskStatusSearch"></portlet>
 			<portlet id="smDeactivateAdmin"></portlet>
+			<portlet id="DirectMofRegistration"></portlet>
 		</category>
 
 		<category name="Template">
