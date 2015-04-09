@@ -406,6 +406,7 @@ public class PpCommonUtil {
 				reqDTO = new ProcurementPlanReqDTO();
 				resDTO = new ProcurementPlanResDTO();
 				reqDTO.setOrgProfileId(orgProfileId);
+				reqDTO.setPlanTypeId(planTypeId);
 				reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 				resDTO = reqSO.retrieveExistingPlanYears(reqDTO);
 				if (resDTO.isSuccessful() && resDTO.getPlanYears()!=null) {
