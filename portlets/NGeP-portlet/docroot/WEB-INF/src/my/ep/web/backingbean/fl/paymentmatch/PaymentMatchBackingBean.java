@@ -1303,7 +1303,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				}
 				totalDeductionAmt = totalDeductionAmt.add(deduction.getDeductionAmt());
 				if(totalDeductionAmt.doubleValue() > getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().doubleValue()){
-					throw new EpException("Total deduction amount cannot more than invoice amount.");
+					throw new EpException(MessageConst.ERROR_100032, new String[]{
+							ResourceBundleUtils.getMessage("lbl.fl.payment.match.total.deduction",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+							ResourceBundleUtils.getMessage("lbl.fl.amount.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
 		}
@@ -1432,7 +1434,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	
 	public String navigateFulfilmentNote(FlFulfilmentNote fulfilmentNote){
-			System.out.println("Fulfilment Note  No "+fulfilmentNote.getFulfilmentNoteNo());
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFulfilmentNoteId(fulfilmentNote.getFulfilmentNoteId());
