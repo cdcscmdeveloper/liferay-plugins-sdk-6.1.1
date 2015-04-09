@@ -29,6 +29,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -55,6 +56,8 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -137,7 +140,6 @@ public class NoticeBoardBackingBean extends
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
 
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
-	private String mofNo;
 	private boolean visible;
 	private boolean displayImage;
 	
@@ -593,7 +595,7 @@ public class NoticeBoardBackingBean extends
 		/*ScQt scQt = new ScQt();
 		scQt.setQtId(qtId);*/
 		this.getManagedBean().setScQt(resDTO.getScQt());
-
+		
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
 	}
 
@@ -802,7 +804,7 @@ public class NoticeBoardBackingBean extends
 	public void checkSupplierQulificationStatus() {
 		
 		this.getManagedBean().setQualificationBean(null);
-		String mofNo = getMofNo();
+		String mofNo = this.getManagedBean().getMofNo();
 		setVisible(false);
 		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
 			throw new EpException("Mof No should not be Null or Empty");
@@ -1921,6 +1923,12 @@ public class NoticeBoardBackingBean extends
 			PmUser pmUser = fs.getUserSessionBean();
 			if (null != pmUser && null != pmUser.getUserId()) {
 				isUser = true;
+				
+				// Get MOF number of sign in supplier & set into mofNo property
+				// to pre populate in check supplier qualification criteria  screen.
+				if (this.getManagedBean().getMofNo() == null) {
+					this.getManagedBean().setMofNo(retrieveMofNo());
+				}
 			}
 
 		} catch (EpException exception) {
@@ -2085,20 +2093,6 @@ public class NoticeBoardBackingBean extends
 	public void setQtDataModel(IPagingDataModel<Object[]> qtDataModel) {
 		this.qtDataModel = qtDataModel;
 	}
-	
-	/**
-	 * @return the mofNo
-	 */
-	public String getMofNo() {
-		return mofNo;
-	}
-
-	/**
-	 * @param mofNo the mofNo to set
-	 */
-	public void setMofNo(String mofNo) {
-		this.mofNo = mofNo;
-	}
 
 	/**
 	 * @return the visible
@@ -2133,5 +2127,58 @@ public class NoticeBoardBackingBean extends
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * fetch the  mof number based on sign in supplier id
+	 * 
+	 * @return mofNO
+	 */
+	private String retrieveMofNo() {
+		
+		Long supplierId;
+		String mofNO = null;
+		IMofAccountSO mofAccountSO = null;
+		OrgProfileResDTO profileResDTO = getOrgProfile();
+
+		if (!profileResDTO.getOrgProfileList().isEmpty()
+				&& profileResDTO.getOrgProfileList().size() > 0) {
+			supplierId = profileResDTO.getOrgProfileList().get(0)
+					.getOrgProfileId();
+			try {
+				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IMofAccountSO.class);
+				MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+				reqDTO.setSupplierId(supplierId);
+				MofAccountResDTO resDTO = mofAccountSO
+						.retrieveMofNoBySupplierId(reqDTO);
+				if (resDTO.isSuccessful() && resDTO.getMofAccount() != null) {
+					mofNO = resDTO.getMofAccount().getMofNo();
+				}
+			} finally {
+				mofAccountSO = null;
+			}
+
+		}
+		
+		return mofNO;
+	}
+	private OrgProfileResDTO getOrgProfile(){
+		
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+			profileReqDTO.setUserId(new FacesScopes().getUserSessionBean()
+					.getUserId());
+			profileReqDTO.setOrgType(OrganizationType.SUPPLIER.value());
+			OrgProfileResDTO profileResDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(profileReqDTO);
+			return profileResDTO;
+		} finally {
+			orgProfileSO = null;
+		}
 	}
 }
