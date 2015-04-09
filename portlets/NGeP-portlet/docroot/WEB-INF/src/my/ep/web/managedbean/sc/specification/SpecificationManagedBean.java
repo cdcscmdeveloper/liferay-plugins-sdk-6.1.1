@@ -54,6 +54,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
@@ -576,7 +577,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String buttonOutCome;
 
 	/** The all state code. */
-	private int allStateCode;
+	private PTJLocalityCode allStateCode;
 
 	/** The is panel change. */
 	private boolean isPanelChange;
@@ -4215,7 +4216,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the all state code
 	 */
-	public int getAllStateCode() {
+	public PTJLocalityCode getAllStateCode() {
 		return allStateCode;
 	}
 
@@ -4225,7 +4226,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 * @param allStateCode
 	 *            the new all state code
 	 */
-	public void setAllStateCode(int allStateCode) {
+	public void setAllStateCode(PTJLocalityCode allStateCode) {
 		this.allStateCode = allStateCode;
 	}
 

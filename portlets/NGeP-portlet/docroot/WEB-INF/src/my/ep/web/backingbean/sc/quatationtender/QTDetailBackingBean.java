@@ -125,6 +125,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.type.sc.CommitteType;
@@ -1570,7 +1571,7 @@ public class QTDetailBackingBean extends
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			resDTO = committeSO.retrieveFinalizationSecratryDtls(reqDTO);
+			resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
 		} finally {
 			committeSO = null;
 		}
@@ -2130,7 +2131,7 @@ public class QTDetailBackingBean extends
 					}
 
 					if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND
-							&& this.getManagedBean().getAllStateCode() == 3
+							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
@@ -2185,7 +2186,7 @@ public class QTDetailBackingBean extends
 				} else {
 					ScQt scQt = this.getManagedBean().getQt();
 					if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND
-							&& this.getManagedBean().getAllStateCode() == 3
+							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
@@ -3951,7 +3952,7 @@ public class QTDetailBackingBean extends
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(qtId);
 		CommitteResDTO committeResDTO = committeSO
-				.retrieveFinalizationSecratryDtls(reqDTO);
+				.retrieveFinalizationCommitteeType(reqDTO);
 		List<PmParameter> finalizationSecreatry = committeResDTO
 				.getFinalizationSecratry();
 
