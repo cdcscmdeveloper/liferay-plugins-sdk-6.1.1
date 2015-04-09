@@ -441,16 +441,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 				
-				if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.last.remedy.start.date", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
-				if (getManagedBean().getContractVer().getCtTermination().getRemedyEndDate() == null) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.last.remedy.end.date", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-				
 				if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null
 						|| getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.recommended.agency", 
@@ -475,9 +465,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					throw new EpException(MessageConst.ERROR_750014);
 				}
 			}
-			
-			// Decision = remedy
-			if(this.getManagedBean().isRemedy()) {
+		
+			if (!getManagedBean().isMutualTermination()) {
 				if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.start.date", 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -487,29 +476,27 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.end.date", 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
+				
+				if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.ct.reason.termination", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}	
+				
+				if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
+						!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
+					  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
+						   if(reason.getClauseNo().length() == 0){
+							   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+						   if(reason.getDescription().length() == 0){
+							   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						   }
+					  }
+				}
 			}
-		}		
-		
-		//if (!getManagedBean().isMutualTermination()) {
-			if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-				throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.ct.reason.termination", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}	
-			
-			if(getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null && 
-					!getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().isEmpty()) {
-				  for(CtTerminationReason reason : getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons()){
-					   if(reason.getClauseNo().length() == 0){
-						   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					   }
-					   if(reason.getDescription().length() == 0){
-						   throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.clause.no", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					   }
-				  }
-			}
-		//}
+		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
