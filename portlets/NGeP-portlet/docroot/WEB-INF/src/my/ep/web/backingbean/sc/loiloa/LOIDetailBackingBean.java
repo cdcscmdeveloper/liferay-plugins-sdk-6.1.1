@@ -2537,36 +2537,11 @@ public class LOIDetailBackingBean extends
 			ackDueDays = DateUtils.getDaysDifference(scLoi.getIssueDate(), scLoi.getAckDueDate()) + "";
 		}
 		context.put("ackDueDays", ackDueDays);
-		
-		IUserSO userSO = null;
-		try {
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			
-			Long createdBy = scLoi.getCreatedBy();
-			if (createdBy == null) {
-				createdBy = new FacesScopes().getUserSessionBean().getUserId();
-			}
-			
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(createdBy);
-			PmUser createdByUser = userSO.retrieveUserByUserId(userReqDTO)
-					.getPmUser();
-			
-			if (createdByUser != null) {
-				String officerName = createdByUser.getUserName();
-				officerName = officerName.replaceAll("&", "&#38;");
-				context.put("officerName", officerName);
-				
-				String officerDesignation = createdByUser.getDesignation();
-				officerDesignation = officerDesignation.replaceAll("&", "&#38;");
-				context.put("officerDesignation", officerDesignation);
-			}
-			
-		} finally {
-			userSO = null;
-		}
-		
+
+		context.put("loiSigner", scLoi.getLoiSigner());
+		context.put("loiSignerDesignation", scLoi.getLoiSignerDesig());
+
+
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOI_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
