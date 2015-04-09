@@ -44,7 +44,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			  
 			  <p:column headerText="#{lbl['lbl.ct.item.group']}" style="width:10%;">
-			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="8" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
+			       <ac:lov id="itemGroupLovId" lovId="CT_PANEL_ITEM_GROUP" size="6" headerText="#{lbl['lbl.ct.item.group']}" readonly="true" 
 						value="#{panelItemsVar.ctPanelItemGroup.groupName}" conditionField="recordStatus^1" 
 						saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].ctPanelItemGroup"
 						disabled="#{panelBackingBean.managedBean.viewContract}">
