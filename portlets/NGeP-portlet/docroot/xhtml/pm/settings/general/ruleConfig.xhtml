@@ -141,10 +141,9 @@
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
 				<p:inputText value="#{typeValueObj.fromValue}" size="15"
-					maxlength="18" id="fromValueId"
-					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}"
-					validator="#{webappBean.checkFloatField}"
-					>
+					maxlength="18" id="fromValueId" converter="DoubleConverter"
+					 converterMessage="#{lbl['lbl.pm.settings.double.value.error.msg']}"
+					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink])" />
 				</p:inputText>
@@ -157,9 +156,9 @@
 				                	#{lbl['lbl.pm.rule.to.value']}
 			                	</f:facet>
 				<p:inputText value="#{typeValueObj.toValue}" size="15"
-					maxlength="18" id="toValueId"
-					disabled="#{!(typeValueObj.brandNew)}"
-					validator="#{webappBean.checkFloatField}">
+					maxlength="18" id="toValueId" converter="DoubleConverter"
+                    converterMessage="#{lbl['lbl.pm.settings.double.value.error.msg']}"
+					disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink])" />
 					<p:ajax event="change"
@@ -229,7 +228,8 @@
 				<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
-				<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
+				<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}" 
+				   rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.brandNew}" style="width:100px;">
 					<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
