@@ -41,6 +41,7 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
@@ -63,6 +64,8 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
@@ -9055,5 +9058,31 @@ public class SmApplicationBackingBean extends
 		log.info("getManagedBean().getActiveCategoryList(): "
 				+ getManagedBean().getActiveCategoryList());
 
+	}
+	
+	public void prerenderDirectMofRegistration() {
+		
+		ISupplierSearchSO supplierSearchSO = null;
+		SmSupplier smSupplier = null;
+		try {
+			supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+	
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+			smSupplier = smResDTO.getResultBean().getResultList().get(0);
+		} finally {
+			supplierSearchSO = null;
+		}
+		
+		getManagedBean().setNewSupplierType(smSupplier.getSmAppl().getSupplierType());
+		String prerenderUrl = proceedToApplication("N");
+		log.info("prerenderUrl: " + prerenderUrl);
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
+				"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 	}
 }
