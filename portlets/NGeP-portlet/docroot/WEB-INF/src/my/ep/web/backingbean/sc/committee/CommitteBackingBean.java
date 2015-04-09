@@ -591,10 +591,10 @@ public class CommitteBackingBean extends
 		String committeeType = getManagedBean().getScCommittee()
 				.getCommitteeType().getParameterCode();
 		log.info("Committee Type : " + committeeType);
-		if (committeeType.equalsIgnoreCase("OC")
-				|| committeeType.equalsIgnoreCase("EC")
-				|| committeeType.equalsIgnoreCase("TEC")
-				|| committeeType.equalsIgnoreCase("FEC")) {
+		if (committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)
+				|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)
+				|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)
+				|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			PmParameter commType = scQtCommittee.getScCommittee()
 					.getCommitteeType();
@@ -647,9 +647,12 @@ public class CommitteBackingBean extends
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
 
-		} else if (committeeType.equals("QCB") || committeeType.equals("QCA")
-				|| committeeType.equals("PBB") || committeeType.equals("PBA")
-				|| committeeType.equals("PBS") || committeeType.equals("PBQ")) {
+		} else if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
+				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
+				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B) 
+				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)
+				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			PmParameter commType = scQtCommittee.getScCommittee()
 					.getCommitteeType();
@@ -664,24 +667,24 @@ public class CommitteBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 				qtCommitte = resDTO.getScQtCommittee();
-				if ("QCB".equalsIgnoreCase(committeeType)
-						|| "QCA".equalsIgnoreCase(committeeType)) {
+				if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+						|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)) {
 					SelectItem[] qcItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
 					this.getManagedBean().setRepresentativesTypeslist(
 							Arrays.asList(qcItems));
-				} else if ("PBB".equalsIgnoreCase(committeeType)) {
+				} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
 					SelectItem[] pbbItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
 					this.getManagedBean().setRepresentativesTypeslist(
 							Arrays.asList(pbbItems));
-				} else if ("PBA".equalsIgnoreCase(committeeType)) {
+				} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)) {
 					SelectItem[] pbaItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
 					this.getManagedBean().setRepresentativesTypeslist(
 							Arrays.asList(pbaItems));
-				} else if ("PBS".equalsIgnoreCase(committeeType)) {
+				} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)) {
 					SelectItem[] fpbhItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH);
 					this.getManagedBean().setRepresentativesTypeslist(
 							Arrays.asList(fpbhItems));
-				} else if ("PBQ".equalsIgnoreCase(committeeType)) {
+				} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
 					SelectItem[] fpbkItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
 					this.getManagedBean().setRepresentativesTypeslist(
 							Arrays.asList(fpbkItems));
@@ -717,7 +720,8 @@ public class CommitteBackingBean extends
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
 
-		} else if (committeeType.equals("BO") || committeeType.equals("SC")) {
+		} else if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER) 
+				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			PmParameter commType = scQtCommittee.getScCommittee()
 					.getCommitteeType();
@@ -1902,16 +1906,16 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setScCommittee(qtCommittee.getScCommittee());
 			this.getManagedBean().setQt(qtCommittee.getScQt());
 			String representitiveType = null;
-			if ("QCB".equalsIgnoreCase(committeeType)
-					|| "QCA".equalsIgnoreCase(committeeType)) {
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)) {
 				representitiveType = ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-			} else if ("PBB".equalsIgnoreCase(committeeType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
 				representitiveType = ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
-			} else if ("PBA".equalsIgnoreCase(committeeType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)) {
 				representitiveType = ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
-			} else if ("PBS".equalsIgnoreCase(committeeType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)) {
 				representitiveType = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
-			} else if ("PBQ".equalsIgnoreCase(committeeType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
 				representitiveType = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
 			}
 			SelectItem[] pbaItems = getDropdownValues(representitiveType);
