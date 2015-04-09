@@ -66,9 +66,10 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 				System.out.println("ISearchResultBean<ScRequestNote>");
 
 				if(getSearchDocumentType()!=null && getSearchDocumentType()!="") {
-					System.out.println("transactionType");
+					System.out.println("getSearchDocumentType" + getSearchDocumentType());
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getSearchDocumentType()));
-					if(getSearchDocumentType()=="LA") {
+					if(getSearchDocumentType().equalsIgnoreCase("LA")) {
+						System.out.println("LA");
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("MOD",SearchOperator.OPERATOR_EQUALS.value(),ModuleCodeConst.DIRECT_PURCHASE));
 					}
 				}
