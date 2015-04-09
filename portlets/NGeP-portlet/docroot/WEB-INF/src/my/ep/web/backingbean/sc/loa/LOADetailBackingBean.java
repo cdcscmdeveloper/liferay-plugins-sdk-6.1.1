@@ -1536,12 +1536,8 @@ public class LOADetailBackingBean extends
 			contractEffDate = dateSDF.format(scLoa.getContractEffDate());
 		}
 		context.put("contractEffDate", contractEffDate);
-		if (scLoa.getContractSigner() != null) {
-			context.put("contractSigner", scLoa.getContractSigner()
-					.getUserName());
-			context.put("contractSignerDesignation", scLoa.getContractSigner()
-					.getDesignation());
-		}
+		context.put("loaSigner", scLoa.getLoaSigner());
+		context.put("loaSignerDesignation", scLoa.getLoaSignerDesig());
 
 		// Supplier user details
 		String supplierUser = "";
