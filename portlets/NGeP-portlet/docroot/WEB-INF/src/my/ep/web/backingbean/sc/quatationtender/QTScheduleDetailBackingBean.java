@@ -62,6 +62,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
@@ -628,12 +629,13 @@ public class QTScheduleDetailBackingBean extends
 			BriefingResDTO briefingResDTO = briefingSO
 					.retrieveRegistartionDtlsByQt(briefingReqDTO);
 
-			ScQtApproval approval = briefingResDTO.getApproval();
-
+			List<ScQtApprovalRequest> approvalRequests = briefingResDTO
+					.getApprovalRequests();
+			ScQtApproval approval = approvalRequests.get(0).getScQtApproval();
 			approval.setScQtApprovalRemarks(initializeRemarks(approval, null,
 					approval.getScQtApprovalRemarks(), ScQtApprovalRemark.class));
 			this.getManagedBean().setScQtApproval(approval);
-
+			this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
 			this.getManagedBean().setQt(briefingResDTO.getScQt());
 			this.getManagedBean().setBriefingRegistrationList(
 					briefingResDTO.getBriefingRegResultBean().getResultList());
@@ -675,7 +677,7 @@ public class QTScheduleDetailBackingBean extends
 		try {
 			List<ScQtBsvRegistration> registrations = this.getManagedBean()
 					.getBriefingRegistrationList();
-			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+			if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
 				for (ScQtBsvRegistration registration : registrations) {
 					registration
 							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
