@@ -82,7 +82,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					    disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo !=null 
 						    and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''}">
 	            			<f:selectItems value="#{taskAssignBackingBean.getRoleList()}" />
-	            			<p:ajax event="change" process="@this"  partialSubmit ="true" update="@this"/> 
+	            			<p:ajax event="change" process="@this"  partialSubmit ="true" update="@this,:form:lovDocType:lovDocType"/> 
 	       				 </p:selectManyCheckbox>
        				</div>
 				</td>
@@ -125,6 +125,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:ajax event="blur" listener="#{taskAssignBackingBean.onChangeUser()}" 
 				     		update=":form:pTaskAssignSearch"/> 
 					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.pm.ta.docno.tooltips']}" />
 				</td>
 				
 				<td width="30%">
