@@ -65,7 +65,8 @@
                 		<h:outputText value="#{lbl['lbl.ct.days']}" />
                 	</td>                	
                 	</h:panelGroup>   
-                	<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}">
+                	<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement
+                		and contractDetailsBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractCreation}">
                 	<td class="columnWidth150">
 						<p:outputLabel id="centralSignDate1" value="#{lbl['lbl.ct.signed.date']}" />
 					</td> 
