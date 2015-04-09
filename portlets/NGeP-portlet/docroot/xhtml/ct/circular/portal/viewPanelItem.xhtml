@@ -197,7 +197,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			          <ac:paginator for="itemSupplierDt" />
 				  
 				      <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:27%;white-space:normal;">
-				           <p:outputLabel value="#{supVar.supplier.companyName}" style="float:left;"/>
+				           <p:commandLink update="@([id$=suppDtlPopUp])" style="float:left;"
+								action="#{panelBackingBean.showSupplierDetails(supVar.supplier)}"
+								oncomplete="suppDtlWidgetVar.show();">
+								<h:outputText value="#{supVar.supplier.companyName}" />
+							</p:commandLink>
 			          </p:column>
 				
 				      <p:column headerText="#{lbl['lbl.ct.business.reg.no']}"  style="width:10%;"> 
@@ -231,5 +235,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			</p:dataTable>
 	    </h:panelGroup>	
 	  </p:outputPanel>
+	  <!-- Supplier Details PopUp -->
+	  <ui:include src="/xhtml/ct/circular/panel/supplierDetailsPopUp.xhtml" />
 	</p:panel>
 </ui:composition>
