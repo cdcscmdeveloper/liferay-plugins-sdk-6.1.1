@@ -24,7 +24,6 @@
 							<p:inputText value="#{circularZoneVar.deliveryTerm}" maxlength="4" label="#{lbl['lbl.ct.delivery.term']}" />
 						</p:column>						
 					</p:dataTable>
-					<p:spacer height="2" />
 					<div class="ppRightBtn"> 
 						<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="false" 
 							action="#{centralContractBackingBean.addCircularZone('C')}" update="circularZoneDt" />
@@ -60,8 +59,6 @@
 									conditionField="recordStatus^1" /> 					
 							</p:column>
 						</p:dataTable>
-						
-						<p:spacer height="2" />
 						<div class="ppRightBtn"> 
 							<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 								disabled="#{centralContractBackingBean.managedBean.selectedCircularZone == null}"
@@ -98,7 +95,6 @@
 							<p:inputText value="#{itemZoneVar.name}" style="width:400px;" />
 						</p:column>			
 					</p:dataTable>
-					<p:spacer height="2" />
 					<div class="ppRightBtn"> 
 						<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="false" 
 							action="#{centralContractBackingBean.addCircularZone('I')}" update="itemZoneDt" />
@@ -134,8 +130,6 @@
 									conditionField="recordStatus^1" /> 					
 							</p:column>
 						</p:dataTable>
-						
-						<p:spacer height="2" />
 						<div class="ppRightBtn"> 
 							<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 								disabled="#{centralContractBackingBean.managedBean.selectedItemZone == null}"

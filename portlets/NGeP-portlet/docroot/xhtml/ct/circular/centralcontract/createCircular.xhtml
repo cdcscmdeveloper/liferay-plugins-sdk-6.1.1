@@ -43,7 +43,6 @@
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
 			   action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt"
@@ -135,7 +134,6 @@
 				<h:outputText value="#{cancelCircularVar.circularVer.name}" />
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"  oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
 				actionListener="#{centralContractBackingBean.addCancelCircularListener()}" 
@@ -161,7 +159,6 @@
 					<h:outputText value="#{cancelledCircularDlgVar.circularVer.name}" style="width:300px;" />
 				</p:column>									
 			</p:dataTable>
-			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"  process="cancelCircularDlg" 
 					action="#{centralContractBackingBean.addCancelledCircular}"
