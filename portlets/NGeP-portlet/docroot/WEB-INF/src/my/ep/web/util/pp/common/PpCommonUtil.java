@@ -393,7 +393,7 @@ public class PpCommonUtil {
 		return pmOrgProfile;
 	}
 	
-	public static List<Long> getExistingPlanYear(Long userId, Long orgProfileId) {
+	public static List<Long> getExistingPlanYear(Long userId, Long orgProfileId,Long planTypeId) {
 		log.info("getExistingPlanYear");
 		
 		ProcurementPlanReqDTO reqDTO = null;
@@ -488,13 +488,13 @@ public class PpCommonUtil {
 	 * retrieve plan year options for current year & current year +1
 	 * @return plan year options
 	 */
-	public static SelectItem[] getPlanYearOptions(Long userId, Long orgProfileId) {
+	public static SelectItem[] getPlanYearOptions(Long userId, Long orgProfileId,Long planTypeId) {
 		log.info("getPlanYearOptions - Start");
 		SelectItem[] items = new SelectItem[1];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		
 		
-		List<Long> planYears = getExistingPlanYear(userId, orgProfileId);
+		List<Long> planYears = getExistingPlanYear(userId, orgProfileId,planTypeId);
 		List<Long> years = new ArrayList<Long>();
 		Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		Integer nextYear = currentYear + 1;
