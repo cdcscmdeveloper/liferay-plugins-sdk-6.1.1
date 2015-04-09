@@ -4513,8 +4513,10 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("selectAllItemsEvent");
 
 		this.getManagedBean().setItemRowSelect(false);
-		List<ScQtRecommend> selectedItemsList = this.getManagedBean()
-				.getItemList();
+		List<ScQtRecommend> selectedItemsList = new ArrayList<ScQtRecommend>();
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getItemList())) {
+			selectedItemsList.addAll(this.getManagedBean().getItemList());
+		}
 		if (selectAll) {
 			if (CollectionUtils.isNotEmpty(selectedItemsList)) {
 				for (ScQtRecommend scQtRecommend : selectedItemsList) {
