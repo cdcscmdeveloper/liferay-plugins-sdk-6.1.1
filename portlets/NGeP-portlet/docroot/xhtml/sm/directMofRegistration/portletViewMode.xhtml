@@ -9,11 +9,11 @@
 
 	<ui:define name="contentSection">
 
-	
 		#{i18n['DirectMofRegistration-hello-world']} in view mode.
-
-
-
+		<h:panelGroup id="directMofRegistrationPanel">
+			<f:event listener="#{backingBean.prerenderDirectMofRegistration}" 
+				type="preRenderView" />	
+		</h:panelGroup>
 
 	</ui:define>
 
