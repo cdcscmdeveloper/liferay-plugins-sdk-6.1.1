@@ -103,13 +103,8 @@
 					   <h:outputText value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" />
 					</p:column>
 				</p:dataTable>
-				<div>
-		   		<table style="width:100%; margin-top:5px">
-				<tr><td class="TableFieldLeft" width="80%"></td>
-			 	<td>
-			   	<table><tr>
-			   		<td>
-			   		<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE"
+				<div class="ppRightBtn">
+					<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE"
 						postUpdateListener="contractDetailsBackingBean.addDeliveryAddress(contractDetailsBackingBean.managedBean.addressTypeList)"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.btn.add']}"
@@ -119,16 +114,9 @@
 						update=":form:deliveryAddressTbl"
 						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
 					<ac:lovPopup />
-					</td>
-					<td>
-				    <p:commandButton id="delAddressBtn" value="#{lbl['lbl.btn.delete']}" 
+					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.btn.delete']}" 
 				     	 process="@this" onclick="delAddressDlg.show()" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
-					</td>
-				</tr></table>
-				</td>
-			    </tr>
-				</table>
-	      		</div>
+				</div>
 		      	<p:dialog id="delAddressDlg" widgetVar="delAddressDlg"
 			   		styleClass="screen-title" modal="true" width="330">  
 	           		<h:panelGrid columns="3">
