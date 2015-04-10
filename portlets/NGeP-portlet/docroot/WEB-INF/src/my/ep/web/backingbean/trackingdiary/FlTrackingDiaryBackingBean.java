@@ -12,8 +12,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -290,12 +292,11 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocId());
 			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocType());
 			SearchFilterBean searchFilterBean4 = new SearchFilterBean("groupId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocId());
-//			new SearchMultiFilterBean(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocType()), 
-//					new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocId()));
-//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvFlDocument().getDocNo()));
-			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(new SearchMultiFilterBean(searchFilterBean1,SearchCondition.CONDITION_AND.value(),searchFilterBean2),
-							SearchCondition.CONDITION_OR.value(),
-							new SearchMultiFilterBean(searchFilterBean3,SearchCondition.CONDITION_AND.value(),searchFilterBean4)));
+			
+			BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);
+			BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
+			BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
+			searchBean.getDataFilterBeans().add(multiFilterBean3);
 			System.out.println("Fl TrackingDiary docNo " + getManagedBean().getvFlDocument().getDocNo());
 			System.out.println("Fl TrackingDiary DocType " + getManagedBean().getvFlDocument().getDocType());
 
