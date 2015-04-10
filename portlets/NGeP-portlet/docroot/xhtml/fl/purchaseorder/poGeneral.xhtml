@@ -90,11 +90,6 @@
 					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.approver.date']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" /> <p:spacer
-						width="5" /> <p:inputText size="2" value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.pmUom)}" disabled="true" /></td>
-			</tr>
-			<tr>
 				<td><p:outputLabel styleClass="highlight-mark" value="#{lbl['lbl.fl.po.factored']} " /></td>
 				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null or flOrderBB.managedBean.fulfilmentOrder.status.statusId eq FulfilmentStatusCont.poPendingRejAck or flOrderBB.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" 
 						value="#{flOrderBB.managedBean.factoringCheck}">
@@ -104,6 +99,13 @@
 							listener="#{flOrderBB.factoringChecked}" update="@(.factStyle)"
 							partialSubmit="true" />
 					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><p:inputText size="12" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" /> <p:spacer
+						width="5" /> <p:inputText size="2" value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.pmUom)}" disabled="true" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.startDate}">
