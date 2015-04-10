@@ -329,6 +329,7 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_PROCESSING_OFFICER = "20112";
 	public static final String PM_STATUS_REJECTED_BY_APPROVER = "20113";
 	public static final String PM_STATUS_APPROVED_BY_APPROVER = "20113";
+	public static final String PM_STATUS_REJECTED_BY_SYSTEM = "20118";
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";

@@ -87,6 +87,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -191,84 +192,142 @@ public class SmApplicationBackingBean extends
 	 * Pre-render re-submission questionnaire page.
 	 */
 	public void prerenderResubmissionQuestionaire() {
-		log.info("**** Prerender Questions *************");
-
-		HttpServletRequest originalServletRequest = new FacesScopes()
-				.getOriginalServletRequest();
-		String applId = originalServletRequest.getParameter("apId");
-
-		log.info("application id : " + applId);
-		SmAppl appl = null;
-		SmSupplier supplierProfile = null;
-		String xhtml = "/xhtml/sm/resubmitApplication/prerenderResubmitApplication.xhtml";
+		IMofRegistrationSO mofRegistrationSO = null;
 		try {
+			log.info("**** Prerender Questions *************");
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			HttpServletRequest originalServletRequest = new FacesScopes()
+					.getOriginalServletRequest();
+			String applId = originalServletRequest.getParameter("apId");
+
+			log.info("application id : " + applId);
+			SmAppl rejAppl = null;
+			SmSupplier supplierProfile = null;
+			String xhtml = "/xhtml/sm/resubmitApplication/prerenderResubmitApplication.xhtml";
 			if (applId != null) {
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = SmApplicationUtil.retriveApplicationById(Integer
 						.parseInt(applId));
-				appl = mofResDto.getSmAppl();
+				rejAppl = mofResDto.getSmAppl();
 				supplierProfile = mofResDto.getSmSupplier();
 			}
-		} finally {
-		}
-		this.getManagedBean().setValidResubmit(true);
-		if (appl != null && supplierProfile != null) {
-			boolean activeExist = false;
-			activeExist = SmApplicationUtil
-					.checkActiveSmApplForSupp(supplierProfile);
-			SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(appl
-					.getApplId());
-			if (sts != null && sts.getPmStatus() != null
-					&& sts.getPmStatus().getStatusId() != null) {
-				if (sts.getPmStatus()
-						.getStatusId()
-						.compareTo(
-								SupplierManagementConst.PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED) == 0
-						|| sts.getPmStatus()
-								.getStatusId()
-								.compareTo(
-										SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED) == 0) {
-					getManagedBean().setResubmitInValidMsg(
-							SmCommonUtil.getMessage(
-									"lbl.sm.approvedApplicationCantProceed",
-									null));
-					this.getManagedBean().setValidResubmit(false);
-				} else if (sts
-						.getPmStatus()
-						.getStatusId()
-						.compareTo(
-								SupplierManagementConst.PM_STATUS_PENDING_PAYMENT) == 0) {
-					getManagedBean()
-							.setResubmitInValidMsg(
-									SmCommonUtil
-											.getMessage(
-													"lbl.sm.approvedApplicationPendingFinalPay",
-													null));
-					this.getManagedBean().setValidResubmit(false);
-				}
 
-			}
-			if (this.getManagedBean().isValidResubmit()) {
+			this.getManagedBean().setValidResubmit(true);
+			if (rejAppl != null && supplierProfile != null) {
+				boolean activeExist = false;
+				activeExist = SmApplicationUtil
+						.checkActiveSmApplForSupp(supplierProfile);
+				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(rejAppl
+						.getApplId());
+
 				if (!activeExist) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					if (!appl.getApplType().equalsIgnoreCase(
-							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-						QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-						quesBackingBean.getManagedBean().setTargetUrl(xhtml);
-						quesBackingBean.getManagedBean().setSmSupp(
-								supplierProfile);
-						quesBackingBean.getManagedBean().setSmAppl(appl);
-						quesBackingBean.retrieveQuestionnaire();
-						fc.getApplication()
-								.getNavigationHandler()
-								.handleNavigation(fc, null,
-										"/xhtml/sm/questionnaire/questionnaireView.xhtml");
-						getManagedBean().setSmAppl(appl);
-						getManagedBean().setSmSupplier(supplierProfile);
-					} else {
-						getManagedBean().setSmAppl(appl);
-						getManagedBean().setSmSupplier(supplierProfile);
-						prerenderApplicationForResubmission();
+					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+					reqDTO.setCreatedDate(rejAppl.getCreatedDate());
+					reqDTO.setSupplierId(supplierProfile.getSupplierId());
+					reqDTO.setAppType(rejAppl.getApplType());
+
+					MofRegistrationResDTO resDto = null;
+					// 1.1. Check for resubmitted and rejected
+					StringBuilder sb = new StringBuilder();
+					sb.append("(")
+							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+							.append(",")
+							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+							.append(",")
+							.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+							.append(")");
+					reqDTO.setWorkflowStatus(sb.toString());
+					resDto = mofRegistrationSO
+							.checkForApplicationDuplicateResubmission(reqDTO);
+					if (resDto != null && resDto.getResubmitApplnCount() > 0) {
+						getManagedBean()
+								.setResubmitInValidMsg(
+										SmCommonUtil
+												.getMessage(
+														"lbl.sm.resubmitAndRejectApplicationCantProceed",
+														null));
+						this.getManagedBean().setValidResubmit(false);
+					}
+					// 1.2 Check for resubmitted and approved
+					if (this.getManagedBean().isValidResubmit()) {
+						sb = new StringBuilder();
+						sb.append("(")
+								.append(SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED)
+								.append(",")
+								.append(SupplierManagementConst.PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED)
+								.append(")");
+						reqDTO.setWorkflowStatus(sb.toString());
+						resDto = mofRegistrationSO
+								.checkForApplicationDuplicateResubmission(reqDTO);
+						if (resDto != null
+								&& resDto.getResubmitApplnCount() > 0) {
+							getManagedBean()
+									.setResubmitInValidMsg(
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.approvedApplicationCantProceed",
+															null));
+							this.getManagedBean().setValidResubmit(false);
+						}
+					}
+					// 1.3 Check for resubmitted and pending final payment
+					if (this.getManagedBean().isValidResubmit()) {
+						sb = new StringBuilder();
+						sb.append("(")
+								.append(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
+								.append(")");
+						reqDTO.setWorkflowStatus(sb.toString());
+						resDto = mofRegistrationSO
+								.checkForApplicationDuplicateResubmission(reqDTO);
+						if (resDto != null
+								&& resDto.getResubmitApplnCount() > 0) {
+							getManagedBean()
+									.setResubmitInValidMsg(
+											SmCommonUtil
+													.getMessage(
+															"lbl.sm.approvedApplicationPendingFinalPay",
+															null));
+							this.getManagedBean().setValidResubmit(false);
+						}
+					}
+					if (this.getManagedBean().isValidResubmit() && rejAppl.getCreatedDate().compareTo(
+							supplierProfile.getSmAppl().getCreatedDate()) < 0) {
+						getManagedBean().setResubmitInValidMsg(
+								SmCommonUtil.getMessage(
+										"lbl.sm.anotherApplApproved", null));
+						this.getManagedBean().setValidResubmit(false);
+					}
+					if (this.getManagedBean().isValidResubmit()) {
+						FacesContext fc = FacesContext.getCurrentInstance();
+						MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
+						mofReqDto.setApplId(Long.parseLong(applId));
+						mofReqDto.setSmSupplier(supplierProfile);
+						MofRegistrationResDTO mofRespDto = mofRegistrationSO
+								.cloneSmApplicationForResubmissionDraft(mofReqDto);
+						SmAppl clnAppl = mofRespDto.getSmAppl();
+						SmSupplier supp = mofRespDto.getSmSupplier();
+						if (!clnAppl.getApplType().equalsIgnoreCase(
+								ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+							QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+							quesBackingBean.getManagedBean()
+									.setTargetUrl(xhtml);
+							quesBackingBean.getManagedBean().setSmSupp(
+									supplierProfile);
+							quesBackingBean.getManagedBean().setSmAppl(clnAppl);
+							quesBackingBean.retrieveQuestionnaire();
+							fc.getApplication()
+									.getNavigationHandler()
+									.handleNavigation(fc, null,
+											"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+							getManagedBean().setSmAppl(clnAppl);
+							getManagedBean().setSmSupplier(supp);
+						} else {
+							getManagedBean().setSmAppl(clnAppl);
+							getManagedBean().setSmSupplier(supp);
+							prerenderApplicationForResubmission();
+						}
 					}
 				} else {
 					getManagedBean().setResubmitInValidMsg(
@@ -277,13 +336,16 @@ public class SmApplicationBackingBean extends
 					this.getManagedBean().setValidResubmit(false);
 
 				}
+
+			} else {
+				getManagedBean().setResubmitInValidMsg(
+						SmCommonUtil.getMessage("lbl.sm.resubmission.invalid",
+								null));
+				// redirect & display resubmit expired
+				this.getManagedBean().setValidResubmit(false);
 			}
-		} else {
-			getManagedBean().setResubmitInValidMsg(
-					SmCommonUtil
-							.getMessage("lbl.sm.resubmission.invalid", null));
-			// redirect & display resubmit expired
-			this.getManagedBean().setValidResubmit(false);
+		} finally {
+			mofRegistrationSO = null;
 		}
 
 	}
@@ -323,9 +385,9 @@ public class SmApplicationBackingBean extends
 			c.add(Calendar.DATE, 60);
 			Date d = c.getTime();
 			getManagedBean().getSmAppl().setDraftExpiryDate(d);
-			String newApplNum = SmApplicationUtil.generateApplicationNum(
-					getManagedBean().getSmAppl().getApplType(),
-					getManagedBean().getSmAppl().getSupplierType());
+//			String newApplNum = SmApplicationUtil.generateApplicationNum(
+//					getManagedBean().getSmAppl().getApplType(),
+//					getManagedBean().getSmAppl().getSupplierType());
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null
 					&& !getManagedBean().getSmAppl().getSmApplSectionReviews()
 							.isEmpty()) {
@@ -337,9 +399,9 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setRecordStatusFlg(
 						DbValueConst.RECORD_STATUS_ACTIVE);
 			}
-			if (newApplNum != null) {
-				getManagedBean().getSmAppl().setApplNo(newApplNum);
-			}
+			// if (newApplNum != null) {
+			// getManagedBean().getSmAppl().setApplNo(newApplNum);
+			// }
 			getManagedBean().getSmAppl().setQuestionnaire(false);
 			if (getManagedBean().getSmAppl().getSmSvTasks() != null
 					&& !getManagedBean().getSmAppl().getSmSvTasks().isEmpty()) {
@@ -1299,11 +1361,15 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					// calcPersonnelListCount();
 					displayBumiRecommendNote();
+					assignApplicationRegistrationStatus(getManagedBean()
+							.getSmAppl().getPmRegStatus());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					// calcPersonnelListCount();
 					displayBumiRecommendNote();
+					assignApplicationRegistrationStatus(getManagedBean()
+							.getSmAppl().getPmRegStatus());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
@@ -3371,7 +3437,8 @@ public class SmApplicationBackingBean extends
 				// "smCatCodesRenewApplDtWidVar.paginator.endLink.click()");
 			}
 			saveOrUpdateAppl();
-			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+			SmApplicationUtil
+					.assignActiveAndApprovedCategoryList(getManagedBean());
 			assignValReqdToFalse();
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
@@ -8260,6 +8327,35 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Assign Application Registration Status
+	 * 
+	 * @param regStatus
+	 *            - PmRegStatus object
+	 */
+	private void assignApplicationRegistrationStatus(PmRegStatus regStatus) {
+		if (getManagedBean().getSmAppl().getPmRegStatus() != null
+				&& getManagedBean().getSmAppl().getPmRegStatus().getPmStatus() != null) {
+			log.info("****** reg Status Id ******"
+					+ regStatus.getPmStatus().getStatusId());
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(regStatus.getPmStatus().getStatusId());
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
+					.getLanguage());
+			IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+			StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
+			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+				getManagedBean().setApplRegStatus(
+						resDTO.getPmStatusDesc().getStatusName());
+			} else {
+				getManagedBean().setApplRegStatus(" ");
+			}
+		} else {
+			getManagedBean().setApplRegStatus(" ");
+		}
+	}
+
+	/**
 	 * Assign value reqd to false when anyof the pop up is opened in the
 	 * screen.Used for enable and disable screen validation dynamically.
 	 */
@@ -9059,30 +9155,35 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getActiveCategoryList());
 
 	}
-	
+
 	public void prerenderDirectMofRegistration() {
-		
+
 		ISupplierSearchSO supplierSearchSO = null;
 		SmSupplier smSupplier = null;
 		try {
 			supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-	
+
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
-			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
 			smSupplier = smResDTO.getResultBean().getResultList().get(0);
 		} finally {
 			supplierSearchSO = null;
 		}
-		
-		getManagedBean().setNewSupplierType(smSupplier.getSmAppl().getSupplierType());
+
+		getManagedBean().setNewSupplierType(
+				smSupplier.getSmAppl().getSupplierType());
 		String prerenderUrl = proceedToApplication("N");
 		log.info("prerenderUrl: " + prerenderUrl);
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
-				"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 	}
 }
