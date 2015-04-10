@@ -2737,11 +2737,11 @@ public class SmApplicationBackingBean extends
 						.getSmCompanyExperienceCats().isEmpty())) {
 			throw new EpException(MessageConst.ERROR_722550);
 		}
-		if (getManagedBean().getSelectedCompanyExperience()
-				.getPaymentMethodId() == null) {
-			getManagedBean().getSelectedCompanyExperience().setPaymentMethodId(
-					new BigDecimal(0));
-		}
+		// if (getManagedBean().getSelectedCompanyExperience()
+		// .getPaymentMethodId() == null) {
+		// getManagedBean().getSelectedCompanyExperience().setPaymentMethodId(
+		// new BigDecimal(0));
+		// }
 		if (getManagedBean().getSmAppl().getSmCompanyExperiences()
 				.contains(getManagedBean().getSelectedCompanyExperience())) {
 			// TODO if any validation reqd for branch info

@@ -196,6 +196,17 @@
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.payMthd']}" />
+							</td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.projDtls.payMthd']}" id="supCnstntPayMthd"
+									value="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItems value="#{backingBean.getDropdownValues('PYM')}" />
+								</p:selectOneMenu> <p:message id="supCnstntPayMthdMsg" for="supCnstntPayMthd"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+						<tr>
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 							<td><p:selectOneRadio

@@ -178,6 +178,17 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.payMthd']}" />
+				</td>
+				<td><p:selectOneMenu label="#{lbl['lbl.sm.projDtls.payMthd']}"
+						id="supCntrctPayMthd"
+						value="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItems value="#{backingBean.getDropdownValues('PYM')}" />
+					</p:selectOneMenu> <p:message id="supCntrctPayMthdMsg" for="supCntrctPayMthd"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procMode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
@@ -198,12 +209,13 @@
 						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
 							itemValue="O" />
 					</p:selectOneRadio></td>
-					<td> &#160; <p:graphicImage id="tooltip" library="ep/images/design"
-										name="tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
-										<p:outputLabel escape="false"
-											value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
-									</p:tooltip>&#160;					
-					</td>
+				<td>&#160; <p:graphicImage id="tooltip"
+						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						id="toolinfo" for="tooltip">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
+					</p:tooltip>&#160;
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" />
