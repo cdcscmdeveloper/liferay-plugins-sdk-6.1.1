@@ -43,6 +43,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -64,6 +65,8 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.dtl.ContractZoneReqDTO;
+import my.ep.dto.ct.dtl.ContractZoneResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -2491,12 +2494,42 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	/**
-	 * The method used to retrieve the delivery address type.
-	 * 
-	 * @return delivery address type
-     */
-	public String getDeliveryAddressType() {
-		return AddressType.DELIVERY_ADDRESS.value();
+	 * The method used to retrieve the condition for construct the LOV listing
+	 * @return the condition
+	 */
+	public String getDeliveryAddressCondition() {
+		String condition = "recordStatus^1|addressType^" + AddressType.DELIVERY_ADDRESS.value()
+				+ "|pmOrgProfile.orgProfileId^" + this.getManagedBean().getSelectedAgency().getOrgProfile().getOrgProfileId();
+		
+		PmParameter locationLevel = getManagedBean().getContractVer().getCtContract().getLocationLevel();
+		if (locationLevel != null) {
+			IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractZoneSO.class);
+			ContractZoneReqDTO reqDTO = new ContractZoneReqDTO();
+			reqDTO.setCtContract(getManagedBean().getCtContract());
+			
+			ContractZoneResDTO resDTO = contractZoneSO.getContractZoneDtls(reqDTO);
+			String stateList = "";
+			String districtList = "";
+			
+			for (CtContractZoneDtl zoneDtl : resDTO.getZoneDtlList()) {
+				if (locationLevel.getParameterCode().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)
+						&& zoneDtl.getState() != null) {
+					stateList += zoneDtl.getState().getStateId() + ",";
+				}
+				if (locationLevel.getParameterCode().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)
+						&& zoneDtl.getDistrict() != null) {
+					districtList += zoneDtl.getDistrict().getDistrictId() + ",";
+				}
+			}
+			if (!stateList.isEmpty()) {
+				condition += "|pmAddress.pmState.stateId^" + stateList + "^" + SearchOperator.OPERATOR_IN.value();
+			}
+			if (!districtList.isEmpty()) {
+				condition += "|pmAddress.pmDistrict.districtId^" + districtList + "^" + SearchOperator.OPERATOR_IN.value();
+			}
+		}
+		return condition;
 	}
 	
 	/**
