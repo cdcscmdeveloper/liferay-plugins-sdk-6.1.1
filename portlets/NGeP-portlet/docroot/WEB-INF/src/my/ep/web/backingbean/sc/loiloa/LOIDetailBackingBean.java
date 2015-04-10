@@ -76,7 +76,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -118,6 +117,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.type.sc.TermType;
 import my.ep.util.MessageUtils;
+import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.CommonUIConst;
@@ -810,7 +810,27 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
-		retrieveLOIList(getManagedBean().getSourceId());
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setDocId(getManagedBean().getSourceId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
+		
+		if (resDTO.isSuccessful()) {
+			getManagedBean().setQt(resDTO.getScQt());
+			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
+			QtLOABackingBean qtLOABackingBean  = new QtLOABackingBean();
+			if (loiLoaList != null && loiLoaList.size() > 0) {
+				// qt loa list
+				qtLOABackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
+				qtLOABackingBean.getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
+				
+				// rec supplier in loi list
+				getManagedBean().setRecSupplierList(loiLoaList);
+				getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
+			}	
+		}
+		//retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 
