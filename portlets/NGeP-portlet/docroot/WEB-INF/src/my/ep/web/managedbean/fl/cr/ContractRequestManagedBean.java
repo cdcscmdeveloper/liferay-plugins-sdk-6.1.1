@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
+import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -65,6 +66,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmAddressType> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
 	private List<PmAddressType> selectedAddrTypeList;
+	private List<CtAgencyAddress> selectedAgencyAddressList;
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
 	private List<VCtActiveContract> activeContractList; 
@@ -2461,6 +2463,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setAgencyAddress(boolean agencyAddress) {
 		this.agencyAddress = agencyAddress;
+	}
+
+	public List<CtAgencyAddress> getSelectedAgencyAddressList() {
+		return selectedAgencyAddressList;
+	}
+
+	public void setSelectedAgencyAddressList(
+			List<CtAgencyAddress> selectedAgencyAddressList) {
+		this.selectedAgencyAddressList = selectedAgencyAddressList;
 	}
 
 }
