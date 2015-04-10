@@ -72,20 +72,20 @@
 			<tr>
 				<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
 				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}"
-						 action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeDebitAdjustmentNote)}"/> </td>
+						 action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeDebitAdjustmentNote)}" immediate="true"/> </td>
 				<td style="width:390px;"><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
 				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}"
-						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeCreditAdjustmentNote)}"/> </td>		 	
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeCreditAdjustmentNote)}" immediate="true"/> </td>		 	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
 				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo}"
-						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeStopDelivery)}"/>
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeStopDelivery)}" immediate="true"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.inst.no']}"/> </td>		
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.contract.no']}" /></td>
 				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
-						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.contract)}"/></td>	
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.contract)}" immediate="true"/></td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
@@ -102,7 +102,7 @@
     			<td><p:outputLabel value="#{lbl['lbl.fl.frn.no']}" /></td>
 				<td><p:dataList value="#{paymentMatchBackingBean.managedBean.fulfilmentNoteList}" var="frnList" type="unordered" itemType="none">
         				<p:commandLink value="#{frnList.fulfilmentNoteNo}" rendered="#{frnList.recordStatusFlg==1}"
-					 		action="#{paymentMatchBackingBean.navigateFulfilmentNote(frnList)}"/>
+					 		action="#{paymentMatchBackingBean.navigateFulfilmentNote(frnList)}" immediate="true"/>
     				</p:dataList></td>	
 			</tr>
 		</table>
@@ -136,7 +136,7 @@
 						value="#{lbl['lbl.fl.invoice.no']}" /></td>
 				<td>
 						<p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}"
-						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}"></p:commandLink>
+						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}" immediate="true"></p:commandLink>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
