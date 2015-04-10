@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.registration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -23,6 +24,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
@@ -43,6 +45,8 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -67,8 +71,8 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -89,6 +93,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -96,6 +101,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -231,6 +237,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//Validate GST No
 		validateGstRegNo();
+		
+		//check gst upload
+		checkIsFileUpload();
+		
 		if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
 				StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setGstRegistrationDate(null);
@@ -519,9 +529,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		/* set the temporary default value to supplier and appl type,
 		 * will change force the user to select upon activation
 		 *  */
-		 
 /*		smAppl.setApplType(SupplierManagementConst.TEMP_TYPE);
 		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);*/
+		
+		
+		/*
+		 * Gst FIle Upload
+		 */
+		
+		SmAttachment smAttachment = new SmAttachment();
+		if(getManagedBean().isGstFlag() && getManagedBean().getFileName() != null){
+			smAttachment = gstFileUpload();
+		}
+		/*if(getManagedBean().isGstFlag() && getManagedBean().getFileUpload().getFile() != null){
+			smAttachment = gstFileUpload();
+		}*/
+		
 		
 		/*
 		 * Add all related objects to Parent SmSupplier
@@ -532,12 +555,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		smSuppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 		smSupp.getSmSupplierOwners().add(smSuppOwner);
-
+		
 		/* Create Basic Account */
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		FacesScopes fs = new FacesScopes();
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		
+		if(smAttachment != null){
+			reqDTO.setSmAttachment(smAttachment);
+		}
 		
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
@@ -588,6 +615,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
+		
+/*		//update GST Attachment
+		if(getManagedBean().isGstFlag()){
+			if(getManagedBean().getSmAttachment() != null){
+				this.getManagedBean().setSmAttachment(getManagedBean().getSmAttachment());
+				this.getManagedBean().setFilePath(getManagedBean().getFilePath());
+				this.getManagedBean().setFileName(getManagedBean().getFileName());
+			}
+		}*/
 		
 		try{
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
@@ -1203,6 +1239,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
 			setDisableCompanyNameBusinessTypeInMaintenance();
+			
+			//set GST Flag
+			if(getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() != null && 
+					StringUtils.isNotBlank(getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
+				
+				ISmAttachmentSO smAttachmentSO = SmServiceLookup.getSmAttachmentSO();
+				SmAttachmentReqDTO smAttachmentReqDTO = new SmAttachmentReqDTO();
+				smAttachmentReqDTO.setDocId(resDTO.getSmSupp().getSupplierId());
+				smAttachmentReqDTO.setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
+				SmAttachmentResDTO smAttachmentResDTO  = smAttachmentSO.retrieveSmAttachmentByDocIdAndType(smAttachmentReqDTO);
+				if(smAttachmentResDTO.getAttachment() != null){
+					//setGstAttachment(smAttachmentResDTO.getAttachment());
+					getManagedBean().setGstFlag(true);
+					this.getManagedBean().setSmAttachment(smAttachmentResDTO.getAttachment());
+					this.getManagedBean().setFilePath(smAttachmentResDTO.getAttachment().getFilePath());
+					this.getManagedBean().setFileName(smAttachmentResDTO.getAttachment().getFileName());
+				}
+				
+			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
@@ -2029,29 +2084,136 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	
+	
 	public void handleFileUpload(FileUploadEvent event) throws Exception {
-		if (event.getFile() != null) {
-			log.info("***** File attached *******"+ event.getFile().getFileName());
-			if (getManagedBean().getSmAppl().getSmApplSupportDocs().contains("")) {
-				log.info("******* Contains selected file ****");
-				//SmApplSupportDoc doc = getManagedBean().getSupportDoc();
-				// StringUtils.replace(event.getFile().getFileName(), " ", "-");
-/*				doc.getSmApplDocFiles().get(0).setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
-				getManagedBean().getSmAppl().getSmApplSupportDocs().set(getManagedBean().getSmAppl().getSmApplSupportDocs().indexOf(getManagedBean().getSupportDoc()),
-				getManagedBean().getSupportDoc());*/
-				
-				String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + getManagedBean().getSmAppl().getApplNo()+ "/SD/";
-				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
-						.getSmApplSupportDocs()) {
-					log.info(" *** The name is ****"
-							+ docs.getSmApplDocFiles().get(0).getFileName());
-					docs.getSmApplDocFiles().get(0).setFilePath(filePath);
-				}
-
-				commonUploadFile(event, filePath);
+		if(event != null){
+			log.info("******handleFileUpload******");
+			//getManagedBean().setFileUpload(event);
+			//getManagedBean().getFileUpload().getFile().getFileName();
+	
+	       /* InputStream stream = getManagedBean().getFileUpload().getFile().getInputstream();
+	        StreamedContent media = new DefaultStreamedContent(stream, event.getFile().getContentType());
+	        
+	        getManagedBean().setMedia(media);
+	        
+	        
+			log.info("****FIle Name******"  + getManagedBean().getFileUpload().getFile().getFileName());
+			log.info("****Media******"  +getManagedBean().getMedia());
+			log.info("****Content type******"  +getManagedBean().getMedia().getContentType());*/
+			
+			String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "test" + "/SD/";
+			getManagedBean().setFileName(event.getFile().getFileName());
+			getManagedBean().setFilePath(filePath);
+			commonUploadFile(event, filePath);
+		}
+	}
+	
+	private SmAttachment gstFileUpload(){
+		//getManagedBean().getSmAppl().setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
+	
+		SmAttachment attachment = new SmAttachment();
+		//String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "test" + "/SD/";
+		
+		//attachment.setFileName(getManagedBean().getFileUpload().getFile().getFileName());
+		attachment.setFileName(getManagedBean().getFileName());
+		attachment.setFilePath(getManagedBean().getFilePath());
+		attachment.setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
+		
+		//commonUploadFile(getManagedBean().getFileUpload(), filePath);
+		
+		return attachment;
+	}
+	
+	private void checkIsFileUpload(){
+/*		if(getManagedBean().isGstFlag()){
+			if(getManagedBean().getFileUpload() == null){
+				throw new EpException(MessageConst.ERROR_721028);
+			}
+		}*/
+		
+		
+		if(getManagedBean().isGstFlag()){
+			if(getManagedBean().getFileName() == null){
+				throw new EpException(MessageConst.ERROR_721028);
 			}
 		}
 	}
+	
+	public void downloadUploadedFileDownload() throws IOException{
+		/*PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="+ getManagedBean().getFileUpload().getFile().getFileName());
+		response.setContentType("application/octet-stream");
+		response.flushBuffer();
+		
+		InputStream input = getManagedBean().getFileUpload().getFile().getInputstream();
+		OutputStream out = response.getOutputStream();
+		byte[] buffer = new byte[4096];
+		int bytesRead;
+		while ((bytesRead = this.getManagedBean().getMedia().read(buffer)) != -1) {
+			out.write(buffer, 0, bytesRead);
+			buffer = new byte[4096];
+		}
+		out.close();
+		input.close();
+		
+		return null;*/
+		
+		
+		log.info("-----------PATH------------" + this.getManagedBean().getFilePath() + this.getManagedBean().getFileName());
+		
+		try {
+			StreamedContent file = commonDownload(this.getManagedBean().getFilePath() + this.getManagedBean().getFileName(), this.getManagedBean().getFileName());
+        	
+        } catch (IOException e) {
+        	// TODO Auto-generated catch block
+        	log.info("****downloadUploadedFileDownload***" + e.getMessage());
+        	e.printStackTrace();
+        }
+	}
+	/*
+	private StreamedContent getOutputStreamContent(SmAttachment attachement) throws IOException{
+		if (attachement != null) {
+			File file = new File(attachement.getFilePath());
+			ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+			FileInputStream in = new FileInputStream(file);
+			byte[] buf = new byte[512];
+			int len;
+			while (true) {
+				len = in.read(buf);
+				if (len == -1) {
+					break;
+				}
+				tmpOut.write(buf, 0, len);
+			}
+			in.close();
+			tmpOut.close();
+			ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
+					tmpOut.size());
+
+			ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+
+			return new DefaultStreamedContent(stream);
+		} else {
+			return null;
+		}
+	}
+	
+	private void setGstAttachment(SmAttachment attachment){
+		try {
+			StreamedContent outputStream = getOutputStreamContent(attachment);
+			outputStream.getContentType();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			log.info("******e.printStackTrace()); 
+		}
+	}*/
 }
 
 
