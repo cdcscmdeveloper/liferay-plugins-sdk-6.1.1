@@ -292,8 +292,10 @@ public class SmApplicationBackingBean extends
 							this.getManagedBean().setValidResubmit(false);
 						}
 					}
-					if (this.getManagedBean().isValidResubmit() && rejAppl.getCreatedDate().compareTo(
-							supplierProfile.getSmAppl().getCreatedDate()) < 0) {
+					if (this.getManagedBean().isValidResubmit()
+							&& rejAppl.getCreatedDate().compareTo(
+									supplierProfile.getSmAppl()
+											.getCreatedDate()) < 0) {
 						getManagedBean().setResubmitInValidMsg(
 								SmCommonUtil.getMessage(
 										"lbl.sm.anotherApplApproved", null));
@@ -385,9 +387,9 @@ public class SmApplicationBackingBean extends
 			c.add(Calendar.DATE, 60);
 			Date d = c.getTime();
 			getManagedBean().getSmAppl().setDraftExpiryDate(d);
-//			String newApplNum = SmApplicationUtil.generateApplicationNum(
-//					getManagedBean().getSmAppl().getApplType(),
-//					getManagedBean().getSmAppl().getSupplierType());
+			// String newApplNum = SmApplicationUtil.generateApplicationNum(
+			// getManagedBean().getSmAppl().getApplType(),
+			// getManagedBean().getSmAppl().getSupplierType());
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null
 					&& !getManagedBean().getSmAppl().getSmApplSectionReviews()
 							.isEmpty()) {
@@ -6791,7 +6793,9 @@ public class SmApplicationBackingBean extends
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 						.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+							|| cat.getRecordStatusFlg().compareTo(
+									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 						if ((getManagedBean().isPoUser()
 								&& cat.getPoDecFlg() != null && cat
 								.getPoDecFlg().compareTo(new Integer(1)) == 0)
