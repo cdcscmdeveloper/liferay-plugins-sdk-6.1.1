@@ -596,6 +596,10 @@ public class NoticeBoardBackingBean extends
 		scQt.setQtId(qtId);*/
 		this.getManagedBean().setScQt(resDTO.getScQt());
 		
+		String mofNo = this.getManagedBean().getMofNo();
+		if(StringUtils.equalsIgnoreCase(mofNo, StringUtils.EMPTY)){
+			this.getManagedBean().setMofNo(null);
+		}
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
 	}
 
