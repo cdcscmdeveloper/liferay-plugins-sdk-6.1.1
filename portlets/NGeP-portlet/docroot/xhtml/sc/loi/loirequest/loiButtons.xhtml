@@ -12,13 +12,13 @@
 			style="float:left;"
 			action="#{lOIDetailBackingBean.backToPrevious}" />
 
-		<p:commandButton value="Preview Letter" rendered="#{isPendingSubmissionStatus || isPendingNegotiation}"
+		<p:commandButton value="Preview Letter" rendered="#{isEditableStatus and !empty lOIDetailBackingBean.managedBean.taskId}"
 			update="@all" 
 			action="#{lOIDetailBackingBean.previewLetter}"/>
 			
 					
 		<p:commandButton value="#{lbl['lbl.so.save']}"
-			action="#{lOIDetailBackingBean.saveAction}"  rendered="#{isEditableStatus}"
+			action="#{lOIDetailBackingBean.saveAction}" rendered="#{isEditableStatus and !empty lOIDetailBackingBean.managedBean.taskId}"
 			process="@form" update="@form" />
 			
 		<c:choose>
