@@ -98,7 +98,7 @@
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple"
-						saveObject="contractRequestBackingBean.managedBean.selectedAddrTypeList"
+						saveObject="contractRequestBackingBean.managedBean.selectedAgencyAddressList"
 						conditionField="recordStatus^1|ctAgency.ctContractVer.contractVerId^#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.contractVerId}|ctAgency.orgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup"
 						rendered="#{contractRequestBackingBean.managedBean.agencyAddress}"
