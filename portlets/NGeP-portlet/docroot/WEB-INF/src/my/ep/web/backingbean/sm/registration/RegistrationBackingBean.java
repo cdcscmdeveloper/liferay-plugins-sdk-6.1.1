@@ -615,14 +615,27 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		
-/*		//update GST Attachment
+		//update GST Attachment
 		if(getManagedBean().isGstFlag()){
-			if(getManagedBean().getSmAttachment() != null){
-				this.getManagedBean().setSmAttachment(getManagedBean().getSmAttachment());
-				this.getManagedBean().setFilePath(getManagedBean().getFilePath());
-				this.getManagedBean().setFileName(getManagedBean().getFileName());
+			SmAttachment attachedFile = retrievAndSetSmAttachment();
+			if(attachedFile != null){
+				getManagedBean().getSmAttachment().setFilePath(getManagedBean().getFilePath());
+				getManagedBean().getSmAttachment().setFileName(getManagedBean().getFileName());
+			}else{
+				SmAttachment attachment = new SmAttachment();
+				attachment.setFilePath(getManagedBean().getFilePath());
+				attachment.setFileName(getManagedBean().getFileName());
+				attachment.setDocId(getManagedBean().getSmSupp().getSupplierId());
+				getManagedBean().setSmAttachment(attachment);
 			}
-		}*/
+			
+			getManagedBean().getSmAttachment().setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
+			reqDTO.setSmAttachment(getManagedBean().getSmAttachment());
+			
+			log.info("reqDTO filename>>>>>" + reqDTO.getSmAttachment().getFileName());
+			log.info("reqDTO filePath>>>>>" + reqDTO.getSmAttachment().getFilePath());
+			log.info("reqDTO Suppllier>>>>>" + reqDTO.getSmAttachment().getDocId());
+		}
 		
 		try{
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
@@ -634,6 +647,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						FacesMessage.SEVERITY_INFO,
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				renewSesionObject();
 				return "/xhtml/sm/onlinereg/outputMsg";
 			} else {
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
@@ -1242,20 +1256,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//set GST Flag
 			if(getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() != null && 
 					StringUtils.isNotBlank(getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
-				
-				ISmAttachmentSO smAttachmentSO = SmServiceLookup.getSmAttachmentSO();
-				SmAttachmentReqDTO smAttachmentReqDTO = new SmAttachmentReqDTO();
-				smAttachmentReqDTO.setDocId(resDTO.getSmSupp().getSupplierId());
-				smAttachmentReqDTO.setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
-				SmAttachmentResDTO smAttachmentResDTO  = smAttachmentSO.retrieveSmAttachmentByDocIdAndType(smAttachmentReqDTO);
-				if(smAttachmentResDTO.getAttachment() != null){
-					//setGstAttachment(smAttachmentResDTO.getAttachment());
-					getManagedBean().setGstFlag(true);
-					this.getManagedBean().setSmAttachment(smAttachmentResDTO.getAttachment());
-					this.getManagedBean().setFilePath(smAttachmentResDTO.getAttachment().getFilePath());
-					this.getManagedBean().setFileName(smAttachmentResDTO.getAttachment().getFileName());
+				SmAttachment attachment = retrievAndSetSmAttachment();
+				if(attachment != null){
+					this.getManagedBean().setFileName(attachment.getFileName());
+					this.getManagedBean().setFilePath(attachment.getFilePath());
 				}
-				
 			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -2069,6 +2074,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	/**
+	 * Validate gst no and format
+	 */
 	public void validateGstRegNo(){
 		String gstNo = this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo();
 		if(gstNo != null && gstNo.length() > 0){
@@ -2084,7 +2092,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	
-	
+	/**
+	 * FIle upload Handler
+	 * @param event
+	 * @throws Exception
+	 */
 	public void handleFileUpload(FileUploadEvent event) throws Exception {
 		if(event != null){
 			log.info("******handleFileUpload******");
@@ -2096,6 +2108,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	/**
+	 * Get File Upload Instance
+	 * @return SmAttachment
+	 */
 	private SmAttachment gstFileUpload(){
 		//getManagedBean().getSmAppl().setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
 	
@@ -2112,6 +2128,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return attachment;
 	}
 	
+	/**
+	 * Check whether file is uploaded
+	 */
 	private void checkIsFileUpload(){
 		if(getManagedBean().isGstFlag()){
 			if(getManagedBean().getFileName() == null){
@@ -2120,6 +2139,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	/**
+	 * Action - download Uploaded File
+	 * @throws IOException
+	 */
 	public void downloadUploadedFileDownload() throws IOException{
 
 		log.info("-----------PATH------------" + this.getManagedBean().getFilePath() + this.getManagedBean().getFileName());
@@ -2132,6 +2155,28 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
         	log.info("****downloadUploadedFileDownload***" + e.getMessage());
         	e.printStackTrace();
         }
+	}
+	
+	/**
+	 * Retrieve SmAttachment and set to managedBean
+	 * @return SmAttachment
+	 */
+	private SmAttachment retrievAndSetSmAttachment(){
+		ISmAttachmentSO smAttachmentSO = SmServiceLookup.getSmAttachmentSO();
+		SmAttachmentReqDTO smAttachmentReqDTO = new SmAttachmentReqDTO();
+		smAttachmentReqDTO.setDocId(getManagedBean().getSmSupp().getSupplierId());
+		smAttachmentReqDTO.setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
+		SmAttachmentResDTO smAttachmentResDTO  = smAttachmentSO.retrieveSmAttachmentByDocIdAndType(smAttachmentReqDTO);
+		if(smAttachmentResDTO.getAttachment() != null){
+			getManagedBean().setGstFlag(true);
+			this.getManagedBean().setSmAttachment(smAttachmentResDTO.getAttachment());
+/*			this.getManagedBean().setFilePath(smAttachmentResDTO.getAttachment().getFilePath());
+			this.getManagedBean().setFileName(smAttachmentResDTO.getAttachment().getFileName());*/
+			
+			return smAttachmentResDTO.getAttachment();
+		}
+		
+		return null;
 	}
 
 }
