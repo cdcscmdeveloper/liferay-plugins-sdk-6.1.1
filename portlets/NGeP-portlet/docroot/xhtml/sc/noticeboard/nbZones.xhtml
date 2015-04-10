@@ -8,7 +8,7 @@
 	<p:spacer height="10px" />
 	<div align="left" style="padding-left:10px;">
 		<h:outputText value="#{lbl['lbl.sc.zone.name']}"
-			style="font-weight:bold;text-align: left;font-size: 14px;" />
+			style="font-weight:bold;text-align: left;font-size: 14px;font-family: arial;" />
 	</div>
 	
 	<p:tabView var="zones" dynamic="true" orientation="left"
@@ -19,7 +19,7 @@
 		<p:spacer height="10px"></p:spacer>
 			<div align="right">
 				<p:commandLink style="margin-right:10px;"
-					oncomplete="popupZonedtl.show()" update="@(.zonedtls)">
+					oncomplete="popupZonedtl.show()" update="zonedtls">
 					<h:outputText value="#{lbl['lbl.sc.notice.board.view.zone.details']}" />
 				</p:commandLink>
 			</div>
