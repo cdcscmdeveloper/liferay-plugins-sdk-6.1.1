@@ -79,6 +79,9 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private String catLevel;
 	
 	/** The new category. */
+	private boolean categoryRestrRequired = true;
+	
+	/** The new category. */
 	private boolean newCategory = false;
 	
 	/** The category for company type. */
@@ -98,6 +101,24 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	
 	/** The selected basic category. */
 	private List<PmBasicCategory> selectedBasicCategory;
+	
+	/** The basic category list. */
+	private List<PmBasicCategory> basicCategoryList;
+	
+	/** The category restr list. */
+	private List<PmCategoryRestr> categoryRestrList;
+	
+	/** The tobe added category restr list. */
+	private List<PmCategoryRestr> tobeAddedCategoryRestrList;
+	
+	/** The tobe added pm basic category list. */
+	private List<PmBasicCategory> tobeAddedPmBasicCategoryList;
+	
+	/** The tobe added pm machine category list. */
+	private List<PmMachineCategory> tobeAddedPmMachineCategoryList;
+	
+	/** The pm machine category list. */
+	private List<PmMachineCategory> pmMachineCategoryList;
 	
 	/** The selected basic category2. */
 	private PmBasicCategory[] selectedBasicCategory2;
@@ -728,7 +749,6 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 			List<PmMachineCategory> selectedpmMachineCategory) {
 		this.selectedpmMachineCategory = selectedpmMachineCategory;
 	}
-
 	/**
 	 * Gets the pm machine.
 	 * 
@@ -866,6 +886,107 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 			List<PmBasicCategory> deletedpmBasicCategory) {
 		this.deletedpmBasicCategory = deletedpmBasicCategory;
 	}
-	
+
+	/**
+	 * @return the basicCategoryList
+	 */
+	public List<PmBasicCategory> getBasicCategoryList() {
+		return basicCategoryList;
+	}
+
+	/**
+	 * @param basicCategoryList the basicCategoryList to set
+	 */
+	public void setBasicCategoryList(List<PmBasicCategory> basicCategoryList) {
+		this.basicCategoryList = basicCategoryList;
+	}
+
+	/**
+	 * @return the pmMachineCategoryList
+	 */
+	public List<PmMachineCategory> getPmMachineCategoryList() {
+		return pmMachineCategoryList;
+	}
+
+	/**
+	 * @param pmMachineCategoryList the pmMachineCategoryList to set
+	 */
+	public void setPmMachineCategoryList(
+			List<PmMachineCategory> pmMachineCategoryList) {
+		this.pmMachineCategoryList = pmMachineCategoryList;
+	}
+
+	/**
+	 * @return the categoryRestrRequired
+	 */
+	public boolean isCategoryRestrRequired() {
+		return categoryRestrRequired;
+	}
+
+	/**
+	 * @param categoryRestrRequired the categoryRestrRequired to set
+	 */
+	public void setCategoryRestrRequired(boolean categoryRestrRequired) {
+		this.categoryRestrRequired = categoryRestrRequired;
+	}
+
+	/**
+	 * @return the categoryRestrList
+	 */
+	public List<PmCategoryRestr> getCategoryRestrList() {
+		return categoryRestrList;
+	}
+
+	/**
+	 * @param categoryRestrList the categoryRestrList to set
+	 */
+	public void setCategoryRestrList(List<PmCategoryRestr> categoryRestrList) {
+		this.categoryRestrList = categoryRestrList;
+	}
+
+	/**
+	 * @return the tobeAddedCategoryRestrList
+	 */
+	public List<PmCategoryRestr> getTobeAddedCategoryRestrList() {
+		return tobeAddedCategoryRestrList;
+	}
+
+	/**
+	 * @param tobeAddedCategoryRestrList the tobeAddedCategoryRestrList to set
+	 */
+	public void setTobeAddedCategoryRestrList(
+			List<PmCategoryRestr> tobeAddedCategoryRestrList) {
+		this.tobeAddedCategoryRestrList = tobeAddedCategoryRestrList;
+	}
+
+	/**
+	 * @return the tobeAddedPmBasicCategoryList
+	 */
+	public List<PmBasicCategory> getTobeAddedPmBasicCategoryList() {
+		return tobeAddedPmBasicCategoryList;
+	}
+
+	/**
+	 * @param tobeAddedPmBasicCategoryList the tobeAddedPmBasicCategoryList to set
+	 */
+	public void setTobeAddedPmBasicCategoryList(
+			List<PmBasicCategory> tobeAddedPmBasicCategoryList) {
+		this.tobeAddedPmBasicCategoryList = tobeAddedPmBasicCategoryList;
+	}
+
+	/**
+	 * @return the tobeAddedPmMachineCategoryList
+	 */
+	public List<PmMachineCategory> getTobeAddedPmMachineCategoryList() {
+		return tobeAddedPmMachineCategoryList;
+	}
+
+	/**
+	 * @param tobeAddedPmMachineCategoryList the tobeAddedPmMachineCategoryList to set
+	 */
+	public void setTobeAddedPmMachineCategoryList(
+			List<PmMachineCategory> tobeAddedPmMachineCategoryList) {
+		this.tobeAddedPmMachineCategoryList = tobeAddedPmMachineCategoryList;
+	}
 
 }

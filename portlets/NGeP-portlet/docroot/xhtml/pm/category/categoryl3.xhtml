@@ -375,7 +375,7 @@
 			rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
 			<p:dataTable id="groupdetailsId"
 				rowKey="#{pmBasicCategory.createdDate}"
-				value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
+				value="#{categoryBackingBean.managedBean.basicCategoryList}"
 				width="100%" var="pmBasicCategory">
 
 				<ac:paginator for="groupdetailsId"></ac:paginator>
@@ -428,7 +428,7 @@
 			toggleable="true">
 			<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
 				rowKey="#{pmMachineCategory.createdDate}"
-				value="#{categoryBackingBean.managedBean.pmCategoryL3.pmMachineCategory}"
+				value="#{categoryBackingBean.managedBean.pmMachineCategoryList}"
 				width="100%" var="pmMachineCategory">
 
 				<ac:paginator for="machineDetailsId"></ac:paginator>
@@ -704,7 +704,7 @@
 						rendered="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 						<p:dataTable id="dtlCategoryRestrId" rowIndexVar="rowIndex"
 							rowKey="#{pmCategoryRestr}"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryRestrs}"
+							value="#{categoryBackingBean.managedBean.categoryRestrList}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							width="100%" var="pmCategoryRestr">
 
