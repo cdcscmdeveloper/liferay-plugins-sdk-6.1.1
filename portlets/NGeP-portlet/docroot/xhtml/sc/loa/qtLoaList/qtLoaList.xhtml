@@ -82,7 +82,7 @@
 							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}" />
 
 						<p:commandLink
-							rendered="#{loiloa.status.statusId ne QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
+							rendered="#{loiloa.status.statusId ne QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT and loiloa.status.statusId ne LOI_PENDING_SUBMISSION}"
 							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}"
 							process="@this">
 
@@ -100,8 +100,8 @@
 							action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
 
 						<p:commandLink
-							rendered="#{loiloa.status.statusId ne QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}"
-							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi)}"
+							rendered="#{loiloa.status.statusId ne QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT and loiloa.status.statusId ne LOA_PENDING_SUBMISSION}"
+							action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}"
 							process="@this">
 
 							<p:graphicImage  library="ep/images/design"
