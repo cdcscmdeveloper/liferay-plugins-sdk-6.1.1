@@ -71,10 +71,10 @@
 				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
 					maxlength="20" id="amountValueId"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
-					requiredMessage="Value is mandatory"
+					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
 					validator="#{webappBean.checkIntegerField}"
 					validatorMessage="Value Of Amount Type should be a Digit!">
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, amountValueMsg" />
 				</p:inputText>
 				<p:message id="amountValueMsg" for="amountValueId" display="icon" />
 			</p:column>
@@ -88,10 +88,10 @@
 				<p:selectOneMenu id="parameterCodeValueId"
 					value="#{typeValueObj.ruleValue}"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
-					requiredMessage="Value is mandatory" style="width:230px;">
+					requiredMessage="#{lbl['lbl.pm.settings.value.required']}" style="width:230px;">
 					<f:selectItems
 						value="#{ruleCatalogueBackingBean.getDropdownCodeValuesBySearchBean(ruleCatalogueBackingBean.managedBean.selectedRuleType.parameterType, ruleCatalogueBackingBean.parameterSearchBean)}" />
-					<p:ajax partialSubmit="true" process="@this" update="@this" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, parameterCodeValueMsg" />
 				</p:selectOneMenu>
 				<p:message id="parameterCodeValueMsg" for="parameterCodeValueId"
 					display="icon" />
@@ -106,10 +106,10 @@
 				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
 					maxlength="20" id="percentageValueId"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
-					requiredMessage="Value is mandatory"
+					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
 					validator="#{webappBean.validatePercentageNumber}">
 					<p:ajax partialSubmit="true" process="@this"
-						update="@this, @([id$=cloneLink])" />
+						update="@this, @([id$=cloneLink]),percentageValueMsg" />
 				</p:inputText>
 				<p:message id="percentageValueMsg" for="percentageValueId"
 					display="icon" />
@@ -140,12 +140,12 @@
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
 			</f:facet>
-				<p:inputText value="#{typeValueObj.fromValue}" size="15"
-					maxlength="18" id="fromValueId" converter="DoubleConverter"
+				<p:inputText id="fromValueId" value="#{typeValueObj.fromValue}" size="15" required="true"
+					maxlength="18"  converter="DoubleConverter" requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					 converterMessage="#{lbl['lbl.pm.settings.double.value.error.msg']}"
 					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1 and !typeValueObj.showFlag)}">
 					<p:ajax partialSubmit="true" process="@this"
-						update="@this, @([id$=cloneLink])" />
+						update="@this, @([id$=cloneLink]), fromValueMsg" />
 				</p:inputText>
 				<p:message id="fromValueMsg" for="fromValueId" display="icon" />
 			</p:column>
