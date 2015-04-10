@@ -31,30 +31,27 @@
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
-						partialSubmit="true" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						partialSubmit="true" process="@this" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
 						update=":form:tt:approverAppDialog"
 						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
-						process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						process="@this" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
 						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
-					
-				</div> 
-				
-				<c:if
+
+				</div> <c:if
 					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
 					<table style="width: 100%">
 						<tr>
-							<td><h:outputText
-									value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
+							<td><h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
 									style="float:left;" /></td>
 						</tr>
 					</table>
-				</c:if>
-				
-				<p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
+				</c:if> <p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
 					<table>
 						<!-- <tr>
 				<td colspan="3"><h4
@@ -80,6 +77,14 @@
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</p:inputText></td>
+
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.regStatus']}" /></td>
+							<td><p:outputLabel value="   : " /></td>
+							<td><p:inputText readonly="true" size="50"
+									value="#{backingBean.managedBean.applRegStatus}"
+									disabled="true" /></td>
 
 						</tr>
 						<tr>
