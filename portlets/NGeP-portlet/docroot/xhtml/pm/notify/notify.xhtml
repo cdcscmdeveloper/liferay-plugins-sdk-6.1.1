@@ -30,11 +30,9 @@
 								</p:commandLink></td>
 							<td style="text-align: right;"><p:commandButton
 									value="#{lbl['lbl.portal.notify.btn.refresh']}"
-									icon="ui-icon-reset"
 									action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable" /> <p:commandButton
 									value="#{lbl['lbl.portal.notify.btn.delete']}"
-									icon="ui-icon-delete"
 									action="#{notifyBackingBean.removeNotifys}"
 									update=":form:notifyTable,:form:pnldetail" /></td>
 						</tr>
