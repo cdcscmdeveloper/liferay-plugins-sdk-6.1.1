@@ -101,7 +101,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -2089,20 +2088,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void handleFileUpload(FileUploadEvent event) throws Exception {
 		if(event != null){
 			log.info("******handleFileUpload******");
-			//getManagedBean().setFileUpload(event);
-			//getManagedBean().getFileUpload().getFile().getFileName();
-	
-	       /* InputStream stream = getManagedBean().getFileUpload().getFile().getInputstream();
-	        StreamedContent media = new DefaultStreamedContent(stream, event.getFile().getContentType());
-	        
-	        getManagedBean().setMedia(media);
-	        
-	        
-			log.info("****FIle Name******"  + getManagedBean().getFileUpload().getFile().getFileName());
-			log.info("****Media******"  +getManagedBean().getMedia());
-			log.info("****Content type******"  +getManagedBean().getMedia().getContentType());*/
 			
-			String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "test" + "/SD/";
+			String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "BASIC_GST" + "/SD/";
 			getManagedBean().setFileName(event.getFile().getFileName());
 			getManagedBean().setFilePath(filePath);
 			commonUploadFile(event, filePath);
@@ -2126,13 +2113,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	private void checkIsFileUpload(){
-/*		if(getManagedBean().isGstFlag()){
-			if(getManagedBean().getFileUpload() == null){
-				throw new EpException(MessageConst.ERROR_721028);
-			}
-		}*/
-		
-		
 		if(getManagedBean().isGstFlag()){
 			if(getManagedBean().getFileName() == null){
 				throw new EpException(MessageConst.ERROR_721028);
@@ -2141,35 +2121,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void downloadUploadedFileDownload() throws IOException{
-		/*PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
 
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-		// response.setContentType("application/vnd.ms-excel");
-		// response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename="+ getManagedBean().getFileUpload().getFile().getFileName());
-		response.setContentType("application/octet-stream");
-		response.flushBuffer();
-		
-		InputStream input = getManagedBean().getFileUpload().getFile().getInputstream();
-		OutputStream out = response.getOutputStream();
-		byte[] buffer = new byte[4096];
-		int bytesRead;
-		while ((bytesRead = this.getManagedBean().getMedia().read(buffer)) != -1) {
-			out.write(buffer, 0, bytesRead);
-			buffer = new byte[4096];
-		}
-		out.close();
-		input.close();
-		
-		return null;*/
-		
-		
 		log.info("-----------PATH------------" + this.getManagedBean().getFilePath() + this.getManagedBean().getFileName());
 		
 		try {
-			StreamedContent file = commonDownload(this.getManagedBean().getFilePath() + this.getManagedBean().getFileName(), this.getManagedBean().getFileName());
+			commonDownload(this.getManagedBean().getFilePath() + this.getManagedBean().getFileName(), this.getManagedBean().getFileName());
         	
         } catch (IOException e) {
         	// TODO Auto-generated catch block
@@ -2177,43 +2133,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
         	e.printStackTrace();
         }
 	}
-	/*
-	private StreamedContent getOutputStreamContent(SmAttachment attachement) throws IOException{
-		if (attachement != null) {
-			File file = new File(attachement.getFilePath());
-			ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
-			FileInputStream in = new FileInputStream(file);
-			byte[] buf = new byte[512];
-			int len;
-			while (true) {
-				len = in.read(buf);
-				if (len == -1) {
-					break;
-				}
-				tmpOut.write(buf, 0, len);
-			}
-			in.close();
-			tmpOut.close();
-			ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-					tmpOut.size());
 
-			ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
-
-			return new DefaultStreamedContent(stream);
-		} else {
-			return null;
-		}
-	}
-	
-	private void setGstAttachment(SmAttachment attachment){
-		try {
-			StreamedContent outputStream = getOutputStreamContent(attachment);
-			outputStream.getContentType();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.info("******e.printStackTrace()); 
-		}
-	}*/
 }
 
 
