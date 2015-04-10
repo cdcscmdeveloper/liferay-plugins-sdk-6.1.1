@@ -68,8 +68,6 @@
 	           		value="#{contractDetailsBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
 					rowKey="#{deliveryAddress}" selection="#{contractDetailsBackingBean.managedBean.selectedListOfAddress}">
 					<ac:paginator for="deliveryAddressTbl"/>
-					<p:column selectionMode="multiple" style="width:3%"  
-						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
 					<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="width:100%; white-space:normal;">
 					   <h:outputText value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" />
 					</p:column>
