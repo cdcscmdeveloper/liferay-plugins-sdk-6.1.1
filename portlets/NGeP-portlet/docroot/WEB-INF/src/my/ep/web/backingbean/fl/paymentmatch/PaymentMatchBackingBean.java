@@ -353,16 +353,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				new FulfilmentBackingBean(ParameterConst.DOCTYPE_PAYMENT_ADVICE, getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractNo());
 			}	
 			populateChargeLineData();
-			if(null == getManagedBean().getPaymentAdvice().getDescription()){
-				String desc = "";
-				if(getManagedBean().getPaymentAdvice().getFlRequest().getTitle().length() > 24){
-					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle().substring(0,24).trim();
-				}else{
-					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle();
-				}
-				
-				getManagedBean().getPaymentAdvice().setDescription(desc);
-			}
 			checkHaveAdvancedPayment(paymentAdvice);
 			validateAdvancedPayment();
 			if(getManagedBean().getPaymentAdvice().isBrandNew()){
