@@ -17,7 +17,7 @@
 				<td style="width:12%"><p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="80" id="title" required="true"
-						maxlength="100" label="#{lbl['lbl.sc.title']}" disabled="#{!isPendingSubmissionStatus}"
+						maxlength="100" label="#{lbl['lbl.sc.title']}"
 						value="#{requestNoteBackingBean.managedBean.requestNote.title}"
 						style="margin-bottom: 5px;">
 						 <p:ajax event="blur" partialSubmit="true" process="@this" /> 
