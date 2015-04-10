@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.cc;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.bouncycastle.util.encoders.Base64;
 import org.primefaces.context.RequestContext;
 
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -186,7 +188,7 @@ public class SpkiBackingBean {
 	
 			System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword() + dataForSigning);
 			// Request service to signData based on the answered challenges and data 
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),"eP-1008I348f", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData(getDigiCertUserId(),"STRONG HABIS", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 			
 			
 			switch(res.getStatusCode())
@@ -201,7 +203,7 @@ public class SpkiBackingBean {
 //				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
 				
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-				signedData = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
+				signedData = new String(Base64.encode(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE))));
 				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				break;
 
@@ -291,35 +293,39 @@ public class SpkiBackingBean {
 	try{
 		String signedData ;
 		// Create property file
-		String challengeQues1;
-		String challengeAns1;
+		String challengeQues1 = new String("In what city you were born?");
+		String challengeAns1 = new String("welcome1");
 		File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
 		// Create KMCClient with the property file
 		KMCClient client = KMCClientFactory.getInstance(f);
 		// Simulate user selected the question and answer accordingly
 		Map<Object, Object> challenges = new HashMap<Object, Object>();
-//		challenges.put(challengeQues1, challengeAns1);
+		challenges.put(challengeQues1, challengeAns1);
 
 		// Simulate the data ready to sign
 		String dataForSigning = "originalText";
 		
-		String pin = "originalText";
+		String pin = "efgh1234";
 
 //		System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword());
 		// Request service to signData based on the answered challenges and data 
-		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("eP-1008I348f","eP-1008I348f", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823102233","STRONG HABIS", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 		
 		
 		switch(res.getStatusCode())
 		{
 		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-			RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-			signedData = new String(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE)));
+//			RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
+			FileOutputStream fos = new FileOutputStream("sign.bin");
+			fos.flush();
+			fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
+			fos.close();
+			signedData = new String(Base64.encode(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE))));
 			System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 			break;
 
 		default:
-			FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+
 			System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
 			//throw new EpException(MessageConst.ERROR_776052);
 //			signedData = "DEFAULT SIGNED TEXT";
