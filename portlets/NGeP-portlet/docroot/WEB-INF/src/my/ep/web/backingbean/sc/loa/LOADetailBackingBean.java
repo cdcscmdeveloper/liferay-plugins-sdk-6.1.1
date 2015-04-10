@@ -3882,11 +3882,25 @@ public class LOADetailBackingBean extends
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setDocId(getManagedBean().getSourceId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
+			QtLOABackingBean qtLOABackingBean  = new QtLOABackingBean();
+			if (loiLoaList != null && loiLoaList.size() > 0) {
+				// qt loa list
+				qtLOABackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
+				qtLOABackingBean.getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
+			}	
+		}
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
-	
+
 
 	/**
 	 * Pre render page navigation to direct nego or loa
