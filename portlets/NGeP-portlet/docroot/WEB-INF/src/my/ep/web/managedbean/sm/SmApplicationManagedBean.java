@@ -272,6 +272,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmStatusDesc> regStatusDescList;
 
 	private String currentStatus;
+	private String applRegStatus;
 	private Long[] reasonId;
 	private SmPersonnleCalcVO personCalc;
 	private BigDecimal equiPerCapTotal;
@@ -2683,6 +2684,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setApprovedCategoryList(
 			List<SmSupplierCategory> approvedCategoryList) {
 		this.approvedCategoryList = approvedCategoryList;
+	}
+
+	public String getApplRegStatus() {
+		return applRegStatus;
+	}
+
+	public void setApplRegStatus(String applRegStatus) {
+		this.applRegStatus = applRegStatus;
 	}
 
 }
