@@ -169,6 +169,14 @@
 
 						</tr>
 						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.regStatus']}" /></td>
+							<td><p:outputLabel value="   : " /></td>
+							<td><p:inputText readonly="true" size="50"
+									value="#{backingBean.managedBean.applRegStatus}"
+									disabled="true" /></td>
+
+						</tr>
+						<tr>
 							<c:if test="#{backingBean.managedBean.smAppl.applType eq 'C'}">
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.remark.cancellation']}" /></td>
