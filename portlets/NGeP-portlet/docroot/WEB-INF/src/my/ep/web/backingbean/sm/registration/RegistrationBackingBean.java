@@ -2100,8 +2100,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void handleFileUpload(FileUploadEvent event) throws Exception {
 		if(event != null){
 			log.info("******handleFileUpload******");
-			
-			String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "BASIC_GST" + "/SD/";
+			String tempPath = String.valueOf((new Date()).getTime());
+			String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "BASIC_GST/" + tempPath + "/";
 			getManagedBean().setFileName(event.getFile().getFileName());
 			getManagedBean().setFilePath(filePath);
 			commonUploadFile(event, filePath);
@@ -2178,6 +2178,45 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		return null;
 	}
+	
+	/*public void customGenFile(FileUploadEvent event, String path) {
+		
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tempDir += "/" + path;
+
+		//String uploadDir = "";
+
+		File dir = new File(tempDir);
+		log.info(" dir.exists()" + dir.exists());
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		try {
+			UploadedFile file = event.getFile();
+			Date date = new Date();
+			Timestamp timeStamp = new Timestamp(date.getTime());
+					
+			String tempFileName = StringUtils.replace(file.getFileName(), " ", "-");
+			String finalFileName = timeStamp + tempFileName;
+			
+			log.info("finalFileName: " + finalFileName);
+			
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
+					new FileOutputStream(tempDir + "/" + finalFileName));
+
+			bufferedOutputStream.write(file.getContents());
+
+			if (bufferedOutputStream != null) {
+				bufferedOutputStream.flush();
+				bufferedOutputStream.close();
+			}
+
+		} catch (Exception e) {
+			log.error(e);
+		}
+
+	}*/
 
 }
 
