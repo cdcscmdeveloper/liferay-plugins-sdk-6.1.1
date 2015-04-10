@@ -3046,28 +3046,23 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void checkIfLoggedinUserIsSecretary() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		List<String> roleCodes = new ArrayList<String>();
-		roleCodes.add(RoleCode.QCA_SECRETARY.toString());
-		roleCodes.add(RoleCode.QCB_SECRETARY.toString());
-		roleCodes.add(RoleCode.PBA_SECRETARY.toString());
-		roleCodes.add(RoleCode.PBB_SECRETARY.toString());
-		roleCodes.add(RoleCode.FPB_SECRETARY.toString());
-
-		List<String> pmRoleCodes = new ArrayList<String>();
-		if (CollectionUtils.isNotEmpty(roleDesc)) {
-			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
-			}
-			for (String role : roleCodes) {
-				if (pmRoleCodes.contains(role)) {
-					this.getManagedBean().setSecretaryUser(true);
+		String identificationNo = getFacesScopes().getUserSessionBean()
+									.getIdentificationNo();
+		List<ScQtCommitteeActivity> committeeMembers = 
+				this.getManagedBean().getCommitteeList();
+		
+		if (StringUtils.isNotBlank(identificationNo) && 
+				CollectionUtils.isNotEmpty(committeeMembers)) {
+			for (ScQtCommitteeActivity committeeActivity :
+					committeeMembers) {
+				if (StringUtils.equals(identificationNo, 
+						committeeActivity.getScCommitteeMember().getIcPassport())) {
+					String userRole = committeeActivity.getScCommitteeMember().
+							getMemberRole().getParameterCode();
+					if (StringUtils.equals(userRole, 
+							ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						this.getManagedBean().setSecretaryUser(true);
+					}
 					break;
 				}
 			}
@@ -4544,31 +4539,44 @@ public class SupplierFinalizationBackingBean extends
 			ScQtEvaluationResultDtl evaluationResultDtl, boolean isAwarded) {
 		debugLogger("selectSupplierEvent");
 
-		List<ScQtEvaluationResultDtl> recommendedItemSupplierList = getManagedBean()
-				.getRecommendedSupplierList();
-		if (recommendedItemSupplierList == null) {
-			recommendedItemSupplierList = new ArrayList<ScQtEvaluationResultDtl>();
-			getManagedBean().setRecommendedSupplierList(
-					recommendedItemSupplierList);
-		}
-
 		boolean isSelected = false;
-
 		if (isAwarded) {
 			isSelected = evaluationResultDtl.isAwareded();
 		} else {
 			isSelected = evaluationResultDtl.isShortListed();
 		}
 
-		if (isSelected) {
-			recommendedItemSupplierList.add(evaluationResultDtl);
-
-			addSelectedSupplier();
-		} else {
-			recommendedItemSupplierList.remove(evaluationResultDtl);
-
-			unSelectSupplierEvent(evaluationResultDtl);
+		ScQtRecommend selectedItem = null;
+		if (this.getManagedBean().isItemRowSelect()) { 
+			selectedItem = getManagedBean().getSelectedRecommendList().get(0);
 		}
+		
+		if (this.getManagedBean().isSecretaryUser() &&
+				selectedItem != null && !selectedItem.isDisabled() && 
+				!selectedItem.isAwardedItem()) {
+			List<ScQtEvaluationResultDtl> recommendedItemSupplierList = getManagedBean()
+					.getRecommendedSupplierList();
+			if (recommendedItemSupplierList == null) {
+				recommendedItemSupplierList = new ArrayList<ScQtEvaluationResultDtl>();
+				getManagedBean().setRecommendedSupplierList(
+						recommendedItemSupplierList);
+			}
+			if (isSelected) {
+				recommendedItemSupplierList.add(evaluationResultDtl);
+				addSelectedSupplier();
+			} else {
+				recommendedItemSupplierList.remove(evaluationResultDtl);
+				unSelectSupplierEvent(evaluationResultDtl);
+			}
+		} else {
+			// Reset to previous selection
+			if (isAwarded) {
+				evaluationResultDtl.setAwareded(!isSelected);
+			} else {
+				evaluationResultDtl.setShortListed(!isSelected);
+			}
+		}
+	
 	}
 
 	private void addSelectedSupplier() {
