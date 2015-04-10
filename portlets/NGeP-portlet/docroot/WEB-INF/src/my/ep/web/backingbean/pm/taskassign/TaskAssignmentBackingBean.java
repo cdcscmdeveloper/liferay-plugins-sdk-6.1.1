@@ -559,11 +559,31 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			String moduleCode = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue()).getModuleCode();
 			if(ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
 				// approver should be returned by BPM not selected from DB
-				bean = new SearchFilterBean();
-				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
-				bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
-				bean.setSearchValue(APPROVER);
-				searchBean.getDataFilterBeans().add(bean);
+				boolean receivingOfficer = false;
+				for(String status : statusRoles){
+					if(ProfileManagementConst.RECEIVING_OFFICER.equals(status)){
+						receivingOfficer = true;
+						break;
+					}
+				}
+			
+				if(receivingOfficer){
+					List<Long> userIds = getReceivingOfficerIdListByDeliveryOrderId(task.getDocId().longValue());			
+					if(userIds != null && !userIds.isEmpty()){											
+						bean = new SearchFilterBean();
+						bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+						bean.setSearchField("userId");					
+						bean.setSearchValue(userIds);
+						searchBean.getDataFilterBeans().add(bean);
+					}				
+				}else{
+					bean = new SearchFilterBean();
+					bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
+					bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
+					bean.setSearchValue(APPROVER);
+					searchBean.getDataFilterBeans().add(bean);
+				}
+				
 			}
 			/* 27 Jan 2014
 			// approver should be returned by BPM not selected from DB
@@ -1101,6 +1121,25 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 		
 		getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
+	}
+	
+	private List<Long> getReceivingOfficerIdListByDeliveryOrderId(Long docId){
+		IFulfilmentDocumentSO documentSO = null;
+		List<Long> userIds = null;
+		try{			
+			FlDocumentReqDTO reqDTO = new FlDocumentReqDTO();
+			reqDTO.setDocId(docId);
+			documentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentDocumentSO.class);
+			FlDocumentResDTO resDTO = documentSO.retrieveReceivingOfficerListByDeliveryOrderId(reqDTO);
+			userIds = resDTO.getUserIdList();
+		}catch(Exception e){
+			
+		}finally{
+			documentSO = null;		
+		}
+		
+		
+		return userIds;
 	}
 		
 }
