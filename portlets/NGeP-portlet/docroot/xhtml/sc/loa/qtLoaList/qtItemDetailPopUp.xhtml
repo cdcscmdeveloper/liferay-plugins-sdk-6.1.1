@@ -24,7 +24,38 @@
 			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}">
 				#{scLoiLoaItem.scRequestItem.itemName}
 			</p:column>
-
+			
+				<p:column style="width:7%;white-space:normal;text-align:right;"
+					headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+					<h:outputText
+						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
+				</p:column>
+	
+             <p:column style="width:7%;white-space:normal;text-align:right;"
+					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+					<h:outputText
+						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+				</p:column>
+	
+				<p:column style="width:8%;white-space:normal;text-align:right;"
+					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+					<h:outputText
+						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+				</p:column>
+	
+				<p:column style="width:7%;white-space:normal;text-align:right;"
+					headerText="#{lbl['lbl.tpl.spec.content.duration.month']}">
+					<h:outputText
+						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
+				</p:column>
+			
+			
 			<p:column style="width:10%; text-align:right;"
 				headerText="#{lbl['lbl.sc.loiloa.item.quantity']}">
 				<h:outputText value="#{scLoiLoaItem.qty}">
@@ -40,15 +71,11 @@
 
 		</p:dataTable>
 
-		<p:spacer height="15px"></p:spacer>
-		<p:panelGrid styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column>
-					<p:commandButton value="#{lbl['lbl.sc.close']}" process="@this"
+		<p:spacer height="3px" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.sc.close']}" process="@this"
 						onclick="qtItemDtlDlg.hide()"/>
-				</p:column>
-			</p:row>
-		</p:panelGrid>
-
+		</div>
+		
 	</p:dialog>
 </ui:composition>
