@@ -1570,22 +1570,33 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			throw new EpException(MessageConst.ERROR_730028);
 		}
 		
+		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+			boolean valid = false;
+			  if(getManagedBean().getEpItemsB() != null && !getManagedBean().getEpItemsB().isEmpty()){
+			   valid = true;
+			  }else if(getManagedBean().getEpItemsH() != null && !getManagedBean().getEpItemsH().isEmpty()){
+			   valid = true;
+			  }else if(getManagedBean().getEpItemsT() != null && !getManagedBean().getEpItemsT().isEmpty()){
+				   valid = true;
+			  }else if(getManagedBean().getEpItemsP() != null && !getManagedBean().getEpItemsP().isEmpty()){
+				   valid = true;
+			  }else if(getManagedBean().getEpItemsS() != null && !getManagedBean().getEpItemsS().isEmpty()){
+				   valid = true;
+			  }
+			  
+			  if(!valid){
+			   throw new EpException(MessageConst.ERROR_730029);
+			  }
+    }else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
 		boolean valid = false;
-		  if(getManagedBean().getEpItemsB() != null && !getManagedBean().getEpItemsB().isEmpty()){
+		  if(getManagedBean().getSelectedPlan().getPpProcurementItems() != null && !getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty()){
 		   valid = true;
-		  }else if(getManagedBean().getEpItemsH() != null && !getManagedBean().getEpItemsH().isEmpty()){
-		   valid = true;
-		  }else if(getManagedBean().getEpItemsT() != null && !getManagedBean().getEpItemsT().isEmpty()){
-			   valid = true;
-		  }else if(getManagedBean().getEpItemsP() != null && !getManagedBean().getEpItemsP().isEmpty()){
-			   valid = true;
-		  }else if(getManagedBean().getEpItemsS() != null && !getManagedBean().getEpItemsS().isEmpty()){
-			   valid = true;
 		  }
 		  
 		  if(!valid){
 		   throw new EpException(MessageConst.ERROR_730029);
 		  }
+}
 		
 		if(ppPlan.isBrandNew() && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){ 
             if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
