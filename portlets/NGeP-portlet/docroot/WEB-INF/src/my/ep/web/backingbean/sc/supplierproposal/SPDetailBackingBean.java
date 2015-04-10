@@ -1615,7 +1615,7 @@ public class SPDetailBackingBean extends
 
 			smPersonnelsList.add(technicalStaffBean);
 
-			totalYearsExp += smPersonnel.getWorkExperienceYear();
+			totalYearsExp += smPersonnel.getWorkExperienceYear().intValue();
 		}
 		getManagedBean().setSmPersonnelList(smPersonnelsList);
 		getManagedBean().setTotalNoOfYearsExperience(totalYearsExp);
