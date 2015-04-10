@@ -190,7 +190,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 						messageId = MessageConst.INFO_700008;
 						noteNo = resDTO.getFulfilmentNoteNo();
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-						messageId = MessageConst.INFO_700005;
+						messageId = MessageConst.INFO_700018;
 						noteNo = resDTO.getFulfilmentNoteNo();
 					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
