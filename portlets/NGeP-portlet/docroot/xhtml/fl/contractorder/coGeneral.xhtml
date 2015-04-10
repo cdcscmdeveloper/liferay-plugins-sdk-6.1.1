@@ -80,15 +80,15 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" rendered="false"/></td>
-				<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.financialYear}" rendered="false"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
+				<td><p:selectBooleanCheckbox
+						value="#{flOrderBB.managedBean.flRequest.ctContract.mto}"
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" rendered="false"/></td>
-				<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}" rendered="false">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
+				<td><p:selectBooleanCheckbox disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
@@ -122,10 +122,11 @@
 							listener="#{flOrderBB.updateDeliveryDate}"
 							update="delEndDate" />
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
-				<td><p:selectBooleanCheckbox
-						value="#{flOrderBB.managedBean.flRequest.ctContract.mto}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td>
+				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
+						value="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}" />
+				</td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
@@ -133,18 +134,17 @@
 						value="#{flOrderBB.managedBean.flRequest.endDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td>
-				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}" />
-				</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" rendered="false"/></td>
+				<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.financialYear}" rendered="false"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" rendered="false"/></td>
+				<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}" rendered="false">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>
