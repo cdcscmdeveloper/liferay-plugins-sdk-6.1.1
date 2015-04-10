@@ -16,7 +16,7 @@
 
 	</div>
 
-	<p:dataTable id="feeByContractTableID" var="feeObj" row="10"
+	<p:dataTable id="feeByContractTableID" var="feeObj" rows="10"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForContract}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
@@ -59,7 +59,7 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 
-			<p:calendar showOn="button" id="effDate"
+			<p:calendar showOn="button" id="effDate"  disabled ="#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				mindate="#{feeObj.defaultEffDate}" style="width :45px;"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -73,7 +73,7 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="contractFeeExpDateId" 
+			<p:calendar showOn="button" id="contractFeeExpDateId"  disabled = "#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}" style="width :45px;"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"

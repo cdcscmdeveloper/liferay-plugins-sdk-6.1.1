@@ -21,11 +21,11 @@
 		</div>
 
 		<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"
-			var="ruleTypeObj" row="10"
+			var="ruleTypeObj" rows="10"
 			value="#{ruleCatalogueBackingBean.managedBean.configRuleList}"
 			selection="#{ruleCatalogueBackingBean.managedBean.selectedRuleType}"
 			rowKey="#{ruleTypeObj}" rowIndexVar="rowIndex" selectionMode="single">
-
+           <ac:paginator for="ruleTypeTableID" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
