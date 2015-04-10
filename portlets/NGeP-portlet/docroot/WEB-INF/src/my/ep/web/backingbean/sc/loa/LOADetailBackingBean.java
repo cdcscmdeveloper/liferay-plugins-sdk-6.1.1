@@ -282,7 +282,7 @@ public class LOADetailBackingBean extends
 			ruleReqDTO.setRuleType(ParameterTypeConst.RULE_BOND_PERCENTAGE_TYPE);
 			ruleReqDTO.setCompareValue(scLoa.getLoaAmt().toString());
 			RuleResDTO roleResDTO = ruleSO.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
-			MathContext mc = new MathContext(2, RoundingMode.HALF_EVEN);
+			MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
 			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueStrList() != null 
 					&& roleResDTO.getRuleValueStrList().size() > 0) {
 				String percentage = roleResDTO.getRuleValueStrList().get(0);
@@ -290,7 +290,7 @@ public class LOADetailBackingBean extends
 			}
 
 			if(scLoa.getContractDuration() != null){
-				DecimalFormat df = new DecimalFormat("#.00"); 
+				DecimalFormat df = new DecimalFormat("#.##"); 
 				contractDuration = scLoa.getContractDuration();
 				BigDecimal  duration = contractDuration.divide(new BigDecimal(12), mc); 
 				double total  = loaAmt.divide(duration, mc).multiply(bondPercentage).doubleValue();
