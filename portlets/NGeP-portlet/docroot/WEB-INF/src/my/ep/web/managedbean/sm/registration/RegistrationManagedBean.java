@@ -16,6 +16,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -99,6 +100,10 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean disabledBusinessTypeInMaintenance;
 	
 	private boolean gstFlag;
+
+	private String filePath;
+	private String fileName;
+	private SmAttachment smAttachment;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -556,5 +561,29 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setGstFlag(boolean gstFlag) {
 		this.gstFlag = gstFlag;
 	}
-	
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public SmAttachment getSmAttachment() {
+		return smAttachment;
+	}
+
+	public void setSmAttachment(SmAttachment smAttachment) {
+		this.smAttachment = smAttachment;
+	}
+
 }
