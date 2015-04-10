@@ -109,16 +109,28 @@
 					<p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" />
 				</td>
 				
-				<td class="tdContent">
+				<td class="tdContent" colspan="3">
 					<p:inputText id="gstRegNo"  maxlength="12"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationNo}"
 						size="40" label="#{lbl['lbl.sm.gst.regno']}">
-						<p:ajax event="blur" update="gstRegDateCalId" listener="#{registrationBackingBean.validateGstRegNo}" />
+						<p:ajax event="blur" update="gstRegDateCalId,gstPnlUploadId" listener="#{registrationBackingBean.validateGstRegNo}" />
 					</p:inputText>
+					<p:outputPanel id="gstPnlUploadId">
+						<p:commandButton oncomplete="uploadDlg.show();return false;" rendered="#{registrationBackingBean.managedBean.gstFlag}"
+						value="#{lbl['lbl.txt.attach.files']}" />
+						
+						<p:commandLink rendered="#{registrationBackingBean.managedBean.gstFlag}" value="#{registrationBackingBean.managedBean.fileName}"
+						ajax="false"
+						action="#{registrationBackingBean.downloadUploadedFileDownload}"></p:commandLink>
+					
+					</p:outputPanel>
+					
+<!-- 					<p:commandButton oncomplete="uploadDlg.show();return false;" -->
+<!-- 						icon="iconAttachment" partialSubmit="true" value="#{lbl['lbl.txt.attach.files']}" /> -->
 				</td>
 				
-				<td>&#160;</td>
-				<td>&#160;</td>
+<!-- 				<td>&#160;</td> -->
+<!-- 				<td>&#160;</td> -->
 			</tr>
 			
 			<tr>
@@ -128,7 +140,7 @@
 				
 				<td class="tdContent">
 					<p:calendar id="gstRegDateCalId"
-						navigator="true" required="#{registrationBackingBean.managedBean.gstFlag}" label="#{lbl['lbl.sm.gst.regdate']}"
+						navigator="true" required="#{registrationBackingBean.managedBean.gstFlag and !empty param['disableValidation']}" label="#{lbl['lbl.sm.gst.regdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.gstRegistrationDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  
 						disabled="#{!registrationBackingBean.managedBean.gstFlag}"
@@ -394,4 +406,16 @@
 	</p:panel>
 
 	<ui:include src="/xhtml/sm/shared/onlinereg/businessNature.xhtml" />
+
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" appendToBody="false" resizable="false" width="700px"
+		height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload style="display:inline;" multiple="false" fileUploadListener="#{registrationBackingBean.handleFileUpload}"
+			mode="basic" id="upload" fileLimit="1" sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" update="gstPnlUploadId"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			oncomplete="uploadDlg.hide();return false;">
+		</p:fileUpload>
+	</p:dialog>
+
+
 </ui:composition>
