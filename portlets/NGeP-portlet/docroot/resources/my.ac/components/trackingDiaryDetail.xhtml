@@ -39,7 +39,7 @@
 					<f:facet name="header">
 					#{lbl['lbl.td.doc.role']}
 					</f:facet>
-				#{trackingDiaryObj.roleCode}
+				#{trackingDiaryBackingBean.getRoleDescByCode(trackingDiaryObj.roleCode).roleName}
 				</p:column>
 				<p:column style="white-space: normal" >
 					<f:facet name="header">
