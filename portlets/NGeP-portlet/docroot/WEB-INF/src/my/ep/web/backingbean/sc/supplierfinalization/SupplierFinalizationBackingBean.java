@@ -81,7 +81,6 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -121,7 +120,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
@@ -4483,6 +4481,14 @@ public class SupplierFinalizationBackingBean extends
 							scQtRecommend.getAwardSupplierList().add(
 									evalResultDtl);
 							recommendedSupplierList.add(evalResultDtl);
+							if (recommendDtl.getRecordStatusFlg().equals(
+									DbValueConst.RECORD_STATUS_ACTIVE) && 
+									!(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(
+											scQtRecommend.getRecommendByStr()) || 
+											ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(
+													scQtRecommend.getRecommendByStr()))) {
+								evalResultDtl.setAwareded(true);
+							}							
 						}
 					}
 				}
@@ -4595,7 +4601,7 @@ public class SupplierFinalizationBackingBean extends
 
 				// Reset selection
 				if (StringUtils.isBlank(scQtRecommend.getRecommendByStr())
-						|| pmParameter == null) {
+						&& pmParameter == null) {
 					recommendBySelectionFlag = false;
 				} else {
 					scQtRecommend.setRecommendByStr(pmParameter.getParameterCode());
@@ -5006,6 +5012,9 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
+		if (scQtRecommend.isHigherAuthReq()) {
+			return;
+		}
 		if (scQtRecommend.getRecommendBy() == null) {
 			setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
 			throw new EpException(MessageConst.ERROR_760211);
