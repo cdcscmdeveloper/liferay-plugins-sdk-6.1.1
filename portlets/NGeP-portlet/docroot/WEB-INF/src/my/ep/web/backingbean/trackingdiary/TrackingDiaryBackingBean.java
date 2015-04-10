@@ -3,18 +3,31 @@ package my.ep.web.backingbean.trackingdiary;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.trackingdiary.TrackingDiaryManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.RoleHelper;
 
 @ManagedBean(name = "trackingDiaryBackingBean")
 @RequestScoped
 public class TrackingDiaryBackingBean extends
 		BaseBackingBean<TrackingDiaryManagedBean> {
-	private UserReqDTO reqDTO;
+	private ISearchBean<PmParameterDesc> docTypeSearchBean;
+
+	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
+		if (this.docTypeSearchBean == null) {
+			this.docTypeSearchBean = super.createSearchBean(
+					PmParameterDesc.class, "functionMOD");
+		}
+
+		return this.docTypeSearchBean;
+	}
 
 	public String getUserName(Long userId) {
 		UserReqDTO reqDTO = new UserReqDTO();
@@ -25,5 +38,10 @@ public class TrackingDiaryBackingBean extends
 		return resDTO.getPmUser().getUserName();
 	}
 	
+	public PmRoleDesc getRoleDescByCode(String roleCode) {
+		RoleHelper roleHelper = new RoleHelper();
+		
+		return roleHelper.getRoleDescByCode(roleCode);
+	}
 }
 
