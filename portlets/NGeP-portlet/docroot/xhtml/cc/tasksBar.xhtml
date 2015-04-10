@@ -14,9 +14,10 @@
 				<tr>
 					<td colspan="2">
 						<div class="summary-title">
-							<h:outputFormat value="#{lbl['lbl.cc.task.summary.title']}">
+							<h:outputFormat value="#{lbl['lbl.cc.task.summary.title']}" rendered="#{bpmTaskDashSumBackingBean.totalTask gt 0}">
 								<f:param value="#{bpmTaskDashSumBackingBean.totalTask}" />
 							</h:outputFormat>
+							<h:outputFormat value="#{lbl['lbl.cc.task.summary.title2']}" rendered="#{bpmTaskDashSumBackingBean.totalTask eq 0}" />
 						</div>
 					</td>
 				</tr>
