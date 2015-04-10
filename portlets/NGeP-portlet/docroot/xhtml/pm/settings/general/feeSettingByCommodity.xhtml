@@ -19,7 +19,7 @@
 
 	</div>
 
-	<p:dataTable id="feeByComodityTableID" var="feeObj" row="10"
+	<p:dataTable id="feeByComodityTableID" var="feeObj" rows="10"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
@@ -69,6 +69,7 @@
 
 			<p:calendar showOn="button" id="effDate" style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+				disabled = "#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
@@ -83,7 +84,7 @@
 			                	</f:facet>
 
 			<p:calendar showOn="button" id="comodityfeeExpDateId"
-				style="width :100px;"
+				style="width :100px;" disabled ="#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -100,6 +101,8 @@
 				disabled="#{typeValueObj.brandNew}" style="width:128px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+				<p:ajax event="change" update="@([id$=comodityfeeExpDateId]), @([id$=effDate])"
+					process="@this" />
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="3%">
