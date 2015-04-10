@@ -328,7 +328,16 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 
 			getManagedBean().setPaymentAdvice(paymentAdvice);
 			getManagedBean().setDelOrderList(paymentAdvice.getFulfilmentOrder().getFlDeliveryOrders());
-			getManagedBean().setFulfilmentNoteList(paymentAdvice.getFlRequest().getFlFulfilmentNotes());
+			for(FlDeliveryOrder deliveryOrder : paymentAdvice.getFulfilmentOrder().getFlDeliveryOrders()){
+				for(FlFulfilmentNote flNnote : deliveryOrder.getFlFulfilmentNote()){
+					if(flNnote.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+						if(getManagedBean().getFulfilmentNoteList() == null){
+							getManagedBean().setFulfilmentNoteList(new ArrayList<FlFulfilmentNote>());
+						}
+						getManagedBean().getFulfilmentNoteList().add(flNnote);
+					}
+				}
+			}
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
 			// For PO No Deduction Panel 
