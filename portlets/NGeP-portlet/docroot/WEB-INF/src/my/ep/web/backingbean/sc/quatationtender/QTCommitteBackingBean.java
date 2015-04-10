@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.lang.reflect.InvocationTargetException;
@@ -102,7 +102,7 @@ import org.primefaces.model.TreeNode;
 
 /**
  * The Class QTCommitteBackingBean.
- *
+ * 
  * @author Viswanath
  */
 @ManagedBean(name = "qTCommitteBackingBean")
@@ -116,8 +116,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Debug logger.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
@@ -159,7 +160,7 @@ public class QTCommitteBackingBean extends
 	 * The Class UserCommitteePagingDataModel.
 	 */
 	private class UserCommitteePagingDataModel extends PagingDataModel<PmUser> {
-		
+
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
@@ -168,9 +169,11 @@ public class QTCommitteBackingBean extends
 
 		/**
 		 * Instantiates a new user committee paging data model.
-		 *
-		 * @param componentId the component id
-		 * @param userCommitteeSearchBean the user committee search bean
+		 * 
+		 * @param componentId
+		 *            the component id
+		 * @param userCommitteeSearchBean
+		 *            the user committee search bean
 		 */
 		public UserCommitteePagingDataModel(String componentId,
 				UserCommitteeSearchBean userCommitteeSearchBean) {
@@ -178,8 +181,12 @@ public class QTCommitteBackingBean extends
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
 		}
 
-		/* (non-Javadoc)
-		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
 		protected ISearchResultBean<PmUser> pageChangeListener(
@@ -217,8 +224,10 @@ public class QTCommitteBackingBean extends
 	/**
 	 * Method to prepare user search criteria.
 	 * 
-	 * @param userCommitteeSearchBean the user committee search bean
-	 * @param userSearchBean the user search bean
+	 * @param userCommitteeSearchBean
+	 *            the user committee search bean
+	 * @param userSearchBean
+	 *            the user search bean
 	 */
 	private void populateUserSearchCriteria(
 			UserCommitteeSearchBean userCommitteeSearchBean,
@@ -275,7 +284,7 @@ public class QTCommitteBackingBean extends
 	 * The Class QTPagingDataModel.
 	 */
 	private class QTPagingDataModel extends PagingDataModel<ScQt> {
-		
+
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
@@ -284,9 +293,11 @@ public class QTCommitteBackingBean extends
 
 		/**
 		 * Instantiates a new QT paging data model.
-		 *
-		 * @param componentId the component id
-		 * @param cloneQtnTenderSearchBean the clone qtn tender search bean
+		 * 
+		 * @param componentId
+		 *            the component id
+		 * @param cloneQtnTenderSearchBean
+		 *            the clone qtn tender search bean
 		 */
 		public QTPagingDataModel(String componentId,
 				QtnTenderSearchBean cloneQtnTenderSearchBean) {
@@ -294,8 +305,12 @@ public class QTCommitteBackingBean extends
 			this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
 		}
 
-		/* (non-Javadoc)
-		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
 		public ISearchResultBean<ScQt> pageChangeListener(
@@ -326,9 +341,11 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Populate clone qt search criteria.
-	 *
-	 * @param cloneQtnTenderSearchBean the clone qtn tender search bean
-	 * @param qtSearchBean the qt search bean
+	 * 
+	 * @param cloneQtnTenderSearchBean
+	 *            the clone qtn tender search bean
+	 * @param qtSearchBean
+	 *            the qt search bean
 	 */
 	private void populateCloneQTSearchCriteria(
 			QtnTenderSearchBean cloneQtnTenderSearchBean,
@@ -398,8 +415,9 @@ public class QTCommitteBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			
-			Date fromPublishDate = cloneQtnTenderSearchBean.getFromPublishDate();
+
+			Date fromPublishDate = cloneQtnTenderSearchBean
+					.getFromPublishDate();
 			Date toPublishDate = cloneQtnTenderSearchBean.getToPublishDate();
 			if (null != fromPublishDate || null != toPublishDate) {
 				SearchFilterBean bean = new SearchFilterBean();
@@ -410,8 +428,9 @@ public class QTCommitteBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			
-			Date fromClosingDate = cloneQtnTenderSearchBean.getFromClosingDate();
+
+			Date fromClosingDate = cloneQtnTenderSearchBean
+					.getFromClosingDate();
 			Date toClosingDate = cloneQtnTenderSearchBean.getToClosingDate();
 			if (null != fromClosingDate || null != toClosingDate) {
 				SearchFilterBean bean = new SearchFilterBean();
@@ -458,8 +477,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * On tab change action.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void onTabChangeAction(TabChangeEvent event) {
 
@@ -485,17 +505,19 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Gets the role type dropdown values.
-	 *
+	 * 
 	 * @return the role type dropdown values
 	 */
 	public List<PmParameterDesc> getRoleTypeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		//List<String> recommendList = new ArrayList<String>();
-		//recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+		// List<String> recommendList = new ArrayList<String>();
+		// recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 
-		/*searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));*/
+		/*
+		 * searchBean.getDataFilterBeans().add( new
+		 * SearchFilterBean("pmParameter.parameterCode",
+		 * SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		 */
 
 		return retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
@@ -512,8 +534,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * On row clone action.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void onRowCloneAction(SelectEvent event) {
 		debugLogger("onRowCloneAction");
@@ -545,9 +568,11 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Populate committee tree node.
-	 *
-	 * @param committes the committes
-	 * @param searchcommitteeNode the searchcommittee node
+	 * 
+	 * @param committes
+	 *            the committes
+	 * @param searchcommitteeNode
+	 *            the searchcommittee node
 	 */
 	private void populateCommitteeTreeNode(List<ScCommittee> committes,
 			TreeNode searchcommitteeNode) {
@@ -569,8 +594,9 @@ public class QTCommitteBackingBean extends
 	// To clone multiple committes.. or single committe..
 	/**
 	 * Adds the clone dtl to tabs.
-	 *
-	 * @param isApprovalFlow the is approval flow
+	 * 
+	 * @param isApprovalFlow
+	 *            the is approval flow
 	 */
 	public void addCloneDtlToTabs(boolean isApprovalFlow) {
 		debugLogger("addCloneDtlToTabs");
@@ -696,8 +722,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Removes the unselected childs.
-	 *
-	 * @param parent the parent
+	 * 
+	 * @param parent
+	 *            the parent
 	 * @return the list
 	 */
 	private List<ScCommitteeMember> removeUnselectedChilds(TreeNode parent) {
@@ -734,8 +761,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Committeeclone popup action.
-	 *
-	 * @param committee the committee
+	 * 
+	 * @param committee
+	 *            the committee
 	 */
 	public void committeeclonePopupAction(ScQtCommittee committee) {
 		debugLogger("committeeclonePopupAction");
@@ -756,9 +784,11 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Adds the committe member.
-	 *
-	 * @param committee the committee
-	 * @param titleName the title name
+	 * 
+	 * @param committee
+	 *            the committee
+	 * @param titleName
+	 *            the title name
 	 */
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
 		debugLogger("addCommitteMember");
@@ -780,7 +810,7 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * User selection types gov external new.
-	 *
+	 * 
 	 * @return the selection types
 	 */
 	private void getSelectionTypes() {
@@ -795,8 +825,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * User selcetion action.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void userSelcetionAction(AjaxBehaviorEvent event) {
 		String userSelection = (String) event.getComponent().getAttributes()
@@ -1141,14 +1172,17 @@ public class QTCommitteBackingBean extends
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		this.getManagedBean().setSearchcommitteeNode(null);
-		this.getManagedBean().getCloneQtnTenderSearchBean().setFromPublishDate(null);
-		this.getManagedBean().getCloneQtnTenderSearchBean().setToPublishDate(null);
-		this.getManagedBean().getCloneQtnTenderSearchBean().setFromClosingDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setToPublishDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean()
+				.setFromClosingDate(null);
 	}
 
 	/**
 	 * Gets the user so.
-	 *
+	 * 
 	 * @return the user so
 	 */
 	private IUserSO getUserSO() {
@@ -1158,7 +1192,7 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Gets the parameter so.
-	 *
+	 * 
 	 * @return the parameter so
 	 */
 	private IParameterSO getParameterSO() {
@@ -1168,7 +1202,7 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Gets the org profile so.
-	 *
+	 * 
 	 * @return the org profile so
 	 */
 	private IOrgProfileSO getOrgProfileSO() {
@@ -1176,8 +1210,11 @@ public class QTCommitteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
 
-	/* (non-Javadoc)
-	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#preRenderView()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean#
+	 * preRenderView()
 	 */
 	public void preRenderView() {
 		/*
@@ -1259,8 +1296,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Role change listner.
-	 *
-	 * @param member the member
+	 * 
+	 * @param member
+	 *            the member
 	 */
 	public void roleChangeListner(ScCommitteeMember member) {
 		List<ScCommitteeMember> members = this.getManagedBean()
@@ -1285,10 +1323,13 @@ public class QTCommitteBackingBean extends
 	// To check whether committe needs to be clone or not..
 	/**
 	 * Check clone need r not.
-	 *
-	 * @param evalStg the eval stg
-	 * @param status the status
-	 * @param committeCodes the committe codes
+	 * 
+	 * @param evalStg
+	 *            the eval stg
+	 * @param status
+	 *            the status
+	 * @param committeCodes
+	 *            the committe codes
 	 */
 	private void checkCloneNeedRNot(String evalStg, PmStatus status,
 			Set<String> committeCodes) {
@@ -1366,9 +1407,11 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Checks if is member exists.
-	 *
-	 * @param existingMembers the existing members
-	 * @param newMembers the new members
+	 * 
+	 * @param existingMembers
+	 *            the existing members
+	 * @param newMembers
+	 *            the new members
 	 * @return true, if is member exists
 	 */
 	private boolean isMemberExists(List<ScCommitteeMember> existingMembers,
@@ -1411,8 +1454,9 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * On node unselect.
-	 *
-	 * @param event the event
+	 * 
+	 * @param event
+	 *            the event
 	 */
 	public void onNodeUnselect(NodeUnselectEvent event) {
 		TreeNodeBean nodeBean = (TreeNodeBean) event.getTreeNode().getData();
@@ -1429,54 +1473,26 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Checks if is committe info editable.
-	 *
-	 * @param committeStatus the committe status
-	 * @param commType the comm type
+	 * 
+	 * @param committeStatus
+	 *            the committe status
+	 * @param commType
+	 *            the comm type
 	 * @return true, if is committe info editable
 	 */
 	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
-		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
-				.getStatusId();
-		List<String> commTypes = new ArrayList<String>();
-		if (currentQtStatus >= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
-			commTypes
-					.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-		}
-		if (currentQtStatus >= QTStatusConst.QT_EVALUATION_PROPOSAL) {
-			commTypes.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
-			commTypes.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
-			commTypes
-					.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
-			commTypes
-					.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
-		}
 
 		if (this.getManagedBean().isMaintanceFlow()) {
-
-			if (QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus)) {
+			if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
+					|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
+							.equals(committeStatus)) {
 				return true;
-			} else if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
-					.getManagedBean().getQt().getQtStatus().getStatusId())
-					|| QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
-							.equals(this.getManagedBean().getQt().getQtStatus()
-									.getStatusId())) {
+			} else if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+					.equalsIgnoreCase(commType)) {
 				return true;
-
-			} else {
-				if (!commTypes.contains(commType)) {
-					if (QTStatusConst.CMT_PENDING_APPROVAL
-							.equals(committeStatus)
-							|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
-									.equals(committeStatus)) {
-						return true;
-					} else {
-						return false;
-					}
-				} else {
-					return true;
-				}
 			}
 		} else {
+
 			if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
 					|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
 							.equals(committeStatus)
@@ -1492,7 +1508,7 @@ public class QTCommitteBackingBean extends
 
 	/**
 	 * Checks if is FC editable.
-	 *
+	 * 
 	 * @return true, if is FC editable
 	 */
 	public boolean isFCEditable() {
