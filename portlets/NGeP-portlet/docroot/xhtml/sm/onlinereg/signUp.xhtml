@@ -75,7 +75,7 @@
 			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}">
 				<p:ajax update="btnProceed" partialSubmit="true" process="@this" />
 			</p:selectBooleanCheckbox>
-			#{lbl['lbl.sm.have.agreed']} <a href="">#{lbl['lbl.sm.term.and.condition']}</a>
+			#{lbl['lbl.sm.have.agreed']} #{lbl['lbl.sm.term.and.condition']}
 		</p:panel>
 		<div align="right">
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
