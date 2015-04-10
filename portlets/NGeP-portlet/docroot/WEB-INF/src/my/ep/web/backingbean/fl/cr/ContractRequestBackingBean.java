@@ -116,6 +116,7 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -676,6 +677,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * 
 	 */
 	public void updateDeliveryAddrDt() {
+		if(getManagedBean().isAgencyAddress()) {
+			getManagedBean().setSelectedAddrTypeList(new ArrayList<PmAddressType>());
+			if(getManagedBean().getSelectedAgencyAddressList()!=null && getManagedBean().getSelectedAgencyAddressList().size()>0) {
+				for(CtAgencyAddress ctAgencyAddress : getManagedBean().getSelectedAgencyAddressList()) {
+					getManagedBean().getSelectedAddrTypeList().add(ctAgencyAddress.getAddressType());
+				}
+			}
+		}
 		if (null == getManagedBean().getSelectedAddrTypeList()
 				|| getManagedBean().getSelectedAddrTypeList().isEmpty()) {
 			return;
