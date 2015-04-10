@@ -58,8 +58,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterId}"
 						>
 						<f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
-						<p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
-							update="somVotSearch"/>
+						<!-- <p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
+							update="somVotSearch"/> -->
 					</p:selectOneMenu>
 				</td>
 				<th>
@@ -69,7 +69,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 
 				</td>
 			</tr>
-
+			<ui:remove>
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pp.vot.amanah.type']}" />
@@ -89,6 +89,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					
 				</td>
 			</tr>
+			</ui:remove>
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
