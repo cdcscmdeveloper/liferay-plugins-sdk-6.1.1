@@ -170,7 +170,9 @@
 					</p:inputText>
 					<p:inputText size="24" maxlength="24"
 						disabled="#{paymentMatchBackingBean.managedBean.buttonVal=='View'}"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}">
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}"
+						required="true"
+						label="#{lbl['lbl.fl.payment.match.payment.desc']}">
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.desc']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.ref']}" /></td>
