@@ -448,6 +448,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_PARAM_TYPE_CRT = "CRT";
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
+	public static final String GST_ATTACHMENT_DOC_TYPE = "GST";
 
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
