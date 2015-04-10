@@ -28,10 +28,11 @@
 						<h:outputLabel value="#{lbl['lbl.sc.procurement.category']}" />
 					</td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu id="procCat" style="width:289px" 
+						<p:selectOneMenu id="procCat" style="width:289px" rendered="#{templateDocBackingBean.managedBean.processType == null or
+						templateDocBackingBean.managedBean.processType != 'CT'}"
 							value="#{templateDocBackingBean.managedBean.selectedTemplate.procurementCategory.parameterId}"
 							required="true"	label="#{lbl['lbl.sc.procurement.category']}" 
-							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" >
+							disabled="#{templateDocBackingBean.managedBean.externalPageUrl != null}" >
 							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 						<p:message for="procCat" display="icon" />
