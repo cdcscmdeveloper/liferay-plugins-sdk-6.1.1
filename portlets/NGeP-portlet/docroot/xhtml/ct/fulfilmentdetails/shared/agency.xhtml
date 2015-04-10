@@ -110,7 +110,7 @@
 						buttonLabel="#{lbl['lbl.btn.add']}"
 						selectionMode="multiple"
 						saveObject="contractDetailsBackingBean.managedBean.addressTypeList"
-						conditionField="recordStatus^1|addressType^#{contractDetailsBackingBean.getDeliveryAddressType()}|pmOrgProfile.orgProfileId^#{contractDetailsBackingBean.managedBean.selectedAgency.orgProfile.orgProfileId}"
+						conditionField="#{contractDetailsBackingBean.getDeliveryAddressCondition()}"
 						update=":form:deliveryAddressTbl"
 						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
 					<ac:lovPopup />
