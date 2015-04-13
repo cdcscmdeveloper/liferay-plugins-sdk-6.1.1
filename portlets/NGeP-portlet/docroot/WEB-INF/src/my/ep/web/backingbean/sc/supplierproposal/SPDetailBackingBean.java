@@ -202,6 +202,8 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = getProposalSO()
 					.retrieveProposalDtlBySupplierId(reqDTO);
 			getManagedBean().setQt(resDTO.getScQt());
+			
+			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 			getManagedBean().setQtProposal(resDTO.getScQtProposal());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
 
@@ -258,11 +260,19 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
+	 * Listener for tab change to retrieve Quotation/Tender Document Details 
+	 */
+	public void retrieveQTDocumentDetails() {
+		debugLogger("retrieveTechnicalProposalList");
+		this.getManagedBean().setPrepareActiveIndex(0);
+	}
+	
+	/**
 	 * Listener for tab change to retrieve Technical Proposal List
 	 */
 	public void retrieveTechnicalProposalList() {
 		debugLogger("retrieveTechnicalProposalList");
-		this.getManagedBean().setPrepareActiveIndex(0);
+		this.getManagedBean().setPrepareActiveIndex(1);
 	}
 
 	/**
@@ -270,7 +280,7 @@ public class SPDetailBackingBean extends
 	 */
 	public void retrieveFinancialProposalList() {
 		debugLogger("retrieveFinancialProposalList");
-		this.getManagedBean().setPrepareActiveIndex(1);
+		this.getManagedBean().setPrepareActiveIndex(2);
 	}
 
 	/**
@@ -280,10 +290,26 @@ public class SPDetailBackingBean extends
 	 */
 	public void retrieveDeclarationList() throws Exception {
 		debugLogger("retrieveDeclarationList");
-		this.getManagedBean().setPrepareActiveIndex(2);
+		this.getManagedBean().setPrepareActiveIndex(3);
 
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
+	
+	/**
+	 * method to retrieve integrity details
+	 * @throws Exception
+	 */
+
+	public void retrieveIntegrityDetails() throws Exception {
+		debugLogger("retrieveIntegrityDetails");
+		this.getManagedBean().setPrepareActiveIndex(4);
+		VelocityContext context = new VelocityContext();
+		String othersTermsConditions = DocumentGenerator.getInstance()
+				.getHtmlFromVelocity(
+						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY, context);
+		getManagedBean().setOthersTermsConditions(othersTermsConditions);
+	}
+	
 
 	/**
 	 * Method to submit the Supplier Proposal details
@@ -3557,19 +3583,4 @@ public class SPDetailBackingBean extends
 		}
 	}
 	
-	/**
-	 * method to retrieve integrity details
-	 * @throws Exception
-	 */
-
-	public void retrieveIntegrityDetails() throws Exception {
-		debugLogger("retrieveIntegrityDetails");
-		this.getManagedBean().setPrepareActiveIndex(3);
-		VelocityContext context = new VelocityContext();
-		String othersTermsConditions = DocumentGenerator.getInstance()
-				.getHtmlFromVelocity(
-						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY, context);
-		getManagedBean().setOthersTermsConditions(othersTermsConditions);
-	}
-
 }
