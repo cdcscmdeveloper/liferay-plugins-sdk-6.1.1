@@ -7,22 +7,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:panel id="groupInfo" header="#{lbl['lbl.pm.ug.result.title']}" toggleable="true">
+	<p:panel id="groupInfo" header="#{lbl['lbl.pm.ug.result.title']}"
+		toggleable="true">
 		<p:spacer height="10"></p:spacer>
 
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="width:178px;text-transform:uppercase"
+				</td>
+				<td><p:inputText style="width:220px;text-transform:uppercase"
 						value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
-						disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
+						disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew or usergroupBackingBean.managedBean.userGroup.brandNew}"
 						size="30" maxlength="10" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
+				<td><p:inputText style="width:220px"
 						value="#{usergroupBackingBean.managedBean.userGroup.groupName}"
 						size="30" maxlength="50" /></td>
 			</tr>
@@ -36,8 +37,9 @@
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 							size="10" readonly="true" />&#160;&#160;
       	                   <ac:lov id="uomLovId"
-							lovId="PM_ORG_PROFILE_FPJ" size="60" 
-							update=":form:orgCodeUpdate,:form:userPanelId" headerText="Org Profile Lov" 
+							lovId="PM_ORG_PROFILE_FPJ" size="60"
+							update=":form:orgCodeUpdate,:form:userPanelId"
+							headerText="Org Profile Lov"
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}"
 							saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
@@ -50,7 +52,7 @@
 			<p:spacer height="5"></p:spacer>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
-				<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
+				<td><p:selectOneMenu style="width:230px;margin-bottom:5px;"
 						value="#{usergroupBackingBean.managedBean.userGroup.recordStatusFlg}"
 						disabled="#{usergroupBackingBean.managedBean.userGroup.brandNew}">
 						<f:selectItems
@@ -61,7 +63,8 @@
 	</p:panel>
 	<p:spacer height="20"></p:spacer>
 
-	<p:panel header="#{lbl['lbl.pm.ug.result.title1']}" toggleable="true" id="userPanelId">
+	<p:panel header="#{lbl['lbl.pm.ug.result.title1']}" toggleable="true"
+		id="userPanelId">
 		<ac:lovPopup />
 		<p:dataTable id="groupUser"
 			value="#{usergroupBackingBean.managedBean.userGroups}"
@@ -99,10 +102,10 @@
 					<td>
 						<table>
 							<tr>
-								<td class="TableFieldLeft" style="padding-bottom: 5px" width="100%"><ac:lov
-										id="usergrouping" lovId="PM_USER" headerText="User Selection"
-										buttonLabel="#{lbl['lbl.btn.add']}" 
-										selectionMode="multiple"
+								<td class="TableFieldLeft" style="padding-bottom: 5px"
+									width="100%"><ac:lov id="usergrouping" lovId="PM_USER"
+										headerText="User Selection"
+										buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
 										saveObject="usergroupBackingBean.managedBean.users"
 										postUpdateListener="usergroupBackingBean.userGroupListner(usergroupBackingBean.managedBean.users)"
 										update="@form"
