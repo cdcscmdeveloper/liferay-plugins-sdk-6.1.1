@@ -11,7 +11,8 @@
 	<p:dataTable id="expiredSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.expiredItemList}"
 		rowIndexVar="rowIndex" var="expired"
-		rowKey="#{expired.supplierItemId}">
+		rowKey="#{expired.supplierItemId}"
+		rows="10">
 
 	
 		<ac:paginator for="expiredSupplierItemID"></ac:paginator>

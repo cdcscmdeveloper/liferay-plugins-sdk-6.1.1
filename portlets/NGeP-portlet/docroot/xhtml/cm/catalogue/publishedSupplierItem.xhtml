@@ -11,7 +11,8 @@
 	<p:dataTable id="publishSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.publishedItemList}"
 		rowIndexVar="rowIndex" var="publish"
-		rowKey="#{publish.supplierItemId}">
+		rowKey="#{publish.supplierItemId}"
+		rows="10">
 
 		
 		<ac:paginator for="publishSupplierItemID"></ac:paginator>
