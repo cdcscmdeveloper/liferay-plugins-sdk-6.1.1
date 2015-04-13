@@ -307,6 +307,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
+					for(FlFulfilmentNoteItem flFulfilmentNoteItem :resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
+						flFulfilmentNoteItem.setTotalRecvAmount(flFulfilmentNoteItem.getReceivedAmt());
+						flFulfilmentNoteItem.setTotalRecvQty(flFulfilmentNoteItem.getReceivedQty());
+					}
 				} else {
 					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 					resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -357,6 +361,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(outcome);
 			}
+			
 			getManagedBean().setSelectedTabIndex(0);
 			
 			// Set evaluation
@@ -695,6 +700,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem());
+			getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
 		}
 		
 	}
