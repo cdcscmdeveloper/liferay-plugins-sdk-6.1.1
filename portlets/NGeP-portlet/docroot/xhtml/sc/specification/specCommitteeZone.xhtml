@@ -10,7 +10,7 @@
 			rendered="#{specificationBackingBean.managedBean.ctzones eq 'true'}">
 
 			<p:panel id="ctZoneList"
-				header="#{lbl['lbl.sc.spec.panel.location.details']}"
+				header="#{lbl['lbl.sc.location.details']}"
 				toggleable="true">
 
 
@@ -19,7 +19,7 @@
 					var="Zones" rowIndexVar="index" dynamic="true">
 
 
-					<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
+					<p:column headerText="#{lbl['lbl.sc.zone']}"
 						style="width:90%">
 						<p:tree value="#{Zones}" var="location" selectionMode="single"
 							selection="#{specificationBackingBean.managedBean.panelZoneSelect}">
