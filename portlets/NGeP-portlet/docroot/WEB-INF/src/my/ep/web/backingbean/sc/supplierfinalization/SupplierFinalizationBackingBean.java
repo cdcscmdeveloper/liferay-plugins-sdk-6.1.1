@@ -1777,12 +1777,17 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("isPlanned", planned);
 
-		StringBuilder fulfilmentType = new StringBuilder();
-		if (fulfilmentType != null) {
-			fulfilmentType.append(getParameterDesc(scQt.getFulfilmentType()));
+//		StringBuilder fulfilmentType = new StringBuilder();
+//		if (fulfilmentType != null) {
+//			fulfilmentType.append(getParameterDesc(scQt.getFulfilmentType()));
+//		}
+//		context.put("fulfilmentType", fulfilmentType);
+		StringBuilder contractDuration = new StringBuilder();
+		if (scQt.getContractDuration() != null) {
+			contractDuration.append(scQt.getContractDuration() + " months");
 		}
-		context.put("fulfilmentType", fulfilmentType);
-
+		context.put("contractDuration", contractDuration);
+		
 		boolean isSample = false;
 		if (scQt.isSampleReq()) {
 			isSample = true;
