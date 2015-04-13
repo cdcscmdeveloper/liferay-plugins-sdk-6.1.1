@@ -13,7 +13,9 @@ package my.ep.web.backingbean.pm.category;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -692,26 +694,40 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					this.getManagedBean().setCategoryRestrList(new ArrayList<PmCategoryRestr>());
 				//}
 
-				
-				if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmBasicCategory()!=null){
-					for(PmBasicCategory pmBasicCategory :this.getManagedBean().getPmCategoryL3().getPmBasicCategory()){
-						if(!pmBasicCategory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-							this.getManagedBean().getBasicCategoryList().add(pmBasicCategory);
-						}
+					List<PmMachineCategory> removedDuplicatePmMachineCategory = new ArrayList<>();
+					Set<PmMachineCategory> pmMachineCategorySet = new HashSet<>();
+					List<PmBasicCategory> removedDuplicatePmBasicCategory = new ArrayList<>();
+					Set<PmBasicCategory> pmBasicCategorySet = new HashSet<>();
+					
+					if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmBasicCategory()!=null){
 
-					}
-				}
-				System.out.println("save--MACHINE_Update-->"+this.getManagedBean().getPmCategoryL3().getPmMachineCategory().size());
-				if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmMachineCategory()!=null){
-					for(PmMachineCategory pmMachineCategory :this.getManagedBean().getPmCategoryL3().getPmMachineCategory()){
-						if(!pmMachineCategory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-							pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-							this.getManagedBean().getPmMachineCategoryList().add(pmMachineCategory);
-						}
+						pmBasicCategorySet.addAll(this.getManagedBean().getPmCategoryL3().getPmBasicCategory());
+						removedDuplicatePmBasicCategory.clear();
+						removedDuplicatePmBasicCategory.addAll(pmBasicCategorySet);
 
+						for(PmBasicCategory removedDpmBasicCategory :removedDuplicatePmBasicCategory){
+							if(!removedDpmBasicCategory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+								this.getManagedBean().getBasicCategoryList().add(removedDpmBasicCategory);
+							}
+
+						}
 					}
-				}
-				
+					System.out.println("save--MACHINE_Update-->"+this.getManagedBean().getPmCategoryL3().getPmMachineCategory().size());
+					if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmMachineCategory()!=null){
+
+						pmMachineCategorySet.addAll(this.getManagedBean().getPmCategoryL3().getPmMachineCategory());
+						removedDuplicatePmMachineCategory.clear();
+						removedDuplicatePmMachineCategory.addAll(pmMachineCategorySet);
+
+						for(PmMachineCategory pmMachineCategory :removedDuplicatePmMachineCategory){
+							if(!pmMachineCategory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+								pmMachineCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+								this.getManagedBean().getPmMachineCategoryList().add(pmMachineCategory);
+							}
+
+						}
+					}
+
 				if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()!=null){
 					for(PmCategoryRestr pmCategoryRestr :this.getManagedBean().getPmCategoryL3().getPmCategoryRestrs()){
 						if(!pmCategoryRestr.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
@@ -1622,8 +1638,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 							resetLOV();
 							throw new EpException(MessageConst.ERROR_770165);
 						}
-						
-						tempPmBasicCategoryList.add(pmBasicCategory);
+
+						if(!tempPmBasicCategoryList.contains(pmBasicCategory)){
+							tempPmBasicCategoryList.add(pmBasicCategory);
+						}
 					}
 					    this.getManagedBean().getBasicCategoryList().addAll(tempPmBasicCategoryList);
 					    tempPmBasicCategoryList.clear();
@@ -1735,10 +1753,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 							resetPmMachineLOV();
 							throw new EpException(MessageConst.ERROR_770164);
 						}
-						
-						tempPmMachineCategoryList.add(pmMachineCategory);
+						if(!tempPmMachineCategoryList.contains(pmMachineCategory)){
+							tempPmMachineCategoryList.add(pmMachineCategory);
+						}
 					}
 					this.getManagedBean().getPmMachineCategoryList().addAll(tempPmMachineCategoryList);
+					System.out.println("getTobeAddedPmMachineCategoryList()--->  "+this.getManagedBean().getPmMachineCategoryList().size());
 					tempPmMachineCategoryList.clear();
 				}
 
@@ -1746,6 +1766,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				if(CollectionUtils.isEmpty(this.getManagedBean().getTobeAddedPmMachineCategoryList())){
 					
 					this.getManagedBean().setTobeAddedPmMachineCategoryList(new ArrayList<PmMachineCategory>());
+					tempPmMachineCategoryList.add(pmMachineCategory);
 					this.getManagedBean().getTobeAddedPmMachineCategoryList().addAll(tempPmMachineCategoryList);
 					tempPmMachineCategoryList.clear();
 					System.out.println("getTobeAddedPmMachineCategoryList()--->  "+this.getManagedBean().getTobeAddedPmMachineCategoryList().size());
