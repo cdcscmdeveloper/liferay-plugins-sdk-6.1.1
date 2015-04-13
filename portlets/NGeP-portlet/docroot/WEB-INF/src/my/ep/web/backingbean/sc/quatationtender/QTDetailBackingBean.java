@@ -1456,8 +1456,7 @@ public class QTDetailBackingBean extends
 						ParameterConst.DOCTYPE_FEC_COMMITTE, fecCommitte));
 			}
 			//
-			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(qtId);
-			this.getManagedBean().setFinalizationSecratary(finalizeList);
+			retrieveFinalizationCommitteeType(qtId);
 			// Displaying the Secretary Details
 			/*
 			 * List<PmUser> pmUsersList = retrievePmUserSecratryDtl(commType);
@@ -1553,25 +1552,34 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * Retrieve finalization secratry dtl.
+	 * Retrieve finalization committee types.
 	 * 
 	 * @param qtId
 	 *            the qt id
 	 * @return the list
 	 */
-	private List<PmParameter> retrieveFinalizationSecratryDtl(Long qtId) {
-		ICommitteSO committeSO;
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setQtId(qtId);
-		CommitteResDTO resDTO = null;
-		try {
-			committeSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
-		} finally {
-			committeSO = null;
+	private List<PmParameter> retrieveFinalizationCommitteeType(Long qtId) {
+		List<PmParameter> finalizationSecratary = getManagedBean().getFinalizationSecratary();
+		
+		if (finalizationSecratary == null) {
+			ICommitteSO committeSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				
+				CommitteReqDTO reqDTO = new CommitteReqDTO();
+				reqDTO.setQtId(qtId);
+				CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
+				
+				finalizationSecratary = resDTO.getFinalizationSecratry();
+				
+				getManagedBean().setFinalizationSecratary(finalizationSecratary);
+			} finally {
+				committeSO = null;
+			}
 		}
-		return resDTO.getFinalizationSecratry();
+		
+		return finalizationSecratary;
 	}
 
 	/**
@@ -1633,7 +1641,7 @@ public class QTDetailBackingBean extends
 
 			}
 			this.getManagedBean().setActiveIndex(1);
-			retrieveFinalizationSecratryDtl(qtId);
+			retrieveFinalizationCommitteeType(qtId);
 			retrieveQuationTenderDetails(new Long(qtId), null);
 			if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())) {
@@ -1965,7 +1973,7 @@ public class QTDetailBackingBean extends
 							tabBeans.add(new TabBean(
 									qtApproval.getApprovalType(),
 									qtApproval,
-									pbaApproverSettingDtls(qtApproval, this
+									retrieveFinalizationCommitteeType(this
 											.getManagedBean().getQt().getQtId())));
 						} else if (qtApproval
 								.getApprovalCategory()
@@ -3858,7 +3866,7 @@ public class QTDetailBackingBean extends
 						qtApproval.getScQtApprovalRemarks(),
 						ScQtApprovalRemark.class));
 				TabBean tabBean = new TabBean(qtApproval.getApprovalType(),
-						qtApproval, pbaApproverSettingDtls(qtApproval, this
+						qtApproval, retrieveFinalizationCommitteeType(this
 								.getManagedBean().getQt().getQtId()));
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
 				return "/xhtml/sc/quatationtender/cancelqtdetails.xhtml";
@@ -3914,30 +3922,6 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * Pba approver setting dtls.
-	 * 
-	 * @param approval
-	 *            the approval
-	 * @param qtId
-	 *            the qt id
-	 * @return the list
-	 */
-	private List<PmParameter> pbaApproverSettingDtls(ScQtApproval approval,
-			Long qtId) {
-		ICommitteSO committeSO = (ICommitteSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						ICommitteSO.class);
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setQtId(qtId);
-		CommitteResDTO committeResDTO = committeSO
-				.retrieveFinalizationCommitteeType(reqDTO);
-		List<PmParameter> finalizationSecreatry = committeResDTO
-				.getFinalizationSecratry();
-
-		return finalizationSecreatry;
-	}
-
-	/**
 	 * Change pb secretary comm type.
 	 * 
 	 * @param event
@@ -3961,11 +3945,8 @@ public class QTDetailBackingBean extends
 				}
 			}
 		} else {
-			this.getManagedBean().getQt().setFinalizationSecratery(null);
-			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(getManagedBean()
+			retrieveFinalizationCommitteeType(getManagedBean()
 					.getQt().getQtId());
-			log.info("Finalization Secratory Size : " + finalizeList.size());
-			this.getManagedBean().setFinalizationSecratary(finalizeList);
 		}
 	}
 
