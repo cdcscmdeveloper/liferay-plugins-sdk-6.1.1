@@ -21,7 +21,7 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private String statusDesc;
 	
 	private boolean hyperlink;
-	private Map<String,String> mofUserMap;
+	private Map<String,String> userActionMap;
 	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -47,12 +47,12 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 		this.hyperlink = hyperlink;
 	}
 
-	public Map<String, String> getMofUserMap() {
-		return mofUserMap;
+	public Map<String, String> getUserActionMap() {
+		return userActionMap;
 	}
 
-	public void setMofUserMap(Map<String, String> mofUserMap) {
-		this.mofUserMap = mofUserMap;
+	public void setUserActionMap(Map<String, String> userActionMap) {
+		this.userActionMap = userActionMap;
 	}
 
 }
