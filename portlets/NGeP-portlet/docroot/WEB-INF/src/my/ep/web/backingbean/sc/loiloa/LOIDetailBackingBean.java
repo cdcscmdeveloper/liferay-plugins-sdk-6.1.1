@@ -811,6 +811,7 @@ public class LOIDetailBackingBean extends
 		log.info("backToPrevious");
 		retrieveLOIList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
+		getManagedBean().setButtonFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
@@ -1257,6 +1258,7 @@ public class LOIDetailBackingBean extends
 
 			populateLOIDetails(resDTO);
 			getManagedBean().setEditFlag(true);
+			getManagedBean().setButtonFlag(true);
 		} catch (Exception ex) {
 			handleException(ex);
 		}
@@ -1287,6 +1289,7 @@ public class LOIDetailBackingBean extends
 			handleException(ex);
 		}
 		getManagedBean().setEditFlag(true);
+		getManagedBean().setButtonFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
 			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
