@@ -173,14 +173,14 @@
 						action="#{organisationBackingBean.addContacePerson}"
 						update="addManualDelAddrPnl" process="addManualDelAddrPnl"
 						partialSubmit="true">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							title="Contact Person"
-							value="/resources/ep/images/design/edit.png" />
+						<p:graphicImage
+							title="#{lbl['lbl.pm.header.general.org.contactPerson']}"
+							value="/css/images/design/edit.png" />
 					</p:commandLink></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog id="contactPerson" header="#{lbl['lbl.pm.header.general.org.contactPerson']}" closable="false"
+	<p:dialog id="contactPerson" header="#{lbl['lbl.pm.header.general.org.contactPerson']}" closable="false" resizable="false" 
 		widgetVar="contactPersonPopup" modal="true" width="600" height="200">
 		<p:messages id="OrgContactMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
