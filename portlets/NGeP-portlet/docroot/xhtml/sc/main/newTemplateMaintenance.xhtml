@@ -34,14 +34,14 @@
 		<div class="clear"></div>
 		<p:spacer height="40"></p:spacer>
 		<!-- 	<ui:include src="/xhtml/sc/main/templateMaintenanceheader.xhtml"></ui:include> -->
-		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true"
 			style="width:100%;">
 
 
 			<table>
 				<tr>
 					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							style="margin-bottom:5px;" maxlength="200"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}">
@@ -52,10 +52,10 @@
 
 				<tr>
 					<td style="width: 10%"><h:outputLabel
-							value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
+							value="#{lbl['lbl.sc.item.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" /></td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.specification.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
@@ -74,7 +74,7 @@
 				<tr>
 
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
+							value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<td><h:outputLabel
@@ -95,7 +95,7 @@
 			</table>
 
 			<p:dialog id="bocreateTechnicalDialog"
-				widgetVar="createTechnicalDialog" header="Cancel Confirmation"
+				widgetVar="createTechnicalDialog" header="#{lbl['lbl.sc.cancel.confirm']}"
 				resizable="false" width="325" height="75" closable="false">
 				<table>
 					<tr>
