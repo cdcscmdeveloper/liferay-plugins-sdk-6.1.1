@@ -16,7 +16,7 @@
 	<div style="border: 1px solid #a1a1a1;">		
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">	
 	    <tr>
-	    	<td align="center"><img src='http://$hostUrl/NGeP-portlet/resources/ep/images/Lambang_Malaysia_2010.jpg' width='124' height='100' /></td>
+	    	<td align="center"><img src='http://$hostUrl/NGeP-portlet/css/images/Lambang_Malaysia_2010.jpg' width='124' height='100' /></td>
 	    </tr>
 		</table>
 	</div>
