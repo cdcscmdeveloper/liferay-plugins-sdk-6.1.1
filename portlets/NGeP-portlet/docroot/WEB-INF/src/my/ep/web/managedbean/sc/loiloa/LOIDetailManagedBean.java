@@ -299,6 +299,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The terms conditions. */
 	private String termsConditions;
 	
+	
+	/** The button flag. */
+	private boolean buttonFlag;
+	
 	/**
 	 * Gets the sc qt evaluation result.
 	 *
@@ -1775,4 +1779,23 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setTermsConditions(String termsConditions) {
 		this.termsConditions = termsConditions;
 	}
+
+	/**
+	 * Checks if is button flag.
+	 *
+	 * @return the buttonFlag
+	 */
+	public boolean isButtonFlag() {
+		return buttonFlag;
+	}
+
+	/**
+	 * Sets the button flag.
+	 *
+	 * @param buttonFlag the buttonFlag to set
+	 */
+	public void setButtonFlag(boolean buttonFlag) {
+		this.buttonFlag = buttonFlag;
+	}
+	
 }
