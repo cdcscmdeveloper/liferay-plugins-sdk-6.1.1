@@ -114,7 +114,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column style="white-space:nowrap;">
 	        
 	       		<ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" update=":form:dtExpenditurePlanB" 
-   					disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}"
+   					disabled="#{!epItem.brandNew}"
 			    	required="#{!empty param['disableValidation']}"
 	            	readonly="true" 
 					headerText="#{lbl['lbl.pp.goso.code']}"
