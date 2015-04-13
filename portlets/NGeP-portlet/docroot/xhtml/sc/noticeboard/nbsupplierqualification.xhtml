@@ -37,7 +37,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.sc.mof.no']}" ></h:outputLabel>
 				</td>
 				<td><p:inputText value="#{noticeBoardBackingBean.managedBean.mofNo}" 
-							readonly="#{noticeBoardBackingBean.managedBean.mofNo ne null?'true':'false'}"></p:inputText></td>
+							readonly="#{noticeBoardBackingBean.managedBean.supplierMofNo ne null?'true':'false'}"></p:inputText></td>
 				<td><p:commandButton value="#{lbl['lbl.btn.check']}"
 						id="nbCheckSupplierQualification"
 						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
