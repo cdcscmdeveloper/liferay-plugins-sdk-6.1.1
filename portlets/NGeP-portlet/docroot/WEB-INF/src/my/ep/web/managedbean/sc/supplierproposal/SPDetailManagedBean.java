@@ -15,6 +15,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
@@ -72,6 +73,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	// Tab Menu
 	private int prepareActiveIndex;
+	
+	private List<ScQtDocReport> scQtDocReports;
 
 	private ScQtProposalChecklist selectDetails;
 	/**
@@ -1510,6 +1513,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckListDefintionKey(String checkListDefintionKey) {
 		this.checkListDefintionKey = checkListDefintionKey;
+	}
+
+	/**
+	 * @return the scQtDocReports
+	 */
+	public List<ScQtDocReport> getScQtDocReports() {
+		return scQtDocReports;
+	}
+
+	/**
+	 * @param scQtDocReports the scQtDocReports to set
+	 */
+	public void setScQtDocReports(List<ScQtDocReport> scQtDocReports) {
+		this.scQtDocReports = scQtDocReports;
 	}
 
 }
