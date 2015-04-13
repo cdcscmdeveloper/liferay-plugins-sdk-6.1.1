@@ -495,6 +495,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}	
+			if(!isGovtSeller()){
+				flOrderBB.getManagedBean().setSupplier(isFlFulfilmentSupplier());
+			}
 			navgPage=NAV_TO_MAINTAIN_CO;
 		}else if(docType.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
