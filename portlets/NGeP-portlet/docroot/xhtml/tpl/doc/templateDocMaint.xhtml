@@ -28,8 +28,7 @@
 						<h:outputLabel value="#{lbl['lbl.sc.procurement.category']}" />
 					</td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu id="procCat" style="width:289px" rendered="#{templateDocBackingBean.managedBean.processType == null or
-						templateDocBackingBean.managedBean.processType != 'CT'}"
+						<p:selectOneMenu id="procCat" style="width:289px" 
 							value="#{templateDocBackingBean.managedBean.selectedTemplate.procurementCategory.parameterId}"
 							required="true"	label="#{lbl['lbl.sc.procurement.category']}" 
 							disabled="#{templateDocBackingBean.managedBean.externalPageUrl != null}" >
