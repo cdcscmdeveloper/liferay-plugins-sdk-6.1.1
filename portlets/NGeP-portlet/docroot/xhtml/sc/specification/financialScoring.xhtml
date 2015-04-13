@@ -11,7 +11,7 @@
 		toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tech.weightage']}" />
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.weightage']}" />
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<p:outputLabel value="*" styleClass="mandatory" />
@@ -19,7 +19,7 @@
 
 				<td><p:selectOneRadio id="finScoreWeight"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-						label="#{lbl['lbl.sc.spec.tech.weightage']}" required="true"
+						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -49,7 +49,7 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
+					<h:outputText value="#{lbl['lbl.sc.score']}" />
 				</f:facet>
 				<ui:fragment
 					rendered="#{finance.definationType.parameterCode eq 'TS' or finance.definationType.parameterCode eq 'SD' or finance.definationType.parameterCode eq 'WF'}">
@@ -60,7 +60,7 @@
 					<p:inputText value="#{finance.qtScoreWeightage.score}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						maxlength="18" required="true"
-						label="#{lbl['lbl.sc.spec.stage2.score']}" id="finScoreWeightage"
+						label="#{lbl['lbl.sc.score']}" id="finScoreWeightage"
 						style="text-align:right">
 						<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 						<p:ajax event="blur" process="@this"
@@ -96,7 +96,7 @@
 
 				<tr>
 					<td style="width: 149px;"><h:outputText
-							value="#{lbl['lbl.sc.spec.net.total.points']} " /></td>
+							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 					<td><p:inputText readonly="true" disabled="true"
 							style="text-align:right"
 							value="#{specificationBackingBean.managedBean.finPoints}"></p:inputText>
@@ -117,12 +117,12 @@
 		</h:panelGroup>
 	</p:panel>
 	<h:panelGroup id="offeredPrice">
-		<p:panel header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
+		<p:panel header="#{lbl['lbl.sc.by.package']}"
 			toggleable="true">
 			<table>
 				<tr>
 					<td style="width: 100px;"><h:outputText
-							value="#{lbl['lbl.sc.spec.fin.pasing.score']}" /></td>
+							value="#{lbl['lbl.sc.spec.pasing.score']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
@@ -136,15 +136,15 @@
 				<f:facet name="header">
 					<p:row>
 						<p:column styleClass="panelGridHeaders" style="width:20%;"
-							colspan="1">#{lbl['lbl.sc.spec.fin.score.offer.price']}</p:column>
+							colspan="1">#{lbl['lbl.sc.offered.price']}</p:column>
 						<p:column styleClass="panelGridHeaders" style="width:15%;"
-							colspan="1">#{lbl['lbl.sc.spec.fin.score.from.varience']}</p:column>
+							colspan="1">#{lbl['lbl.sc.spec.score.from.varience']}</p:column>
 						<p:column styleClass="panelGridHeaders" style="width:15%;"
-							colspan="1">#{lbl['lbl.sc.spec.fin.score.to.varience']}</p:column>
-						<p:column styleClass="panelGridHeaders" style="width:20%;">#{lbl['lbl.sc.spec.fin.score.below.varience']}</p:column>
+							colspan="1">#{lbl['lbl.sc.spec.score.to.varience']}</p:column>
+						<p:column styleClass="panelGridHeaders" style="width:20%;">#{lbl['lbl.sc.spec.score.below.varience']}</p:column>
 						<p:column styleClass="panelGridHeaders"
-							style="width:15%;text-align:center;">#{lbl['lbl.sc.spec.fin.score.within.variance']}</p:column>
-						<p:column styleClass="panelGridHeaders" style="width:15%;">#{lbl['lbl.sc.spec.fin.score.above.variance']}</p:column>
+							style="width:15%;text-align:center;">#{lbl['lbl.sc.spec.score.within.variance']}</p:column>
+						<p:column styleClass="panelGridHeaders" style="width:15%;">#{lbl['lbl.sc.spec.score.above.variance']}</p:column>
 					</p:row>
 				</f:facet>
 				<p:row>
@@ -153,7 +153,7 @@
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 							<h:outputText value="* " styleClass="mandatory" />
 						</ui:fragment>
-					#{lbl['lbl.sc.spec.fin.score.by.package']}</p:column>
+					#{lbl['lbl.sc.by.package']}</p:column>
 					<p:column>
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -201,12 +201,12 @@
 		</p:panel>
 	</h:panelGroup>
 	<p:panel id="financialScoringItemPanle"
-		header="#{lbl['lbl.sc.spec.fin.score.by.item']}" toggleable="true">
+		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
 
 		<table>
 			<tr>
 				<td style="width: 100px;"><h:outputText
-						value="#{lbl['lbl.sc.spec.fin.pasing.score']}" /></td>
+						value="#{lbl['lbl.sc.spec.pasing.score']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
@@ -224,9 +224,9 @@
 			<f:facet name="header">
 
 				<p:row>
-					<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.item']}</p:column>
-					<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.others']}</p:column>
-					<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.score']}</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.item']}</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.others']}</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.score']}</p:column>
 				</p:row>
 			</f:facet>
 

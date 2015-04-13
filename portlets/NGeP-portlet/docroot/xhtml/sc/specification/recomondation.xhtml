@@ -13,12 +13,12 @@
 		<h:panelGroup
 			rendered="#{((specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false') or (specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true') or (specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
 			<p:panel id="package"
-				header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
+				header="#{lbl['lbl.sc.by.package']}"
 				toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.recommendation.technical']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.spec.technical']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
@@ -30,7 +30,7 @@
 					</tr>
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.fin.scoring.financial']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.spec.financial']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
@@ -42,7 +42,7 @@
 					</tr>
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.recommendation.total']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.total']}"></h:outputLabel></td>
 						<td><p:inputText id="totalrecommendation"
 								style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageTotal}"
@@ -51,7 +51,7 @@
 					</tr>
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}">
@@ -64,12 +64,12 @@
 
 
 
-			<p:panel id="item" header="#{lbl['lbl.sc.spec.fin.score.by.item']}"
+			<p:panel id="item" header="#{lbl['lbl.sc.by.item']}"
 				toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
@@ -83,13 +83,13 @@
 					<f:facet name="header">
 						<p:row>
 							<p:column styleClass="panelGridHeaders" colspan="1"></p:column>
-							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.recommendation.item']}</p:column>
-							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.recommendation.others']}</p:column>
-							<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.spec.recommendation.score']}</p:column>
+							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.item']}</p:column>
+							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.others']}</p:column>
+							<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.spec.score']}</p:column>
 						</p:row>
 					</f:facet>
 					<p:row>
-						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.recommendation.technical']}</p:column>
+						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.technical']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -117,7 +117,7 @@
 						</p:column>
 					</p:row>
 					<p:row>
-						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.scoring.financial']}</p:column>
+						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.financial']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -163,13 +163,13 @@
 		<h:panelGroup
 			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false'}">
 			<p:panel id="recommendTechnicalItem"
-				header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
+				header="#{lbl['lbl.sc.by.package']}"
 				toggleable="true">
 				<table>
 
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
 						<td><p:inputText maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}"
@@ -181,12 +181,12 @@
 				</table>
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.sc.spec.fin.score.by.item']}"
+			<p:panel header="#{lbl['lbl.sc.by.item']}"
 				toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.spec.passing.score.percentage']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
@@ -200,14 +200,14 @@
 
 						<p:row>
 							<p:column colspan="1"></p:column>
-							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.item']}</p:column>
-							<p:column colspan="1">#{lbl['lbl.sc.spec.recommendation.others']}</p:column>
-							<p:column>#{lbl['lbl.sc.spec.recommendation.score']}</p:column>
+							<p:column colspan="1">#{lbl['lbl.sc.item']}</p:column>
+							<p:column colspan="1">#{lbl['lbl.sc.spec.others']}</p:column>
+							<p:column>#{lbl['lbl.sc.spec.score']}</p:column>
 						</p:row>
 					</f:facet>
 
 					<p:row>
-						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.scoring.financial']}</p:column>
+						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.financial']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"

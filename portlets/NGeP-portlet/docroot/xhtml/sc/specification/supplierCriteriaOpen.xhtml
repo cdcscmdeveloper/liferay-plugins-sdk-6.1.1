@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.category.code']}" toggleable="true">
 
 
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
@@ -39,7 +39,7 @@
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
+			<p:column headerText="#{lbl['lbl.sc.mandatory']}"
 				style="text-align:center;">
 				<p:selectBooleanCheckbox value="#{cateGory.mandatory}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}">
@@ -68,7 +68,7 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.zonal =='false')  or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'  and specificationBackingBean.managedBean.scQt.zonal) or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'  and specificationBackingBean.managedBean.scQt.zonal =='false'))}">
 
 		<table style="width: 100%">
@@ -138,11 +138,11 @@
 					</tr>
 					<tr>
 						<td style="width: 145px"><p:outputLabel
-								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
+								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locLevels"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
-								label="#{lbl['lbl.sc.spec.zone.location.level']}"
+								label="#{lbl['lbl.sc.location.level']}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
 
@@ -222,7 +222,7 @@
 			</h:panelGroup>
 
 
-			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+			<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
 				<table style="width: 100%">
 					<tr>
@@ -241,7 +241,7 @@
 
 					<tr>
 						<td style="width: 94px"><p:outputLabel
-								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
+								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locZoneLevels"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -328,7 +328,7 @@
 				</div>
 			</h:panelGroup>
 
-			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
+			<p:dialog header="#{lbl['lbl.sc.add.location']}"
 				widgetVar="ZoneLocation" modal="true" width="490" position="top"
 				height="410">
 				<p:panel id="zonePopupPanel">
@@ -387,11 +387,11 @@
 
 
 	<p:panel id="businessOwnerTotalSuppliers"
-		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
+		header="#{lbl['lbl.sc.spec.qualified.suppliers']}">
 		<table>
 			<tr>
 				<td style="width: 150px"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
+						value="#{lbl['lbl.sc.totalsup']}" /></td>
 				<td><p:inputText style="margin-right:5px;" disabled="true"
 						value="#{specificationBackingBean.managedBean.totalSuppliers}" />
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
