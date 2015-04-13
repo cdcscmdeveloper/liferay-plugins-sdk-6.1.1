@@ -19,6 +19,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
+import my.ep.biz.bean.sc.QTRuleDataBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -1009,6 +1010,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtLocCriteria> supplierLocationList;
 
 	private boolean paidupcapital;
+	
+	private QTRuleDataBean ruleDataBean;
 	
 	/**
 	 * Sets the panel suppliers.
@@ -6345,6 +6348,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPaidupcapital(boolean paidupcapital) {
 		this.paidupcapital = paidupcapital;
+	}
+
+	public QTRuleDataBean getRuleDataBean() {
+		return ruleDataBean;
+	}
+
+	public void setRuleDataBean(QTRuleDataBean ruleDataBean) {
+		this.ruleDataBean = ruleDataBean;
 	}
 
 }
