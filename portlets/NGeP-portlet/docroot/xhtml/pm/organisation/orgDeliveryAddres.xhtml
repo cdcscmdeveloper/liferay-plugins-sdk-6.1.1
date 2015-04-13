@@ -41,8 +41,8 @@
 					actionListener="#{organisationBackingBean.editDeliveryAddress(address)}"
 					update="@([id$=deliveryAddressDialog])"								
 					style="padding-right:5px">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+					<p:graphicImage 
+						value="/css/images/design/edit.png" />
 				</p:commandLink>
 			</p:column>
 
@@ -59,7 +59,7 @@
 		</div>
 
 	</p:panel>
-	<p:dialog header="#{lbl['lbl.pm.header.general.org.delivery']}" widgetVar="addressPopup" id="deliveryAddressDialog"
+	<p:dialog header="#{lbl['lbl.pm.header.general.org.delivery']}" widgetVar="addressPopup" id="deliveryAddressDialog" resizable="false"
 		modal="true" width="900" height="450">
 
 		<p:panel header="#{lbl['lbl.pm.header.general.org.delivery']}" toggleable="true" >

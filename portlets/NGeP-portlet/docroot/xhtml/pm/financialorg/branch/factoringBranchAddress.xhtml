@@ -164,14 +164,13 @@
 						action="#{financialOrgBackingBean.addBranchContacePerson}"
 						update="branchAddress" process="branchAddress"
 						partialSubmit="true">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							title="Contact Person"
-							value="/resources/ep/images/design/edit.png" />
+						<p:graphicImage title="#{lbl['lbl.pm.header.general.org.contactPerson']}"
+							value="/css/images/design/edit.png" />
 					</p:commandLink></td>
 			</tr>
 		</table>
 	</p:outputPanel>
-	<p:dialog id="branchContactPerson" header="Contact Person"
+	<p:dialog id="branchContactPerson" header="#{lbl['lbl.pm.header.general.org.contactPerson']}"
 		widgetVar="branchContactPersonPopup" modal="true" width="600"
 		height="200">
 

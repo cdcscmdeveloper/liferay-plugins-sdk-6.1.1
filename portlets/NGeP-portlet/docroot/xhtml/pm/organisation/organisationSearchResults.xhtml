@@ -31,9 +31,9 @@
 				<p:commandLink
 					action="#{organisationBackingBean.redirectToOrganisation(organisation.orgProfileId)}"
 					update="@form">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						title="Edit Organisation"
-						value="/resources/ep/images/design/edit.png" />
+					<p:graphicImage 
+						title="#{lbl['lbl.pm.org.edit']}"
+						value="/css/images/design/edit.png" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
