@@ -21,7 +21,7 @@
 				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
@@ -47,14 +47,14 @@
 		</table>
 
 		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.tech.employee.list']}"
+		<p:panel header="#{lbl['lbl.sc.spec.tech.staff.list']}"
 			toggleable="true">
 
 			<p:dataTable id="techEmployeeList" var="techEmployee"
 				rowIndexVar="index">
 				<ac:paginator for="techEmployeeList"></ac:paginator>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.tech.name']}">
+				<p:column headerText="#{lbl['lbl.sc.name']}">
 					<h:outputText></h:outputText>
 				</p:column>
 
@@ -66,11 +66,11 @@
 					<h:outputText></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.tech.qualification']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.qualification']}">
 					<h:outputText></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.tech.yrs.exp']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.no.of.yrs.exp']}">
 					<h:outputText></h:outputText>
 				</p:column>
 			</p:dataTable>

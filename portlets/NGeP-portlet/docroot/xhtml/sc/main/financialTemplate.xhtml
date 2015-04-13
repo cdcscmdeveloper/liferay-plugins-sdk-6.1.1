@@ -21,13 +21,13 @@
 				immediate="true"
 				action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',2)}" />
 
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',2)}" />
@@ -45,18 +45,18 @@
 			<table>
 				<tr>
 					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							disabled="true" maxlength="200" style="margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 10%"><h:outputLabel
-							value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
+							value="#{lbl['lbl.sc.item.type']}" /></td>
 					<td><p:inputText
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}"
 							disabled="true" size="30" /></td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.specification.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
@@ -72,7 +72,7 @@
 				<tr>
 
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
+							value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<!-- 	<td><h:outputLabel
