@@ -417,7 +417,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		
 		SmCompanyBasic companyBasic = retrieveSmCompanyBasic(supplier.getSupplierId());
 		if(companyBasic.isWithFederal() && supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-			if(!checkSoftCertRequest(supplier.getSupplierId())){
+			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
 				String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
 				mofActionMap.put(msg, MOF_SOFTCERT_REQUEST);
 			}
@@ -444,7 +444,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	
-	private boolean checkSoftCertRequest(Long supplierId){
+	private boolean checkPendingSoftCertRequest(Long supplierId){
 		IPersonnelSO personnelSO =  SmServiceLookup.getPersonnelSO();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
@@ -455,7 +455,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		log.info("resDTO.getSmPersonnelList().size(): "+ resDTO.getSmPersonnelList().size());
 		if(resDTO.getSmPersonnelList().size() > 0){
 			for(SmPersonnel personnel : resDTO.getSmPersonnelList()){
-				if(personnel.getSoftcertFlg() > 0){
+				if(personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ){
 					softCertStatus = true;
 					break;
 				}
