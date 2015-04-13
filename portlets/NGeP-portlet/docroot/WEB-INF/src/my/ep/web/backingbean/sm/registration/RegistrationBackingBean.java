@@ -531,18 +531,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 /*		smAppl.setApplType(SupplierManagementConst.TEMP_TYPE);
 		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);*/
 		
-		
-		/*
-		 * Gst FIle Upload
-		 */
-		
-		SmAttachment smAttachment = new SmAttachment();
-		if(getManagedBean().isGstFlag() && getManagedBean().getFileName() != null){
-			smAttachment = gstFileUpload();
-		}
 		/*if(getManagedBean().isGstFlag() && getManagedBean().getFileUpload().getFile() != null){
 			smAttachment = gstFileUpload();
 		}*/
+		
 		
 		
 		/*
@@ -560,8 +552,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		FacesScopes fs = new FacesScopes();
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
-		
-		if(smAttachment != null){
+
+		/*
+		 * Gst FIle Upload
+		 */
+		if(getManagedBean().isGstFlag() && getManagedBean().getFileName() != null){
+			SmAttachment smAttachment = new SmAttachment();
+			smAttachment = gstFileUpload();
 			reqDTO.setSmAttachment(smAttachment);
 		}
 		
