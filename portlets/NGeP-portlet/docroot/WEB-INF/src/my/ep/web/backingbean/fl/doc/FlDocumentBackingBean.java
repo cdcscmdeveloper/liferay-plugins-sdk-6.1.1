@@ -573,6 +573,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
 				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
+				fulfilmentNoteItem.setTotalRecvAmount(fulfilmentNoteItem.getReceivedAmt());
+				fulfilmentNoteItem.setTotalRecvQty(fulfilmentNoteItem.getReceivedQty());
 			}
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
 			recNoteBB.getManagedBean().setDocMaintainRemarks(true);
