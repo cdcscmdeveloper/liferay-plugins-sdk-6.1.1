@@ -6320,22 +6320,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.supplierLocationList = supplierLocationList;
 	}
 
-	public boolean isMaintanceFlow() {
-		return maintanceFlow;
-	}
-
-	public void setMaintanceFlow(boolean maintanceFlow) {
-		this.maintanceFlow = maintanceFlow;
-	}
-
-	public QtAmendMentBean getAmendMentBean() {
-		return amendMentBean;
-	}
-
-	public void setAmendMentBean(QtAmendMentBean amendMentBean) {
-		this.amendMentBean = amendMentBean;
-	}
-
 	/**
 	 * @return the paidupcapital
 	 */
@@ -6350,10 +6334,44 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.paidupcapital = paidupcapital;
 	}
 
+	/**
+	 * @return the maintanceFlow
+	 */
+	public boolean isMaintanceFlow() {
+		return maintanceFlow;
+	}
+
+	/**
+	 * @param maintanceFlow the maintanceFlow to set
+	 */
+	public void setMaintanceFlow(boolean maintanceFlow) {
+		this.maintanceFlow = maintanceFlow;
+	}
+
+	/**
+	 * @return the amendMentBean
+	 */
+	public QtAmendMentBean getAmendMentBean() {
+		return amendMentBean;
+	}
+
+	/**
+	 * @param amendMentBean the amendMentBean to set
+	 */
+	public void setAmendMentBean(QtAmendMentBean amendMentBean) {
+		this.amendMentBean = amendMentBean;
+	}
+
+	/**
+	 * @return the ruleDataBean
+	 */
 	public QTRuleDataBean getRuleDataBean() {
 		return ruleDataBean;
 	}
 
+	/**
+	 * @param ruleDataBean the ruleDataBean to set
+	 */
 	public void setRuleDataBean(QTRuleDataBean ruleDataBean) {
 		this.ruleDataBean = ruleDataBean;
 	}
