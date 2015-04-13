@@ -14,7 +14,7 @@
 		<h:outputStylesheet library="ep/css" name="ep.css" />
 	</h:head>
 	<ui:define name="contentSection">
-		<p:panel id="suppQualPnl" header="#{lbl['lbl.td.doc.trackingDiary']}" >
+		<p:panel id="trackingDiary" header="#{lbl['lbl.td.doc.trackingDiary']}" >
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20">
 				
 				<h:column>
@@ -24,7 +24,7 @@
 				<h:column>
 					<p:selectOneMenu id="functionMOD" value="#{trackingDiaryBackingBean.managedBean.moduleSelect}">
 						<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('MOD')}" />
-			        	<p:ajax event="change" onstart="#{trackingDiaryBackingBean.onModuleSelect()}" partialSubmit="true" update="suppQualPnl"/>
+			        	<p:ajax event="change" onstart="#{trackingDiaryBackingBean.onModuleSelect()}" partialSubmit="true" update="trackingDiary"/>
 					</p:selectOneMenu>
 
 				</h:column>
