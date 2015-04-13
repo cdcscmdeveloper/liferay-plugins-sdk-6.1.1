@@ -5,7 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui" xmlns:dp="http://openam.com/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="resourceSection">
@@ -22,37 +22,37 @@
 						value="*" styleClass="mandatory" />
 				</h:column>
 				<h:column>
-					<p:selectOneMenu value="#{trackingDiaryBackingBean.managedBean.codeType}">
+					<p:selectOneMenu id="functionMOD" value="#{trackingDiaryBackingBean.managedBean.moduleSelect}">
 						<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('MOD')}" />
-			        	<p:ajax event="change" partialSubmit="true" update="suppQualPnl"/>
+			        	<p:ajax event="change" onstart="#{trackingDiaryBackingBean.onModuleSelect()}" partialSubmit="true" update="suppQualPnl"/>
 					</p:selectOneMenu>
 
 				</h:column>
 			</h:panelGrid>
 					
 			<h:panelGroup id="TrackingDiary">
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'SM'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'SM'}">
 					<ui:include src="/xhtml/trackingdiary/smTrackingDiarySearch.xhtml" />
 				</c:if>
-<!-- 				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'PP'}"> -->
+<!-- 				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'PP'}"> -->
 <!-- 					<ui:include src="/xhtml/trackingdiary/ppTrackingDiarySearch.xhtml" /> -->
 <!-- 				</c:if> -->
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CT'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'CT'}">
 					<ui:include src="/xhtml/trackingdiary/ctTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'FL'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'FL'}">
 					<ui:include src="/xhtml/trackingdiary/flTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CM'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'CM'}">
 					<ui:include src="/xhtml/trackingdiary/cmTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'SC'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'SC'}">
 					<ui:include src="/xhtml/trackingdiary/scTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'DP'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'DP'}">
 					<ui:include src="/xhtml/trackingdiary/dpTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CD'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelect == 'CD'}">
 					<ui:include src="/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml" />
 				</c:if>
 			</h:panelGroup>
