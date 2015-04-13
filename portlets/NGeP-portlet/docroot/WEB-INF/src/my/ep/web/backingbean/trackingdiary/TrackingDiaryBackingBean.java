@@ -2,6 +2,7 @@ package my.ep.web.backingbean.trackingdiary;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -28,7 +29,17 @@ public class TrackingDiaryBackingBean extends
 
 		return this.docTypeSearchBean;
 	}
-
+	
+	 /**
+	 * Page navigation 
+	 */
+	 public void onModuleSelect() {
+			renewSesionObject();
+			FacesContext fc=FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, "flDocSearch?faces-redirect=true");
+	 }		
+	
 	public String getUserName(Long userId) {
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);

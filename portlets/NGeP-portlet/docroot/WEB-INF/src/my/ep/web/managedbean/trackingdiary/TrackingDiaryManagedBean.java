@@ -10,16 +10,15 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class TrackingDiaryManagedBean extends BaseManagedBean { 
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(CdTrackingDiaryBackingBean.class);
 
-	private String codeType;
+	private String moduleSelect;
 
-	public String getCodeType() {
-		return codeType;
+	public String getModuleSelect() {
+		return moduleSelect;
 	}
 
-	public void setCodeType(String codeType) {
-		this.codeType = codeType;
+	public void setModuleSelect(String moduleSelect) {
+		this.moduleSelect = moduleSelect;
 	}
 
 }
