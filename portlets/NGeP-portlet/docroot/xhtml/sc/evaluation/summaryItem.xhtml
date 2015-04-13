@@ -18,7 +18,7 @@
 			<ac:paginator for="evaluationSummaryItem" />
 
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
-				update="@form" listener="#{evaluationBackingBean.summaryItemSelect}"></p:ajax>
+				update="@form" listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.item']}"
 				style="width:35%">
 

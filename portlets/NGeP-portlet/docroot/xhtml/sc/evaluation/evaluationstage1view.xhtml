@@ -14,13 +14,7 @@
 			showSummary="false" closable="true" severity="error, info,warn" />
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
 			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
-		<ui:fragment
-			rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.tabActiveIndex eq 1 and !evaluationBackingBean.managedBean.readOnly and (evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3')) or (evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0  and !evaluationBackingBean.managedBean.readOnly) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0 and !evaluationBackingBean.managedBean.readOnly))}">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
-				style="float:right;" update="@form"
-				rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"
-				action="#{evaluationBackingBean.generateEvaluationStage}" />
-		</ui:fragment>
+	
 
 		<ui:fragment
 			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
@@ -74,17 +68,21 @@
 			<ui:include src="complianceStage.xhtml" />
 		</c:if>
 
-		<c:if
-			test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 }">
 
 			<ui:include src="evaluationStage.xhtml" />
 		</c:if>
 
 
-		<c:if
-			test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 and evaluationBackingBean.managedBean.evaluationStageStatusHide}">
-
-			<ui:include src="presentationDemoStage.xhtml" />
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
+				<ui:include src="oneTierFinancialEvaluation.xhtml" />
+			</ui:fragment>
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+				<ui:include src="presentationDemoStage.xhtml" />
+			</ui:fragment>
 		</c:if>
 
 
