@@ -478,8 +478,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** check report download. */
 	private boolean checkReportDownload;
-	
+
 	private BigDecimal packageScore;
+
+	private String financialSummaryView;
+
+	private int oneTierFinancialActiveIndex;
 
 	/**
 	 * Gets the today.
@@ -3131,10 +3135,41 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param packageScore the packageScore to set
+	 * @param packageScore
+	 *            the packageScore to set
 	 */
 	public void setPackageScore(BigDecimal packageScore) {
 		this.packageScore = packageScore;
+	}
+
+	/**
+	 * @return the oneTierFinancialActiveIndex
+	 */
+	public int getOneTierFinancialActiveIndex() {
+		return oneTierFinancialActiveIndex;
+	}
+
+	/**
+	 * @param oneTierFinancialActiveIndex
+	 *            the oneTierFinancialActiveIndex to set
+	 */
+	public void setOneTierFinancialActiveIndex(int oneTierFinancialActiveIndex) {
+		this.oneTierFinancialActiveIndex = oneTierFinancialActiveIndex;
+	}
+
+	/**
+	 * @return the financialSummaryView
+	 */
+	public String getFinancialSummaryView() {
+		return financialSummaryView;
+	}
+
+	/**
+	 * @param financialSummaryView
+	 *            the financialSummaryView to set
+	 */
+	public void setFinancialSummaryView(String financialSummaryView) {
+		this.financialSummaryView = financialSummaryView;
 	}
 
 }
