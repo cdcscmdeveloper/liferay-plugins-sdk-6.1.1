@@ -17,12 +17,12 @@
 
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.search.delivery.address.ministry']}" />
+							value="#{lbl['lbl.sc.ministry']}" />
 					</td>
 					<td colspan="3"><p:selectOneMenu id="committeeMinistryId"
 							style="width:500px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.ministryId}">
-							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.ministryList}"
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
@@ -34,11 +34,11 @@
 				</tr>
 
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.delivery.ptj']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td colspan="3"><p:selectOneMenu id="ptj"
 							style="width:500px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.ptjId}">
-							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.ptjtList}"
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
@@ -49,10 +49,10 @@
 
 				<tr>
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.search.delivery.address.state']}" /></td>
+							value="#{lbl['lbl.sc.state']}" /></td>
 					<td><p:selectOneMenu style="width:150px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.stateId}">
-							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.stateList}"
 								var="state" itemLabel="#{state.stateName}"
@@ -63,12 +63,12 @@
 						</p:selectOneMenu></td>
 
 					<td style="width: 35px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.search.delivery.address.division']}" /></td>
+							value="#{lbl['lbl.sc.division']}" /></td>
 					<td><p:selectOneMenu id="divisionId"
 							style="width:150px;margin-bottom:5px;"
 							disabled="#{specificationBackingBean.managedBean.stateCode ne '13'}"
 							value="#{specificationBackingBean.managedBean.stateId}">
-							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.divisionList}"
 								var="division" itemLabel="#{division.divisionName}"
@@ -78,10 +78,10 @@
 								listener="#{specificationBackingBean.retriveDivisionDistrict}"></p:ajax>
 						</p:selectOneMenu></td>
 					<td style="width: 35px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.search.delivery.address.district']}" /></td>
+							value="#{lbl['lbl.sc.district']}" /></td>
 					<td><p:selectOneMenu id="districtId" style="width:150px;"
 							value="#{specificationBackingBean.managedBean.districtId}">
-							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.districtList}"
 								var="district" itemLabel="#{district.districtName}"

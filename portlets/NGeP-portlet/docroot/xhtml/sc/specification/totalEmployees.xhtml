@@ -21,7 +21,7 @@
 				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
@@ -61,13 +61,13 @@
 			<p:spacer height="25"></p:spacer>
 
 			<h:panelGrid columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.spec.total.employees']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.total.employees']}"></h:outputLabel>
 				<p:inputText readonly="true"></p:inputText>
 			</h:panelGrid>
 		</p:panel>
 		<p:spacer height="75"></p:spacer>
 		<p:panel id="technicalTotalEmployees"
-			header="#{lbl['lbl.sc.spec.score.tot.employees']}" toggleable="true"
+			header="#{lbl['lbl.sc.scoring.tot.employees']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
@@ -102,7 +102,7 @@
 						<ui:param name="componentName" value="Employees" />
 						<ui:param name="scoringPnlId" value="employessId" />
 						<ui:param name="scoringPnlName"
-							value="#{lbl['lbl.sc.spec.score.tot.employees']}"></ui:param>
+							value="#{lbl['lbl.sc.scoring.tot.employees']}"></ui:param>
 						<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 						<div align="right">
 							<p:commandButton value="#{lbl['lbl.btn.add']}"
