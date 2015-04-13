@@ -42,6 +42,7 @@
 		value="#{catalogueBackingBean.managedBean.maintainItemList}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
 		rowKey="#{selectedSuppCat.supplierItemId}"
+		rows="10"
 		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
 
 		<ac:paginator for="draftSupplierItemID"></ac:paginator>

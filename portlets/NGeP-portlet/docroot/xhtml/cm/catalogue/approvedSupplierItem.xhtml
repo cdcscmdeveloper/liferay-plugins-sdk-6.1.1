@@ -18,6 +18,7 @@
 		value="#{catalogueBackingBean.managedBean.approvedItemList}"
 		rowIndexVar="rowIndex" var="approved"
 		rowKey="#{approved.supplierItemId}"
+		rows="10"
 		selection="#{catalogueBackingBean.managedBean.selectedApprovedItems}">
 
 		<p:column selectionMode="multiple" style="width:2%" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedItemList) > 0 }"/>
