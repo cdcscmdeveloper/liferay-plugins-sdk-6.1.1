@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
 
@@ -37,7 +38,12 @@
 								value="#{lbl['lbl.cm.item.name']}:"></p:outputLabel></td>
 						<td width="25%"><h:outputText
 								style="white-space: normal!important;text-align: left;"
-								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemName}" /></td>
+								value="#{codificationBackingBean.managedBean.selectedRequestItem.itemName}" />
+								<p:spacer width="8" />
+								<p:commandLink rendered="#{fn:length(codificationBackingBean.managedBean.selectedRequestItem.ctPanelItem.ctPanelItemSpecs) > 0}"
+									oncomplete="itemSpecDlg.show();">
+									<p:graphicImage library="ep/images/design" name="document.png" title="#{lbl['lbl.ct.specification']}" />
+								</p:commandLink></td>
 						<td width="10%"></td>
 						<td></td>
 					</tr>
@@ -143,6 +149,9 @@
 				<ui:include src="recommendSearchPopUp.xhtml"></ui:include>
 
 			</p:dialog>
+			
+			<!-- Item Specification PopUp -->
+			<ui:include src="/xhtml/cm/codification/itemSpecDlg.xhtml" />
 
 		</h:panelGroup>
 
