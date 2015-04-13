@@ -34,10 +34,10 @@ public class TrackingDiaryBackingBean extends
 	 * Page navigation 
 	 */
 	 public void onModuleSelect() {
-			renewSesionObject();
-			FacesContext fc=FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, "flDocSearch?faces-redirect=true");
+//			renewSesionObject();
+//			FacesContext fc=FacesContext.getCurrentInstance();
+//			fc.getApplication().getNavigationHandler()
+//			.handleNavigation(fc, null, "flDocSearch?faces-redirect=true");
 	 }		
 	
 	public String getUserName(Long userId) {
