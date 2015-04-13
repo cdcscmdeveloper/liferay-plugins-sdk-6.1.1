@@ -10,15 +10,15 @@
 		<table style="width: 100%">
 			<tr style="width: 200px;">
 
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.supplier.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.companyName}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.registration.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.regNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.registration.type']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.businessType}" /></td>
 
@@ -38,10 +38,10 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.smMofAccounts[0].mofNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.bumi.status']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
 				<td><p:inputText value="#{(smSupplier.bumi)? 'Yes' : 'No' }"
 						disabled="true" readonly="true" size="30" /></td>
 			</tr>
@@ -52,7 +52,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.exp.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expiry.date']}" /></td>
 				<td><p:inputText value="#{smSupplier.smMofAccounts[0].expDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
@@ -67,7 +67,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
+						value="#{lbl['lbl.sc.address']}" /></td>
 				<td><p:inputTextarea disabled="true" readonly="true" rows="5"
 						cols="30" autoResize="flase"
 						value="#{supplierProposalDetailBackingBean.getFullAddress(smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}"
@@ -77,13 +77,13 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.phn.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smAppl.smCompanyBasic.phoneNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.fax.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smAppl.smCompanyBasic.faxNo}" /></td>
 			</tr>
 
 		<!--  	<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.email']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{'yet to map'}" /></td>
 
@@ -121,11 +121,11 @@
 		<p:dataTable id="facility" rowIndexVar="index" rows="10"
 			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}" var="facility">
 			<ac:paginator for="facility"></ac:paginator>
-			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}" style="width : 25%; white-space : normal;">
+			<p:column headerText=" #{lbl['lbl.sc.name']}" style="width : 25%; white-space : normal;">
 				<h:outputText value="#{facility.facilityName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width : 15%;">
+			<p:column headerText="#{lbl['lbl.sc.type']}" style="width : 15%;">
 				<h:outputText rendered="#{facility.facilityType eq 'F'}" value="FACTORY"></h:outputText>
 				<h:outputText rendered="#{facility.facilityType eq 'D'}" value="DOCKYARD"></h:outputText>
 				<h:outputText rendered="#{facility.facilityType eq 'w'}" value="WORKSHOP"></h:outputText>
@@ -139,7 +139,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}" style="width : 15%;">
 				<p:outputLabel value="#{facility.areaSquareFeet}"></p:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="white-space : normal; width : 30%;">
+			<p:column headerText="#{lbl['lbl.sc.address']}" style="white-space : normal; width : 30%;">
 				<p:outputLabel style="float : left;"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(facility.smAddress)}"></p:outputLabel>
 			</p:column>
