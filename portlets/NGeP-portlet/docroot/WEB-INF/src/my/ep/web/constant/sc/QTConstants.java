@@ -190,7 +190,8 @@ public interface QTConstants {
 	public static final String RECOMMENDATION_BY_ITEM = "RI";
 	public static final String AWARD_TYPE_PACKAGE = "P";
 	public static final String AWARD_TYPE_ITEM = "I";
-	public static final String PREFERENCE_MARGIN = "M";
+	public static final String RECOMMENDATION_PREFERENCE_MARGIN = "RPM";
+	public static final String FINANCIAL_PREFERENCE_MARGIN = "FPM";
 	public static final String FINANCIAL_EVALUATION = "F";
 
 	public static final int CHECKLIST_USER_SCORE = 2;
