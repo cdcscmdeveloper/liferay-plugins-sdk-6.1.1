@@ -467,7 +467,19 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		debugLogger("saveUserGroup");
 		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
 		userGroup.setRoleCode("FL_APPROVER");
-		userGroup.setGroupCode(userGroup.getGroupCode().toUpperCase());
+		
+		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserGroupSO.class);
+		
+//		userGroup.setGroupCode(userGroup.getGroupCode().toUpperCase());
+		if (userGroup.isBrandNew()) {
+			
+			UserGroupReqDTO seqReqDto = new UserGroupReqDTO();
+			seqReqDto.setGroupCode("GR");
+			UserGroupResDTO seqResDto = userGrpSo.generateGroupCode(seqReqDto);
+			userGroup.setGroupCode(seqResDto.getGroupCode());
+		}
 
 		userGroupValidationMsg(userGroup);
 
@@ -487,9 +499,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		UserGroupReqDTO reqDto = new UserGroupReqDTO();
 		reqDto.setUserGroup(userGroup);
 
-		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserGroupSO.class);
+		
 
 		UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
 
