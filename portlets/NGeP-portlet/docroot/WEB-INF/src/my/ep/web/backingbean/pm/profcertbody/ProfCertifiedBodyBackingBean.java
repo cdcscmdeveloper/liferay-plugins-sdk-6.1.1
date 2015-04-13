@@ -18,6 +18,7 @@ import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.exception.EpException;
@@ -34,6 +35,7 @@ import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodyManagedBean;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -262,13 +264,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 */
 	private void validationMessage(PmCertBody certBody){
 		debugLogger("validationMessage");
-		if(StringUtils.isBlank(certBody.getBodyCode())){
+		/*if(StringUtils.isBlank(certBody.getBodyCode())){
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.pm.search.codes",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
-		}
+		}*/
 		
 		if(StringUtils.isBlank(certBody.getBodyName())){
 			throw new EpException(MessageConst.ERROR_100022,
@@ -333,10 +335,12 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		PmCertBody certBody =  this.getManagedBean().getCertBody();
 		validationMessage(certBody);
 		
-		certBody.setBodyCode(certBody.getBodyCode().toUpperCase());
+		//certBody.setBodyCode(certBody.getBodyCode().toUpperCase());
 		
-		if(certBody.isBrandNew()){
-		setUserDetails(certBody);}
+		if(certBody.isBrandNew()){			
+		setUserDetails(certBody);
+		generateCertBodyCode();
+		}
 		
 		ICertBodySO certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 		
@@ -395,6 +399,15 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(1L);
+	}
+	public void generateCertBodyCode(){
+		CertBodyReqDTO reqDTO = new CertBodyReqDTO();
+		reqDTO.setCertBodyCode(ProfileManagementConst.CERT_BODY_CODE);
+		ICertBodySO certBodySO = (ICertBodySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);	
+		CertBodyResDTO resDTO = certBodySO.generateCertBodyCode(reqDTO);
+		getManagedBean().getCertBody().setBodyCode(resDTO.getCertBodyCode());
+		log.info("generated Body Code--------->"+resDTO.getCertBodyCode());
+		
 	}
 
 	/**
