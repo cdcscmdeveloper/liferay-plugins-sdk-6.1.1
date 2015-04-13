@@ -8,13 +8,13 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.category.code']}" toggleable="true">
 
 		<p:dataTable id="restrictedPnlId" var="cateGory" rows="10"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
 			style="width:100%" rowIndexVar="index">
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
+			<p:column headerText="#{lbl['lbl.sc.category.code']}"
 				style="width:10%">
 
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryL1Code}">
@@ -28,26 +28,26 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
+			<p:column headerText="#{lbl['lbl.sc.main.category']}"
 				style="width:32%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 				style="width:26%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 				style="width:22%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
+			<p:column headerText="#{lbl['lbl.sc.category.type']}"
 				style="width:5%;white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
+			<p:column headerText="#{lbl['lbl.sc.mandatory']}"
 				style="width:5%;text-align: center;">
 
 				<h:outputText

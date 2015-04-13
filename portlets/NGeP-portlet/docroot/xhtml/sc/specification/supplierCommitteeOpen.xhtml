@@ -8,14 +8,14 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.category.code']}" toggleable="true">
 
 		<p:dataTable id="openPnlId" var="cateGory" rowIndexVar="index"
 			styleClass="openPnlId" rows="10"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}">
 
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
+			<p:column headerText="#{lbl['lbl.sc.category.code']}"
 				style="width:10%">
 
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryL1Code}">
@@ -29,26 +29,26 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
+			<p:column headerText="#{lbl['lbl.sc.main.category']}"
 				style="width:32%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 				style="width:26%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
+			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 				style="width:22%;white-space: normal;">
 				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
+			<p:column headerText="#{lbl['lbl.sc.category.type']}"
 				style="width:5%;white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
+			<p:column headerText="#{lbl['lbl.sc.mandatory']}"
 				style="width:5%;text-align: center;">
 
 				<h:outputText
@@ -60,7 +60,7 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<table style="width: 100%">
@@ -76,7 +76,7 @@
 			</tr>
 			<tr>
 				<td style="width: 94px"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
+						value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
@@ -94,7 +94,7 @@
 			<p:dataTable id="zoneyesDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneTrees}"
 				var="zoneTree" style="width:100%" rowIndexVar="index">
-				<p:column headerText="Location">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<p:tree value="#{zoneTree}" var="location">
 						<p:treeNode type="state">
 							<h:outputText value="#{location.pmState.stateName}" />
@@ -115,7 +115,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		toggleable="true"
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<table style="width: 100%">
@@ -141,7 +141,7 @@
 			</tr>
 			<tr>
 				<td style="width: 94px"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
+						value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 						style="width: 178px;">
@@ -159,7 +159,7 @@
 			<p:dataTable id="zoneLocationDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneTrees}"
 				var="zoneTree" style="width:100%" rowIndexVar="index">
-				<p:column headerText="Location">
+				<p:column headerText="#{lbl['lbl.sc.location']}">
 					<p:tree value="#{zoneTree}" var="location">
 						<p:treeNode type="state">
 							<h:outputText value="#{location.pmState.stateName}" />
@@ -177,7 +177,7 @@
 
 
 	</h:panelGroup>
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
 		<table>
@@ -202,11 +202,11 @@
 
 
 	<p:panel id="specCommitteeTotalSuppliers" toggleable="true"
-		header=" #{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
+		header=" #{lbl['lbl.sc.spec.qualified.suppliers']}">
 		<table>
 			<tr>
 				<td style="width: 150px"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
+						value="#{lbl['lbl.sc.totalsup']}" /></td>
 				<td><p:inputText style="margin-right:5px;" disabled="true"
 						value="#{specificationBackingBean.managedBean.totalSuppliers}" />
 					<p:commandButton value="#{lbl['lbl.btn.search']}"

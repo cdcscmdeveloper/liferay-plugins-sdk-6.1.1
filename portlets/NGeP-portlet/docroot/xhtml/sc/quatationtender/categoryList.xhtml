@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.category.code']}" toggleable="true">
 		<p:dataTable id="#{criteriaPnlId}" var="scQtCategory"
 			value="#{criteriaList}" editable="true" style="width:100%"
 			rowIndexVar="index" rowKey="#{scQtCategory}"
@@ -18,10 +18,10 @@
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}" />
 
-			<p:column headerText="Main-Category" />
-			<p:column headerText="Sub-Category" />
-			<p:column headerText="Sub-Category Division" />
-			<p:column headerText="Category Type" />
+			<p:column headerText="#{lbl['lbl.sc.main.category']}" />
+			<p:column headerText="#{lbl['lbl.sc.sub.category']}" />
+			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}" />
+			<p:column headerText="#{lbl['lbl.sc.category.type']}" />
 			<p:column headerText="#{lbl['lbl.sc.mandatory']}">
 				<p:selectBooleanCheckbox value="#{scQtCategory.mandatory}"
 					disabled="#{!qTDetailBB.managedBean.editable}" />
