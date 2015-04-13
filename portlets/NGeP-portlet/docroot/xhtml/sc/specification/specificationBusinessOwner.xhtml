@@ -51,7 +51,7 @@
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
 					<td><h:outputLabel
-							value=" #{lbl['lbl.sc.spec.justification']}" /></td>
+							value=" #{lbl['lbl.sc.justification']}" /></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="143"
 							style="margin-bottom:5px;width: 80%;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -66,7 +66,7 @@
 
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.qut.tender.type']}" /> <ui:fragment
+						value="#{lbl['lbl.sc.qttentype']}" /> <ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
@@ -86,7 +86,7 @@
 
 						<p:selectOneRadio required="true" id="tenderType"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.spec.qut.tender.type']}"
+							label="#{lbl['lbl.sc.qttentype']}"
 							value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
 							<f:selectItems
@@ -118,7 +118,7 @@
 
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.evaluation.type']}" /> <p:outputLabel
+						value="#{lbl['lbl.sc.evaluation.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '50000'}">
@@ -134,7 +134,7 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or specificationBackingBean.managedBean.scQt.estimatedAmount gt '50000'}">
 						<p:selectOneRadio required="true" id="evalType"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							label=" #{lbl['lbl.sc.spec.evaluation.type']}"
+							label=" #{lbl['lbl.sc.evaluation.type']}"
 							value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
@@ -168,7 +168,7 @@
 			<tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}">
-					<td><h:outputLabel value="Zone/Location" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 					<td><p:selectOneRadio
 							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.scQt.panel ne 'No'}"
 							value="#{specificationBackingBean.managedBean.scQt.zonal}">
@@ -215,16 +215,16 @@
 	</p:panel>
 
 	<h:panelGroup id="generalLocationList">
-		<p:panel header="#{lbl['lbl.sc.spec.zone.location.list']}"
+		<p:panel header="#{lbl['lbl.sc.location.list']}"
 			rendered="#{(specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false')}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 150px"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
+							value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><p:selectOneMenu id="locationLevels"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.spec.zone.location.level']}"
+							label="#{lbl['lbl.sc.location.level']}"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 							style="width: 178px;">
 
@@ -303,7 +303,7 @@
 			</div>
 		</h:panelGroup>
 	</h:panelGroup>
-	<p:dialog id="dlgId" header="#{lbl['lbl.sc.spec.zone.add.location']}"
+	<p:dialog id="dlgId" header="#{lbl['lbl.sc.add.location']}"
 		widgetVar="ZoneGeneral" modal="true" width="490" position="top"
 		height="410">
 		<p:messages id="specBusinessOwnerZonemessages" showDetail="true"
@@ -312,13 +312,13 @@
 			<table styleClass="noBorders tr,noBorders td" border="0">
 				<TR>
 					<TD width="30%" valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel> <p:outputLabel
+							value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory" /></TD>
 					<td width="70%">
 						<table>
 							<tr>
 								<td><p:inputText size="50" id="zoneNameId"
-										label="#{lbl['lbl.sc.spec.zone.zoneName']}" maxlength="50"
+										label="#{lbl['lbl.sc.zone.name']}" maxlength="50"
 										required="#{specificationBackingBean.managedBean.zoneLocation}"
 										value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText></td>
 								<td><p:message id="zoneNameMsg" for="zoneNameId"
@@ -329,7 +329,7 @@
 				</TR>
 				<TR>
 					<TD valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.zone.location']}" /> <p:outputLabel
+							value="#{lbl['lbl.sc.zone.location']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></TD>
 					<TD>
 						<div style="height: 300px; overflow-y: scroll;">

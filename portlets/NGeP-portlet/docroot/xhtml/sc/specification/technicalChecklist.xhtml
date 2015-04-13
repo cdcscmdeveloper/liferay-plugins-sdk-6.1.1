@@ -83,7 +83,7 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
+			<p:column headerText="#{lbl['lbl.sc.type']}"
 				style="width:10%;white-space: normal;">
 				<h:panelGroup id="technicalChecklisttypes">
 					<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId ne null}">
@@ -120,7 +120,7 @@
 
 						<p:selectOneMenu style="width:100px;" required="true"
 							id="techChecklistTitlenullType"
-							label="#{lbl['lbl.sc.spec.stage.type']}"
+							label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -141,7 +141,7 @@
 
 						<p:selectOneMenu style="width:100px;" required="true"
 							id="techChecklistTitlenotnullType"
-							label="#{lbl['lbl.sc.spec.stage.type']}"
+							label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -226,7 +226,7 @@
 				</h:panelGroup>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.scoring']}"
 				style="width:10%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreView">
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
@@ -253,7 +253,7 @@
 				</h:panelGroup>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
+			<p:column headerText="#{lbl['lbl.sc.qt.document']}"
 				style="width:18%;white-space: normal;text-align: center;">
 
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->

@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.general.info']}" toggleable="true">
 
 		<table style="width: 100%">
 			<tr>
@@ -38,7 +38,7 @@
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
 					<td><h:outputLabel
-							value=" #{lbl['lbl.sc.spec.justification']}" /></td>
+							value=" #{lbl['lbl.sc.justification']}" /></td>
 					<td colspan="3"><p:inputTextarea rows="3" cols="30"
 							style="margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
@@ -46,7 +46,7 @@
 				</ui:fragment>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="Quotation/Tender Type" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qttentype']}" /></td>
 				<td><p:inputText readonly="true" size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true" /></td>
@@ -65,14 +65,14 @@
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 					</p:selectOneMenu></td>
-				<td><h:outputLabel value="Zone/Location" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td><p:inputText readonly="true" disabled="true" size="30"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</td>
 			</tr>
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.sc.spec.evaluation.type']}" /></td>
+						value="#{lbl['lbl.sc.evaluation.type']}" /></td>
 				<td><p:inputText size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, specificationBackingBean.managedBean.scQt.evaluationType)}"
 						readonly="true" disabled="true" /></td>
@@ -93,13 +93,13 @@
 					</p:inputMask></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" #{lbl['lbl.sc.spec.ful.type']}" />
+				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 					</ui:fragment></td>
 				<td><p:selectOneMenu required="true" id="fulfilId"
-						label="#{lbl['lbl.sc.spec.ful.type']}"
+						label="#{lbl['lbl.sc.fullfillent.type']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
@@ -129,11 +129,11 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="Zone/Location Info"
+	<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}"
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+				<td style="width: 94px"><p:outputLabel value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locationLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 						style="width: 178px;">

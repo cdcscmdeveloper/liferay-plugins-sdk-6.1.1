@@ -81,7 +81,7 @@
 						pattern="MM/yyyy"></p:calendar> -->
 					</p:column>
 					<p:column
-						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
+						headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.startYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -110,7 +110,7 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+					<p:column headerText="#{lbl['lbl.sc.end.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.endYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -125,7 +125,7 @@
 
 					</p:column>
 					<p:column
-						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
+						headerText="#{lbl['lbl.sc.total.months']}"
 						style="width:10%">
 						<h:panelGroup id="scheduleDetails">
 							<h:outputText value="#{frequency.totalMonths}"></h:outputText>
@@ -204,12 +204,12 @@
 					<p:column style="width:10%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.sc.spec.description']}" />
+							<h:outputText value="#{lbl['lbl.sc.description']}" />
 						</f:facet>
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							required="true" id="progressivePhasedesc" style="width:100px;"
-							label="#{lbl['lbl.sc.spec.description']}">
+							label="#{lbl['lbl.sc.description']}">
 							<p:ajax process="@this" partialSubmit="true"
 								update="@this,progressivePayment" />
 						</p:inputText>
@@ -217,7 +217,7 @@
 							display="icon"></p:message>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
+					<p:column headerText="#{lbl['lbl.sc.from']}"
 						style="width:15%">
 						<p:selectOneMenu style="width:100px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -232,7 +232,7 @@
 
 					</p:column>
 					<p:column
-						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
+						headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
 
 						<p:selectOneMenu value="#{payment.startYear}"
@@ -248,7 +248,7 @@
 					</p:column>
 					<p:column
 						headerText="
-								#{lbl['lbl.sc.spec.stage2.score.to']}"
+								#{lbl['lbl.sc.to']}"
 						style="width:15%">
 						<p:selectOneMenu style="width:100px;" id="paymentEndMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -261,7 +261,7 @@
 								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+					<p:column headerText="#{lbl['lbl.sc.end.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{payment.endYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"

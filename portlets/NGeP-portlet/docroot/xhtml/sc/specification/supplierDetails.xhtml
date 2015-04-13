@@ -10,15 +10,15 @@
 		<table style="width: 100%">
 			<tr style="width: 200px;">
 
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.supplier.name']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.companyName}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.registration.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.regNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.registration.type']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
@@ -37,10 +37,10 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.smMofAccounts[0].mofNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.bumi.status']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.bumiputra.status']}" /></td>
 				<td><p:inputText value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, smSupplier.bumi)}" disabled="true" readonly="true"
 						size="30" /></td>
 			</tr>
@@ -53,7 +53,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.exp.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expiry.date']}" /></td>
 				<td><p:inputText
 						value="#{smSupplier.smMofAccounts[0].expDate}"
 						size="30" readonly="true" disabled="true">
@@ -71,7 +71,7 @@
 
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
+						value="#{lbl['lbl.sc.address']}" /></td>
 				<td><p:inputTextarea disabled="true" readonly="true" rows="5"
 						cols="30" autoResize="flase"
 						style="width: 171px;margin-bottom: 5px;" /></td>
@@ -81,12 +81,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.phn.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.fax.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.email']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
 
 			</tr>
@@ -121,11 +121,11 @@
 		<p:dataTable id="factory" rowIndexVar="index" >
 			<ac:paginator for="factory"></ac:paginator>
 			<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
-			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}">
+			<p:column headerText=" #{lbl['lbl.sc.name']}">
 				<p:inputText></p:inputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}">
+			<p:column headerText="#{lbl['lbl.sc.type']}">
 				<p:inputText></p:inputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}">
@@ -135,7 +135,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}">
 				<p:inputText></p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
+			<p:column headerText="#{lbl['lbl.sc.address']}">
 				<p:inputText></p:inputText>
 			</p:column>
 
