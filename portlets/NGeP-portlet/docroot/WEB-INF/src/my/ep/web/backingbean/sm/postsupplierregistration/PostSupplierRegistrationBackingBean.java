@@ -1,8 +1,10 @@
 package my.ep.web.backingbean.sm.postsupplierregistration;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -11,6 +13,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
@@ -21,6 +24,8 @@ import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -31,8 +36,11 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
@@ -44,6 +52,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -63,6 +72,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	//private static final String DASHBOARD = "dashboard";
 	private static final String DASHBOARD_PATH = "welcome";
 	private static final String SUPPLIER_TYPE_SELECTION_XHTML = "/xhtml/sm/supplierregistrationcont/supplierTypeSelection.xhtml";
+	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
 	
 	public static Logger log = Logger.getLogger(PostSupplierRegistrationBackingBean.class);
 	
@@ -85,16 +95,22 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				log.info("*****In Progress*********");			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
 				desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
-		
 				showHyperlink(workFlowStatus.getPmStatus().getStatusId());
 				path = TASK_LIST_PATH;
+				
 			}else{
-				this.getManagedBean().setHyperlink(true);
-				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
+				if(new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+					log.info("MOF_SUPPLIER_ADMIN>>>>");
+					//getManagedBean().setMofUserFlag(true);
+					mofUserAction(supplier);
+					
+				}else{
+					this.getManagedBean().setHyperlink(true);
+					/*				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
 						supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
 					path = SUPPLIER_TYPE_SELECTION_PATH;
 					desc = getLabelFromProperties("lbl.sm.basic.supplier.selection");
-				}else{
+					}else{*/
 					log.info("Supplier appl type===>" + supplier.getSmAppl().getApplType());
 					if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 						path = MOF_REG_PATH;
@@ -140,15 +156,19 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							}
 						}
 					}
-				}
+					//}
 
+				}
 			}
-			
+			//RequestContext.getCurrentInstance().update("msgPanelId");
+			//RequestContext.getCurrentInstance().update("basicPanelId");
+
 			if(isPath){
 				return path;
 			}else{
 				return desc;
 			}
+			
 		}
 
 		return null;
@@ -158,6 +178,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		String currStatus = currentStatusAndPath(false);
 		log.info("******PreRender****" + currStatus);
 		this.getManagedBean().setStatusDesc(currStatus);
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
 	}
 	
 	public void pageNavigate() throws Exception{
@@ -386,6 +409,76 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			break;
 		}	
 	}
+	
+	private void mofUserAction(SmSupplier supplier){
+		Map<String,String> mofActionMap = new HashMap<String, String>();
+		
+		SmCompanyBasic companyBasic = retrieveSmCompanyBasic(supplier.getSupplierId());
+		if(companyBasic.isWithFederal() && supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
+			if(!checkSoftCertRequest(supplier.getSupplierId())){
+				String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
+				mofActionMap.put(msg, SOFT_CERT_PATH);
+			}
+			
+			List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
+			log.info("SupplierItems size:>>>>> " + suppItems);
+			boolean publishedStatus = false;
+			if(suppItems.size() > 0){
+				for(CmSupplierItem cmSuppItem : suppItems){
+					if(cmSuppItem.getItemStatus().equalsIgnoreCase("U")){
+						publishedStatus = true;
+					}
+				}
+			}
+			
+			if(!publishedStatus){
+				String msg = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
+				mofActionMap.put(msg, CATALOGUE_UPLOAD_PATH);
+			}
+		}
+		
+		log.info("mofActionMap>>>>" + mofActionMap.size());
+		getManagedBean().setMofUserMap(mofActionMap);
+	}
+	
+	
+	private boolean checkSoftCertRequest(Long supplierId){
+		IPersonnelSO personnelSO =  SmServiceLookup.getPersonnelSO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		
+		PersonnelResDTO resDTO = personnelSO.retrievePersonnelBySupplierId(reqDTO); 
+		boolean softCertStatus = false;
+		
+		log.info("resDTO.getSmPersonnelList().size(): "+ resDTO.getSmPersonnelList().size());
+		if(resDTO.getSmPersonnelList().size() > 0){
+			for(SmPersonnel personnel : resDTO.getSmPersonnelList()){
+				if(personnel.getSoftcertFlg() > 0){
+					softCertStatus = true;
+					break;
+				}
+			}
+		}
+		
+		return softCertStatus;
+	}
+	
+	private SmCompanyBasic retrieveSmCompanyBasic(Long supplierId){
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveSmCompanyBasicBySupplierId(reqDTO);
+		
+		return resDTO.getSmCompanyBasic();
+	}
+	
+	public boolean validMofUser(){
+		log.info("*******validMofUser********");
+		if(new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){ 
+			return true;
+		}
+		return false;
+	}
+	
 	
 /*	private void initCatalogueBackingBean(){
 		CatalogueBackingBean cBB = new CatalogueBackingBean();
