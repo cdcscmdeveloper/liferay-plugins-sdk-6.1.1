@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.sm.postsupplierregistration;
 
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -19,7 +21,8 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private String statusDesc;
 	
 	private boolean hyperlink;
-
+	private Map<String,String> mofUserMap;
+	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
@@ -43,4 +46,13 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	public void setHyperlink(boolean hyperlink) {
 		this.hyperlink = hyperlink;
 	}
+
+	public Map<String, String> getMofUserMap() {
+		return mofUserMap;
+	}
+
+	public void setMofUserMap(Map<String, String> mofUserMap) {
+		this.mofUserMap = mofUserMap;
+	}
+
 }
