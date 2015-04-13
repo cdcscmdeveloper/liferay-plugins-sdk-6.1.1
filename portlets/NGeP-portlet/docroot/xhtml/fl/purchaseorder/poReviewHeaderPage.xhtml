@@ -10,9 +10,8 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.fl.purchase.request.no']} " /></td>
 				<td class="header-info-text">
-					<p:panel rendered="#{flOrderBB.managedBean.supplier}">
-					#{flOrderBB.managedBean.flRequest.docNo}</p:panel>
-					
+					<p:outputLabel rendered="#{flOrderBB.managedBean.supplier}" style="font-weight:normal !important"
+					value="#{flOrderBB.managedBean.flRequest.docNo}"></p:outputLabel>
 					<p:commandLink
 						value="#{flOrderBB.managedBean.flRequest.docNo}"
 						action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.flRequest.docType)}"
