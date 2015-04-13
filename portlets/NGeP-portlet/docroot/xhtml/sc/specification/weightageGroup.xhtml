@@ -14,14 +14,14 @@
 
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tech.weightage']}" />
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.weightage']}" />
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
 				<td><p:selectOneRadio required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-						label="#{lbl['lbl.sc.spec.tech.weightage']}" id="techWeightage"
+						label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -50,14 +50,14 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
+					<h:outputText value="#{lbl['lbl.sc.score']}" />
 				</f:facet>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					id="techScoreWeight" required="true" maxlength="18"
-					label="#{lbl['lbl.sc.spec.stage2.score']}" style="text-align:right"
+					label="#{lbl['lbl.sc.score']}" style="text-align:right"
 					rendered="#{((tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'SP' or tech.definationType.parameterCode eq 'PD' or tech.definationType.parameterCode eq 'NA') and tech.scoringReq)}">
 					<ac:validateNumber integerOnly="
 					true" maxIntegerDigits="14">
@@ -95,7 +95,7 @@
 			<table>
 				<tr>
 					<td style="width: 149px;"><h:outputText
-							value="#{lbl['lbl.sc.spec.net.total.points']} " /></td>
+							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 
 					<td><p:inputText readonly="true" disabled="true"
 							style="text-align:right"
@@ -119,7 +119,7 @@
 
 		</h:panelGroup>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.spec.fin.pasing.score']}"
+	<p:panel header="#{lbl['lbl.sc.spec.pasing.score']}"
 		toggleable="true">
 
 		<table>
@@ -141,7 +141,7 @@
 
 			<tr>
 				<td><h:outputText
-						value="#{lbl['lbl.sc.spec.recommendation.technical']}" /></td>
+						value="#{lbl['lbl.sc.spec.technical']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">

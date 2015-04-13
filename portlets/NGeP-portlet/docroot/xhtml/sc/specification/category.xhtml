@@ -12,26 +12,26 @@
 		
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true" >
+		<p:panel header="#{lbl['lbl.sc.category.code']}" toggleable="true" >
 			<p:dataTable id="SupplierCategoryCodes" rowIndexVar="index"
 				var="factory" rowKey="#{factory}">
 				<ac:paginator for="SupplierCategoryCodes"></ac:paginator>
 				<p:column  selectionMode="multiple" style="width:2px;"></p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.category.code']}">
+				<p:column headerText="#{lbl['lbl.sc.category.code']}">
 					<p:inputText></p:inputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.main.category']}">
+				<p:column headerText="#{lbl['lbl.sc.main.category']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}">
+				<p:column headerText="#{lbl['lbl.sc.sub.category']}">
 					<p:inputText></p:inputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
+				<p:column headerText="#{lbl['lbl.sc.category.division']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
+				<p:column headerText="#{lbl['lbl.sc.category.type']}">
 					<p:inputText></p:inputText>
 				</p:column>
 
