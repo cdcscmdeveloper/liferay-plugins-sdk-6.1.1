@@ -73,6 +73,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String DASHBOARD_PATH = "welcome";
 	private static final String SUPPLIER_TYPE_SELECTION_XHTML = "/xhtml/sm/supplierregistrationcont/supplierTypeSelection.xhtml";
 	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
+	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
+	private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	
 	public static Logger log = Logger.getLogger(PostSupplierRegistrationBackingBean.class);
 	
@@ -417,7 +419,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		if(companyBasic.isWithFederal() && supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 			if(!checkSoftCertRequest(supplier.getSupplierId())){
 				String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
-				mofActionMap.put(msg, SOFT_CERT_PATH);
+				mofActionMap.put(msg, MOF_SOFTCERT_REQUEST);
 			}
 			
 			List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
@@ -433,7 +435,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(!publishedStatus){
 				String msg = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
-				mofActionMap.put(msg, CATALOGUE_UPLOAD_PATH);
+				mofActionMap.put(msg, MOF_CODIFICATION_SEARCH);
 			}
 		}
 		
