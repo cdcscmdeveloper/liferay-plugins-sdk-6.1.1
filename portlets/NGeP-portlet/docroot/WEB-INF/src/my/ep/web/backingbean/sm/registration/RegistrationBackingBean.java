@@ -416,6 +416,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smPersonnel.setIdentificationNo(smSupp.getRegNo());
 			smPersonnel.setPmCountry(indNationality);
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
+			
+			getManagedBean().setGstFlag(false);
+			getManagedBean().setFileName(null);
 		}
 		
 		//Validate IC Length
