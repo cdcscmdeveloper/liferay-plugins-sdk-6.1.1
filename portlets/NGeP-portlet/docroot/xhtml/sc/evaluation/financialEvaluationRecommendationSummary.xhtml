@@ -13,8 +13,8 @@
 			<td><p:selectOneMenu
 					value="#{evaluationBackingBean.managedBean.financialSummaryView}">
 					<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="Item" itemValue="FI"></f:selectItem>
 					<f:selectItem itemLabel="Package Preference Margin" itemValue="FPM"></f:selectItem>
+					<f:selectItem itemLabel="Item" itemValue="FI"></f:selectItem>
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						listener="#{evaluationBackingBean.financialsummaryChange}"
 						update="@([id$=financialviewSummary])"></p:ajax>
