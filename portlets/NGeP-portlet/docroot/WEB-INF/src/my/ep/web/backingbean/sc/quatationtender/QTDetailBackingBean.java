@@ -622,13 +622,7 @@ public class QTDetailBackingBean extends
 	 */
 	public String gotoQtSearchPage() {
 		debugLogger("gotoQtSearchPage");
-		this.getManagedBean().setQt(null);
-		if (this.getManagedBean().getQt() == null) {
-			this.getManagedBean().setQt(new ScQt());
-		}
-		if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
-			this.getManagedBean().getQt().setPmOrgProfile(new PmOrgProfile());
-		}
+		
 		return QTConstants.SEARCH_PAGE;
 	}
 
@@ -640,7 +634,7 @@ public class QTDetailBackingBean extends
 	 * @return maintanacepage
 	 */
 	public String editAction(ScQt scQt) {
-		renewSesionObject();
+		renewQTDetails();
 		this.getManagedBean().setMaintanceFlow(true);
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
@@ -716,6 +710,14 @@ public class QTDetailBackingBean extends
 			detailSO = null;
 		}
 		return REDIRECT_PAGE;
+	}
+	
+	private void renewQTDetails() {
+		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
+		
+		super.renewSesionObject();
+		
+		getManagedBean().setQtnTenderSearchBean(qtnTenderSearchBean);
 	}
 
 	/**
