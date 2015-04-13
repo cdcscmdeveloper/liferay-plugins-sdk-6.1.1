@@ -350,6 +350,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disabledBusinessType;
 	private boolean disableWithFedralTransaction;
 	private boolean disableBranchGst;
+	private String mofNumber;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -2692,6 +2693,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setApplRegStatus(String applRegStatus) {
 		this.applRegStatus = applRegStatus;
+	}
+
+	public String getMofNumber() {
+		return mofNumber;
+	}
+
+	public void setMofNumber(String mofNumber) {
+		this.mofNumber = mofNumber;
 	}
 
 }

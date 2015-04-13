@@ -109,6 +109,7 @@ import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -867,7 +868,19 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil
 						.assignNonPersonnelProfBodyList(getManagedBean());
 			}
-
+			List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
+					.getSmMofAccounts();
+			if (accounts != null && !accounts.isEmpty()) {
+				for (SmMofAccount account : accounts) {
+					if (account.getSupplierType().equalsIgnoreCase(
+							getManagedBean().getSmSupplier().getSmAppl()
+									.getSupplierType())
+							&& account.getRecordStatusFlg().compareTo(
+									DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+						getManagedBean().setMofNumber(account.getMofNo());
+					}
+				}
+			}
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
 			// mofRegistrationSO = null;
@@ -2737,11 +2750,6 @@ public class SmApplicationBackingBean extends
 						.getSmCompanyExperienceCats().isEmpty())) {
 			throw new EpException(MessageConst.ERROR_722550);
 		}
-		// if (getManagedBean().getSelectedCompanyExperience()
-		// .getPaymentMethodId() == null) {
-		// getManagedBean().getSelectedCompanyExperience().setPaymentMethodId(
-		// new BigDecimal(0));
-		// }
 		if (getManagedBean().getSmAppl().getSmCompanyExperiences()
 				.contains(getManagedBean().getSelectedCompanyExperience())) {
 			// TODO if any validation reqd for branch info
@@ -6794,8 +6802,9 @@ public class SmApplicationBackingBean extends
 						.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0
-							|| cat.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
+							|| cat.getRecordStatusFlg()
+									.compareTo(
+											SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 						if ((getManagedBean().isPoUser()
 								&& cat.getPoDecFlg() != null && cat
 								.getPoDecFlg().compareTo(new Integer(1)) == 0)
