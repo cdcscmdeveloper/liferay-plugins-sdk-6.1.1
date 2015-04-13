@@ -82,7 +82,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
+			<p:column headerText="#{lbl['lbl.sc.type']}"
 				style="width:10%;white-space: normal;">
 
 
@@ -121,7 +121,7 @@
 
 						<p:selectOneMenu style="width:100px;" required="true"
 							id="finhChecklistTitlenullType"
-							label="#{lbl['lbl.sc.spec.stage.type']}"
+							label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwofunctional.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getFinancialChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -142,7 +142,7 @@
 
 						<p:selectOneMenu style="width:100px;" required="true"
 							id="finChecklistTitlenotnullType"
-							label="#{lbl['lbl.sc.spec.stage.type']}"
+							label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwofunctional.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getFinancialChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -222,7 +222,7 @@
 					</ui:fragment>
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.scoring']}"
 				style="width:10%;white-space: normal;text-align: center;">
 				<h:panelGroup id="scoreFinanceView">
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
@@ -270,7 +270,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
+			<p:column headerText="#{lbl['lbl.sc.qt.document']}"
 				style="width:16%;white-space: normal;text-align: center;">
 				<h:panelGroup id="uploadFinance">
 					<p:commandLink oncomplete="uploadS1Fin.show();return false;"

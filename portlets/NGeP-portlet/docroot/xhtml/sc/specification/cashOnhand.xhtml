@@ -22,7 +22,7 @@
 				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
@@ -64,10 +64,10 @@
 				<p:column headerText="#{lbl['lbl.sc.spec.act.type']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.address']}">
+				<p:column headerText="#{lbl['lbl.sc.address']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+				<p:column headerText="#{lbl['lbl.sc.planned.amount']}">
 					<p:inputText></p:inputText>
 				</p:column>
 

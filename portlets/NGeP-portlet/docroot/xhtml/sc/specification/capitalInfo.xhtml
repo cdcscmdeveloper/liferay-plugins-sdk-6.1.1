@@ -33,7 +33,7 @@
 				<p:row>
 					<p:column styleClass="panelGridHeaders"  colspan="1">#{lbl['lbl.sc.spec.composition.capital.distribution']}</p:column>
 					<p:column styleClass="panelGridHeaders"  colspan="1">#{lbl['lbl.sc.spec.no.of.members']}</p:column>
-					<p:column styleClass="panelGridHeaders"  colspan="1">#{lbl['lbl.sc.spec.amount']}</p:column>
+					<p:column styleClass="panelGridHeaders"  colspan="1">#{lbl['lbl.sc.planned.amount']}</p:column>
 					<p:column styleClass="panelGridHeaders" >(%)</p:column>
 				</p:row>
 			</f:facet>
@@ -91,13 +91,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.citizen']}">
 				<p:inputText />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+			<p:column headerText="#{lbl['lbl.sc.planned.amount']}">
 				<p:inputText />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
 				<p:inputText />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.position']}">
 				<p:inputText />
 			</p:column>
 		</p:dataTable>
@@ -107,13 +107,13 @@
 		<p:dataTable id="shareCompany" rowIndexVar="index" var="factory"
 			rowKey="#{factory}">
 			<ac:paginator for="shareCompany" />
-			<p:column headerText="#{lbl['lbl.sc.spec.company.name']}">
+			<p:column headerText="#{lbl['lbl.sc.company.name']}">
 				<p:inputText />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}">
 				<p:inputText />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+			<p:column headerText="#{lbl['lbl.sc.planned.amount']}">
 				<p:inputText />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">

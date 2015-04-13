@@ -21,7 +21,7 @@
 				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
@@ -41,7 +41,7 @@
 
 		<table>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel>
+				<td><h:outputLabel value="#{lbl['lbl.sc.title']}"></h:outputLabel>
 				</td>
 				<td><p:inputTextarea rows="2" cols="100" style="width: 100%;"
 						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
@@ -60,14 +60,14 @@
 					<p:inputText></p:inputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.address']}">
+				<p:column headerText="#{lbl['lbl.sc.address']}">
 					<p:inputText></p:inputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.credit.type']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+				<p:column headerText="#{lbl['lbl.sc.planned.amount']}">
 					<p:inputText></p:inputText>
 				</p:column>
 
