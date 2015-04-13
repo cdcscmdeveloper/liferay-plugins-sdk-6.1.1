@@ -322,6 +322,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return retVal;
 	}
 	
+	/**
+	 * Page Redirect
+	 * @param url
+	 * @throws IOException
+	 * @throws PortalException
+	 * @throws SystemException
+	 */
 	public void pageRedirect(String url)  throws IOException,PortalException, SystemException {
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
@@ -331,6 +338,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		externalContext.redirect(commonUrl + "/" + url);
 	}
 	
+	/**
+	 * retrieve In Process Appl
+	 * @param supplierId
+	 * @return
+	 */
 	private SmAppl retrieveInProcessAppl(Long supplierId){
 		IMofRegistrationSO mofRegSO = SmServiceLookup.getMofRegistrationSO();
 		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
@@ -344,6 +356,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return mofRegistrationResDTO.getSmAppl();
 	}
 	
+	/**
+	 * Retrieve SmWorkFlowStatus
+	 * @param appl
+	 * @return SmWorkflowStatus
+	 */
 	private SmWorkflowStatus getSmWorkflowStatus(SmAppl appl){
 		ISmWorkFlowStatusSO workFlowSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
@@ -354,6 +371,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		
 	}
 	
+	/**
+	 * get Labe From Properties
+	 * @param labelStr
+	 * @return String
+	 */
 	private String getLabelFromProperties(String labelStr){
 		Locale locale = new FacesScopes().getUserLocale();
 		String label = ResourceBundleUtils.getMessage(labelStr, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
@@ -361,6 +383,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return label;
 	}
 	
+	/**
+	 * proceed To Supplier Selection
+	 * @throws PortalException
+	 * @throws SystemException
+	 * @throws IOException
+	 */
 	public void proceedToSupplierSelection() throws PortalException, SystemException, IOException{
 		SmSupplier supplier = getSupplierProfile();
 		if(supplier != null){
@@ -382,6 +410,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}
 	}
 	
+	/**
+	 * show/ Hide the hyperlink based on statusCode
+	 * @param statusCode
+	 */
 	private void showHyperlink(Long statusCode){
 		Integer sc = statusCode.intValue();
 		
@@ -412,6 +444,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}	
 	}
 	
+	/**
+	 * Construct the to do list for MOF
+	 * @param supplier
+	 */
 	private void mofUserAction(SmSupplier supplier){
 		Map<String,String> mofActionMap = new HashMap<String, String>();
 		
@@ -443,7 +479,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		getManagedBean().setMofUserMap(mofActionMap);
 	}
 	
-	
+	/**
+	 * check Pending SoftCert Request
+	 * @param supplierId
+	 * @return boolean
+	 */
 	private boolean checkPendingSoftCertRequest(Long supplierId){
 		IPersonnelSO personnelSO =  SmServiceLookup.getPersonnelSO();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -465,6 +505,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return softCertStatus;
 	}
 	
+	/**
+	 * retrieve SmCompanyBasic by supplier Id
+	 * @param supplierId
+	 * @return SmCompanyBasic
+	 */
 	private SmCompanyBasic retrieveSmCompanyBasic(Long supplierId){
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setSupplierId(supplierId);
@@ -473,6 +518,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return resDTO.getSmCompanyBasic();
 	}
 	
+	/**
+	 * Validate User is MOF Admin
+	 * @return boolean
+	 */
 	public boolean validMofUser(){
 		log.info("*******validMofUser********");
 		if(new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){ 
