@@ -453,6 +453,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
+			
+			if(!isGovtSeller()){
+				flOrderBB.getManagedBean().setSupplier(isFlFulfilmentSupplier());
+			}
+			
 			navgPage=NAV_TO_MAINTAIN_PO;
 		}else if(docType.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -821,6 +826,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public boolean isFlFulfilmentPaymentOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
+	}
+	
+	/**
+	 * Checks if is fl fulfilment govt seller.
+	 *
+	 * @return true, if is fl fulfilment govt seller.
+	 */
+	public boolean isGovtSeller() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value());
 	}
 	
 	/**

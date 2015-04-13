@@ -204,6 +204,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
+    
+    private boolean supplier = false;
 	
 	
 	/* (non-Javadoc)
@@ -1154,6 +1156,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
+	}
+
+	/**
+	 * @return the supplier
+	 */
+	public boolean isSupplier() {
+		return supplier;
+	}
+
+	/**
+	 * @param supplier the supplier to set
+	 */
+	public void setSupplier(boolean supplier) {
+		this.supplier = supplier;
 	}
 
 }
