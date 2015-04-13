@@ -1743,7 +1743,7 @@ public class SmCommonUtil {
 	 *            refAddress
 	 * @return SmAddress
 	 */
-	private static SmAddress cloneAddress(SmAddress refAddress) {
+	public static SmAddress cloneAddress(SmAddress refAddress) {
 		SmAddress address = new SmAddress();
 		if (refAddress.getAddress1() != null)
 			address.setAddress1(new String(refAddress.getAddress1().toString()));
