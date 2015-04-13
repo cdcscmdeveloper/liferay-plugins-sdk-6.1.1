@@ -32,9 +32,9 @@
 				<p:commandLink
 					action="#{financialOrgBackingBean.redirectToFinOrg(finorg.financialOrgId)}"
 					update="@form">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						title="Edit Financial Org"
-						value="/resources/ep/images/design/edit.png" />
+					<p:graphicImage 
+						title="#{lbl['lbl.pm.financialorg.edit']}"
+						value="/css/images/design/edit.png" />
 				</p:commandLink>
 
 			</p:column>
