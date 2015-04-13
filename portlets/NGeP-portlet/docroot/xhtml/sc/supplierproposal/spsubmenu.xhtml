@@ -11,6 +11,9 @@
 			<td width="10%" class="sidemenutd" style="vertical-align: baseline;"><p:tabMenu
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex}"
 					styleClass="sidemenu" style="display : table-caption;">
+					<p:menuitem value="#{lbl['lbl.sc.quotation.tender.document']}"
+						action="#{supplierProposalDetailBackingBean.retrieveQTDocumentDetails}"
+						update="@form" />
 					<p:menuitem value="#{lbl['lbl.sc.technical.proposal']}"
 						action="#{supplierProposalDetailBackingBean.retrieveTechnicalProposalList}"
 						update="@form" />
@@ -28,18 +31,22 @@
 					id="menuSPContent">
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '0'}">
-						<ui:include src="sptechdetails.xhtml" />
+						<ui:include src="qutationTenderDocument.xhtml" />
 					</c:if>
 					<c:if
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '1'}">
+						<ui:include src="sptechdetails.xhtml" />
+					</c:if>
+					<c:if
+						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
 						<ui:include src="spfinancedetails.xhtml" />
 					</c:if>
 					<h:panelGroup
-						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
+						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '3'}">
 						<ui:include src="spdeclaration.xhtml" />
 					</h:panelGroup>
 					<h:panelGroup
-						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '3'}">
+						rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '4'}">
 						<ui:include src="spintegrity.xhtml" />
 					</h:panelGroup>
 				</h:panelGroup></td>
