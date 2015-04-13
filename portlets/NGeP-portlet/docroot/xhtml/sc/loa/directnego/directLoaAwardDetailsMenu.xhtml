@@ -10,7 +10,7 @@
 		<table>
 			<tr>
 				<td valign="top"><h:outputLabel
-						value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
+						value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 				<td colspan="3"><p:inputText size="98"
 						style="margin-bottom:5px;" 
 						value="#{lOADetailBackingBean.managedBean.tplSpecMaster.specName}" /></td>
@@ -18,7 +18,7 @@
 			<tr>
 				<td style="width: 10%">
 				<h:outputLabel
-						value="#{lbl['lbl.sc.tpl.search.item']}" /> 
+						value="#{lbl['lbl.sc.item.type']}" /> 
 				<p:outputLabel value="*" styleClass="mandatory"  /></td>
 				<td><p:selectOneMenu id="itemType"
 						value="#{lOADetailBackingBean.managedBean.itemTypeId}"
@@ -30,7 +30,7 @@
 					</p:selectOneMenu>
 				</td>
 					
-				<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.specification.type']}" /></td>
 				<td><p:inputText disabled="true" size="30" /></td>
 			</tr>
 			<tr>
@@ -43,7 +43,7 @@
 			</tr>
 			<tr>
                 <td><h:outputLabel
-						value="#{lbl['lbl.sc.spec.template.status']}" /></td>
+						value="#{lbl['lbl.sc.status']}" /></td>
 				<td><p:inputText disabled="true"></p:inputText></td>
 			</tr>
 
