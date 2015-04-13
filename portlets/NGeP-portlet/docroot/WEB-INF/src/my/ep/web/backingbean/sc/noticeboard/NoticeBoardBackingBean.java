@@ -595,10 +595,10 @@ public class NoticeBoardBackingBean extends
 		/*ScQt scQt = new ScQt();
 		scQt.setQtId(qtId);*/
 		this.getManagedBean().setScQt(resDTO.getScQt());
-		
-		String mofNo = this.getManagedBean().getMofNo();
-		if(StringUtils.equalsIgnoreCase(mofNo, StringUtils.EMPTY)){
-			this.getManagedBean().setMofNo(null);
+		this.getManagedBean().setMofNo(null);
+		String mofNo = this.getManagedBean().getSupplierMofNo();
+		if(null != mofNo){
+			this.getManagedBean().setMofNo(mofNo);
 		}
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
 	}
@@ -939,13 +939,17 @@ public class NoticeBoardBackingBean extends
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
+				} else if (ParameterConst.NOTICE_BOARD_STATUS_CANCELLED
+						.equals(selectedTab)) {
+					statusIds.add(QTStatusConst.QT_CANCELLED);
+					
 				} else {
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 					setDisplayImage(isUser());
 
 				}
-
+				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("status.IS_CURRENT",
 								SearchOperator.OPERATOR_EQUALS.value(), 1));
@@ -953,7 +957,18 @@ public class NoticeBoardBackingBean extends
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmStatus.STATUS_ID",
 								SearchOperator.OPERATOR_IN.value(), statusIds));
-
+				
+				if (ParameterConst.NOTICE_BOARD_STATUS_CANCELLED
+						.equals(selectedTab)) {
+					
+					List<Long> statusIdList = new ArrayList<>(2);
+					statusIdList.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
+					statusIdList.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("wfStatus.STATUS_ID",
+									SearchOperator.OPERATOR_IN.value(),statusIdList));
+				}
+				
 				// Filter By - QT No
 				if (StringUtils.isNotBlank(getManagedBean().getQtNo())) {
 					searchBean.getDataFilterBeans().add(
@@ -1930,8 +1945,8 @@ public class NoticeBoardBackingBean extends
 				
 				// Get MOF number of sign in supplier & set into mofNo property
 				// to pre populate in check supplier qualification criteria  screen.
-				if (this.getManagedBean().getMofNo() == null) {
-					this.getManagedBean().setMofNo(retrieveMofNo());
+				if (this.getManagedBean().getSupplierMofNo() == null) {
+					this.getManagedBean().setSupplierMofNo(retrieveMofNo());
 				}
 			}
 
