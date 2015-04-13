@@ -61,24 +61,39 @@
 						<td>Item</td>
 						<td>Specification</td>
 						<td>UOM</td>
+						#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+						<td>Freq. per UOM</td>
+						<td>No. UOM per day</td>
+						<td>No. UOM per month</td>
+						#end
 						<td>Price Type</td>
 						<td>Quantity</td>
-						<td>Answer</td>
-						<td>Note</td>
 					</tr>
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 						<tr>
 							<td>$tplspecQuestion.clItem</td>
 							<td>$tplspecQuestion.clSpecDetail</td>
+							#if ($tplspecQuestion.questionType == "I")
 							<td>$tplspecQuestion.clUom.uomName</td>
-							<td>
-								#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "")
-								   $tplspecQuestion.clPriceTypeCode.parameterCode
-								#else
-								   $bean.getParameterDesc($tplspecQuestion.clPriceTypeCode)
+							#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+							<td align="right">
+								#if ($tplspecQuestion.clUomFrequency)
+									$tplspecQuestion.clUomFrequency
 								#end
 							</td>
-							<td>
+							<td align="right">
+								#if ($tplspecQuestion.clUomPerDay)
+									$tplspecQuestion.clUomPerDay
+								#end
+							</td>
+							<td align="right">
+								#if ($tplspecQuestion.clUomPerMonth)
+									$tplspecQuestion.clUomPerMonth
+								#end
+							</td>
+							#end
+							<td>$bean.getParameterDesc($tplspecQuestion.clPriceTypeCode)</td>
+							<td align="right">
 								#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "03")
 									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
 										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
@@ -103,8 +118,13 @@
 									$tplspecQuestion.clQuantity
 								#end
 							</td>
-							<td>$tplspecQuestion.clAnswerRequired</td>
-							<td>$tplspecQuestion.clReviewRemark</td>
+							#else
+								#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+									<td colspan="6"></td>
+								#else
+									<td colspan="3"></td>
+								#end
+							#end
 						</tr>
 					#end
 				</table>
