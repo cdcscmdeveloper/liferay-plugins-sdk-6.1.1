@@ -10,7 +10,10 @@
 		<td align="right">
 			<p:commandButton immediate="true"
 				value="#{lbl['lbl.btn.back']}"
-				action="#{qTDetailBB.gotoQtSearchPage}" update="@all"
+				action="#{qTDetailBB.gotoQtSearchPage}" 
+				partialSubmit="true"
+				process="@this"
+				update="@this"
 				style="float:left;" />
 			<c:if
 				test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">

@@ -15,7 +15,10 @@
 				<td align="right">
 				<ui:fragment rendered="#{qTDetailBB.managedBean.taskName eq null}">
 					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-						action="#{qTDetailBB.gotoQtSearchPage}" />
+						action="#{qTDetailBB.gotoQtSearchPage}"
+						partialSubmit="true"
+						process="@this"
+						update="@this" />
 
 				</ui:fragment>
 
