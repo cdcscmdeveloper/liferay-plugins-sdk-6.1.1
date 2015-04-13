@@ -145,6 +145,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -3856,7 +3857,7 @@ public class QTDetailBackingBean extends
 				quationTenderReqDTO
 						.setApprovalType(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
 				QuationTenderResDTO resDTO = detailSO
-						.retriveQTApprovalDetails(quationTenderReqDTO);
+						.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
 				this.getManagedBean().setQt(resDTO.getQtDetail());
 				ScQtApproval qtApproval = resDTO.getQtApproval();
 
@@ -3932,18 +3933,9 @@ public class QTDetailBackingBean extends
 		String commType = (String) event.getComponent().getAttributes()
 				.get("value");
 		if (null != commType) {
-			if (!commType
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					&& !commType
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-
-				List<PmUser> userList = retrievePmUserSecratryDtl(commType);
-				if (userList != null && userList.size() > 0) {
-					getManagedBean().getSelectedApprovalTabBean()
-							.getScQtApproval().getApproverSettings().get(0)
-							.setApprover(userList.get(0));
-				}
-			}
+			getManagedBean().getSelectedApprovalTabBean()
+			.getScQtApproval().getApproverSettings().get(0)
+			.setApprover(new PmUser());
 		} else {
 			retrieveFinalizationCommitteeType(getManagedBean()
 					.getQt().getQtId());
@@ -4008,6 +4000,29 @@ public class QTDetailBackingBean extends
 			TabBean tabBean = this.getManagedBean()
 					.getSelectedApprovalTabBean();
 			finalizeRemarks(tabBean.getScQtApproval().getScQtApprovalRemarks());
+			
+			List<ScQtApproverSettings> approverSettings = tabBean
+					.getScQtApproval().getApproverSettings();
+			if (null != approverSettings && !approverSettings.isEmpty()) {
+				String fcCommType = approverSettings.get(0).getCommitteType();
+				if (StringUtils.isEmpty(fcCommType)) {
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage(
+									"lbl.sc.finalization.committee", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+				}
+				
+				PmUser approver = approverSettings.get(0).getApprover();
+				if (approver == null || approver.getUserId() == null) {
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage(
+									"lbl.sc.qt.secretary.name", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())});
+				}
+			}
+			
 			if (tabBean.getScQtApproval().getScQtApprovalRemarks().isEmpty()) {
 				ScQtApproval qtApproval = tabBean.getScQtApproval();
 				qtApproval.setScQtApprovalRemarks(initializeRemarks(qtApproval,
@@ -4015,15 +4030,11 @@ public class QTDetailBackingBean extends
 								.getCurrentWorkFlowStatus(),
 						qtApproval.getScQtApprovalRemarks(),
 						ScQtApprovalRemark.class));
-				throw new EpException("Remarks is mandatory");
-			}
-			List<ScQtApproverSettings> approverSettings = tabBean
-					.getScQtApproval().getApproverSettings();
-			if (null != approverSettings && !approverSettings.isEmpty()) {
-				String fcCommType = approverSettings.get(0).getCommitteType();
-				if (StringUtils.isEmpty(fcCommType)) {
-					throw new EpException("Please Choose finalization Committe");
-				}
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage(
+								"lbl.txt.remarks", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())});
 			}
 			List<ScQtApproval> scQtApprovals = new ArrayList<ScQtApproval>();
 
