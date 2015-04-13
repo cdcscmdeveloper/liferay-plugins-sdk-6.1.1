@@ -1493,12 +1493,17 @@ public class QTCommitteBackingBean extends
 			}
 		} else {
 
-			if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
-					|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
-							.equals(committeStatus)
-					|| QTStatusConst.CMT_COMPLETED.equals(committeStatus)) {
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION < this.getManagedBean()
+					.getCurrentStatusId()) {
 				return true;
 			}
+			/*
+			 * if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus) ||
+			 * QTStatusConst.CMT_PENDING_REVISION_APPROVAL
+			 * .equals(committeStatus) ||
+			 * QTStatusConst.CMT_COMPLETED.equals(committeStatus)) { return
+			 * true; }
+			 */
 
 		}
 
