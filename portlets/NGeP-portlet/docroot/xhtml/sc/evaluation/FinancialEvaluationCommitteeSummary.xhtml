@@ -13,12 +13,12 @@
 			<td><p:selectOneMenu
 					value="#{evaluationBackingBean.managedBean.summaryViewBy}">
 					<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="Package" itemValue="FP"></f:selectItem>
-					<f:selectItem itemLabel="Item" itemValue="FI"></f:selectItem>
-					<f:selectItem itemLabel="Preference Margin" itemValue="M"></f:selectItem>
+
+					<f:selectItem itemLabel="Item" itemValue="RI"></f:selectItem>
+					<f:selectItem itemLabel="Package Preference Margin" itemValue="RPM"></f:selectItem>
 					<p:ajax event="change" process="@this" partialSubmit="true"
-						listener="#{evaluationBackingBean.summaryChange}"
-						update="@([id$=viewSummary])"></p:ajax>
+						listener="#{evaluationBackingBean.recommendationsummaryChange}"
+						update="@([id$=recommendationviewSummary])"></p:ajax>
 				</p:selectOneMenu></td>
 		</tr>
 
@@ -26,65 +26,16 @@
 
 
 
-	<h:panelGroup id="viewSummary">
-
+	<h:panelGroup id="recommendationviewSummary">
 		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'FP'}">
-
-
+			rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'RI'}">
 			<ui:fragment
 				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
 				<p:accordionPanel dynamic="true"
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
 					<p:ajax event="tabChange"
-						listener="#{evaluationBackingBean.evaluationZonessummaryTabChange}"
-						update="@(.evaluationstagesummarytab)" />
-					<p:tab title="#{zonePnlList.zoneName}">
-						<h:panelGroup styleClass="evaluationstagesummarytab">
-							<c:if test="#{zonePnlList.zoneName ne null}">
-								<ui:param name="qualifiedListId" value="#{zonePnlList.zoneName}"></ui:param>
-								<ui:param name="disQualifiedListId"
-									value="#{zonePnlList.zoneName}"></ui:param>
-							</c:if>
-
-							<c:if test="#{zonePnlList.zoneName eq null}">
-								<ui:param name="qualifiedListId" value="hello1"></ui:param>
-								<ui:param name="disQualifiedListId" value="hello2"></ui:param>
-							</c:if>
-
-							<ui:param name="qualifiedList"
-								value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
-							<ui:param name="disQualifiedList"
-								value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
-
-							<ui:include src="summaryPackage.xhtml"></ui:include>
-						</h:panelGroup>
-					</p:tab>
-				</p:accordionPanel>
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
-				<ui:param name="qualifiedListId" value="QualifiedPackageListId"></ui:param>
-				<ui:param name="disQualifiedListId"
-					value="disQualifiedpackageListId"></ui:param>
-				<ui:param name="qualifiedList"
-					value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
-				<ui:param name="disQualifiedList"
-					value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
-
-				<ui:include src="summaryPackage.xhtml"></ui:include>
-			</ui:fragment>
-		</ui:fragment>
-		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'FI'}">
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
-				<p:accordionPanel dynamic="true"
-					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
-					var="zonePnlList">
-					<p:ajax event="tabChange"
-						listener="#{evaluationBackingBean.evaluationZonessummaryTabChange}"
+						listener="#{evaluationBackingBean.evaluationRecommendationZonessummaryTabChange}"
 						update="@(.evaluationstagesummaryItemtab)" />
 					<p:tab title="#{zonePnlList.zoneName}">
 						<h:panelGroup styleClass="evaluationstagesummaryItemtab">
@@ -142,7 +93,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'M'}">
+			rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'RPM'}">
 
 			<ui:fragment
 				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
@@ -150,7 +101,7 @@
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
 					<p:ajax event="tabChange"
-						listener="#{evaluationBackingBean.evaluationZonessummaryTabChange}"
+						listener="#{evaluationBackingBean.evaluationRecommendationZonessummaryTabChange}"
 						update="@(.evaluationstagesummaryPreferenceMargintab)" />
 					<p:tab title="#{zonePnlList.zoneName}">
 						<h:panelGroup

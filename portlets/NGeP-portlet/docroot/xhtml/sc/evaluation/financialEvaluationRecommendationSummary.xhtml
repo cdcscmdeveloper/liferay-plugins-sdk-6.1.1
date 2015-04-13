@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<table>
+		<tr>
+			<td><h:outputLabel value="#{lbl['lbl.sc.eva.summary.view.by']}" /></td>
+			<td><p:selectOneMenu
+					value="#{evaluationBackingBean.managedBean.financialSummaryView}">
+					<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="Item" itemValue="FI"></f:selectItem>
+					<f:selectItem itemLabel="Package Preference Margin" itemValue="FPM"></f:selectItem>
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						listener="#{evaluationBackingBean.financialsummaryChange}"
+						update="@([id$=financialviewSummary])"></p:ajax>
+				</p:selectOneMenu></td>
+		</tr>
+
+	</table>
+
+
+
+	<h:panelGroup id="financialviewSummary">
+
+
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.financialSummaryView eq 'FI'}">
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+				<p:accordionPanel dynamic="true"
+					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
+					var="zonePnlList">
+					<p:ajax event="tabChange"
+						listener="#{evaluationBackingBean.evaluationZonesFinancialsummaryTabChange}"
+						update="@(.evaluationstagesummaryrecommendationItemtab)" />
+					<p:tab title="#{zonePnlList.zoneName}">
+						<h:panelGroup
+							styleClass="evaluationstagesummaryrecommendationItemtab">
+							<c:if test="#{zonePnlList.zoneName ne null}">
+								<ui:param name="recommendationitemListId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationitemSelectQualifiedId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationitemSelectDisQualifiedId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationqualifiedSupplierItemId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationdisQualifiedSupplierItemId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+
+
+
+							</c:if>
+
+							<c:if test="#{zonePnlList.zoneName eq null}">
+								<ui:param name="recommendationitemListId" value="itemLst1"></ui:param>
+								<ui:param name="recommendationitemSelectDisQualifiedId"
+									value="supplierItemsdisSelected"></ui:param>
+								<ui:param name="recommendationqualifiedSupplierItemId"
+									value="qualifiedSuppliersZone"></ui:param>
+								<ui:param name="recommendationdisQualifiedSupplierItemId"
+									value="disQualifiedSupplierszone"></ui:param>
+								<ui:param name="recommendationitemSelectQualifiedId"
+									value="supplierItemsSelected"></ui:param>
+
+							</c:if>
+
+							<ui:param name="itemList"
+								value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
+
+							<ui:include src="summaryItem.xhtml"></ui:include>
+						</h:panelGroup>
+					</p:tab>
+				</p:accordionPanel>
+			</ui:fragment>
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
+				<ui:param name="recommendationitemListId" value="itemLstwithoutzone"></ui:param>
+				<ui:param name="recommendationitemSelectQualifiedId"
+					value="itemSupplierQualifiedoutzoneId"></ui:param>
+				<ui:param name="recommendationitemSelectDisQualifiedId"
+					value="itemSupplierDisQualifiedoutzoneId"></ui:param>
+				<ui:param name="recommendationqualifiedSupplierItemId"
+					value="qualifiedSupplierswithOutZone"></ui:param>
+				<ui:param name="recommendationdisQualifiedSupplierItemId"
+					value="disQualifiedSupplierswithOutzone"></ui:param>
+				<ui:param name="itemList"
+					value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
+				<ui:include src="summaryItem.xhtml"></ui:include>
+			</ui:fragment>
+		</ui:fragment>
+
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.financialSummaryView eq 'FPM'}">
+
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+				<p:accordionPanel dynamic="true"
+					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
+					var="zonePnlList">
+					<p:ajax event="tabChange"
+						listener="#{evaluationBackingBean.evaluationZonesFinancialsummaryTabChange}"
+						update="@(.evaluationstagesummaryrecommendationPreferenceMargintab)" />
+					<p:tab title="#{zonePnlList.zoneName}">
+						<h:panelGroup
+							styleClass="evaluationstagesummaryrecommendationPreferenceMargintab">
+							<c:if test="#{zonePnlList.zoneName ne null}">
+								<ui:param name="recommendationqualifiedPreferenceListId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+								<ui:param name="recommendationdisQualifiedPreferenceListId"
+									value="#{zonePnlList.zoneName}"></ui:param>
+							</c:if>
+
+							<c:if test="#{zonePnlList.zoneName eq null}">
+								<ui:param name="recommendationqualifiedPreferenceListId"
+									value="preference1"></ui:param>
+								<ui:param name="recommendationdisQualifiedPreferenceListId"
+									value="preference2"></ui:param>
+							</c:if>
+
+							<ui:param name="qualifiedPreferenceList"
+								value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
+							<ui:param name="disQualifiedPreferenceList"
+								value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
+							<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
+						</h:panelGroup>
+					</p:tab>
+				</p:accordionPanel>
+			</ui:fragment>
+
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
+				<ui:param name="recommendationqualifiedPreferenceListId"
+					value="QualifiedPreferenceMarginListId"></ui:param>
+				<ui:param name="recommendationdisQualifiedPreferenceListId"
+					value="disQualifiedPreferenceMarginListId"></ui:param>
+				<ui:param name="qualifiedPreferenceList"
+					value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
+				<ui:param name="disQualifiedPreferenceList"
+					value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
+				<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
+			</ui:fragment>
+		</ui:fragment>
+	</h:panelGroup>
+
+
+
+</ui:composition>
