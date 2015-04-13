@@ -75,6 +75,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
 	private static final String MOF_CODIFICATION_SEARCH = "codification-search";
+	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
 	
 	public static Logger log = Logger.getLogger(PostSupplierRegistrationBackingBean.class);
 	
@@ -106,6 +107,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					//getManagedBean().setMofUserFlag(true);
 					mofUserAction(supplier);
 					
+				}else if(validBasicSupplier()){
+					basicSupplierAction(supplier);
+			
 				}else{
 					this.getManagedBean().setHyperlink(true);
 					/*				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
@@ -476,7 +480,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}
 		
 		log.info("mofActionMap>>>>" + mofActionMap.size());
-		getManagedBean().setMofUserMap(mofActionMap);
+		getManagedBean().setUserActionMap(mofActionMap);
 	}
 	
 	/**
@@ -530,6 +534,42 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return false;
 	}
 	
+	/**
+	 * Validate User is MOF Admin
+	 * @return boolean
+	 */
+	public boolean validBasicSupplier(){
+		log.info("*******validBasicSupplierAdmin********");
+		if(new FacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){ 
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Action for basic supplier admin
+	 */
+	private void basicSupplierAction(SmSupplier supplier){
+		Map<String,String> basicActionMap = new HashMap<String, String>();
+		
+		String msg = "Upgrade to MOF Account to enjoys more benefits.";
+		basicActionMap.put(msg, UPGRADE_TO_MOF);
+		
+		getManagedBean().setUserActionMap(basicActionMap);
+	}
+	
+	
+	/**
+	 * Validate User is Supplier Temp
+	 * @return boolean
+	 */
+	public boolean validSupplierTemp(){
+		log.info("*******validBasicSupplierAdmin********");
+		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){ 
+			return true;
+		}
+		return false;
+	}
 	
 /*	private void initCatalogueBackingBean(){
 		CatalogueBackingBean cBB = new CatalogueBackingBean();

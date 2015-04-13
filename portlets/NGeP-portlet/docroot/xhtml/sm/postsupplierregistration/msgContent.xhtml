@@ -9,14 +9,14 @@
 
 
 	<ui:define name="contentSection">
-		<p:outputPanel rendered="#{postSupplierRegBB.validMofUser()}" id="mofPanelId">
-			<c:forEach items="#{postSupplierRegBB.managedBean.mofUserMap}" var="entry">
+		<p:outputPanel rendered="#{postSupplierRegBB.validMofUser() or postSupplierRegBB.validBasicSupplier()}" id="mofPanelId">
+			<c:forEach items="#{postSupplierRegBB.managedBean.userActionMap}" var="entry">
 				#{entry.key}
 				<p:commandLink  value="- click here to continue" action="#{postSupplierRegBB.pageRedirect(entry.value)}"></p:commandLink><br />
 			</c:forEach>
 		</p:outputPanel>
 		
-		<p:outputPanel rendered="#{!postSupplierRegBB.validMofUser()}"  id="basicPanelId">
+		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">
 			<h:outputText value="Congratulations!!" style="font-size:30;" /><br />
 			<h:outputText value="You have successfully activated the eP account." /><br />
 			<h:outputText value="Please proceed to the following step to complete the registration." /><br />
@@ -25,7 +25,6 @@
 			<p:commandLink  value="- click here to continue"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 		</p:outputPanel>
 		<br /><br />
-		
 	</ui:define>
 
 </ui:composition>
