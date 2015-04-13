@@ -81,7 +81,7 @@
 				<tr>
 
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
+							value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<td><h:outputLabel
@@ -102,7 +102,7 @@
 			</table>
 
 			<p:dialog id="bocreateEditTechnicalDialog"
-				widgetVar="createTechnicalDialog" header="Cancel Confirmation"
+				widgetVar="createTechnicalDialog" header="#{lbl['lbl.sc.cancel.confirm']}"
 				resizable="false" width="325" height="75" closable="false">
 				<table>
 					<tr>

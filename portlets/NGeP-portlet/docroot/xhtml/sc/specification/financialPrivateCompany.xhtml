@@ -21,7 +21,7 @@
 				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveCheckListScores}">
@@ -83,10 +83,10 @@
 				<p:column headerText="#{lbl['lbl.sc.spec.loa.no']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.effective.date']}">
+				<p:column headerText="#{lbl['lbl.sc.effective.date']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.exp.date']}">
+				<p:column headerText="#{lbl['lbl.sc.exp.date']}">
 					<p:inputText></p:inputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contarct.period']}">
