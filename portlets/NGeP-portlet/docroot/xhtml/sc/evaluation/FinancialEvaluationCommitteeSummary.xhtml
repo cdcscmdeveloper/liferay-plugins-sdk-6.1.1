@@ -14,8 +14,9 @@
 					value="#{evaluationBackingBean.managedBean.summaryViewBy}">
 					<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
 
-					<f:selectItem itemLabel="Item" itemValue="RI"></f:selectItem>
+
 					<f:selectItem itemLabel="Package Preference Margin" itemValue="RPM"></f:selectItem>
+					<f:selectItem itemLabel="Item" itemValue="RI"></f:selectItem>
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						listener="#{evaluationBackingBean.recommendationsummaryChange}"
 						update="@([id$=recommendationviewSummary])"></p:ajax>
