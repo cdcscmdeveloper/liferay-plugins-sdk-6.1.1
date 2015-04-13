@@ -20,22 +20,22 @@
 
 					<p:menuitem value="#{lbl['lbl.sc.spec.general']}" update="@form"
 						action="#{specificationBackingBean.businessOwnerTabChange(0)}" />
-					<p:menuitem value="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
+					<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 						action="#{specificationBackingBean.businessOwnerTabChange(1)}"
 						update="@form" />
-					<p:menuitem value="#{lbl['lbl.sc.spec.tech.specification']}"
+					<p:menuitem value="#{lbl['lbl.sc.technical.specification']}"
 						actionListener="#{specificationBackingBean.businessOwnerTabChange(2)}"
 						update="@form" />
 
 
-					<p:menuitem value="#{lbl['lbl.sc.spec.financial.specification']}"
+					<p:menuitem value="#{lbl['lbl.sc.financial.specification']}"
 						actionListener="#{specificationBackingBean.businessOwnerTabChange(3)}"
 						update="@form" />
 
 					<c:if
 						test="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.taskName eq 'Specification Approval' }">
 
-						<p:menuitem value="#{lbl['lbl.sc.spec.approval']}"
+						<p:menuitem value="#{lbl['lbl.sc.approval']}"
 							actionListener="#{specificationBackingBean.businessOwnerTabChange(4)}"
 							update="@form" />
 					</c:if>

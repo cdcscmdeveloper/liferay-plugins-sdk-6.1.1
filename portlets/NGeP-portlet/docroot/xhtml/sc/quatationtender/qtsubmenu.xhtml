@@ -28,7 +28,7 @@
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
-					<p:menuitem value="#{lbl['lbl.sc.spec.financial.specification']}"
+					<p:menuitem value="#{lbl['lbl.sc.financial.specification']}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />

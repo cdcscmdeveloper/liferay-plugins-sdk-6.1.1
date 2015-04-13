@@ -22,7 +22,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}" style="width : 35%;">
 				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}" style="white-space : normal; width : 35%;">
+			<p:column headerText="#{lbl['lbl.sc.address']}" style="white-space : normal; width : 35%;">
 				<p:outputLabel style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
 			</p:column>
 		</p:dataTable>
@@ -40,10 +40,10 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.passport.no']}" style="width : 25%;">
 				<h:outputText value="#{cheque.smPersonnel.identificationNo}" ></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.bumi.status']}" style="width : 25%;">
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width : 25%;">
 				<h:outputText value="#{(cheque.smPersonnel.bumi) ? 'Yes' : 'No'}" ></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.share.position']}" style="width : 25%;">
+			<p:column headerText="#{lbl['lbl.sc.spec.position']}" style="width : 25%;">
 				<h:outputText value="#{cheque.smPersonnel.designation}" ></h:outputText>
 			</p:column>
 		</p:dataTable>
