@@ -108,13 +108,14 @@
 				</table>
 			#end
 			#if ($isPlanned == "false")
+				NA
 			#end
 		</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.4</td>
 		<td class="tdInfoTable">Tempoh Perjanjian  (Bermasa) / Tempoh Penyiapan (for One-Off)</td>
-		<td class="tdInfoTable">$fulfilmentType</td>
+		<td class="tdInfoTable">$contractDuration</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.5</td>
@@ -140,6 +141,7 @@
 					Total Suppliers : $supplierSize
 			#end
 			#if ($isZone == "false")
+				
 			#end
 		</td>
 	</tr>
@@ -175,23 +177,19 @@
 	<tr>
 		<td class="tdInfoTable">1.12</td>
 		<td class="tdInfoTable">Jenis Tender/ Sebut Harga</td>
-		<td class="tdInfoTable">$openType</td>
-	</tr>
-	<tr>
-		<td class="tdInfoTable">1.13</td>
-		<td class="tdInfoTable">Bumiputra Status</td>
-		<td class="tdInfoTable">
+		<td class="tdInfoTable">$openType 
 			#if ($openType == "Open")
+				to 
 				#if ($openFor == "B")
-					Yes
+					Bumiputra
 				#else
-					No 
+					All 
 				#end
-			#end
+			#end		 				
 		</td>
 	</tr>
 	<tr>
-		<td class="tdInfoTable">1.14</td>
+		<td class="tdInfoTable">1.13</td>
 		<td class="tdInfoTable">PEMBEKAL SEMASA</td>
 		<td class="tdInfoTable">
 			#if ($existingContract == "")
