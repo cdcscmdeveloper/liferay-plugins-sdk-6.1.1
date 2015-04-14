@@ -266,12 +266,13 @@
 			  <p:outputLabel value="*" styleClass="mandatory" />
 		      <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 		</h:panelGrid> 
-		 <h:panelGrid columns="2" 
+		 <h:panelGrid columns="3" 
 		      rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}">
 		    <p:inputText id="fileRefNum" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.fileRefNo}" 
 		           disabled="#{terminationBackingBean.managedBean.viewContract}"
 		           style="width:170px;" maxlength="100">
 		     </p:inputText>
+		     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
 		     <p:message for="fileRefNum" display="icon"/>
 		 </h:panelGrid>		 
 		 
@@ -336,11 +337,12 @@
 			<p:outputLabel value="*" styleClass="mandatory" />
 		    <p:outputLabel value="#{lbl['lbl.ct.last.remedy.file.no']}" />
 		  </h:panelGrid>
-		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
+		  <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.termination}">
            <p:inputText id="lastRemedyFileNo" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.lastRemedyFileNo}" 
              disabled="#{terminationBackingBean.managedBean.viewContract}"
              style="width:170px;" maxlength="100">
               </p:inputText>
+              <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remedy.file.ref.no']}" />
                 <p:message for="lastRemedyFileNo" display="icon"/>
 		  </h:panelGrid>
 		 
