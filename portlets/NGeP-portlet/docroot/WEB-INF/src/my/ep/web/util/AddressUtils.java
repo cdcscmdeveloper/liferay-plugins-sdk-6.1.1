@@ -14,6 +14,50 @@ import my.ep.persistence.entity.sm.SmAddress;
 public class AddressUtils {
 	
 	private static String separator = ", ";
+	private static String htmlLineSeparator ="<br/>";
+	
+	/**
+	 * Get Full Formatted Address based on SmAddress
+	 * @param smAddress
+	 * @return full address
+	 */
+	public static String getSmFullFormattedAddress(SmAddress smAddress) {
+		StringBuilder address = new StringBuilder();
+		if(smAddress!=null) {
+			if (smAddress.getAddress1() != null && smAddress.getAddress1().length() > 0) {
+				address.append(smAddress.getAddress1());
+				address.append(separator).append(htmlLineSeparator);
+			}
+			if (smAddress.getAddress2() != null && smAddress.getAddress2().length() > 0) {
+				address.append(smAddress.getAddress2());
+				address.append(separator).append(htmlLineSeparator);
+			}
+			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
+				address.append(smAddress.getAddress3());
+				address.append(separator).append(htmlLineSeparator);
+			}
+			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
+				address.append(smAddress.getAddress4());
+				address.append(separator).append(htmlLineSeparator);
+			}
+			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {
+				address.append(smAddress.getPostcode());
+				address.append(" ").append(htmlLineSeparator);
+			}
+			if (smAddress.getPmCity() != null && smAddress.getPmCity().getCityName() !=null && smAddress.getPmCity().getCityName().length() > 0) {
+				address.append(smAddress.getPmCity().getCityName());
+				address.append(separator).append(htmlLineSeparator);
+			}
+			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
+				address.append(smAddress.getPmDistrict().getDistrictName());
+				address.append(separator).append(htmlLineSeparator);
+			}
+			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
+				address.append(smAddress.getPmState().getStateName());
+			}			
+		}
+		return address.toString();
+	}
 	
 	/**
 	 * Get Full Address based on SmAddress
