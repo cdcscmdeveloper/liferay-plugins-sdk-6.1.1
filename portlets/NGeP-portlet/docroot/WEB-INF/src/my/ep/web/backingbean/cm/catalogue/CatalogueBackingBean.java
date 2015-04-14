@@ -141,6 +141,7 @@ import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.ss.usermodel.Cell;
@@ -8322,5 +8323,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		options.add(new SelectItem(CmConst.ITEM_STATUS_EXPIRED, "Tamat Tempoh"));
 		
 		return options;
+	}
+	
+	public void setCatTypeAndTabIndex(String catType, int tabIndex) {
+		this.getManagedBean().setResultTabActiveIndex(tabIndex);
+		if(StringUtils.isNotBlank(catType)) {
+			this.getManagedBean().getCatTypeFilterBean().setSearchValue(catType);
+		} else {
+			this.getManagedBean().getCatTypeFilterBean().setSearchValue(null);
+		}
 	}
 }
