@@ -514,7 +514,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
 				 
 			   if(resDTO.isSuccessful()){
-				   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+				   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome)){
 					   Long statusId = getManagedBean().getPidStatus().getStatusId();
 					   
 					   if(DPStatusConstants.PID_PENDING_VERIFICATION.equals(statusId)){
@@ -547,7 +547,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	public void approverAction(String outcome) {
 		debugLogger("approverAction");
 		this.getManagedBean().setAction(outcome);
-		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome)){
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
