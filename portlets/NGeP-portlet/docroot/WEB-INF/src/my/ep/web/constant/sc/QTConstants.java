@@ -201,5 +201,9 @@ public interface QTConstants {
 	public static final String QT_ALL = "A";
 	public static final String QT_BUMIPUTRA = "B";
 	public static final String QT_OPEN = "Open";
+	public static final String GREATER_THAN = ">";
+	public static final String GREATER_THAN_OR_EQUAL = ">=";
+	public static final String LESSER_THAN = "<";
+	public static final String LESSER_THAN_OR_EQUAL = "<=";
 
 }

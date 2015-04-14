@@ -677,10 +677,10 @@ public class QTScheduleDetailBackingBean extends
 		try {
 			List<ScQtBsvRegistration> registrations = this.getManagedBean()
 					.getBriefingRegistrationList();
-			if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+			if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 				for (ScQtBsvRegistration registration : registrations) {
 					registration
-							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 				}
 			}
 			briefingReqDTO.setBriefingReqDtls(registrations);
