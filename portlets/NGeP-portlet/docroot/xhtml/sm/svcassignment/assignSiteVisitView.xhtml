@@ -45,41 +45,23 @@
 			<p:dataTable var="svc"
 				value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smSvAddresses}"
 				rowIndexVar="rowIndex">
-				
-				<p:column headerText="#{lbl['lbl.sm.facility.name']}">
+
+				<p:column headerText="#{lbl['lbl.sm.facility.name']}"
+					style="width: 30%;white-space: normal;">
 				#{svc.facilityName}
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.address']}">
-					#{svc.smAddress.address1}<br />
-					#{svc.smAddress.address2}<br />
-					#{svc.smAddress.address3}<br />
-					#{svc.smAddress.address4}
+				<p:column headerText="#{lbl['lbl.sm.address']}"
+					style="width: 40%;white-space: normal;">
+					<h:outputText
+						value="#{backingBean.getSMFullAddress(svc.smAddress)}"
+						escape="false" style="float : left" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.postcode']}">
-				#{svc.smAddress.postcode}
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.towncity']}">
-				#{svc.smAddress.pmCity.cityName}
-				</p:column>
-
-
-				<p:column headerText="#{lbl['lbl.sm.district']}">
-				#{svc.smAddress.pmDistrict.districtName}
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.state']}">
-				#{svc.smAddress.pmState.stateName}
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.country']}">
-				#{svc.smAddress.pmCountry.countryName}
-				</p:column>
 
 				<p:column
-					headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}">
+					headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
+					style="width: 30%;white-space: normal;">
 					<h:outputText value="*"
 						style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />&#160;&#160;
 					<p:calendar id="scheduleDateId" navigator="true" required="true"

@@ -844,6 +844,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public String getFullAddress(SmAddress smAddress) {
 		return AddressUtils.getFullAddress(smAddress);
 	}
+	
+	public String getSMFullAddress(SmAddress smAddress) {
+		return AddressUtils.getSmFullFormattedAddress(smAddress);
+	}
 
 	public String getFullAddress(PmAddress pmAddress) {
 		return AddressUtils.getFullAddress(pmAddress);

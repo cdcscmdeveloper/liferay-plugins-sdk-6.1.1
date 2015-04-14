@@ -7,76 +7,65 @@
 
 
 	<p:panel header="#{lbl['lbl.sm.category']}" toggleable="true">
-		<p:dataTable var="cType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" 
-		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+		<p:dataTable var="cType"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
-				<ui:param name="lblCategoryDesc" value="lbl.sm.sitevisit.category.categorycode_#{cType.pmParameter.parameterCode}" />
+				<ui:param name="lblCategoryDesc"
+					value="lbl.sm.sitevisit.category.categorycode_#{cType.pmParameter.parameterCode}" />
 				#{lbl[lblCategoryDesc]}
 			</p:column>
-			
-			
+
+
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
-				<p:commandButton value="#{lbl['lbl.btn.download']}"  ajax="false" action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cType.pmParameter.parameterCode)}">
+				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
+					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cType.pmParameter.parameterCode)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
 			</p:column>
-			
+
 		</p:dataTable>
-		
+
 		<br />
-		<p:dataTable var="cat" value="#{svoSiteVisitBackingBean.managedBean.svTaskCategories}" 
+		<p:dataTable var="cat"
+			value="#{svoSiteVisitBackingBean.managedBean.svTaskCategories}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column headerText="#{lbl['lbl.sm.category.description']}">
 				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 				:
 				#{cat.pmCategoryL3.categoryName}
-				&#160;<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.pmCategoryL3.categoryL3Code eq '99' or 
-				(cat.pmCategoryL1.categoryL1Code eq '22' and cat.pmCategoryL2.categoryL2Code eq '07' and cat.pmCategoryL3.categoryL3Code eq '01')}"/>
+				&#160;<h:outputText value="(#{cat.otherDesc})"
+					rendered="#{cat.pmCategoryL3.categoryL3Code eq '99' or 
+				(cat.pmCategoryL1.categoryL1Code eq '22' and cat.pmCategoryL2.categoryL2Code eq '07' and cat.pmCategoryL3.categoryL3Code eq '01')}" />
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sm.category.remarks']}">
-				<h:outputText value="#{cat.poRemarks}" style="float: left;white-space: normal;" />
+				<h:outputText value="#{cat.poRemarks}"
+					style="float: left;white-space: normal;" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	
+
 	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" toggleable="true">
-		<p:dataTable var="addr" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}" 
-		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column headerText="#{lbl['lbl.sm.address']}">
-					#{addr.smAddress.address1}<br />
-					#{addr.smAddress.address2}<br />
-					#{addr.smAddress.address3}<br />
-					#{addr.smAddress.address4}
-				</p:column>
+		<p:dataTable var="addr"
+			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
-			<p:column headerText="#{lbl['lbl.sm.postcode']}">
-				#{addr.smAddress.postcode}
-				</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.towncity']}">
-				#{addr.smAddress.pmCity.cityName}
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sm.address']}"
+				style="width: 50%;white-space: normal;">
+				<h:outputText
+					value="#{backingBean.getSMFullAddress(addr.smAddress)}"
+					escape="false" style="float : left" />
+			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sm.district']}">
-				#{addr.smAddress.pmDistrict.districtName}
-				</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.state']}">
-				#{addr.smAddress.pmState.stateName}
-				</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.country']}">
-				#{addr.smAddress.pmCountry.countryName}
-				</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}">
+			<p:column
+				headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}">
 				<h:outputText value="#{addr.scheduleDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
 
-		</p:dataTable> 
+		</p:dataTable>
 	</p:panel>
 </ui:composition>
