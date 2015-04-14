@@ -14,168 +14,53 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-
-		<p:panel header="#{lbl['lbl.sm.supplier.application.history']}" toggleable="true" id="searchSupplierProfilePanelId">
-			<table style="width: 100%">
-				<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.supplierUser}">
-					<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.companyname']}" />
-						</td>
-						<td>
-							<p:inputText label="#{lbl['lbl.sm.companyname']}"
-								value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.companyName}"
-								size="40" disabled="true"/>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.rocNo']}" />
-						</td>
-						<td>
-							<p:inputText label="#{lbl['lbl.sm.rocNo']}"
-								value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.regNo}"
-								size="35" disabled="true"/>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.ep.no']}" />
-						</td>
-						<td>
-							<p:inputText label="#{lbl['lbl.sm.ep.no']}"
-								value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.epNo}"
-								size="35" disabled="true"/>
-						</td>
-					</tr>
-				</p:outputPanel>
-				<p:outputPanel rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
-					<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.complaint.search.by']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td>
-							<p:selectOneRadio id="searchById" required="false"
-								value="#{viewSuppProfileBackingBean.managedBean.searchBy}" >
-								<f:selectItem itemLabel="#{lbl['lbl.sm.companyname']}" itemValue="1" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.rocNo']}" itemValue="2" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.ep.no']}" itemValue="3" />
-								<p:ajax update="searchSupplierProfilePanelId" event="change" process="@this" listener="#{viewSuppProfileBackingBean.onChangeSearchBy}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-							</p:selectOneRadio>
-						</td>
-					</tr>
-					<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.searchBy eq 1}">
-						<tr>
-							<td>
-								<p:outputLabel value="#{lbl['lbl.sm.companyname']}" /> 
-								<p:outputLabel value="*" styleClass="mandatory" />
-							</td>
-							<td>
-								<p:inputText id="companyNameId"
-									label="#{lbl['lbl.sm.companyname']}"
-									value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.companyName}"
-									size="40" maxlength="100" required="true"  />
-								<p:message id="companyNameIdMsg" for="companyNameId"
-									showSummary="true" showDetail="false" display="icon" />
-							</td>
-						</tr>
-					</p:outputPanel>
-					<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.searchBy eq 2}">
-						<tr>
-							<td>
-								<p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /> 
-								<p:outputLabel value="*" styleClass="mandatory" />
-							</td>
-							<td>
-								<p:inputText id="regNoId"
-									label="#{lbl['lbl.sm.rocNo']}"
-									value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.regNo}"
-									size="35" maxlength="20" required="true"  />
-								<p:message id="regNoIdMsg" for="regNoId"
-									showSummary="true" showDetail="false" display="icon" />
-							</td>
-						</tr>
-					</p:outputPanel>
-					<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.searchBy eq 3}">
-						<tr>
-							<td>
-								<p:outputLabel value="#{lbl['lbl.sm.ep.no']}" /> 
-								<p:outputLabel value="*" styleClass="mandatory" />
-							</td>
-							<td>
-								<p:inputText id="epNoId"
-									label="#{lbl['lbl.sm.ep.no']}"
-									value="#{viewSuppProfileBackingBean.managedBean.searchSupplier.epNo}"
-									size="35" maxlength="12" required="true"  />
-								<p:message id="epNoIdMsg" for="epNoId"
-									showSummary="true" showDetail="false" display="icon" />
-							</td>
-						</tr>
-					</p:outputPanel>
-					<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.searchBy eq 1 
-								or viewSuppProfileBackingBean.managedBean.searchBy eq 2 or viewSuppProfileBackingBean.managedBean.searchBy eq 3}">
-						<tr>
-							<td colspan="2">
-								<div style="text-align: right;">
-									<p:commandButton value="#{lbl['lbl.btn.search']}" 
-										action="#{viewSuppProfileBackingBean.managedBean.searchSupplier}"
-										update="searchSupplierProfilePanelId" 
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-									</p:commandButton>
-									<p:commandButton value="#{lbl['lbl.btn.reset']}" 
-										action="#{viewSuppProfileBackingBean.resetSearch}"
-										update="searchSupplierProfilePanelId">
-									</p:commandButton>
-								</div>
-							</td>
-						</tr>
-					</p:outputPanel>
-				</p:outputPanel>
-			</table>
+		
+		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+		
+		<p:panel header="#{lbl['lbl.sm.search.supprofile']}" toggleable="true" id="searchSupplierProfilePanelId">
+		
+		<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
 			
-			<br />
+		<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
+			editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
+			selection="#{viewSuppProfileBackingBean.managedBean.selectedSupplier}"
+			rowKey="#{smSupplier}" rowIndexVar="index" id="supplierApplHistoryDtId">
+			<ac:paginator for="supplierApplHistoryDtId" />
 			
-			<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
-				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
-				selection="#{viewSuppProfileBackingBean.managedBean.selectedApplHistory}"
-				rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
-				<ac:paginator for="supplierApplHistoryDtId" />
-				
-				<p:column headerText="#{lbl['lbl.sm.companyname']}" rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
-					<h:outputText value="#{smAppl.smSupplier.companyName}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.application.no']}">
-					<h:outputText value="#{smAppl.applNo}" />
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sm.companyname']}" rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
+				<h:outputText value="#{smSupplier.companyName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.application.no']}">
+				<h:outputText value="#{smSupplier.smAppl.applNo}" />
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.applicationtype']}">
-					<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl.applType eq 'N'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl.applType eq 'B'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl.applType eq 'A'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl.applType eq 'U'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl.applType eq 'C'}" />
-					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl.applType eq 'R'}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()"
-						action="#{viewSuppProfileBackingBean.viewApplication(smAppl)}"
-						process="@this" partialSubmit="true" update="@([id$=searchSupplierProfilePanelId])"
-						style="padding-right:5px;">
-						<p:graphicImage library="ep/images/design" name="document.png"
-								value="/resources/ep/images/design/document.png" />
-					</p:commandLink>
-				</p:column>
-				
-			</p:dataTable>
+			<p:column headerText="#{lbl['lbl.sm.applicationtype']}">
+				<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smSupplier.smAppl.applType eq 'N'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smSupplier.smAppl.applType eq 'B'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smSupplier.smAppl.applType eq 'A'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smSupplier.smAppl.applType eq 'U'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smSupplier.smAppl.applType eq 'C'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smSupplier.smAppl.applType eq 'R'}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:commandLink onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()"
+					action="#{viewSuppProfileBackingBean.viewApplication(smSupplier.smAppl)}"
+					process="@this" partialSubmit="true" update="@([id$=searchSupplierProfilePanelId])"
+					style="padding-right:5px;">
+					<p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png" />
+				</p:commandLink>
+			</p:column>
+			
+		</p:dataTable>
 			
 		</p:panel>
 	</ui:define>

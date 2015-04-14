@@ -24,12 +24,9 @@
 		<p:outputPanel id="supplierProfilePanelId">
 			<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
 				<ac:smPanel id="tt">
-					<div style="text-align: left;">
-						<p:commandButton value="#{lbl['lbl.sm.button.back.appl.history']}" 
-							action="#{viewSmApplBackingBean.backToSearch}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-						</p:commandButton>
-					</div>
+					
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/backButtonAndUrl.xhtml" />
+					
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
 						<ui:include src="step1ViewProfileCompanyInfo.xhtml" />
 					</c:if>

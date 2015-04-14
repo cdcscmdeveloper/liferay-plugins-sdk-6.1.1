@@ -1,141 +1,74 @@
 package my.ep.web.backingbean.sm.applicationView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
-import com.liferay.portal.model.Role;
+import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
 public class ViewSuppProfileBackingBean extends
 		BaseReviewApplicationBackingBean<ViewSuppProfileManagedBean> {
 
-	private static final int SEARCH_BY_COMPANY_NAME = 1;
-	private static final int SEARCH_BY_BUSINESS_REG_NO = 2;
-	private static final int SEARCH_BY_EP_NO = 3;
-
 	/**
-	 * Pre - render for Search Supplier Profile
+	 * Pre - render for View Supplier Profile
 	 */
-	public void preRenderSearchSupplierProfile() {
+	public void preRenderViewSupplierProfile() {
 		initLogin();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",
-						"");
-	}
-
-	/**
-	 * Redirect back to Search Supplier Profile page
-	 * 
-	 * @return String
-	 */
-	public String backToSearch() {
-		return "searchSupplierProfilePage.xhtml";
-	}
-
-	/**
-	 * View Supplier Profile
-	 */
-	public void viewApplication(SmAppl selectedSmAppl) {
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setApplNo(selectedSmAppl.getApplNo());
-		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
-				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
-		setApplication(smAppl);
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml",
-						"");
-	}
-
-	/**
-	 * Search By on change and reset value
-	 * 
-	 * @param e
-	 */
-	public void onChangeSearchBy(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSearchBy() == SEARCH_BY_COMPANY_NAME) {
-			getManagedBean().getSearchSupplier().setEpNo("");
-			getManagedBean().getSearchSupplier().setRegNo("");
-		} else if (getManagedBean().getSearchBy() == SEARCH_BY_BUSINESS_REG_NO) {
-			getManagedBean().getSearchSupplier().setEpNo("");
-			getManagedBean().getSearchSupplier().setCompanyName("");
-		} else if (getManagedBean().getSearchBy() == SEARCH_BY_EP_NO) {
-			getManagedBean().getSearchSupplier().setCompanyName("");
-			getManagedBean().getSearchSupplier().setRegNo("");
-		}
-	}
-
-	/**
-	 * Reset search value
-	 */
-	public void resetSearch() {
-		getManagedBean().getSearchSupplier().setCompanyName("");
-		getManagedBean().getSearchSupplier().setEpNo("");
-		getManagedBean().getSearchSupplier().setRegNo("");
-	}
-
-	/**
-	 * Set login role
-	 */
-	private void setUserLoginRole() {
-		FacesScopes sc = new FacesScopes();
-		List<Role> loginUserRoles = sc.getUserRoleList();
-		List<String> roleNames = new ArrayList<String>();
-		for (Role r : loginUserRoles) {
-			roleNames.add(r.getName());
-		}
-		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
-				|| sc.hasRoleUser(SupplierManagementConst.PO_HQ_TEMP)) {
-			getManagedBean().setPoUser(true);
-		} else if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
-				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ_TEMP)
-				|| sc.hasRoleUser(SupplierManagementConst.APPROVER)) {
-			getManagedBean().setApproverUser(true);
-		} else if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
-				|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
-				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
-				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
-				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
-				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
-			getManagedBean().setSupplierUser(true);
-			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
-					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
-				getManagedBean().setMofSupplier(true);
-			}
-		}
-	}
-
-	/**
-	 * Initialized supplier by login role
-	 */
-	private void initLogin() {
-		setUserLoginRole();
+		getManagedBean().setViewApplicationHistory(false);
 		if (getManagedBean().isSupplierUser()) {
-			getManagedBean().setSearchSupplier(
-					SmApplicationUtil.getCurrentSupplier());
+			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			MofRegistrationResDTO resDTO = SmServiceLookup
+					.getMofRegistrationSO()
+					.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
+			String redirectToAppl = SmApplicationUtil.getApplicationErrorPage();
+
+			if (resDTO.getSmAppl() != null) {
+				String applNo = resDTO.getSmAppl().getApplNo();
+				getManagedBean().setApplicationNoParam(applNo + "_APP");
+				if (applNo != null && StringUtils.isNotBlank(applNo)) {
+					setApplication(resDTO.getSmAppl());
+					redirectToAppl = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
+					SmCommonUtil.redirectToPage(redirectToAppl, "");
+				} else {
+					SmCommonUtil.redirectToPage(redirectToAppl,
+							MessageConst.INFO_721212);
+				}
+			} else {
+				SmCommonUtil.redirectToPage(redirectToAppl,
+						MessageConst.INFO_721212);
+			}
+			setTabParam();
+			getManagedBean().setRenderedBackButton(false);
 		} else {
-			getManagedBean().setSearchSupplier(new SmSupplier());
-			getManagedBean().getSearchSupplier().setCompanyName("");
-			getManagedBean().getSearchSupplier().setEpNo("");
-			getManagedBean().getSearchSupplier().setRegNo("");
+			getManagedBean().setRenderedBackButton(true);
+			String supplierIdParam = getSupplierIdParam();
+			if (StringUtils.isNotBlank(supplierIdParam)) {
+				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
+				getManagedBean().setSearchSupplier(
+						SmServiceLookup.getSupplierSearchSO()
+								.retriveSupplierById(reqDTO).getSmSupplier());
+			} else {
+				SmCommonUtil
+						.redirectToPage(
+								"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",
+								"");
+			}
 		}
 	}
 
