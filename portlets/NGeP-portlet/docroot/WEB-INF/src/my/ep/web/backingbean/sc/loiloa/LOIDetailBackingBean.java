@@ -578,6 +578,7 @@ public class LOIDetailBackingBean extends
 						loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 						loiLoaBean.setLoiLoaStatus(getStatusDescById(
 								scLoa.getPmStatus().getStatusId()));
+						loiLoaBean.setPmStatus(scLoa.getPmStatus());
 						loiloaBeans.add(loiLoaBean);
 					}
 				}
@@ -590,6 +591,7 @@ public class LOIDetailBackingBean extends
 						loiLoaBean.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 						loiLoaBean.setLoiLoaStatus(getStatusDescById(
 								scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()));
+						loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus().getPmStatus());
 						loiloaBeans.add(loiLoaBean);
 					}
 				}
@@ -939,7 +941,7 @@ public class LOIDetailBackingBean extends
 		if (scLoiTerms != null && scLoiTerms.size()>0) {
 
 			for (ScLoiTerm scLoiTerm : scLoiTerms) {
-				if (!scLoiTerm.isDeleted()) {
+				if (!scLoiTerm.isSelectedTerm()) {
 					negoTermsList.add(scLoiTerm);
 				} else{
 					flag = false;
@@ -1289,7 +1291,13 @@ public class LOIDetailBackingBean extends
 			handleException(ex);
 		}
 		getManagedBean().setEditFlag(true);
-		getManagedBean().setButtonFlag(false);
+		
+		if(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION)){
+			getManagedBean().setButtonFlag(true);
+		} else{
+			getManagedBean().setButtonFlag(false);
+		}
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
 			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -1334,6 +1342,7 @@ public class LOIDetailBackingBean extends
 		ScLoi scLoi = resDTO.getScLoi();
 		getManagedBean().setScLoi(scLoi);
 		boolean termPriceFound = false;
+		
 		// nego terms
 		if(scLoi.getScNegoTerms() == null || scLoi.getScNegoTerms().isEmpty()){
 			if(getManagedBean().getNegoTermsList() != null){
@@ -1342,7 +1351,12 @@ public class LOIDetailBackingBean extends
 		} else{
 			if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
 				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
-					scLoiTerm.setSelected(true);
+
+					if(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION)){
+						scLoiTerm.setSelected(true);
+					} else{
+						scLoiTerm.setSelectedTerm(true);
+					}
 				}
 			}
 			if(getManagedBean().getNegoTermsList() != null && getManagedBean().getNegoTermsList().size()>0){
@@ -3719,14 +3733,16 @@ public class LOIDetailBackingBean extends
 
 		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
 			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
-				if(term.getTermDesc().equals(QTConstants.LOI_NEGO_TERM_PRICE)){
-					termPriceFound = true;
+				if(term.getTermDesc() != null){
+					if(term.getTermDesc().equals(QTConstants.LOI_NEGO_TERM_PRICE)){
+						termPriceFound = true;
+					}
 				}
 			}
 		}
 		getManagedBean().setHideColumnFlag(termPriceFound);	
 	}
-	
+
 	/**
 	 * Price key in event.
 	 * when keyin unit price, calculate subtotal after nego.
