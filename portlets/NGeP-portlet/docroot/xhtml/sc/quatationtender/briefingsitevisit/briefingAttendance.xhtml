@@ -37,14 +37,20 @@
 		<p:panel>
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 10%"><h:outputLabel value="Briefing:" /></td>
-					<td style="width: 30%" class="header-info-text">
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.sc.briefing']}:" /></td>
+					<td style="width: 40%" class="header-info-text">
 						#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDesc}</td>
-					<td style="width: 20%"><h:outputLabel value="Date/Time:" /></td>
-					<td style="width: 30%" class="header-info-text">
-						#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDate}</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.sc.date.time']}:" /></td>
+					<td style="width: 40%" class="header-info-text"><h:outputText
+							value="#{bsvAttendanceBackingBean.managedBean.scQtBriefing.bsvDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+						</h:outputText></td>
 
 				</tr>
+
 			</table>
 		</p:panel>
 
