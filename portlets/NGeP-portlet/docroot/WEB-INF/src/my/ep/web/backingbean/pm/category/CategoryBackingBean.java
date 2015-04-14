@@ -1607,23 +1607,40 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setPmBasicCategoryId(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
-				reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
+				reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
+				reqDTO.setCategoryL1Id(pmBasicCategory.getBasicCategoryL1());				
 				reqDTO.setCategoryL2Id(pmBasicCategory.getBasicCategoryL2());
-				reqDTO.setCategoryL1Id(pmBasicCategory.getBasicCategoryL1());
+				reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
+				
 
 				CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmBasicCategoryByIds(reqDTO);
 
 				if (resDTO.getPmBasicCategory() != null) {
+
 					pmBasicCategory = resDTO.getPmBasicCategory();
-					pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+
+					if(pmBasicCategory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){						
+						
+						pmBasicCategory.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);		
+						
+						pmBasicCategory.setBasicCategoryL1desc(pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName());
+						
+						pmBasicCategory.setBasicCategoryL2desc(pmCategoryL3.getPmCategoryL2().getCategoryName());
+						
+						pmBasicCategory.setBasicCategoryL3desc(pmCategoryL3.getCategoryName());
+						
+						pmBasicCategory.setCodeConcatenate(
+								pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()+
+								pmCategoryL3.getPmCategoryL2().getCategoryL2Code()+
+								pmCategoryL3.getCategoryL3Code());	
+					}
 				}
 
 				if(CollectionUtils.isNotEmpty(this.getManagedBean().getBasicCategoryList())){
 
 					for(PmBasicCategory showPmBasicCategory:this.getManagedBean().getBasicCategoryList())
 					{
-						if(showPmBasicCategory.getBasicCategoryL3().equals(pmCategoryL3.getCategoryL3Id())){
+						if(showPmBasicCategory.getBasicCategoryL3().equals(pmBasicCategory.getBasicCategoryL3())){
 							resetLOV();
 							throw new EpException(MessageConst.ERROR_770165);
 						}
