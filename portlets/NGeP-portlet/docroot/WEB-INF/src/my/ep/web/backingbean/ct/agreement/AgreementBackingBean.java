@@ -1190,23 +1190,35 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @throws IOException       if an input or output exception occurred
 	 * @see    IOException
 	 */
-	public void downloadTemplateDoc(CtAgreementContent agreementContent) throws IOException {
+	public String downloadTemplateDoc(CtAgreementContent agreementContent) throws IOException {
 		// TODO download the templateDoc file
-		/*
-		 * IContractTemplateSO contractTemplateSO = null; ContractTemplateReqDTO
-		 * reqDTO = null; ContractTemplateResDTO ResDTO = null; try {
-		 * //this.getManagedBean().setFilePath(agreementDetails.getFilePath());
-		 * contractTemplateSO =
-		 * (IContractTemplateSO)BusinessDelegate.getInstance
-		 * ().getServiceObject("ct", IContractTemplateSO.class); reqDTO = new
-		 * ContractTemplateReqDTO(); reqDTO.setTemplateId(agreementContent);
-		 * ResDTO = contractTemplateSO.retrieveTemplateById(reqDTO);
-		 * this.getManagedBean().setCtTemplates(ResDTO.getCtTemplate());
-		 * }catch(Exception ex) { log.error("Exception>>", ex); }finally{
-		 * contractTemplateSO = null; }
-		 * agreementDetails.getFileType().;ParameterConst.agreementTemplateDoc;
-		 */
-		// agreementContent.getTitle();
+		
+				VelocityContext context = null;
+				String vmFile = null;
+				String content = null;
+			  //  SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			
+				try {	     
+					          context = new VelocityContext();	
+					          String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
+							  vmFile = "/ct/agreement/agreement-clause.vm";
+					          
+							  context.put("imgUrl", imgUrl);
+					          context.put("documentName", agreementContent.getTitle());
+					          context.put("documentTitle", agreementContent.getTplDocMaster().getDocName());
+					          context.put("documentDescription", agreementContent.getTplDocMaster().getDocDesc());
+					        /*  if(agreementContent.getTplDocMaster().getProcurementCategory() != null)
+					                  context.put("procrumentCategory",getParameterDesc(agreementContent.getTplDocMaster().getProcurementCategory()));
+					          if(agreementContent.getTplDocMaster().getProcessType() != null)
+					                context.put("processType",getParameterDesc(agreementContent.getTplDocMaster().getProcessType()));*/
+					          if(agreementContent.getTplDocMaster().getTplDocSections() != null)
+					              context.put("sectionList", agreementContent.getTplDocMaster().getTplDocSections());
+					      	if (vmFile != null && context != null) {
+								content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
+							}			
+					}catch(Exception ex){
+					   log.error(ex);
+				}return content;
 	}
 
 	/**
