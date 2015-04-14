@@ -138,6 +138,7 @@
 
 
 						<p:commandButton value="#{lbl['lbl.btn.next']}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
 							action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 							update=":form" />
@@ -164,6 +165,7 @@
 
 
 						<p:commandButton value="#{lbl['lbl.btn.next']}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
 							action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 							update=":form" />
