@@ -1487,7 +1487,7 @@ public class QTCommitteBackingBean extends
 					|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
 							.equals(committeStatus)) {
 				return true;
-			} else if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+			} else if (QTStatusConst.CMT_COMPLETED.equals(committeStatus) && ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 					.equalsIgnoreCase(commType)) {
 				return true;
 			}
