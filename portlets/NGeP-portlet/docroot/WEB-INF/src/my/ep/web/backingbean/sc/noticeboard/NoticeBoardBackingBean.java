@@ -84,6 +84,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -614,11 +615,11 @@ public class NoticeBoardBackingBean extends
 
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 		retriveBsvDetails(qtId);
-		this.getManagedBean().setMofNumber(
-				this.getManagedBean().getSmSupplier().getSmMofAccount()
-						.getMofNo());
-		this.getManagedBean().setCompanyName(
-				this.getManagedBean().getSmSupplier().getCompanyName());
+		SmSupplier smSupplier = this.getManagedBean().getSmSupplier();
+		if (smSupplier != null) {
+			this.getManagedBean().setMofNumber(retrieveMofAccount().getMofNo());
+			this.getManagedBean().setCompanyName(smSupplier.getCompanyName());
+		}
 		this.getManagedBean().setActiveTabIndex(0);
 		this.getManagedBean().setSelectedZoneTabIndex(0);
 		this.getManagedBean().setBriefingDtls(null);
@@ -1685,8 +1686,15 @@ public class NoticeBoardBackingBean extends
 				.retrieveSupplierRegistrationDtl(reqDTO);
 		ScQt scQt = resDTO.getScQt();
 		this.getManagedBean().setScQt(resDTO.getScQt());
-
-		this.getManagedBean().setSmSupplier(resDTO.getSupplier());
+		
+		Long supplierId = getSupplierId();
+		if (supplierId != null) {
+			
+			SupplierSearchResDTO searchResDTO = getSupplierInfo(supplierId);
+			SmSupplier smSupplier = searchResDTO.getSmSupplier();
+			this.getManagedBean().setSmSupplier(smSupplier);
+		}
+		
 		if (!scQt.isZonal()) {
 			ScQtBsv scQtBsv = resDTO.getScQtBsv();
 
@@ -1830,8 +1838,12 @@ public class NoticeBoardBackingBean extends
 
 		ScQtBsvRegistration bsvRegistration = scQtBsvDtl.getTempRegistration();
 
-		if (null == bsvRegistration
-				|| bsvRegistration.getBsvAttendance().isEmpty()) {
+		if ((null != this.getManagedBean().getSmSupplier() && null != this
+				.getManagedBean().getMofNumber())&&
+				 (null == bsvRegistration || bsvRegistration
+						.getBsvAttendance().isEmpty())) {
+				
+			
 			List<ScQtBsvAttendance> bsvAttandances = new ArrayList<ScQtBsvAttendance>();
 			IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1946,7 +1958,10 @@ public class NoticeBoardBackingBean extends
 				// Get MOF number of sign in supplier & set into mofNo property
 				// to pre populate in check supplier qualification criteria  screen.
 				if (this.getManagedBean().getSupplierMofNo() == null) {
-					this.getManagedBean().setSupplierMofNo(retrieveMofNo());
+					SmMofAccount mofAccount = retrieveMofAccount();
+					this.getManagedBean().setSupplierMofNo(mofAccount != null ? 
+							mofAccount.getMofNo() : null);
+									
 				}
 			}
 
@@ -2149,40 +2164,54 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	/**
-	 * fetch the  mof number based on sign in supplier id
+	 * fetch the  mofAccount object based on sign in supplier id
 	 * 
-	 * @return mofNO
+	 * @return mofAccount
 	 */
-	private String retrieveMofNo() {
+	private SmMofAccount retrieveMofAccount() {
 		
-		Long supplierId;
-		String mofNO = null;
-		IMofAccountSO mofAccountSO = null;
-		OrgProfileResDTO profileResDTO = getOrgProfile();
+		SmMofAccount mofAccount = null;
+		final Long supplierId = getSupplierId();
+		if (null != supplierId) {
+			MofAccountResDTO resDTO = getIMofAccount(supplierId);
+			if (resDTO.isSuccessful() && resDTO.getMofAccount() != null) {
+				mofAccount  = resDTO.getMofAccount();
+			}
+		}
+		
+		return mofAccount;
+	}
 
-		if (!profileResDTO.getOrgProfileList().isEmpty()
+	private MofAccountResDTO getIMofAccount(Long supplierId) {
+		
+		IMofAccountSO mofAccountSO = null;
+		MofAccountResDTO resDTO = null;
+		try {
+			mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IMofAccountSO.class);
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplierId);
+			resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+
+		} finally {
+			mofAccountSO = null;
+		}
+		return resDTO;
+	}
+
+	private Long getSupplierId() {
+
+		Long supplierId = null;
+		OrgProfileResDTO profileResDTO = getOrgProfile();
+		if (CollectionUtils.isNotEmpty(profileResDTO.getOrgProfileList())
 				&& profileResDTO.getOrgProfileList().size() > 0) {
 			supplierId = profileResDTO.getOrgProfileList().get(0)
 					.getOrgProfileId();
-			try {
-				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								IMofAccountSO.class);
-				MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-				reqDTO.setSupplierId(supplierId);
-				MofAccountResDTO resDTO = mofAccountSO
-						.retrieveMofNoBySupplierId(reqDTO);
-				if (resDTO.isSuccessful() && resDTO.getMofAccount() != null) {
-					mofNO = resDTO.getMofAccount().getMofNo();
-				}
-			} finally {
-				mofAccountSO = null;
-			}
-
 		}
-		
-		return mofNO;
+		return supplierId;
 	}
+	
 	private OrgProfileResDTO getOrgProfile(){
 		
 		IOrgProfileSO orgProfileSO = null;
@@ -2199,5 +2228,28 @@ public class NoticeBoardBackingBean extends
 		} finally {
 			orgProfileSO = null;
 		}
+	}
+	
+	/**
+	 * fetch the smSupper info based on supplier id 
+	 * 
+	 * @param supplierId
+	 * @return
+	 */
+	private SupplierSearchResDTO getSupplierInfo(Long supplierId){
+		
+		ISupplierSearchSO supplierSearchSO = null;
+		try{
+			supplierSearchSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierSearchSO.class);
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		supplierSearchReqDTO.setSupplierId(supplierId);
+		return supplierSearchSO
+				.retriveSupplierById(supplierSearchReqDTO);
+		} finally {
+			supplierSearchSO = null;
+		}
+		
 	}
 }
