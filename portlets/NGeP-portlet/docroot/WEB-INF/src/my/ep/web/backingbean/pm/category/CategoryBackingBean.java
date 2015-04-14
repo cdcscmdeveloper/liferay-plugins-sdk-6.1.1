@@ -659,6 +659,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				resDTO.getCategoryL3().setHomeOperatedValue(resDTO.getCategoryL3().getHomeOperated()==1?true:false);
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
 				this.getManagedBean().setNewCategory(false);
+				
 
 				reloadSelectionPmCategoryL3();				
 				updateSpecialCategory();
@@ -1167,7 +1168,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 								new FacesScopes().getUserLocale())));
 				}
 				//renewSesionObject();
-				loadPmCategoryL3Data(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
+				
 			}
 			
 		}finally {
@@ -1176,11 +1177,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 
 		if (this.getManagedBean().isNewCategory()){
+			loadPmCategoryL3Data(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
 			//return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
 			this.getManagedBean().setNewCategory(false);
 			//return "/xhtml/pm/category/categoryl2.xhtml";
 			return "/xhtml/pm/category/search.xhtml";
 		}else
+			loadPmCategoryL3Data(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
 			return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
@@ -1468,7 +1471,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										new FacesScopes().getUserLocale())));
 				return false;
 			}*/
-			if(!this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue() && (this.getManagedBean().getPmCategoryL3().getPmBasicCategory()==null || this.getManagedBean().getPmCategoryL3().getPmBasicCategory().size()==0)){
+			if(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue() && (this.getManagedBean().getBasicCategoryList()==null || this.getManagedBean().getBasicCategoryList().size()==0)){
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(
