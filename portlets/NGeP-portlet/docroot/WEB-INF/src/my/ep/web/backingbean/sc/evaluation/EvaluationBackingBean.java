@@ -432,10 +432,19 @@ public class EvaluationBackingBean extends
 	 *         Optional),String resultStage(Mandatory),String award(optional))
 	 */
 	private EvaluationReqDTO setSummaryPrepareData(String view) {
+		this.getManagedBean().setPassingScore(0);
 		EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
-		String award = null;
 		List<String> resultStg = new ArrayList<String>();
+		String award = null;
+		EvaluationResDTO resDTO = null;
+		
 		if (null != view && !"".equals(view)) {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			
 			if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM.equalsIgnoreCase(view)) {
 
 				resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
@@ -444,6 +453,9 @@ public class EvaluationBackingBean extends
 					award = SourcingConstants.AWARD_BY_ITEM;
 				}
 				// this.getManagedBean().setSummaryZoneBean(null);
+				
+				reqDTO.setSettingType(getSettingType(QTConstants.FINANCIAL_EVALUATION_BY_ITEM));
+				resDTO = evaluationSO.retrievePassingScoreByQT(reqDTO);
 			} else if (QTConstants.FINANCIAL_PREFERENCE_MARGIN
 					.equalsIgnoreCase(view)) {
 
@@ -451,6 +463,9 @@ public class EvaluationBackingBean extends
 
 				summaryReqDTO.setResultStages(resultStg);
 				// this.getManagedBean().setSummaryZoneBean(null);
+				
+				reqDTO.setSettingType(getSettingType(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE));
+				resDTO = evaluationSO.retrievePassingScoreByQT(reqDTO);
 			}
 
 			else if (QTConstants.RECOMMENDATION_BY_ITEM.equalsIgnoreCase(this
@@ -461,6 +476,9 @@ public class EvaluationBackingBean extends
 					award = SourcingConstants.AWARD_BY_ITEM;
 				}
 				// this.getManagedBean().setSummaryZoneBean(null);
+				
+				reqDTO.setSettingType(getSettingType(QTConstants.RECOMMENDATION_BY_ITEM));
+				resDTO = evaluationSO.retrievePassingScoreByQT(reqDTO);
 			} else if (QTConstants.RECOMMENDATION_PREFERENCE_MARGIN
 					.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())) {
 
@@ -468,17 +486,51 @@ public class EvaluationBackingBean extends
 
 				summaryReqDTO.setResultStages(resultStg);
 				// this.getManagedBean().setSummaryZoneBean(null);
+				
+				reqDTO.setSettingType(getSettingType(QTConstants.RECOMMENDATION_BY_PACKAGE));
+				resDTO = evaluationSO.retrievePassingScoreByQT(reqDTO);
 			}
 		}
 
+		this.getManagedBean().setPassingScore(resDTO.getPassingScore());
 		summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		summaryReqDTO.setZonal(this.getManagedBean().getScQt().isZonal());
 		summaryReqDTO.setResultStages(resultStg);
 		summaryReqDTO.setAwardBy(award);
+		
 		return summaryReqDTO;
-
 	}
 
+	private int getSettingType(String recommendBy) {
+//		ScQt scQt = this.getManagedBean().getScQt();
+		
+		// scQt.isTechEvaluationReq()
+		
+//		if (scQt.getEvaluationType().equals
+//				(QTConstants.EVALUATION_ONE_TIER)) {
+//
+//		}
+		
+		if (StringUtils.equals(recommendBy, 
+				QTConstants.TECHNICAL_EVALUATION)) {
+			return QTConstants.SETTING_TYPE_TECHNICAL;
+		} else if (StringUtils.equals(recommendBy, 
+				QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE)) {
+			return QTConstants.SETTING_TYPE_FINANCIAL_BY_PACKAGE;
+		} else if (StringUtils.equals(recommendBy, 
+				QTConstants.PRESENTATION_DEMO_EVALUATION)) {
+			return QTConstants.SETTING_TYPE_DEMO;
+		} else if (StringUtils.equals(recommendBy, 
+				QTConstants.RECOMMENDATION_BY_PACKAGE)) {
+			return QTConstants.SETTING_TYPE_RECOMMENDATION_BY_PACKAGE;
+		} else if (StringUtils.equals(recommendBy, 
+				QTConstants.FINANCIAL_EVALUATION_BY_ITEM)) {
+			return QTConstants.SETTING_TYPE_FINANCIAL_BY_ITEM;
+		} else {
+			return QTConstants.SETTING_TYPE_RECOMMENDATION_BY_ITEM;
+		}	
+	}
+	
 	/**
 	 * Evaluation stage zone summary.to get all the qualified and disqualified
 	 * suppliers based on zonal
@@ -2002,8 +2054,10 @@ public class EvaluationBackingBean extends
 	 * and preference margin and item.
 	 */
 	public void retriveSummaryEvaluationStage() {
+		this.getManagedBean().setPassingScore(0);
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = null;
+		EvaluationResDTO resDTO = null;		
 		try {
 
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -2080,6 +2134,11 @@ public class EvaluationBackingBean extends
 							evalResDTO.getDisQulifiedSuppliers()
 									.getTotalRecord());
 				}
+				
+				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+				resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);						
 			}
 
 			else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
@@ -2102,10 +2161,19 @@ public class EvaluationBackingBean extends
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
 					summaryReqDTO
 							.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
-
+					
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+					reqDTO.setSettingType(getSettingType(QTConstants.PRESENTATION_DEMO_EVALUATION));
+					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);	
 				} else {
 					summaryReqDTO
 							.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+					reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);						
 				}
 				List<String> resultStg2 = new ArrayList<String>();
 				resultStg2.add(QTConstants.RECOMMENDATION_BY_PACKAGE);
@@ -2154,6 +2222,11 @@ public class EvaluationBackingBean extends
 					summaryReqDTO.setResultStages(resultStg2);
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+					reqDTO.setSettingType(getSettingType(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE));
+					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);						
 				} else if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
 						&& !this.getManagedBean().isReadOnly()
@@ -2223,10 +2296,17 @@ public class EvaluationBackingBean extends
 								evalResDTO.getDisQulifiedSuppliers()
 										.getTotalRecord());
 					}
+					
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+					reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);						
 				}
 
 			}
 			// }
+			
+			this.getManagedBean().setPassingScore(resDTO.getPassingScore());
 
 		} finally {
 
