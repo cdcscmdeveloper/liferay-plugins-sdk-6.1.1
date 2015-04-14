@@ -1553,7 +1553,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		log.info("In populateToSaveLOV");
 		List<PmBasicCategory> tempPmBasicCategoryList=new ArrayList<PmBasicCategory>();
 		Set<PmBasicCategory> pmPmBasicCategorySet=null;//new HashSet<PmBasicCategory>();		
-		Set<PmBasicCategory> tobeAddedPmPmBasicCategorySet=null;//=new HashSet<PmBasicCategory>();
+		Set<PmBasicCategory> tobeAddedPmBasicCategorySet=null;//=new HashSet<PmBasicCategory>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 
 		if(this.getManagedBean().getSelectedLOV() != null && !this.getManagedBean().getSelectedLOV().isEmpty()) {
@@ -1649,15 +1649,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				else
 				{
 					/*this.getManagedBean().getTobeAddedPmBasicCategoryList().addAll(tempPmBasicCategoryList);
-					tobeAddedPmPmBasicCategorySet.addAll( this.getManagedBean().getBasicCategoryList());
+					tobeAddedPmBasicCategorySet.addAll( this.getManagedBean().getBasicCategoryList());
 					    this.getManagedBean().getTobeAddedPmBasicCategoryList().clear();
 					    this.getManagedBean().getTobeAddedPmBasicCategoryList().addAll(tobeAddedPmPmBasicCategorySet);*/
 
 
 					this.getManagedBean().getTobeAddedPmBasicCategoryList().addAll(tempPmBasicCategoryList);
-					tobeAddedPmPmBasicCategorySet = new LinkedHashSet<PmBasicCategory>( this.getManagedBean().getTobeAddedPmBasicCategoryList());
+					tobeAddedPmBasicCategorySet = new LinkedHashSet<PmBasicCategory>( this.getManagedBean().getTobeAddedPmBasicCategoryList());
 					this.getManagedBean().getTobeAddedPmBasicCategoryList().clear();
-					this.getManagedBean().getTobeAddedPmBasicCategoryList().addAll(tobeAddedPmPmBasicCategorySet);
+					this.getManagedBean().getTobeAddedPmBasicCategoryList().addAll(tobeAddedPmBasicCategorySet);
 				}
 
 			}
@@ -1676,7 +1676,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		List<PmMachineCategory> tempPmMachineCategoryList=new ArrayList<PmMachineCategory>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		HashSet<PmMachineCategory> pmMachineCategorieSet= null;//new HashSet<PmMachineCategory>();
-		HashSet<PmMachineCategory> tobeAddedpmMachineCategorieSet=null;//new HashSet<PmMachineCategory>();
+		HashSet<PmMachineCategory> tobeAddedPmMachineCategorieSet=null;//new HashSet<PmMachineCategory>();
 		
 		if(this.getManagedBean().getSelectedpmMachine() != null && !this.getManagedBean().getSelectedpmMachine().isEmpty()) {
 			
@@ -1773,9 +1773,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					this.getManagedBean().getTobeAddedPmMachineCategoryList().clear();
 					this.getManagedBean().getTobeAddedPmMachineCategoryList().addAll(tobeAddedpmMachineCategorieSet);*/
 					
-					tobeAddedpmMachineCategorieSet = new LinkedHashSet<PmMachineCategory>( this.getManagedBean().getTobeAddedPmMachineCategoryList());
+					tobeAddedPmMachineCategorieSet = new LinkedHashSet<PmMachineCategory>( this.getManagedBean().getTobeAddedPmMachineCategoryList());
 					this.getManagedBean().getTobeAddedPmMachineCategoryList().clear();
-					this.getManagedBean().getTobeAddedPmMachineCategoryList().addAll(tobeAddedpmMachineCategorieSet);
+					this.getManagedBean().getTobeAddedPmMachineCategoryList().addAll(tobeAddedPmMachineCategorieSet);
 				   }
 				
 				/*PmBasicCategory pmBasicCategory = new PmBasicCategory();
