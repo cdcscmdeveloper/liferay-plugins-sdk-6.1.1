@@ -1946,7 +1946,7 @@ public class LOIDetailBackingBean extends
 														new String[] {
 																getParameterDesc(
 																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_LETTER_OF_AWARD),
+																		ParameterConst.DOCTYPE_LETTER_OF_INTENT),
 																scLoi.getLoiNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
