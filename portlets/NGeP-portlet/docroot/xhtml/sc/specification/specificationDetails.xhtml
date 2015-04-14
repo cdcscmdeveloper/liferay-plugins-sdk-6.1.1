@@ -37,8 +37,7 @@
 			<tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
-					<td><h:outputLabel
-							value=" #{lbl['lbl.sc.justification']}" /></td>
+					<td><h:outputLabel value=" #{lbl['lbl.sc.justification']}" /></td>
 					<td colspan="3"><p:inputTextarea rows="3" cols="30"
 							style="margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
@@ -71,8 +70,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.evaluation.type']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" /></td>
 				<td><p:inputText size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, specificationBackingBean.managedBean.scQt.evaluationType)}"
 						readonly="true" disabled="true" /></td>
@@ -98,8 +96,9 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 					</ui:fragment></td>
-				<td><p:selectOneMenu required="true" id="fulfilId"
-						label="#{lbl['lbl.sc.fullfillent.type']}"
+				<td><p:selectOneMenu
+						required="#{!specificationBackingBean.managedBean.readOnly}"
+						id="fulfilId" label="#{lbl['lbl.sc.fullfillent.type']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
@@ -116,8 +115,9 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 					</ui:fragment></td>
-				<td><p:inputMask id="contract" required="true" size="30"
-						mask="9?99" placeHolder="" maxlength="3"
+				<td><p:inputMask id="contract"
+						required="#{!specificationBackingBean.managedBean.readOnly}"
+						size="30" mask="9?99" placeHolder="" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
@@ -133,7 +133,8 @@
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 94px"><p:outputLabel value="#{lbl['lbl.sc.location.level']}" /></td>
+				<td style="width: 94px"><p:outputLabel
+						value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locationLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 						style="width: 178px;">
