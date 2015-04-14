@@ -4580,4 +4580,14 @@ public class QTDetailBackingBean extends
 		}
 		return null;
 	}
+	public void qtMaiantanceValueChangeListner(ValueChangeEvent event) {
+
+		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(this
+				.getManagedBean().getQt().getQtStatus().getStatusId()) <= 0) {
+
+			updateQtAmmendMentDtls(event.getComponent().getId(),
+					event.getOldValue(), event.getNewValue());
+		}
+
+	}
 }
