@@ -1352,18 +1352,20 @@ public class SpecificationBackingBean extends
 
 		switch (previousIndex) {
 		case 0:
-			if (this.getManagedBean().isReadOnly()) {
-				if ((null != this.getManagedBean().getScQt()
-						.getFulfilmentType() && null == this.getManagedBean()
-						.getScQt().getFulfilmentType().getParameterId())
-						|| (null == this.getManagedBean().getScQt()
-								.getContractDuration())) {
-					throw new EpException(MessageConst.ERROR_760134);
-
-				}
+			/*
+			 * if (this.getManagedBean().isReadOnly()) { if ((null !=
+			 * this.getManagedBean().getScQt() .getFulfilmentType() && null ==
+			 * this.getManagedBean()
+			 * .getScQt().getFulfilmentType().getParameterId()) || (null ==
+			 * this.getManagedBean().getScQt() .getContractDuration())) { throw
+			 * new EpException(MessageConst.ERROR_760134);
+			 * 
+			 * } }
+			 */
+			if (!this.getManagedBean().isReadOnly()) {
+				specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
+				specSo.validateSpecCommitteGeneralInfo(specReqDTO);
 			}
-			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
-			specSo.validateSpecCommitteGeneralInfo(specReqDTO);
 
 			break;
 		case 1:
@@ -1773,7 +1775,9 @@ public class SpecificationBackingBean extends
 					checkFinancialSpecStatus(this.getManagedBean().getScQt());
 				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
 						.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+								.getFulfilmentType())
+						|| null == this.getManagedBean().getFulfilmentType()
+						|| "".equals(this.getManagedBean().getFulfilmentType())) {
 					retriveCommitteeEndorsment();
 					checktemplateSpecStatus(this.getManagedBean().getScQt());
 					checkFinancialSpecStatus(this.getManagedBean().getScQt());
@@ -1813,7 +1817,9 @@ public class SpecificationBackingBean extends
 					checkFinancialSpecStatus(this.getManagedBean().getScQt());
 				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
 						.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+								.getFulfilmentType())
+						|| null == this.getManagedBean().getFulfilmentType()
+						|| "".equals(this.getManagedBean().getFulfilmentType())) {
 					retriveCommitteeEndorsment();
 					checktemplateSpecStatus(this.getManagedBean().getScQt());
 					checkFinancialSpecStatus(this.getManagedBean().getScQt());
@@ -8752,13 +8758,15 @@ public class SpecificationBackingBean extends
 					+ technical.getOverallOtherTechnical().intValue();
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
-			
+
 			int financialScore = 0;
 			if (null != getManagedBean().getRecommendfinancialScore()) {
-				financialScore = getManagedBean().getRecommendfinancialScore().intValue();
+				financialScore = getManagedBean().getRecommendfinancialScore()
+						.intValue();
 			}
-			this.getManagedBean().setTotalScore(new BigDecimal(local + financialScore));
-			
+			this.getManagedBean().setTotalScore(
+					new BigDecimal(local + financialScore));
+
 		} finally {
 
 		}
@@ -8783,12 +8791,14 @@ public class SpecificationBackingBean extends
 					+ financial.getOverallOtherFin().intValue();
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
-			
+
 			int technicalScore = 0;
 			if (null != getManagedBean().getRecommendTechnicalScore()) {
-				technicalScore = getManagedBean().getRecommendTechnicalScore().intValue();
-			}			
-			this.getManagedBean().setTotalScore(new BigDecimal(local + technicalScore));
+				technicalScore = getManagedBean().getRecommendTechnicalScore()
+						.intValue();
+			}
+			this.getManagedBean().setTotalScore(
+					new BigDecimal(local + technicalScore));
 
 		} finally {
 
@@ -11493,14 +11503,16 @@ public class SpecificationBackingBean extends
 				&& financialItemScoreSetting.getSettingType() == 6) {
 			if (null == financialItemScoreSetting.getPassingScore()) {
 				// financialItemScoreSetting.setPassingScore(new BigDecimal(0));
-				if (scQt.getEvaluationType().equalsIgnoreCase(
-						QTConstants.EVALUATION_ONE_TIER)
-						&& !scQt.isTechEvaluationReq()) {
-					this.getManagedBean().setActiveIndex(4);
-				} else {
-					this.getManagedBean().setActiveIndex(5);
+				if (!this.getManagedBean().isReadOnly()) {
+					if (scQt.getEvaluationType().equalsIgnoreCase(
+							QTConstants.EVALUATION_ONE_TIER)
+							&& !scQt.isTechEvaluationReq()) {
+						this.getManagedBean().setActiveIndex(4);
+					} else {
+						this.getManagedBean().setActiveIndex(5);
+					}
+					throw new EpException(MessageConst.ERROR_760258);
 				}
-				throw new EpException(MessageConst.ERROR_760258);
 			}
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
