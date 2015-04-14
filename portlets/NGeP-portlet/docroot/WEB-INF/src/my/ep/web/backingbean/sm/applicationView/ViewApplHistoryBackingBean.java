@@ -3,12 +3,16 @@ package my.ep.web.backingbean.sm.applicationView;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import org.apache.commons.lang3.StringUtils;
-
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.lang3.StringUtils;
 
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
@@ -24,10 +28,10 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(true);
 		getManagedBean().setRenderedBackButton(true);
-		
-		if(!getManagedBean().isSupplierUser()){
+
+		if (!getManagedBean().isSupplierUser()) {
 			String supplierIdParam = getSupplierIdParam();
-			if(StringUtils.isNotBlank(supplierIdParam)){
+			if (StringUtils.isNotBlank(supplierIdParam)) {
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
 				getManagedBean().setSearchSupplier(
@@ -35,11 +39,39 @@ public class ViewApplHistoryBackingBean extends
 								.retriveSupplierById(reqDTO).getSmSupplier());
 			}
 		}
-		
+
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml",
 						"");
+	}
+
+	/**
+	 * Get Application Status
+	 * 
+	 * @param String
+	 *            statusId
+	 * @return String
+	 */
+	public String getApplicationStatus() {
+		String statusDesc = "";
+		SmWorkflowStatus sts = SmCommonUtil
+				.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl()
+						.getApplId());
+
+		if (sts != null && sts.getPmStatus() != null
+				&& sts.getPmStatus().getStatusId() != null) {
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(sts.getPmStatus().getStatusId());
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale()
+					.getLanguage());
+			StatusResDTO resDTO = SmServiceLookup.getStatusSO()
+					.retrieveStatusDescById(reqDTO);
+			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+				statusDesc = resDTO.getPmStatusDesc().getStatusName();
+			}
+		}
+		return statusDesc;
 	}
 
 }

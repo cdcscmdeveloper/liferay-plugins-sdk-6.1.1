@@ -30,6 +30,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -54,6 +55,8 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
@@ -72,6 +75,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.sm.ApplType;
 import my.ep.util.EpPropertiesUtils;
@@ -1801,5 +1805,27 @@ public class SmCommonUtil {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Gets the current active work flow status.
+	 * 
+	 * @param applId
+	 *            - the appl id
+	 * @return the SmWorkflowStatus
+	 */
+	public static SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		reqDTO.setApplId(applId);
+		ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject("sm", ISmWorkFlowStatusSO.class);
+		SmWorkFlowStatusResDTO resDTO = reqSO
+				.retrieveCurrentWorkFlowStatusByDocId(reqDTO);
+		if (resDTO != null && resDTO.getWorkflowStatus() != null) {
+			return resDTO.getWorkflowStatus();
+		} else {
+			return null;
+		}
 	}
 }

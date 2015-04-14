@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
+				<td class="header-info-text"><c:if
+						test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">#{lbl['lbl.sm.mofReg.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'A'}">#{lbl['lbl.sm.addnlCat.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'B'}">#{lbl['lbl.sm.bumi.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R'}">#{lbl['lbl.sm.renewMof.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'U'}">#{lbl['lbl.sm.updateMof.headerLbl']}</c:if>
+				</td>
+				<td><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.applNo}</td>
+				<td><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
+				<td class="header-info-text">#{viewSmApplBackingBean.getApplicationStatus()}</td>
+			</tr>
+		</table>
+	</div>
+	
+</ui:composition>
