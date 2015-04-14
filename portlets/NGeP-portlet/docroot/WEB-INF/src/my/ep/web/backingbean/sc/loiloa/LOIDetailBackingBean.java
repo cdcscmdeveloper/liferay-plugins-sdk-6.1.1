@@ -285,7 +285,7 @@ public class LOIDetailBackingBean extends
 			if (awardSupplierResDTO.getScLoi() != null) {
 				scLoi = awardSupplierResDTO.getScLoi();
 			}
-			editLOI(scLoi);
+			editLOI(scLoi, Boolean.TRUE);
 			getManagedBean().setEditFlag(false);
 
 //			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1277,7 +1277,7 @@ public class LOIDetailBackingBean extends
 	 * page navigate to loi details page.
 	 * @param scLoi the sc loi
 	 */
-	public void editLOI(ScLoi scLoi) {
+	public void editLOI(ScLoi scLoi, boolean isEditFlag) {
 		 //getManagedBean().setScLoi(scLoi);
 		try {
 			renewSessionWithPreviousValues();
@@ -1291,7 +1291,15 @@ public class LOIDetailBackingBean extends
 		} catch (Exception ex) {
 			handleException(ex);
 		}
-		getManagedBean().setEditFlag(true);
+		
+		
+		if(isEditFlag){
+			getManagedBean().setButtonFlag(Boolean.TRUE);
+		} else{
+			getManagedBean().setButtonFlag(Boolean.FALSE);
+		}
+
+		getManagedBean().setEditFlag(Boolean.TRUE);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
 			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -1299,6 +1307,27 @@ public class LOIDetailBackingBean extends
 		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
+	}
+	
+	/**
+	 * Reaload loi.
+	 *
+	 * @param scLoi the sc loi
+	 */
+	private void reloadLOI(ScLoi scLoi) {
+		try {
+			renewSessionWithPreviousValues();
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoi(scLoi);
+			reqDTO.setRecommendDtlIdList(null);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
+
+			populateLOIDetails(resDTO);
+			getManagedBean().setButtonFlag(Boolean.TRUE);
+
+		} catch (Exception ex) {
+			handleException(ex);
+		}
 	}
 
 	/**
@@ -1355,15 +1384,6 @@ public class LOIDetailBackingBean extends
 			}
 			if(getManagedBean().getNegoTermsList() != null && getManagedBean().getNegoTermsList().size()>0){
 				scLoi.getScNegoTerms().addAll(getManagedBean().getNegoTermsList());
-			}
-		}
-		
-		if(scLoi.getScWorkFlowStatus() != null){
-			PmStatus status  = scLoi.getScWorkFlowStatus().getPmStatus();
-			if(status.getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION) || status.getStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION)){
-				getManagedBean().setButtonFlag(true);
-			} else{
-				getManagedBean().setButtonFlag(false);
 			}
 		}
 		
@@ -1931,7 +1951,7 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
-				editLOI(scLoi);
+				reloadLOI(scLoi);
 
 				FacesContext
 						.getCurrentInstance()
@@ -2677,6 +2697,8 @@ public class LOIDetailBackingBean extends
 		String  backToPreviousPage = getManagedBean().getBackToPreviousPage();
 		List<String> recommendDtlIds = getManagedBean().getRecommendDtlIds();
 		List<ScLoiTerm> negoTerms = getManagedBean().getNegoTermsList();
+		boolean editButton  = getManagedBean().isEditFlag();
+		boolean buttonFlag = getManagedBean().isButtonFlag();
 
 		this.renewSesionObject();
 
@@ -2697,6 +2719,8 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setRecommendDtlIds(recommendDtlIds);
 		getManagedBean().setCommitteeType(committeeType);
 		getManagedBean().setNegoTermsList(negoTerms);
+		getManagedBean().setEditFlag(editButton);
+		getManagedBean().setButtonFlag(buttonFlag);
 	}
 
 	/**
