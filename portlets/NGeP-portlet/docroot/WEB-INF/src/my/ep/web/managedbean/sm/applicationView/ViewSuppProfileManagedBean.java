@@ -7,8 +7,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.dto.sm.revision.SmApplRevisionResDTO;
-import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -25,20 +23,14 @@ public class ViewSuppProfileManagedBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -9029253736925390560L;
-	private boolean supplierUser;
-	private boolean poUser;
-	private boolean approverUser;
-	private boolean mofSupplier;
-	private int searchBy;
-	private SmSupplier searchSupplier;
-	private SmAppl selectedApplHistory;
-	private IPagingDataModel<SmAppl> smSupplierDataModel = new SmSupplierPagingDataModel();
+	private SmSupplier selectedSupplier;
+	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
 	public ViewSuppProfileManagedBean() {
 
 	}
-
-	private class SmSupplierPagingDataModel extends PagingDataModel<SmAppl> {
+	
+	private class SmSupplierPagingDataModel extends PagingDataModel<SmSupplier> {
 		/**
 		 * 
 		 */
@@ -49,11 +41,11 @@ public class ViewSuppProfileManagedBean extends
 		}
 
 		@Override
-		protected ISearchResultBean<SmAppl> pageChangeListener(
-				ISearchBean<SmAppl> searchBean) {
+		protected ISearchResultBean<SmSupplier> pageChangeListener(
+				ISearchBean<SmSupplier> searchBean) {
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setSearchBean(searchBean);
-			SmApplRevisionResDTO resDTO = new SmApplRevisionResDTO();
+			reqDTO.setSupplierSearchBean(searchBean);
+			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
 
 			try {
 				if (!isSupplierUser()) {
@@ -63,102 +55,51 @@ public class ViewSuppProfileManagedBean extends
 									.getEpNo())
 							|| StringUtils.isNotBlank(getSearchSupplier()
 									.getRegNo())) {
-						reqDTO.setSmSupplier(getSearchSupplier());
-						resDTO = SmServiceLookup
-								.getSmApplRevisionSO()
-								.retrieveApplicationHistoryBySupplierSearchCriteria(
-										reqDTO);
-						return resDTO.getResultBean();
+						return getApplicationHistoryResultBean(reqDTO);
 					} else {
 						return new SearchResultBean();
 					}
 				} else {
-					reqDTO.setSmSupplier(getSearchSupplier());
-					resDTO = SmServiceLookup
-							.getSmApplRevisionSO()
-							.retrieveApplicationHistoryBySupplierSearchCriteria(
-									reqDTO);
-					return resDTO.getResultBean();
+					return new SearchResultBean();
 				}
 			} catch (Exception ex) {
 				return new SearchResultBean();
 			} finally {
 				reqDTO = null;
-				resDTO = null;
 			}
+		}
+
+		private ISearchResultBean<SmSupplier> getApplicationHistoryResultBean(
+				SmApplRevisionReqDTO reqDTO) {
+			reqDTO.setSmSupplier(getSearchSupplier());
+			return SmServiceLookup.getSmApplRevisionSO()
+					.retrieveSupplierBySearchCriteria(reqDTO)
+					.getSupplierResultBean();
 		}
 	}
 
 	/**
-	 * Search supplier application history
+	 * Search supplier latest application
 	 */
 	public void searchSupplier() {
 		smSupplierDataModel.reloadData();
 	}
 
-	public boolean isSupplierUser() {
-		return supplierUser;
-	}
-
-	public void setSupplierUser(boolean supplierUser) {
-		this.supplierUser = supplierUser;
-	}
-
-	public boolean isPoUser() {
-		return poUser;
-	}
-
-	public void setPoUser(boolean poUser) {
-		this.poUser = poUser;
-	}
-
-	public boolean isApproverUser() {
-		return approverUser;
-	}
-
-	public void setApproverUser(boolean approverUser) {
-		this.approverUser = approverUser;
-	}
-
-	public boolean isMofSupplier() {
-		return mofSupplier;
-	}
-
-	public void setMofSupplier(boolean mofSupplier) {
-		this.mofSupplier = mofSupplier;
-	}
-
-	public SmSupplier getSearchSupplier() {
-		return searchSupplier;
-	}
-
-	public void setSearchSupplier(SmSupplier searchSupplier) {
-		this.searchSupplier = searchSupplier;
-	}
-
-	public IPagingDataModel<SmAppl> getSmSupplierDataModel() {
+	public IPagingDataModel<SmSupplier> getSmSupplierDataModel() {
 		return smSupplierDataModel;
 	}
 
 	public void setSmSupplierDataModel(
-			IPagingDataModel<SmAppl> smSupplierDataModel) {
+			IPagingDataModel<SmSupplier> smSupplierDataModel) {
 		this.smSupplierDataModel = smSupplierDataModel;
 	}
 
-	public SmAppl getSelectedApplHistory() {
-		return selectedApplHistory;
+	public SmSupplier getSelectedSupplier() {
+		return selectedSupplier;
 	}
 
-	public void setSelectedApplHistory(SmAppl selectedApplHistory) {
-		this.selectedApplHistory = selectedApplHistory;
-	}
-
-	public int getSearchBy() {
-		return searchBy;
-	}
-
-	public void setSearchBy(int searchBy) {
-		this.searchBy = searchBy;
+	public void setSelectedSupplier(SmSupplier selectedSupplier) {
+		this.selectedSupplier = selectedSupplier;
 	}
 
 }

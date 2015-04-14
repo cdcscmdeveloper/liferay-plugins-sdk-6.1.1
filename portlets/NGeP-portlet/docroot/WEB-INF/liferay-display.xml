@@ -186,13 +186,8 @@
 			<portlet id="UserProfileMaintenance"></portlet>
 
 			<portlet id="SmUserProfileMaintenance"></portlet>
-			<portlet id="SoftCertReg"></portlet>
 			<portlet id="TaskSummary"></portlet>
-			<portlet id="SmApplRevisionView"></portlet>
-			<portlet id="SoftCertPayment"></portlet>
-			<portlet id="viewSupplierProfile"></portlet>
 			<portlet id="taskStatusSearch"></portlet>
-			<portlet id="smDeactivateAdmin"></portlet>
 			<portlet id="DirectMofRegistration"></portlet>
 		</category>
 
@@ -231,6 +226,13 @@
 		<portlet id="supplierBusinessNature"></portlet>
 		<portlet id="postsupplierregistration"></portlet>
 		<portlet id="supplierRegistrationCont"></portlet>
+		
+		<portlet id="SmApplRevisionView"></portlet>
+		<portlet id="SoftCertPayment"></portlet>
+		<portlet id="viewSupplierProfile"></portlet>
+		<portlet id="viewApplicationHistory"></portlet>
+		<portlet id="SoftCertReg"></portlet>
+		<portlet id="smDeactivateAdmin"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
