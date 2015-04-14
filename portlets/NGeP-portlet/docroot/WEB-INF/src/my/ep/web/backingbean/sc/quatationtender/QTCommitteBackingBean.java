@@ -1483,28 +1483,19 @@ public class QTCommitteBackingBean extends
 	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
 
 		if (this.getManagedBean().isMaintanceFlow()) {
-			if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
-					|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
-							.equals(committeStatus)) {
-				return true;
-			} else if (QTStatusConst.CMT_COMPLETED.equals(committeStatus) && ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
-					.equalsIgnoreCase(commType)) {
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
+					.getManagedBean().getCurrentStatusId())) {
 				return true;
 			}
-		} else {
-
-			if (QTStatusConst.QT_PENDING_QT_SUBMISSION < this.getManagedBean()
-					.getCurrentStatusId()) {
-				return true;
-			}
-			/*
-			 * if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus) ||
-			 * QTStatusConst.CMT_PENDING_REVISION_APPROVAL
-			 * .equals(committeStatus) ||
-			 * QTStatusConst.CMT_COMPLETED.equals(committeStatus)) { return
-			 * true; }
-			 */
-
+		}
+		if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
+				|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
+						.equals(committeStatus)) {
+			return true;
+		} else if (QTStatusConst.CMT_COMPLETED.equals(committeStatus)
+				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+						.equalsIgnoreCase(commType)) {
+			return true;
 		}
 
 		return false;
