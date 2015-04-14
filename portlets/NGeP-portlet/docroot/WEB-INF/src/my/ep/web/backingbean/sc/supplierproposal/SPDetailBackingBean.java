@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -52,6 +53,8 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
+import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -67,6 +70,8 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
@@ -90,6 +95,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -3582,5 +3588,64 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setProposalZonalMenuModel(zoneMenuModel);
 		}
 	}
+	
+	/**
+	 *Method is used to download the document from repository 
+	 *on click of download button.
+	 * 
+	 * @param scQtDocReport
+	 * 			the instance of ScQtDocReport
+	 * @throws Exception
+	 */
+	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
+		
+		log.info("** Qtn / TenderDetsils **");
+		ScQt scQt = this.getManagedBean().getQt();
+		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
+		qtDocumentsBackingBean.getManagedBean().setQt(null);
+		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
+		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport
+				.getScQtDocReportAttachment();
+		if (scQtDocReportAttachment == null) {
+			scQtDocReportAttachment = qtDocumentsBackingBean
+					.generateDocumentAttachment(scQtDocReport);
+			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		}
+		downloadFile(scQtDocReportAttachment);
+	}
+	
+	/**
+	 * Method is used to download all documents from repository 
+	 * on click of 'Download all' button.
+	 * 
+	 * @param qtId
+	 *        the Long variable.
+	 * @throws Exception
+	 */
+	public void downloadAllQTDocuments() throws Exception {
+		
+		log.info("** Qtn / TenderDetsils **");
+		ScQt scQt = this.getManagedBean().getQt();
+		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
+		qtDocumentsBackingBean.getManagedBean().setQt(null);
+		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
+		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReports();
+		
+		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
+			for (ScQtDocReport scQtDocReport : scQtDocReports) {
+				ScQtDocReportAttachment attachment = scQtDocReport
+						.getScQtDocReportAttachment();
+				if (attachment == null) {
+					attachment = qtDocumentsBackingBean
+							.generateDocumentAttachment(scQtDocReport);
+					scQtDocReport.setScQtDocReportAttachment(attachment);
+				}
+				scAttachments.add(attachment);
+			}
+			downloadAllFiles("NGeP-QT-Documents", scAttachments);
+		}
+	}
+
 	
 }
