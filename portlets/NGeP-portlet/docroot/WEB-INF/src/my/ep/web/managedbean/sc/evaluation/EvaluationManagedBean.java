@@ -480,6 +480,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean checkReportDownload;
 
 	private BigDecimal packageScore;
+	
+	/** passing score */
+	private int passingScore;
 
 	private String financialSummaryView;
 
@@ -3140,6 +3143,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setPackageScore(BigDecimal packageScore) {
 		this.packageScore = packageScore;
+	}
+
+	/**
+	 * @return the passingScore
+	 */
+	public int getPassingScore() {
+		return passingScore;
+	}
+
+	/**
+	 * @param passingScore 
+	 * 				the passingScore to set
+	 */
+	public void setPassingScore(int passingScore) {
+		this.passingScore = passingScore;
 	}
 
 	/**
