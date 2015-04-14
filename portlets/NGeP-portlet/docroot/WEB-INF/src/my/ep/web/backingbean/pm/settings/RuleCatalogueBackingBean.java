@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.settings;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -408,7 +409,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void fromValueUpdate(int index,
-			List<PmConfigRuleValue> ruleTypeValueList, Double fromValue) {
+			List<PmConfigRuleValue> ruleTypeValueList, BigDecimal fromValue) {
 		log.info("................fromValueUpdate...............");
 		if (fromValue != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
@@ -423,7 +424,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void toValueUpdate(int index,
-			List<PmConfigRuleValue> ruleTypeValueList, Double toValue) {
+			List<PmConfigRuleValue> ruleTypeValueList, BigDecimal toValue) {
 		log.info("................toValueUpdate...............");
 		if (toValue != null) {
 			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
@@ -1771,7 +1772,7 @@ public class RuleCatalogueBackingBean extends
 						.getConfigRuleValues().get(markIndex).getRuleValue()
 						.isEmpty()) {
 			ruleValue.setFromValue(this.getManagedBean().getSelectedRuleType()
-					.getConfigRuleValues().get(markIndex).getToValue() + 1);
+					.getConfigRuleValues().get(markIndex).getToValue().add(new BigDecimal(1)));
 			ruleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 					.add(markIndex + 1, ruleValue);
@@ -1802,7 +1803,7 @@ public class RuleCatalogueBackingBean extends
 					.getGroupValueId())
 				rulevalue.setFromValue(this.getManagedBean()
 						.getSelectedRuleType().getConfigRuleValues().get(index)
-						.getToValue() + 1);
+						.getToValue().add(new BigDecimal(1)));
 		}
 	}
 
@@ -1866,7 +1867,7 @@ public class RuleCatalogueBackingBean extends
 			} else {
 				newRuleValue.setGroupValueId(1);
 			}
-			newRuleValue.setFromValue(1d);
+			newRuleValue.setFromValue(new BigDecimal(1));
 		}
 		int index = this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().size();
