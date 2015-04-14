@@ -55,9 +55,16 @@
 		<tr>
 			<td><div align="left" style="width: 99%">
 					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
+							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('4','3')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
 					</ui:fragment>
 
