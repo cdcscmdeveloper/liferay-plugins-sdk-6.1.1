@@ -67,7 +67,8 @@
 									value="supplierItemsSelected"></ui:param>
 
 							</c:if>
-
+							<ui:param name="passingScore"
+								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
 							<ui:param name="itemList"
 								value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
 
@@ -89,6 +90,8 @@
 					value="disQualifiedSupplierswithOutzone"></ui:param>
 				<ui:param name="itemList"
 					value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
+				<ui:param name="passingScore"
+					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>					
 				<ui:include src="summaryItem.xhtml"></ui:include>
 			</ui:fragment>
 		</ui:fragment>
@@ -124,6 +127,8 @@
 								value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
 							<ui:param name="disQualifiedPreferenceList"
 								value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
+							<ui:param name="passingScore"
+								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>								
 							<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
 						</h:panelGroup>
 					</p:tab>
@@ -140,6 +145,8 @@
 					value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
 				<ui:param name="disQualifiedPreferenceList"
 					value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
+				<ui:param name="passingScore"
+					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>					
 				<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
 			</ui:fragment>
 		</ui:fragment>

@@ -50,7 +50,12 @@
 
 
 	<table>
-
+		<tr>
+			<td><h:outputLabel
+					value="#{lbl['lbl.sc.eva.compliance.passing.score']}" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+				style="text-align:right" value="#{passingScore}"></p:inputText></td>
+		</tr>
 		<tr>
 			<td><h:outputLabel
 					value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
