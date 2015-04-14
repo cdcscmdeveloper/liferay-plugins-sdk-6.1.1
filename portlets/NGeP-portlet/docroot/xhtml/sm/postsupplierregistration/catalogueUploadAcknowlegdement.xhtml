@@ -7,8 +7,8 @@
 	
     <ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}" toggleable="true" toggleSpeed="500">
-			<h:outputText value="Catalogue uploaded successfully. To request softcert, please click " />
-			<p:commandLink value="here" action="#{postSupplierRegBB.naviToSoftCertRequest}" />
+			<h:outputText value="#{lbl['lbl.sm.basic.catalogue.upload.acknowledgement']} " />
+			<p:commandLink value="#{lbl['lbl.sm.basic.here']}" action="#{postSupplierRegBB.naviToSoftCertRequest}" />
 		</p:panel>
 	</ui:define>
 		    
