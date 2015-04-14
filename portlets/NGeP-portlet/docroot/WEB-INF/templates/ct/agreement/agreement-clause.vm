@@ -1,0 +1,50 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+      </style>
+   </head>
+   <body>
+      <table border="1" width="100%" style="font-weight: normal;">
+         <tbody>
+            <tr>
+               <td>
+                  <table width="100%">
+                     <tbody>
+                        <tr>
+                           <td width="20%">
+                              <img width="120" height="100" src="$imgUrl"/>
+                           </td>
+                           <td>
+                              <table>
+                                 <tbody>
+                                    <tr>
+                                       <td>$documentName</td>
+                                    </tr>
+                                    <tr>
+                                       <td>$documentTitle</td>
+                                    </tr>
+                                    <tr>
+                                       <td>$documentDescription</td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <br/>
+        <div style="font-weight: normal; text-align: center;"><strong><u><br/></u></strong></div>
+      <div style="font-weight: normal; text-align: left;">
+      #foreach( $reason in $sectionList) 
+      	<span class="Apple-tab-span" style="white-space:pre">Section Name	</span>$reason.sectionName<br/>
+      	<span class="Apple-tab-span" style="white-space:pre">Section Title	</span>$reason.sectionTitle <br/>
+      	<span class="Apple-tab-span" style="white-space:pre">	</span>$reason.sectionContent <br/>
+      #end
+      </div>
+   </body>
+</html>
