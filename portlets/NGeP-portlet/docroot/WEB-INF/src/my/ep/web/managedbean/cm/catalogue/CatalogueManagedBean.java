@@ -409,6 +409,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	/** The upload dir. */
 	private String uploadDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL);
 	
+	private int resultTabActiveIndex;
+	
 	/**
 	 * The Class SearchPagingDataModel.
 	 */
@@ -455,7 +457,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance().getServiceObject("cm",IViewSupplierItemSO.class);
 
-
+				System.out.println("catTypeFilterBean.getSearchValue(): " + catTypeFilterBean.getSearchValue());
+				if(catTypeFilterBean.getSearchValue() != null) {
+					catTypeFilterBean.setSearchField("catType");
+	//				catTypeFilterBean.setSearchValue("XC");
+					searchBean.getDataFilterBeans().add(catTypeFilterBean);
+				}
 				if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
 					itemNameFilterBean.setSearchField("itemName");
 					itemNameFilterBean.setCaseInsensitive(true);
@@ -2181,6 +2188,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.stateFilterBean = stateFilterBean;
 	}
 
+	public int getResultTabActiveIndex() {
+		return resultTabActiveIndex;
+	}
+
+	public void setResultTabActiveIndex(int resultTabActiveIndex) {
+		this.resultTabActiveIndex = resultTabActiveIndex;
+	}
 
 	/**
 	 * Gets the tab active index.
