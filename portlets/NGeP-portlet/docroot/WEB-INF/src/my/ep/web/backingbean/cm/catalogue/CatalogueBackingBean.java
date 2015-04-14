@@ -3730,7 +3730,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/common/acknowledge.xhtml";
+			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
 		}
 		
 		log.info("Exit saveCatalogItem");
@@ -4179,7 +4179,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/common/acknowledge.xhtml";
+			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
 		}
 
 		return "catalogMaintenanceFile";
@@ -4572,7 +4572,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/common/acknowledge.xhtml";
+			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
 		}
 		return "catalogMaintenanceFile";
 	}
@@ -4693,7 +4693,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/common/acknowledge.xhtml";
+			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
 		}
 		
 		return "catalogMaintenanceFile";
