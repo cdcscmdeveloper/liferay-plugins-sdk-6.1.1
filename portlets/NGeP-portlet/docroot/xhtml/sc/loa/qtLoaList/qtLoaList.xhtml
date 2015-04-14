@@ -39,7 +39,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
 					<p:commandButton  value="Create LOA" 
-						rendered="#{empty scLoiLoa.scloas}"
+						rendered="#{!scLoiLoa.loaCreated}"
 						action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}" />
 				</p:column>
 			</p:dataTable>
