@@ -97,6 +97,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean searchSupplierProfile;
 	private boolean previousApproved;
 	private boolean original;
+	private boolean viewApplicationHistory;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
 	private String catTypeConfirm;
@@ -113,6 +114,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String selectedCompanyExperienceCatL3;
 	private String supplierRemarks;
 	private String currentStatus;
+	private String portletUrl;
+	private String portletUrlLabel;
+	private String supplierIdParam;
 
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -140,6 +144,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	private String revTypeParam;
 	private int maxTab;
+	
+	private boolean mofSupplier;
+	private boolean renderedBackButton;
+	private int searchBy;
+	private SmSupplier searchSupplier;
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -911,6 +920,70 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSearchSupplierProfile(boolean searchSupplierProfile) {
 		this.searchSupplierProfile = searchSupplierProfile;
+	}
+
+	public boolean isViewApplicationHistory() {
+		return viewApplicationHistory;
+	}
+
+	public void setViewApplicationHistory(boolean viewApplicationHistory) {
+		this.viewApplicationHistory = viewApplicationHistory;
+	}
+
+	public boolean isMofSupplier() {
+		return mofSupplier;
+	}
+
+	public void setMofSupplier(boolean mofSupplier) {
+		this.mofSupplier = mofSupplier;
+	}
+
+	public boolean isRenderedBackButton() {
+		return renderedBackButton;
+	}
+
+	public void setRenderedBackButton(boolean renderedBackButton) {
+		this.renderedBackButton = renderedBackButton;
+	}
+
+	public int getSearchBy() {
+		return searchBy;
+	}
+
+	public void setSearchBy(int searchBy) {
+		this.searchBy = searchBy;
+	}
+
+	public SmSupplier getSearchSupplier() {
+		return searchSupplier;
+	}
+
+	public void setSearchSupplier(SmSupplier searchSupplier) {
+		this.searchSupplier = searchSupplier;
+	}
+
+	public String getPortletUrl() {
+		return portletUrl;
+	}
+
+	public void setPortletUrl(String portletUrl) {
+		this.portletUrl = portletUrl;
+	}
+
+	public String getSupplierIdParam() {
+		return supplierIdParam;
+	}
+
+	public void setSupplierIdParam(String supplierIdParam) {
+		this.supplierIdParam = supplierIdParam;
+	}
+
+	public String getPortletUrlLabel() {
+		return portletUrlLabel;
+	}
+
+	public void setPortletUrlLabel(String portletUrlLabel) {
+		this.portletUrlLabel = portletUrlLabel;
 	}
 
 }

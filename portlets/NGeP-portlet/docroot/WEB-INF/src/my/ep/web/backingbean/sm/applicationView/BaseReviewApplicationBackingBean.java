@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -72,6 +74,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -81,6 +84,10 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.theme.ThemeDisplay;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -91,6 +98,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private static final String SER_FILE_TYPE = ".ser";
 	private static final String FOLDER_NAME_SM = "SM";
 	private static final String FOLDER_NAME_REVISION = "Revision";
+	private static final int SEARCH_BY_COMPANY_NAME = 1;
+	private static final int SEARCH_BY_BUSINESS_REG_NO = 2;
+	private static final int SEARCH_BY_EP_NO = 3;
 
 	/**
 	 * Initialized and construct BaseReviewApplicationBackingBean
@@ -392,7 +402,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			cntry = SmCommonUtil
 					.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-			// cntry.setCountryId(1l);
 		}
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
@@ -1623,4 +1632,160 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		log.info("**** assignSiteVisitPopUp *** ");
 
 	}
+
+	/**
+	 * Search By on change and reset value
+	 * 
+	 * @param e
+	 */
+	public void onChangeSearchBy(AjaxBehaviorEvent e) {
+		if (getManagedBean().getSearchBy() == SEARCH_BY_COMPANY_NAME) {
+			getManagedBean().getSearchSupplier().setEpNo("");
+			getManagedBean().getSearchSupplier().setRegNo("");
+		} else if (getManagedBean().getSearchBy() == SEARCH_BY_BUSINESS_REG_NO) {
+			getManagedBean().getSearchSupplier().setEpNo("");
+			getManagedBean().getSearchSupplier().setCompanyName("");
+		} else if (getManagedBean().getSearchBy() == SEARCH_BY_EP_NO) {
+			getManagedBean().getSearchSupplier().setCompanyName("");
+			getManagedBean().getSearchSupplier().setRegNo("");
+		}
+	}
+
+	/**
+	 * Reset search value
+	 */
+	public void resetSearch() {
+		getManagedBean().getSearchSupplier().setCompanyName("");
+		getManagedBean().getSearchSupplier().setEpNo("");
+		getManagedBean().getSearchSupplier().setRegNo("");
+	}
+
+	/**
+	 * Set login role
+	 */
+	private void setUserLoginRole() {
+		FacesScopes sc = new FacesScopes();
+		List<Role> loginUserRoles = sc.getUserRoleList();
+		List<String> roleNames = new ArrayList<String>();
+		for (Role r : loginUserRoles) {
+			roleNames.add(r.getName());
+		}
+		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
+				|| sc.hasRoleUser(SupplierManagementConst.PO_HQ_TEMP)) {
+			getManagedBean().setPoUser(true);
+		} else if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
+				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ_TEMP)
+				|| sc.hasRoleUser(SupplierManagementConst.APPROVER)) {
+			getManagedBean().setApproverUser(true);
+		} else if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
+				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
+				|| sc.hasRoleUser(SupplierManagementConst.SUPPLIER_USER)) {
+			getManagedBean().setSupplierUser(true);
+			if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
+				getManagedBean().setMofSupplier(true);
+			}
+		}
+	}
+
+	/**
+	 * Initialized supplier by login role
+	 */
+	public void initLogin() {
+		setUserLoginRole();
+		if (getManagedBean().isSupplierUser()) {
+			getManagedBean().setSearchSupplier(
+					SmApplicationUtil.getCurrentSupplier());
+		} else {
+			getManagedBean().setSearchSupplier(new SmSupplier());
+			getManagedBean().getSearchSupplier().setCompanyName("");
+			getManagedBean().getSearchSupplier().setEpNo("");
+			getManagedBean().getSearchSupplier().setRegNo("");
+		}
+	}
+
+	/**
+	 * Set url for Supplier Profile or Supplier Application History.
+	 */
+	private void setSupplierProfileOrHistoryUrl(String baseUrl,
+			String baseUrlLabel, String supplierId) {
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		Layout layout = themeDisplay.getLayout();
+
+		String portalUrl = themeDisplay.getURLPortal();
+		String currentUrl = themeDisplay.getURLCurrent();
+		currentUrl = currentUrl.substring(0,
+				currentUrl.indexOf(layout.getFriendlyURL()));
+
+		String url = portalUrl + currentUrl + baseUrl;
+		getManagedBean().setPortletUrl(url);
+		getManagedBean().setSupplierIdParam(supplierId);
+		getManagedBean().setPortletUrlLabel(baseUrlLabel);
+	}
+
+	/**
+	 * Redirect back to Search Supplier Profile page
+	 * 
+	 * @return String
+	 */
+	public String backToSearch() {
+		if (getManagedBean().isViewApplicationHistory()) {
+			return "searchSupplierApplicationHistoryPage.xhtml";
+		} else {
+			return "searchSupplierProfilePage.xhtml";
+		}
+	}
+
+	/**
+	 * View Supplier Profile from Application List
+	 */
+	public void viewApplication(SmAppl selectedSmAppl) {
+		String baseUrl = "";
+		String baseUrlLabel = "";
+		String basePage = "";
+
+		if (getManagedBean().isViewApplicationHistory()) {
+			basePage = "/xhtml/sm/revisionSmApplView/viewApplicationHistory/smViewApplHistorySideMenu_BasePage.xhtml";
+			baseUrl = "/supplier-profile";
+			baseUrlLabel = SmCommonUtil.getMessage(
+					"lbl.sm.supprofile", null);
+		} else {
+			basePage = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
+			baseUrl = "/application-history";
+			baseUrlLabel = SmCommonUtil.getMessage(
+					"lbl.sm.supplier.application.history", null);
+		}
+
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(selectedSmAppl.getApplNo());
+		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
+		setApplication(smAppl);
+
+		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
+				.getSmSupplier().getSupplierId().toString());
+		SmCommonUtil.redirectToPage(basePage, "");
+	}
+
+	/**
+	 * Get Supplier Id from url parameter
+	 * 
+	 * @return String supplierId
+	 */
+	public String getSupplierIdParam() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String supplierId = originalServletRequest.getParameter("supplierId");
+		return supplierId;
+	}
+
 }
