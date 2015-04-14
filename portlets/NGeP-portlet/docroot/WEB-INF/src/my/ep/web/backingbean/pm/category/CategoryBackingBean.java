@@ -1075,6 +1075,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					this.getManagedBean().getPmCategoryL3().getPmBasicCategory().addAll(
 							this.getManagedBean().getTobeAddedPmBasicCategoryList());					
 					this.getManagedBean().getTobeAddedPmBasicCategoryList().clear();
+					
+					/*this.getManagedBean().getPmCategoryL3().getPmBasicCategory().addAll(
+							this.getManagedBean().getTobeAddedPmBasicCategoryList());
+					
+					pmPmBasicCategorySet = new LinkedHashSet<PmBasicCategory>(this.getManagedBean().getPmCategoryL3().getPmBasicCategory());
+					this.getManagedBean().getPmCategoryL3().getPmBasicCategory().addAll(pmPmBasicCategorySet);
+					this.getManagedBean().getTobeAddedPmBasicCategoryList().clear();*/
+					
 				}
 
 			}
@@ -1158,7 +1166,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 				}
-				
+				//renewSesionObject();
 				loadPmCategoryL3Data(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
 			}
 			
@@ -1613,9 +1621,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 				if(CollectionUtils.isNotEmpty(this.getManagedBean().getBasicCategoryList())){
 
-					for(PmBasicCategory showPopPmBasicCategory:this.getManagedBean().getBasicCategoryList())
+					for(PmBasicCategory showPmBasicCategory:this.getManagedBean().getBasicCategoryList())
 					{
-						if(showPopPmBasicCategory.getBasicCategoryL3().equals(pmCategoryL3.getCategoryL3Id())){
+						if(showPmBasicCategory.getBasicCategoryL3().equals(pmCategoryL3.getCategoryL3Id())){
 							resetLOV();
 							throw new EpException(MessageConst.ERROR_770165);
 						}
