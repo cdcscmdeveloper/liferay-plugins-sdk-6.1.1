@@ -623,7 +623,7 @@ public class QTDetailBackingBean extends
 	 */
 	public String gotoQtSearchPage() {
 		debugLogger("gotoQtSearchPage");
-		
+
 		return QTConstants.SEARCH_PAGE;
 	}
 
@@ -4230,37 +4230,64 @@ public class QTDetailBackingBean extends
 	public void publishPeriodDaysChanged(ValueChangeEvent changeEvent) {
 		Long currentStatus = this.getManagedBean().getCurrentStatusId();
 
-		/*createRuleDataForQt(this.getManagedBean().getQt().getEstimatedAmount(),
+		createRuleDataForQt(this.getManagedBean().getQt().getEstimatedAmount(),
 				null);
+		PmParameter procureMentMode = this.getManagedBean().getQt()
+				.getProcurementMode();
+		if (null != procureMentMode)
+			if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+					.equalsIgnoreCase(procureMentMode.getParameterCode())) {
+				if (this.getManagedBean().getRuleDataBean()
+						.getPublishPeriodDays() > ((Integer) changeEvent
+						.getNewValue()).intValue()) {
+					this.getManagedBean()
+							.getQt()
+							.setPublishPeriod(
+									((Integer) changeEvent.getOldValue())
+											.intValue());
+					throw new EpException(
+							MessageConst.ERROR_760260,
+							new String[] { String.valueOf(this.getManagedBean()
+									.getRuleDataBean().getPublishPeriodDays()) });
+
+				}
+			}
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
-			// Logic not to reduce the publish period after publish.
-			if (this.getManagedBean().getRuleDataBean().getPublishPeriodDays() < ((Integer) changeEvent.getNewValue()).intValue()) {
-				throw new EpException(
-						"Can not reduce after publish should be extend");
+			// Logic not to reduce the publish period after publish. if
+			if (this.getManagedBean().getRuleDataBean().getPublishPeriodDays() > ((Integer) changeEvent
+					.getNewValue()).intValue()) {
+				this.getManagedBean()
+						.getQt()
+						.setPublishPeriod(
+								((Integer) changeEvent.getOldValue())
+										.intValue());
+				throw new EpException(MessageConst.ERROR_760260,
+						new String[] { String.valueOf(this.getManagedBean()
+								.getRuleDataBean().getPublishPeriodDays()) });
 			}
 			updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
 					changeEvent.getOldValue(), changeEvent.getNewValue());
-		}*/
+		}
+
 	}
 
 	public void estimateAmtChanged(ValueChangeEvent changeEvent) {
 		Long currentStatus = this.getManagedBean().getCurrentStatusId();
-		// TODO Need to call the rules to get the estmt ammount and need to
-		// checkings.
 
-		/*createRuleDataForQt((BigDecimal) changeEvent.getNewValue(), null);
+		createRuleDataForQt((BigDecimal) changeEvent.getOldValue(), null);
 
 		estmatedAmountValidations((BigDecimal) changeEvent.getNewValue());
 
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
 			updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
 					changeEvent.getOldValue(), changeEvent.getNewValue());
-		}*/
+		}
+
 	}
 
 	public void proposalValidityChanged(ValueChangeEvent changeEvent) {
 
-		/*Long currentStatus = this.getManagedBean().getCurrentStatusId();
+		Long currentStatus = this.getManagedBean().getCurrentStatusId();
 		createRuleDataForQt(this.getManagedBean().getQt().getEstimatedAmount(),
 				null);
 		proposalValidityDaysValidations(((Integer) changeEvent.getNewValue())
@@ -4269,7 +4296,8 @@ public class QTDetailBackingBean extends
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
 			updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
 					changeEvent.getOldValue(), changeEvent.getNewValue());
-		}*/
+		}
+
 	}
 
 	/**
@@ -4429,7 +4457,7 @@ public class QTDetailBackingBean extends
 					.equalsIgnoreCase(procureMentMode.getParameterCode())) {
 				int validityDays = this.getManagedBean().getRuleDataBean()
 						.getProposalValidityDays();
-
+				this.getManagedBean().getQt().setQtValidityPeriod(validityDays);
 				if (validityDays < changedDays) {
 					throw new EpException(MessageConst.ERROR_760044,
 							new String[] { String.valueOf(validityDays) });
@@ -4438,31 +4466,118 @@ public class QTDetailBackingBean extends
 	}
 
 	private void estmatedAmountValidations(BigDecimal estmtAmount) {
-		BigDecimal belowRange = this.getManagedBean().getRuleDataBean()
+		String belowRange = this.getManagedBean().getRuleDataBean()
 				.getBelowEstimatedAmount();
-		BigDecimal aboveRange = this.getManagedBean().getRuleDataBean()
+
+		String aboveRange = this.getManagedBean().getRuleDataBean()
 				.getAboveEstimatedAmount();
-		if (belowRange.compareTo(estmtAmount) >= 0
-				&& (null != aboveRange && aboveRange.compareTo(estmtAmount) > 0)) {
-			throw new EpException(MessageConst.ERROR_760259, new String[] {
-					String.valueOf(belowRange), String.valueOf(aboveRange) });
+		if (null != belowRange) {
+			String operator = findOperator(belowRange);
+			if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN_OR_EQUAL)) {
+				belowRange = belowRange.replace(
+						QTConstants.LESSER_THAN_OR_EQUAL, "");
+				if (new BigDecimal(belowRange).compareTo(estmtAmount) <= 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
+									String.valueOf(belowRange) });
+				}
+			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
+				belowRange = belowRange.replace(QTConstants.LESSER_THAN, "");
+				if (new BigDecimal(belowRange).compareTo(estmtAmount) < 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.LESSER_THAN,
+									String.valueOf(belowRange) });
+				}
+			} else if (operator
+					.equalsIgnoreCase(QTConstants.GREATER_THAN_OR_EQUAL)) {
+				belowRange = belowRange.replace(
+						QTConstants.GREATER_THAN_OR_EQUAL, "");
+				if (new BigDecimal(belowRange).compareTo(estmtAmount) >= 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
+									String.valueOf(belowRange) });
+				}
+			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
+				belowRange = belowRange.replace(QTConstants.GREATER_THAN, "");
+				if (new BigDecimal(belowRange).compareTo(estmtAmount) > 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.GREATER_THAN,
+									String.valueOf(belowRange) });
+				}
+			}
+		}
+		if (null != aboveRange) {
+			String operator = findOperator(aboveRange);
+			if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN_OR_EQUAL)) {
+				aboveRange = aboveRange.replace(
+						QTConstants.LESSER_THAN_OR_EQUAL, "");
+				if (new BigDecimal(aboveRange).compareTo(estmtAmount) <= 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
+									String.valueOf(aboveRange) });
+				}
+			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
+				aboveRange = aboveRange.replace(QTConstants.LESSER_THAN, "");
+				if (new BigDecimal(aboveRange).compareTo(estmtAmount) < 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.LESSER_THAN,
+									String.valueOf(aboveRange) });
+				}
+			} else if (operator
+					.equalsIgnoreCase(QTConstants.GREATER_THAN_OR_EQUAL)) {
+				aboveRange = aboveRange.replace(
+						QTConstants.GREATER_THAN_OR_EQUAL, "");
+				if (new BigDecimal(aboveRange).compareTo(estmtAmount) >= 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
+									String.valueOf(aboveRange) });
+				}
+			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
+				aboveRange = aboveRange.replace(QTConstants.GREATER_THAN, "");
+				if (new BigDecimal(aboveRange).compareTo(estmtAmount) > 0) {
+					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					throw new EpException(MessageConst.ERROR_760259,
+							new String[] { QTConstants.GREATER_THAN,
+									String.valueOf(aboveRange) });
+				}
+			}
 		}
 
 	}
 
 	private void createRuleDataForQt(BigDecimal estmtAmount, String qtType) {
 		QTRuleDataBean ruleDataBean = this.getManagedBean().getRuleDataBean();
-		/* if (null == ruleDataBean) { */
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTDetailSO.class);
-		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-		quationTenderReqDTO.setEstmtAmount(estmtAmount);
-		quationTenderReqDTO.setQtType(qtType);
-		QuationTenderResDTO resDTO = detailSO
-				.retrieveRuleDetailsByEstmtAmount(quationTenderReqDTO);
-		this.getManagedBean().setRuleDataBean(resDTO.getRuleDataBean());
-		// }
+		if (null == ruleDataBean) {
+			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTDetailSO.class);
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			quationTenderReqDTO.setEstmtAmount(estmtAmount);
+			quationTenderReqDTO.setQtType(qtType);
+			QuationTenderResDTO resDTO = detailSO
+					.retrieveRuleDetailsByEstmtAmount(quationTenderReqDTO);
+			this.getManagedBean().setRuleDataBean(resDTO.getRuleDataBean());
+		}
 
+	}
+
+	private String findOperator(String estmtAmout) {
+		if (estmtAmout.contains(QTConstants.LESSER_THAN_OR_EQUAL)) {
+			return QTConstants.LESSER_THAN_OR_EQUAL;
+		} else if (estmtAmout.contains(QTConstants.LESSER_THAN)) {
+			return QTConstants.LESSER_THAN;
+		} else if (estmtAmout.contains(QTConstants.GREATER_THAN_OR_EQUAL)) {
+			return QTConstants.GREATER_THAN_OR_EQUAL;
+		} else if (estmtAmout.contains(QTConstants.GREATER_THAN)) {
+			return QTConstants.GREATER_THAN;
+		}
+		return null;
 	}
 }
