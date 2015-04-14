@@ -10,6 +10,7 @@
  */
 package my.ep.web.bean.sc.quatationtender;
 
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 
@@ -33,6 +34,9 @@ public class LoiLoaBean {
 	
 	/** The loi loa status. */
 	private String loiLoaStatus;
+	
+	/** The pm status. */
+	private PmStatus pmStatus;
 	
 	/**
 	 * Gets the sc loi.
@@ -105,4 +109,19 @@ public class LoiLoaBean {
 	public void setLoiLoaStatus(String loiLoaStatus) {
 		this.loiLoaStatus = loiLoaStatus;
 	}
+
+	/**
+	 * @return the pmStatus
+	 */
+	public PmStatus getPmStatus() {
+		return pmStatus;
+	}
+
+	/**
+	 * @param pmStatus the pmStatus to set
+	 */
+	public void setPmStatus(PmStatus pmStatus) {
+		this.pmStatus = pmStatus;
+	}
+	
 }
