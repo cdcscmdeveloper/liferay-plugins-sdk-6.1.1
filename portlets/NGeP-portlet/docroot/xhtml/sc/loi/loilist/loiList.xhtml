@@ -98,11 +98,11 @@
 						<p:commandButton title="edit" icon="ui-icon-edit"
 							rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION}"
 							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-							action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi)}" />
+							action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, true)}" />
 
 						<p:commandLink
 							rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION}"
-							action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi)}"
+							action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, false)}"
 							process="@this">
 
 							<p:graphicImage library="ep/images/design" name="document.png"
