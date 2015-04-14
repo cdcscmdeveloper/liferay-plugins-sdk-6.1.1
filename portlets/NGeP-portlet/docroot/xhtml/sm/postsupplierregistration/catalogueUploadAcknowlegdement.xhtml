@@ -1,0 +1,15 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" >
+	
+    <ui:define name="contentSection">
+		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}" toggleable="true" toggleSpeed="500">
+			<h:outputText value="Catalogue uploaded successfully. To request softcert, please click " />
+			<p:commandLink value="here" action="#{postSupplierRegBB.naviToSoftCertRequest}" />
+		</p:panel>
+	</ui:define>
+		    
+</ui:composition>
