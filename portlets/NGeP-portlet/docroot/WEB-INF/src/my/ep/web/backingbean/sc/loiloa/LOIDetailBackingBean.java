@@ -74,6 +74,7 @@ import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
@@ -1291,13 +1292,6 @@ public class LOIDetailBackingBean extends
 			handleException(ex);
 		}
 		getManagedBean().setEditFlag(true);
-		
-		if(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION)){
-			getManagedBean().setButtonFlag(true);
-		} else{
-			getManagedBean().setButtonFlag(false);
-		}
-		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
 			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -1361,6 +1355,15 @@ public class LOIDetailBackingBean extends
 			}
 			if(getManagedBean().getNegoTermsList() != null && getManagedBean().getNegoTermsList().size()>0){
 				scLoi.getScNegoTerms().addAll(getManagedBean().getNegoTermsList());
+			}
+		}
+		
+		if(scLoi.getScWorkFlowStatus() != null){
+			PmStatus status  = scLoi.getScWorkFlowStatus().getPmStatus();
+			if(status.getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION) || status.getStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION)){
+				getManagedBean().setButtonFlag(true);
+			} else{
+				getManagedBean().setButtonFlag(false);
 			}
 		}
 		
