@@ -1380,9 +1380,8 @@ public class LOADetailBackingBean extends
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		PmUser ackByUser = scLoa.getAckBy();
 		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		String DEFAULT_DATE_FORMAT = "dd MMMM yyyy";
+		SimpleDateFormat dateSDF = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
 		DecimalFormat amountDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -3882,11 +3881,33 @@ public class LOADetailBackingBean extends
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
+		retrieveLOILOAList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
 	
+	/**
+	 * retrieving LOI LOA List from database.
+	 *
+	 * @param qtId the qt id
+	 */
+	public void retrieveLOILOAList(Long qtId) {
+		debugLogger("retrieveLOILOAList");
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setDocId(qtId);
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
+		QtLOABackingBean  loaBackingBean = new QtLOABackingBean();
+		if (resDTO.isSuccessful()) {
+			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
+			if (loiLoaList != null && loiLoaList.size() > 0) {
+				loaBackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
+				loaBackingBean.getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
+			}	
+		}
+	}
 
 	/**
 	 * Pre render page navigation to direct nego or loa

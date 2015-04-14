@@ -116,17 +116,17 @@
 	</tr>
 	<tr>
 		<td>
-			Sekian, terima kasih. <br /><br /><br />
+			Sekian, terima kasih. <br /><br />
 		</td>
 	</tr>
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:14px;font-family: Albertus Medium;'>"BERKHIDMAT UNTUK NEGARA"</span> <br /><br /><br />
+			<span style='font-weight:bold;font-size:14px;font-family: Albertus Medium;'>"BERKHIDMAT UNTUK NEGARA"</span> <br /><br /><br /><br />
 		</td>
 	</tr>
 	<tr>
 		<td>
-			Saya yang menurut perintah, <br /><br /><br />
+			Saya yang menurut perintah, <br /><br />
 			________________________________ <br />
 			$loaSigner <br />
 			$loaSignerDesignation
@@ -141,47 +141,37 @@
 			#if ($loiContentFlag == "false")
 				<p style="text-align:justify;"><span style="font-family:Arial;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Dengan ini bertandatangan di bawah ini mengakui penerimaan surat tersebut di atas salinanya yang mana telah pun di simpan dan mengesahkan bahawa *tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang terkandung dalam jadual dokumen tender/ sebut harga telah dikenakan dengan keluaran surat tersebut di atas adalah merupakan keseluruhan tender/ sebut harga yang bertandangan di bawah ini.</span></p>
 			#end
-			<br />
+			
 		</td>
 	</tr>
+	
+	</table>
+	
+
+  <table  align="left"  width="60%">
 	<tr>
-		<td>
-			<table border="0" cellpadding="0" cellspacing="0" width="100%">
-			<tr>
-				<td colspan="3">
-					<br />________________________________
-				</td>
-				<td colspan="3">
-					<br />________________________________
-				</td>
+		<td colspan="3">
+			<br />________________________________
+		  </td>
+				
 			</tr>
 			<tr>
-				<td colspan="3" style='font-weight:bold;'>
+				<td style='font-weight:bold;' colspan="3">
 					Tandatangan bagi pihak Pembekal
 				</td>
-				<td colspan="3" style='font-weight:bold;'>
-					Tandatangan bagi pihak saksi Pembekal
-				</td>
+			
 			</tr>
 			<tr>
-				<td width="17%">
+				<td>
 					Nama Penuh 
 				</td>
-				<td width="1%">
+				<td>
 					: 
 				</td>
-				<td width="32%">
+				<td>
 					$supplierUser
 				</td>
-				<td width="17%">
-					Nama Penuh
-				</td>
-				<td width="1%">
-					: 
-				</td>
-				<td width="32%">
-					$supplierWitnessUser
-				</td>
+				
 			</tr>
 			<tr>
 				<td>
@@ -193,15 +183,7 @@
 				<td>
 					$supplierIcNo
 				</td>
-				<td>
-					No KP
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierWitnessIcNo
-				</td>
+			
 			</tr>
 			<tr>
 				<td>
@@ -213,15 +195,7 @@
 				<td>
 					$supplierDesignation
 				</td>
-				<td>
-					Jawatan
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierWitnessDesignation
-				</td>
+				
 			</tr>
 			<tr>
 				<td>
@@ -230,7 +204,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td>
 					$supplierName
 				</td>
 			</tr>
@@ -244,15 +218,7 @@
 				<td style="white-space: normal;">
 					$supplierAddress
 				</td>
-				<td>
-					Alamat
-				</td>
-				<td>
-					: 
-				</td>
-				<td style="white-space: normal;">
-					$supplierWitnessAddress
-				</td>
+				
 			</tr>
 			<tr>
 				<td>
@@ -264,15 +230,7 @@
 				<td>
 					$supplierPhoneNo
 				</td>
-				<td>
-					No Tel
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierWitnessPhoneNo
-				</td>
+				
 			</tr>
 			<tr>
 				<td>
@@ -284,15 +242,7 @@
 				<td>
 					$supplierFaxNo
 				</td>
-				<td>
-					No Faks
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierWitnessFaxNo
-				</td>
+				
 			</tr>
 			<tr>
 				<td>
@@ -304,15 +254,7 @@
 				<td>
 					$supplierMobNo
 				</td>
-				<td>
-					Tel Bimbit
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierWitnessMobNo
-				</td>
+				
 			</tr>
 			<tr>
 				<td>
@@ -324,18 +266,10 @@
 				<td>
 					$supplierEmail
 				</td>
-				<td>
-					Alamat emel
-				</td>
-				<td>
-					: 
-				</td>
-				<td>
-					$supplierWitnessEmail
-				</td>
+				
 			</tr>	
 			<tr>
-				<td colspan="6">
+				<td>
 					<br /><br />
 				</td>
 			</tr>
@@ -346,7 +280,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td>
 					$bankAccNo
 				</td>
 			</tr>
@@ -357,7 +291,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td>
 					$bankName
 				</td>
 			</tr>
@@ -368,7 +302,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td>
 					$bankBranch
 				</td>
 			</tr>
@@ -379,7 +313,7 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td>
 					$bankAddress
 				</td>
 			</tr>
@@ -390,13 +324,111 @@
 				<td>
 					: 
 				</td>
-				<td colspan="3">
+				<td>
 					$ackDate
 				</td>
 			</tr>
-			</table>
+	 </table>
+
+	 <table align="right" width="40%">
+	   <tr>
+	      <td colspan="3">
+			<br />________________________________
+	      </td>
+	 </tr>
+	  <tr>
+	     <td style='font-weight:bold;' colspan="3">
+	       Tandatangan bagi pihak saksi Pembekal
+	    </td>
+		 </tr>
+	  <tr>
+		<td>
+				Nama Penuh
 		</td>
-	</tr>
+		<td>
+			: 
+		</td>
+		<td>
+		  $supplierWitnessUser
+		</td>
+		 </tr>
+	  <tr>
+		<td>
+			No KP
+		</td>
+		<td>
+			: 
+		</td>
+		<td>
+		    $supplierWitnessIcNo
+		</td>
+		 </tr>
+	  <tr>
+		<td>
+		 Jawatan
+		 </td>
+		 <td>
+		    : 
+		</td>
+		 <td>
+			$supplierWitnessDesignation
+		</td>
+		 </tr>
+	  <tr>
+		<td>
+		  Alamat
+	    </td>
+		<td>
+			: 
+		</td>
+		<td style="white-space: normal;">
+			$supplierWitnessAddress
+		</td>
+		 </tr>
+	  <tr>
+	  <td>
+			No Tel
+	  </td>
+		<td>
+			: 
+		</td>
+		<td>
+			$supplierWitnessPhoneNo
+		</td>	
+		 </tr>
+	  <tr>
+		<td>
+		  No Faks
+		</td>
+	  	<td>
+		   : 
+	   </td>
+		<td>
+			$supplierWitnessFaxNo
+		</td>
+		 </tr>
+	  <tr>
+		<td>
+			Tel Bimbit
+		</td>
+		<td>
+			: 
+		</td>
+		<td>
+			$supplierWitnessMobNo
+		</td>
+		 </tr>
+	  <tr>
+		<td>
+			Alamat emel
+		</td>
+		<td>
+			: 
+		</td>
+		<td>
+			$supplierWitnessEmail
+		</td>
+	  </tr>
 	</table>
 </body>
 </html>
