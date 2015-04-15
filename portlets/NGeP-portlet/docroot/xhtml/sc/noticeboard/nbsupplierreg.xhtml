@@ -21,7 +21,7 @@
 						action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
 				</p:column>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.btn.register']}"
+					<p:commandButton value="#{lbl['lbl.btn.register']}" disabled="#{!noticeBoardBackingBean.managedBean.validMofNo}"
 						action="#{noticeBoardBackingBean.registerSupplierForBSV}"
 						style="float:right;" process="@all" update="@all" />
 				</p:column>
