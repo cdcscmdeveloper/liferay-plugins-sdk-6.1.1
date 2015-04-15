@@ -105,6 +105,7 @@ import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -139,6 +140,7 @@ public class NoticeBoardBackingBean extends
 		SourcingBaseBackingBean<NoticeBoardManagedBean> {
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
+	private static final String MOF_INVALID_MSG_KEY = "lbl.sc.mof.invalid.orinactive";
 
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private boolean visible;
@@ -612,18 +614,29 @@ public class NoticeBoardBackingBean extends
 	 * @return navigateUrl
 	 */
 	public String gotoSupplierRegistration(Long qtId) {
-
-		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
+		
+		NoticeBoardManagedBean managedBean = this.getManagedBean();
+		managedBean.setPreviousPage("noticeboardlandingpage");
 		retriveBsvDetails(qtId);
-		SmSupplier smSupplier = this.getManagedBean().getSmSupplier();
-		if (smSupplier != null) {
-			this.getManagedBean().setMofNumber(retrieveMofAccount().getMofNo());
-			this.getManagedBean().setCompanyName(smSupplier.getCompanyName());
+		SmSupplier smSupplier = managedBean.getSmSupplier();
+		managedBean.setMofNumber(managedBean.getSupplierMofNo());
+		if (smSupplier != null && null != managedBean.getMofNumber()) {
+			managedBean.setCompanyName(smSupplier.getCompanyName());
+			managedBean.setValidMofNo(true);
+		} else {
+			managedBean.setValidMofNo(false);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							null, ResourceBundleUtils.getMessage(
+									MOF_INVALID_MSG_KEY, 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+							
 		}
-		this.getManagedBean().setActiveTabIndex(0);
-		this.getManagedBean().setSelectedZoneTabIndex(0);
-		this.getManagedBean().setBriefingDtls(null);
-		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
+		managedBean.setActiveTabIndex(0);
+		managedBean.setSelectedZoneTabIndex(0);
+		managedBean.setBriefingDtls(null);
+		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml";
 	}
 
 	public void bsvZoneTabChangeAction(Integer selectedZoneTabIndex) {
