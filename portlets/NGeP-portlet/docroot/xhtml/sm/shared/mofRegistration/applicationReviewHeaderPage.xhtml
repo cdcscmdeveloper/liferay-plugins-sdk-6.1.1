@@ -54,26 +54,32 @@
 	</div>
 	
 	<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
-		<p:spacer height="20px" />
-		<div align="left" style="width: 100%">
-			<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
-				<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank" >
-					<p:outputLabel value="#{lbl['lbl.sm.view.previous.appr.appl']}" styleClass="outputLabel-view" />
-					<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
-					<f:param name="applicationType" value="#{backingBean.managedBean.revisionApplType}"/>
-					<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
-				</h:outputLink>&#160;&#160;&#160;&#160;
-			</c:if>
-			<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank" >
-				<p:outputLabel value="#{lbl['lbl.sm.view.original.appl']}" styleClass="outputLabel-view" />
-				<f:param name="applicationNo" value="#{backingBean.managedBean.revisionSupplierAppNoParam}"/>
-				<f:param name="applicationType" value="#{backingBean.managedBean.smAppl.applType}"/>
-				<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
-			</h:outputLink>
-		</div>
+		<br />
+		<table style="width: 30%;float:left;" >
+			<tr>
+				<td>
+					<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
+						<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" >
+							<p:outputLabel value="#{lbl['lbl.sm.view.previous.appr.appl']}" />
+							<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
+							<f:param name="applicationType" value="#{backingBean.managedBean.revisionApplType}"/>
+							<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
+						</h:outputLink>
+					</c:if>
+				</td>
+				<td>
+					<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank" >
+						<p:outputLabel value="#{lbl['lbl.sm.view.original.appl']}" />
+						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionSupplierAppNoParam}"/>
+						<f:param name="applicationType" value="#{backingBean.managedBean.smAppl.applType}"/>
+						<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
+					</h:outputLink>
+				</td>
+			</tr>
+		</table>
+		<br /><br />
 	</c:if>
 	
-	<p:spacer height="10px" />
 	<table style="width: 100%;">
 		<p:outputPanel
 			rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.redirectToPersonPage}">
