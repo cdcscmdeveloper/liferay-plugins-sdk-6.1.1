@@ -434,6 +434,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		getManagedBean().getNewAdmin().setAuthorizedFlg(
 				DbValueConst.RECORD_STATUS_ACTIVE);
+		getManagedBean().getNewAdmin().setContractSignerFlg(
+				DbValueConst.RECORD_STATUS_ACTIVE);
 
 		PmCountry country = SmCommonUtil
 				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
