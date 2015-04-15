@@ -11082,6 +11082,8 @@ public class SpecificationBackingBean extends
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
+		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
@@ -11170,10 +11172,27 @@ public class SpecificationBackingBean extends
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
 					scQt.setDemoRequired(true);
-				} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				}
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(checkList.getDefinationType()
 								.getParameterCode())) {
 					scQt.setSampleReq(true);
+
+				}
+				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode())
+						&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+								.equalsIgnoreCase(checkList.getDefinationType()
+										.getParameterCode())) {
+					if (!checkList.isScoringReq()) {
+						StatusReqDTO statusreq = new StatusReqDTO();
+						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+						StatusResDTO statusres = statussO
+								.retrieveStatusByStatusId(statusreq);
+
+						checkList.setPmEvalStatus(statusres.getPmStatus());
+					}
 
 				}
 
@@ -11183,6 +11202,26 @@ public class SpecificationBackingBean extends
 		}
 
 		if (financialCheckList != null && !financialCheckList.isEmpty()) {
+			for (ScQtCheckList financialcheckList : financialCheckList) {
+				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+						.equalsIgnoreCase(financialcheckList
+								.getDefinationType().getParameterCode())
+						&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+								.equalsIgnoreCase(financialcheckList
+										.getDefinationType().getParameterCode())) {
+					if (!financialcheckList.isScoringReq()) {
+						StatusReqDTO statusreq = new StatusReqDTO();
+						statusreq.setStatusId(QTStatusConst.TS_COMPLETED);
+						StatusResDTO statusres = statussO
+								.retrieveStatusByStatusId(statusreq);
+
+						financialcheckList.setPmEvalStatus(statusres
+								.getPmStatus());
+					}
+
+				}
+
+			}
 			localChecklist.addAll(financialCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
