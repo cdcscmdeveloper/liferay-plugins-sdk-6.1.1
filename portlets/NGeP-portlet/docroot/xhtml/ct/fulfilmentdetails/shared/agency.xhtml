@@ -12,38 +12,75 @@
        <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/><br/>
        <p:dataTable id="tableAgencyDetails" var="agencyData"  value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
-  			selectionMode="single" rowKey="#{agencyData}" selection="#{contractDetailsBackingBean.managedBean.selectedAgency}" >
+  			selectionMode="single" rowKey="#{agencyData}" selection="#{contractDetailsBackingBean.managedBean.selectedAgency}" 
+  			rowIndexVar="indexVar" >
             <ac:paginator for="tableAgencyDetails"/>
             <p:ajax event="rowSelect" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				update="@([id$=agencyDeliveryAddress],[id$=delBtn])"  />	
-                  
-            <p:column style="width:2%;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
-	     		<p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}" styleClass="myCustomChekBox">
-			  		<p:ajax event="change" update=":form:delBtn" listener="#{contractDetailsBackingBean.selectAgencyListner}"></p:ajax>
-		       	</p:selectBooleanCheckbox>
-	      	</p:column>
-            
-               <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:26%;white-space:normal;">
-				    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
-			   </p:column>
+				
+				<p:columnGroup type="header"> 
+								<p:row> 
+									<p:column rowspan="2"
+									     style="width:10px;"  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" />
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" /> 
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}"/> 						
+									<p:column rowspan="2" style="width:10%;white-space:normal;"
+									  >
+									      <f:facet name="header">
+					                          <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
+               		                          <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
+               	                           </f:facet>
+									</p:column>
+									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" />
+									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;"/>
+									<p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}"> 
+									 <f:facet name="header">
+					                       <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
+               		                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
+               	                     </f:facet>
+               	                    </p:column>						
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;"/>
+								</p:row>							
+								<p:row> 
+									<p:column/>	
+									<p:column>
+									  <f:facet name="header">
+									     <h:outputText value="*" styleClass="mandatory" />
+									     <h:outputText value="Attachment"/>
+									  </f:facet>
+									</p:column>  
+									<p:column>
+									  <f:facet name="header">
+									       <h:outputText value="*" styleClass="mandatory" />
+									       <h:outputText value="File Ref. No"/>
+									   </f:facet>
+									 </p:column>
+								</p:row>
+							</p:columnGroup>
+						
+							<p:column style="width:10px;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+	     		                   <p:selectBooleanCheckbox value="#{agencyData.selectedCheckBox}">
+			  		               <p:ajax event="change" update=":form:delBtn" listener="#{contractDetailsBackingBean.selectAgencyListner}"></p:ajax>
+		       	                   </p:selectBooleanCheckbox>
+	      	                 </p:column>
+	      	                 
+	      	                 <p:column style="width:25%;white-space:normal;" >
+				                    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
+			                 </p:column>
+			                 
+			                  <p:column style="width:25%;white-space:normal;" >
+				                     <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
+			                  </p:column>
 			
-			   <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:32%;white-space:normal;">
-				   <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
-			    </p:column>
-			
-			    <p:column style="width:10%;white-space:normal;">
-			  	    <f:facet name="header">
-					   <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
-               		   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
-               	    </f:facet>
+			    <p:column>
            		    <p:inputText value="#{agencyData.ceilingAmount}"  required="true"  label="#{lbl['lbl.ct.ceiling.amount']}"
-           		        disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" maxlength="23"  styleClass="ppRightBtn">
+           		        disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;" maxlength="23"  styleClass="ppRightBtn">
 			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			 		    <p:ajax event="change" update=":form:tableAgencyDetails" process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
 				     </p:inputText>
 		    	</p:column>
 		   
-		   	     <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;">
+		   	     <p:column>
 			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="8"
 		               readonlyInput="true" 
 		               mindate="#{(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate gt contractDetailsBackingBean.currentDate) ? contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate : contractDetailsBackingBean.currentDate}" 
@@ -54,23 +91,44 @@
 		           </p:calendar>
 		          </p:column>
 		   	
-		   	      <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;">
+		   	      <p:column>
 				  <h:outputText value="#{agencyData.expDate}">
 				      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	   </p:column>
 		   	
-		   	   <p:column style="width:8%;white-space:normal;">
-		   	 	   <f:facet name="header">
-					  <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
-               		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
-               	   </f:facet>
-		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;" disabled="true"
-		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != agencyData.orgProfile.parentOrgProfile.orgName}"/>
+		   	   <p:column>
+		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:10px;float:center;" disabled="true"
+		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != agencyData.orgProfile.parentOrgProfile.orgName}">
+		   	      </p:selectBooleanCheckbox>
+		       </p:column>
+		       <p:column style="white-space:normal;">
+		         <p:commandButton id="uploadSharingDoc" oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
+					        rendered="#{agencyData.ap178 and agencyData.fileName == null}" action="#{contractDetailsBackingBean.setIndexProperty(indexVar)}"
+					       disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
+
+		      <h:commandLink
+						title="#{agencyData.fileName}"
+						value="#{contractDetailsBackingBean.getShortFileName(agencyData.fileName)}"						
+						style="float:left;margin-top:10px;" styleClass="blue_font"
+						action="#{contractDetailsBackingBean.downloadFile(agencyData.filePath, agencyData.fileName)}" />
+						
+			   	<p:commandLink 
+			   	   onclick="deleteAttachmentDlg1.show();" action="#{contractDetailsBackingBean.setIndexProperty(indexVar)}"
+						  rendered="#{!contractDetailsBackingBean.managedBean.viewContract and agencyData.ap178 and agencyData.fileName != null}">
+			   				<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
+			 	</p:commandLink>
+			 	 				
+		       </p:column>
+		       <p:column style="white-space:normal;">
+		           <p:inputText id="uploadRefNoDoc"  value="#{agencyData.refNo}" style="width:80px;" 
+		              rendered="#{agencyData.ap178}"> </p:inputText>
 		       </p:column>
 		        
-		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;">
+		        <p:column>
 		   	         <h:outputText id="agenyStatus" value="#{agencyData.chkStatus ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}" style="float:none" />
 		       </p:column>
+                  
+           
 			</p:dataTable> 
        	<div class="ppRightBtn">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"   oncomplete="dlgAgency.show();" 
@@ -247,46 +305,6 @@
 						</tr>
 					</table>    					
 				</td>
-				<td width="50%" valign="top">
-				    <table style="width: 100%">
-				    <tr>
-			           <td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
-			           <td class="TableFieldRight">
-				         <p:commandButton oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
-					        update="lampiran1, uploadDlg1" value="#{lbl['lbl.ct.upload.attach.files']}"
-					        disabled="#{contractDetailsBackingBean.managedBean.viewContract or !contractDetailsBackingBean.contractSharing}"/>
-			           </td>
-		             </tr>
-		             <tr>
-			           <td/>
-			           <td>
-				            <p:dataGrid id="lampiran1" value="#{contractDetailsBackingBean.managedBean.contractVer.agencyAttachements}"
-					           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-					           <table>
-						          <tr>
-							       <td rowspan="2"><h:graphicImage library="ep/images/design" name="#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
-							       <td width="5"></td>
-							       <td>
-								       <h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
-								       <h:outputText value="#{attachFile.createdDate}">
-									     <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
-						   </h:outputText>
-						</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>
-								<h:commandLink value="#{attachFile.fileName}" 
-									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
-			 	 				<p:commandLink onclick="deleteAttachmentDlg1.show();" action="#{contractDetailsBackingBean.setAttachFileIndex(attachFileIndex)}"
-									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId) and !contractDetailsBackingBean.managedBean.viewContract}">
-			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
-			 	 				</p:commandLink>
-			 	 			</td>
-						</tr>
-					</table>
-				</p:dataGrid>
-			</td>
 		</tr>
 	</table>
 
@@ -298,7 +316,7 @@
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			mode="advanced" id="upload1"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			update="lampiran1" >
+			update=":form:tableAgencyDetails" >
 		</p:fileUpload> 
 	</p:dialog>
 	
@@ -311,15 +329,12 @@
             <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
      	</h:panelGrid>
 		<div class="ppRightBtn">
-	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  update="lampiran1" process="@form" 
-	     	actionListener="#{contractDetailsBackingBean.deleteAttachmentAction(contractDetailsBackingBean.managedBean.attachFileIndex)}" 
+	     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@form"  update=":form:tableAgencyDetails"
+	     	actionListener="#{contractDetailsBackingBean.deleteAgencyAttachement()}" 
 	     	onclick="deleteAttachmentDlg1.hide();"/>
 		 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachmentDlg1.hide();" type="button" />
 	   </div>
  	</p:dialog>	
-				</td>
-			</tr>
-		</table>
 		
 	</p:panel>		
 </ui:composition>                                      
