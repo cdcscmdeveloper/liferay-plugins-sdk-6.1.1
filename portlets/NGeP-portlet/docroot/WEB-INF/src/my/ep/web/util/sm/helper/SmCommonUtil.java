@@ -1779,34 +1779,34 @@ public class SmCommonUtil {
 
 		return address;
 	}
-	
-	public static boolean validateGstRegNo(String value){
+
+	public static boolean validateGstRegNo(String value) {
 		String gstNoPattern = "\\d+";
-		Pattern pattern; 
+		Pattern pattern;
 		Matcher matcher;
-		
+
 		pattern = Pattern.compile(gstNoPattern);
 
-		if(value != null){
+		if (value != null) {
 			String gstNo = value.toString();
 
-			if(gstNo.length() > 0){
-				if(gstNo.length() != 12){
+			if (gstNo.length() > 0) {
+				if (gstNo.length() != 12) {
 					return false;
 				}
 
 				matcher = pattern.matcher(value.toString());
-				if(!matcher.matches()){
+				if (!matcher.matches()) {
 					return false;
 				}
-				
+
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Gets the current active work flow status.
 	 * 
@@ -1817,10 +1817,7 @@ public class SmCommonUtil {
 	public static SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		reqDTO.setApplId(applId);
-		ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject("sm", ISmWorkFlowStatusSO.class);
-		SmWorkFlowStatusResDTO resDTO = reqSO
+		SmWorkFlowStatusResDTO resDTO = SmServiceLookup.getSmWorkFlowStatusSO()
 				.retrieveCurrentWorkFlowStatusByDocId(reqDTO);
 		if (resDTO != null && resDTO.getWorkflowStatus() != null) {
 			return resDTO.getWorkflowStatus();
