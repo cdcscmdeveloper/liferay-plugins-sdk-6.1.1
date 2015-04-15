@@ -147,6 +147,8 @@ public class ReportBackingBean extends
 	private List<SelectItem> rolecodeRquisitionerList = new ArrayList<SelectItem>();
 	private List<SelectItem> rolecodeApproverList = new ArrayList<SelectItem>();
 	private List<SelectItem> rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
+	private List<SelectItem> identificationTypeList = new ArrayList<SelectItem>();
+	private List<SelectItem> accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -156,36 +158,7 @@ public class ReportBackingBean extends
 	PPReportBackingBean ppReportBackingBean;
 	Long unspid = null;
 	Long ministryId= null;
-	private List<SelectItem> levOneCatLst2 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst3 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst4 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst5 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst6 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst7 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst8 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst9 = new ArrayList<SelectItem>();
-	private List<SelectItem> levOneCatLst10 = new ArrayList<SelectItem>();
-
-	private List<SelectItem> levTwoCatLst1 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst1 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst2 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst2 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst3 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst3 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst4 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst4 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst5 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst5 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst6 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst6 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst7 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst7 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst8 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst8 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst9 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst9 = new ArrayList<SelectItem>();
-	private List<SelectItem> levTwoCatLst10 = new ArrayList<SelectItem>();
-	private List<SelectItem> levThreeCatLst10 = new ArrayList<SelectItem>();
+	
 	private List<String> roleCodeList = new ArrayList<String>();
 	private List<String> supplCompanyList = new ArrayList<String>();
 	private boolean valueReqd;
@@ -209,6 +182,23 @@ public class ReportBackingBean extends
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
 		
+
+	public List<SelectItem> getIdentificationTypeList() {
+		return identificationTypeList;
+	}
+
+	public void setIdentificationTypeList(List<SelectItem> identificationTypeList) {
+		this.identificationTypeList = identificationTypeList;
+	}
+
+	public List<SelectItem> getAccumulatedPaidUpCptlList() {
+		return accumulatedPaidUpCptlList;
+	}
+
+	public void setAccumulatedPaidUpCptlList(
+			List<SelectItem> accumulatedPaidUpCptlList) {
+		this.accumulatedPaidUpCptlList = accumulatedPaidUpCptlList;
+	}
 
 	public List<SelectItem> getSmStateList() {
 		return smStateList;
@@ -428,238 +418,6 @@ public class ReportBackingBean extends
 
 	public void setValueReqd(boolean valueReqd) {
 		this.valueReqd = valueReqd;
-	}
-
-	public List<SelectItem> getLevOneCatLst2() {
-		return levOneCatLst2;
-	}
-
-	public void setLevOneCatLst2(List<SelectItem> levOneCatLst2) {
-		this.levOneCatLst2 = levOneCatLst2;
-	}
-
-	public List<SelectItem> getLevOneCatLst3() {
-		return levOneCatLst3;
-	}
-
-	public void setLevOneCatLst3(List<SelectItem> levOneCatLst3) {
-		this.levOneCatLst3 = levOneCatLst3;
-	}
-
-	public List<SelectItem> getLevOneCatLst4() {
-		return levOneCatLst4;
-	}
-
-	public void setLevOneCatLst4(List<SelectItem> levOneCatLst4) {
-		this.levOneCatLst4 = levOneCatLst4;
-	}
-
-	public List<SelectItem> getLevOneCatLst5() {
-		return levOneCatLst5;
-	}
-
-	public void setLevOneCatLst5(List<SelectItem> levOneCatLst5) {
-		this.levOneCatLst5 = levOneCatLst5;
-	}
-
-	public List<SelectItem> getLevOneCatLst6() {
-		return levOneCatLst6;
-	}
-
-	public void setLevOneCatLst6(List<SelectItem> levOneCatLst6) {
-		this.levOneCatLst6 = levOneCatLst6;
-	}
-
-	public List<SelectItem> getLevOneCatLst7() {
-		return levOneCatLst7;
-	}
-
-	public void setLevOneCatLst7(List<SelectItem> levOneCatLst7) {
-		this.levOneCatLst7 = levOneCatLst7;
-	}
-
-	public List<SelectItem> getLevOneCatLst8() {
-		return levOneCatLst8;
-	}
-
-	public void setLevOneCatLst8(List<SelectItem> levOneCatLst8) {
-		this.levOneCatLst8 = levOneCatLst8;
-	}
-
-	public List<SelectItem> getLevOneCatLst9() {
-		return levOneCatLst9;
-	}
-
-	public void setLevOneCatLst9(List<SelectItem> levOneCatLst9) {
-		this.levOneCatLst9 = levOneCatLst9;
-	}
-
-	public List<SelectItem> getLevOneCatLst10() {
-		return levOneCatLst10;
-	}
-
-	public void setLevOneCatLst10(List<SelectItem> levOneCatLst10) {
-		this.levOneCatLst10 = levOneCatLst10;
-	}
-
-	public List<SelectItem> getLevTwoCatLst1() {
-		return levTwoCatLst1;
-	}
-
-	public void setLevTwoCatLst1(List<SelectItem> levTwoCatLst1) {
-		this.levTwoCatLst1 = levTwoCatLst1;
-	}
-
-	public List<SelectItem> getLevThreeCatLst1() {
-		return levThreeCatLst1;
-	}
-
-	public void setLevThreeCatLst1(List<SelectItem> levThreeCatLst1) {
-		this.levThreeCatLst1 = levThreeCatLst1;
-	}
-
-	public List<SelectItem> getLevTwoCatLst2() {
-		return levTwoCatLst2;
-	}
-
-	public void setLevTwoCatLst2(List<SelectItem> levTwoCatLst2) {
-		this.levTwoCatLst2 = levTwoCatLst2;
-	}
-
-	public List<SelectItem> getLevThreeCatLst2() {
-		return levThreeCatLst2;
-	}
-
-	public void setLevThreeCatLst2(List<SelectItem> levThreeCatLst2) {
-		this.levThreeCatLst2 = levThreeCatLst2;
-	}
-
-	public List<SelectItem> getLevTwoCatLst3() {
-		return levTwoCatLst3;
-	}
-
-	public void setLevTwoCatLst3(List<SelectItem> levTwoCatLst3) {
-		this.levTwoCatLst3 = levTwoCatLst3;
-	}
-
-	public List<SelectItem> getLevThreeCatLst3() {
-		return levThreeCatLst3;
-	}
-
-	public void setLevThreeCatLst3(List<SelectItem> levThreeCatLst3) {
-		this.levThreeCatLst3 = levThreeCatLst3;
-	}
-
-	public List<SelectItem> getLevTwoCatLst4() {
-		return levTwoCatLst4;
-	}
-
-	public void setLevTwoCatLst4(List<SelectItem> levTwoCatLst4) {
-		this.levTwoCatLst4 = levTwoCatLst4;
-	}
-
-	public List<SelectItem> getLevThreeCatLst4() {
-		return levThreeCatLst4;
-	}
-
-	public void setLevThreeCatLst4(List<SelectItem> levThreeCatLst4) {
-		this.levThreeCatLst4 = levThreeCatLst4;
-	}
-
-	public List<SelectItem> getLevTwoCatLst5() {
-		return levTwoCatLst5;
-	}
-
-	public void setLevTwoCatLst5(List<SelectItem> levTwoCatLst5) {
-		this.levTwoCatLst5 = levTwoCatLst5;
-	}
-
-	public List<SelectItem> getLevThreeCatLst5() {
-		return levThreeCatLst5;
-	}
-
-	public void setLevThreeCatLst5(List<SelectItem> levThreeCatLst5) {
-		this.levThreeCatLst5 = levThreeCatLst5;
-	}
-
-	public List<SelectItem> getLevTwoCatLst6() {
-		return levTwoCatLst6;
-	}
-
-	public void setLevTwoCatLst6(List<SelectItem> levTwoCatLst6) {
-		this.levTwoCatLst6 = levTwoCatLst6;
-	}
-
-	public List<SelectItem> getLevThreeCatLst6() {
-		return levThreeCatLst6;
-	}
-
-	public void setLevThreeCatLst6(List<SelectItem> levThreeCatLst6) {
-		this.levThreeCatLst6 = levThreeCatLst6;
-	}
-
-	public List<SelectItem> getLevTwoCatLst7() {
-		return levTwoCatLst7;
-	}
-
-	public void setLevTwoCatLst7(List<SelectItem> levTwoCatLst7) {
-		this.levTwoCatLst7 = levTwoCatLst7;
-	}
-
-	public List<SelectItem> getLevThreeCatLst7() {
-		return levThreeCatLst7;
-	}
-
-	public void setLevThreeCatLst7(List<SelectItem> levThreeCatLst7) {
-		this.levThreeCatLst7 = levThreeCatLst7;
-	}
-
-	public List<SelectItem> getLevTwoCatLst8() {
-		return levTwoCatLst8;
-	}
-
-	public void setLevTwoCatLst8(List<SelectItem> levTwoCatLst8) {
-		this.levTwoCatLst8 = levTwoCatLst8;
-	}
-
-	public List<SelectItem> getLevThreeCatLst8() {
-		return levThreeCatLst8;
-	}
-
-	public void setLevThreeCatLst8(List<SelectItem> levThreeCatLst8) {
-		this.levThreeCatLst8 = levThreeCatLst8;
-	}
-
-	public List<SelectItem> getLevTwoCatLst9() {
-		return levTwoCatLst9;
-	}
-
-	public void setLevTwoCatLst9(List<SelectItem> levTwoCatLst9) {
-		this.levTwoCatLst9 = levTwoCatLst9;
-	}
-
-	public List<SelectItem> getLevThreeCatLst9() {
-		return levThreeCatLst9;
-	}
-
-	public void setLevThreeCatLst9(List<SelectItem> levThreeCatLst9) {
-		this.levThreeCatLst9 = levThreeCatLst9;
-	}
-
-	public List<SelectItem> getLevTwoCatLst10() {
-		return levTwoCatLst10;
-	}
-
-	public void setLevTwoCatLst10(List<SelectItem> levTwoCatLst10) {
-		this.levTwoCatLst10 = levTwoCatLst10;
-	}
-
-	public List<SelectItem> getLevThreeCatLst10() {
-		return levThreeCatLst10;
-	}
-
-	public void setLevThreeCatLst10(List<SelectItem> levThreeCatLst10) {
-		this.levThreeCatLst10 = levThreeCatLst10;
 	}
 
 	public List<SelectItem> getBrandList() {
@@ -893,8 +651,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)241997; //122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
+	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	private Long lngUserId = (long)25; //122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -1030,36 +788,22 @@ public class ReportBackingBean extends
 	private String smCompanyName;
 	private String smRegistrationType;
 	private String smYearText;
-	private String smMainCategory1;
-	private String smSubCategory1;
-	private String smSubCategoryDivision1;
-	private String smMainCategory2;
-	private String smSubCategory2;
-	private String smSubCategoryDivision2;
-	private String smMainCategory3;
-	private String smSubCategory3;
-	private String smSubCategoryDivision3;
-	private String smMainCategory4;
-	private String smSubCategory4;
-	private String smSubCategoryDivision4;
-	private String smMainCategory5;
-	private String smSubCategory5;
-	private String smSubCategoryDivision5;
-	private String smMainCategory6;
-	private String smSubCategory6;
-	private String smSubCategoryDivision6;
-	private String smMainCategory7;
-	private String smSubCategory7;
-	private String smSubCategoryDivision7;
-	private String smMainCategory8;
-	private String smSubCategory8;
-	private String smSubCategoryDivision8;
-	private String smMainCategory9;
-	private String smSubCategory9;
-	private String smSubCategoryDivision9;
-	private String smMainCategory10;
-	private String smSubCategory10;
-	private String smSubCategoryDivision10;
+	
+	private String smMofRegNoFrom;
+	private String smMofRegNoTo;
+	private String smPaidUpCapitalFrm;
+	private String smPaidUpCapitalTo;
+	private String smPaidUpCapitalNaccum;
+	
+	private String smRole;
+	private String smEpNo;
+	private String smRegistrationNo;
+	private String smSupportingDocumentMode;
+	private String smSupportingDocumentStatus;
+	private String smPersonnelRole;
+	private String smIdentificationType;
+	private String smIdentificationNumber;
+	private String smCancellationBy;
 	// CT
 	private String ctContractNo;
 	private String ctAgreement;
@@ -1084,6 +828,118 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public String getSmIdentificationType() {
+		return smIdentificationType;
+	}
+
+	public void setSmIdentificationType(String smIdentificationType) {
+		this.smIdentificationType = smIdentificationType;
+	}
+
+	public String getSmIdentificationNumber() {
+		return smIdentificationNumber;
+	}
+
+	public void setSmIdentificationNumber(String smIdentificationNumber) {
+		this.smIdentificationNumber = smIdentificationNumber;
+	}
+
+	public String getSmCancellationBy() {
+		return smCancellationBy;
+	}
+
+	public void setSmCancellationBy(String smCancellationBy) {
+		this.smCancellationBy = smCancellationBy;
+	}
+
+	public String getSmPersonnelRole() {
+		return smPersonnelRole;
+	}
+
+	public void setSmPersonnelRole(String smPersonnelRole) {
+		this.smPersonnelRole = smPersonnelRole;
+	}
+
+	public String getSmMofRegNoFrom() {
+		return smMofRegNoFrom;
+	}
+
+	public void setSmMofRegNoFrom(String smMofRegNoFrom) {
+		this.smMofRegNoFrom = smMofRegNoFrom;
+	}
+
+	public String getSmMofRegNoTo() {
+		return smMofRegNoTo;
+	}
+
+	public void setSmMofRegNoTo(String smMofRegNoTo) {
+		this.smMofRegNoTo = smMofRegNoTo;
+	}
+
+	public String getSmPaidUpCapitalFrm() {
+		return smPaidUpCapitalFrm;
+	}
+
+	public void setSmPaidUpCapitalFrm(String smPaidUpCapitalFrm) {
+		this.smPaidUpCapitalFrm = smPaidUpCapitalFrm;
+	}
+
+	public String getSmPaidUpCapitalTo() {
+		return smPaidUpCapitalTo;
+	}
+
+	public void setSmPaidUpCapitalTo(String smPaidUpCapitalTo) {
+		this.smPaidUpCapitalTo = smPaidUpCapitalTo;
+	}
+
+	public String getSmPaidUpCapitalNaccum() {
+		return smPaidUpCapitalNaccum;
+	}
+
+	public void setSmPaidUpCapitalNaccum(String smPaidUpCapitalNaccum) {
+		this.smPaidUpCapitalNaccum = smPaidUpCapitalNaccum;
+	}
+
+	public String getSmRole() {
+		return smRole;
+	}
+
+	public void setSmRole(String smRole) {
+		this.smRole = smRole;
+	}
+
+	public String getSmEpNo() {
+		return smEpNo;
+	}
+
+	public void setSmEpNo(String smEpNo) {
+		this.smEpNo = smEpNo;
+	}
+
+	public String getSmRegistrationNo() {
+		return smRegistrationNo;
+	}
+
+	public void setSmRegistrationNo(String smRegistrationNo) {
+		this.smRegistrationNo = smRegistrationNo;
+	}
+
+	public String getSmSupportingDocumentMode() {
+		return smSupportingDocumentMode;
+	}
+
+	public void setSmSupportingDocumentMode(String smSupportingDocumentMode) {
+		this.smSupportingDocumentMode = smSupportingDocumentMode;
+	}
+
+	public String getSmSupportingDocumentStatus() {
+		return smSupportingDocumentStatus;
+	}
+
+	public void setSmSupportingDocumentStatus(String smSupportingDocumentStatus) {
+		this.smSupportingDocumentStatus = smSupportingDocumentStatus;
+	}
 
 	public long[] getLngDistrictId() {
 		return lngDistrictId;
@@ -1228,247 +1084,7 @@ public class ReportBackingBean extends
 	public void setCtProcurementMode(String ctProcurementMode) {
 		this.ctProcurementMode = ctProcurementMode;
 	}
-
-	public String getSmMainCategory1() {
-		return smMainCategory1;
-	}
-
-	public void setSmMainCategory1(String smMainCategory1) {
-		this.smMainCategory1 = smMainCategory1;
-	}
-
-	public String getSmSubCategory1() {
-		return smSubCategory1;
-	}
-
-	public void setSmSubCategory1(String smSubCategory1) {
-		this.smSubCategory1 = smSubCategory1;
-	}
-
-	public String getSmSubCategoryDivision1() {
-		return smSubCategoryDivision1;
-	}
-
-	public void setSmSubCategoryDivision1(String smSubCategoryDivision1) {
-		this.smSubCategoryDivision1 = smSubCategoryDivision1;
-	}
-
-	public String getSmMainCategory2() {
-		return smMainCategory2;
-	}
-
-	public void setSmMainCategory2(String smMainCategory2) {
-		this.smMainCategory2 = smMainCategory2;
-	}
-
-	public String getSmSubCategory2() {
-		return smSubCategory2;
-	}
-
-	public void setSmSubCategory2(String smSubCategory2) {
-		this.smSubCategory2 = smSubCategory2;
-	}
-
-	public String getSmSubCategoryDivision2() {
-		return smSubCategoryDivision2;
-	}
-
-	public void setSmSubCategoryDivision2(String smSubCategoryDivision2) {
-		this.smSubCategoryDivision2 = smSubCategoryDivision2;
-	}
-
-	public String getSmMainCategory3() {
-		return smMainCategory3;
-	}
-
-	public void setSmMainCategory3(String smMainCategory3) {
-		this.smMainCategory3 = smMainCategory3;
-	}
-
-	public String getSmSubCategory3() {
-		return smSubCategory3;
-	}
-
-	public void setSmSubCategory3(String smSubCategory3) {
-		this.smSubCategory3 = smSubCategory3;
-	}
-
-	public String getSmSubCategoryDivision3() {
-		return smSubCategoryDivision3;
-	}
-
-	public void setSmSubCategoryDivision3(String smSubCategoryDivision3) {
-		this.smSubCategoryDivision3 = smSubCategoryDivision3;
-	}
-
-	public String getSmMainCategory4() {
-		return smMainCategory4;
-	}
-
-	public void setSmMainCategory4(String smMainCategory4) {
-		this.smMainCategory4 = smMainCategory4;
-	}
-
-	public String getSmSubCategory4() {
-		return smSubCategory4;
-	}
-
-	public void setSmSubCategory4(String smSubCategory4) {
-		this.smSubCategory4 = smSubCategory4;
-	}
-
-	public String getSmSubCategoryDivision4() {
-		return smSubCategoryDivision4;
-	}
-
-	public void setSmSubCategoryDivision4(String smSubCategoryDivision4) {
-		this.smSubCategoryDivision4 = smSubCategoryDivision4;
-	}
-
-	public String getSmMainCategory5() {
-		return smMainCategory5;
-	}
-
-	public void setSmMainCategory5(String smMainCategory5) {
-		this.smMainCategory5 = smMainCategory5;
-	}
-
-	public String getSmSubCategory5() {
-		return smSubCategory5;
-	}
-
-	public void setSmSubCategory5(String smSubCategory5) {
-		this.smSubCategory5 = smSubCategory5;
-	}
-
-	public String getSmSubCategoryDivision5() {
-		return smSubCategoryDivision5;
-	}
-
-	public void setSmSubCategoryDivision5(String smSubCategoryDivision5) {
-		this.smSubCategoryDivision5 = smSubCategoryDivision5;
-	}
-
-	public String getSmMainCategory6() {
-		return smMainCategory6;
-	}
-
-	public void setSmMainCategory6(String smMainCategory6) {
-		this.smMainCategory6 = smMainCategory6;
-	}
-
-	public String getSmSubCategory6() {
-		return smSubCategory6;
-	}
-
-	public void setSmSubCategory6(String smSubCategory6) {
-		this.smSubCategory6 = smSubCategory6;
-	}
-
-	public String getSmSubCategoryDivision6() {
-		return smSubCategoryDivision6;
-	}
-
-	public void setSmSubCategoryDivision6(String smSubCategoryDivision6) {
-		this.smSubCategoryDivision6 = smSubCategoryDivision6;
-	}
-
-	public String getSmMainCategory7() {
-		return smMainCategory7;
-	}
-
-	public void setSmMainCategory7(String smMainCategory7) {
-		this.smMainCategory7 = smMainCategory7;
-	}
-
-	public String getSmSubCategory7() {
-		return smSubCategory7;
-	}
-
-	public void setSmSubCategory7(String smSubCategory7) {
-		this.smSubCategory7 = smSubCategory7;
-	}
-
-	public String getSmSubCategoryDivision7() {
-		return smSubCategoryDivision7;
-	}
-
-	public void setSmSubCategoryDivision7(String smSubCategoryDivision7) {
-		this.smSubCategoryDivision7 = smSubCategoryDivision7;
-	}
-
-	public String getSmMainCategory8() {
-		return smMainCategory8;
-	}
-
-	public void setSmMainCategory8(String smMainCategory8) {
-		this.smMainCategory8 = smMainCategory8;
-	}
-
-	public String getSmSubCategory8() {
-		return smSubCategory8;
-	}
-
-	public void setSmSubCategory8(String smSubCategory8) {
-		this.smSubCategory8 = smSubCategory8;
-	}
-
-	public String getSmSubCategoryDivision8() {
-		return smSubCategoryDivision8;
-	}
-
-	public void setSmSubCategoryDivision8(String smSubCategoryDivision8) {
-		this.smSubCategoryDivision8 = smSubCategoryDivision8;
-	}
-
-	public String getSmMainCategory9() {
-		return smMainCategory9;
-	}
-
-	public void setSmMainCategory9(String smMainCategory9) {
-		this.smMainCategory9 = smMainCategory9;
-	}
-
-	public String getSmSubCategory9() {
-		return smSubCategory9;
-	}
-
-	public void setSmSubCategory9(String smSubCategory9) {
-		this.smSubCategory9 = smSubCategory9;
-	}
-
-	public String getSmSubCategoryDivision9() {
-		return smSubCategoryDivision9;
-	}
-
-	public void setSmSubCategoryDivision9(String smSubCategoryDivision9) {
-		this.smSubCategoryDivision9 = smSubCategoryDivision9;
-	}
-
-	public String getSmMainCategory10() {
-		return smMainCategory10;
-	}
-
-	public void setSmMainCategory10(String smMainCategory10) {
-		this.smMainCategory10 = smMainCategory10;
-	}
-
-	public String getSmSubCategory10() {
-		return smSubCategory10;
-	}
-
-	public void setSmSubCategory10(String smSubCategory10) {
-		this.smSubCategory10 = smSubCategory10;
-	}
-
-	public String getSmSubCategoryDivision10() {
-		return smSubCategoryDivision10;
-	}
-
-	public void setSmSubCategoryDivision10(String smSubCategoryDivision10) {
-		this.smSubCategoryDivision10 = smSubCategoryDivision10;
-	}
-
+	
 	public String getSmYearText() {
 		return smYearText;
 	}
@@ -2754,6 +2370,38 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
+	public void retrieveIdentificationType(){
+		identificationTypeList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+			
+					List<Object[]> identificationTypeLst = reportSO.retrieveIdentificationType();			
+					for (Object[] object : identificationTypeLst) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[0].toString());
+						selectItem.setLabel(object[1].toString());
+						identificationTypeList.add(selectItem);
+					}
+			}
+	 }
+	public void retrieveAccumulatedPaidUpCptl(){
+		accumulatedPaidUpCptlList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+			
+					List<Object[]> accumulatedPaidUpCptlLst = reportSO.retrieveAccumulatedPaidUpCptl();			
+					for (Object[] object : accumulatedPaidUpCptlLst) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[0].toString());
+						selectItem.setLabel(object[1].toString());
+						accumulatedPaidUpCptlList.add(selectItem);
+					}
+			}
+	 }
 	
 	private void retrieveMinistryList() {
 		pmMinistryList =new ArrayList<SelectItem>();
@@ -3946,6 +3594,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 				assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
 				retrieveUPSSVOUser();
+				retrieveIdentificationType();
+				retrieveAccumulatedPaidUpCptl();
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(
 						rptGenBean, authoriztionList);
 			} else if ((this.getModuleValue()
@@ -4432,10 +4082,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 * Generate CT module report
 	 */
 	public void generateCTReport() {
-		if (((this.getCtContrMontrStatus() != null) && (this
-				.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtProductService() != null) && (this
-						.getCtProductService() != ReportConst.EMPTY_VAL))
+		if (((this.getCtContrMontrStatus() != null) && (this.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtProductService() != null) && (this.getCtProductService() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL)) 
 				|| ((this.getCtLOAPhysicalNo() != null) && (this.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
@@ -4668,39 +4316,39 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
 		} else if (((this.getSmYearText() != null) && (this.getSmYearText() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmApplicationType() != null) && (this
-						.getSmApplicationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmMonthlyRptByYear() != null) && (this
-						.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmPaymentType() != null) && (this
-						.getSmPaymentType() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmCompanyName() != null) && (this
-						.getSmCompanyName() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmRegistrationType() != null) && (this
-						.getSmRegistrationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmApplicationNo() != null) && (this
-						.getSmApplicationNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmApplicationType() != null) && (this.getSmApplicationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMonthlyRptByYear() != null) && (this.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaymentType() != null) && (this.getSmPaymentType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmCompanyName() != null) && (this.getSmCompanyName() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRegistrationType() != null) && (this.getSmRegistrationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmApplicationNo() != null) && (this.getSmApplicationNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmZone() != null) && (this.getSmZone() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmSupplierType() != null) && (this
-						.getSmSupplierType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSupplierType() != null) && (this.getSmSupplierType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMofRegNo() != null) && (this.getSmMofRegNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmRegistrationStatus() != null) && (this
-						.getSmRegistrationStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmMainCategory() != null) && (this
-						.getSmMainCategory() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmSubCategory() != null) && (this
-						.getSmSubCategory() != ReportConst.EMPTY_VAL))//this.getSelectedCatList()
-				|| ((this.getSelectedCatList() != null) && (this
-						.getSelectedCatList().size()> 0))
-				|| ((this.getSmSubCategoryDivision() != null) && (this
-						.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmApplicationStatus() != null) && (this
-						.getSmApplicationStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRegistrationStatus() != null) && (this.getSmRegistrationStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMainCategory() != null) && (this.getSmMainCategory() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSubCategory() != null) && (this.getSmSubCategory() != ReportConst.EMPTY_VAL))//this.getSelectedCatList()
+				|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
+				|| ((this.getSmSubCategoryDivision() != null) && (this.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmApplicationStatus() != null) && (this.getSmApplicationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmState() != null) && (this.getSmState() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmDistrict() != null) && (this.getSmDistrict() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmReportType() != null) && (this.getSmReportType() != ReportConst.EMPTY_VAL))
-				|| ((this.getFromDate() != null) && (this.getFromDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMofRegNoFrom() != null) && (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmMofRegNoTo() != null) && (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaidUpCapitalFrm() != null) && (this.getSmPaidUpCapitalFrm() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaidUpCapitalTo() != null) && (this.getSmPaidUpCapitalTo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPaidUpCapitalNaccum() != null) && (this.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRole() != null) && (this.getSmRole() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmEpNo() != null) && (this.getSmEpNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRegistrationNo() != null) && (this.getSmRegistrationNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSupportingDocumentMode() != null) && (this.getSmSupportingDocumentMode() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmSupportingDocumentStatus() != null) && (this.getSmSupportingDocumentStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmPersonnelRole()!= null) && (this.getSmPersonnelRole() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmIdentificationType()!= null) && (this.getSmIdentificationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmIdentificationNumber()!= null) && (this.getSmIdentificationNumber() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmCancellationBy()!= null) && (this.getSmCancellationBy() != ReportConst.EMPTY_VAL))
+				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))) {
 
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
@@ -4824,6 +4472,76 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setSmMonthlyRptByYearVar(ReportConst.AMP_SM_YEAR_EQ
 						+ this.getSmMonthlyRptByYear());
 			}
+			if ((this.getSmMofRegNoFrom() != null)
+					&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmMofRegNoFromVar(ReportConst.AMP_SM_MOF_REG_NO_FRM_EQ
+						+ this.getSmMofRegNoFrom());
+			}
+			if ((this.getSmMofRegNoTo() != null)
+					&& (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmMofRegNoToVar(ReportConst.AMP_SM_MOF_REG_NO_TO_EQ
+						+ this.getSmMofRegNoTo());
+			}
+			if ((this.getSmPaidUpCapitalFrm() != null)
+					&& (this.getSmPaidUpCapitalFrm() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmPaidUpCapitalFrmVar(ReportConst.AMP_SM_PAIDUP_CPTL_FROM_EQ
+						+ this.getSmPaidUpCapitalFrm());
+			}
+			if ((this.getSmPaidUpCapitalTo() != null)
+					&& (this.getSmPaidUpCapitalTo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmPaidUpCapitalToVar(ReportConst.AMP_SM_PAIDUP_CPTL_TO_EQ
+						+ this.getSmPaidUpCapitalTo());
+			}
+			if ((this.getSmPaidUpCapitalNaccum() != null)
+					&& (this.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmPaidUpCapitalNaccumVar(ReportConst.AMP_SM_PAIDUP_CPTL_R_ACLTD_EQ
+						+ this.getSmPaidUpCapitalNaccum());
+			}
+			if ((this.getSmRole() != null)
+					&& (this.getSmRole() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmRoleVar(ReportConst.AMP_SM_ROLE_EQ
+						+ this.getSmRole());
+			}
+			if ((this.getSmEpNo() != null)
+					&& (this.getSmEpNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmEpNoVar(ReportConst.AMP_SM_EP_NO_EQ
+						+ this.getSmEpNo());
+			}
+			if ((this.getSmRegistrationNo() != null)
+					&& (this.getSmRegistrationNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmRegistrationNoVar(ReportConst.AMP_SM_REG_NO_EQ
+						+ this.getSmRegistrationNo());
+			}
+			if ((this.getSmSupportingDocumentMode() != null)
+					&& (this.getSmSupportingDocumentMode() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmSupportingDocumentModeVar(ReportConst.AMP_SM_SUPP_DOC_MODE_EQ
+						+ this.getSmSupportingDocumentMode());
+			}
+			if ((this.getSmSupportingDocumentStatus() != null)
+					&& (this.getSmSupportingDocumentStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmSupportingDocumentStatusVar(ReportConst.AMP_SM_SUPP_DOC_STATUS_EQ
+						+ this.getSmSupportingDocumentStatus());
+			}
+			if ((this.getSmPersonnelRole() != null)
+					&& (this.getSmPersonnelRole() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmPersonnelRoleVar(ReportConst.AMP_SM_IDENT_TYPE_EQ
+						+ this.getSmPersonnelRole());
+			}
+			if ((this.getSmIdentificationType() != null)
+					&& (this.getSmIdentificationType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmIdentificationTypeVar(ReportConst.AMP_SM_IDENT_TYPE_EQ
+						+ this.getSmIdentificationType());
+			}
+			if ((this.getSmIdentificationNumber() != null)
+					&& (this.getSmIdentificationNumber() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmIdentificationNumberVar(ReportConst.AMP_SM_IDENT_NO_EQ
+						+ this.getSmIdentificationNumber());
+			}
+			if ((this.getSmCancellationBy() != null)
+					&& (this.getSmCancellationBy() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setSmCancellationByVar(ReportConst.AMP_SM_CANCEL_BY_EQ
+						+ this.getSmCancellationBy());
+			}
 			StringBuffer maincategory = new StringBuffer();
 			StringBuffer subcategory = new StringBuffer();
 			StringBuffer subcategorydivision = new StringBuffer();
@@ -4875,6 +4593,20 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getSupplierTypeTotVar()
 						+ rptGenBean.getMofRegNoTotVar()
 						+ rptGenBean.getRegistrationStatusTotVar()						
+						+ rptGenBean.getSmMofRegNoFromVar()
+						+ rptGenBean.getSmMofRegNoToVar()
+						+ rptGenBean.getSmPaidUpCapitalFrmVar()
+						+ rptGenBean.getSmPaidUpCapitalToVar()
+						+ rptGenBean.getSmPaidUpCapitalNaccumVar()
+						+ rptGenBean.getSmRoleVar()
+						+ rptGenBean.getSmEpNoVar()
+						+ rptGenBean.getSmRegistrationNoVar()
+						+ rptGenBean.getSmSupportingDocumentModeVar()
+						+ rptGenBean.getSmSupportingDocumentStatusVar()
+						+ rptGenBean.getSmPersonnelRoleVar()
+						+ rptGenBean.getSmIdentificationTypeVar()
+						+ rptGenBean.getSmIdentificationNumberVar()
+						+ rptGenBean.getSmCancellationByVar()
 						+maincategory
 						+subcategory
 						+subcategorydivision
@@ -4926,10 +4658,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else if (((getScQuotationNo() != null) && (getScQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScSoneCrtdFromDate() != null) && (getScSoneCrtdFromDate()
-						.toString() != ReportConst.EMPTY_VAL))
-				|| ((getScSoneCrtdToDate() != null) && (getScSoneCrtdToDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getScSoneCrtdFromDate() != null) && (getScSoneCrtdFromDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScSoneCrtdToDate() != null) && (getScSoneCrtdToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPIno() != null) && (getScPIno() != ReportConst.EMPTY_VAL))
 				|| ((getScRequisenerId() != null) && (getScRequisenerId() != ReportConst.EMPTY_VAL))
 				|| ((getScSupplier() != null) && (getScSupplier() != ReportConst.EMPTY_VAL))
@@ -4938,18 +4668,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| (this.getScQuotationList().size() > 0)
 				|| (this.getScTenderList().size() > 0)
 				|| (this.getScRstrctdTndrList().size() > 0)
-				|| ((getScCreatedToMonth() != null) && (getScCreatedToMonth()
-						.toString() != ReportConst.EMPTY_VAL))
-				|| ((getScCreatedFromMonth() != null) && (getScCreatedFromMonth()
-						.toString() != ReportConst.EMPTY_VAL))
-				|| ((getScDeskOfficer() != null) && (getScDeskOfficer()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getScCreatedToMonth() != null) && (getScCreatedToMonth().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScCreatedFromMonth() != null) && (getScCreatedFromMonth().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScDeskOfficer() != null) && (getScDeskOfficer().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPtj() != null) && (getScPtj().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScStatus() != null) && (getScStatus().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScPublishFromDate() != null) && (getScPublishFromDate()
-						.toString() != ReportConst.EMPTY_VAL))
-				|| ((getScPublishToDate() != null) && (getScPublishToDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((getScPublishFromDate() != null) && (getScPublishFromDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((getScPublishToDate() != null) && (getScPublishToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPrcRptGroup() != null) && (getScPrcRptGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScPIDtlsPrcRptGroup() != null) && (getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL))
 				|| ((getScProcurementType() != null) && (getScProcurementType() != ReportConst.EMPTY_VAL))
@@ -5270,37 +4995,25 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 */
 	public void generateCMReport() {
 		if (((this.getCmExtention() != null) && (this.getCmExtention() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionCode() != null) && (this
-						.getCmExtentionCode() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionCode() != null) && (this.getCmExtentionCode() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemName() != null) && (this.getCmItemName() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemStatus() != null) && (this.getCmItemStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmUnspscTitle() != null) && (this
-						.getCmUnspscTitle() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionType() != null) && (this
-						.getCmExtentionType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionBrand() != null) && (this
-						.getCmExtentionBrand() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionMeasurment() != null) && (this
-						.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmExtentionColour() != null) && (this
-						.getCmExtentionColour() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmCompanyName() != null) && (this
-						.getCmCompanyName() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmRegistrationType() != null) && (this
-						.getCmRegistrationType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmItemCategory() != null) && (this
-						.getCmItemCategory() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmProofIdentity() != null) && (this
-						.getCmProofIdentity() != ReportConst.EMPTY_VAL))
-				|| ((this.getFromDate() != null) && (this.getFromDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmUnspscTitle() != null) && (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionType() != null) && (this.getCmExtentionType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionBrand() != null) && (this.getCmExtentionBrand() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionMeasurment() != null) && (this.getCmExtentionMeasurment() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmExtentionColour() != null) && (this.getCmExtentionColour() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmCompanyName() != null) && (this.getCmCompanyName() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmRegistrationType() != null) && (this.getCmRegistrationType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmItemCategory() != null) && (this.getCmItemCategory() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmProofIdentity() != null) && (this.getCmProofIdentity() != ReportConst.EMPTY_VAL))
+				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmEpNumber() != null) && (this.getCmEpNumber() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmBusinessRegNo() != null) && (this
-						.getCmBusinessRegNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getCmBusinessRegNo() != null) && (this.getCmBusinessRegNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmIcNumber() != null) && (this.getCmIcNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmMofNumber() != null) && (this.getCmMofNumber() != ReportConst.EMPTY_VAL))) {
 			if ((this.getCmItemName() != null)
@@ -5473,45 +5186,32 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getFlSupplier() != null) && (this.getFlSupplier() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlStatus() != null) && (this.getFlStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDuration() != null) && (this.getFlDuration() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlRecievingOfficer() != null) && (this
-						.getFlRecievingOfficer() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDeliveryAddress() != null) && (this
-						.getFlDeliveryAddress() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRecievingOfficer() != null) && (this.getFlRecievingOfficer() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeliveryAddress() != null) && (this.getFlDeliveryAddress() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlRecNoteNo() != null) && (this.getFlRecNoteNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlContractType() != null) && (this
-						.getFlContractType() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlRequisitioner() != null) && (this
-						.getFlRequisitioner() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlMtoContract() != null) && (this
-						.getFlMtoContract() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractType() != null) && (this.getFlContractType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlRequisitioner() != null) && (this.getFlRequisitioner() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlMtoContract() != null) && (this.getFlMtoContract() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlInvoiceNo() != null) && (this.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDeductionType() != null) && (this
-						.getFlDeductionType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeductionType() != null) && (this.getFlDeductionType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlCrNo() != null) && (this.getFlCrNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlApproverName() != null) && (this
-						.getFlApproverName() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDocumentType() != null) && (this
-						.getFlDocumentType() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlApproverName() != null) && (this.getFlApproverName() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDocumentType() != null) && (this.getFlDocumentType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlCriteria() != null) && (this.getFlCriteria() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlScoring() != null) && (this.getFlScoring() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPkpNo() != null) && (this.getFlPkpNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlDeliveryOrderNo() != null) && (this
-						.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlDeliveryOrderNo() != null) && (this.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItemCode() != null) && (this.getFlItemCode() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPoAmount() != null) && (this.getFlPoAmount() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPrNo() != null) && (this.getFlPrNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPmo() != null) && (this.getFlPmo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItemName() != null) && (this.getFlItemName() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItmType() != null) && (this.getFlItmType() != ReportConst.EMPTY_VAL))
-				|| ((this.getFromDate() != null) && (this.getFromDate()
-						.toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlContractOrder() != null) && (this
-						.getFlContractOrder() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlContractRequest() != null) && (this
-						.getFlContractRequest() != ReportConst.EMPTY_VAL))
-				|| ((this.getFlPurchaseOrderNo() != null) && (this
-						.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
+				|| ((this.getFlContractOrder() != null) && (this.getFlContractOrder() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlContractRequest() != null) && (this.getFlContractRequest() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPurchaseOrderNo() != null) && (this.getFlPurchaseOrderNo() != ReportConst.EMPTY_VAL))) {
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ
@@ -5849,8 +5549,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	public void generatePPReport() {
 		if (((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCommonMinistry() != null) && (this.getCommonMinistry() != ReportConst.EMPTY_VAL))
-				|| ((this.getPpYear() != null) && (this
-						.getPpYear() != ReportConst.EMPTY_VAL))) {
+				|| ((this.getPpYear() != null) && (this.getPpYear() != ReportConst.EMPTY_VAL))) {
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPpPTJVar(ReportConst.FL_AMP_PTJ_NAME_EQ
@@ -6034,6 +5733,20 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setSmCreatedFromYear(null);
 		this.setSmCreatedToYear(null);
 		this.setSmYearText(null);
+		this.setSmMofRegNoFrom(null);
+		this.setSmMofRegNoTo(null);
+		this.setSmPaidUpCapitalFrm(null);
+		this.setSmPaidUpCapitalTo(null);
+		this.setSmPaidUpCapitalNaccum(null);		
+		this.setSmRole(null);
+		this.setSmEpNo(null);
+		this.setSmRegistrationNo(null);
+		this.setSmSupportingDocumentMode(null);
+		this.setSmPersonnelRole(null);
+		this.setSmSupportingDocumentStatus(null);
+		this.setSmIdentificationType(null);
+		this.setSmIdentificationNumber(null);
+		this.setSmCancellationBy(null);
 		this.setFlContractOrder(null);
 		this.setFlContractRequest(null);
 		this.setFlPurchaseOrderNo(null);
