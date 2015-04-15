@@ -81,7 +81,6 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
-import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
@@ -1140,11 +1139,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				double ceilingAmt = 0.0;
 				for (CtAgency ctAgency : contractVer.getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-					if (ctAgency.isAp178() == true && contractVer.getAgencyAttachements().size() == 0
-							&& !ctAgency.getOrgProfile().getParentOrgProfile().getOrgName().equalsIgnoreCase(
-									getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName())) {
+					if (ctAgency.isAp178() == true && (ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
 						throw new EpException(MessageConst.ERROR_750008); 
 						// Approval document is mandatory for AP178 agency. Please upload the document.
+					}
+					
+					if (ctAgency.isAp178() == true && (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
+						throw new EpException(MessageConst.ERROR_100022, new String[] {"File Reference No."});
 					}
 				}
 				if (ceilingAmt > contractVer.getCtContractValue().getContractAmount().doubleValue()) {
@@ -1723,14 +1724,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoCommonViewPage(Long contractId) {	
+	public String gotoCommonViewPage() {	
+		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
 		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
 		reqDTO.setContractVerId(latestContractVer.getContractVerId());
-		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+	//	reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		reqDTO.setViewOnly(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    setValidateContractField(resDTO);
@@ -3306,13 +3308,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
 	    
-		CtAttachment attachment = new CtAttachment();
-		attachment.setFileName(item.getFileName());
-		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		attachment.setCreatedUser(facesScopes.getUserSessionBean());
-		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		this.getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
+	    CtAgency agency =  getManagedBean().getContractVer().getCtAgencies().get(getManagedBean().getIndex());
+	    getManagedBean().getContractVer().getCtAgencies().remove(getManagedBean().getIndex());
+	    agency.setFileName(item.getFileName());
+	    agency.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
+	 
 	}
     
 	/**
@@ -3494,4 +3495,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
+    
+    public void setIndexProperty(int index){
+    	  getManagedBean().setIndex(index);
+    }
+    
+    public void deleteAgencyAttachement(){
+    	
+    	 CtAgency agency =  getManagedBean().getContractVer().getCtAgencies().get(getManagedBean().getIndex());
+ 	    getManagedBean().getContractVer().getCtAgencies().remove(getManagedBean().getIndex());
+ 	    agency.setFileName(null);
+ 	    agency.setFilePath(null);
+ 	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
+    }
 }
