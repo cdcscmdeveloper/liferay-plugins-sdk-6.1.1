@@ -3141,8 +3141,8 @@ public class SupplierFinalizationBackingBean extends
 			retrieveCommitteeEndorsement();
 			for (ScQtCommitteeActivity scQtCommitteeActivity : getManagedBean()
 					.getCommitteeEndorsementList()) {
-				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser()
-						.equals(getFacesScopes().getUserSessionBean())) {
+				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
+						.equals(getFacesScopes().getUserSessionBean().getUserId())) {
 					if (scQtCommitteeActivity.getScCommitteeMember()
 							.getMemberRole()
 							.equals(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
