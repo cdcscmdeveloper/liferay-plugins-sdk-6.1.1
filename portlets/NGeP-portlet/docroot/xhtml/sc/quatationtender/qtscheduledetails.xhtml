@@ -228,7 +228,7 @@
 							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address3}"
 							size="30" maxlength="255" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sc.qt.district']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
@@ -236,7 +236,7 @@
 								<td><p:selectOneMenu styleClass="samplestate"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 218px;margin-bottom: 5px;" id="sampledistrict1"
-										required="true" label="#{lbl['lbl.sc.qt.district']}"
+										required="true" label="#{lbl['lbl.sc.district']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -316,17 +316,17 @@
 
 			<ac:paginator for="cpersondetailsid" />
 
-			<p:column headerText="#{lbl['lbl.sc.qt.name']}">
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:inputText value="#{contactpersondetails.name}"
 					style="width: 200px;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.qt.phone']}">
+			<p:column headerText="#{lbl['lbl.sc.tel.no']}">
 				<h:inputText value="#{contactpersondetails.phoneNo}"
 					style="width: 120px;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.qt.fax']}">
+			<p:column headerText="#{lbl['lbl.sc.fax.no']}">
 				<h:inputText value="#{contactpersondetails.faxNo}"
 					style="width: 120px;" />
 			</p:column>

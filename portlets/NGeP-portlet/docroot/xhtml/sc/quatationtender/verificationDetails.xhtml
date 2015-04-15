@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Verification Details Section" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.verification.details.section']}" toggleable="true">
 
 
 		<h:panelGrid columns="4"
@@ -59,7 +59,7 @@
 						
 			</p:selectOneMenu>
             
-			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}" style="vertical-align:top;"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.remarks']}" style="vertical-align:top;"></h:outputLabel>
 
 			<p:inputTextarea rows="3" cols="50" autoResize="false"
 				value="#{approvalCategory.scQtApproval.verifierRemark}" disabled="#{!qTDetailBB.managedBean.editable}"></p:inputTextarea>
