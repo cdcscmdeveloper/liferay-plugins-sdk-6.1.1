@@ -130,6 +130,8 @@ public class ReportsGenerateBean {
 		private boolean smMandatorySupplierTypeView = false;
 		private boolean smMandatoryApplicationDateView = false;
 		private boolean smMandatoryApplicationStatusView = false;
+		private boolean smMandatoryApplicationStatusTwoView = false;
+		private boolean smMandatoryApplicationStatusThreeView = false;
 		private boolean smMandatoryMofRegNoView = false;
 		private boolean smMandatoryExpiryDateView = false;
 		private boolean smMandatoryPrintedDateView = false;	
@@ -164,6 +166,22 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryDateView = false;
 		private boolean smNonMandatoryDateView = false;
 		
+		private boolean smRoleView = false;
+		private boolean smEpNoView = false;
+		private boolean smRegistrationNoView = false;
+		private boolean smSupportingDocumentModeView = false;
+		private boolean smSupportingDocumentStatusView = false;
+		private boolean smMofRegNoFromView = false;
+		private boolean smMofRegNoToView = false;
+		private boolean smPaidUpCapitalFrmView = false;
+		private boolean smPaidUpCapitalToView = false;
+		private boolean smPaidUpCapitalNaccumView = false;
+		private boolean smMandatoryMofRegNoFromView = false;
+		private boolean smMandatoryMofRegNoToView = false;
+		private boolean smPersonnelRoleView = false;
+		private boolean smIdentficationTypeView = false;
+		private boolean smIdentificationNumberView = false;
+		private boolean smCancellationByView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -326,9 +344,22 @@ public class ReportsGenerateBean {
 		private String smMandatoryCreatedToYearVar=ReportConst.EMPTY_VAL;
 		private String smSVOUserVar=ReportConst.EMPTY_VAL;
 		private String smYearTextVar=ReportConst.EMPTY_VAL;
+		private String smRoleVar=ReportConst.EMPTY_VAL;
 		
+		private String smEpNoVar=ReportConst.EMPTY_VAL;
+		private String smRegistrationNoVar=ReportConst.EMPTY_VAL;
+		private String smSupportingDocumentModeVar=ReportConst.EMPTY_VAL;
+		private String smSupportingDocumentStatusVar=ReportConst.EMPTY_VAL;
+		private String smMofRegNoFromVar=ReportConst.EMPTY_VAL;
+		private String smMofRegNoToVar=ReportConst.EMPTY_VAL;
+		private String smPaidUpCapitalFrmVar=ReportConst.EMPTY_VAL;
+		private String smPaidUpCapitalToVar=ReportConst.EMPTY_VAL;
+		private String smPaidUpCapitalNaccumVar=ReportConst.EMPTY_VAL;
+		private String smPersonnelRoleVar=ReportConst.EMPTY_VAL;
+		private String smIdentificationTypeVar=ReportConst.EMPTY_VAL;
+		private String smIdentificationNumberVar=ReportConst.EMPTY_VAL;
+		private String smCancellationByVar=ReportConst.EMPTY_VAL;
 		
-				
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
 		//sc
@@ -410,6 +441,203 @@ public class ReportsGenerateBean {
 		private String ppPTJVar=ReportConst.EMPTY_VAL;
 		
 		
+		
+		public boolean isSmMandatoryApplicationStatusThreeView() {
+			return smMandatoryApplicationStatusThreeView;
+		}
+		public void setSmMandatoryApplicationStatusThreeView(
+				boolean smMandatoryApplicationStatusThreeView) {
+			this.smMandatoryApplicationStatusThreeView = smMandatoryApplicationStatusThreeView;
+		}
+		public boolean isSmMandatoryApplicationStatusTwoView() {
+			return smMandatoryApplicationStatusTwoView;
+		}
+		public void setSmMandatoryApplicationStatusTwoView(
+				boolean smMandatoryApplicationStatusTwoView) {
+			this.smMandatoryApplicationStatusTwoView = smMandatoryApplicationStatusTwoView;
+		}
+		public boolean isSmIdentficationTypeView() {
+			return smIdentficationTypeView;
+		}
+		public void setSmIdentficationTypeView(boolean smIdentficationTypeView) {
+			this.smIdentficationTypeView = smIdentficationTypeView;
+		}
+		public boolean isSmIdentificationNumberView() {
+			return smIdentificationNumberView;
+		}
+		public void setSmIdentificationNumberView(boolean smIdentificationNumberView) {
+			this.smIdentificationNumberView = smIdentificationNumberView;
+		}
+		public boolean isSmCancellationByView() {
+			return smCancellationByView;
+		}
+		public void setSmCancellationByView(boolean smCancellationByView) {
+			this.smCancellationByView = smCancellationByView;
+		}
+		public String getSmIdentificationTypeVar() {
+			return smIdentificationTypeVar;
+		}
+		public void setSmIdentificationTypeVar(String smIdentificationTypeVar) {
+			this.smIdentificationTypeVar = smIdentificationTypeVar;
+		}
+		public String getSmIdentificationNumberVar() {
+			return smIdentificationNumberVar;
+		}
+		public void setSmIdentificationNumberVar(String smIdentificationNumberVar) {
+			this.smIdentificationNumberVar = smIdentificationNumberVar;
+		}
+		public String getSmCancellationByVar() {
+			return smCancellationByVar;
+		}
+		public void setSmCancellationByVar(String smCancellationByVar) {
+			this.smCancellationByVar = smCancellationByVar;
+		}
+		public boolean isSmPersonnelRoleView() {
+			return smPersonnelRoleView;
+		}
+		public void setSmPersonnelRoleView(boolean smPersonnelRoleView) {
+			this.smPersonnelRoleView = smPersonnelRoleView;
+		}
+		public String getSmPersonnelRoleVar() {
+			return smPersonnelRoleVar;
+		}
+		public void setSmPersonnelRoleVar(String smPersonnelRoleVar) {
+			this.smPersonnelRoleVar = smPersonnelRoleVar;
+		}
+		public boolean isSmMandatoryMofRegNoFromView() {
+			return smMandatoryMofRegNoFromView;
+		}
+		public void setSmMandatoryMofRegNoFromView(boolean smMandatoryMofRegNoFromView) {
+			this.smMandatoryMofRegNoFromView = smMandatoryMofRegNoFromView;
+		}
+		public boolean isSmMandatoryMofRegNoToView() {
+			return smMandatoryMofRegNoToView;
+		}
+		public void setSmMandatoryMofRegNoToView(boolean smMandatoryMofRegNoToView) {
+			this.smMandatoryMofRegNoToView = smMandatoryMofRegNoToView;
+		}
+		public boolean isSmMofRegNoFromView() {
+			return smMofRegNoFromView;
+		}
+		public void setSmMofRegNoFromView(boolean smMofRegNoFromView) {
+			this.smMofRegNoFromView = smMofRegNoFromView;
+		}
+		public boolean isSmMofRegNoToView() {
+			return smMofRegNoToView;
+		}
+		public void setSmMofRegNoToView(boolean smMofRegNoToView) {
+			this.smMofRegNoToView = smMofRegNoToView;
+		}
+		public boolean isSmPaidUpCapitalFrmView() {
+			return smPaidUpCapitalFrmView;
+		}
+		public void setSmPaidUpCapitalFrmView(boolean smPaidUpCapitalFrmView) {
+			this.smPaidUpCapitalFrmView = smPaidUpCapitalFrmView;
+		}
+		public boolean isSmPaidUpCapitalToView() {
+			return smPaidUpCapitalToView;
+		}
+		public void setSmPaidUpCapitalToView(boolean smPaidUpCapitalToView) {
+			this.smPaidUpCapitalToView = smPaidUpCapitalToView;
+		}
+		public boolean isSmPaidUpCapitalNaccumView() {
+			return smPaidUpCapitalNaccumView;
+		}
+		public void setSmPaidUpCapitalNaccumView(boolean smPaidUpCapitalNaccumView) {
+			this.smPaidUpCapitalNaccumView = smPaidUpCapitalNaccumView;
+		}
+		public String getSmMofRegNoFromVar() {
+			return smMofRegNoFromVar;
+		}
+		public void setSmMofRegNoFromVar(String smMofRegNoFromVar) {
+			this.smMofRegNoFromVar = smMofRegNoFromVar;
+		}
+		public String getSmMofRegNoToVar() {
+			return smMofRegNoToVar;
+		}
+		public void setSmMofRegNoToVar(String smMofRegNoToVar) {
+			this.smMofRegNoToVar = smMofRegNoToVar;
+		}
+		public String getSmPaidUpCapitalFrmVar() {
+			return smPaidUpCapitalFrmVar;
+		}
+		public void setSmPaidUpCapitalFrmVar(String smPaidUpCapitalFrmVar) {
+			this.smPaidUpCapitalFrmVar = smPaidUpCapitalFrmVar;
+		}
+		public String getSmPaidUpCapitalToVar() {
+			return smPaidUpCapitalToVar;
+		}
+		public void setSmPaidUpCapitalToVar(String smPaidUpCapitalToVar) {
+			this.smPaidUpCapitalToVar = smPaidUpCapitalToVar;
+		}
+		public String getSmPaidUpCapitalNaccumVar() {
+			return smPaidUpCapitalNaccumVar;
+		}
+		public void setSmPaidUpCapitalNaccumVar(String smPaidUpCapitalNaccumVar) {
+			this.smPaidUpCapitalNaccumVar = smPaidUpCapitalNaccumVar;
+		}
+		public boolean isSmRoleView() {
+			return smRoleView;
+		}
+		public void setSmRoleView(boolean smRoleView) {
+			this.smRoleView = smRoleView;
+		}
+		public boolean isSmEpNoView() {
+			return smEpNoView;
+		}
+		public void setSmEpNoView(boolean smEpNoView) {
+			this.smEpNoView = smEpNoView;
+		}
+		public boolean isSmRegistrationNoView() {
+			return smRegistrationNoView;
+		}
+		public void setSmRegistrationNoView(boolean smRegistrationNoView) {
+			this.smRegistrationNoView = smRegistrationNoView;
+		}
+		public boolean isSmSupportingDocumentModeView() {
+			return smSupportingDocumentModeView;
+		}
+		public void setSmSupportingDocumentModeView(boolean smSupportingDocumentModeView) {
+			this.smSupportingDocumentModeView = smSupportingDocumentModeView;
+		}
+		public boolean isSmSupportingDocumentStatusView() {
+			return smSupportingDocumentStatusView;
+		}
+		public void setSmSupportingDocumentStatusView(
+				boolean smSupportingDocumentStatusView) {
+			this.smSupportingDocumentStatusView = smSupportingDocumentStatusView;
+		}
+		public String getSmRoleVar() {
+			return smRoleVar;
+		}
+		public void setSmRoleVar(String smRoleVar) {
+			this.smRoleVar = smRoleVar;
+		}
+		public String getSmEpNoVar() {
+			return smEpNoVar;
+		}
+		public void setSmEpNoVar(String smEpNoVar) {
+			this.smEpNoVar = smEpNoVar;
+		}
+		public String getSmRegistrationNoVar() {
+			return smRegistrationNoVar;
+		}
+		public void setSmRegistrationNoVar(String smRegistrationNoVar) {
+			this.smRegistrationNoVar = smRegistrationNoVar;
+		}
+		public String getSmSupportingDocumentModeVar() {
+			return smSupportingDocumentModeVar;
+		}
+		public void setSmSupportingDocumentModeVar(String smSupportingDocumentModeVar) {
+			this.smSupportingDocumentModeVar = smSupportingDocumentModeVar;
+		}
+		public String getSmSupportingDocumentStatusVar() {
+			return smSupportingDocumentStatusVar;
+		}
+		public void setSmSupportingDocumentStatusVar(
+				String smSupportingDocumentStatusVar) {
+			this.smSupportingDocumentStatusVar = smSupportingDocumentStatusVar;
+		}
 		public boolean isPpYearView() {
 			return ppYearView;
 		}

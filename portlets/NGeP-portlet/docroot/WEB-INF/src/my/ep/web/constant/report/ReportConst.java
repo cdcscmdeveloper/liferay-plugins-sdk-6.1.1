@@ -351,38 +351,20 @@ public class ReportConst {
 		public static final String SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL = "SM_029";
 		public static final String SM_SITE_VISIT_APPL_OFFICER_RPT_VAL = "SM_030";
 		public static final String SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL = "SM_031";
-		/*public static final String SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME = "lbl.rpt.sm.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME";
-		public static final String SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL = "ListOfBlacklistedDirectorOrOwner";
-		public static final String SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_NAME = "lbl.rpt.sm.SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_NAME";
-		public static final String SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_VAL = "LstOfContactPersonBnkAcBrnch";
-		public static final String SM_THRESHLD_SUPP_TRNS_VAL_RPT_NAME = "lbl.rpt.sm.SM_THRESHLD_SUPP_TRNS_VAL_RPT_NAME";
-		public static final String SM_THRESHLD_SUPP_TRNS_VAL_RPT_VAL = "ThresholdSupplierTransactionValueRpt";
-		public static final String SM_SUPP_PEROFRM_RPT_NAME = "lbl.rpt.sm.SM_SUPP_PEROFRM_RPT_NAME";
-		public static final String SM_SUPP_PEROFRM_RPT_VAL = "SupplierPerformanceRpt";
-		public static final String SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_NAME = "lbl.rpt.sm.SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_NAME";	
-		public static final String SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_VAL = "LstOrStatOfApplReqFortheSiteVisit";
-		public static final String SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_NAME = "lbl.rpt.sm.SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_NAME";
-		public static final String SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_VAL = "LstOfSiteVisitOfficerAndSiteVisitLocationRpt";
-		public static final String SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_NAME = "lbl.rpt.sm.SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_NAME";
-		public static final String SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_VAL = "LstOrStatOfPendSiteVisit/PerformSiteVisit";
-		public static final String SM_DETAILS_OF_APPLICATION_RPT_NAME = "lbl.rpt.sm.SM_DETAILS_OF_APPLICATION_RPT_NAME";
-		public static final String SM_DETAILS_OF_APPLICATION_RPT_VAL = "DetailsOfApplication";*/
-		//jsp
-		/*public static final String SM_LST_OF_APP_RPT_JSP = "List_of_Application.jsp";
-		public static final String SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_JSP = "List_of_Company_Based_on_Type_and_Capital.jsp";
-		public static final String SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_JSP = "List_of_Company_Sorted_Alphabetically.jsp";
-		public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_JSP = "List_of_Company_Supplrtype_Sts_Catogry_Wise.jsp";
-		public static final String SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_JSP = "List_of_Company_with_Director_Owner_Ceo_Eqvnt.jsp";
-		public static final String SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_JSP = "List_of_Daily_Application_Submitted.jsp";
-		public static final String SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_JSP = "List_of_Director_Owner_Ceo_Eqvnt_in_Many_Company.jsp";
-		public static final String SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_JSP = "List_of_MOF-Registered_Cancellation_by_Supplier_and_System.jsp";
-		public static final String SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_JSP = "List_of_Payment_for_Processing_Registration_Fee.jsp";
-		public static final String SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_JSP = "List_of_Personnel_Staff_Belong_to_Many_Company.jsp";
-		public static final String SM_LST_PRE_EXP_COMP_RPT_JSP = "List_of_PreExpiry_Expired_Company.jsp";
-		public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_JSP = "List_offline_Supportg_Doc_Pendg_Submission.jsp";
-		public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP = "Virtual_Certificate_Release_List_of_the_Day.jsp";*/
-		//SM Module report end
-	
+		public static final String SM_LIST_OF_APPLICATION_RPT_VAL = "SM_042";
+		public static final String SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL = "SM_043";
+		public static final String SM_VIRTUAL_DAY_REPORT_RPT_VAL = "SM_044";
+		public static final String SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL = "SM_045";
+		public static final String SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL = "SM_046";
+		public static final String SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL = "SM_047";
+		public static final String SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL = "SM_048";
+		public static final String SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL = "SM_049";
+		public static final String SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL = "SM_050";
+		public static final String SM_LIST_OF_MOF_CANCELLATION_RPT_VAL = "SM_051";
+		public static final String SM_COMPANY_ADDRESS_LIST_RPT_VAL = "SM_052";
+		public static final String SM_BPK_USER_PROFILE_RPT_VAL = "SM_053";
+		public static final String SM_BPK_ADMIN_PROFILE_RPT_VAL = "SM_054";
+		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
 	public static final String SM_VIRTUAL_VERIFICATION_BUMI_jsp = "SM_VIRTUAL_VERIFICATION_BUMI.jsp";
@@ -433,7 +415,21 @@ public class ReportConst {
 	public static final String AMP_SM_APPLICATION_NO_EQ = "&PAPPLNO=";
 	public static final String AMP_SM_SVO_NAME_EQ = "&PSVOUSERID=";
 	public static final String AMP_SM_MOF_CERTIFICATE_SERIAL_NUMBER_EQ = "";
+	public static final String AMP_SM_ROLE_EQ = "&PROLE=";
+	public static final String AMP_SM_EP_NO_EQ = "&PEPNO=";
+	public static final String AMP_SM_SUPP_DOC_MODE_EQ = "&PSUPPDOCMODE=";
+	public static final String AMP_SM_SUPP_DOC_STATUS_EQ = "&PSUPPDOC =";
+	public static final String AMP_SM_REG_NO_EQ = "&PREGNO=";
+	public static final String AMP_SM_MOF_REG_NO_FRM_EQ = "&PFROMMOFNO=";
+	public static final String AMP_SM_MOF_REG_NO_TO_EQ = "&PTOMOFNO=";
+	public static final String AMP_SM_PAIDUP_CPTL_R_ACLTD_EQ = "&PUC_OR_AS=";
+	public static final String AMP_SM_PAIDUP_CPTL_FROM_EQ = "&PFRPAIDUPCAPITAL=";
+	public static final String AMP_SM_PAIDUP_CPTL_TO_EQ = "&PTOPAIDUPCAPITAL=";
 	public static final String AMP_SM_PAYMENT_TYPE_EQ = "&PPAYTYPE=";
+	public static final String AMP_SM_PERSONNEL_ROLE_EQ = "&PPERSONNELROLE="; 
+	public static final String AMP_SM_IDENT_TYPE_EQ = "&PIDENTYPE="; 
+	public static final String AMP_SM_IDENT_NO_EQ = "&PIDENNO="; 
+	public static final String AMP_SM_CANCEL_BY_EQ = "&PCANCELBY="; 
 	public static final String KAMA = ",";
 
 	
