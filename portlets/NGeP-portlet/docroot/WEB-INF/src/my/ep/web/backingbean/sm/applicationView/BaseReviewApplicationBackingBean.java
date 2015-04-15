@@ -1791,6 +1791,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 	/**
 	 * Get application rejection reasons
+	 * 
 	 * @return String
 	 */
 	public String getApplicationRejectionReason() {
