@@ -4261,8 +4261,8 @@ public class QTDetailBackingBean extends
 			}
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
 			// Logic not to reduce the publish period after publish. if
-			if (this.getManagedBean().getRuleDataBean().getPublishPeriodDays() > ((Integer) changeEvent
-					.getNewValue()).intValue()) {
+			if (this.getManagedBean().getRuleDataBean().getPublishPeriodDays() > (((Integer) changeEvent
+					.getNewValue()).intValue()) ){
 				this.getManagedBean()
 						.getQt()
 						.setPublishPeriod(
