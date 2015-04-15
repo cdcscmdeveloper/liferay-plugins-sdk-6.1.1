@@ -220,7 +220,7 @@ public class SmApplicationBackingBean extends
 				boolean activeExist = false;
 				activeExist = SmApplicationUtil
 						.checkActiveSmApplForSupp(supplierProfile);
-				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(rejAppl
+				SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(rejAppl
 						.getApplId());
 
 				if (!activeExist) {
@@ -736,7 +736,7 @@ public class SmApplicationBackingBean extends
 					log.info("*** Current Status Value Retrieved from BPM (set in common appl backing bean)****** "
 							+ getManagedBean().getCurrentStatus());
 				} else {
-					SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(smAppl
+					SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(smAppl
 							.getApplId());
 					if (sts != null && sts.getPmStatus() != null
 							&& sts.getPmStatus().getStatusId() != null) {
@@ -888,29 +888,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Gets the current active work flow status.
-	 * 
-	 * @param applId
-	 *            - the appl id
-	 * @return the SmWorkflowStatus
-	 */
-	private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
-		log.info("*** This is resubmit to get po ****** ");
-		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
-		reqDTO.setApplId(applId);
-		ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject("sm", ISmWorkFlowStatusSO.class);
-		SmWorkFlowStatusResDTO resDTO = reqSO
-				.retrieveCurrentWorkFlowStatusByDocId(reqDTO);
-		if (resDTO != null && resDTO.getWorkflowStatus() != null) {
-			return resDTO.getWorkflowStatus();
-		} else {
-			return null;
-		}
-	}
-
-	/**
 	 * Delete pending mof application.
 	 * 
 	 * @return String - output page to redirect
@@ -941,7 +918,7 @@ public class SmApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722581);
 				}
 				getManagedBean().setSmAppl(smAppl);
-				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(getManagedBean()
+				SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
 						.getSmAppl().getApplId());
 				if (sts != null && sts.getPmStatus() != null) {
 					if (sts.getPmStatus()
@@ -6045,7 +6022,7 @@ public class SmApplicationBackingBean extends
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			regSo.initiateSmDelPendingApplicationTask(reqDTO);
 			String msg = "";
-			SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(getManagedBean()
+			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
 					.getSmAppl().getApplId());
 			if (sts != null && sts.getPmStatus() != null) {
 				if (sts.getPmStatus()

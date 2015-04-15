@@ -25,18 +25,17 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
-			<table style="width: 100%;">
-				<tr>
-					<td>
-						<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" action="#{softCertBackingBean.navigateToPaymentPage}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							style="float:right;" id="proceedBtnId" disabled="#{empty softCertBackingBean.managedBean.softCertSelectList}">
-						</p:commandButton>
-					</td>
-				</tr>
-			</table>	
-		</p:panel>
+		<table style="width: 100%;">
+			<tr>
+				<td style="text-align: left;">
+					<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" action="#{softCertBackingBean.navigateToPaymentPage}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						style="float:right;" id="proceedBtnId" disabled="#{empty softCertBackingBean.managedBean.softCertSelectList}">
+					</p:commandButton>
+				</td>
+			</tr>
+		</table>
+		<br />
 
 		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultPanelId">
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
