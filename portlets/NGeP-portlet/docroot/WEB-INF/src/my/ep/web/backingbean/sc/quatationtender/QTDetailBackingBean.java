@@ -1680,6 +1680,12 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public String updateBpmTask(String outcome) {
+		
+		//Code will be called if user didnt visit the approval tabs..
+		List<TabBean> tabList = this.getManagedBean().getTabList();
+		if (CollectionUtils.isEmpty(tabList)) {
+			retrieveApprovalTabDtl();
+		}
 
 		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
 
