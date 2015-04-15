@@ -714,8 +714,9 @@ public class QTDetailBackingBean extends
 	}
 	
 	private void renewQTDetails() {
-		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
-		
+		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean()
+				.getQtnTenderSearchBean();
+
 		super.renewSesionObject();
 		
 		getManagedBean().setQtnTenderSearchBean(qtnTenderSearchBean);
@@ -1560,26 +1561,29 @@ public class QTDetailBackingBean extends
 	 * @return the list
 	 */
 	private List<PmParameter> retrieveFinalizationCommitteeType(Long qtId) {
-		List<PmParameter> finalizationSecratary = getManagedBean().getFinalizationSecratary();
-		
+		List<PmParameter> finalizationSecratary = getManagedBean()
+				.getFinalizationSecratary();
+
 		if (finalizationSecratary == null) {
 			ICommitteSO committeSO;
 			try {
 				committeSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-				
+
 				CommitteReqDTO reqDTO = new CommitteReqDTO();
 				reqDTO.setQtId(qtId);
-				CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
-				
+				CommitteResDTO resDTO = committeSO
+						.retrieveFinalizationCommitteeType(reqDTO);
+
 				finalizationSecratary = resDTO.getFinalizationSecratry();
-				
-				getManagedBean().setFinalizationSecratary(finalizationSecratary);
+
+				getManagedBean()
+						.setFinalizationSecratary(finalizationSecratary);
 			} finally {
 				committeSO = null;
 			}
 		}
-		
+
 		return finalizationSecratary;
 	}
 
@@ -1697,12 +1701,11 @@ public class QTDetailBackingBean extends
 			ScQt qt = qtReqDTO.getQtdetail();
 			// Added by visu on 09012015 - Fix for Other Approval Validations on
 			// sumbit only
-			qt.setOtherApproval(true);
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
 			if (currentStatus
 					.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
-				qt.setModified(true);
+
 				// check if its Pending Schedule and Documents , only execute
 				// this part
 				if (null == this.getManagedBean().getScQtDocReportList()) {
@@ -3495,7 +3498,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void qtDetailsTabChange(Integer activeIndex) {
 		int priviousIndex = this.getManagedBean().getActiveIndex();
-		getManagedBean().getQt().setOtherApproval(false);
+
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -3515,9 +3518,7 @@ public class QTDetailBackingBean extends
 				// retrieveSuppQualificationTabDtl();
 				break;
 			case 3:
-				
-				reqDTO.getQtdetail().setOtherApproval(false);
-				reqDTO.getQtdetail().setModified(false);
+
 				detailSO.validateApprovalDetails(reqDTO);
 				// retrieveApprovalTabDtl();
 				break;
@@ -3546,9 +3547,9 @@ public class QTDetailBackingBean extends
 				break;
 			case 9:
 				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-					QuationTenderReqDTO qtReqDTO = reqDTO;
-					qtReqDTO.getQtdetail().setModified(true);
-					detailSO.validateApprovalDetails(qtReqDTO);
+
+					reqDTO.getQtdetail().setCallPTJValidation(true);
+					detailSO.validateApprovalDetails(reqDTO);
 				}
 				break;
 			}
@@ -3789,7 +3790,7 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			// validateQtDetails();
-			
+
 			List<TabBean> tabList = this.getManagedBean().getTabList();
 			if (CollectionUtils.isEmpty(tabList)) {
 				retrieveApprovalTabDtl();
@@ -3797,7 +3798,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
-		
+
 			quationTenderReqDTO.setQtdetail(qtDetails);
 			quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
 					.getAmendMentBean());
@@ -3933,12 +3934,11 @@ public class QTDetailBackingBean extends
 		String commType = (String) event.getComponent().getAttributes()
 				.get("value");
 		if (null != commType) {
-			getManagedBean().getSelectedApprovalTabBean()
-			.getScQtApproval().getApproverSettings().get(0)
-			.setApprover(new PmUser());
+			getManagedBean().getSelectedApprovalTabBean().getScQtApproval()
+					.getApproverSettings().get(0).setApprover(new PmUser());
 		} else {
-			retrieveFinalizationCommitteeType(getManagedBean()
-					.getQt().getQtId());
+			retrieveFinalizationCommitteeType(getManagedBean().getQt()
+					.getQtId());
 		}
 	}
 
@@ -3971,7 +3971,7 @@ public class QTDetailBackingBean extends
 		Date latestBsvDate = null;
 		for (ScQtBsvDtl bsvDtl : bsvDetails) {
 			dates.add(bsvDtl.getBsvDate());
-			
+
 		}
 		if (null != dates && !dates.isEmpty()) {
 			latestBsvDate = Collections.max(dates);
@@ -4000,29 +4000,29 @@ public class QTDetailBackingBean extends
 			TabBean tabBean = this.getManagedBean()
 					.getSelectedApprovalTabBean();
 			finalizeRemarks(tabBean.getScQtApproval().getScQtApprovalRemarks());
-			
+
 			List<ScQtApproverSettings> approverSettings = tabBean
 					.getScQtApproval().getApproverSettings();
 			if (null != approverSettings && !approverSettings.isEmpty()) {
 				String fcCommType = approverSettings.get(0).getCommitteType();
 				if (StringUtils.isEmpty(fcCommType)) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage(
-									"lbl.sc.finalization.committee", 
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.finalization.committee",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())});
+									new FacesScopes().getUserLocale()) });
 				}
-				
+
 				PmUser approver = approverSettings.get(0).getApprover();
 				if (approver == null || approver.getUserId() == null) {
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage(
-									"lbl.sc.qt.secretary.name", 
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { ResourceBundleUtils.getMessage(
+									"lbl.sc.qt.secretary.name",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())});
+									new FacesScopes().getUserLocale()) });
 				}
 			}
-			
+
 			if (tabBean.getScQtApproval().getScQtApprovalRemarks().isEmpty()) {
 				ScQtApproval qtApproval = tabBean.getScQtApproval();
 				qtApproval.setScQtApprovalRemarks(initializeRemarks(qtApproval,
@@ -4030,11 +4030,11 @@ public class QTDetailBackingBean extends
 								.getCurrentWorkFlowStatus(),
 						qtApproval.getScQtApprovalRemarks(),
 						ScQtApprovalRemark.class));
-				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage(
-								"lbl.txt.remarks", 
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[] { ResourceBundleUtils.getMessage(
+								"lbl.txt.remarks",
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())});
+								new FacesScopes().getUserLocale()) });
 			}
 			List<ScQtApproval> scQtApprovals = new ArrayList<ScQtApproval>();
 
@@ -4219,7 +4219,8 @@ public class QTDetailBackingBean extends
 		if (null != pmStatus) {
 			Long qtStatus = pmStatus.getStatusId();
 			if (qtStatus > QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
-					&& qtStatus < QTStatusConst.QT_BRIEFING_SITE_VISIT && !this.getManagedBean().isMaintanceFlow()) {
+					&& qtStatus < QTStatusConst.QT_BRIEFING_SITE_VISIT
+					&& !this.getManagedBean().isMaintanceFlow()) {
 				return true;
 			}
 		}
@@ -4406,6 +4407,14 @@ public class QTDetailBackingBean extends
 	}
 
 	public boolean approvalDtlsEditable(ScQtApproval approval) {
+		if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(this
+				.getManagedBean().getQt().getQtStatus().getStatusId())
+				&& ParameterConst.APPROVAL_CATEGORY_PTJ
+						.equalsIgnoreCase(approval.getApprovalCategory()
+								.getParameterCode())) {
+			return false;
+
+		}
 		List<ScQtApprovalRequest> approvalRequests = approval
 				.getScQtApprovalDtls();
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
@@ -4477,7 +4486,8 @@ public class QTDetailBackingBean extends
 				belowRange = belowRange.replace(
 						QTConstants.LESSER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) <= 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
 									String.valueOf(belowRange) });
@@ -4485,7 +4495,8 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
 				belowRange = belowRange.replace(QTConstants.LESSER_THAN, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) < 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN,
 									String.valueOf(belowRange) });
@@ -4495,7 +4506,8 @@ public class QTDetailBackingBean extends
 				belowRange = belowRange.replace(
 						QTConstants.GREATER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) >= 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
 									String.valueOf(belowRange) });
@@ -4503,7 +4515,8 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
 				belowRange = belowRange.replace(QTConstants.GREATER_THAN, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) > 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN,
 									String.valueOf(belowRange) });
@@ -4516,7 +4529,8 @@ public class QTDetailBackingBean extends
 				aboveRange = aboveRange.replace(
 						QTConstants.LESSER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) <= 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
 									String.valueOf(aboveRange) });
@@ -4524,7 +4538,8 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
 				aboveRange = aboveRange.replace(QTConstants.LESSER_THAN, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) < 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN,
 									String.valueOf(aboveRange) });
@@ -4534,7 +4549,8 @@ public class QTDetailBackingBean extends
 				aboveRange = aboveRange.replace(
 						QTConstants.GREATER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) >= 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
 									String.valueOf(aboveRange) });
@@ -4542,7 +4558,8 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
 				aboveRange = aboveRange.replace(QTConstants.GREATER_THAN, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) > 0) {
-					this.getManagedBean().getQt().setEstimatedAmount(estmtAmount);
+					this.getManagedBean().getQt()
+							.setEstimatedAmount(estmtAmount);
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN,
 									String.valueOf(aboveRange) });
@@ -4580,6 +4597,7 @@ public class QTDetailBackingBean extends
 		}
 		return null;
 	}
+
 	public void qtMaiantanceValueChangeListner(ValueChangeEvent event) {
 
 		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(this
