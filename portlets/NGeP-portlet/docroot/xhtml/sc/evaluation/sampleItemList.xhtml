@@ -36,8 +36,10 @@
 
 					<tr>
 
-						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}" /></td>
+						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" /></td>
 						<td><p:inputText id="sampleaddressUserScoreId"
+								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
 								label="#{lbl['lbl.sc.eva.s1.user.score']}"
 								disabled="#{evaluationBackingBean.managedBean.readOnly}"
 								required="true"
@@ -50,6 +52,7 @@
 								<f:attribute name="max"
 									value="#{evaluationBackingBean.managedBean.userScores}" />
 							</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
 								value="/#{evaluationBackingBean.managedBean.userScores}" /> <p:message
 								id="sampleaddressUserScoreMessage"
 								for="sampleaddressUserScoreId" display="icon"></p:message></td>
