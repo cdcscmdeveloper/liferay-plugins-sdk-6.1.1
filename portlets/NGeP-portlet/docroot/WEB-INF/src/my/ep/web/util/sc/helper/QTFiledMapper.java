@@ -103,8 +103,6 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
 
-						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
-
 						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
