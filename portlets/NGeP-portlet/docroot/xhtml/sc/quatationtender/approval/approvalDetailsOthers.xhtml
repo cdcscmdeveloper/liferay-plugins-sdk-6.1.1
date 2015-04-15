@@ -19,7 +19,7 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.qt.status']}" />
+					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.approverAction.parameterId}"
@@ -34,7 +34,7 @@
 				<p:message id="decisiontypeidMsg" for="decisiontypeid"
 					display="icon" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
+			<p:column headerText="#{lbl['lbl.sc.document']}">
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
 					value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 					partialSubmit="true" process="otherreqdtlsid"
@@ -67,7 +67,7 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.qt.remark']}" />
+					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
 				<p:inputTextarea id="remarkid"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"

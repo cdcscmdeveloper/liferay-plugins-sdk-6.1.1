@@ -16,10 +16,10 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
+			<p:column headerText="#{lbl['lbl.sc.from']}">
 				<h:outputText value="#{requestdetails.originalValue}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.to']}">
+			<p:column headerText="#{lbl['lbl.sc.to']}">
 				<h:panelGroup
 					rendered="#{requestdetails.changedValue eq 'B' or requestdetails.changedValue eq 'A'}">
 					<h:outputText
@@ -56,7 +56,7 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="Supplier List" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true"
 		rendered="#{approvalBackingBean.managedBean.qt.qtType eq 'R'}">
 		<p:dataTable id="supplierlistid" var="qtSupplier" rows="10"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}"

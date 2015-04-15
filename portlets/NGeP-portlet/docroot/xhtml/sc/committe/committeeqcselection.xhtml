@@ -96,12 +96,12 @@
 		</h:panelGroup>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
 		rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.remark']}" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
 						value="#{committeBackingBean.managedBean.scCommitteeRemarksList}"
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
