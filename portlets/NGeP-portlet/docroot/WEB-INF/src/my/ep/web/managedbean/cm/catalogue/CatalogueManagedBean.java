@@ -59,7 +59,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
@@ -68,6 +67,7 @@ import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -621,19 +621,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 				
 				SimpleQuoteBackingBean simpleQuoteBackingBean =  new SimpleQuoteBackingBean();
+				 TemplateSpecBean productTemplateSpecBean = simpleQuoteBackingBean.getManagedBean().getProductTemplateSpecBean();
+				 TemplateSpecBean serviceTemplateSpecBean = simpleQuoteBackingBean.getManagedBean().getServiceTemplateSpecBean();
 				if(simpleQuoteBackingBean.getManagedBean() != null){
 					if(simpleQuoteBackingBean.getManagedBean().getScQuote() != null){
 						ScQuote scQuote = simpleQuoteBackingBean.getManagedBean().getScQuote();
 						if(scQuote.getPanelItem() != null){
 							setSimpleQuoteFlag(false);
 						} else{
-							if(scQuote.getQuoteDocs() != null && scQuote.getQuoteDocs().size()>0){
-								for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
-									if(scQuoteDoc.getSpecMaster() != null && scQuoteDoc.getSpecMaster().getTplSpecQuestions() != null 
-											&& scQuoteDoc.getSpecMaster().getTplSpecQuestions().size()>0){
-										setSimpleQuoteFlag(false);
-									}
-								}
+							if(productTemplateSpecBean.getSpecMaster() != null 
+									&& productTemplateSpecBean.getSpecMaster().getTplSpecQuestions() != null 
+									&& productTemplateSpecBean.getSpecMaster().getTplSpecQuestions().size()>0 || serviceTemplateSpecBean.getSpecMaster() != null 
+									&& serviceTemplateSpecBean.getSpecMaster().getTplSpecQuestions() != null 
+									&& serviceTemplateSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
+								setSimpleQuoteFlag(false);
 							}
 						}
 					}
