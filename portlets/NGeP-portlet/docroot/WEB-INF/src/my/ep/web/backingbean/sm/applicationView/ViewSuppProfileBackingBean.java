@@ -41,9 +41,7 @@ public class ViewSuppProfileBackingBean extends
 				String applNo = resDTO.getSmAppl().getApplNo();
 				getManagedBean().setApplicationNoParam(applNo + "_APP");
 				if (applNo != null && StringUtils.isNotBlank(applNo)) {
-					setApplication(resDTO.getSmAppl());
-					redirectToAppl = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
-					SmCommonUtil.redirectToPage(redirectToAppl, "");
+					viewApplication(resDTO.getSmAppl());
 				} else {
 					SmCommonUtil.redirectToPage(redirectToAppl,
 							MessageConst.INFO_721212);
@@ -60,15 +58,18 @@ public class ViewSuppProfileBackingBean extends
 			if (StringUtils.isNotBlank(supplierIdParam)) {
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
-				getManagedBean().setSearchSupplier(
+				SmSupplier paramSupplier = 
 						SmServiceLookup.getSupplierSearchSO()
-								.retriveSupplierById(reqDTO).getSmSupplier());
-			} else {
-				SmCommonUtil
-						.redirectToPage(
-								"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",
-								"");
+						.retriveSupplierById(reqDTO).getSmSupplier();
+				getManagedBean().setSearchSupplier(new SmSupplier());
+				getManagedBean().getSearchSupplier().setRegNo(paramSupplier.getRegNo());
+				getManagedBean().setSearchBy(SEARCH_BY_BUSINESS_REG_NO);
+				getManagedBean().searchSupplier();
 			}
+			SmCommonUtil
+					.redirectToPage(
+							"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",
+							"");
 		}
 	}
 

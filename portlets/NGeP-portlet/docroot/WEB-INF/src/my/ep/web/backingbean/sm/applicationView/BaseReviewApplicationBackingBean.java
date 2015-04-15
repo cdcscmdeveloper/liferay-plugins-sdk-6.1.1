@@ -34,9 +34,11 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -98,9 +100,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private static final String SER_FILE_TYPE = ".ser";
 	private static final String FOLDER_NAME_SM = "SM";
 	private static final String FOLDER_NAME_REVISION = "Revision";
-	private static final int SEARCH_BY_COMPANY_NAME = 1;
-	private static final int SEARCH_BY_BUSINESS_REG_NO = 2;
-	private static final int SEARCH_BY_EP_NO = 3;
+	public static final int SEARCH_BY_COMPANY_NAME = 1;
+	public static final int SEARCH_BY_BUSINESS_REG_NO = 2;
+	public static final int SEARCH_BY_EP_NO = 3;
 
 	/**
 	 * Initialized and construct BaseReviewApplicationBackingBean
@@ -1754,8 +1756,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().isViewApplicationHistory()) {
 			basePage = "/xhtml/sm/revisionSmApplView/viewApplicationHistory/smViewApplHistorySideMenu_BasePage.xhtml";
 			baseUrl = "/supplier-profile";
-			baseUrlLabel = SmCommonUtil.getMessage(
-					"lbl.sm.supprofile", null);
+			baseUrlLabel = SmCommonUtil.getMessage("lbl.sm.supprofile", null);
 		} else {
 			basePage = "/xhtml/sm/revisionSmApplView/viewSupplierProfile/smViewProfileSideMenu_BasePage.xhtml";
 			baseUrl = "/application-history";
@@ -1786,6 +1787,30 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.getOriginalServletRequest(servletRequest);
 		String supplierId = originalServletRequest.getParameter("supplierId");
 		return supplierId;
+	}
+
+	/**
+	 * Get application rejection reasons
+	 * @return String
+	 */
+	public String getApplicationRejectionReason() {
+		String langCode = new FacesScopes().getUserLocale().getLanguage();
+		StringBuffer sb = new StringBuffer();
+		for (SmApplRejectReason rej : getManagedBean().getSmAppl()
+				.getSmApplRejectReasons()) {
+			if (rej.getPmReason() != null
+					&& rej.getPmReason().getPmReasonDescs() != null) {
+				for (PmReasonDesc desc : rej.getPmReason().getPmReasonDescs()) {
+					if (desc.getPmLanguage() != null
+							&& desc.getPmLanguage().getLanguageCode()
+									.equalsIgnoreCase(langCode)) {
+						sb.append(desc.getReasonDesc()).append("\n");
+					}
+				}
+
+			}
+		}
+		return sb.toString();
 	}
 
 }
