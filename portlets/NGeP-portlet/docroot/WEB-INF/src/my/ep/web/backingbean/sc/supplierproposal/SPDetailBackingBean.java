@@ -297,8 +297,13 @@ public class SPDetailBackingBean extends
 	public void retrieveDeclarationList() throws Exception {
 		debugLogger("retrieveDeclarationList");
 		this.getManagedBean().setPrepareActiveIndex(3);
+		
+		VelocityContext context = new VelocityContext();
+		String othersTermsConditions = DocumentGenerator.getInstance()
+				.getHtmlFromVelocity(
+						SourcingConstants.SUPPLIER_PROPOSAL_DECLARATION, context);
+		getManagedBean().setOthersTermsConditions(othersTermsConditions);
 
-		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
 	
 	/**
@@ -309,11 +314,7 @@ public class SPDetailBackingBean extends
 	public void retrieveIntegrityDetails() throws Exception {
 		debugLogger("retrieveIntegrityDetails");
 		this.getManagedBean().setPrepareActiveIndex(4);
-		VelocityContext context = new VelocityContext();
-		String othersTermsConditions = DocumentGenerator.getInstance()
-				.getHtmlFromVelocity(
-						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY, context);
-		getManagedBean().setOthersTermsConditions(othersTermsConditions);
+		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
 	
 
@@ -1814,7 +1815,7 @@ public class SPDetailBackingBean extends
 			ScQt scQt = getManagedBean().getQt();
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-
+			reqDTO.setQtSupplierId(getManagedBean().getSupplierId());
 			// To retrieve financial spec details
 			ProposalResDTO resDTO = proposalSO
 					.retrieveFinancialSpecDtls(reqDTO);
@@ -3089,7 +3090,7 @@ public class SPDetailBackingBean extends
 
 		String integrityPact = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
-						SourcingConstants.SUPPLIER_PROPOSAL_DECLARATION,
+						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY,
 						context);
 
 		getManagedBean().setIntegrityPact(integrityPact);
