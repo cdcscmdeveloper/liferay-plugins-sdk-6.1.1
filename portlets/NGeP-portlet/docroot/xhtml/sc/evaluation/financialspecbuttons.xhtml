@@ -17,6 +17,7 @@
 					action="#{evaluationBackingBean.financialSpecBackaction}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					style="float:right;" update="@all"
 					action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
 			</div>
