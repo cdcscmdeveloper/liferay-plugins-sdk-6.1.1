@@ -21,6 +21,12 @@
 				<td><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 				<td class="header-info-text">#{viewSmApplBackingBean.getApplicationStatus()}</td>
 			</tr>
+			<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplRejectReasons}">
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
+					<td class="header-info-text">#{viewSmApplBackingBean.getApplicationRejectionReason()}</td>
+				</tr>
+			</c:if>
 		</table>
 	</div>
 	
