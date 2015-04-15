@@ -31,13 +31,20 @@
 			<table style="width: 100%;">
 				<tr>
 					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.subject']}" /></td>
-					<td style="width:85%;"><p:inputText size="50" disabled="true"
+					<td><p:inputText size="50" disabled="true"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquirySubject}" /></td>
+							
+					<td><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquirydate']}" /></td>
+					<td>
+						<p:inputText disabled="true" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryDate}">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+					</td>
 				</tr>
-
+				
 				<tr>
 					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry']}" /></td>
-					<td style="width:85%;"><p:inputTextarea id="inquiryDetailId" rows="20" cols="180"
+					<td style="width:85%;" colspan="3"><p:inputTextarea id="inquiryDetailId" rows="20" cols="180"
 							disabled="true" autoResize="false"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
 				</tr>

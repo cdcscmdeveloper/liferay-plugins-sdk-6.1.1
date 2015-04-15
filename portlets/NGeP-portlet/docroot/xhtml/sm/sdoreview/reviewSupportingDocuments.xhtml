@@ -51,6 +51,18 @@
 						<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
 					</tr>
+					
+					<tr>
+						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>
+					</tr>
+					<tr>
+						<td><p:inputText id="resInquiryDateId" disabled="true" 
+								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquiryDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText>		
+						</td>
+					</tr>
+					
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquiry']}</td>
 					</tr>
@@ -310,12 +322,18 @@
 			selection="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
 			value="#{sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}" var="applInq">
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.subject']}">
-				#{applInq.inquirySubject}
+					#{applInq.inquirySubject}
 				</p:column>
 				<p:ajax event="rowSelect" listener="#{sdoReviewBackingBean.inquiryRowSelect}"  update=":#{p:component('resOutPanelId')}" oncomplete="responseDlg.show();" />
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.responsedate']}">
 				
-				<h:outputText value="#{applInq.responseDate}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.inquirydate']}">
+					<h:outputText value="#{applInq.createdDate}">
+						<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.responsedate']}">
+					<h:outputText value="#{applInq.responseDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
