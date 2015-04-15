@@ -13,28 +13,23 @@
 			<ui:param name="smAppl"
 				value="#{supplierProposalDetailBackingBean.managedBean.smAppl}" />
 
-			<p:tab id="tab1" title="#{lbl['lbl.sc.sp.supp.info']}"
-				>
+			<p:tab id="tab1" title="#{lbl['lbl.sc.sp.supp.info']}">
 				<ui:include src="/xhtml/sc/supplierproposal/supplierDetails.xhtml" />
 			</p:tab>
 
-			<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}"
-				>
+			<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}">
 				<ui:include src="/xhtml/sc/supplierproposal/branchInfo.xhtml" />
 			</p:tab>
 
-			<p:tab id="tab3" title="#{lbl['lbl.sc.sp.capital.info']}"
-				>
+			<p:tab id="tab3" title="#{lbl['lbl.sc.sp.capital.info']}">
 				<ui:include src="/xhtml/sc/supplierproposal/capitalInfo.xhtml" />
 			</p:tab>
 
-			<p:tab id="tab4" title="#{lbl['lbl.sc.sp.personnel']}"
-				>
+			<p:tab id="tab4" title="#{lbl['lbl.sc.sp.personnel']}">
 				<ui:include src="/xhtml/sc/supplierproposal/personnelInfo.xhtml" />
 			</p:tab>
 
-			<p:tab id="tab5" title="#{lbl['lbl.sc.sp.bank.info']}"
-				>
+			<p:tab id="tab5" title="#{lbl['lbl.sc.sp.bank.info']}">
 				<ui:include src="/xhtml/sc/supplierproposal/bankInfo.xhtml" />
 			</p:tab>
 
@@ -44,8 +39,7 @@
 			</p:tab>
 
 
-			<p:tab  rendered="#{statusHide}"
-				>
+			<p:tab rendered="#{statusHide}">
 				<f:facet name="title">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText
