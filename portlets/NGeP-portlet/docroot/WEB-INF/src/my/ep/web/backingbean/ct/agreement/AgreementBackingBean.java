@@ -1159,7 +1159,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 				attachmentFormat = new AttachmentDateFormat();
 				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
-				content = getContent(agreementContent.getTitle());
+				if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
+				      content = getTemplateContent(agreementContent);
+				} else {
+					content = getContent(agreementContent.getTitle());
+				}
 				if (content != null) {
 					convertHtmlToDocFile(content, filePath);
 					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
@@ -1190,7 +1194,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @throws IOException       if an input or output exception occurred
 	 * @see    IOException
 	 */
-	public String downloadTemplateDoc(CtAgreementContent agreementContent) throws IOException {
+	public String getTemplateContent(CtAgreementContent agreementContent) throws Exception {
 		// TODO download the templateDoc file
 		
 				VelocityContext context = null;
@@ -1198,27 +1202,26 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				String content = null;
 			  //  SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			
-				try {	     
-					          context = new VelocityContext();	
-					          String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
-							  vmFile = "/ct/agreement/agreement-clause.vm";
+			    context = new VelocityContext();	
+			    String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
+				vmFile = "/ct/agreement/agreement-clause.vm";
 					          
-							  context.put("imgUrl", imgUrl);
-					          context.put("documentName", agreementContent.getTitle());
-					          context.put("documentTitle", agreementContent.getTplDocMaster().getDocName());
-					          context.put("documentDescription", agreementContent.getTplDocMaster().getDocDesc());
+				context.put("imgUrl", imgUrl);
+			    context.put("documentName", agreementContent.getTitle());
+			    context.put("documentTitle", agreementContent.getTplDocMaster().getDocName());
+			    context.put("documentDescription", agreementContent.getTplDocMaster().getDocDesc());
 					        /*  if(agreementContent.getTplDocMaster().getProcurementCategory() != null)
 					                  context.put("procrumentCategory",getParameterDesc(agreementContent.getTplDocMaster().getProcurementCategory()));
 					          if(agreementContent.getTplDocMaster().getProcessType() != null)
 					                context.put("processType",getParameterDesc(agreementContent.getTplDocMaster().getProcessType()));*/
-					          if(agreementContent.getTplDocMaster().getTplDocSections() != null)
-					              context.put("sectionList", agreementContent.getTplDocMaster().getTplDocSections());
-					      	if (vmFile != null && context != null) {
-								content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
-							}			
-					}catch(Exception ex){
-					   log.error(ex);
-				}return content;
+				 if(agreementContent.getTplDocMaster().getTplDocSections() != null)
+					     context.put("sectionList", agreementContent.getTplDocMaster().getTplDocSections());
+					      	
+				 if (vmFile != null && context != null) {
+					    content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
+				  }			
+					
+				 return content;
 	}
 
 	/**
@@ -1307,7 +1310,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			return "AgreementPartyPage.docx";
 		} else if (templateType.trim().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE)) {
 			return "AgreementSigningPage.docx";
+		}else if (templateType.trim().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_CLAUSE)) {
+			return "AgreementClausePage.docx";
 		}
+		
 		return null;
 	}
 
