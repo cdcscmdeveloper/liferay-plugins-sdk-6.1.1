@@ -23,6 +23,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cc.dashsummary.IDashSummarySO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -33,6 +34,9 @@ import my.ep.constants.BpmConstants;
 import my.ep.dto.cc.dashsummary.BpmTaskSummaryDTO;
 import my.ep.dto.cc.dashsummary.DashSummaryReqDTO;
 import my.ep.dto.cc.dashsummary.DashSummaryResDTO;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.aut.SearchOperator;
@@ -71,6 +75,8 @@ public class BPMTaskDashSumBackingBean extends
 	private long pendingApprovalItemNum;
 	private int pendingMOFSubmissionNum;
 	private long pendingCodifiedItemsNum;
+	private long pendingPublishedItemsNum;
+	private long rejectedItemsNum;
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 
 	public BPMTaskDashSumBackingBean() {
@@ -92,37 +98,59 @@ public class BPMTaskDashSumBackingBean extends
 
 			reqDTO.setCtxToken(token);
 			reqDTO.setUserId(userId);
+			// ///getting supplier Id//////////////////////////////
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+			supplierReqDTO.setUserId(userId);
+
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+					.get(0).getSupplierId());
+			// /////////////////////////////////////////////////////
 			if (isCatalogueAdmin()) {
 				reqDTO.setCatalogueAdminRole(true);
-			}else{
+			} else {
 				reqDTO.setCatalogueAdminRole(false);
 			}
 			DashSummaryResDTO responseDTO = dashSummarySO
 					.getTaskSummary(reqDTO);
-//			log.info("responseDTO*****" + responseDTO);
-//			log.info("responseDTO.getTaskSummaryDTOList()*****"
-//					+ responseDTO.getTaskSummaryDTOList());
+			// log.info("responseDTO*****" + responseDTO);
+			// log.info("responseDTO.getTaskSummaryDTOList()*****"
+			// + responseDTO.getTaskSummaryDTOList());
 			log.info("after call service in backingBean: " + new Date());
 			dashboardSummary = responseDTO.getTaskSummaryDTOList();
-//			log.info("responseDTO.getTotalTask()*****"
-//					+ responseDTO.getTotalTask());
+			// log.info("responseDTO.getTotalTask()*****"
+			// + responseDTO.getTotalTask());
 			totalTask = responseDTO.getTotalTask();
-			log.info("after getting responce list in backingBean: " + new Date());
+			log.info("after getting responce list in backingBean: "
+					+ new Date());
 			pendingDeliveryListNum = responseDTO.getPendingDeliveryNum();
-//			log.info("responseDTO.getPendingDeliveryNum()*****"
-//					+ responseDTO.getPendingDeliveryNum());
-//			log.info("back in backingBean: " + new Date());
-			log.info("after getting pendingDeliveryListNum in backingBean: " + new Date());
-				pendingApprovalItemNum = responseDTO
-						.getPendingApprovalItemNum();
-				log.info("after getting pendingApprovalItemNum in backingBean: " + new Date());
-				pendingCodifiedItemsNum = responseDTO
-						.getPendingCodifiedItemsNum();
-			
-//			log.info("pendingApprovalItemNum*****" + pendingApprovalItemNum);
-//
-//			log.info("pendingCodifiedItemsNum*****" + pendingCodifiedItemsNum);
-				log.info("after getting pendingCodifiedItemsNum and end backingBean: " + new Date());
+			// log.info("responseDTO.getPendingDeliveryNum()*****"
+			// + responseDTO.getPendingDeliveryNum());
+			// log.info("back in backingBean: " + new Date());
+			log.info("after getting pendingDeliveryListNum in backingBean: "
+					+ new Date());
+			pendingApprovalItemNum = responseDTO.getPendingApprovalItemNum();
+			log.info("after getting pendingApprovalItemNum in backingBean: "
+					+ new Date());
+			pendingCodifiedItemsNum = responseDTO.getPendingCodifiedItemsNum();
+			log.info("after getting pendingPublishedItemsNum in backingBean: "
+					+ new Date());
+			pendingPublishedItemsNum = responseDTO
+					.getPendingPublishedItemsNum();
+			log.info("after getting rejectedItemsNum in backingBean: "
+					+ new Date());
+			rejectedItemsNum = responseDTO.getRejectedItemsNum();
+			// log.info("pendingApprovalItemNum*****" + pendingApprovalItemNum);
+			//
+			// log.info("pendingCodifiedItemsNum*****" +
+			// pendingCodifiedItemsNum);
+			log.info("after getting pendingCodifiedItemsNum and end backingBean: "
+					+ new Date());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -257,6 +285,38 @@ public class BPMTaskDashSumBackingBean extends
 		}
 	}
 
+	public void redirectToCatalogueMaintenance(String itemStatus) throws PortalException,
+			SystemException {
+		System.out
+				.println(">>>>>>>>>>redirectToCatalogueMaintenance<<<<<<<<<<");
+		
+		try {
+			FacesScopes facesScope = new FacesScopes();
+
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
+					.getRequestScope(WebKeys.THEME_DISPLAY);
+
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+
+			String commonUrl = themeDisplay.getURLCurrent().substring(
+					0,
+					themeDisplay.getURLCurrent().indexOf(
+							themeDisplay.getLayout().getGroup()
+									.getFriendlyURL())
+							+ themeDisplay.getLayout().getGroup()
+									.getFriendlyURL().length());
+			System.out.println("commonUrl" + commonUrl);
+			System.out.println("itemStatus=" + itemStatus);
+		
+			externalContext.redirect(commonUrl + "/" + "catalogue-maintenance-file?itemStatus="+itemStatus);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public void redirectToPendingDeliveryList() throws PortalException,
 			SystemException {
 		System.out.println(">>>>>>>>>>redirectToPendingDeliveryList<<<<<<<<<<");
@@ -355,18 +415,35 @@ public class BPMTaskDashSumBackingBean extends
 
 		return this.docTypeSearchBean;
 	}
-	
+
+	public long getPendingPublishedItemsNum() {
+		return pendingPublishedItemsNum;
+	}
+
+	public void setPendingPublishedItemsNum(long pendingPublishedItemsNum) {
+		this.pendingPublishedItemsNum = pendingPublishedItemsNum;
+	}
+
+	public long getRejectedItemsNum() {
+		return rejectedItemsNum;
+	}
+
+	public void setRejectedItemsNum(long rejectedItemsNum) {
+		this.rejectedItemsNum = rejectedItemsNum;
+	}
+
 	/**
 	 * Get meaningful application status message
+	 * 
 	 * @param docInt
 	 * @return String
 	 */
 	public String applicationStatus(Integer docInt) {
 		log.info("applicationStatus");
 		log.info("docInt:" + docInt);
-		if(docInt!=null){
+		if (docInt != null) {
 			return getStatusDescById(docInt.longValue());
-		}else{
+		} else {
 			return "";
 		}
 	}
