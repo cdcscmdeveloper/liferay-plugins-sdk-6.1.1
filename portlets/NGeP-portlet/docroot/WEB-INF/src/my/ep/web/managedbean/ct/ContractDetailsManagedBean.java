@@ -161,6 +161,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int paymentTracking = 99;
 	public int itemIndex = 99;
 	public int settingIndex = 101;
+	private int index;
 	
 	
 	/**
@@ -1425,6 +1426,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSmAddress(SmAddress smAddress) {
 		this.smAddress = smAddress;
+	}
+
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	/**
