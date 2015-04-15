@@ -571,6 +571,15 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return false;
 	}
 	
+	public void naviToSoftCertRequest(){
+		try {
+			pageRedirect(SOFT_CERT_PATH);
+		} catch (PortalException | SystemException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 /*	private void initCatalogueBackingBean(){
 		CatalogueBackingBean cBB = new CatalogueBackingBean();
 		cBB.preRenderCatalogue();
