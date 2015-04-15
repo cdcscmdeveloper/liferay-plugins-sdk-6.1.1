@@ -19,7 +19,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<p:panel style="width:100%">
+		<p:panel style="width:100%;border: none;">
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td>
@@ -31,7 +31,7 @@
 		</p:panel>
 
 
-		<p:panel id="UserProfile" style="width:100%;"
+		<p:panel id="UserProfile" style="border: none;width:100%;"
 			toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
@@ -110,7 +110,7 @@
 		
 			<table style="width: 100%;table-layout:fixed">
 			<tr>
-				<td valign="top" width="50%"><p:panel id="permAddrPan">
+				<td valign="top" width="50%"><p:panel id="permAddrPan" style="border: none;">
 						<table style="width: 100%;table-layout:fixed">
 							<tr>
 								<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.permAddr']} " /></td>
@@ -156,7 +156,7 @@
 							</tr>
 						</table>
 					</p:panel></td>
-					<td valign="top"><p:panel id="mailAddrPan">
+					<td valign="top"><p:panel id="mailAddrPan" style="border: none;">
 							<table style="width: 100%;table-layout:fixed">
 								<tr>
 									<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.mailAddr']} " /></td>
