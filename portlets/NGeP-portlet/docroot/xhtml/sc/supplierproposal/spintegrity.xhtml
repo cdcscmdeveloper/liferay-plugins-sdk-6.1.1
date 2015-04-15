@@ -6,12 +6,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:spacer height="5"></p:spacer>
-		<!-- lbl.sc.integrity.pact -->	
-	<p:panel header="#{lbl['lbl.sc.sp.others']}" style="width : 870px;"  toggleable="true">
+	<!-- lbl.sc.integrity.pact -->
+	<p:panel header="#{lbl['lbl.sc.sp.others']}" style="width : 870px;"
+		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="870px">
 			<tr>
-				<td><p:editor controls="" id="othersEditor" style="overflow : auto"
-						value="#{supplierProposalDetailBackingBean.managedBean.othersTermsConditions}"
+				<td><p:editor controls="" id="othersEditor"
+						style="overflow : auto"
+						value="#{supplierProposalDetailBackingBean.managedBean.integrityPact}"
 						disabled="true" width="870" height="430" /></td>
 			</tr>
 			<tr height="10">
@@ -20,8 +22,8 @@
 			<tr>
 				<td><p:selectBooleanCheckbox
 						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}" />
-					<p:spacer width="2" /> <p:outputLabel 
-						value="#{lbl['lbl.sc.others.note']}"
+					<p:spacer width="2" /> <p:outputLabel
+						value="#{lbl['lbl.sc.integrity.note']}"
 						style="vertical-align:top; float: none;" /></td>
 			</tr>
 		</table>
