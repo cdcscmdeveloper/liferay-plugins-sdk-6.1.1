@@ -1366,26 +1366,6 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setScLoi(scLoi);
 		boolean termPriceFound = false;
 		
-		// nego terms
-		if(scLoi.getScNegoTerms() == null || scLoi.getScNegoTerms().isEmpty()){
-			if(getManagedBean().getNegoTermsList() != null){
-				scLoi.getScNegoTerms().addAll(getManagedBean().getNegoTermsList());
-			}
-		} else{
-			if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
-				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
-
-					if(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION)){
-						scLoiTerm.setSelected(true);
-					} else{
-						scLoiTerm.setSelectedTerm(true);
-					}
-				}
-			}
-			if(getManagedBean().getNegoTermsList() != null && getManagedBean().getNegoTermsList().size()>0){
-				scLoi.getScNegoTerms().addAll(getManagedBean().getNegoTermsList());
-			}
-		}
 		
 		// check nego term price
 		termPriceFound = checkNegoTermPrice(scLoi);
@@ -2153,9 +2133,6 @@ public class LOIDetailBackingBean extends
 			
 			parseLOIDetails(scLoi, outcome);
 			
-			// Terms and Conditions validation for supplier responce
-			//validateLOIDetails(scLoi, outcome);
-		
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
 					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
@@ -2652,27 +2629,17 @@ public class LOIDetailBackingBean extends
 
 		scLoi.setScLoiRemarks(finalizeRemarks(scLoi.getScLoiRemarks()));
 
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			if(QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)){
-				List<ScLoiTerm> removeList = new ArrayList<ScLoiTerm>();
-				for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
-					if(!loiTerm.isSelected()){
-						removeList.add(loiTerm);
-					}
-				}
-				scLoi.getScNegoTerms().removeAll(removeList);
-			}
-		} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-			List<ScLoiTerm> unSelectedTerms = new ArrayList<ScLoiTerm>();
+		// nego terms
+		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
+			List<ScLoiTerm> selectedTerms = new ArrayList<ScLoiTerm>();
 			for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
-				if(!loiTerm.isSelected()){
-					unSelectedTerms.add(loiTerm);
+				if(loiTerm.isSelected()){
+					selectedTerms.add(loiTerm);
 				}
 			}
-			scLoi.getScNegoTerms().removeAll(unSelectedTerms);
-			getManagedBean().setNegoTermsList(unSelectedTerms);
+			scLoi.setScNegoTerms(selectedTerms);
 		}
-		
+
 		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())){
 			if(("P").equals(getManagedBean().getScQt().getScheduleType())){
 				this.saveProgressivePaymntList();
