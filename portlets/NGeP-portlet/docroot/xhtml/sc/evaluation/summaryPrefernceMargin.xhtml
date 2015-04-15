@@ -41,8 +41,14 @@
 
 			</p:column>
 
+			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
+				style="width:10%">
+				<h:outputLabel value="#{prefQualSupplier.totalScore}"
+					style="text-align:right"></h:outputLabel>
+			</p:column>
+
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
-				style="width:20%">
+				style="width:15%">
 
 				<h:outputText
 					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
@@ -51,7 +57,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.price.diff']}"
-				style="width:20%">
+				style="width:15%">
 
 				<h:outputLabel
 					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.priceDifference gt 0}"
@@ -140,6 +146,12 @@
 
 			</p:column>
 
+			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
+				style="width:10%">
+				<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
+					style="text-align:right"></h:outputLabel>
+			</p:column>
+
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
 				style="width:25%">
 
@@ -176,7 +188,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
-				style="width:25%">
+				style="width:15%">
 
 				<!-- 	<h:outputLabel style="text-align:right"
 					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin}">
