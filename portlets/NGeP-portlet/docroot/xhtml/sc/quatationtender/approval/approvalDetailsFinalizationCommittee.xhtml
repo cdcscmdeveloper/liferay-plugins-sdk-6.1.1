@@ -25,7 +25,7 @@
 		<p:dataTable id="finalizationsecretaryid"
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
 			var="approverSettings">
-			<p:column headerText="#{lbl['lbl.sc.qt.finalization.committee']}">
+			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}">
 				<p:selectOneMenu id="fcApprovalId"
 					value="#{approverSettings.committeType}"
 					style="width: 178px;margin-bottom: 5px;">
@@ -41,7 +41,7 @@
 				</p:selectOneMenu>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.secretary.name']}">
+			<p:column headerText="#{lbl['lbl.sc.secretary.name']}">
 				<h:panelGroup id="commTypes">
 					<p:selectOneMenu id="usersSecretaryId"
 						value="#{approverSettings.approver.userId}"
@@ -61,12 +61,12 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
 		id="fcuploads">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.remark']}" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
 						value="#{fcaApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">

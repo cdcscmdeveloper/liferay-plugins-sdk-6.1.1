@@ -5,12 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Remark and Supporting Document" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.remark.supporting.doc']}" toggleable="true"
 		id="bpkremarksupDtls">
 		<table style="width: 100%" id="bpkremarksupDtlslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.remark']}" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid id="bpkremarklist"
 						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">

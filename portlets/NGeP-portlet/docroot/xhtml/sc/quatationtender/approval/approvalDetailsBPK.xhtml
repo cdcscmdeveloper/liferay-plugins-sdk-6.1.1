@@ -15,10 +15,10 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
+			<p:column headerText="#{lbl['lbl.sc.from']}">
 				<h:outputText value="#{requestdetails.originalValue}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.to']}">
+			<p:column headerText="#{lbl['lbl.sc.to']}">
 				<h:panelGroup
 					rendered="#{requestdetails.changedValue eq 'B' or requestdetails.changedValue eq 'A'}">
 					<h:outputText
@@ -30,16 +30,16 @@
 					<h:outputText value="#{requestdetails.changedValue}" />
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
+			<p:column headerText="#{lbl['lbl.sc.approved.by']}">
 				<c:if test="#{requestdetails.approverId ne null}">
 					<h:outputText value="#{requestdetails.approverId.userName}" />
 				</c:if>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
+			<p:column headerText="#{lbl['lbl.sc.status']}">
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approverAction)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
+			<p:column headerText="#{lbl['lbl.sc.date']}">
 				<h:outputText value="#{requestdetails.approverActionDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -49,12 +49,12 @@
 	</p:panel>
 	<p:spacer height="5" />
 
-	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
 		id="bpkuploads">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.remark']}" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
 						value="#{bpkApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">

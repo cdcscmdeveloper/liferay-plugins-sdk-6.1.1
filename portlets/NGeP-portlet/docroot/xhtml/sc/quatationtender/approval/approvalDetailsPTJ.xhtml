@@ -14,10 +14,10 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(ptjrequestdetails.approvalType)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
+			<p:column headerText="#{lbl['lbl.sc.from']}">
 				<h:outputText value="#{ptjrequestdetails.originalValue}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.to']}">
+			<p:column headerText="#{lbl['lbl.sc.to']}">
 				<h:outputText value="#{ptjrequestdetails.changedValue}" />
 			</p:column>
 		</p:dataTable>
@@ -38,12 +38,12 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
 		id="uploadfileid">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.remark']}" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
 						value="#{ptjApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">

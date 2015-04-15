@@ -102,12 +102,12 @@
 						<td><p:inputText
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address2}"
 								size="30" maxlength="255" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sc.qt.district']}" /> <p:outputLabel
+						<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu styleClass="brieftstate"
 								style="width: 218px;margin-bottom: 5px;" id="briefdistrict"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-								label="#{lbl['lbl.sc.qt.district']}"
+								label="#{lbl['lbl.sc.district']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDistrict.districtId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="district"
