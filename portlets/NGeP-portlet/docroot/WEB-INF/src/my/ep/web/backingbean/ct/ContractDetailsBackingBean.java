@@ -3254,15 +3254,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void setAttachFileIndex(int index) {
 		this.getManagedBean().setAttachFileIndex(index);
 	}
-	
-	/**
-	 * The method used to delete attachment from the list.
-	 * 
-	 * @param index  file index of attachment list
-	 */
-	public void deleteAttachmentAction(int index) {
-		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
-	} 
 
 	/**
 	 * The method used to upload AP201 file.
