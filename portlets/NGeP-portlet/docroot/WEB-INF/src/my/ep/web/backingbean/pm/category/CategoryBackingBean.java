@@ -12,7 +12,7 @@ package my.ep.web.backingbean.pm.category;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -61,7 +61,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+
 import org.apache.log4j.Logger;
 
 
@@ -136,12 +136,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		 */
 		public SearchCategoryPagingDataModel() {
 			super("searchCategory");
+			
 		}
-
-		
 		public ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
 			ICategoryCodeSO categoryCodeSO;
 			try {
+				
 				categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
@@ -151,7 +151,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				if (getManagedBean().getMainCatDesc() != null) {
 					reqDTO.setMainCatDesc(getManagedBean().getMainCatDesc());
 				}
-				
+				if (getManagedBean().getStatus() != null) {
+					reqDTO.setStatus(getManagedBean().getStatus());
+				}
 				if (getManagedBean().getSubCatCode() != null) {
 					reqDTO.setSubCatCode(getManagedBean().getSubCatCode());
 				}
@@ -174,6 +176,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					
 					if (resDTO.isSuccessful()) {
 						//resDTO.getCategoryResultBean().getResultList();
+						
 						return resDTO.getCategoryResultBean();
 					}
 				}/*else{
@@ -185,13 +188,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 				}*/
-	
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 				categoryCodeSO = null;
 			}
+			
 			return null;
+			
 		}
 	}
 	
@@ -920,7 +925,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	/**
 	 * Pre render search.
 	 */
-	private void preRenderSearch() {
+	public void preRenderSearch() {
+		resetSearchCriteriaResult();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/pm/category/search.xhtml");
@@ -1893,13 +1899,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * Reset category.
 	 */
 	public void resetCategory() {
-		this.getManagedBean().setMainCatCode(null);
-		this.getManagedBean().setMainCatDesc(null);
-		this.getManagedBean().setSubCatCode(null);
-		this.getManagedBean().setSubCatDesc(null);
-		this.getManagedBean().setSubDivCode(null);
-		this.getManagedBean().setSubDivDesc(null);
-		this.getManagedBean().setPmCategoryLevel(0);
+		resetSearchCriteriaResult();
 		searchCategory.reloadData();
 	}
 	
@@ -2240,5 +2240,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 		
 		return true;
+	}
+	
+	private void resetSearchCriteriaResult(){
+		this.getManagedBean().setMainCatCode(null);
+		this.getManagedBean().setMainCatDesc(null);
+		this.getManagedBean().setSubCatCode(null);
+		this.getManagedBean().setSubCatDesc(null);
+		this.getManagedBean().setSubDivCode(null);
+		this.getManagedBean().setSubDivDesc(null);
+		this.getManagedBean().setStatus(null);
+		this.getManagedBean().setPmCategoryLevel(0);
 	}
 }

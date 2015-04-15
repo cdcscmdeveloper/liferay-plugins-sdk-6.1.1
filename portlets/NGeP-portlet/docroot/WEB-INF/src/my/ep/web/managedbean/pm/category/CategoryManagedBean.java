@@ -78,6 +78,9 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	/** The cat level. */
 	private String catLevel;
 	
+	/** The status. */
+	private Long status;
+	
 	/** The new category. */
 	private boolean categoryRestrRequired = true;
 	
@@ -987,6 +990,20 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	public void setTobeAddedPmMachineCategoryList(
 			List<PmMachineCategory> tobeAddedPmMachineCategoryList) {
 		this.tobeAddedPmMachineCategoryList = tobeAddedPmMachineCategoryList;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public Long getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Long status) {
+		this.status = status;
 	}
 
 }
