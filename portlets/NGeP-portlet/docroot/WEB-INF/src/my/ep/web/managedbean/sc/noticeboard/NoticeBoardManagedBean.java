@@ -155,6 +155,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	// Used to set mof number if logged user is a supplier
 	private String mofNo = null;
 	private String supplierMofNo;
+	private boolean validMofNo;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1062,6 +1063,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierMofNo(String supplierMofNo) {
 		this.supplierMofNo = supplierMofNo;
+	}
+
+	/**
+	 * @return the validMofNo
+	 */
+	public boolean isValidMofNo() {
+		return validMofNo;
+	}
+
+	/**
+	 * @param validMofNo the validMofNo to set
+	 */
+	public void setValidMofNo(boolean validMofNo) {
+		this.validMofNo = validMofNo;
 	}
 
 	
