@@ -4302,6 +4302,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @return String(catalogMaintenanceFile)
 	 */
 	public String onTabChange1(String status) {
+		 log.info("onTabChange1");
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String itemStatus = originalServletRequest.getParameter("itemStatus");
+        log.info(".2.......itemStatus="+itemStatus);
+		if (itemStatus != null) {
+			originalServletRequest.getParameterMap().remove("itemStatus");
+
+		}
 		System.out.println("******status*******" + status);
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -4312,93 +4323,96 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-		try{
+		try {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
-	
+
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
-	
+
 			System.out.println("getSmSupplier"
 					+ smResDTO.getResultBean().getResultList().get(0));
-	
-			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-					.getSupplierId());
-	
+
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+					.get(0).getSupplierId());
+
 			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-	
+
 			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
-	
-			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-	
+
+			this.getManagedBean().setSupplierZoneList(
+					resDTO.getSupplierZoneLs());
+
 			if (status.equalsIgnoreCase("Draft")) {
-	
+
 				reqDTO.setItemStatus("D");
 				System.out.println("getSupplierId:" + reqDTO.getSupplierId());
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
+
 				this.getManagedBean().setMaintainItemList(
 						resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(0);
-	
+
 			} else if (status.equalsIgnoreCase("Published")) {
-	
+
 				reqDTO.setItemStatus("U");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
+
 				this.getManagedBean().setPublishedItemList(
 						resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(4);
-				
-	
+
 			} else if (status.equalsIgnoreCase("Approval")) {
-	
+
 				reqDTO.setItemStatus("P");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
+
 				this.getManagedBean().setApprovalItemList(
 						resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(1);
-	
+
 			} else if (status.equalsIgnoreCase("Approved")) {
-	
+
 				reqDTO.setItemStatus("A");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
+
 				this.getManagedBean().setApprovedItemList(
 						resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(2);
-	
+
 			} else if (status.equalsIgnoreCase("Rejected")) {
-	
+
 				reqDTO.setItemStatus("R");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
+
 				this.getManagedBean().setRejectedItemList(
 						resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(3);
-	
+
 			} else if (status.equalsIgnoreCase("Expired")) {
-	
+
 				reqDTO.setItemStatus("E");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
+
 				this.getManagedBean().setExpiredItemList(
 						resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(5);
-	
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			catalogueSO = null;
 			supplierSearchSO = null;
 		}
-
-		return "catalogMaintenanceFile";
-		//return "catalogMaintenanceFile?faces-redirect=true";
+       log.info("before return to page");
+		
+		if(status.equalsIgnoreCase("Draft")){
+		 return "catalogMaintenanceFile?faces-redirect=true";
+		}else{
+		  return "catalogMaintenanceFile";
+		}
 	}
-
 	/*
 	 * public void onTabChange(TabChangeEvent event) {
 	 * System.out.println("title"+event.getTab().getTitle());
@@ -4982,65 +4996,118 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void preRenderCatalogue() {
 		log.debug("In preRenderCatalogue");
-		
+
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		
-		try{
+
+		try {
 			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-	
+
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
-	
+
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
-	
-			log.info("Sm Supplier" + smResDTO.getResultBean().getResultList().get(0).getCompanyName());
-			
-			/*CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-					.getSupplierId());
-			reqDTO.setItemStatus("D");
-			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
-			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
 
-			CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);	
-			log.info("zone size:" + resDTO2.getSupplierZoneLs().size());	
-			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());*/
+			log.info("Sm Supplier"
+					+ smResDTO.getResultBean().getResultList().get(0)
+							.getCompanyName());
+
+			/*
+			 * CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			 * reqDTO.setSupplierId
+			 * (smResDTO.getResultBean().getResultList().get(0)
+			 * .getSupplierId()); reqDTO.setItemStatus("D"); CatalogueResDTO
+			 * resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+			 * 
+			 * this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList
+			 * ());
+			 * 
+			 * CatalogueResDTO resDTO2 =
+			 * catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+			 * log.info("zone size:" + resDTO2.getSupplierZoneLs().size());
+			 * this.
+			 * getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs
+			 * ());
+			 */
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			String itemStatus = originalServletRequest.getParameter("itemStatus");
+            log.info("........itemStatus="+itemStatus);
+			if (itemStatus != null && !itemStatus.isEmpty()) {
+				originalServletRequest.getParameterMap().remove("itemStatus");
+				retrieveSupplierItemsBySupplierId(catalogueSO, smResDTO
+						.getResultBean().getResultList().get(0).getSupplierId(), itemStatus);
+
+			} else {
+				retrieveSupplierItemsBySupplierId(catalogueSO, smResDTO
+						.getResultBean().getResultList().get(0).getSupplierId(), null);
+
+			}
 			
-			retrieveSupplierItemsBySupplierId(catalogueSO, smResDTO.getResultBean().getResultList().get(0).getSupplierId());
-			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-		}finally {
+			// } catch (Exception e) {
+			// e.printStackTrace();
+		} finally {
 			catalogueSO = null;
 			supplierSearchSO = null;
 		}
 
 		log.debug("Exit preRenderCatalogue");
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "catalogMaintenanceFile");
 
 	}
 
-	private void retrieveSupplierItemsBySupplierId(ICatalogueSO catalogueSO, Long supplierId) {
+	private void retrieveSupplierItemsBySupplierId(ICatalogueSO catalogueSO,
+			Long supplierId, String itemStatus) {
+		log.info("......retrieveSupplierItemsBySupplierId.....itemStatus="+itemStatus);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		CatalogueResDTO resDTO = null;
 		reqDTO.setSupplierId(supplierId);
-		reqDTO.setItemStatus("D");
-		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+		
+		if (itemStatus != null && !itemStatus.isEmpty()) {
+			if (itemStatus.equals(CmConst.ITEM_STATUS_APPROVED)) {
+				reqDTO.setItemStatus("A");
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
-		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+				this.getManagedBean().setApprovedItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(2);
+				log.info("setTab index to 2 this.getManagedBean().getTabActiveIndex()="+this.getManagedBean().getTabActiveIndex());
+			} else if (itemStatus.equals(CmConst.ITEM_STATUS_REJECTED)) {
+				reqDTO.setItemStatus("R");
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
-		CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);	
-		log.info("zone size:" + resDTO2.getSupplierZoneLs().size());	
-		this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());
+				this.getManagedBean().setRejectedItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(3);
+				log.info("setTab index to 3 this.getManagedBean().getTabActiveIndex()="+this.getManagedBean().getTabActiveIndex());
+			}
+
+		} else {
+		
+			reqDTO.setItemStatus("D");
+			resDTO = catalogueSO
+					.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setMaintainItemList(
+					resDTO.getSupplierItemList());
+		}
+			CatalogueResDTO resDTO2 = catalogueSO
+					.retrieveSupplierZoneBySuppId(reqDTO);
+			log.info("zone size:" + resDTO2.getSupplierZoneLs().size());
+			this.getManagedBean().setSupplierZoneList(
+					resDTO2.getSupplierZoneLs());
+		
 	}
+
 	
 	/**
 	 * back To Previous.
