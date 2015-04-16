@@ -1713,8 +1713,8 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			ScQt qt = qtReqDTO.getQtdetail();
-			// Added by visu on 09012015 - Fix for Other Approval Validations on
-			// sumbit only
+			// Added by visu on 09012015 - Fix for Other Approval Validations on sumbit only
+			qt.setOtherApproval(true); 
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
 			if (currentStatus
@@ -3512,7 +3512,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void qtDetailsTabChange(Integer activeIndex) {
 		int priviousIndex = this.getManagedBean().getActiveIndex();
-
+		getManagedBean().getQt().setOtherApproval(false);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
