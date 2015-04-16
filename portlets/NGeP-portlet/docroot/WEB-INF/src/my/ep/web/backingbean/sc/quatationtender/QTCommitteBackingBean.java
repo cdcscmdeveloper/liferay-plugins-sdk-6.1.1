@@ -1518,7 +1518,7 @@ public class QTCommitteBackingBean extends
 		return false;
 	}
 	
-	public boolean enableCloneButton(){
+	public boolean isEnableCloneButton(){
 		if(this.getManagedBean().isMaintanceFlow()&&QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())){
 			return true;
 		}
