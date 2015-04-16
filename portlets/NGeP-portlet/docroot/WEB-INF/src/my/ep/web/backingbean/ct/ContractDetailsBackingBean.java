@@ -1724,15 +1724,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * 
 	 * @return the navigate URL 
 	 */
-	public String gotoCommonViewPage() {	
-		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+	public String gotoCommonViewPage(Long contractId) {	
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
 		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
 		reqDTO.setContractVerId(latestContractVer.getContractVerId());
-	//	reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		reqDTO.setViewOnly(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    setValidateContractField(resDTO);
