@@ -100,14 +100,14 @@ public class SpkiBackingBean {
 				break;
 
 				default:
-				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+				System.err.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
 				throw new EpException(MessageConst.ERROR_776051);
 //				return;
 			}
 
 			if(challs.size() == 0)
 			{
-				System.err.println("No challanges found for the user! Data signing failed!");
+				System.err.println("No challanges found for the user! ");
 				throw new EpException(MessageConst.ERROR_776051);
 //				return;
 			}
@@ -211,7 +211,7 @@ public class SpkiBackingBean {
 				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
 				//throw new EpException(MessageConst.ERROR_776052);
-				signedData = "DEFAULT SIGNED TEXT";
+				signedData = "DEFAULT SIGNED TEXT1";
 				break;
 		}
 			
