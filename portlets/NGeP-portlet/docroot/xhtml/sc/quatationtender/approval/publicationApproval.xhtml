@@ -16,8 +16,8 @@
 				var="publicationUser" showTargetControls="true"
 				itemLabel="#{publicationUser.approver.userName}"
 				itemValue="#{publicationUser}" converter="approverPickListConverter">
-				<f:facet name="sourceCaption">Available </f:facet>
-				<f:facet name="targetCaption">Selected</f:facet>
+				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
+				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
 			</p:pickList>
 		</div>
 	</p:panel>

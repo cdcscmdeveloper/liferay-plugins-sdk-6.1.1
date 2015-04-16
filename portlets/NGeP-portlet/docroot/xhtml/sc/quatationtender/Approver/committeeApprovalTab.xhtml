@@ -73,7 +73,7 @@
 							<td colspan="2"><p:commandButton
 									oncomplete="committeeApproverAttachDlg.show();return false;"
 									icon="iconAttachment" update="committeeremarksupDtls"
-									value="Attach Files">
+									value="#{lbl['lbl.btn.attach.files']}">
 								</p:commandButton></td>
 						</tr>
 						<tr>
@@ -113,13 +113,13 @@
 	<p:dialog id="committeeApproverAttachDlgids" widgetVar="committeeApproverAttachDlg"
 		modal="true" dynamic="true" hideEffect="explode" resizable="false"
 		width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+		header="#{lbl['lbl.sc.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
 			mode="advanced" id="dlgsuploadsids"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			update="committeeremarksupDtls" oncomplete="committeeApproverAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>

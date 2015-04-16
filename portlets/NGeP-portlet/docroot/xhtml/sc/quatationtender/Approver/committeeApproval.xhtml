@@ -61,7 +61,7 @@
 						disabled="#{committe.committeStatus.statusId eq 60202}">
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{approvalBackingBean.roleChangeListner(committeeapprover)}" />
-						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems var="role"
 							value="#{approvalBackingBean.managedBean.roleTypes}"
 							itemLabel="#{role.codeName}"
