@@ -240,6 +240,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		
 		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 		    getManagedBean().setCircularVer(resDTO.getCircularVer());
+		    
+		    if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
+		    	  getManagedBean().setCircularExtension(true);
+		    }
 		   
 		   if (getManagedBean().isUpdateAction()) {
 			   IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
@@ -1190,7 +1194,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * and extension end date for central circluar
     */
 	public void extendStartEndDate(){
-		if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
+		/*if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
 			Calendar c = Calendar.getInstance();
 			c.setTime(getManagedBean().getCircularVer().getEndDate());
 			c.add(Calendar.DATE, 1);
@@ -1200,6 +1204,22 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			c.add(Calendar.MONTH, getManagedBean().getCircularVer().getExtPeriod());
 			getManagedBean().getCircularVer().setExtendEndDate(c.getTime());
 		}else{
+			getManagedBean().getCircularVer().setExtendStartDate(null);
+			getManagedBean().getCircularVer().setExtendEndDate(null);
+		}*/
+	}
+	
+	/**
+	 * Method used to set new effective date  for panel circular
+	 * during update 
+	 */
+	public void chkCircularExtension(){
+		if(getManagedBean().isCircularExtension()) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(getManagedBean().getCircularVer().getEndDate());
+				c.add(Calendar.DATE, 1);
+				getManagedBean().getCircularVer().setExtendStartDate(c.getTime());
+		} else {
 			getManagedBean().getCircularVer().setExtendStartDate(null);
 			getManagedBean().getCircularVer().setExtendEndDate(null);
 		}

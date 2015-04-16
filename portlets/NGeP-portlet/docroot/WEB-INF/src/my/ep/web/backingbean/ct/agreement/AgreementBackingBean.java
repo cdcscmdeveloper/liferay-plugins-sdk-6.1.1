@@ -1208,13 +1208,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					          
 				context.put("imgUrl", imgUrl);
 			    context.put("documentName", agreementContent.getTitle());
-			    context.put("documentTitle", agreementContent.getTplDocMaster().getDocName());
-			    context.put("documentDescription", agreementContent.getTplDocMaster().getDocDesc());
+			    if(agreementContent.getTplDocMaster() != null && agreementContent.getTplDocMaster().getDocName() != null){
+			         context.put("documentTitle", agreementContent.getTplDocMaster().getDocName());
+			        context.put("documentDescription", agreementContent.getTplDocMaster().getDocDesc());
+	           }
 					        /*  if(agreementContent.getTplDocMaster().getProcurementCategory() != null)
 					                  context.put("procrumentCategory",getParameterDesc(agreementContent.getTplDocMaster().getProcurementCategory()));
 					          if(agreementContent.getTplDocMaster().getProcessType() != null)
 					                context.put("processType",getParameterDesc(agreementContent.getTplDocMaster().getProcessType()));*/
-				 if(agreementContent.getTplDocMaster().getTplDocSections() != null)
+				 if(agreementContent.getTplDocMaster() != null && agreementContent.getTplDocMaster().getTplDocSections() != null
+						 && agreementContent.getTplDocMaster().getTplDocSections().size() > 0)
 					     context.put("sectionList", agreementContent.getTplDocMaster().getTplDocSections());
 					      	
 				 if (vmFile != null && context != null) {

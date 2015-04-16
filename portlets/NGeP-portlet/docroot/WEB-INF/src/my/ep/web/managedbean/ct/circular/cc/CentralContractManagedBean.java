@@ -86,6 +86,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean chkCancelPage;
 	private boolean fromCircularNotice;
 	private boolean autoUpdate = true;
+	private boolean circularExtension;
 	
 	private TreeNode centralZoneTrees;
 	private PmDigiSign pmDigiSign;
@@ -740,6 +741,16 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setFromCircularNotice(boolean fromCircularNotice) {
 		this.fromCircularNotice = fromCircularNotice;
 	}
+
+	public boolean isCircularExtension() {
+		return circularExtension;
+	}
+
+	public void setCircularExtension(boolean circularExtension) {
+		this.circularExtension = circularExtension;
+	}
+
+
 
 	/**
 	 * Pagination for central circular search list 
