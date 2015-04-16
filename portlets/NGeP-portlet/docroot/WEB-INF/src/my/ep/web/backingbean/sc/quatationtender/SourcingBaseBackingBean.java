@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -906,8 +907,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				URL obj = new URL(reportUrl.toString());
 				HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
 				input = new BufferedInputStream(uc.getInputStream());
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (ConnectException e) {
+				throw new EpException(MessageConst.ERROR_100058);
 			}
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			byte[] buf = new byte[1024];
