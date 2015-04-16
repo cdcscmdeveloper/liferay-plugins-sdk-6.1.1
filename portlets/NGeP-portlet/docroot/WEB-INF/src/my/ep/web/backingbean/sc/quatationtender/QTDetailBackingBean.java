@@ -3704,18 +3704,7 @@ public class QTDetailBackingBean extends
 			List<ScQtBsvDtl> bsvDetils = new ArrayList<ScQtBsvDtl>();
 			List<ScQtBsvDtl> briefings = bsvDtlBean.getBriefingList();
 			List<ScQtBsvDtl> siteVisit = bsvDtlBean.getSitevisitList();
-			if (!scQtBsv.isAllBriefingReq()) {
-				if (scQtBsv.getMinBriefingAttend() < 1) {
-					throw new EpException(
-							"Min Briefing Attendance is greater than 0");
-				}
-			}
-			if (!scQtBsv.isAllSiteVisitReq()) {
-				if (scQtBsv.getMinSiteVisitAttend() < 1) {
-					throw new EpException(
-							"Min sitevisit Attendance is greater than 0");
-				}
-			}
+			
 			if (!scQtBsv.isSameBsv()) {
 				if (!briefings.isEmpty()) {
 					bsvDetils.addAll(briefings);
@@ -3728,6 +3717,18 @@ public class QTDetailBackingBean extends
 					bsvDetils.addAll(briefings);
 					scQtBsv.setAllSiteVisitReq(true);
 					scQtBsv.setMinSiteVisitAttend(0);
+				}
+			}
+			if (!scQtBsv.isAllBriefingReq()) {
+				if (scQtBsv.getMinBriefingAttend() < 1) {
+					throw new EpException(
+							"Min Briefing Attendance is greater than 0");
+				}
+			}
+			if (!scQtBsv.isAllSiteVisitReq()) {
+				if (scQtBsv.getMinSiteVisitAttend() < 1) {
+					throw new EpException(
+							"Min sitevisit Attendance is greater than 0");
 				}
 			}
 			scQtBsv.setScQtBsvDtls(bsvDetils);
