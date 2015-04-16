@@ -6,8 +6,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true"
-		id="assocPanel">
+	<p:panel toggleable="true" id="assocPanel">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sm.assocCmpny.panHdr']}" />
+			<p:graphicImage id="assocPanelTipImg" library="ep/images/design"
+				name="tooltips.png" style="padding-left : 10px;" />
+			<p:tooltip id="assocPaneltt" for="assocPanelTipImg">
+				<p:inputTextarea escape="false" readonly="true" disabled="true"
+					rows="3" cols="50"
+					value="#{lbl['lbl.sm.assocCmpny.panHdrToolTip']}" />
+			</p:tooltip>
+		</f:facet>
 		<table style="width: 350px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -152,9 +161,15 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label=" #{lbl['lbl.sm.assocCmpny.regNo']}" id="asocRegNo"
 						value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
-						size="35" maxlength="20" /> <p:message id="asocRegNoMsg"
-						for="asocRegNo" showSummary="true" showDetail="false"
-						display="icon" /></td>
+						size="35" maxlength="20" /> <p:graphicImage id="asocRegNoImg"
+						library="ep/images/design" name="tooltips.png"
+						style="padding-left : 10px;" rendered="false" /> <p:tooltip
+						id="asocRegNoImgtt" for="asocRegNoImg">
+						<p:inputTextarea escape="false" readonly="true" disabled="true"
+							rows="3" cols="50"
+							value="#{lbl['lbl.sm.assocCmpny.regNoToolTip']}" />
+					</p:tooltip> <p:message id="asocRegNoMsg" for="asocReg	No" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<!-- <tr>
 				<td><p:outputLabel

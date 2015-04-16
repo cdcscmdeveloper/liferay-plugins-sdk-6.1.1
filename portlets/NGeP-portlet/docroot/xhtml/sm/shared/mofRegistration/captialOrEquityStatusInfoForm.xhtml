@@ -5,7 +5,17 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.sm.equiStatus.panHdr']}" toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sm.equiStatus.panHdr']}" />
+			<p:graphicImage id="equiStsHdrTipImg" library="ep/images/design"
+				name="tooltips.png" style="padding-left : 10px;" />
+			<p:tooltip id="equiStsHdrTipImgtt" for="equiStsHdrTipImg">
+				<p:inputTextarea escape="false" readonly="true" disabled="true"
+					rows="6" cols="50"
+					value="#{lbl['lbl.sm.equiStatus.panHdrToolTip']}" />
+			</p:tooltip>
+		</f:facet>
 		<table style="width: 100%">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -141,7 +151,7 @@
 				<tr>
 					<td colspan="4">
 						<div style="width: 98%" align="center">
-							<p:panelGrid styleClass="tablePanel"  style="width : 100%">
+							<p:panelGrid styleClass="tablePanel" style="width : 100%">
 								<p:row>
 									<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.equiStatus.compTabHdr']}</p:column>
 									<!-- <p:column>NO. Of Members</p:column> -->
