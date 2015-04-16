@@ -6,7 +6,6 @@ import javax.faces.bean.RequestScoped;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -56,20 +55,16 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setRenderedBackButton(true);
 			String supplierIdParam = getSupplierIdParam();
 			if (StringUtils.isNotBlank(supplierIdParam)) {
-				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
-				SmSupplier paramSupplier = 
-						SmServiceLookup.getSupplierSearchSO()
-						.retriveSupplierById(reqDTO).getSmSupplier();
-				getManagedBean().setSearchSupplier(new SmSupplier());
-				getManagedBean().getSearchSupplier().setRegNo(paramSupplier.getRegNo());
-				getManagedBean().setSearchBy(SEARCH_BY_BUSINESS_REG_NO);
-				getManagedBean().searchSupplier();
+				getManagedBean().setRenderedBackButton(false);
+				viewApplication(SmApplicationUtil
+						.getLatestApplBySupplierId(Long
+								.parseLong(supplierIdParam)));
+			} else {
+				SmCommonUtil
+						.redirectToPage(
+								"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",
+								"");
 			}
-			SmCommonUtil
-					.redirectToPage(
-							"/xhtml/sm/revisionSmApplView/viewSupplierProfile/searchSupplierProfilePage.xhtml",
-							"");
 		}
 	}
 
