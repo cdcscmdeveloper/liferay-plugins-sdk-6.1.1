@@ -2744,9 +2744,10 @@ public class ReportBackingBean extends
 		this.setReportValue(null);		
 		this.setReportName(null);
 		setRoleCode(null);
+		resetReportForm();
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
 		getManagedBean().setRptGenBean(null);
-		resetReportForm();
+		
 		rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
@@ -2950,8 +2951,9 @@ public class ReportBackingBean extends
 		this.setReportName(null);
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
-		getManagedBean().setRptGenBean(null);
 		resetReportForm();
+		getManagedBean().setRptGenBean(null);
+		
 		if (this.getModuleValue() != null) {
 			retriveReportListByModule(this.getModuleValue());
 		}
@@ -3607,9 +3609,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				ppReportBackingBean.enableCriteriaVariablesByReportByPP(
 						rptGenBean, authoriztionList);
 			}
+			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();			
 			retrieveDates();
-			getManagedBean().setRptGenBean(rptGenBean);
+			
 			madatoryIndicator();
 			retrieveParameterCodeType();		
 			enableCriteriaMenu();			
@@ -5650,10 +5653,14 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 */
 	public void resetReportForm() {		
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
-		/*getManagedBean().getRptGenBean().setCmMofRegView(false);
+		getManagedBean().getRptGenBean().setCmMofRegView(false);
 		getManagedBean().getRptGenBean().setCmBasicRegView(false);
 		getManagedBean().getRptGenBean().setSmMofRegView(false);
-		getManagedBean().getRptGenBean().setSmBasicRegView(false);*/
+		getManagedBean().getRptGenBean().setSmBasicRegView(false);
+		getManagedBean().getRptGenBean().setCmExtentionBrandView(false);
+		getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
+		getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
+		getManagedBean().getRptGenBean().setCmExtentionColourView(false);
 		this.setFromDate(null);
 		this.setToDate(null);
 		this.setScQuotationId(null);
