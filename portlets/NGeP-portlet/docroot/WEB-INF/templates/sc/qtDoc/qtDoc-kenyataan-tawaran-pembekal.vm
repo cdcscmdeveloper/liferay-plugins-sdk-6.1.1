@@ -208,6 +208,7 @@
 							
 						#end
 						#if ($subLocLevel == "false")
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">T/B</span>
 						#end
 						
 					#end
@@ -226,12 +227,7 @@
 		            		 	#if ( $isZone)
 									$zoneList.tplSpecZoneDtl.zoneName<br/>
 				            	#end
-		            		 	Site Visit Same As Briefing : 
-								#if ($zoneList.scQtBsv.sameBsv)
-									Yes
-								#else 
-									No 
-								#end </span> <br/>
+		            		 	</span> <br/>
 								#if($zoneList.briefingList && $zoneList.briefingList.size() > 0)
 		            		 	<table width='100%' class="table2">
 		            		 	 <span class="headerfont">
