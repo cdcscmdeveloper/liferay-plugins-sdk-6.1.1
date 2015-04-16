@@ -36,8 +36,15 @@
 			</tr>
 		</table>
 		<br />
+		
+		<div align="left" class="header-info">
+			<table style="width: 100%">
+				<tr><td><p:outputLabel value="#{lbl['lbl.sm.softcert.disclaimer']}" styleClass="outputLabel-view" /></td></tr>
+			</table>
+			<br />
+		</div>
 
-		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultPanelId">
+		<p:panel header="#{lbl['lbl.sm.softcert.authpersonnel.panheader']}" toggleable="true" id="resultPanelId">
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
 				rowIndexVar="index" value="#{softCertBackingBean.managedBean.authorizedPersonnels}"
 				var="personnel" selection="#{softCertBackingBean.managedBean.softCertSelectList}">
@@ -103,10 +110,15 @@
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg eq '8'}" />
 				</p:column>
+				
+				<p:column disabledSelection="#{personnel.disableRowSelection}"
+					headerText="#{lbl['lbl.sm.softcert.no']}">
+					<h:outputText value="#{personnel.softcertNo}" />
+				</p:column>
 
 				<p:column disabledSelection="#{personnel.disableRowSelection}"
 					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
-					<h:outputText value="#{softCertBackingBean.getSoftcertExpiryDate(personnel)}" />
+					<h:outputText value="#{personnel.softcertValidityDate}" />
 				</p:column>
 
 			</p:dataTable>

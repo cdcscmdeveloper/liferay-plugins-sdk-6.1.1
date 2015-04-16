@@ -253,38 +253,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Get personnel soft certificate expiration date inside data table for
-	 * request soft certificate screen
-	 * 
-	 * @param SmPersonnel
-	 *            smPersonnel
-	 * @return String
-	 */
-	public String getSoftcertExpiryDate(SmPersonnel smPersonnel) {
-		String expiryDate = SmCommonUtil
-				.getMessage("lbl.sm.no.available", null);
-
-		if (smPersonnel.getPmUser() != null
-				&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
-					.getSmAppl().getSmSupplier().getSupplierId());
-			reqDTO.setUserId(smPersonnel.getPmUser().getUserId());
-			SmSoftcertRequest softcertRequest = SmServiceLookup
-					.getPersonnelSO()
-					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
-							reqDTO).getSoftcertRequest();
-			if (softcertRequest != null
-					&& softcertRequest.getPmDigiCert() != null
-					&& softcertRequest.getPmDigiCert().getValidTo() != null) {
-				expiryDate = DateUtils.dateToString("dd/MM/yyyy",
-						softcertRequest.getPmDigiCert().getValidTo());
-			}
-		}
-		return expiryDate;
-	}
-
-	/**
 	 * Set payment button label
 	 */
 	private void setPaymentBtnLbl() {
@@ -360,6 +328,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					}
 				}
 			}
+			setPersonnelSoftcertInformation(personnel);
 		}
 	}
 
@@ -383,4 +352,49 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		return finalPayPersonnels;
 	}
 
+	/**
+	 * Set personnel soft certificate validity date and soft certificate number
+	 * inside data table for request soft certificate screen
+	 * 
+	 * @param smPersonnel
+	 */
+	private void setPersonnelSoftcertInformation(SmPersonnel smPersonnel) {
+		String softcertValidityDate = SmCommonUtil.getMessage(
+				"lbl.sm.no.available", null);
+		String sofcertNo = SmCommonUtil.getMessage("lbl.sm.no.available", null);
+
+		if (smPersonnel.getPmUser() != null
+				&& smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
+					.getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setUserId(smPersonnel.getPmUser().getUserId());
+			SmSoftcertRequest softcertRequest = SmServiceLookup
+					.getPersonnelSO()
+					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
+							reqDTO).getSoftcertRequest();
+
+			if (softcertRequest != null
+					&& softcertRequest.getPmDigiCert() != null) {
+				if (StringUtils.isNotBlank(softcertRequest.getPmDigiCert()
+						.getCertSerialNo())) {
+					sofcertNo = softcertRequest.getPmDigiCert()
+							.getCertSerialNo();
+				}
+				if (softcertRequest.getPmDigiCert().getValidFrom() != null) {
+					softcertValidityDate = DateUtils.dateToString("dd/MM/yyyy",
+							softcertRequest.getPmDigiCert().getValidFrom());
+				}
+				if (softcertRequest.getPmDigiCert().getValidTo() != null) {
+					softcertValidityDate = softcertValidityDate
+							+ " - "
+							+ DateUtils.dateToString("dd/MM/yyyy",
+									softcertRequest.getPmDigiCert()
+											.getValidTo());
+				}
+			}
+		}
+		smPersonnel.setSoftcertValidityDate(softcertValidityDate);
+		smPersonnel.setSoftcertNo(sofcertNo);
+	}
 }
