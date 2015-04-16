@@ -31,6 +31,7 @@
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and evaluationBackingBean.managedBean.complianceActiveIndex eq '3') or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2') or(evaluationBackingBean.managedBean.complianceOnly eq 'true'))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveComplianceSummary}"
 							update="@form">
 
