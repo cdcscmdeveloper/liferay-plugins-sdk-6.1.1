@@ -137,7 +137,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone;
 	
 	//Committee Endorsement
-	private List<ScQtCommitteeActivity> committeeEndorsementList;
 	private List<ScQtCommitteeActivity> reminderList;
 	
 	//Online Bidding Endorsement
@@ -559,22 +558,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setProcCategoryMedicine(boolean isProcCategoryMedicine) {
 		this.isProcCategoryMedicine = isProcCategoryMedicine;
-	}
-
-	/**
-	 * @return the committeeEndorsementList
-	 */
-	public List<ScQtCommitteeActivity> getCommitteeEndorsementList() {
-		return committeeEndorsementList;
-	}
-
-	/**
-	 * @param committeeEndorsementList 
-	 * 							the committeeEndorsementList to set
-	 */
-	public void setCommitteeEndorsementList(
-			List<ScQtCommitteeActivity> committeeEndorsementList) {
-		this.committeeEndorsementList = committeeEndorsementList;
 	}
 
 	/**
