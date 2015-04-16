@@ -823,7 +823,7 @@ public class QTDetailBackingBean extends
 
 			}
 		}
-		if (!scQt.getScQtSupplierCriteria().isAllState()) {
+		if (scQt.getScQtSupplierCriteria() != null && !scQt.getScQtSupplierCriteria().isAllState()) {
 			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 					this.getManagedBean().getZoneTrees(), null);
 			if (null != locCriteria && !locCriteria.isEmpty()) {
@@ -1327,6 +1327,10 @@ public class QTDetailBackingBean extends
 							BriefingResDTO briefingResDTO = qTBriefingSO
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
+							if (scQtBsv.getQtBsvId() == null) {
+								scQtBsv.setAllBriefingReq(true);
+								scQtBsv.setAllSiteVisitReq(true);
+							}
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
 									this.getManagedBean().getQt()
 											.getCurrentWorkFlowStatus(),
@@ -1344,6 +1348,10 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
+					if (qtBsv.getQtBsvId() == null) {
+						qtBsv.setAllBriefingReq(true);
+						qtBsv.setAllSiteVisitReq(true);
+					}
 					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, this
 							.getManagedBean().getQt()
 							.getCurrentWorkFlowStatus(), qtBsv.getBsvRemarks(),
@@ -3696,13 +3704,13 @@ public class QTDetailBackingBean extends
 			List<ScQtBsvDtl> bsvDetils = new ArrayList<ScQtBsvDtl>();
 			List<ScQtBsvDtl> briefings = bsvDtlBean.getBriefingList();
 			List<ScQtBsvDtl> siteVisit = bsvDtlBean.getSitevisitList();
-			if (scQtBsv.isAllBriefingReq()) {
+			if (!scQtBsv.isAllBriefingReq()) {
 				if (scQtBsv.getMinBriefingAttend() < 1) {
 					throw new EpException(
 							"Min Briefing Attendance is greater than 0");
 				}
 			}
-			if (scQtBsv.isAllSiteVisitReq()) {
+			if (!scQtBsv.isAllSiteVisitReq()) {
 				if (scQtBsv.getMinSiteVisitAttend() < 1) {
 					throw new EpException(
 							"Min sitevisit Attendance is greater than 0");
