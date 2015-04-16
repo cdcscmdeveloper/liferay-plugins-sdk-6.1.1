@@ -27,8 +27,8 @@
 				itemLabel="#{approverUser.approver.userName}"
 				disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}"
 				itemValue="#{approverUser}" converter="approverPickListConverter">
-				<f:facet name="sourceCaption">Available </f:facet>
-				<f:facet name="targetCaption">Selected</f:facet>
+				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']}</f:facet>
+				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
 			</p:pickList>
 		</div>
 	</p:panel>
@@ -123,7 +123,7 @@
 
 	<p:dialog id="attachDlgids" widgetVar="committeeAttachDlg" modal="true"
 		dynamic="true" resizable="false" width="700px" height="200"
-		styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		styleClass="pop_up_top" header="#{lbl['lbl.sc.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"

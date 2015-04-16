@@ -31,8 +31,8 @@
 				var="ptjapproverUser" showTargetControls="true"
 				itemLabel="#{ptjapproverUser.approver.userName}"
 				itemValue="#{ptjapproverUser}" converter="approverPickListConverter">
-				<f:facet name="sourceCaption">Available </f:facet>
-				<f:facet name="targetCaption">Selected</f:facet>
+				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
+				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
 			</p:pickList>
 		</div>
 	</p:panel>
@@ -127,7 +127,7 @@
 	<p:dialog id="attachfileDlgids" widgetVar="attachDlg" modal="true"
 		dynamic="true" hideEffect="explode" resizable="false" width="700px"
 		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+		header="#{lbl['lbl.sc.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"

@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel id="budgetapprovalid" header="Budget Approver Setting"
+	<p:panel id="budgetapprovalid" header="#{lbl['lbl.sc.budget.approver.setting']}"
 		toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
@@ -13,8 +13,8 @@
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.approver.userName}" itemValue="#{approverUser}"
 				converter="approverPickListConverter">
-				<f:facet name="sourceCaption">Available </f:facet>
-				<f:facet name="targetCaption">Selected</f:facet>
+				<f:facet name="sourceCaption">#{lbl['lbl.sc.available']} </f:facet>
+				<f:facet name="targetCaption">#{lbl['lbl.sc.selected']}</f:facet>
 			</p:pickList>
 		</div>
 	</p:panel>
@@ -101,7 +101,7 @@
 
 
 	<p:dialog id="budgetAttachDlgid" widgetVar="budgetAttachDlg"
-		width="750px" height="200" header="#{lbl['lbl.bpm.choose.file']}">
+		width="750px" height="200" header="#{lbl['lbl.sc.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"

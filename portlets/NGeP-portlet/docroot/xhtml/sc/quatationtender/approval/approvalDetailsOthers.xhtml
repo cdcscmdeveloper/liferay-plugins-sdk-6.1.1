@@ -24,7 +24,7 @@
 				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.approverAction.parameterId}"
 					style="width: 178px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems var="app"
 						value="#{approvalBackingBean.getStatusDropdownValues()}"
 						itemLabel="#{app.codeName}"
@@ -36,7 +36,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.document']}">
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
-					value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
+					value="#{lbl['lbl.btn.attach.files']}" icon="iconAttachment"
 					partialSubmit="true" process="otherreqdtlsid"
 					disabled="#{qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}"
 					update="otherreqdtlsid">
