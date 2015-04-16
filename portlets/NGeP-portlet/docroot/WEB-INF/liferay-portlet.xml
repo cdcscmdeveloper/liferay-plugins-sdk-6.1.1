@@ -1728,6 +1728,18 @@
 		
 		<css-class-wrapper>pm-FactoringCompanies-portlet</css-class-wrapper>
 	</portlet>
+		<portlet>
+		<portlet-name>redirectFactoringCompanies</portlet-name>
+
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		
+		<css-class-wrapper>redirectFactoringCompanies-portlet</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>pmBusinessNature</portlet-name>
 		<icon>/icon.png</icon>
