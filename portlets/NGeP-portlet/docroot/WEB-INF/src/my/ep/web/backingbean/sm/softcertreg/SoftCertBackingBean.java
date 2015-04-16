@@ -340,6 +340,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	/**
 	 * Set list of personnel row whether need to be disabled from check box tick
+	 * and also to determine whether supplier already given free soft
+	 * certificate
 	 * 
 	 * @param List
 	 *            <SmPersonnel> personnels
