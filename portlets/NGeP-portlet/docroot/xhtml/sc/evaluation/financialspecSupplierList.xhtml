@@ -59,7 +59,6 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.different']}"
 					style="width:15%">
 					<h:outputLabel
-						rendered="#{finSpec.scQtProposal.proposalAmount.priceDifference gt 0}"
 						value="#{finSpec.scQtProposal.proposalAmount.priceDifference}"
 						style="text-align:right">
 						<f:convertNumber
@@ -71,7 +70,6 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.diff.varience']}"
 					style="width:15%">
 					<h:outputLabel
-						rendered="#{finSpec.scQtProposal.proposalAmount.percentageDifference gt 0}"
 						value="#{finSpec.scQtProposal.proposalAmount.percentageDifference}"
 						style="text-align:right">
 						<f:convertNumber
