@@ -651,8 +651,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	private Long lngUserId = (long)25; //122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
+	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	//private Long lngUserId = (long)25;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -5650,6 +5650,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 */
 	public void resetReportForm() {		
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
+		getManagedBean().getRptGenBean().setCmMofRegView(false);
+		getManagedBean().getRptGenBean().setCmBasicRegView(false);
+		getManagedBean().getRptGenBean().setSmMofRegView(false);
+		getManagedBean().getRptGenBean().setSmBasicRegView(false);
 		this.setFromDate(null);
 		this.setToDate(null);
 		this.setScQuotationId(null);
