@@ -93,7 +93,7 @@
 		    <p:column style="width:10%;" headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
 		         <p:commandLink action="#{associationBackingBean.goToUpdateAssociatePage}" process="@this" styleClass="column-align-center">
 			         <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
-			         <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+			         <p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 		        </p:commandLink> 
 		  </p:column> 	   
 	   </p:dataTable>
@@ -108,8 +108,7 @@
 		      <p:dialog id="dlgAssociateDel" widgetVar="dlgAssociateDel" styleClass="screen-title"
 		           modal="true" width="330">  
                    <h:panelGrid columns="3">
-                       <p:graphicImage library="ep/images/design" name="exclamation.png"
-			                value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+                       <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			           <p:spacer width="10"/>
                        <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                    </h:panelGrid>

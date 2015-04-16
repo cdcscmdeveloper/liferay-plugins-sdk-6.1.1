@@ -402,7 +402,7 @@
 					<p:commandLink action="#{terminationBackingBean.resetSearchAgency()}" 
 						disabled="#{terminationBackingBean.managedBean.viewContract}"
 						process="@this"	update=":form:searchAgencyPanel" oncomplete="searchAgencyDlg.show();">
-					<p:graphicImage library="ep/images/design" name="magnifier_zoom_in.png" /></p:commandLink>
+					<p:graphicImage value="/css/images/design/magnifier_zoom_in.png" /></p:commandLink>
                   <p:message for="recomendAgency" display="icon"/>
 		     </h:panelGrid>
 		     
@@ -454,8 +454,7 @@
 	   	   <p:dialog id="dlgTerminationReason" widgetVar="dlgTerminationReason" styleClass="screen-title"  
             modal="true" width="330">  
             <h:panelGrid columns="3">
-               <p:graphicImage library="ep/images/design" name="exclamation.png"
-			      value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+               <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 			   <p:spacer width="10"/>
                <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
              </h:panelGrid>

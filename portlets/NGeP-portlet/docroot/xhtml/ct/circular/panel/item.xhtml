@@ -57,7 +57,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
                   	<p:spacer width="3" />
                   	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
-						<p:graphicImage library="ep/images/design" name="document.png" title="#{lbl['lbl.ct.specification']}" />
+						<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.ct.specification']}" />
 					</p:commandLink>
               </p:column>
 			  <p:column>
@@ -160,7 +160,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:dialog id="delItemDlg" 
 		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			  <p:spacer width="10"/>
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
@@ -202,7 +202,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
    		<p:dialog id="delPanelItemSpecDlg"
 		    styleClass="screen-title" widgetVar="delPanelItemSpecDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			  <p:spacer width="10"/>
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
@@ -251,8 +251,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
 						process="@this" update="@([id$=zonePopupGeneral])"
 						oncomplete="ZoneGeneral.show();">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-						  value="/css/images/design/edit.png" />
+						<p:graphicImage value="/css/images/design/edit.png" />
 					  </p:commandLink>
 					</p:column>
 			</p:dataTable>
@@ -313,7 +312,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	   <p:dialog id="delZoneDlg"
 		    styleClass="screen-title" widgetVar="delZoneDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			  <p:spacer width="10"/>
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
@@ -393,8 +392,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg"
 		   styleClass="screen-title" modal="true" width="330">  
            <h:panelGrid columns="3">
-             <p:graphicImage library="ep/images/design" name="exclamation.png"
-			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+             <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			   <p:spacer width="10"/>
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
