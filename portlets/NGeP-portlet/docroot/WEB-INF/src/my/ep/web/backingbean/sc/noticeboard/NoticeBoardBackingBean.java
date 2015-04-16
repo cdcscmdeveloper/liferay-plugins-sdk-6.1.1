@@ -1385,6 +1385,7 @@ public class NoticeBoardBackingBean extends
 				String mofNumber = this.getManagedBean().getMofNumber();
 				String companyName = this.getManagedBean().getCompanyName();
 				int tabIndex = this.getManagedBean().getSelectedZoneTabIndex();
+				boolean isValidMofNo =  this.getManagedBean().isValidMofNo();
 				renewSesionObject();
 				this.getManagedBean().setScQt(currentQt);
 				this.getManagedBean().setSmSupplier(supplier);
@@ -1393,6 +1394,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setMofNumber(mofNumber);
 				this.getManagedBean().setCompanyName(companyName);
 				this.getManagedBean().setSelectedZoneTabIndex(tabIndex);
+				this.getManagedBean().setValidMofNo(isValidMofNo);
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
