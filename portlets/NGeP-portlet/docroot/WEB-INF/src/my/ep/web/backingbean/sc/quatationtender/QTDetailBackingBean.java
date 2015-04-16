@@ -3726,8 +3726,8 @@ public class QTDetailBackingBean extends
 			} else {
 				if (!briefings.isEmpty()) {
 					bsvDetils.addAll(briefings);
-					scQtBsv.setAllSiteVisitReq(false);
-					scQtBsv.setMinSiteVisitAttend(1);
+					scQtBsv.setAllSiteVisitReq(true);
+					scQtBsv.setMinSiteVisitAttend(0);
 				}
 			}
 			scQtBsv.setScQtBsvDtls(bsvDetils);
