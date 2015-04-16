@@ -40,7 +40,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -164,7 +163,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.compat.portal.util.PortalUtil;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -5034,8 +5034,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 * getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs
 			 * ());
 			 */
-			HttpServletRequest servletRequest = PortalUtil
-					.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil
 					.getOriginalServletRequest(servletRequest);
 			String itemStatus = originalServletRequest.getParameter("itemStatus");
