@@ -10318,7 +10318,7 @@ public class SpecificationBackingBean extends
 	public void specOfferpricePackageBelowScore(ScQtScoreOfferPrice offerPrice) {
 		if (null != offerPrice) {
 			if (null == offerPrice.getBelowScore()
-					|| offerPrice.getBelowScore().intValue() <= 0) {
+					|| offerPrice.getBelowScore().intValue() < 0) {
 				throw new EpException(MessageConst.ERROR_760216);
 			}
 
@@ -10338,7 +10338,7 @@ public class SpecificationBackingBean extends
 		if (null != offerPrice) {
 
 			if (null == offerPrice.getAboveScore()
-					|| offerPrice.getAboveScore().intValue() <= 0) {
+					|| offerPrice.getAboveScore().intValue() < 0) {
 				throw new EpException(MessageConst.ERROR_760217);
 			}
 		}
