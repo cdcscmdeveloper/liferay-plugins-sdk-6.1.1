@@ -40,7 +40,6 @@
 						update=":form:tt:approverRejDialog" partialSubmit="true"
 						process="@this" onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
 
 				</div> <c:if

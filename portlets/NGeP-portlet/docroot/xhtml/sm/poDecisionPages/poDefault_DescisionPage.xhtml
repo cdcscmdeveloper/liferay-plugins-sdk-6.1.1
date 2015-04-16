@@ -37,7 +37,6 @@
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialog" partialSubmit="true"
 								process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
@@ -64,7 +63,6 @@
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialog" partialSubmit="true"
 								process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 						</c:when>
 						<c:when
@@ -73,7 +71,6 @@
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialog" partialSubmit="true"
 								process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton
 								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
@@ -98,7 +95,6 @@
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialog" partialSubmit="true"
 								process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton
