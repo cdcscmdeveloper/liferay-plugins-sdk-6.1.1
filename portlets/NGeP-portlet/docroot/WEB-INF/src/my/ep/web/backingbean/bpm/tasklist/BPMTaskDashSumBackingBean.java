@@ -1,66 +1,37 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
-import javax.annotation.PostConstruct;
-
 import java.io.IOException;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cc.dashsummary.IDashSummarySO;
-import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.bpm.vo.DashSummaryVO;
-import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.BpmConstants;
 import my.ep.dto.cc.dashsummary.BpmTaskSummaryDTO;
 import my.ep.dto.cc.dashsummary.DashSummaryReqDTO;
 import my.ep.dto.cc.dashsummary.DashSummaryResDTO;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.cm.DashSummaryStatus;
-import my.ep.web.bean.cm.DashSummaryViewBean;
-import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskDashSumManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
-
 import org.apache.log4j.Logger;
-import org.primefaces.model.chart.CartesianChartModel;
-import org.primefaces.model.chart.ChartSeries;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "bpmTaskDashSumBackingBean")
 @RequestScoped
@@ -107,9 +78,10 @@ public class BPMTaskDashSumBackingBean extends
 
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
-
+        if(smResDTO.getResultBean() != null && smResDTO.getResultBean().getResultList() != null && smResDTO.getResultBean().getResultList().get(0) != null){
 			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
 					.get(0).getSupplierId());
+         }
 			// /////////////////////////////////////////////////////
 			if (isCatalogueAdmin()) {
 				reqDTO.setCatalogueAdminRole(true);
