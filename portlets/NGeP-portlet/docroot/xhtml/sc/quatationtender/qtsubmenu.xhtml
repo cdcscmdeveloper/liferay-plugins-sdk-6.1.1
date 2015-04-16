@@ -60,7 +60,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.qt.public.approval']}"
 						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT and qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_PUBLICATION)}" />
 				</p:tabMenu></td>
 			<td width="80%" valign="top"><h:panelGroup id="menuQTContent">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
