@@ -40,6 +40,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.biz.bean.search.SearchFilterBean;
