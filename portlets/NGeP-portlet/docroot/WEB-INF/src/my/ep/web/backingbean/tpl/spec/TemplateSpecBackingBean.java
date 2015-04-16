@@ -375,7 +375,7 @@ public class TemplateSpecBackingBean extends
 	 * @param questionType
 	 * 		the question type
 	 */
-	public void addQuestion(TplSpecMaster tplSpecMaster,
+	public TplSpecQuestion addQuestion(TplSpecMaster tplSpecMaster,
 			List<TplSpecQuestion> questionList, Integer row, String questionType) {
 		TplSpecQuestion newQuestion = new TplSpecQuestion();
 		boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM
@@ -458,6 +458,8 @@ public class TemplateSpecBackingBean extends
 			TplSpecQuestion question = questionList.get(i);
 			question.setQuestionOrder(i + 1);
 		}
+		
+		return newQuestion;
 	}
 
 	/**
