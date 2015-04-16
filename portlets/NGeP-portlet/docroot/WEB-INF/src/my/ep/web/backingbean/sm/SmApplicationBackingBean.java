@@ -220,8 +220,8 @@ public class SmApplicationBackingBean extends
 				boolean activeExist = false;
 				activeExist = SmApplicationUtil
 						.checkActiveSmApplForSupp(supplierProfile);
-				SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(rejAppl
-						.getApplId());
+				SmWorkflowStatus sts = SmCommonUtil
+						.getCurrentActiveWokFlowStatus(rejAppl.getApplId());
 
 				if (!activeExist) {
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -736,8 +736,8 @@ public class SmApplicationBackingBean extends
 					log.info("*** Current Status Value Retrieved from BPM (set in common appl backing bean)****** "
 							+ getManagedBean().getCurrentStatus());
 				} else {
-					SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(smAppl
-							.getApplId());
+					SmWorkflowStatus sts = SmCommonUtil
+							.getCurrentActiveWokFlowStatus(smAppl.getApplId());
 					if (sts != null && sts.getPmStatus() != null
 							&& sts.getPmStatus().getStatusId() != null) {
 						log.info("** PM Status retrived from work flow *******");
@@ -918,8 +918,9 @@ public class SmApplicationBackingBean extends
 					throw new EpException(MessageConst.ERROR_722581);
 				}
 				getManagedBean().setSmAppl(smAppl);
-				SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
-						.getSmAppl().getApplId());
+				SmWorkflowStatus sts = SmCommonUtil
+						.getCurrentActiveWokFlowStatus(getManagedBean()
+								.getSmAppl().getApplId());
 				if (sts != null && sts.getPmStatus() != null) {
 					if (sts.getPmStatus()
 							.getStatusId()
@@ -6022,8 +6023,9 @@ public class SmApplicationBackingBean extends
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			regSo.initiateSmDelPendingApplicationTask(reqDTO);
 			String msg = "";
-			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
-					.getSmAppl().getApplId());
+			SmWorkflowStatus sts = SmCommonUtil
+					.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl()
+							.getApplId());
 			if (sts != null && sts.getPmStatus() != null) {
 				if (sts.getPmStatus()
 						.getStatusId()
@@ -6383,7 +6385,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
-		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
+		if (!dialog.equalsIgnoreCase("rejectDialog")
+				&& !dialog.equalsIgnoreCase("approverRejDialog")) {
+			SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
+		}
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
