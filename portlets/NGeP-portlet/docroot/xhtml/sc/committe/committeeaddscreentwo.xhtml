@@ -14,7 +14,7 @@
 				autoUpdate="true" closable="true" showSummary="false" />
 			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.selection']}" />
 				<p:selectOneRadio id="selectradioid"
 					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
@@ -32,14 +32,14 @@
 						toggleable="true">
 						<table>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
 								<td colspan="3"><p:inputText
 										value="#{committeBackingBean.managedBean.userQCSearchBean.name}"
 										size="64" /></td>
 							</tr>
 							<tr>
 								<td style="width: 110px;"><p:outputLabel
-										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
+										value="#{lbl['lbl.sc.id.type']}" /></td>
 								<td colspan="3"><p:selectOneMenu
 										value="#{committeBackingBean.managedBean.userQCSearchBean.identificationType}"
 										style="width: 178px;margin-bottom: 5px;">
@@ -48,7 +48,7 @@
 									</p:selectOneMenu></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" /></td>
 								<td colspan="3"><p:inputText
 										value="#{committeBackingBean.managedBean.userQCSearchBean.identificationNo}"
 										size="30" /></td>
@@ -100,7 +100,7 @@
 								<h:outputText
 									value="#{committeBackingBean.getParameterDesc(ParameterTypeConst.committeeRole,ParameterConst.committeeRoleMember)}" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sc.committe.rep.type']}"
+							<p:column headerText="#{lbl['lbl.sc.representative.type']}"
 								style="width: 15%">
 								<p:selectOneMenu
 									value="#{existcommitteeuser.representativesType.parameterId}"
@@ -120,20 +120,20 @@
 						<table>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.name']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.name']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="3"><p:inputText id="name" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.name']}"
+										label="#{lbl['lbl.sc.name']}"
 										value="#{committeBackingBean.managedBean.committeMember.memberName}"
 										size="30" maxlength="50" /> <p:message id="nameMsg"
 										for="name" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.id.type']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:selectOneMenu id="idtype" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.idtype']}"
+										label="#{lbl['lbl.sc.id.type']}"
 										value="#{committeBackingBean.managedBean.committeMember.idType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
@@ -144,10 +144,10 @@
 							</tr>
 							<tr>
 								<td style="width: 140px;"><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.identification.no']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="idno" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.idno']}"
+										label="#{lbl['lbl.sc.identification.no']}"
 										value="#{committeBackingBean.managedBean.committeMember.icPassport}"
 										size="30" maxlength="15" /> <p:message id="idnoMsg"
 										for="idno" display="icon" /></td>
@@ -156,10 +156,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.grade']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.grade']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="gradeid" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.grade']}"
+										label="#{lbl['lbl.sc.grade']}"
 										value="#{committeBackingBean.managedBean.committeMember.grade}"
 										size="30" maxlength="10" /> <p:message id="gradeidMsg"
 										for="gradeid" display="icon" /></td>
@@ -168,10 +168,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.pp']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.pnp']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:selectOneRadio id="pnpid" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.pp']}"
+										label="#{lbl['lbl.sc.pnp']}"
 										value="#{committeBackingBean.managedBean.committeMember.PNP}">
 										<f:selectItem itemLabel="Yes" itemValue="true" />
 										<f:selectItem itemLabel="No" itemValue="false" />
@@ -193,10 +193,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.email']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.email']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="emailid" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.email']}"
+										label="#{lbl['lbl.sc.email']}"
 										value="#{committeBackingBean.managedBean.committeMember.email}"
 										size="30" maxlength="80" /> <p:message id="emailidMsg"
 										for="emailid" display="icon" /></td>
@@ -205,10 +205,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.role']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.role']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="3"><p:selectOneMenu id="role" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.role']}"
+										label="#{lbl['lbl.sc.role']}"
 										value="#{committeBackingBean.managedBean.committeMember.memberRole.parameterId}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
@@ -217,7 +217,7 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.sctable.rep.type']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.representative.type']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="3"><p:selectOneMenu id="repTypeid"
 										required="true"

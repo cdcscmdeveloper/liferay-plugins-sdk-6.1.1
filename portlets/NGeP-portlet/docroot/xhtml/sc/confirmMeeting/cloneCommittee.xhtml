@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
+	<p:dialog id="cloneid" header="#{lbl['lbl.sc.clone.committee']}" widgetVar="screen2"
 		modal="true" width="1000" height="500" position="top">
 		<p:messages id="cloneallCommitteeid" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"></p:messages>
@@ -14,7 +14,7 @@
 			<table>
 				<tr>
 					<td valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
+							value="#{lbl['lbl.sc.title']}" /></td>
 					<td colspan="3"><p:inputTextarea maxlength="100"
 							style="margin-bottom:3px;"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
@@ -22,7 +22,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td><p:inputText maxlength="21"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
 							size="30" /></td>
@@ -31,7 +31,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
+							value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 					<td><p:selectOneMenu
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
@@ -43,7 +43,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
+							value="#{lbl['lbl.sc.created.date.from']}" /></td>
 					<td><p:calendar id="fromDate"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -55,7 +55,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
+							value="#{lbl['lbl.sc.created.date.to']}" /></td>
 					<td><p:calendar id="createdtTo" readonlyInput="true"
 							mindate="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -70,7 +70,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+							value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 							<f:selectItems
@@ -81,12 +81,12 @@
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					style="float:right;"
 					action="#{evaluationMeetingBackingBean.resetClone}"
 					update="clonesearchpnlid" resetValues="true" partialSubmit="true"
 					process="@this" />
-				<p:commandButton value="Search" style="float:right;"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" style="float:right;"
 					action="#{evaluationMeetingBackingBean.cloneSearchCommitteAction}"
 					update="clonesearchCommitteid" partialSubmit="true"
 					process="@parent" />
@@ -95,7 +95,7 @@
 			<br />
 		</p:panel>
 		<p:spacer height="3" />
-		<p:panel header="Quotation/Tender List" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 			<p:dataTable id="clonesearchCommitteid" rows="10"
 				value="#{evaluationMeetingBackingBean.searchQuotatioTender}"
 				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
@@ -107,7 +107,7 @@
 					listener="#{evaluationMeetingBackingBean.onRowCloneAction}" />
 
 				<p:column style="width:17%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+					headerText="#{lbl['lbl.sc.qtn.no']}">
 					<h:outputText value="#{scQt.qtNo}" />
 				</p:column>
 
@@ -141,7 +141,7 @@
 
 
 		<p:panel id="committeedtlsid"
-			header="#{lbl['lbl.sc.eva.committee.details']}" toggleable="true">
+			header="#{lbl['lbl.sc.committee.details']}" toggleable="true">
 
 			<p:dataTable id="cloneCommittee" var="committeeMember" rows="10"
 				value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
@@ -152,12 +152,12 @@
 
 				<p:column selectionMode="multiple" style="width:2%"></p:column>
 				<p:column style="width:25%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
+					headerText="#{lbl['lbl.sc.name']}">
 					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
 				</p:column>
 
 				<p:column style="width:13%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+					headerText="#{lbl['lbl.sc.identification.no']}">
 					<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
 				</p:column>
 
@@ -166,22 +166,22 @@
 					<h:outputText value="#{committeeMember.designation}"></h:outputText>
 				</p:column>
 				<p:column style="width:20%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+					headerText="#{lbl['lbl.sc.email']}">
 					<h:outputText value="#{committeeMember.email}"></h:outputText>
 				</p:column>
 
 				<p:column style="width:5%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
+					headerText="#{lbl['lbl.sc.grade']}">
 					<h:outputText value="#{committeeMember.grade}"></h:outputText>
 				</p:column>
 
 				<p:column style="width:5%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+					headerText="#{lbl['lbl.sc.pnp']}">
 					<h:outputText
 						value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 				</p:column>
 				<p:column style="width:10%;white-space: normal;"
-					headerText="#{lbl['lbl.sc.eva.committee.role']}">
+					headerText="#{lbl['lbl.sc.role']}">
 					<ui:fragment rendered="#{committeeMember.PNP == true}">
 						<h:outputText
 							value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}"></h:outputText>

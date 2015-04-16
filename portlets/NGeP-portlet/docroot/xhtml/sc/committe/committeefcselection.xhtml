@@ -9,7 +9,7 @@
 	<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
 		toggleable="true" styleClass="committeMemberDtls">
 		<div align="right">
-			<p:commandButton value="View History"
+			<p:commandButton value="#{lbl['lbl.btn.view.history']}"
 				action="#{committeBackingBean.viewHistoryAction(committeBackingBean.managedBean.qtCommittee)}" />
 		</div>
 		<p:dataTable id="fcMembers" rowKey="#{committeemember}"
@@ -66,13 +66,13 @@
 			<p:column style="width: 15%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.committe.sctable.rep.type']}" />
+					<h:outputText value="#{lbl['lbl.sc.representative.type']}" />
 				</f:facet>
 				<ui:fragment
 					rendered="#{committeemember.memberRole.parameterCode eq 'M'}">
 					<p:selectOneMenu required="true" id="representativeType"
 						value="#{committeemember.representativeType.parameterId}"
-						label="#{lbl['lbl.sc.committe.representive']}"
+						label="#{lbl['lbl.sc.representative.type']}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{committeBackingBean.managedBean.representativesTypeslist}" />
