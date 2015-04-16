@@ -708,9 +708,13 @@ public class SmApplicationUtil {
 			int prfCnt = 0;
 			int semPrfCnt = 0;
 			for (SmPersonnel per : appl.getSmPersonnels()) {
-				if (per.isProf() && per.getWorkExperienceYear().compareTo(new BigDecimal(5)) >= 0) {
+				if (per.isProf()
+						&& per.getWorkExperienceYear().compareTo(
+								new BigDecimal(5)) >= 0) {
 					prfCnt = prfCnt + 1;
-				} else if (per.isSemiProf() && per.getWorkExperienceYear().compareTo(new BigDecimal(5)) >= 0) {
+				} else if (per.isSemiProf()
+						&& per.getWorkExperienceYear().compareTo(
+								new BigDecimal(5)) >= 0) {
 					semPrfCnt = semPrfCnt + 1;
 				}
 				if (prfCnt > 0 && semPrfCnt > 0) {
@@ -5117,5 +5121,20 @@ public class SmApplicationUtil {
 			retVal = true;
 		}
 		return retVal;
+	}
+
+	/**
+	 * Retrieve latest approved application
+	 * 
+	 * @param Long
+	 *            supplierId
+	 * @return SmAppl
+	 */
+	public static SmAppl getLatestApplBySupplierId(Long supplierId) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(supplierId);
+		MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
+				.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
+		return resDTO.getSmAppl();
 	}
 }
