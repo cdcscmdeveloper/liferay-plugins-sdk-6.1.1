@@ -5099,6 +5099,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			this.getManagedBean().setMaintainItemList(
 					resDTO.getSupplierItemList());
+			this.getManagedBean().setTabActiveIndex(0);
 		}
 			CatalogueResDTO resDTO2 = catalogueSO
 					.retrieveSupplierZoneBySuppId(reqDTO);
