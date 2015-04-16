@@ -2519,7 +2519,8 @@ public class EvaluationBackingBean extends
 						for (ScQtCheckList techCheckList : this
 								.getManagedBean()
 								.getEvaluationStgfinancialCheckList()) {
-							if (null != techCheckList.getPmEvalStatus()
+							if (techCheckList.isScoringReq()
+									&& null != techCheckList.getPmEvalStatus()
 
 									&& techCheckList
 											.getPmEvalStatus()
@@ -2556,7 +2557,8 @@ public class EvaluationBackingBean extends
 				if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 					for (ScQtCheckList techCheckList : this.getManagedBean()
 							.getEvaluationStgfinancialCheckList()) {
-						if (null != techCheckList.getPmEvalStatus()
+						if (techCheckList.isScoringReq()
+								&& null != techCheckList.getPmEvalStatus()
 
 								&& techCheckList
 										.getPmEvalStatus()
@@ -3084,13 +3086,18 @@ public class EvaluationBackingBean extends
 					 * .get(i), zoneResDTO.getComplianceResultBean()
 					 * .getResultList(), null, 0);
 					 */
-					calculateFinacialSpecSupplierPackageScore(zoneResDTO
-							.getComplianceResultBean().getResultList(),
-							speczone.getScoreOfferPrices());
+					/*
+					 * calculateFinacialSpecSupplierPackageScore(zoneResDTO
+					 * .getComplianceResultBean().getResultList(),
+					 * speczone.getScoreOfferPrices());
+					 */
 					/*
 					 * this.getManagedBean().setFinSpecSupplierList(
 					 * zoneResDTO.getComplianceResultBean() .getResultList());
 					 */
+					this.getManagedBean().setFinSpecSupplierList(
+							zoneResDTO.getComplianceResultBean()
+									.getResultList());
 				}
 
 				if (null != speczone.getScoreOfferPrices()
@@ -3359,9 +3366,14 @@ public class EvaluationBackingBean extends
 								speczone.getWithinVarieancePackage());
 					}
 					if (speczone.getComplianceResultBean().getTotalRecord() > 0) {
-						calculateFinacialSpecSupplierPackageScore(speczone
-								.getComplianceResultBean().getResultList(),
-								speczone.getScoreOfferPrices());
+						/*
+						 * calculateFinacialSpecSupplierPackageScore(speczone
+						 * .getComplianceResultBean().getResultList(),
+						 * speczone.getScoreOfferPrices());
+						 */
+						this.getManagedBean().setFinSpecSupplierList(
+								speczone.getComplianceResultBean()
+										.getResultList());
 					}
 
 					return "evaluationFinSpecWithOutzone.xhtml";
@@ -3374,56 +3386,6 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
-
-	}
-
-	// set package score for each supplier in financial spec.
-	private void calculateFinacialSpecSupplierPackageScore(
-			List<ScQtProposalChecklist> proposalCheckList1,
-			ScQtScoreOfferPrice packageOfferPrice) {
-		for (ScQtProposalChecklist proposalCheckList : proposalCheckList1) {
-			if (null != proposalCheckList.getScQtProposal().getProposalAmount()
-					&& null != proposalCheckList.getScQtProposal()
-							.getProposalAmount().getProposalAmt()) {
-				if (null != this.getManagedBean().getPackageFromVarieance()
-						&& null != this.getManagedBean()
-								.getPackageToVarieance()) {
-					if (proposalCheckList.getScQtProposal().getProposalAmount()
-							.getProposalAmt().intValue() < this
-							.getManagedBean().getPackageFromVarieance()
-							.intValue()) {
-						if (null != packageOfferPrice) {
-							proposalCheckList.setPackageScore(packageOfferPrice
-									.getBelowScore());
-						}
-
-					} else if (proposalCheckList.getScQtProposal()
-							.getProposalAmount().getProposalAmt().intValue() >= this
-							.getManagedBean().getPackageFromVarieance()
-							.intValue()
-							&& proposalCheckList.getScQtProposal()
-									.getProposalAmount().getProposalAmt()
-									.intValue() <= this.getManagedBean()
-									.getPackageToVarieance().intValue()) {
-						proposalCheckList.setPackageScore(this.getManagedBean()
-								.getWithInVarieance());
-
-					} else if (proposalCheckList.getScQtProposal()
-							.getProposalAmount().getProposalAmt().intValue() > this
-							.getManagedBean().getPackageToVarieance()
-							.intValue()) {
-						if (null != packageOfferPrice) {
-							proposalCheckList.setPackageScore(packageOfferPrice
-									.getAboveScore());
-						}
-
-					}
-
-				}
-
-			}
-		}
-		this.getManagedBean().setFinSpecSupplierList(proposalCheckList1);
 
 	}
 
@@ -3530,9 +3492,14 @@ public class EvaluationBackingBean extends
 					if (null != zoneResDTO.getComplianceResultBean()
 							&& zoneResDTO.getComplianceResultBean()
 									.getTotalRecord() > 0) {
-						calculateFinacialSpecSupplierPackageScore(zoneResDTO
-								.getComplianceResultBean().getResultList(),
-								this.getManagedBean().getOfferPricePackage());
+						/*
+						 * calculateFinacialSpecSupplierPackageScore(zoneResDTO
+						 * .getComplianceResultBean().getResultList(),
+						 * this.getManagedBean().getOfferPricePackage());
+						 */
+						this.getManagedBean().setFinSpecSupplierList(
+								zoneResDTO.getComplianceResultBean()
+										.getResultList());
 						/*
 						 * this.getManagedBean().setFinSpecSupplierList(
 						 * zoneResDTO.getComplianceResultBean()
@@ -4261,10 +4228,6 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setQtProposalChecklist(proposalCheckList);
 				reqDTO.setProposalChecklist(proposalCheckList);
 
-				if (null != proposalCheckList.getPackageScore()) {
-					this.getManagedBean().setPackageScore(
-							proposalCheckList.getPackageScore());
-				}
 				resDTO = evaluationSO
 						.retrieveSpecificationDetailsByProposal(reqDTO);
 
@@ -4337,6 +4300,7 @@ public class EvaluationBackingBean extends
 
 				this.getManagedBean().setSpecItemScoringList(
 						new ArrayList<TplSpecScoring>());
+				Map<Long, TplSpecScoring> distinctScoring = new HashMap<Long, TplSpecScoring>();
 				if (null != specresDTO1.getSpecAnswerList()
 						&& !specresDTO1.getSpecAnswerList().isEmpty()) {
 					for (TplSpecAnswer specAnswers : specresDTO1
@@ -4354,10 +4318,14 @@ public class EvaluationBackingBean extends
 											.getTplSpecScorings(), this
 											.getManagedBean().getScQt(), this
 											.getManagedBean().getSelectedZone());
-							this.getManagedBean().getSpecItemScoringList()
-									.add(specScoring.get(0));
-						}
+							distinctScoring.put(specScoring.get(0)
+									.getSpecScoringId(), specScoring.get(0));
 
+						}
+						List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(
+								distinctScoring.values());
+						this.getManagedBean().setSpecItemScoringList(
+								scoringList);
 					}
 				}
 
@@ -5520,7 +5488,8 @@ public class EvaluationBackingBean extends
 			if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 				if (null != technicalcheckList && !technicalcheckList.isEmpty()) {
 					for (ScQtCheckList techCheckList : technicalcheckList) {
-						if (null != techCheckList.getPmEvalStatus()
+						if (techCheckList.isScoringReq()
+								&& null != techCheckList.getPmEvalStatus()
 								&& techCheckList
 										.getPmEvalStatus()
 										.getStatusId()
@@ -5586,7 +5555,10 @@ public class EvaluationBackingBean extends
 							for (ScQtCheckList techCheckList : this
 									.getManagedBean()
 									.getEvaluationStgfinancialCheckList()) {
-								if (null != techCheckList.getPmEvalStatus()
+
+								if (techCheckList.isScoringReq()
+										&& null != techCheckList
+												.getPmEvalStatus()
 
 										&& techCheckList
 												.getPmEvalStatus()
@@ -5632,7 +5604,8 @@ public class EvaluationBackingBean extends
 						for (ScQtCheckList techCheckList : this
 								.getManagedBean()
 								.getEvaluationStgfinancialCheckList()) {
-							if (null != techCheckList.getPmEvalStatus()
+							if (techCheckList.isScoringReq()
+									&& null != techCheckList.getPmEvalStatus()
 
 									&& techCheckList
 											.getPmEvalStatus()
@@ -7344,11 +7317,6 @@ public class EvaluationBackingBean extends
 				financialSupplierEvaluate(evalResDTO.getProposalChecklist(),
 						index, getManagedBean().getCheckListType());
 				this.getManagedBean().getFinSpecSupplierList().remove(index);
-
-				this.getManagedBean()
-						.getQtProposalChecklist()
-						.setPackageScore(
-								this.getManagedBean().getPackageScore());
 
 				this.getManagedBean()
 						.getFinSpecSupplierList()
