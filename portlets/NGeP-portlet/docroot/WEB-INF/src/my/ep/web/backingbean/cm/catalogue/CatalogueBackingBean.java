@@ -558,7 +558,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// ""));
 	
 			if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
-				retrieveSupplierItemsBySupplierId(catalogueSO, smSupplier.getSupplierId());
+				retrieveSupplierItemsBySupplierId(catalogueSO, smSupplier.getSupplierId(), null);
 			} else {
 				facesContext.addMessage(
 						null,
