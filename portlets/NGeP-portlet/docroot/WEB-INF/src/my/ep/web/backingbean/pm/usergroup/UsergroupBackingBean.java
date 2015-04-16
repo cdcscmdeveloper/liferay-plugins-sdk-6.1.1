@@ -514,7 +514,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 								MessageUtils.getMessage(
 										MessageConst.ERR_900022, new String[] {
 												resDTO.getUserGroup()
-												.getGroupCode()},
+												.getGroupName()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			} else {
@@ -524,7 +524,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 								MessageUtils.getMessage(
 										MessageConst.ERR_900023, new String[] {
 												resDTO.getUserGroup()
-												.getGroupCode()},
+												.getGroupName()},
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
