@@ -11,7 +11,7 @@
 	<ui:define name="contentSection">
 		<p:outputPanel id="FactoringCompaniesPanelId">	
 			<h:outputText value="#{lbl['lbl.pm.fact.company.view']}" /> 		
-			<p:commandLink  value="#{lbl['lbl.pm.fact.company.view.click']}"  action="#{factoringBackingBean.preRenderView()}"></p:commandLink>
+			<p:commandLink  value="#{lbl['lbl.pm.fact.company.view.click']}"  action="#{factoringBackingBean.pageNavigate()}"></p:commandLink>
 		</p:outputPanel>
 		<br /><br />
 	</ui:define>
