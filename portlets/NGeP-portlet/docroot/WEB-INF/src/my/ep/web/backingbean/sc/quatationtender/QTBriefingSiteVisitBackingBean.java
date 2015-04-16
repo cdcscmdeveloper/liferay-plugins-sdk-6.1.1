@@ -726,7 +726,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (selectedValue) {
 			
 		} else {
-			zoneBean.getScQtBsv().setMinBriefingAttend(1);
+			zoneBean.getScQtBsv().setMinBriefingAttend(0);
 		}
 		this.getManagedBean().setBsvDtlBean(zoneBean);
 
@@ -744,7 +744,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		BriefingZoneBean zoneBean = this.getManagedBean().getBsvDtlBean();
 		if (selectedValue) {
 		} else {
-			zoneBean.getScQtBsv().setMinSiteVisitAttend(1);
+			zoneBean.getScQtBsv().setMinSiteVisitAttend(0);
 		}
 		this.getManagedBean().setBsvDtlBean(zoneBean);
 
