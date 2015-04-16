@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<div align="left" class="header-info">
-		<table style="width: 100%">
+		<table style="width: 100%;table-layout:fixed;">
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
 				<td class="header-info-text"><c:if
@@ -22,9 +22,13 @@
 				<td class="header-info-text">#{viewSmApplBackingBean.getApplicationStatus()}</td>
 			</tr>
 			<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplRejectReasons}">
+				<tr height="15"><td>&#160;</td></tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
-					<td class="header-info-text">#{viewSmApplBackingBean.getApplicationRejectionReason()}</td>
+					<td style="word-wrap: break-word;" colspan="5">
+						<h:outputText value="#{viewSmApplBackingBean.getApplicationRejectionReason()}" 
+						escape="false" style="text-align: left !important;font-weight: normal !important;"/>
+					</td>
 				</tr>
 			</c:if>
 		</table>

@@ -1797,6 +1797,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public String getApplicationRejectionReason() {
 		String langCode = new FacesScopes().getUserLocale().getLanguage();
 		StringBuffer sb = new StringBuffer();
+		int i = 1;
 		for (SmApplRejectReason rej : getManagedBean().getSmAppl()
 				.getSmApplRejectReasons()) {
 			if (rej.getPmReason() != null
@@ -1805,7 +1806,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					if (desc.getPmLanguage() != null
 							&& desc.getPmLanguage().getLanguageCode()
 									.equalsIgnoreCase(langCode)) {
-						sb.append(desc.getReasonDesc()).append("\n");
+						sb.append(i+") "+desc.getReasonDesc()).append("<br />");
+						i++;
 					}
 				}
 
