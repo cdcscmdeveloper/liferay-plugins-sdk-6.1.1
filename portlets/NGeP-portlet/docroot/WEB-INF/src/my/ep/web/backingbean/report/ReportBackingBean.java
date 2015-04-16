@@ -5650,10 +5650,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 */
 	public void resetReportForm() {		
 		assignNewCompanyExperience(new ArrayList<SmSupplierCategory>());
-		getManagedBean().getRptGenBean().setCmMofRegView(false);
+		/*getManagedBean().getRptGenBean().setCmMofRegView(false);
 		getManagedBean().getRptGenBean().setCmBasicRegView(false);
 		getManagedBean().getRptGenBean().setSmMofRegView(false);
-		getManagedBean().getRptGenBean().setSmBasicRegView(false);
+		getManagedBean().getRptGenBean().setSmBasicRegView(false);*/
 		this.setFromDate(null);
 		this.setToDate(null);
 		this.setScQuotationId(null);
