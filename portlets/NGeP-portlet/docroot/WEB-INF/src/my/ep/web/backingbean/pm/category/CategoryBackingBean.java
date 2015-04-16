@@ -2029,7 +2029,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @return the string
 	 */
 	public String backToSearch() {
-		resetCategory();
+		//resetCategory();
 		return "/xhtml/pm/category/search.xhtml?faces-redirect=true";
 	}
 
