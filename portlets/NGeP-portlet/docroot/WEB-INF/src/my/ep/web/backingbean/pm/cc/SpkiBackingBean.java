@@ -212,6 +212,7 @@ public class SpkiBackingBean {
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
 				//throw new EpException(MessageConst.ERROR_776052);
 				signedData = "DEFAULT SIGNED TEXT";
+				break;
 		}
 			
 		} catch (Exception ex)
