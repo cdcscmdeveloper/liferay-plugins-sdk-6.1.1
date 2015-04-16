@@ -48,6 +48,7 @@
 
 
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.setTabValue('3','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
