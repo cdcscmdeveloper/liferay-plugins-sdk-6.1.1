@@ -349,6 +349,7 @@ public class SPDetailBackingBean extends
 							scQtProposalChecklists));
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtSupplierId(getManagedBean().getQtProposal()
 					.getScQtSupplier().getQtSupplierId());
 			reqDTO.setScQtProposal(scQtProposal);
