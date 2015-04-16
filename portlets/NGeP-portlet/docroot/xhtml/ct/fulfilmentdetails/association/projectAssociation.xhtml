@@ -61,11 +61,11 @@
            
           <div class="ppRightBtn"> 
              <p:commandButton value="#{lbl['lbl.btn.search']}" process="@form" action="#{associationBackingBean.searchAssociation}" 
-                 icon="ui-icon-search" onstart="blkAssoSearchTable.show();" oncomplete="blkAssoSearchTable.hide();"  update=":form"
+                 onstart="blkAssoSearchTable.show();" oncomplete="blkAssoSearchTable.hide();"  update=":form"
                  id="searchButtonId" />
             
              <p:commandButton value="#{lbl['lbl.ct.reset']}"  process="@form"
-              action="#{associationBackingBean.searchReset}" icon="ui-icon-reset"   update=":form"/>
+              action="#{associationBackingBean.searchReset}" update=":form"/>
         </div>
      </p:panel>
 	
