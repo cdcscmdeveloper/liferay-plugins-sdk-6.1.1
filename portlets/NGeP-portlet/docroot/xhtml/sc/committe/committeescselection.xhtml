@@ -6,19 +6,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"	
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Committee Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.committee.details']}" toggleable="true">
 		<h:panelGrid columns="4"  cellpadding="3"
 			id="committecheckbox" 
 			rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '4'
     	         or committeBackingBean.managedBean.scCommittee.committeeType eq '5'}">
-    	         <h:outputLabel value="#{lbl['lbl.sc.committe.changeec.tecfec']}" />  
+    	         <h:outputLabel value="#{lbl['lbl.sc.change.to.ec']}" />  
  <p:selectBooleanCheckbox value="#{committeBackingBean.managedBean.ecType}" disabled="#{!committeBackingBean.managedBean.editable}" /> 
 
 		</h:panelGrid>
 		<h:panelGrid columns="4" cellpadding="3" 
 			 
 			rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '3' }">
-			<h:outputLabel value="#{lbl['lbl.sc.committe.changeec.ec']}" />  
+			<h:outputLabel value="#{lbl['lbl.sc.change.tec.fec']}" />  
 			<p:selectBooleanCheckbox value="#{committeBackingBean.managedBean.tecType}" disabled="#{!committeBackingBean.managedBean.editable}" /> 
 		</h:panelGrid>
 		<br />
@@ -32,17 +32,17 @@
                  <p:ajax event="rowEditCancel" listener="#{committeBackingBean.onRowCancel}" update="committeMember"/> 
 				
 
-				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsname']}">
+				<p:column headerText="#{lbl['lbl.sc.name']}">
 					<h:outputText value="#{committemember.memberName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsicno']}">
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
 					<h:outputText value="#{committemember.icPassport}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}">
+				<p:column headerText="#{lbl['lbl.sc.role']}">
 					<h:outputText value="#{committemember.memberRole}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsaccess']}">
+				<p:column headerText="#{lbl['lbl.sc.access']}">
 					<h:outputText value="#{committemember.accessRight}" />
 				</p:column>
 				<p:column style="width:6%" disabled="#{!committeBackingBean.managedBean.editable}">  
@@ -53,19 +53,19 @@
 		
 
 		<div align="right">
-			<p:commandButton value="Add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				action="#{committeBackingBean.addCommitteMember}"
 				 process="@this" oncomplete="screen3.show();" update="@(.qtAddMember)"
 				 disabled="#{!committeBackingBean.managedBean.editable}"></p:commandButton>
 
-			<p:commandButton value="Clone" onclick="screen2.show();" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.clone']}" onclick="screen2.show();" process="@this"
 			disabled="#{!committeBackingBean.managedBean.editable}"></p:commandButton>
 		</div>
 		<br />
 	</p:panel>
 
 
-	<p:panel header="Approval Details" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.approval.details']}" toggleable="true"
 		id="approvaldetails"
 		rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '2' or committeBackingBean.managedBean.scCommittee.committeeType eq '3' 
     or committeBackingBean.managedBean.scCommittee.committeeType eq '4' or committeBackingBean.managedBean.scCommittee.committeeType eq '4' 
@@ -74,18 +74,18 @@
 
 		<h:panelGrid columns="4" style="margin-bottom:10px;width:100%;"
 			cellpadding="3">
-			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appname']}" />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.approver.name']}:" />
 			<p:selectOneMenu style="width:150px"
 				value="#{committeBackingBean.managedBean.scCommittee.pmUser.userId}"
 				disabled="#{!committeBackingBean.managedBean.editable}">
 				<f:selectItems value="#{committeBackingBean.managedBean.approvers}" var="approver" itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
 			</p:selectOneMenu>
 
-			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appdate']}" />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.approver.date']}:" />
 			<p:calendar value="#{committeBackingBean.managedBean.scCommittee.approvalDate}" disabled="#{!committeBackingBean.managedBean.editable}" showOn="button"></p:calendar>
 			
 
-			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appaction']}" />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.approver.action']}:" />
 			<p:selectOneMenu  style="width:150px"
 							value="#{committeBackingBean.managedBean.scCommittee.approvalStatus}"
 							disabled="#{!committeBackingBean.managedBean.editable}">
@@ -94,7 +94,7 @@
 							<f:selectItem itemLabel="Reject" itemValue="3" />
 						</p:selectOneMenu>
 
-			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appremarks']}" />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.approver.remarks']}:" />
 			<p:inputText id="appRemark"
 				value="#{committeBackingBean.managedBean.scCommittee.approvalRemark}"
 				disabled="#{!committeBackingBean.managedBean.editable}" />

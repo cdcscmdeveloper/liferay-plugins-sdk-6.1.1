@@ -14,7 +14,7 @@
 				closable="true" showSummary="false" />
 			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.selection']}" />
 				<p:selectOneRadio id="selection"
 					value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
@@ -33,14 +33,14 @@
 						toggleable="true">
 						<table>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
 								<td colspan="3"><p:inputText
 										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.name}"
 										size="64" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
+										value="#{lbl['lbl.sc.id.type']}" /></td>
 								<td><p:selectOneMenu id="appaction"
 										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationType}"
 										style="width: 178px;margin-bottom: 5px;">
@@ -51,7 +51,7 @@
 								<td />
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" /></td>
 								<td><p:inputText id="Idno"
 										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationNo}"
 										size="30" /></td>
@@ -123,20 +123,20 @@
 						<table>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.name']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.name']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="3"><p:inputText id="name" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.name']}"
+										label="#{lbl['lbl.sc.name']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.memberName}"
 										size="30" maxlength="50" /> <p:message id="nameMsg"
 										for="name" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.id.type']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:selectOneMenu id="idtype" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.idtype']}"
+										label="#{lbl['lbl.sc.id.type']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.idType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
@@ -147,10 +147,10 @@
 							</tr>
 							<tr>
 								<td style="width: 142px;"><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.identification.no']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="idNos" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.idno']}"
+										label="#{lbl['lbl.sc.identification.no']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.icPassport}"
 										size="30" maxlength="15" /> <p:message id="idNosMsg"
 										for="idNos" display="icon" /></td>
@@ -159,10 +159,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.grade']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.grade']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="grade" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.grade']}"
+										label="#{lbl['lbl.sc.grade']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.grade}"
 										size="30" maxlength="10" /> <p:message id="gradeMsg"
 										for="grade" display="icon" /></td>
@@ -171,10 +171,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.pp']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.pnp']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:selectOneRadio id="pnp" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.pp']}"
+										label="#{lbl['lbl.sc.pnp']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.PNP}">
 										<f:selectItem itemLabel="Yes" itemValue="true" />
 										<f:selectItem itemLabel="No" itemValue="false" />
@@ -196,10 +196,10 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sc.committe.addscreen.email']}" /> <p:outputLabel
+										value="#{lbl['lbl.sc.email']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="email" required="true"
-										label="#{lbl['lbl.sc.committe.addscreen.email']}"
+										label="#{lbl['lbl.sc.email']}"
 										value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.email}"
 										size="30" maxlength="80" /> <p:message id="emailMsg"
 										for="email" display="icon" /></td>

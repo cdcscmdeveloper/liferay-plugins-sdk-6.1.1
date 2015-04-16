@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog id="cloneQTPopup" widgetVar="clonedlg" modal="true" appendToBody="true" header="Qtn/Tender Search" 
+	<p:dialog id="cloneQTPopup" widgetVar="clonedlg" modal="true" appendToBody="true" header="#{lbl['lbl.sc.qtn.search']}" 
 		width="800" height="400">
 
 
@@ -63,7 +63,7 @@
             <br />
 		</p:panel>
 
-		<p:panel header="Search Qtn/Tender Result" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.search.qtn.result']}" toggleable="true">
 			<h:panelGroup style="width:100%;">
 				<p:dataTable value="#{qTDetailBB.managedBean.cloneSearchQTDataModel}"
 					id="cloneQtsearch" var="tenders"
@@ -86,7 +86,7 @@
 					<p:column headerText="#{lbl['lbl.sc.title']}">
 						<h:outputText value="#{tenders.qtTitle}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.procmode']}">
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText value="#{tenders.procurementMode}" />
 					</p:column>
 
@@ -102,7 +102,7 @@
 
 		</p:panel>
 
-		<p:panel header="Clone Qtn/Tender Sections" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.clone.qtn.sections']}" toggleable="true">
 			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
 
@@ -114,7 +114,7 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 				
 					 
-					<p:column headerText="Clone All" style="width:25%">
+					<p:column headerText="#{lbl['lbl.sc.clone.all']}" style="width:25%">
 						<h:outputText value="#{clone.displayName}"></h:outputText>
 					</p:column>
 				</p:dataTable>

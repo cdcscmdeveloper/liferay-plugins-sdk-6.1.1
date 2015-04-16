@@ -15,14 +15,14 @@
 			<table>
 				<tr>
 					<td valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
+							value="#{lbl['lbl.sc.title']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
 							size="92" maxlength="100" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td><p:inputText
 							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
 							size="30" maxlength="21" /></td>
@@ -31,7 +31,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
+							value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 					<td><p:selectOneMenu
 							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
@@ -43,7 +43,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
+							value="#{lbl['lbl.sc.created.date.from']}" /></td>
 					<td><p:calendar id="datecreatedfrm" showOn="button"
 							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 							size="30" readonlyInput="true">
@@ -54,7 +54,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
+							value="#{lbl['lbl.sc.created.date.to']}" /></td>
 					<td><p:calendar id="datecreatedto" showOn="button"
 							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 							mindate="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
@@ -67,7 +67,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+							value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
 							value="#{committeBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 							<f:selectItems
