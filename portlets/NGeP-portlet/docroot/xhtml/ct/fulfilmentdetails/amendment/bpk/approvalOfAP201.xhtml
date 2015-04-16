@@ -104,7 +104,7 @@
 				           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 							<table>
 								<tr>
-							       	<td rowspan="2"><h:graphicImage library="ep/images/design" name="#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							       	<td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
 							       	<td width="5"></td>
 							       	<td>
 							       		<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
@@ -120,7 +120,7 @@
 										styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 				 	 				<p:commandLink onclick="deleteAttachmentDlg1.show();" action="#{amendmentBackingBean.setAttachFileIndex(attachFileIndex)}"
 										rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)}">
-				   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
+				   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 				 	 				</p:commandLink>
 		 	 					</td>
 								</tr>
@@ -145,8 +145,7 @@
 					<p:dialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1"
 				      	styleClass="screen-title" modal="true" width="330">  
 				 		<h:panelGrid columns="3">
-				 			<p:graphicImage library="ep/images/design" name="exclamation.png"
-						     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+				 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 						   	<p:spacer width="10"/>
 				            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
 				     	</h:panelGrid>

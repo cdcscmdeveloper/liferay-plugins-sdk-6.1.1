@@ -39,14 +39,12 @@
 			 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;">
 			    <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
 			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
-				       <p:graphicImage library="ep/images/design" name="download.png"
-						   value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+				       <p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				   </h:commandLink>
 			    </h:panelGroup>
 			     <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
 			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(loaReportVar)}">
-					    <p:graphicImage library="ep/images/design" name="download.png"
-						    value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+					    <p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				     </h:commandLink>
 			    </h:panelGroup>
 			  </p:column>
@@ -76,8 +74,7 @@
 		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="330"
 		     styleClass="screen-title">
 			 <h:panelGrid columns="3">
-				 <p:graphicImage library="ep/images/design" name="exclamation.png"
-					 value="/css/images/design/exclamation.png" styleClass="ui-icon-complain" />
+				 <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain" />
 				<p:spacer width="10" />
 				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 			 </h:panelGrid>

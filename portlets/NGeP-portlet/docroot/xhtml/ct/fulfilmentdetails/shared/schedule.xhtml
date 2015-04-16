@@ -104,8 +104,7 @@
 	         
 	                 <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="330" styleClass="screen-title">  
                           <h:panelGrid columns="3">
-                               <p:graphicImage library="ep/images/design"
-                                    name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+                               <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			                    <p:spacer width="10"/>
                                 <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                           </h:panelGrid>
@@ -188,8 +187,7 @@
                                          onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{contractDetailsBackingBean.calculatePercentage(progPaymentObj)}"/>
                                      </p:inputText>
                                      <p:spacer width="5"/>
-		                             <p:graphicImage id="percentValidationId"  value="/css/images/design/reject.png"  name="reject.png" 
-		                                 library="ep/images/design"  styleClass="ui-icon-reject" style="margin-bottom: -5px;" rendered="#{progPaymentObj.percentageExceeded}" />
+		                             <p:graphicImage id="percentValidationId"  value="/css/images/design/reject.png" styleClass="ui-icon-reject" style="margin-bottom: -5px;" rendered="#{progPaymentObj.percentageExceeded}" />
 		                             <p:tooltip for="percentValidationId" showEffect="fade" value="#{lbl['lbl.ct.validation.progressive.percentage']}"/> 
 		                        </h:panelGroup>
                              </p:column>
@@ -209,8 +207,7 @@
 		       
 		       <p:dialog id="progDlgId" widgetVar="progDlgObj" width="330" styleClass="screen-title" modal="true">  
                     <h:panelGrid columns="3">
-                       <p:graphicImage library="ep/images/design" 
-                            name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+                       <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			            <p:spacer width="10"/>
                         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                     </h:panelGrid>

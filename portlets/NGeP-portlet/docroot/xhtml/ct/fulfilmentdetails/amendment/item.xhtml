@@ -26,7 +26,7 @@
 				  <p:column style="width:30%; white-space:normal;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
 				  <f:facet name="header">
 		                    <h:outputText id="productItemDisc"  value="#{lbl['lbl.ct.item.desc']}"/>
-		                        &#160;<p:graphicImage id="amendProductItemId" library="ep/images/design" name="tooltips.png" /> <p:tooltip
+		                        &#160;<p:graphicImage id="amendProductItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
 							          id="amendProductTooltip" for="amendProductItemId">
 							<h:outputText id="amendProductInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
@@ -73,7 +73,7 @@
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;" 
 					  rendered="#{!amendmentBackingBean.managedBean.prepareLOA or !amendmentBackingBean.managedBean.disableFinalAmendDetails}">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
+						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
 					</p:commandLink>
 				</p:column>
 				
@@ -124,11 +124,11 @@
 						           process="@form" disabled="#{itemMaxQtiesVar.chkIndexOfRow}" 
 						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 							       <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
-							       <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+							       <p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						        </p:commandLink>
 					    	    <p:commandLink rendered="#{itemMaxQtiesVar.changeQuantity}" oncomplete="dlgDelItemMaxQty.show();return false;">
 							        <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
-							        <p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+							        <p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						        </p:commandLink>
 				  	       </p:column>					
 				     </p:dataTable>
@@ -142,8 +142,7 @@
 			     <p:dialog id="dlgDelItemMaxQty" widgetVar="dlgDelItemMaxQty" 
 			         modal="true" styleClass="screen-title" width="330">
 				      <h:panelGrid columns="3">
-					     <p:graphicImage library="ep/images/design" name="exclamation.png"
-					     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+					     <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 					     <p:spacer width="10" />
 					     <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 				     </h:panelGrid>
@@ -262,11 +261,11 @@
 										disabled="#{itemPriceVar.chkIndexOfRow}"
 									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
-										<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+										<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 									</p:commandLink>
 									<p:commandLink rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
-										<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+										<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 									</p:commandLink>
 								</p:column>
 				        
@@ -274,8 +273,7 @@
 			          	<p:dialog id="dlgItemPrices" widgetVar="dlgItemPrices"  modal="true"
 			          	    styleClass="screen-title" width="330">
 					        <h:panelGrid columns="3">
-						         <p:graphicImage library="ep/images/design" name="exclamation.png"
-						          	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+						         <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 						         <p:spacer width="10" />
 						         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 					        </h:panelGrid>
@@ -333,11 +331,11 @@
 						   	rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
-							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
 						<p:commandLink oncomplete="dlgCeilQuantity.show();return false;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
-							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
@@ -345,9 +343,7 @@
 			<p:dialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" styleClass="screen-title"
 				modal="true" width="330">
 				<h:panelGrid columns="3">
-					<p:graphicImage library="ep/images/design" name="exclamation.png"
-						value="/css/images/design/exclamation.png"
-						styleClass="ui-icon-complain"></p:graphicImage>
+					<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 					<p:spacer width="10" />
 					<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 				</h:panelGrid>
@@ -374,8 +370,7 @@
 				<p:column  style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
 				      <f:facet name="header">
 		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
-		                        &#160; <p:graphicImage id="amendServiceItemId"
-							         library="ep/images/design" name="tooltips.png" /> <p:tooltip
+		                        &#160; <p:graphicImage id="amendServiceItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
 							          id="amendServiceTooltip" for="amendServiceItemId">
 							<h:outputText id="amendServiceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
@@ -449,21 +444,19 @@
 							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}"
 							 disabled="#{ItemPricesVar.chkIndexOfRow}">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
-							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
 						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;"
 						 disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" >
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
-							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+							<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
 				<p:dialog id="dlgSvcItemPrices" widgetVar="dlgSvcItemPrices" styleClass="screen-title"
 					modal="true" width="330">
 					<h:panelGrid columns="3">
-						<p:graphicImage library="ep/images/design" name="exclamation.png"
-							value="/css/images/design/exclamation.png"
-							styleClass="ui-icon-complain"></p:graphicImage>
+						<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 						<p:spacer width="10" />
 						<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 					</h:panelGrid>

@@ -72,7 +72,7 @@
 					           var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 					           <table>
 						          <tr>
-							       <td rowspan="2"><h:graphicImage library="ep/images/design" name="#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
+							       <td rowspan="2"><h:graphicImage value="/css/images/design/#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
 							       <td width="5"></td>
 							       <td>
 								       <h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,

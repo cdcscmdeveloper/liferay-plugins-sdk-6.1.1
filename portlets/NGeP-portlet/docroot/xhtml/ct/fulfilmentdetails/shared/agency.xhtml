@@ -115,7 +115,7 @@
 			   	<p:commandLink 
 			   	   onclick="deleteAttachmentDlg1.show();" action="#{contractDetailsBackingBean.setIndexProperty(indexVar)}"
 						  rendered="#{!contractDetailsBackingBean.managedBean.viewContract and agencyData.ap178 and agencyData.fileName != null}">
-			   				<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
+			   				<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	</p:commandLink>
 			 	 				
 		       </p:column>
@@ -178,8 +178,7 @@
 		      	<p:dialog id="delAddressDlg" widgetVar="delAddressDlg"
 			   		styleClass="screen-title" modal="true" width="330">  
 	           		<h:panelGrid columns="3">
-	             	<p:graphicImage library="ep/images/design" name="exclamation.png"
-				   		value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+	             	<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 				   	<p:spacer width="10"/>
 	              	<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 	           		</h:panelGrid>
@@ -196,8 +195,7 @@
         <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
            modal="true" width="330">  
            <h:panelGrid columns="3">
-            <p:graphicImage library="ep/images/design" name="exclamation.png"
-			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+            <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 			 <p:spacer width="10"/>
              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
@@ -323,8 +321,7 @@
 	<p:dialog id="deleteAttachmentDlg1" widgetVar="deleteAttachmentDlg1"
       	styleClass="screen-title" modal="true" width="330">  
       	<h:panelGrid columns="3">
- 			<p:graphicImage library="ep/images/design" name="exclamation.png"
-		     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+ 			<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 		   	<p:spacer width="10"/>
             <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
      	</h:panelGrid>

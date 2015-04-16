@@ -10,8 +10,7 @@
 			  <h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.ct.sample.contract']}" />
 				<h:commandLink action="#{agreementBackingBean.downloadFile('', 'sample')}">
-					<p:graphicImage library="ep/images/design" name="download.png"
-						value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+					<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				</h:commandLink>				
 			</h:panelGrid>
 			
@@ -47,14 +46,12 @@
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc or 
 					  contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
 					 <p:commandLink process="@this" partialSubmit="true" action="#{agreementBackingBean.downloadDocFile(contentsVar)}">
-							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 					 </p:commandLink>
 					 <p:spacer width="2"/>
 					 <p:commandLink rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc}"
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
-							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/css/images/design/document.png" title="#{lbl['lbl.ct.view.document']}" />
+							<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.ct.view.document']}" />
 					</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
@@ -108,8 +105,7 @@
 	    <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"
 	      styleClass="screen-title" modal="true" width="330">  
            <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png"
-			     value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+              <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			   <p:spacer width="10"/>
               <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
