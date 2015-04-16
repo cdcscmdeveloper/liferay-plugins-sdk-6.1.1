@@ -78,7 +78,7 @@ public class BPMTaskDashSumBackingBean extends
 
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
-        if(smResDTO.getResultBean() != null && smResDTO.getResultBean().getResultList() != null && smResDTO.getResultBean().getResultList().get(0) != null){
+        if(smResDTO != null && smResDTO.getResultBean() != null && smResDTO.getResultBean().getResultList() != null && smResDTO.getResultBean().getResultList().get(0) != null){
 			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
 					.get(0).getSupplierId());
          }
