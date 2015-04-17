@@ -217,9 +217,7 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
 							size="12"
 							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" /></td>
-				</tr>
-				<th>&#160;</th>
-				<td>&#160;</td>
+				</tr>				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
@@ -255,9 +253,7 @@
 								var="specialCategory" itemLabel="#{specialCategory.codeName}"
 								itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
 						</p:selectOneMenu></td>
-				</tr>
-				<th>&#160;</th>
-				<td>&#160;</td>
+				</tr>			
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
@@ -272,9 +268,7 @@
 								listener="#{categoryBackingBean.updateSpecialGroup}"
 								update="groupdetails,@form" />
 						</p:selectBooleanCheckbox></td>
-				</tr>
-				<th>&#160;</th>
-				<td>&#160;</td>
+				</tr>				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
 						<p:outputLabel value="* " styleClass="mandatory" /></td>
@@ -292,11 +286,9 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 							<p:ajax event="change" update="outpnlCatRes" />
 						</p:selectBooleanCheckbox></td>
-				</tr>
-				<th>&#160;</th>
-				<td>&#160;</td>
+				</tr>				
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
+					<td style="padding-top: 8px; padding-bottom: 8px;"><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
 						<p:outputLabel value="* " styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
@@ -320,9 +312,7 @@
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" /></td>
 
-				</tr>
-				<th>&#160;</th>
-				<td>&#160;</td>
+				</tr>				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
