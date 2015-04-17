@@ -4563,9 +4563,17 @@ public class SupplierFinalizationBackingBean extends
 			selectedItem = getManagedBean().getSelectedRecommendList().get(0);
 		}
 		
-		if (this.getManagedBean().isSecretaryUser() &&
-				selectedItem != null && !selectedItem.isDisabled() && 
-				!selectedItem.isAwardedItem()) {
+		if (this.getManagedBean().isSecretaryUser()) {
+			if ( this.getManagedBean().isItemize() &&
+					selectedItem != null && (selectedItem.isDisabled() || 
+					selectedItem.isAwardedItem()) ) {
+				// Reset to previous selection, if the selected item is disabled
+				if (isAwarded) {
+					evaluationResultDtl.setAwareded(!isSelected);
+				} else {
+					evaluationResultDtl.setShortListed(!isSelected);
+				}
+			}
 			List<ScQtEvaluationResultDtl> recommendedItemSupplierList = getManagedBean()
 					.getRecommendedSupplierList();
 			if (recommendedItemSupplierList == null) {
@@ -4581,7 +4589,7 @@ public class SupplierFinalizationBackingBean extends
 				unSelectSupplierEvent(evaluationResultDtl);
 			}
 		} else {
-			// Reset to previous selection, if the selected item is disabled
+			// Reset to previous selection, if the user is not a secretary
 			if (isAwarded) {
 				evaluationResultDtl.setAwareded(!isSelected);
 			} else {
