@@ -334,7 +334,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryFromDateView(true);
 	        	rptGenBean.setSmMandatoryDateView(true);
 	            break; 
-		 /*case ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL: 				
+		 case ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL: 				
 	        	rptGenBean.setSmRoleView(true);
 	        	rptGenBean.setSmMandatorySupplierTypeView(true);
 	        	rptGenBean.setSmMandatoryApplicationStatusThreeView(true);
@@ -348,7 +348,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL: 				
 	        	rptGenBean.setSmRoleView(true);
 	        	rptGenBean.setSmMandatoryZoneView(true);	        	
-	            break;*/      
+	            break;    
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
