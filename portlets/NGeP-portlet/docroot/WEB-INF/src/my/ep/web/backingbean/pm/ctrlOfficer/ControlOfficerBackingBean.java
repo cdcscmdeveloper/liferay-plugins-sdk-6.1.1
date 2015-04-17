@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.pm.ctrlOfficer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -11,6 +14,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.exception.EpException;
@@ -75,8 +79,7 @@ public class ControlOfficerBackingBean extends
 			ISearchBean<PmAgCtrlOfficer> searchBean) {
 
 		ControllerOfficerSearchBean ctrlSearchBean = this.getManagedBean().getControllerSearchBean();
-		boolean isSearchable = SEARCH_DEFAULT;
-		boolean isEmpty = true;
+		boolean	isEmpty = true;
 		if (ctrlSearchBean.getCtrlCode() != null
 				&& ctrlSearchBean.getCtrlCode() .trim().length() > 0) {
 
@@ -85,6 +88,7 @@ public class ControlOfficerBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(), ctrlSearchBean
 									.getCtrlCode() , true));
 			isEmpty = false;
+			
 		}
 		if (ctrlSearchBean.getCtrlDescription() != null
 				&& ctrlSearchBean.getCtrlDescription().trim().length() > 0) {
@@ -95,11 +99,24 @@ public class ControlOfficerBackingBean extends
 									.getCtrlDescription(), true));
 			isEmpty = false;
 		}
+		if(getManagedBean().getControllerSearchBean().getStatus() != null
+				&& !"".equals(getManagedBean().getControllerSearchBean().getStatus())) {
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						ctrlSearchBean.getStatus()));
+		}		
+		else{
+			List<String> activeAndInActiveStatus = new ArrayList<String>();
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
+			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), 
+							activeAndInActiveStatus
+			));
+		}
 		return searchBean;
 	}
 
@@ -142,7 +159,7 @@ public class ControlOfficerBackingBean extends
 	}
 
 	public static SelectItem[] getStatusOptions() {
-		return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 
 	/**
