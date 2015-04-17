@@ -44,6 +44,7 @@ import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -114,7 +115,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			
+			reqDTO.setUserRole(getUserRole());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -427,5 +428,16 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			sortItems(getManagedBean().getAdjustment().getFlAdjustmentItem());
 		}
 		
+	}
+	/**
+	 * Gets the user role based on role code.
+	 *
+	 * @return the user role
+	 */
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) 
+			return RoleCode.FL_APPROVER.value();
+		else 
+			return null;
 	}
 }
