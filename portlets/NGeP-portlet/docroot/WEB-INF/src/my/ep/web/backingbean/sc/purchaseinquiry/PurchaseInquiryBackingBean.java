@@ -524,6 +524,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			List<ScRequestNoteDtl> requestNoteDtls =  new  ArrayList<ScRequestNoteDtl>();
 			ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 			ScRequestNote	requestNote	=	new ScRequestNote();
+			requestNote.setTitle(prInquiry.getTitle());
 			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 			setUserDetails(requestNote);
