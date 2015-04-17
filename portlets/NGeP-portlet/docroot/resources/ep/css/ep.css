@@ -4998,7 +4998,7 @@ table.rptTbl {
   border-style: none none dashed;
   width: 900px;
   margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 0px !important;
 }
 
 .row_separator_dotted_line{
