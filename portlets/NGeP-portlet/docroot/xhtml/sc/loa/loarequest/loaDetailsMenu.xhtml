@@ -236,17 +236,6 @@
 					</p:selectOneRadio> <p:message id="approvalReqMsg" for="approvalReq" display="icon" />
 			</td>
 		</tr>
-		<tr>
-			<td><p:outputLabel value="*" styleClass="mandatory"
-						rendered="#{isEditableStatus}" /> <p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /></td>
-			<td><p:inputText id="loaSignerDesigId" disabled="#{!isEditableStatus}" 
-						value="#{lOADetailBackingBean.managedBean.scLoa.loaSignerDesig}"
-						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
-						size="30">
-					</p:inputText><p:message id="loaSignerDesigIdIdMsg" for="loaSignerDesigId"
-										display="icon" /></td>
-		</tr>		
 		</table>
 	</p:panel>
 	

@@ -2624,6 +2624,25 @@ public class LOADetailBackingBean extends
 
 	}
 
+   /**
+    * Contract signer event.
+	*/
+	public void contractSignerEvent() {
+		debugLogger("contractSignerEvent");
+		PmUser contractSigner = getManagedBean().getContractSignerUser();
+		if(contractSigner != null){
+			if(getManagedBean().getContractSignerList() != null && getManagedBean().getContractSignerList().size()>0 ){
+				List<PmUser> contractSignerList  = getManagedBean().getContractSignerList();
+				for (PmUser user : contractSignerList) {
+
+					if(contractSigner.getUserId().equals(user.getUserId())){
+						getManagedBean().getScLoa().setLoaSignerDesig(user.getDesignation());
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Handle file upload.
 	 *
