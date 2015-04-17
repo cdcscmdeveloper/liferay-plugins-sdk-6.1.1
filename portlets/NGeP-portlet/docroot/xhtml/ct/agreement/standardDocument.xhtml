@@ -43,16 +43,21 @@
 						<h:outputText value="#{lbl['lbl.ct.action']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
-					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc or 
-					  contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
+					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
 					 <p:commandLink process="@this" partialSubmit="true" action="#{agreementBackingBean.downloadDocFile(contentsVar)}">
 							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 					 </p:commandLink>
 					 <p:spacer width="2"/>
-					 <p:commandLink rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc}"
+					 <p:commandLink
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
 							<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.ct.view.document']}" />
 					</p:commandLink>	
+					</h:panelGroup>
+					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
+						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}" immediate="true">
+							<p:graphicImage library="ep/images/design" name="download.png"
+								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+						</h:commandLink>
 					</h:panelGroup>
 					<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
 						<p:commandButton icon="iconAttachment"  rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"

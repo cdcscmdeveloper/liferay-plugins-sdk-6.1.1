@@ -1117,7 +1117,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
 		if (filePath != null) {
-			filePath =  DocumentRepositoryUtils.getBaseDir()+filePath;
+			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
@@ -1137,54 +1137,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		out.flush();
 		out.close();
 		FacesContext.getCurrentInstance().responseComplete();
-	}
-
-	/**
-	 * The method used to download the agreement content.
-	 * 
-	 * @param  agreementContent  an object of agreement content
-	 * @throws IOException       if an input or output exception occurred
-	 * @see    IOException
-	 */
-	public void downloadDocFile(CtAgreementContent agreementContent) throws IOException {		
-		AttachmentFormat attachmentFormat = null;
-
-		try {
-			String fileName = getTemplateFileName(agreementContent.getTitle());
-			if (fileName != null) {
-				String content = null;
-				String filePath = getManagedBean().getFileDirectory() + "/temp";
-				File file = new File(filePath);
-				file.mkdirs();
-
-				attachmentFormat = new AttachmentDateFormat();
-				filePath =  filePath + "/"+ attachmentFormat.format(fileName, null);
-				if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
-				      content = getTemplateContent(agreementContent);
-				} else {
-					content = getContent(agreementContent.getTitle());
-				}
-				if (content != null) {
-					convertHtmlToDocFile(content, filePath);
-					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
-				}
-			} else {
-				if (agreementContent.getFilePath() == null) {
-					throw new EpException(MessageConst.INFO_100052,new String[] { agreementContent.getTitle() });
-				}
-				downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementContent.getFilePath()),
-						agreementContent.getFileName());
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		} finally {
-	
-			attachmentFormat = null;
-		}
 	}
 	
 	/**
@@ -1225,6 +1177,82 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				  }			
 					
 				 return content;
+	}
+
+	/**
+	 * The method used to download the agreement content.
+	 * 
+	 * @param  agreementContent  an object of agreement content
+	 * @throws IOException       if an input or output exception occurred
+	 * @see    IOException
+	 */
+	public void downloadDocFile(CtAgreementContent agreementContent) throws IOException {		
+		AttachmentFormat attachmentFormat = null;
+
+		try {
+			String fileName = getTemplateFileName(agreementContent.getTitle());
+			if (fileName != null) {
+				String content = null;
+				String filePath = getManagedBean().getFileDirectory() + "/temp";
+				File file = new File(filePath);
+				file.mkdirs();
+
+				attachmentFormat = new AttachmentDateFormat();
+				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
+				
+				if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
+				      content = getTemplateContent(agreementContent);
+				} else {
+					content = getContent(agreementContent.getTitle());
+				}
+	
+				if (content != null) {
+					convertHtmlToDocFile(content, filePath);
+					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
+				}
+			} else {
+				if (agreementContent.getFilePath() == null) {
+					throw new EpException(MessageConst.INFO_100052,new String[] { agreementContent.getTitle() });
+				}
+				downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementContent.getFilePath()),
+						agreementContent.getFileName());
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+	
+			attachmentFormat = null;
+		}
+	}
+	
+	/**
+	 * The method used to download the template doc.
+	 * 
+	 * @param  agreementContent  an object of agreement content
+	 * @throws IOException       if an input or output exception occurred
+	 * @see    IOException
+	 */
+	public void downloadTemplateDoc(CtAgreementContent agreementContent) throws IOException {
+		// TODO download the templateDoc file
+		/*
+		 * IContractTemplateSO contractTemplateSO = null; ContractTemplateReqDTO
+		 * reqDTO = null; ContractTemplateResDTO ResDTO = null; try {
+		 * //this.getManagedBean().setFilePath(agreementDetails.getFilePath());
+		 * contractTemplateSO =
+		 * (IContractTemplateSO)BusinessDelegate.getInstance
+		 * ().getServiceObject("ct", IContractTemplateSO.class); reqDTO = new
+		 * ContractTemplateReqDTO(); reqDTO.setTemplateId(agreementContent);
+		 * ResDTO = contractTemplateSO.retrieveTemplateById(reqDTO);
+		 * this.getManagedBean().setCtTemplates(ResDTO.getCtTemplate());
+		 * }catch(Exception ex) { log.error("Exception>>", ex); }finally{
+		 * contractTemplateSO = null; }
+		 * agreementDetails.getFileType().;ParameterConst.agreementTemplateDoc;
+		 */
+		// agreementContent.getTitle();
 	}
 
 	/**
@@ -1316,7 +1344,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}else if (templateType.trim().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_CLAUSE)) {
 			return "AgreementClausePage.docx";
 		}
-		
 		return null;
 	}
 
