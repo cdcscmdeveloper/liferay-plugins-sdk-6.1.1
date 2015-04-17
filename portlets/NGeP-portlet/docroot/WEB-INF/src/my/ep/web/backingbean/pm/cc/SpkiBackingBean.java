@@ -28,6 +28,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
+import com.augtech.kmc.client.InvalidKMCAPIFieldException;
 import com.augtech.kmc.client.KMCAPIException;
 import com.augtech.kmc.client.KMCClient;
 import com.augtech.kmc.client.KMCClientFactory;
@@ -79,8 +80,8 @@ public class SpkiBackingBean {
 		return client;
 	}
 	
-	public void getChallengeQuestions(){ 
-	try{
+	public void getChallengeQuestions() throws KMCAPIException, InvalidKMCAPIFieldException{ 
+//	try{
 			KMCClient client = getClient();
 			
 			// Request service for user selected question for authentication
@@ -91,11 +92,20 @@ public class SpkiBackingBean {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
 				// show to the user to allow user answer the challenge
-				setChallengeQues1(challs.get(0));
-				for(int i = 0 ; i < challs.size() ; i ++)
+				if(challs.size() == 0)
 				{
-					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
+					System.err.println("No challanges found for the user! ");
+//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+					throw new EpException(MessageConst.ERROR_776051);
+//					return;
+				}else{
+					setChallengeQues1(challs.get(0));
+					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				}
+//				for(int i = 0 ; i < challs.size() ; i ++)
+//				{
+//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
+//				}
 				
 				break;
 
@@ -105,17 +115,12 @@ public class SpkiBackingBean {
 //				return;
 			}
 
-			if(challs.size() == 0)
-			{
-				System.err.println("No challanges found for the user! ");
-				throw new EpException(MessageConst.ERROR_776051);
-//				return;
-			}
 				
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
+//		} catch (Exception ex)
+//		{
+//			throw new EpException(MessageConst.ERROR_776051);
+////			ex.printStackTrace();
+//		}
 	}
 	
 	public String generateSecurityToken(){
@@ -208,11 +213,11 @@ public class SpkiBackingBean {
 				break;
 
 			default:
-				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
-				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				//throw new EpException(MessageConst.ERROR_776052);
-				signedData = "DEFAULT SIGNED TEXT1";
-				break;
+//				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+//				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
+				throw new EpException(MessageConst.ERROR_776052);
+//				signedData = "DEFAULT SIGNED TEXT1";
+//				break;
 		}
 			
 		} catch (Exception ex)
