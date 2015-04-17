@@ -455,23 +455,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 		smPersonnel.setAuthorizedFlg(SupplierManagementConst.FIRST_USER_AUTHO);
 		smPersonnel.setContactPerson(SupplierManagementConst.FIRST_USER_CONT_PERSON);
-		//smPersonnel.setSoftcertFlg(SupplierManagementConst.REG_SOFTCERT);
+		smPersonnel.setSoftcertFlg(SupplierManagementConst.REG_SOFTCERT);
 		//smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
-		smPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
 		smPersonnel.setClerical(true);
 		
 		//set personnel bumi flag or muslim flag 
 		smPersonnel.setBumiFlg(getManagedBean().getUserBumiFlg());
 		smPersonnel.setMuslimFlg(getManagedBean().getUserMuslimFlg());
 
-		//to set the softcert Flag
-		//All supplier type will mark to "SOFT_CERT_PENDING_REQ", except supplier type is "Consultant"
-		if(!smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
-			smPersonnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-		}else{
-			smPersonnel.setSoftcertFlg(0);
-		}
 
 		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
 		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
