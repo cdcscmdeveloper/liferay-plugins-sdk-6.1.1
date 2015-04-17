@@ -28,12 +28,17 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.specification']}"/>
 		</f:facet>
-		<p:inputTextarea id="specification" style="width:calc(100% - 31px);" value="#{question.clSpecDetail}" 
-			rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="1000"
-			label="#{lbl['lbl.tpl.spec.content.specification']}">
-			<p:ajax partialSubmit="true" process="@this" update="@this" />
-		</p:inputTextarea>
-		<p:message id="specificationMsg" for="specification" display="icon" />
+		<c:if test="#{newable}">
+			<p:inputTextarea id="specification" style="width:calc(100% - 31px);" value="#{question.clSpecDetail}" 
+				rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="1000"
+				label="#{lbl['lbl.tpl.spec.content.specification']}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
+			</p:inputTextarea>
+			<p:message id="specificationMsg" for="specification" display="icon" />
+		</c:if>
+		<c:if test="#{!newable}">
+			<h:outputText value="#{question.clSpecDetail}" escape="false" rendered="#{!isQuestionTypeItem or !isSpecificationReq}" />
+		</c:if>
 	</p:column>
 	<p:column style="width:98px;" rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 		<f:facet name="header">
