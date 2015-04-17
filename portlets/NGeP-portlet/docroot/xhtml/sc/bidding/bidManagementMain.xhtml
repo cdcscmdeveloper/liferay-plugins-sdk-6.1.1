@@ -11,6 +11,12 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:outputPanel>
+			<p:commandButton id="backButton" value="#{lbl['lbl.btn.back']}"
+				style="float:left;" partialSubmit="true" process="@this"
+				action="#{biddingBB.biddingMonitorBackAction}" />
+		</p:outputPanel>
+
 		<ui:param name="isZonal"
 			value="#{!biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName eq null}" />
 
@@ -20,17 +26,10 @@
 		<ui:param name="isViewByItem"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
 
-		<div>
-			<p:commandButton id="backButton" value="#{lbl['lbl.btn.back']}"
-				style="float:left;" partialSubmit="true" process="@this"
-				action="#{biddingBB.biddingMonitorBackAction}" />
-		</div>
-
+		<!-- <p:spacer height="10px"></p:spacer> -->
 
 		<div align="left" class="header-info">
-
 			<table style="width: 100%">
-
 				<tr>
 					<td><p:outputLabel id="biddingNoLbl"
 							value="#{lbl['lbl.sc.bidding.no']}" /></td>
@@ -55,8 +54,9 @@
 				</tr>
 
 			</table>
-
 		</div>
+
+		<p:spacer height="10px"></p:spacer>
 
 		<p:panel header="#{lbl['lbl.sc.bid.details']}"
 			id="bidDetailsForBidManagement" toggleable="true">
@@ -142,6 +142,5 @@
 			height="200">
 			<ui:include src="/xhtml/sc/bidding/BMByItemZoneLocationPopup.xhtml" />
 		</p:dialog>
-
 	</ui:define>
 </ui:composition>
