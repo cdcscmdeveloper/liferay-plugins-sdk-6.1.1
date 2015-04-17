@@ -1383,7 +1383,7 @@ public class QTCommitteBackingBean extends
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getToBeDelCommitteMemebers();
-		if (null == selectedList || selectedList.isEmpty()) {
+		if (CollectionUtils.isNotEmpty(selectedList)) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
 
@@ -1401,7 +1401,17 @@ public class QTCommitteBackingBean extends
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.add(this.getManagedBean().getSelectedTabIndex(), bean);
-		this.getManagedBean().setToBeDelCommitteMemebers(null);
+		for (int i = 0; i < selectedList.size(); i++) {
+			if (null == selectedList.get(i).getCommitteeMemberId()) {
+				selectedList.remove(selectedList.get(i--));
+			}
+		}
+		if (CollectionUtils.isEmpty(this.getManagedBean()
+				.getToBeDelCommitteMemebers())) {
+			this.getManagedBean().setToBeDelCommitteMemebers(
+					new ArrayList<ScCommitteeMember>());
+		}
+		this.getManagedBean().setToBeDelCommitteMemebers(selectedList);
 
 	}
 
@@ -1517,11 +1527,95 @@ public class QTCommitteBackingBean extends
 
 		return false;
 	}
-	
-	public boolean isEnableCloneButton(){
-		if(this.getManagedBean().isMaintanceFlow()&&QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getQt().getQtStatus().getStatusId())){
+
+	public boolean isEnableCloneButton() {
+		if (this.getManagedBean().isMaintanceFlow()
+				&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
+						.getManagedBean().getQt().getQtStatus().getStatusId())) {
 			return true;
 		}
 		return false;
 	}
+
+	/**
+	 * Method to check wheter committe is formed with at least one chairperson
+	 * secratary and memeber
+	 */
+	public void checkCommitteFormedOrNot() {
+		TabBean selectedCommitteTabBean = this.getManagedBean()
+				.getSelectedTabBean();
+		if (null != selectedCommitteTabBean) {
+			ScCommittee committee = selectedCommitteTabBean.getScCommittee();
+			if (CollectionUtils.isNotEmpty(committee.getScCommitteeMembers())) {
+				isChairpersonRequired(committee.getScCommitteeMembers());
+				isSecretaryRequired(committee.getScCommitteeMembers());
+				isAtleastOneMemebersReq(committee.getScCommitteeMembers());
+			} else {
+				throw new EpException("");
+
+			}
+		}
+	}
+
+	private void isChairpersonRequired(List<ScCommitteeMember> commMembers) {
+		int count = 0;
+
+		for (ScCommitteeMember committeeMember : commMembers) {
+			String memberRole = committeeMember.getMemberRole()
+					.getParameterCode();
+			if (SourcingConstants.MEMBER_ROLE_CHAIRPERSON
+					.equalsIgnoreCase(memberRole)) {
+				if (!committeeMember.isPNP()) {
+					throw new EpException(MessageConst.ERROR_760264);
+				}
+				count++;
+				if (count >= 2) {
+					throw new EpException(MessageConst.ERROR_760123);
+					// Only required to have 1 chairperson for appoint committee
+				}
+			}
+		}
+
+		if (count == 0) {
+			throw new EpException(MessageConst.ERROR_760047);
+			// At least one chairperson are required for appoint committee
+		}
+	}
+
+	private void isSecretaryRequired(List<ScCommitteeMember> commMembers) {
+		int count = 0;
+		for (ScCommitteeMember committeeMember : commMembers) {
+			String memberRole = committeeMember.getMemberRole()
+					.getParameterCode();
+			if (SourcingConstants.MEMBER_ROLE_SECRATARY
+					.equalsIgnoreCase(memberRole)) {
+				count++;
+				if (count >= 2) {
+					throw new EpException(MessageConst.ERROR_760124);
+					// Only required to have 1 secretary for appoint committee
+				}
+			}
+		}
+		if (count == 0) {
+			throw new EpException(MessageConst.ERROR_760046);
+			// At least one secretary are required for appoint committee
+		}
+	}
+
+	private boolean isAtleastOneMemebersReq(List<ScCommitteeMember> commMembers) {
+		int i = 0;
+		for (ScCommitteeMember committeeMember : commMembers) {
+			String memberRole = committeeMember.getMemberRole()
+					.getParameterCode();
+			if (SourcingConstants.MEMBER_ROLE_MEMBER
+					.equalsIgnoreCase(memberRole)) {
+				i++;
+				if (i >= 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 }
