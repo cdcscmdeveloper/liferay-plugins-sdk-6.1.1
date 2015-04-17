@@ -712,6 +712,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				requestNote = getManagedBean().getRequestNote();
 				setUserDetails(requestNote);
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
+				requestNote.setTitle(quote.getTitle());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
 				requestNote.setQuote(quote);
@@ -1165,6 +1166,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(quote.getRequestNotes() == null || quote.getRequestNotes().isEmpty()){
 				List<ScRequestNote>	requestNotes = new ArrayList<ScRequestNote>();
 				ScRequestNote requestNote = getManagedBean().getRequestNote();
+				requestNote.setTitle(quote.getTitle());
 				setUserDetails(requestNote);
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
