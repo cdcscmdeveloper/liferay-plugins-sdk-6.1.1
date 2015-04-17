@@ -86,7 +86,7 @@
 					</p:tooltip>
               </p:commandButton>
 		      <p:spacer width="1"/>
-		      <p:commandButton id="delContentBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDocumentDel.show();"
+		      <p:commandButton id="delContentBtn" value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgDocumentDel.show();"
 		      		disabled="#{!(agreementBackingBean.managedBean.selectedAgreementContent!=null and 
 		      		agreementBackingBean.managedBean.selectedAgreementContent.contentType.parameterCode==ParameterConst.agreementUserUploadDoc)}">
 		      		<p:tooltip for="delContentBtn">
@@ -94,9 +94,8 @@
 					</p:tooltip>
               </p:commandButton> 
 		      <p:spacer width="1"/>
-		      <p:commandButton id="downloadAllContentBtn" 
-		         value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{agreementBackingBean.downloadAll()}"
-		        	icon="ui-icon-download" process="@form">
+		      <p:commandButton id="downloadAllContentBtn" value="#{lbl['lbl.btn.download.all']}" ajax="false" 
+		      		action="#{agreementBackingBean.downloadAll()}" process="@form">
 		        	<p:tooltip for="downloadAllContentBtn">
 					    <h:outputText value="#{lbl['lbl.ct.tooltip.download.all.agreement.content']}" escape="false" />
 					</p:tooltip>
