@@ -2814,6 +2814,25 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
+	 * Contract signer event.
+	 */
+	public void contractSignerEvent() {
+		debugLogger("contractSignerEvent");
+		PmUser contractSigner = getManagedBean().getContractSignerUser();
+		if(contractSigner != null){
+			if(getManagedBean().getContractSigners() != null && getManagedBean().getContractSigners().size()>0 ){
+				List<PmUser> contractSignerList  = getManagedBean().getContractSigners();
+				for (PmUser user : contractSignerList) {
+
+					if(contractSigner.getUserId().equals(user.getUserId())){
+						getManagedBean().getScLoi().setLoiSignerDesig(user.getDesignation());
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Adds the schedule details.
 	 */
 	public void addScheduleDetails() {
