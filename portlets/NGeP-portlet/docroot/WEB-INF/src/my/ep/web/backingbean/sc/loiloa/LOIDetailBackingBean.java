@@ -74,7 +74,6 @@ import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
@@ -2554,7 +2553,9 @@ public class LOIDetailBackingBean extends
 		}
 		context.put("ackDueDays", ackDueDays);
 
-		context.put("loiSigner", scLoi.getLoiSigner());
+		if(getManagedBean().getContractSignerUser() != null){
+			context.put("loiSigner", getManagedBean().getContractSignerUser().getUserName());
+		}
 		context.put("loiSignerDesignation", scLoi.getLoiSignerDesig());
 
 
