@@ -518,7 +518,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					   Long statusId = getManagedBean().getPidStatus().getStatusId();
 					   
 					   if(DPStatusConstants.PID_PENDING_VERIFICATION.equals(statusId)){
-						   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()); 
+						   successMessage(MessageConst.INFO_700062, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()); 
 					   } else  if(DPStatusConstants.PID_PENDING_APPROVAL.equals(statusId)){
 						   successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
 					   }
