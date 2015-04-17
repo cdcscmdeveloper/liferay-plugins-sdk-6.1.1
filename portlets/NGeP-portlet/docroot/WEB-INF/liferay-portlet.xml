@@ -1305,6 +1305,36 @@
 		<css-class-wrapper>ctrilOfficer search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>pmAccountingOffice</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>accountingOffice search-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>pmVot</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pmVot search-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>pmGlAccount</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>glAccount search-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>ZoneMaintenancePortlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>

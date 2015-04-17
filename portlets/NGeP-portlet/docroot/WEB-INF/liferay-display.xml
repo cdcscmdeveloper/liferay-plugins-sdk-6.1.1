@@ -56,7 +56,11 @@
 			<portlet id="pmBusinessNature"></portlet>	
 			<portlet id="pmCategory"></portlet>	
 			<portlet id="pmRuleConfigure"></portlet>	
-			<portlet id="pmCtrlOfficer"></portlet>	
+			<portlet id="pmCtrlOfficer"></portlet>
+			<portlet id="pmAccountingOffice"></portlet>	
+			<portlet id="pmVot"></portlet>
+			<portlet id="pmGlAccount"></portlet>	
+			
 		</category>
 		<!-- Profile Management - END -->		
 
