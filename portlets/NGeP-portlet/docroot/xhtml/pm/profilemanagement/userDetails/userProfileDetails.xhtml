@@ -35,10 +35,10 @@
 									value="#{profileManagementBackingBean.userImagePathWithDefaultImage(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
 									style="margin-left:25px;" width="140" height="160" />
 								<div align="left">
-									<p:commandButton icon="ui-icon-image"
+									<p:commandButton
 										value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
 										oncomplete="dlImageUpload.show();" immediate="true" />
-									<p:commandButton icon="ui-icon-delete"
+									<p:commandButton
 										value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
 										action="#{profileManagementBackingBean.deletePortrait}"
 										immediate="true" update="giUserImage" />
