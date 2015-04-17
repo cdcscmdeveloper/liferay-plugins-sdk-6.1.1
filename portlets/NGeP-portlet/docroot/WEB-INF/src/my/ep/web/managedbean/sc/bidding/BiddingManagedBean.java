@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -76,6 +77,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	private List<ScBidPrice> lastBidPricesList;
 	private List<ScBidItem> scBidItemsList;
+	private List<BidItemBean> bidPriceItems;
 
 	private ScBidItem selectedBidItem;
 	
@@ -114,6 +116,24 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	
 	
+	/**
+	 * @return the bidPriceItems
+	 */
+	public List<BidItemBean> getBidPriceItems() {
+		return bidPriceItems;
+	}
+
+
+
+	/**
+	 * @param bidPriceItems the bidPriceItems to set
+	 */
+	public void setBidPriceItems(List<BidItemBean> bidPriceItems) {
+		this.bidPriceItems = bidPriceItems;
+	}
+
+
+
 	/**
 	 * @return the bidManagementInitialViewBy
 	 */

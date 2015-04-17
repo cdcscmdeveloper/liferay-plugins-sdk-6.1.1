@@ -94,15 +94,15 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
-				<h:outputText style="float : right" value="#{item.bidPrice}">
+				<h:outputText rendered="#{item.scBidSupplier.packageStartPrice ne item.bidPriceTotal}" style="float : right" value="#{item.bidPriceTotal}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
 				<c:if test="#{isRendered}">
-					<h:outputText style="float : right"
-						value="#{item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice}">
+					<h:outputText style="float : right" rendered="#{biddingBB.managedBean.lowestNonBumiOfferedPrice ne '0'}"
+						value="#{item.bidPriceTotal - biddingBB.managedBean.lowestNonBumiOfferedPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -111,21 +111,21 @@
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
 				<c:if test="#{isRendered}">
 					<h:outputText style="float : right"
-						value="#{((item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice)* 100)/biddingBB.managedBean.lowestNonBumiOfferedPrice }">
+						value="#{item.diffPercentage}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</c:if>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
-				<h:outputText style="float : right" value="10"
+				<h:outputText style="float : right" value="#{item.prefMargin}"
 					rendered="#{item.scBidSupplier.smSupplier.bumi}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
-				<h:outputText style="float : right" value="100">
+				<h:outputText style="float : right" value="#{biddingBB.managedBean.scheduledBid.packageEstimateCost - item.bidPriceTotal}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
