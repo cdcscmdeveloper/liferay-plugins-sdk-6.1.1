@@ -173,11 +173,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	 */
 	private List<String> getAvailableApproverList() {
 		IUserSO userSO = null;
+		UserReqDTO reqDTO = null;
 		List<String> sourceList = new ArrayList<String>();
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
+			 reqDTO = new UserReqDTO();
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
@@ -203,6 +204,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			userSO = null;
+			reqDTO = null;
 		}
 		return sourceList;
 	}
