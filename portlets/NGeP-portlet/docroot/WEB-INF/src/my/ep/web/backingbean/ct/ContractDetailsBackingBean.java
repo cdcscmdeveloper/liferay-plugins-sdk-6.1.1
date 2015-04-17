@@ -3498,4 +3498,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  	    agency.setFilePath(null);
  	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
     }
+    
+    public void updateAsperDate(){
+    	
+    	IContractSO contractSO = null;
+		ContractResDTO resDTO = null;
+		ContractReqDTO reqDTO = null;
+		
+		try {
+			reqDTO = new ContractReqDTO();
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			reqDTO.setContractVerId(getManagedBean().getContractVer().getContractVerId());
+			reqDTO.setCurrentDate(getManagedBean().getCurrentDate());
+			resDTO = contractSO.retrieveContractAmount(reqDTO);
+			getManagedBean().getContractVer().getCtContractValue().setContractAmount(resDTO.getContractAmount().getContractAmount());		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			contractSO = null;
+			resDTO = null;
+			reqDTO = null;
+       }
+    }
 }

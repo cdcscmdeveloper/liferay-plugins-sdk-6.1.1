@@ -1117,7 +1117,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
 		if (filePath != null) {
-			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
+			filePath =  DocumentRepositoryUtils.getBaseDir()+filePath;
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
@@ -1158,7 +1158,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				file.mkdirs();
 
 				attachmentFormat = new AttachmentDateFormat();
-				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
+				filePath =  filePath + "/"+ attachmentFormat.format(fileName, null);
 				if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
 				      content = getTemplateContent(agreementContent);
 				} else {
