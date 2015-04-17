@@ -33,6 +33,28 @@
 				</td>
 			</tr>
 		</table>
+		<table style="width: 100%" border="1">
+		<tr>
+		<td style="width: 15%">  </td>
+			<td style="width: 20%">  </td>
+				<td style="width: 20%">  </td>
+					<td style="width: 15%">  </td>
+			<td style="width: 15%"> 
+		
+			  <p:outputLabel value="View Amount Date" style="float:right;"></p:outputLabel>
+			  </td>
+			  	<td style="width: 15%"> 
+			  		<p:calendar id="selectedDateId" value="#{contractDetailsBackingBean.managedBean.currentDate}"  navigator="true" size="8"
+		               readonlyInput="true" 
+		               mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" 
+		               maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"			             
+		               showOn="button"  rendered="#{contractDetailsBackingBean.managedBean.viewContract}"
+		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+		               <p:ajax event="dateSelect"  process="@this"   listener="#{contractDetailsBackingBean.updateAsperDate()}" update=":form" ></p:ajax>
+		             </p:calendar>
+			  </td>
+			</tr>
+		</table>
 	</div>
 	<br/>
 </ui:composition>
