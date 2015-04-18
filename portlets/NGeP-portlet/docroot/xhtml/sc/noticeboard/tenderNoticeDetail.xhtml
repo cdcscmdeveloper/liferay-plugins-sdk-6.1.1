@@ -10,24 +10,16 @@
 
 	<ui:define name="contentSection">
 
-		<ac:title value="#{lbl['lbl.sc.notice.board.qtn.notice']}" />
+		<!-- <ac:title value="#{lbl['lbl.sc.notice.board.qtn.notice']}" /> -->
 		<div class="clear"></div>
 		<p:messages id="tenderDetails" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
 		<!-- <ui:include src="noticeboardLocationPopUp.xhtml"></ui:include> -->
+		<div align="left">
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				action="#{noticeBoardBackingBean.backBtn}" />
+		</div>
 		
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.btn.back']}"
-							action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
-					</p:column>
-
-				</p:row>
-			</p:panelGrid>
-	
-
 		<p:panel
 			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.qtn' : 'lbl.sc.notice.board.qtn']}"
 			toggleable="true">
