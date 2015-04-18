@@ -1708,6 +1708,8 @@ public class NoticeBoardBackingBean extends
 			SupplierSearchResDTO searchResDTO = getSupplierInfo(supplierId);
 			SmSupplier smSupplier = searchResDTO.getSmSupplier();
 			this.getManagedBean().setSmSupplier(smSupplier);
+		} else {
+			this.getManagedBean().setSmSupplier(new SmSupplier());
 		}
 		
 		if (!scQt.isZonal()) {
