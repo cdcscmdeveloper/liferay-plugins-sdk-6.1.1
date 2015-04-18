@@ -12,20 +12,12 @@
 		<p:messages id="awardSupplier" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 		
 		<div class="clear"></div>
-		
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:left">
-						<p:commandButton value="#{lbl['lbl.btn.back']}"
-							action="#{noticeBoardBackingBean.backBtn}"
-							style="float:left;" />
-					</p:column>
 
-				</p:row>
-			</p:panelGrid>
-		
-		
+		<div align="left">
+			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				action="#{noticeBoardBackingBean.backBtn}" />
+		</div>
+
 		<p:panel header="#{lbl['lbl.sc.notice.board.pricingheader']}" toggleable="true">
 			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 
