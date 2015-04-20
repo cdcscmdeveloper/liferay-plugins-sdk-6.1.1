@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true" styleClass="briefingList">
 		<table style="width: 100%" border="0">
 			<tr>
 				<td style="width: 150px;"><p:outputLabel
@@ -80,14 +80,12 @@
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
-				
-
 			</p:column>
 		</p:dataTable>
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<f:facet name="footer">
-				<div align="right">
+				<div class="ppRightBtn">
 					<h:panelGroup id="addtositebutton">
 						<p:commandButton id="addtositevisitid"
 							update="@([id$=sitevisitdtlid])"
@@ -98,6 +96,7 @@
 					</h:panelGroup>
 					<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
 						process="@this"
+						disabled="#{bsvdtlbean.briefingList.size() eq 1}"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
 						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
@@ -106,39 +105,16 @@
 						process="@this,briefingdtlid" partialSubmit="true"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
-						update="@([id$=briefingdtlid])" />
+						update="@form" />
 				</div>
 			</f:facet>
 		</p:panelGrid>
-		<table style="width: 100%" border="0">
-			<tr>
-				<td style="width: 130px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.attendance.brief']}" /></td>
-				<td style="width: 130px;"><p:selectOneRadio
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-						value="#{bsvdtlbean.scQtBsv.allBriefingReq}">
-						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
-						<p:ajax event="click"
-							listener="#{qTBriefingSiteVisitBackingBean.briefingClickEvent}"
-							update="@([id$=minbsvattend])" />
-					</p:selectOneRadio></td>
-				<td><h:panelGroup id="minbsvattend">
-						<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allBriefingReq}">
-							<p:inputText id="minbsvattendsss" size="5"
-								value="#{bsvdtlbean.scQtBsv.minBriefingAttend}"
-								readonly="#{bsvdtlbean.scQtBsv.allBriefingReq}" />
-						</ui:fragment>
-					</h:panelGroup></td>
-				<td />
-			</tr>
-		</table>
 	</p:panel>
 
 	<h:panelGroup id="sameasbsvrequired">
 		<h:panelGroup rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle'}">
 
-			<p:panel header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true" styleClass="briefingList">
 				<p:dataTable id="sitevisitdtlid" var="sitevisitdtls"
 					value="#{bsvdtlbean.sitevisitList}" styleClass="briefDetails"
 					selection="#{bsvdtlbean.selectedSiteVisitDtls}"
@@ -202,15 +178,12 @@
 							<p:graphicImage library="ep/images/design" name="edit.png"
 								value="/resources/ep/images/design/edit.png" />
 						</p:commandLink>
-						
-
 					</p:column>
 				</p:dataTable>
 				<p:panelGrid columns="2" style="width:100%;"
 					styleClass="noBorders tr,noBorders td">
 					<f:facet name="footer">
-						<div align="right">
-
+						<div class="ppRightBtn">
 							<p:commandButton id="addsitevisitid"
 								rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 								value="#{lbl['lbl.btn.add']}" process="@this"
@@ -222,7 +195,6 @@
 								process="@this, sitevisitdtlid" partialSubmit="true"
 								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
 								update="@([id$=sitevisitdtlid])" />
-
 						</div>
 					</f:facet>
 				</p:panelGrid>
