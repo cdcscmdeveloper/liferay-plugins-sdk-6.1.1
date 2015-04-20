@@ -222,8 +222,20 @@ public class SmApplicationBackingBean extends
 						.checkActiveSmApplForSupp(supplierProfile);
 				SmWorkflowStatus sts = SmCommonUtil
 						.getCurrentActiveWokFlowStatus(rejAppl.getApplId());
-
-				if (!activeExist) {
+				if (rejAppl.getApplSubmitDate() != null) {
+					Timestamp currentDate = new Timestamp(
+							System.currentTimeMillis());
+					long diff = currentDate.getTime()
+							- rejAppl.getApplSubmitDate().getTime();
+					long diffDays = diff / (24 * 60 * 60 * 1000);
+					if (diffDays > 60) {
+						getManagedBean().setResubmitInValidMsg(
+								SmCommonUtil.getMessage(
+										"lbl.sm.resubmitExpired", null));
+						this.getManagedBean().setValidResubmit(false);
+					}
+				}
+				if (!activeExist && this.getManagedBean().isValidResubmit()) {
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setCreatedDate(rejAppl.getCreatedDate());
 					reqDTO.setSupplierId(supplierProfile.getSupplierId());
