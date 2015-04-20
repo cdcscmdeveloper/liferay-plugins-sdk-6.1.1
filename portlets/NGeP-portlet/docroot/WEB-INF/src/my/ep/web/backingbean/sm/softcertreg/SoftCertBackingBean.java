@@ -15,11 +15,13 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
@@ -265,15 +267,36 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	public void updateChallengeResponse() {
-		SmCommonUtil.redirectToExternalUrl("http://www.utusan.com.my/");
+		try {
+			getManagedBean().getSoftCertMaintenanceBackingBean()
+					.RequestChallRespUpdate();
+		} catch (Exception ex) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.ERROR_721037);
+		}
 	}
 
 	public void resetPin() {
-		SmCommonUtil.redirectToExternalUrl("http://www.bharian.com.my/");
+		try {
+			getManagedBean().getSoftCertMaintenanceBackingBean()
+					.RequestResetPIN();
+		} catch (Exception ex) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.ERROR_721037);
+		}
 	}
 
 	public void changePin() {
-		SmCommonUtil.redirectToExternalUrl("http://www.espnfc.us/");
+		try {
+			getManagedBean().getSoftCertMaintenanceBackingBean()
+					.RequestChangePIN();
+		} catch (Exception ex) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.ERROR_721037);
+		}
 	}
 
 	/**
