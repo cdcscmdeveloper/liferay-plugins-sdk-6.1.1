@@ -149,8 +149,8 @@ public class SpkiBackingBean {
 		return tok;
 	}
 	
-	public String spkiSignTransaction(String originalText) {
-		try{
+	public String spkiSignTransaction(String originalText) throws KMCAPIException, InvalidKMCAPIFieldException {
+//		try{
 //			String signedData ;
 			KMCClient client = getClient();
 
@@ -220,10 +220,10 @@ public class SpkiBackingBean {
 //				break;
 		}
 			
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
+//		} catch (Exception ex)
+//		{
+//			ex.printStackTrace();
+//		}
 		return signedData;
 	}
 
