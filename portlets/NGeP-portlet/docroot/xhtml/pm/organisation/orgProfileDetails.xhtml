@@ -64,7 +64,7 @@
 					rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' and not organisationBackingBean.isGroupOrg()}">
 					<td><h:outputText
 							value="#{lbl['lbl.pm.org.jabatan']}" /></td>
-					<td><p:selectBooleanCheckbox
+					<td><p:selectBooleanCheckbox id="isPTJCheckBoxId"
 							value="#{organisationBackingBean.managedBean.orgProfile.groupOrg}">
 							<p:ajax update="@form" />
 						</p:selectBooleanCheckbox></td>
@@ -73,7 +73,7 @@
 					rendered="#{!organisationBackingBean.managedBean.orgProfile.brandNew and (organisationBackingBean.managedBean.orgType eq 'STG' or organisationBackingBean.managedBean.orgType eq 'GLC' or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'STB' or organisationBackingBean.managedBean.orgType eq 'LAT')}">
 					<td><h:outputText
 							value="#{lbl['lbl.pm.organisation.govSeller']}" /></td>
-					<td><p:selectBooleanCheckbox
+					<td><p:selectBooleanCheckbox id="isGovtSellerCheckBoxId"
 							disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}"
 							value="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 							<p:ajax update="@form" />
