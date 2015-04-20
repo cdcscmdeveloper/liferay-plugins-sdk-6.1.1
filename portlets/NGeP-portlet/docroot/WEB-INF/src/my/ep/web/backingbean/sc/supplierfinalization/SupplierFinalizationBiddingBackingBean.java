@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -44,7 +45,6 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
-import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -59,6 +59,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSvWorker_;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -70,6 +71,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -277,6 +279,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void selectBiddingItem(SelectEvent event) {
 		ScBidItem bidItem = (ScBidItem) event.getObject();
+		this.getManagedBean().setSelectedBiddingItem(bidItem);
 
 		IBiddingSO biddingSO = null;
 		try {
@@ -285,12 +288,19 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			reqDTO.setBidItemId(bidItem.getBidItemId());
+			reqDTO.setScBidSchedule(bidItem.getScBidSchedule());
 
 			BiddingResDTO resDTO = biddingSO
 					.retrieveLastBidPricesByItem(reqDTO);
 			if (resDTO.isSuccessful()) {
-				List<ScBidPrice> biddingItemPriceList = resDTO.getBidPrices();
-				getManagedBean().setBiddingItemPriceList(biddingItemPriceList);
+				List<BidItemBean> biddingItemPriceList = resDTO.getBidPriceItems();
+				if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
+					for (BidItemBean itemBean : biddingItemPriceList) {
+						String supplierName = getSupplierNameById(itemBean.getSupplierId());
+						itemBean.setSupplierName(supplierName);
+					}
+				}
+				getManagedBean().setBidPriceItems(biddingItemPriceList);
 			}
 		} finally {
 			biddingSO = null;
@@ -375,36 +385,34 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @param selectedRecommendDtl  
 	 * 				the selectedRecommendDtl while holds the recommended supplier
 	 */
-	public void showSupplierDetails(ScQtRecommend scQtRecommend, ScQtRecommendDtl selectedRecommendDtl) {
+	public void showSupplierDetails(Long supplierId) {
 		debugLogger("showSuppDetails");
 		
 		resetCompanyInfo();
 		
-		if (getManagedBean().getShortlistedSupplier() != null) {
-			this.getManagedBean().setShortlistedSupplier(getManagedBean().getShortlistedSupplier());
-			SmSupplier smSupplier = getManagedBean().getShortlistedSupplier().getScQtProposal().getScQtSupplier().getSmSupplier();
-			if (smSupplier != null) {
-				QTSupplierResDTO resDTO = this.retrieveSupplierDetails(smSupplier);
-				smSupplier = resDTO.getSmSupplier();
-				getManagedBean().setSmSupplier(smSupplier);
-				getManagedBean().setSmMofAccount(smSupplier.getSmMofAccounts().get(0));
-				
-				SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
-				getManagedBean().setSmCompanyBasic(smCompanyBasic);
-				
-				List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
-				for (SmPersonnel smPersonnel : smPersonnelList) {
-					if (smPersonnel.isContactPerson()) {
-						getManagedBean().setSmPersonnel(smPersonnel);
-						break;
-					}
+		if (supplierId != null) {
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(supplierId);
+			QTSupplierResDTO resDTO = this.retrieveSupplierDetails(smSupplier);
+			smSupplier = resDTO.getSmSupplier();
+			getManagedBean().setSmSupplier(smSupplier);
+			getManagedBean().setSmMofAccount(smSupplier.getSmMofAccounts().get(0));
+			
+			SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
+			getManagedBean().setSmCompanyBasic(smCompanyBasic);
+			
+			List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
+			for (SmPersonnel smPersonnel : smPersonnelList) {
+				if (smPersonnel.isContactPerson()) {
+					getManagedBean().setSmPersonnel(smPersonnel);
+					break;
 				}
-				for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
-					if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
-						getManagedBean().setSupplierBranch(QTConstants.SUPPLIER_INFO_HQ);
-						getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
-						break;
-					}
+			}
+			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+					getManagedBean().setSupplierBranch(QTConstants.SUPPLIER_INFO_HQ);
+					getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
+					break;
 				}
 			}
 		}
@@ -419,6 +427,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.getManagedBean().setSupplierAddress(null);
 	}	
 	
+	private String getSupplierNameById(Long supplierId) {
+		SmSupplier smSupplier = new SmSupplier();
+		smSupplier.setSupplierId(supplierId);
+		
+		QTSupplierResDTO resDTO = retrieveSupplierDetails(smSupplier);
+		if (resDTO.isSuccessful()) {
+			return resDTO.getSmSupplier().getCompanyName();
+		}
+		
+		return StringUtils.EMPTY;
+	}	
+	
 	private QTSupplierResDTO retrieveSupplierDetails(SmSupplier smSupplier) {
 		QTSupplierResDTO resDTO = new QTSupplierResDTO();
 		IQTSupplierSO qtSupplierSO = null;
@@ -428,6 +448,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
 			reqDTO.setSupplierId(smSupplier.getSupplierId());
 			resDTO = qtSupplierSO.retrieveSupplierDetails(reqDTO);
+			resDTO.setSuccessful(true);
 		} finally {
 			qtSupplierSO = null;
 		}	
@@ -797,7 +818,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
-
+	
 	/**
 	 * To digitally sign using GPK device
 	 * 
