@@ -652,7 +652,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;// 220152;
+	//private Long lngUserId = (long)25;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2744,11 +2744,13 @@ public class ReportBackingBean extends
 		this.setReportValue(null);		
 		this.setReportName(null);
 		setRoleCode(null);
-		resetReportForm();
+		
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
-		getManagedBean().setRptGenBean(null);
+		
 		
 		rptGenBean = new ReportsGenerateBean();
+		getManagedBean().setRptGenBean(rptGenBean);
+		resetReportForm();
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
@@ -2951,8 +2953,9 @@ public class ReportBackingBean extends
 		this.setReportName(null);
 		setRoleCode(null);
 		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
-		getManagedBean().setRptGenBean(null);
+		
 		
 		if (this.getModuleValue() != null) {
 			retriveReportListByModule(this.getModuleValue());
