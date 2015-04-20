@@ -10,25 +10,21 @@
 
 	<ui:define name="contentSection">
 	<style>
-		div.portlet-borderless-container {			
+		div#p_p_id_redirectFactoringCompanies_WAR_NGePportlet_ div.portlet-borderless-container {			
 		    min-height: 0px;
 		    padding:  0px !important;
 		    margin-bottom:  0px !important;		    			
 		}
 		
-		#_redirectFactoringCompanies_WAR_NGePportlet_:form{
+		form[id^='_redirectFactoringCompanies_WAR_NGePportlet']{
 			 margin-bottom:  0px !important;	
 		}
 		
-		#content br {
-    		display: none;
-		}
 	</style>
 		<p:outputPanel id="FactoringCompaniesPanelId">	
 			<h:outputText value="#{lbl['lbl.pm.fact.company.view']}" /> 		
 			<p:commandLink  value="#{lbl['lbl.pm.fact.company.view.click']}"  action="#{factoringBackingBean.pageNavigate()}"></p:commandLink>
 		</p:outputPanel>
-		<br /><br />
 	</ui:define>
 
 </ui:composition>
