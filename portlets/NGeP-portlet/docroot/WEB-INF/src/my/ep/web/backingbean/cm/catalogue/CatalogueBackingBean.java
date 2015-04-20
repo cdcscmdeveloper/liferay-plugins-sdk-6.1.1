@@ -8411,7 +8411,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		String url = "http://" + hostName + ":" + String.valueOf(portNo) + "/web/epapp/" + softCertPath;
 		
 		log.info("*******Str Url**********" + url);
-		FacesContext.getCurrentInstance().addMessage("catUploadedMsg",new FacesMessage(
+		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 				FacesMessage.SEVERITY_INFO,
 				null, MessageUtils.getMessage(MessageConst.INFO_721030, new String[]{url},ResourceBundleUtils.BUNDLE_COMMON_LABELS, fs.getUserLocale())));
 
