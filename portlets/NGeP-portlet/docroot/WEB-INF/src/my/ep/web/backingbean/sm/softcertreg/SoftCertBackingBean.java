@@ -266,6 +266,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Update softcert challenge response
+	 */
 	public void updateChallengeResponse() {
 		try {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
@@ -277,6 +280,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Reset softcert PIN number
+	 */
 	public void resetPin() {
 		try {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
@@ -288,6 +294,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		}
 	}
 
+	/**
+	 * Change softcert PIN number
+	 */
 	public void changePin() {
 		try {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
