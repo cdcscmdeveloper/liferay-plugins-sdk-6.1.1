@@ -103,6 +103,19 @@
 				</tr>
 				#end
 			</table>
+			<p><b>Turut Hadir</b></p>
+			<table class="table2" width='100%'>
+				<tr>
+					<td>Nama</td>
+					<td>Kad Pengenalan No.</td>
+				</tr>
+				#foreach( $memberAttendance in $meetingAttendances )
+				<tr>
+					<td>$memberAttendance.name</td>
+					<td>$memberAttendance.icPassport</td>
+				</tr>
+				#end
+			</table>
 			</span>
 			 #end
         </td>
