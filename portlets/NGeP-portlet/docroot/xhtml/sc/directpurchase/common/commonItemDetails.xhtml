@@ -100,7 +100,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%; white-space: normal;">
-				    <h:commandLink immediate="true"  action="#{requestNoteBackingBean.viewMarketResearch(requestNoteDtl)}"
+				    <p:commandLink immediate="true" partialSubmit="true" process="@this" action="#{requestNoteBackingBean.viewMarketResearch(requestNoteDtl)}"
 				    	id="marketSummaryIcon">
 				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
@@ -110,7 +110,7 @@
 							<h:outputText rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}" 
 							value="#{lbl['lbl.sc.summary.simple.quote.tooltip']}" escape="false" />
 						</p:tooltip>
-				  </h:commandLink> 
+				  </p:commandLink> 
 				    <p:spacer width="2px;"/>
 				   <h:panelGroup rendered="#{requestNoteDtl.showPurchaseInquiry}">
 				   <h:commandLink immediate="true" 
