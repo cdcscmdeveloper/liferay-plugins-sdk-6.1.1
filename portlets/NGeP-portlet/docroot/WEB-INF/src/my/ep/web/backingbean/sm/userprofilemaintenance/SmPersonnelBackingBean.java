@@ -1055,15 +1055,17 @@ public class SmPersonnelBackingBean extends
 
 	/**
 	 * Deactivate or terminate authorized personnel
-	 * 
-	 * @throws Exception
 	 */
-	public void deactivateOrTerminate() throws Exception {
-		updateUser(getManagedBean().getBasicSmPersonnel());
-		initAuthorizedPersonnels(getManagedBean().getSmSupplier());
-		getManagedBean().setDisableAddNewUser(
-				validatePersonLimit(getManagedBean().getSmSupplier()));
-		getManagedBean().setDeactivateTerminateConfirmMsg("");
+	public void deactivateOrTerminate() {
+		try {
+			updateUser(getManagedBean().getBasicSmPersonnel());
+			initAuthorizedPersonnels(getManagedBean().getSmSupplier());
+			getManagedBean().setDisableAddNewUser(
+					validatePersonLimit(getManagedBean().getSmSupplier()));
+			getManagedBean().setDeactivateTerminateConfirmMsg("");
+		} catch (Exception ex) {
+			throw new EpException(ex.getMessage());
+		}
 	}
 
 	/**
@@ -1169,7 +1171,6 @@ public class SmPersonnelBackingBean extends
 		return SmServiceLookup.getPersonnelSO()
 				.updatePersonnelAccountStatusOrEpRole(reqDTO);
 	}
-
 
 	/**
 	 * Validate personnel before save in Supplier User Maintenance
