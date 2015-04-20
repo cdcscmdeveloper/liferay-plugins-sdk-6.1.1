@@ -39,12 +39,12 @@
       </table>
       <br/>
         <div style="font-weight: normal; text-align: center;"><strong><u><br/></u></strong></div>
-      <div style="font-weight: normal; text-align: left;">
+      <div style="font-weight:  bold; text-align: left;">
       #foreach( $reason in $sectionList) 
-      	<span class="Apple-tab-span" style="white-space:pre">Section Name	</span>$reason.sectionName<br/>
-      	<span class="Apple-tab-span" style="white-space:pre">Section Title	</span>$reason.sectionTitle <br/>
-      	<span class="Apple-tab-span" style="white-space:pre">	</span>$reason.sectionContent <br/>
-      #end
+         <div style="font-weight: bold; text-align: left;"><strong> Section Name: </strong> $reason.sectionName</div><br/>
+             <div style="font-weight: bold; text-align: left;"><strong> Section Title:	 </strong> $reason.sectionTitle</div><br/>
+               <div style="font-weight: normal; text-align: left;"> $reason.sectionContent </div>
+            #end
       </div>
    </body>
 </html>

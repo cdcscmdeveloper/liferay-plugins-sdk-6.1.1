@@ -80,6 +80,7 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -1169,9 +1170,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					          if(agreementContent.getTplDocMaster().getProcessType() != null)
 					                context.put("processType",getParameterDesc(agreementContent.getTplDocMaster().getProcessType()));*/
 				 if(agreementContent.getTplDocMaster() != null && agreementContent.getTplDocMaster().getTplDocSections() != null
-						 && agreementContent.getTplDocMaster().getTplDocSections().size() > 0)
-					     context.put("sectionList", agreementContent.getTplDocMaster().getTplDocSections());
-					      	
+						 && agreementContent.getTplDocMaster().getTplDocSections().size() > 0){
+			          List<TplDocSection> docList = new ArrayList<TplDocSection>();
+			          for(TplDocSection sectionList : agreementContent.getTplDocMaster().getTplDocSections()){
+			        	   if(sectionList.getSectionTitle() != null && !sectionList.getSectionTitle().equalsIgnoreCase("")){
+			        		   docList.add(sectionList);
+			        	   }
+			          }
+						 context.put("sectionList", docList);
+				 }      	
 				 if (vmFile != null && context != null) {
 					    content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 				  }			
