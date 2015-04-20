@@ -98,7 +98,6 @@
 								<td>Main-Category</td>
 								<td>Sub-Category</td>
 								<td>Sub-Category Division</td>
-								<td>Mandatory</td>
 							</tr>
 						</span>
 							#foreach( $categoryResults in $categoryResults1 )
@@ -112,12 +111,6 @@
 								<td>$categoryResults.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
             					<td>$categoryResults.pmCategoryL3.pmCategoryL2.categoryName</td>
             					<td>$categoryResults.pmCategoryL3.categoryName</td>
-            					<td>#if ($categoryResults.mandatory)
-										Yes
-									#else 
-										No 
-									#end
-            					</td>
 							</tr>
 							</span>
 							#end
