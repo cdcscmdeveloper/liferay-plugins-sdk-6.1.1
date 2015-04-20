@@ -9,6 +9,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
@@ -70,6 +71,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private Long supplierCode;
 	private ScBidSchedule scheduledBid;
 	private List<ScBidPrice> ScBidPriceList;
+	private List<BidItemBean> bidPriceItems;
 	
 	private BigDecimal lowestNonBumiOfferedPrice;
 	private BigDecimal bumiSuppLowestOfferedPrice;
@@ -367,6 +369,19 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setScBidPriceList(List<ScBidPrice> scBidPriceList) {
 		ScBidPriceList = scBidPriceList;
+	}
+	/**
+	 * @return the bidPriceItems
+	 */
+	public List<BidItemBean> getBidPriceItems() {
+		return bidPriceItems;
+	}
+	/**
+	 * @param bidPriceItems 
+	 * 				the bidPriceItems to set
+	 */
+	public void setBidPriceItems(List<BidItemBean> bidPriceItems) {
+		this.bidPriceItems = bidPriceItems;
 	}
 	/**
 	 * @return  the lowestNonBumiOfferedPrice
