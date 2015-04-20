@@ -166,10 +166,13 @@ public class SupplierUserActivationBackingBean extends
 			log.info("****password***" + password);
 			log.info("****confirm password***" + confirmPassword);
 			
+			//ensure password is not same as loginId
+			if(password.equalsIgnoreCase(loginId)){
+				throw new EpException(MessageConst.ERROR_721037);
+			}
 			
 			String keyStr = supplierId + personnelId + this.getTempPassword();
 			String hashStr = SmCommonUtil.hashString(keyStr);
-			
 			log.info("****hashStr***" + hashStr);
 			log.info("****EcrypgtStr***" + this.getManagedBean().getEncrpKeyStr());
 			
