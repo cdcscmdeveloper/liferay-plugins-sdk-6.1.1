@@ -109,6 +109,7 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -273,6 +274,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		if(null == getManagedBean().getFlManulaAddress().getPmAddress()){
 			 getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
+		}
+		if(null == getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes() || getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().size()==0){
+			 getManagedBean().getFlManulaAddress().getPmAddress().setPmAddressTypes(new ArrayList<PmAddressType>());
+			 getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().add(new PmAddressType());
+		}
+		if(null == getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts() || getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts().size()==0){
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).setPmContacts(new ArrayList<PmContact>());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts().add(new PmContact());
+		}
+		if(null == getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry()){
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().setCountryId(1L);
 		}
 		if(null == getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry()){
 			getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
@@ -628,6 +641,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FlDeliveryAddress deliveryAddr = null;
 		PmAddress manualAddr=new PmAddress();
 		manualAddr=getManagedBean().getFlManulaAddress().getPmAddress();
+				
+		List<PmAddressType> addressTypeList =  new ArrayList<PmAddressType>();
+		
+		PmAddressType pmAddressType = new PmAddressType();
+		pmAddressType.setAddressType("M");
+		getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts().get(0).setPmAddressType(pmAddressType);
+		pmAddressType.setPmContacts(getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts());
+		pmAddressType.setPmAddress(manualAddr);
+		addressTypeList.add(pmAddressType);
+				
+		manualAddr.setPmAddressTypes(addressTypeList);	
 		deliveryAddr = new FlDeliveryAddress();
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 		deliveryAddr.setPmAddress(manualAddr);
@@ -1519,7 +1543,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		retrievePTJList.add(new SelectItem("", ResourceBundleUtils.getMessage("lbl.txt.select",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
-		//System.out.println("profile is for list::: "+getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
 		//orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
 		orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
 		resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
@@ -1538,15 +1561,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 *
 	 * @param flDelAddress the fl del address
 	 */
-	public void editManualAddress(FlDeliveryAddress flDelAddress){
-		//retrieveCountryList();
+	public void editManualAddress(FlDeliveryAddress flDelAddress){//retrieveCountryList();
 		getManagedBean().setEmailValidate(false);
 		getManagedBean().setFlManulaAddress(flDelAddress);
 		if(getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision()==null) {
 			getManagedBean().getFlManulaAddress().getPmAddress().setPmDivision(new PmDivision());
 		}
 		retrieveCountryList();
-		
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(flDelAddress.getPmAddress().getPmCountry().getCountryId());
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
@@ -1589,7 +1610,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 		getManagedBean().setManualAddrList(manualAddrList);
-		
 		flDelAddress.setEditable(true);
 	}
 	
