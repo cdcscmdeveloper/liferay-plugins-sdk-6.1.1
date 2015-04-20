@@ -236,6 +236,7 @@
 		<portlet id="viewSupplierProfile"></portlet>
 		<portlet id="viewApplicationHistory"></portlet>
 		<portlet id="SoftCertReg"></portlet>
+		<portlet id="MySoftCert"></portlet>
 		<portlet id="smDeactivateAdmin"></portlet>
 	</category>
 
