@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -41,6 +42,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private WorklistItemVO softCertBpmTask;
 	private List<SmPersonnel> authorizedPersonnels;
 	private boolean alreadyHadFreeSoftcert;
+	private SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean = new SoftCertMaintenanceBackingBean();
 
 	public SoftCertManagedBean() {
 		super();
@@ -190,6 +192,15 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setTotalGstAmount(BigDecimal totalGstAmount) {
 		this.totalGstAmount = totalGstAmount;
+	}
+
+	public SoftCertMaintenanceBackingBean getSoftCertMaintenanceBackingBean() {
+		return softCertMaintenanceBackingBean;
+	}
+
+	public void setSoftCertMaintenanceBackingBean(
+			SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean) {
+		this.softCertMaintenanceBackingBean = softCertMaintenanceBackingBean;
 	}
 
 }
