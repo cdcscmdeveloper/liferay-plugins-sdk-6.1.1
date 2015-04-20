@@ -361,7 +361,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setPmCategoryL1(new PmCategoryL1());
 		this.getManagedBean().setCatLevel("1");
 		this.getManagedBean().setNewCategory(true);
-		return "/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true";
+		return "/xhtml/pm/category/categoryl1.xhtml";
 	}
 	
 	/**
@@ -413,7 +413,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = null;
 		}
 		
-		return "/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true";
+		return "/xhtml/pm/category/categoryl2.xhtml";
 	}
 	
 	/**
@@ -477,7 +477,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = null;
 		}
 		
-		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
+		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
 	/**
@@ -564,7 +564,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}finally {
 			categoryCodeSO = null;
 		}
-		return "/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true";
+		return "/xhtml/pm/category/categoryl1.xhtml";
 	}
 	
 	/**
@@ -628,7 +628,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}finally {
 			categoryCodeSO = null;
 		}
-		return "/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true";
+		return "/xhtml/pm/category/categoryl2.xhtml";
 	}
 	
 	/**
@@ -643,7 +643,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		
 		loadPmCategoryL3Data(id);
 		
-		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
+		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
 	private  void loadPmCategoryL3Data(Long id) {
@@ -2030,7 +2030,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 */
 	public String backToSearch() {
 		//resetCategory();
-		return "/xhtml/pm/category/search.xhtml?faces-redirect=true";
+		return "/xhtml/pm/category/search.xhtml";
 	}
 
 	/**
