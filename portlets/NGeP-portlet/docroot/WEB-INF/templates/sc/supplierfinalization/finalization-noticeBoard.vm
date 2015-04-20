@@ -188,7 +188,6 @@
 			<td class="tdInfoTable" bgcolor="#eee">Sub-Category</td>
 			<td class="tdInfoTable" bgcolor="#eee">Sub-Category Division</td>
 			<td class="tdInfoTable" bgcolor="#eee">Category Type</td>
-			<td class="tdInfoTable" bgcolor="#eee">Mandatory</td>
 		</tr>
 		#foreach( $categoryDtls in $categoryList )
 		<tr>
@@ -204,13 +203,6 @@
 				$categoryDtls.pmCategoryL3.categoryName</td>
 			<td class="tdInfoTable">
 				$bean.getParameterDesc($categoryDtls.pmCategoryL3.categoryTypeCode)</td>
-			<td class="tdInfoTable">
-				#if ($categoryDtls.mandatory)
-					Yes
-				#else 
-					No 
-				#end
-			</td>
 		</tr>
 		#end
 	</table>
