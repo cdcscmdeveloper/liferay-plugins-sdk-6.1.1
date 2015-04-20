@@ -252,6 +252,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The back to previous page. */
     private String backToPreviousPage;
     
+    /** The end loa token. */
+    private String endLoaToken;
+    
+	/** The end loa task id. */
+	private String endLoaTaskId;
+	
+	/** The end loa outcome. */
+	private String endLoaOutcome;
     
     /**
      * Instantiates a new request note managed bean.
@@ -1502,4 +1510,58 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setBackToPreviousPage(String backToPreviousPage) {
 		this.backToPreviousPage = backToPreviousPage;
 	}
+	/**
+	 * Gets the end loa token.
+	 *
+	 * @return the end loa token
+	 */
+	public String getEndLoaToken() {
+		return endLoaToken;
+	}
+
+	/**
+	 * Sets the end loa token.
+	 *
+	 * @param endLoaToken the new end loa token
+	 */
+	public void setEndLoaToken(String endLoaToken) {
+		this.endLoaToken = endLoaToken;
+	}
+
+	/**
+	 * Gets the end loa task id.
+	 *
+	 * @return the end loa task id
+	 */
+	public String getEndLoaTaskId() {
+		return endLoaTaskId;
+	}
+
+	/**
+	 * Sets the end loa task id.
+	 *
+	 * @param endLoaTaskId the new end loa task id
+	 */
+	public void setEndLoaTaskId(String endLoaTaskId) {
+		this.endLoaTaskId = endLoaTaskId;
+	}
+
+	/**
+	 * Gets the end loa outcome.
+	 *
+	 * @return the end loa outcome
+	 */
+	public String getEndLoaOutcome() {
+		return endLoaOutcome;
+	}
+
+	/**
+	 * Sets the end loa outcome.
+	 *
+	 * @param endLoaOutcome the new end loa outcome
+	 */
+	public void setEndLoaOutcome(String endLoaOutcome) {
+		this.endLoaOutcome = endLoaOutcome;
+	}
+	
 }

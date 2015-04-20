@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -27,7 +25,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
-
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -137,7 +134,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.template.DocumentGenerator;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -147,7 +143,6 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
-
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
@@ -306,6 +301,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    FacesScopes face = new FacesScopes();
 	    requestNoteReqDTO.setPmUser(face.getUserSessionBean());
 	    requestNoteReqDTO.setRoleCode(getUserRoleCode());
+	    
+	    // reRecommend
+	    requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
+	    requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
+	    requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
+
 	    Long prInqId = getManagedBean().getPrInquiryId();
 	    Long pidId = getManagedBean().getPurchaseInDefaultId();
 	    if(getManagedBean().getPrInquiryId() != null){
@@ -498,6 +499,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
+			
+			// reRecommend
+			requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
+			requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
+			requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
+
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
@@ -642,6 +649,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void retrieveRequestNoteDetails(ScRequestNote requestNote , Long docStatusId , boolean zoneFlag) {
 		//RequestNote Details
+		getManagedBean().setRequestNote(requestNote);
 		List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -712,7 +720,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getDeliverTermType().getParameterId());
 				requestNoteDtls.add(scRequestNoteDtl);
 			}
-			getManagedBean().setRequestNote(requestNote);
+			
 			fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
 			getManagedBean().setRequestNoteDtl(requestNote.getRequestNoteDtls().get(0));
 		}
@@ -759,79 +767,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
 					
-		getManagedBean().setRequestNote(requestNote);
 		initialInformation(requestNote);
-	}
-
-	/**
-	 * Group request note dtls.
-	 *
-	 * @param requestNoteDtls the request note dtls
-	 * @return the list
-	 */
-	public	List<ScRequestNoteDtl>	groupRequestNoteDtls(List<ScRequestNoteDtl>	requestNoteDtls){
-		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
-		
-		Map<Long, ScRequestNoteDtl >	uniqueRequestNoteDtls	=	new HashMap<Long,  ScRequestNoteDtl>();
-		for(ScRequestNoteDtl requestNoteDtl:requestNoteDtls){
-			uniqueRequestNoteDtls.put(requestNoteDtl.getRequestItem().getRequestNoteItemId(), requestNoteDtl);
-		}
-		 		
-		List<String>	sortItemList	=	new ArrayList<String>();
-		Set<Long> itemIds	=	uniqueRequestNoteDtls.keySet();
-		if(itemIds != null){
-			for(Long requestItemId: itemIds){
-				ScRequestNoteDtl	requestNoteDtl	=	uniqueRequestNoteDtls.get(requestItemId);
-				results.add(requestNoteDtl);
-				sortItemList.add(requestNoteDtl.getRequestItem().getItemName());
-			}
-			
-			Collections.sort(sortItemList);
-			results = sortItemList(results ,sortItemList);
-		}
-		return results;
-	}
-
-	/**
-	 * Sort item list.
-	 *
-	 * @param requestNoteDtls the request note dtls
-	 * @param sortItemList the sort item list
-	 * @return the list
-	 */
-	private	List<ScRequestNoteDtl>	sortItemList(List<ScRequestNoteDtl>	requestNoteDtls , List<String>	sortItemList){
-		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
-		for(String itemName:sortItemList){
-
-			for(ScRequestNoteDtl requestNoteDtl:requestNoteDtls){
-
-				if(itemName.equalsIgnoreCase(requestNoteDtl.getRequestItem().getItemName())){
-					results.add(requestNoteDtl);
-				}
-			}
-		}
-		return results;
-	}
-
-	/**
-	 * Sort supplier recs.
-	 *
-	 * @param requestNoteDtls the request note dtls
-	 * @param sortSupplierRecs the sort supplier recs
-	 * @return the list
-	 */
-	private	List<ScRequestNoteDtl>	sortSupplierRecs(List<ScRequestNoteDtl>	requestNoteDtls, Map<String, Long>	sortSupplierRecs){
-		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
-		for(String zoneName:sortSupplierRecs.keySet()){
-
-			for(ScRequestNoteDtl requestNoteDtl:requestNoteDtls){
-
-				if(zoneName.equalsIgnoreCase(requestNoteDtl.getTplSpecZoneDtl().getZoneName())){
-					results.add(requestNoteDtl);
-				}
-			}
-		}
-		return results;
 	}
 	
 	/**
@@ -2840,6 +2776,42 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setSupplierRecList(requestNoteDtls);
 			getManagedBean().getSelectedRequestNoteDtls().clear();
 		} 
+	}
+	
+	/**
+	 * Re recommend.
+	 *
+	 * @param scRequestNote the sc request note
+	 */
+	public void reRecommend(ScRequestNote scRequestNote){
+		try {
+			if(scRequestNote.getCurrentStatus() == null){
+				// WorkFlow Status 
+				List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+				ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+				StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
+				getCurrentStatus(statusResDTO.getPmStatus());
+				scWorkFlowStatus.setCurrent(Boolean.TRUE);
+				scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+				scWorkFlowStatus.setRequestNote(scRequestNote);
+				workFlowStatuses.add(scWorkFlowStatus);
+				scRequestNote.setWorkFlowStatuses(workFlowStatuses);
+			}
+
+		} finally {
+		}
+
+		boolean isZone = Boolean.FALSE;
+		if(scRequestNote.getScRNZone() != null){
+			isZone =  Boolean.TRUE;;
+		}
+		
+		retrieveRequestNoteDetails(scRequestNote, DPStatusConstants.RN_PENDING_SUBMISSION, isZone);
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
 
 	/**
