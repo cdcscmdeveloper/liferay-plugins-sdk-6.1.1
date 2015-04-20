@@ -40,7 +40,7 @@
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
 		
 		<p:dataTable id="supplierItemTbl" var="price"
-			value="#{suppFinalBiddingBackingBean.managedBean.biddingItemPriceList}"
+			value="#{suppFinalBiddingBackingBean.managedBean.bidPriceItems}"
 			rows="10"
 			rowKey="#{price.bidPriceId}" rowIndexVar="rowIndex">
 			<ac:paginator for="supplierItemTbl" />
@@ -51,19 +51,18 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 				<p:commandLink update="@([id$=suppDtlPopUp])"
-					action="#{suppFinalBiddingBackingBean.showSupplierDetails}"
+					action="#{suppFinalBiddingBackingBean.showSupplierDetails(price.supplierId)}"
 					oncomplete="suppDtlWidgetVar.show();">
-					<f:setPropertyActionListener value="#{price}" target="#{suppFinalBiddingBackingBean.managedBean.shortlistedSupplier}" />
-					<h:outputText value="#{price.scBidSupplierItem.scBidSupplier.smSupplier.companyName}" />
+					<h:outputText value="#{price.supplierName}" />
 				</p:commandLink>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}">
-				<h:outputText value="#{(price.scBidSupplierItem.scBidSupplier.smSupplier.bumi) ? 'Yes' : 'No'}" />
+				<h:outputText value="#{(price.bumi) ? 'Yes' : 'No'}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.starting.price']}">
-				<h:outputText style="float : right" value="#{price.scBidSupplierItem.itemStartPrice}">
+				<h:outputText style="float : right" value="#{price.startingPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
@@ -78,13 +77,13 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<h:outputText style="float : right" value="#{price.scBidSupplierItem.itemStartPrice - price.bidPrice}">
+				<h:outputText style="float : right" value="#{price.startingPrice - price.bidPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.cost.saving']}">
-				<h:outputText style="float : right" value="#{1000}">
+				<h:outputText style="float : right" value="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem.estimatedCost - price.bidPriceTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
