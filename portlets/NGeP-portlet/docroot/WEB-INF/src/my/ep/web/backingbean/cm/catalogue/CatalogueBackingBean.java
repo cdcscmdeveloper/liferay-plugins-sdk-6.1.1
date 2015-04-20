@@ -8413,7 +8413,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("*******Str Url**********" + url);
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 				FacesMessage.SEVERITY_INFO,
-				null, MessageUtils.getMessage(MessageConst.INFO_721030, new String[]{url},ResourceBundleUtils.BUNDLE_COMMON_LABELS, fs.getUserLocale())));
+				null, MessageUtils.getMessage(MessageConst.INFO_721030, new String[]{url},MessageUtils.BUNDLE_COMMON_MESSAGES, fs.getUserLocale())));
+
 
 		return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
 	}
