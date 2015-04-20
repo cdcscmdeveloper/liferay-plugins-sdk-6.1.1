@@ -38,6 +38,11 @@
 				validatorMessage="#{lbl['lbl.sm.validation.loginid']}">
 					<f:validator validatorId="loginIdValidator" />
 				</p:inputText>
+				&#160;
+				<p:graphicImage id="regNoti" library="ep/images/design" name="tooltips.png" />
+				<p:tooltip id="regNott" for="regNoti">
+					<p:outputLabel escape="false" value="#{lbl['tt.sm.supplieractivation.login.id']}"  />
+				</p:tooltip>&#160;
 			</td>
 		</tr>
 		
@@ -50,6 +55,11 @@
 				feedback="false" match="pwd2" label="#{lbl['lbl.sm.activation.password']}" required="true">
 					<f:validateLength minimum="8" maximum="20"></f:validateLength>
 				</p:password>
+				
+				<p:graphicImage id="regPassTT" library="ep/images/design" name="tooltips.png" />
+				<p:tooltip id="regPass" for="regPassTT">
+					<p:outputLabel escape="false" value="#{lbl['tt.sm.supplieractivation.password']}"  />
+				</p:tooltip>&#160;
 			</td>
 		</tr>
 		<tr>
