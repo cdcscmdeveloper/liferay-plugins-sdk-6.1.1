@@ -62,7 +62,7 @@
 				action="#{softCertBackingBean.changePin}"
 				update="mySoftcertPanelId" />
 			<p:commandButton value="#{lbl['lbl.sm.button.reset.pin']}"
-				process="persInfoDtPanel" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				process="@this" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
 				action="#{softCertBackingBean.resetPin}"
 				update="mySoftcertPanelId" />
