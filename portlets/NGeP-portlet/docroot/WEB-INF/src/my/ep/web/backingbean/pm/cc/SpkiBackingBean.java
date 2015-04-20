@@ -42,6 +42,32 @@ import com.augtech.kmc.client.KMCRequestBuilder;
 @SessionScoped
 public class SpkiBackingBean {
 	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
+//	public static final int OPERATION_FAILED  = 0;
+//	public static final int OPERATION_SUCCESSFUL = 1;
+//	public static final int ERROR_USER_EXISTED 	= 10;
+//	public static final int ERROR_USER_NOT_FOUND = 11;
+//	public static final int ERROR_USER_INVALID 	= 12;
+//	public static final int ERROR_USER_REVOKED 	= 13;
+//	public static final int ERROR_USER_SUSPENDED = 14;
+//	public static final int ERROR_USER_INACTIVE 	= 15;
+//	public static final int ERROR_USER_CHALLENGE_EXIST = 16;
+//	public static final int ERROR_USER_ROAMING_EXIST = 17;
+//	public static final int ERROR_WRONG_RESPONSE  = 20;
+//	public static final int ERROR_INVALID_CERT = 21;
+//	public static final int ERROR_POLICY_VIOLATION	= 22;
+//	public static final int ERROR_BACKEND_SERVICES_ERROR = 23;
+//	public static final int ERROR_CERT_GOOD = 40;
+//	public static final int ERROR_CERT_EXPIRED = 41;
+//	public static final int ERROR_CERT_NOT_YET_VALID = 42;
+//	public static final int ERROR_CERT_REVOKED = 43;
+//	public static final int ERROR_CERT_NOT_FOUND	= 44;
+//	public static final int ERROR_CERT_SUSPENDED	= 45;
+//	public static final int ERROR_INVALID_PIN = 50;
+//	public static final int ERROR_PIN_BLOCKED = 51;
+//	public static final int ERROR_PIN_RESETTING = 52;
+//	public static final int ERROR_FATAL_SIGN_ERROR = 99;
+//	public static final int ERROR_SERVICE_RUNTIME = 110;
+//	public static final int ERROR_SERVICE_CONNECTION = 111;
 
 	private static List<String> challs = null;
 	private String challengeQues1;
