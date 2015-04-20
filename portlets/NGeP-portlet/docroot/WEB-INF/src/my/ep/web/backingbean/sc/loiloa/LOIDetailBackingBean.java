@@ -338,7 +338,11 @@ public class LOIDetailBackingBean extends
 				}
 				scLoi.setScLoiLoaItems(scLoiLoaItems);
 			}
-			
+			// contract signer
+			if(scLoi.getContractSigner() != null){
+				getManagedBean().setContractSignerUser(scLoi.getContractSigner());
+			}
+		
 			generateDeclarationFromVelocity(scLoi, awardSupplierResDTO.getScQt());
 			getManagedBean().setScLoi(scLoi);
 
@@ -2554,7 +2558,11 @@ public class LOIDetailBackingBean extends
 		context.put("ackDueDays", ackDueDays);
 
 		if(getManagedBean().getContractSignerUser() != null){
-			context.put("loiSigner", getManagedBean().getContractSignerUser().getUserName());
+			if(getManagedBean().getContractSignerUser().getUserName() == null){
+				context.put("loiSigner", "-");
+			}else{
+				context.put("loiSigner", getManagedBean().getContractSignerUser().getUserName());	
+			}
 		}
 		context.put("loiSignerDesignation", scLoi.getLoiSignerDesig());
 
@@ -2826,6 +2834,7 @@ public class LOIDetailBackingBean extends
 
 					if(contractSigner.getUserId().equals(user.getUserId())){
 						getManagedBean().getScLoi().setLoiSignerDesig(user.getDesignation());
+						getManagedBean().setContractSignerUser(user);
 					}
 				}
 			}
