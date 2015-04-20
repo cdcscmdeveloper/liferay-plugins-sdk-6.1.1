@@ -81,8 +81,12 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.status']}"/>
 				</th>
 				<td>
-				 	<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userStatus}">  
-		            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />  
+					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userStatus}">  
+		          
+								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
+									itemValue="0" />
+								<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+				   
 	              	</p:selectOneMenu> 
 				</td>
 				<th>&#160;</th>
