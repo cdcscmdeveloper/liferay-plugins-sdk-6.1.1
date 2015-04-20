@@ -259,6 +259,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String contactPhoneNo;
 	public String backToDocument;
 	
+	//display gst info
+	private String gstRegistrationNo;
+	private Date gstRegistrationDate;
+	
 	/**
 	 * @param chargeLineItemRoot the chargeLineItemRoot to set
 	 */
@@ -2472,6 +2476,34 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setSelectedAgencyAddressList(
 			List<CtAgencyAddress> selectedAgencyAddressList) {
 		this.selectedAgencyAddressList = selectedAgencyAddressList;
+	}
+
+	/**
+	 * @return the gstRegistrationNo
+	 */
+	public String getGstRegistrationNo() {
+		return gstRegistrationNo;
+	}
+
+	/**
+	 * @return the gstRegistrationDate
+	 */
+	public Date getGstRegistrationDate() {
+		return gstRegistrationDate;
+	}
+
+	/**
+	 * @param gstRegistrationNo the gstRegistrationNo to set
+	 */
+	public void setGstRegistrationNo(String gstRegistrationNo) {
+		this.gstRegistrationNo = gstRegistrationNo;
+	}
+
+	/**
+	 * @param gstRegistrationDate the gstRegistrationDate to set
+	 */
+	public void setGstRegistrationDate(Date gstRegistrationDate) {
+		this.gstRegistrationDate = gstRegistrationDate;
 	}
 
 }
