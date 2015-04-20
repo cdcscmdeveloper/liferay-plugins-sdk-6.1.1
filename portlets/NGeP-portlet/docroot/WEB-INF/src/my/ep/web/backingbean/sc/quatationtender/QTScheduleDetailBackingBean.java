@@ -697,6 +697,8 @@ public class QTScheduleDetailBackingBean extends
 						.getScQtApprovalRemarks());
 				briefingReqDTO.setApproval(this.getManagedBean()
 						.getScQtApproval());
+				updateApprovalRequest(this.getManagedBean()
+						.getScQtApproval().getScQtApprovalDtls(), outcome);
 			}
 			briefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);

@@ -49,6 +49,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -72,6 +73,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
@@ -97,6 +99,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -1390,6 +1393,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return Arrays.asList(paramTypes);
 		}
 		return null;
+	}
+	
+
+	/**
+	 * Update approval request.
+	 * 
+	 * @param approvalRequests
+	 *            the approval requests
+	 * @param outCome
+	 *            the out come
+	 */
+	protected void updateApprovalRequest(
+			List<ScQtApprovalRequest> approvalRequests, String outCome) {
+
+		PmParameter parameter = null;
+		if (!"SUBMIT".equalsIgnoreCase(outCome)) {
+			parameter = getParameterByTypeAndCode(
+					ParameterTypeConst.APPROVAL_DECISION_TYPE, ApprovalStatus
+							.valueOf(outCome).getApprovalStatus());
+		}
+		if (CollectionUtils.isNotEmpty(approvalRequests)) {
+			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
+				if (null != parameter) {
+					approvalRequest.setApproverAction(parameter);
+				}
+				approvalRequest.setApproverActionDate(new Date());
+				approvalRequest.setApproverId(new FacesScopes()
+						.getUserSessionBean());
+
+			}
+		}
+
 	}
 
 }

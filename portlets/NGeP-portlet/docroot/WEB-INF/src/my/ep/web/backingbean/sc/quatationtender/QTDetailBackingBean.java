@@ -1090,6 +1090,8 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
 					.getAmendMentBean());
 		}
+		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
+				.getToBeDelCommitteMemebers());
 		return quationTenderReqDTO;
 	}
 
@@ -4005,7 +4007,7 @@ public class QTDetailBackingBean extends
 			qt.setScQtCommittees(null);
 			qt.setScQtBriefings(null);
 			qt.setScQtStatus(null);
-			ScQtApproval approval = this.getManagedBean().getScQtApproval();
+			ScQtApproval approval = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval();
 			finalizeRemarks(approval.getScQtApprovalRemarks());
 
 			List<ScQtApproverSettings> approverSettings = approval
@@ -4030,19 +4032,17 @@ public class QTDetailBackingBean extends
 				}
 			}
 
-			if (approval.getScQtApprovalRemarks().isEmpty()) {
-
-				approval.setScQtApprovalRemarks(initializeRemarks(approval,
-						this.getManagedBean().getQt()
-								.getCurrentWorkFlowStatus(),
-						approval.getScQtApprovalRemarks(),
-						ScQtApprovalRemark.class));
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] { ResourceBundleUtils.getMessage(
-								"lbl.txt.remarks",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-			}
+			/*
+			 * if (approval.getScQtApprovalRemarks().isEmpty()) {
+			 * 
+			 * approval.setScQtApprovalRemarks(initializeRemarks(approval,
+			 * this.getManagedBean().getQt() .getCurrentWorkFlowStatus(),
+			 * approval.getScQtApprovalRemarks(), ScQtApprovalRemark.class));
+			 * throw new EpException(MessageConst.ERROR_100022, new String[] {
+			 * ResourceBundleUtils.getMessage( "lbl.txt.remarks",
+			 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+			 * FacesScopes().getUserLocale()) }); }
+			 */
 			List<ScQtApproval> scQtApprovals = new ArrayList<ScQtApproval>();
 
 			scQtApprovals.add(approval);
@@ -4248,15 +4248,11 @@ public class QTDetailBackingBean extends
 				if (this.getManagedBean().getRuleDataBean()
 						.getPublishPeriodDays() > ((Integer) changeEvent
 						.getNewValue()).intValue()) {
-					this.getManagedBean()
-							.getQt()
-							.setPublishPeriod(
-									((Integer) changeEvent.getOldValue())
-											.intValue());
-					throw new EpException(
-							MessageConst.ERROR_760260,
-							new String[] { String.valueOf(this.getManagedBean()
-									.getRuleDataBean().getPublishPeriodDays()) });
+
+					throw new EpException(MessageConst.ERROR_760260,
+							new String[] { String
+									.valueOf(((Integer) changeEvent
+											.getOldValue()).intValue()) });
 
 				}
 			}
@@ -4267,15 +4263,10 @@ public class QTDetailBackingBean extends
 			if (this.getManagedBean().getAmendMentBean()
 					.getOldPublishPeriodDays() >= (((Integer) changeEvent
 					.getNewValue()).intValue())) {
-				this.getManagedBean()
-						.getQt()
-						.setPublishPeriod(
-								((Integer) changeEvent.getOldValue())
-										.intValue());
-				throw new EpException(
-						MessageConst.ERROR_760260,
-						new String[] { String.valueOf(this.getManagedBean()
-								.getAmendMentBean().getOldPublishPeriodDays()) });
+
+				throw new EpException(MessageConst.ERROR_760260,
+						new String[] { String.valueOf(((Integer) changeEvent
+								.getOldValue()).intValue()) });
 			}
 
 		}
@@ -4478,7 +4469,7 @@ public class QTDetailBackingBean extends
 					.equalsIgnoreCase(procureMentMode.getParameterCode())) {
 				int validityDays = this.getManagedBean().getRuleDataBean()
 						.getProposalValidityDays();
-				this.getManagedBean().getQt().setQtValidityPeriod(validityDays);
+
 				if (validityDays < changedDays) {
 					throw new EpException(MessageConst.ERROR_760044,
 							new String[] { String.valueOf(validityDays) });
@@ -4498,8 +4489,7 @@ public class QTDetailBackingBean extends
 				belowRange = belowRange.replace(
 						QTConstants.LESSER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) <= 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
 									String.valueOf(belowRange) });
@@ -4507,8 +4497,7 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
 				belowRange = belowRange.replace(QTConstants.LESSER_THAN, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) < 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN,
 									String.valueOf(belowRange) });
@@ -4518,8 +4507,7 @@ public class QTDetailBackingBean extends
 				belowRange = belowRange.replace(
 						QTConstants.GREATER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) >= 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
 									String.valueOf(belowRange) });
@@ -4527,8 +4515,7 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
 				belowRange = belowRange.replace(QTConstants.GREATER_THAN, "");
 				if (new BigDecimal(belowRange).compareTo(estmtAmount) > 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN,
 									String.valueOf(belowRange) });
@@ -4541,8 +4528,7 @@ public class QTDetailBackingBean extends
 				aboveRange = aboveRange.replace(
 						QTConstants.LESSER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) <= 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
 									String.valueOf(aboveRange) });
@@ -4550,8 +4536,7 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
 				aboveRange = aboveRange.replace(QTConstants.LESSER_THAN, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) < 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.LESSER_THAN,
 									String.valueOf(aboveRange) });
@@ -4561,8 +4546,7 @@ public class QTDetailBackingBean extends
 				aboveRange = aboveRange.replace(
 						QTConstants.GREATER_THAN_OR_EQUAL, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) >= 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
 									String.valueOf(aboveRange) });
@@ -4570,8 +4554,7 @@ public class QTDetailBackingBean extends
 			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
 				aboveRange = aboveRange.replace(QTConstants.GREATER_THAN, "");
 				if (new BigDecimal(aboveRange).compareTo(estmtAmount) > 0) {
-					this.getManagedBean().getQt()
-							.setEstimatedAmount(estmtAmount);
+
 					throw new EpException(MessageConst.ERROR_760259,
 							new String[] { QTConstants.GREATER_THAN,
 									String.valueOf(aboveRange) });
