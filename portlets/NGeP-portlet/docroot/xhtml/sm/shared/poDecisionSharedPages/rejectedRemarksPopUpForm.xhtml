@@ -9,6 +9,7 @@
 	<br />
 	<p:messages id="applicationRejectedRemarksMsg" showSummary="false"
 		showDetail="true" autoUpdate="true" closable="true" />
+
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
@@ -23,24 +24,37 @@
 						<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
 							var="res" itemLabel="#{res.reasonDesc}"
 							itemValue="#{res.pmReason.reasonId}" />
+						<p:ajax update=":form:tt:rejRemarksPanelTst" event="change"
+							process="applRejectSelBox"
+							listener="#{backingBean.verifySelectedRejectReasons()}" />
 					</p:selectManyMenu> <p:message id="applRejectSelBoxMsg" for="applRejectSelBox"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</c:if>
 		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}" />
-				<p:outputLabel value="*" styleClass="mandatory" /></td>
-			<td style="padding-top: 5px;"><p:inputTextarea cols="121"
-					value="#{backingBean.managedBean.applnRejectionRemarks}"
-					id="rmrksForRejectTxtArea" rows="5"
-					validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
-					label="#{lbl['lbl.sm.remarks.rejection']}"
-					required="#{backingBean.managedBean.valueReqd}" maxlength="1000">
-					<f:validateLength maximum="1000" />
-				</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
-					for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
-					display="icon" /></td>
-		</tr>
 	</table>
+	<p:outputPanel id="rejRemarksPanelTst">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}"
+						id="rejReasonLbl"
+						rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
+						value="*" styleClass="mandatory" id="rejReasonLblMndty"
+						rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
+				<td style="padding-top: 5px;"><p:inputTextarea cols="121"
+						style="width : auto;"
+						rendered="#{backingBean.managedBean.rejectReasonReqd}"
+						value="#{backingBean.managedBean.applnRejectionRemarks}"
+						id="rmrksForRejectTxtArea" rows="5"
+						validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+						label="#{lbl['lbl.sm.remarks.rejection']}"
+						required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
+						maxlength="1000">
+						<f:validateLength maximum="1000" />
+					</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
+						for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
+						display="icon" /></td>
+			</tr>
+		</table>
+	</p:outputPanel>
 
 </ui:composition>
