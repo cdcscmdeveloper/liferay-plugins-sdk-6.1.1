@@ -496,6 +496,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The back to document. */
 	private String backToDocument;
 	
+	private String gstRegistrationNo;
+	private Date gstRegistrationDate;
+	
 /**
  * Gets the charge line item root.
  *
@@ -3088,6 +3091,34 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setBackToDocument(String backToDocument) {
 		this.backToDocument = backToDocument;
+	}
+
+	/**
+	 * @return the gstRegistrationDate
+	 */
+	public Date getGstRegistrationDate() {
+		return gstRegistrationDate;
+	}
+
+	/**
+	 * @param gstRegistrationDate the gstRegistrationDate to set
+	 */
+	public void setGstRegistrationDate(Date gstRegistrationDate) {
+		this.gstRegistrationDate = gstRegistrationDate;
+	}
+
+	/**
+	 * @return the gstRegistrationNo
+	 */
+	public String getGstRegistrationNo() {
+		return gstRegistrationNo;
+	}
+
+	/**
+	 * @param gstRegistrationNo the gstRegistrationNo to set
+	 */
+	public void setGstRegistrationNo(String gstRegistrationNo) {
+		this.gstRegistrationNo = gstRegistrationNo;
 	}
 
 }
