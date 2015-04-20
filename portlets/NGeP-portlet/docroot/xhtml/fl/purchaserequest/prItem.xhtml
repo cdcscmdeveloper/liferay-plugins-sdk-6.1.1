@@ -342,7 +342,7 @@
 					<td><p:inputText id="email"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.email']}" maxlength="80"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
+							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).email}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
 							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
@@ -372,18 +372,29 @@
 					<td><p:inputText id="telNo"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.telno']}" maxlength="20"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
+							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).phoneNo}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
 							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
 							</td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
 							<p:message for="telNo" display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.person']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="contactPerson"
+							required="#{purchaseRequestBackingBean.managedBean.required}"
+							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="20"
+							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).contactName}"
+							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
+							size="35"></p:inputText>
+							</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.supp.contact.person']}"/>
+							<p:message for="contactPerson" display="icon" /></td>			
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
 					<td><p:inputText maxlength="20"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
+							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).faxNo}"
 							 validatorMessage="#{lbl['lbl.fl.fax.no.msg']}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
@@ -393,7 +404,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td><p:inputText maxlength="20"
-							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
+							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).mobileNo}"
 							validatorMessage="#{lbl['lbl.fl.mobile.no.msg']}"
 							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" /></p:inputText>

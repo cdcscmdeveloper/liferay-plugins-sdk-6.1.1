@@ -274,6 +274,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if(null == getManagedBean().getFlManulaAddress().getPmAddress()){
 			 getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
 		}
+		if(null == getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes() || getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().size()==0){
+			 getManagedBean().getFlManulaAddress().getPmAddress().setPmAddressTypes(new ArrayList<PmAddressType>());
+			 getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().add(new PmAddressType());
+		}
+		if(null == getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts() || getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts().size()==0){
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).setPmContacts(new ArrayList<PmContact>());
+			getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts().add(new PmContact());
+		}
 		if(null == getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry()){
 			getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
 			getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().setCountryId(1L);
@@ -766,6 +774,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FlDeliveryAddress deliveryAddr = null;
 		PmAddress manualAddr=null;
 		manualAddr=getManagedBean().getFlManulaAddress().getPmAddress();
+		
+		List<PmAddressType> addressTypeList =  new ArrayList<PmAddressType>();
+		
+		PmAddressType pmAddressType = new PmAddressType();
+		pmAddressType.setAddressType("M");
+		getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts().get(0).setPmAddressType(pmAddressType);
+		pmAddressType.setPmContacts(getManagedBean().getFlManulaAddress().getPmAddress().getPmAddressTypes().get(0).getPmContacts());
+		pmAddressType.setPmAddress(manualAddr);
+		addressTypeList.add(pmAddressType);
+				
+		manualAddr.setPmAddressTypes(addressTypeList);	
+		
 		deliveryAddr = new FlDeliveryAddress();
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 		deliveryAddr.setPmAddress(manualAddr);
@@ -1217,7 +1237,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}else{
 				supplierDtl.setBranchCode(null);
 				supplierDtl.setBranchName(null);
+				//getManagedBean().setGstRegistrationDate(flRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getGstRegistrationDate());
+				//getManagedBean().setGstRegistrationNo(flRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getGstRegistrationNo());
 			}
+			
 			supplierDtl.setFaxNo(ctSupplierDtl.getSupplierFaxNo());
 			supplierDtl.setFlFulfilmentRequest(flRequest);
 			supplierDtl.setPhoneNo(ctSupplierDtl.getSupplierPhoneNo());
