@@ -4334,7 +4334,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 * @return true, if login user is supplier
 	 *         false, if login user is not supplier
      */
-	private boolean isSupplierRole() {
+	public boolean isSupplierRole() {
 		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
