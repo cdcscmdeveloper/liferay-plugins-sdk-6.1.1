@@ -3047,6 +3047,38 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static Long retrieveOtherRejectReasonId() {
+		Long id = null;
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IParameterSO.class);
+		IReasonSO resReqSO = (IReasonSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IReasonSO.class);
+
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterCode("SRR");
+		reqDTO.setParameterType("RC");
+		ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
+		if (resDTO != null && resDTO.getPmParameter() != null) {
+			ReasonReqDTO resReqDTO = new ReasonReqDTO();
+			resReqDTO.setReasonCategoryId(resDTO.getPmParameter()
+					.getParameterId());
+			resReqDTO.setLanguage(new FacesScopes().getUserLocale()
+					.getLanguage());
+			resReqDTO.setReasonCode("OTHERS");
+			ReasonResDTO resResDTO = resReqSO
+					.retrieveReasonByReasonCode(resReqDTO);
+			if (resResDTO != null && resResDTO.getPmReason() != null) {
+				id = resResDTO.getPmReason().getReasonId();
+			} else {
+				id = null;
+			}
+		} else {
+			id = null;
+		}
+
+		return id;
+	}
+
 	/**
 	 * Gets the uom list for select items in drop down.
 	 * 

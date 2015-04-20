@@ -538,6 +538,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
 			getManagedBean().setReasonDescList(
 					SmApplicationUtil.retrieveRejectReasonList());
+			getManagedBean().setRejectionOtherReasonId(
+					SmApplicationUtil.retrieveOtherRejectReasonId());
 			getManagedBean().setRegStatusDescList(
 					SmApplicationUtil
 							.retrieveRegistrationStatusList(applicationType));
@@ -1508,6 +1510,23 @@ public class SmApplicationBackingBean extends
 			smPersonnelSO = null;
 		}
 
+	}
+
+	public void verifySelectedRejectReasons() {
+		System.out.println("Other description reason id == "
+				+ getManagedBean().getRejectionOtherReasonId());
+		getManagedBean().setRejectReasonReqd(false);
+		for (Long resId : getManagedBean().getReasonId()) {
+			if (resId.compareTo(getManagedBean().getRejectionOtherReasonId()) == 0) {
+				getManagedBean().setRejectReasonReqd(true);
+				break;
+			}
+		}
+		System.out.println(" *** Final Out put *********"
+				+ getManagedBean().isRejectReasonReqd());
+		if (!getManagedBean().isRejectReasonReqd()) {
+			getManagedBean().setApplnRejectionRemarks("");
+		}
 	}
 
 	/**
@@ -6414,6 +6433,7 @@ public class SmApplicationBackingBean extends
 	public void approveOrRejectMofCancellation(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
 		assignValReqdToTrue();
+		getManagedBean().setRejectReasonReqd(true);
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -6497,6 +6517,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		assignValReqdToFalse();
+		getManagedBean().setReasonId(null);
+		getManagedBean().setRejectReasonReqd(false);
 		RequestContext.getCurrentInstance().reset(":form:tt:" + dialog);
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 	}

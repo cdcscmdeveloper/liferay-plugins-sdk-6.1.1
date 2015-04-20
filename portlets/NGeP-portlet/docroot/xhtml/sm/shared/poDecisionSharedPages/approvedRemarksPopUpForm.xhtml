@@ -28,7 +28,8 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approval']}" /></td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-					rows="10" value="#{backingBean.managedBean.applnApprovalRemarks}"
+					style="width : auto;" rows="10"
+					value="#{backingBean.managedBean.applnApprovalRemarks}"
 					id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
 					validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 					maxlength="1000">
