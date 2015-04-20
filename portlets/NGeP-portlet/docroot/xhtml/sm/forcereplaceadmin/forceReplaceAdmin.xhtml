@@ -7,7 +7,11 @@
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<ui:define name="resourceSection" />
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_forceReplaceSupplierAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.force.replace.suppadmin']}");
+		</script>
+	</ui:define>
 	
 	<ui:define name="contentSection">
 	
