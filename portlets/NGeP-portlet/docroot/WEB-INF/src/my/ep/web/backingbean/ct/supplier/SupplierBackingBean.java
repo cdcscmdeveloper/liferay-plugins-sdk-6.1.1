@@ -1497,7 +1497,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()));
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()));
 	}
     
     /**
