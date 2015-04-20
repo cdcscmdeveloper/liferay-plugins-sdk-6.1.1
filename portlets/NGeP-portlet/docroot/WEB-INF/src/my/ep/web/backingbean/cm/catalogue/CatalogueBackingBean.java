@@ -3732,7 +3732,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
+			return supplierTempUploadedMsg();
 		}
 		
 		log.info("Exit saveCatalogItem");
@@ -4181,7 +4181,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
+			return supplierTempUploadedMsg();
 		}
 
 		return "catalogMaintenanceFile";
@@ -4588,7 +4588,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
+			return supplierTempUploadedMsg();
 		}
 		return "catalogMaintenanceFile";
 	}
@@ -4709,7 +4709,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
+			return supplierTempUploadedMsg();
 		}
 		
 		return "catalogMaintenanceFile";
@@ -8400,5 +8400,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			this.getManagedBean().getCatTypeFilterBean().setSearchValue(null);
 		}
+	}
+	
+	public String supplierTempUploadedMsg(){
+		FacesScopes fs = new FacesScopes();
+		String hostName = fs.getRequest().getServerName();
+		int portNo = fs.getRequest().getServerPort();
+		
+		String softCertPath = "supptemp-request-soft-cert";
+		String url = "http://" + hostName + ":" + String.valueOf(portNo) + "/web/epapp/" + softCertPath;
+		
+		log.info("*******Str Url**********" + url);
+		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+				FacesMessage.SEVERITY_INFO,
+				null, MessageUtils.getMessage(MessageConst.INFO_721030, new String[]{url},ResourceBundleUtils.BUNDLE_COMMON_LABELS, fs.getUserLocale())));
+
+		return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
 	}
 }
