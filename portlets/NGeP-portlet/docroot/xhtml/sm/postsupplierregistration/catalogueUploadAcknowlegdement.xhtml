@@ -7,8 +7,8 @@
 	
     <ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}" toggleable="true" toggleSpeed="500">
-			<h:outputText value="#{lbl['lbl.sm.basic.catalogue.upload.acknowledgement']} " />
-			<p:commandLink value="#{lbl['lbl.sm.basic.here']}" action="#{postSupplierRegBB.naviToSoftCertRequest}" />
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" severity="info" escape="false"  >
+			</p:messages>
 		</p:panel>
 	</ui:define>
 		    
