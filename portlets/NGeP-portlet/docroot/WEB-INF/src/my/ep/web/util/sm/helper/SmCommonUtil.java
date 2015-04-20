@@ -2,6 +2,7 @@ package my.ep.web.util.sm.helper;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -30,7 +32,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
-import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -1599,6 +1600,22 @@ public class SmCommonUtil {
 		}
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, page);
+	}
+
+	/**
+	 * Redirect to external URL
+	 * 
+	 * @param url
+	 *            -String (mandatory)
+	 */
+	public static void redirectToExternalUrl(String url) {
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		try {
+			externalContext.redirect(url);
+		} catch (IOException e) {
+			throw new EpException(e.getMessage());
+		}
 	}
 
 	/**
