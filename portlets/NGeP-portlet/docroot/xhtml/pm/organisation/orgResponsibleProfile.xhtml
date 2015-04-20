@@ -40,7 +40,7 @@
        			#{orgUnit.authorizedOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.financialorg.status']}" style="width:20%">
-				<p:selectOneMenu value="#{orgUnit.recordStatusFlg}"
+				<p:selectOneMenu value="#{orgUnit.recordStatusFlg}" id="responsiblePTJStatudId"
 					required="true" disabled="#{orgUnit.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
@@ -60,7 +60,7 @@
        	<br/>
 		<div class="ppRightBtn">
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this,dtOrgUnit" partialSubmit="true" immediate="true" 
-		   	 	update="dtOrgUnit" action="#{organisationBackingBean.addOrgUnit()}" 
+		   	 	update="dtOrgUnit" action="#{organisationBackingBean.addOrgUnit()}" id="responsiblePTJAddBtnId"
 		   	 	oncomplete="responsibleOrg.paginator.endLink.click();" />
 		</div>
     	<ac:lovPopup /> 		

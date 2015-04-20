@@ -70,6 +70,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -81,6 +82,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -277,6 +279,46 @@ public class OrganisationBackingBean extends
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getOrganisationSearchBean()
 									.getOrgTypeCode()));
+			
+			PmParameter orgTypeParameter = getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,OrganizationType.DIVISION.value());
+			if(orgTypeParameter != null && orgTypeParameter.getParameterId().toString().equals(oSearchBean.getOrgTypeCode())){
+				//ministry admin or ptj admin
+				PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), true);
+				PmOrgProfile orgProfile = null;
+				if(user != null){
+					orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
+				}
+				if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {					
+					if(orgProfile !=null){
+						searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("parentOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+					}
+					
+				}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {	
+					if(orgProfile !=null ){
+						// Naik Taraf / Group Org.
+						if(orgProfile.isGroupOrg()){
+							Set<Long> orgProfileSet = new HashSet<Long>(); 							
+							//add current org profile
+							orgProfileSet.add(orgProfile.getOrgProfileId());
+							//loop and add authorized profile (child list)
+							for(PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()){
+								orgProfileSet.add(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
+							}	
+							List<Long> orgProfileIds = new ArrayList<Long>(orgProfileSet); 
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("orgProfileId",
+											SearchOperator.OPERATOR_IN.value(),orgProfileIds));
+						}else{
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("orgProfileId",
+											SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+						}
+					}
+				}
+			}
+			
 		}
 
 		if (oSearchBean.getOrgCode() != null
@@ -1476,6 +1518,31 @@ public class OrganisationBackingBean extends
 			recommendList.add(OrganizationType.STATUTORY_BODIES.value());
 			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
 			recommendList.add(OrganizationType.SUPPORT.value());
+			
+			// check if user is ministry admin or ptj admin
+			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {			
+				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+						.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+				recommendList
+						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+			}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+				recommendList.add(OrganizationType.MINISTRY.value());
+				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+						.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+				recommendList
+						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+			}
+			
 			// recommendList.add(OrganizationType.OTHERS.value());
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
 			recommendList.add(OrganizationType.MINISTRY.value());
@@ -2024,6 +2091,16 @@ public class OrganisationBackingBean extends
 		}
 	}
 
+	/**
+     * This method used to retrieve login user information.
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+	
+	
 	/**
 	 * @return the federalGovt
 	 */
