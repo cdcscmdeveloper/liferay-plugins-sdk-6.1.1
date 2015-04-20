@@ -51,21 +51,24 @@
 		
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.update.chalresponse']}"
-				process="@this" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-				disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
-				action="#{softCertBackingBean.updateChallengeResponse}"
-				update="mySoftcertPanelId" />
-			<p:commandButton value="#{lbl['lbl.sm.button.change.pin']}"
-				process="@this" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
-				action="#{softCertBackingBean.changePin}"
-				update="mySoftcertPanelId" />
-			<p:commandButton value="#{lbl['lbl.sm.button.reset.pin']}"
-				process="@this" partialSubmit="true" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
-				action="#{softCertBackingBean.resetPin}"
-				update="mySoftcertPanelId" />
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
+				action="#{softCertBackingBean.updateChallengeResponse}" target="_blank"
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="#{lbl['lbl.sm.button.update.chalresponse']}" 
+					disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"/>
+			</h:commandLink>
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
+				action="#{softCertBackingBean.changePin}" target="_blank"
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="#{lbl['lbl.sm.button.change.pin']}" 
+					disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"/>
+			</h:commandLink>
+			<h:commandLink disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"
+				action="#{softCertBackingBean.resetPin}" target="_blank"
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="#{lbl['lbl.sm.button.reset.pin']}" 
+					disabled="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg ne '1'}"/>
+			</h:commandLink>
 		</div>
 	</p:panel>
 	
