@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.pm.factoringCompanies;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -64,7 +63,7 @@ public class FactoringBackingBean extends
 	
 	
 	public void pageNavigate() throws Exception{
-		pageRedirect("view-factoring-companies");		
+		pageRedirect("view-factoring-company");		
 	}
 	
 	/**
