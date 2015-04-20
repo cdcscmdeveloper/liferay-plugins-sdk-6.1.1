@@ -39,13 +39,6 @@
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.mandatory']}"
-				style="text-align: center;">
-				<p:selectBooleanCheckbox value="#{cateGory.mandatory}"
-					disabled="#{specificationBackingBean.managedBean.readOnly}">
-
-				</p:selectBooleanCheckbox>
-			</p:column>
 
 		</p:dataTable>
 
