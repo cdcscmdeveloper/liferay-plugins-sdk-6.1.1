@@ -1331,7 +1331,7 @@ public class QTDetailBackingBean extends
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 							if (scQtBsv.getQtBsvId() == null) {
-								scQtBsv.setAllBriefingReq(true);
+								// scQtBsv.setAllBriefingReq(true);
 								scQtBsv.setAllSiteVisitReq(true);
 							}
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
@@ -1352,7 +1352,7 @@ public class QTDetailBackingBean extends
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					if (qtBsv.getQtBsvId() == null) {
-						qtBsv.setAllBriefingReq(true);
+						// qtBsv.setAllBriefingReq(true);
 						qtBsv.setAllSiteVisitReq(true);
 					}
 					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, this
@@ -3714,12 +3714,12 @@ public class QTDetailBackingBean extends
 					scQtBsv.setMinSiteVisitAttend(0);
 				}
 			}
-			if (!scQtBsv.isAllBriefingReq()) {
+			/*if (!scQtBsv.isAllBriefingReq()) {
 				if (scQtBsv.getMinBriefingAttend() < 1) {
 					throw new EpException(
 							"Min Briefing Attendance is greater than 0");
 				}
-			}
+			}*/
 			if (!scQtBsv.isAllSiteVisitReq()) {
 				if (scQtBsv.getMinSiteVisitAttend() < 1) {
 					throw new EpException(
