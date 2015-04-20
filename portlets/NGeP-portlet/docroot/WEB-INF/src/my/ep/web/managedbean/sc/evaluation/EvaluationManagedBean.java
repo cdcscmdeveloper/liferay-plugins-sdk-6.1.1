@@ -487,6 +487,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String financialSummaryView;
 
 	private int oneTierFinancialActiveIndex;
+	private BigDecimal finSpecZoneEstimatedPrice;
 
 	/**
 	 * Gets the today.
@@ -3188,6 +3189,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setFinancialSummaryView(String financialSummaryView) {
 		this.financialSummaryView = financialSummaryView;
+	}
+
+	/**
+	 * @return the finSpecZoneEstimatedPrice
+	 */
+	public BigDecimal getFinSpecZoneEstimatedPrice() {
+		return finSpecZoneEstimatedPrice;
+	}
+
+	/**
+	 * @param finSpecZoneEstimatedPrice the finSpecZoneEstimatedPrice to set
+	 */
+	public void setFinSpecZoneEstimatedPrice(BigDecimal finSpecZoneEstimatedPrice) {
+		this.finSpecZoneEstimatedPrice = finSpecZoneEstimatedPrice;
 	}
 
 }
