@@ -512,6 +512,8 @@ public class ApprovalBackingBean extends
 
 		} else if (SCProcessNameConst.APPROVE_CANCELATION
 				.equalsIgnoreCase(taskName)) {
+			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
+					.getXflagFinalization());
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.FINALIZATION_COMMITTEE_APPROVAL
 							.dispalyName());
@@ -521,12 +523,11 @@ public class ApprovalBackingBean extends
 
 		}
 
-		initializeRemarks(approvalRequests.get(0).getScQtApproval(), this
+		initializeRemarks(this.getManagedBean().getScQtApproval(), this
 				.getManagedBean().getQt().getCurrentWorkFlowStatus(),
-				approvalRequests.get(0).getScQtApproval()
+				this.getManagedBean().getScQtApproval()
 						.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
-		this.getManagedBean().setScQtApproval(
-				approvalRequests.get(0).getScQtApproval());
+		//this.getManagedBean().setScQtApproval(this.getManagedBean().getScQtApproval());
 		this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication()
@@ -691,7 +692,9 @@ public class ApprovalBackingBean extends
 				finalizeRemarks(approval.getScQtApprovalRemarks());
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
-				approval.setScQtApprovalDtls(this.getManagedBean()
+				approval.getScQtApprovalDtls().removeAll(this.getManagedBean()
+						.getScQtApprovalRequestList());
+				approval.getScQtApprovalDtls().addAll(this.getManagedBean()
 						.getScQtApprovalRequestList());
 				qt.setScQtApprovals(qtApproval);
 
@@ -930,6 +933,7 @@ public class ApprovalBackingBean extends
 		tenderReqDTO.setQtId(qtId);
 		tenderReqDTO.setDocType(docType);
 		tenderReqDTO.setApprovalReqTypes(reqTypes);
+		tenderReqDTO.setApprovalType(approvalType);
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -937,6 +941,7 @@ public class ApprovalBackingBean extends
 				.retrieveApprovalsByQtIdNType(tenderReqDTO);
 
 		this.getManagedBean().setQt(resDTO.getQtDetail());
+		this.getManagedBean().setScQtApproval(resDTO.getQtApproval());
 		return resDTO.getApprovalRequests();
 	}
 
@@ -1137,36 +1142,6 @@ public class ApprovalBackingBean extends
 		this.pmDigiSign = pmDigiSign;
 	}
 
-	/**
-	 * Update approval request.
-	 * 
-	 * @param approvalRequests
-	 *            the approval requests
-	 * @param outCome
-	 *            the out come
-	 */
-	private void updateApprovalRequest(
-			List<ScQtApprovalRequest> approvalRequests, String outCome) {
-
-		PmParameter parameter = null;
-		if (!"SUBMIT".equalsIgnoreCase(outCome)) {
-			parameter = getParameterByTypeAndCode(
-					ParameterTypeConst.APPROVAL_DECISION_TYPE, ApprovalStatus
-							.valueOf(outCome).getApprovalStatus());
-		}
-		if (CollectionUtils.isNotEmpty(approvalRequests)) {
-			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-				if (null != parameter) {
-					approvalRequest.setApproverAction(parameter);
-				}
-				approvalRequest.setApproverActionDate(new Date());
-				approvalRequest.setApproverId(new FacesScopes()
-						.getUserSessionBean());
-
-			}
-		}
-
-	}
 
 	private void revertToOldValues(List<ScQtApprovalRequest> approvalRequests,
 			ScQt scQt) {
