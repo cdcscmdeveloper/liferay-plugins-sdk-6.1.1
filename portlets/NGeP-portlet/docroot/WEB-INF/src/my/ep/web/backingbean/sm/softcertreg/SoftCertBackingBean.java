@@ -56,6 +56,18 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
+	 * Pre - render My Softcert Page
+	 */
+	public void preRenderMySoftCert() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser usr = facesScopes.getUserSessionBean();
+		getPersonnelByPmUser(usr);
+		setPersonnelSoftcertInformation(getManagedBean()
+				.getLoginUserPersonnelInfo());
+		SmCommonUtil.redirectToPage("mySoftcertPage.xhtml", "");
+	}
+
+	/**
 	 * Pre - render Softcert Payment from task list
 	 */
 	public void preRenderSoftCertPay() {
@@ -250,6 +262,18 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		} else {
 			return "150.00";
 		}
+	}
+
+	public void updateChallengeResponse() {
+		SmCommonUtil.redirectToExternalUrl("http://www.utusan.com.my/");
+	}
+
+	public void resetPin() {
+		SmCommonUtil.redirectToExternalUrl("http://www.bharian.com.my/");
+	}
+
+	public void changePin() {
+		SmCommonUtil.redirectToExternalUrl("http://www.espnfc.us/");
 	}
 
 	/**
