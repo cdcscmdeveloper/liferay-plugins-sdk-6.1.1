@@ -77,8 +77,6 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
 							size="120" />
 					</h:panelGrid>
-
-
 					<h:panelGrid columns="4"
 						columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5">
 						<h:panelGroup style="float: right">
@@ -122,7 +120,7 @@
 								listener="#{categoryBackingBean.updateSpecialCategory}"
 								update="@form" />
 						</p:selectOneMenu>
-						<p:selectOneMenu
+						<p:selectOneMenu 
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
@@ -213,7 +211,7 @@
 
 					<td style="float: left;  margin-right:300px"><p:outputLabel value="#{lbl['lbl.pm.paid.capital']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td ><p:inputText style="margin-left:-440px;"
+					<td ><p:inputText style="margin-left:-680px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
 							size="12"
 							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" /></td>
@@ -232,7 +230,7 @@
 
 					<td style="float: left;  margin-right:300px"><p:outputLabel value="#{lbl['lbl.pm.special.category']}" />
 						<p:outputLabel value="* " styleClass="mandatory" /></td>
-					<td ><p:selectOneMenu style="margin-left:-440px;"
+					<td ><p:selectOneMenu style="margin-left:-680px;" 
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
@@ -244,7 +242,8 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{categoryBackingBean.updateSpecialCategory}"
 								update="@form" />
-						</p:selectOneMenu> <p:selectOneMenu style="margin-left:-440px;"
+						</p:selectOneMenu> 
+						<p:selectOneMenu style="margin-left:-440px;" 
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
@@ -262,7 +261,7 @@
 							size="55" /></td>
 
 					<td style="float: left;  margin-right:300px"><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>
-					<td><p:selectBooleanCheckbox  style="margin-left:-440px;"
+					<td><p:selectBooleanCheckbox  style="margin-left:-680px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
 							<p:ajax event="change"
 								listener="#{categoryBackingBean.updateSpecialGroup}"
@@ -280,9 +279,9 @@
 							<f:selectItem itemLabel="100%" itemValue="100" />
 						</p:selectOneMenu></td>
 
-					<td style="float: left;  margin-right:280px"><p:outputLabel 
+					<td style="float: left;  margin-right:300px"><p:outputLabel 
 							value="#{lbl['lbl.pm.category.company.restriction']}" /></td>
-					<td><p:selectBooleanCheckbox style="margin-left:-405px;"
+					<td><p:selectBooleanCheckbox style="margin-left:-680px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
 							<p:ajax event="change" update="outpnlCatRes" />
 						</p:selectBooleanCheckbox></td>
@@ -309,7 +308,7 @@
 						</p:selectOneMenu></td>
 
 					<td style="float: left;  margin-right:300px"><p:outputLabel value="#{lbl['lbl.pm.operate.from.home']}" /></td>
-					<td><p:selectBooleanCheckbox style="margin-left:-438px;"
+					<td><p:selectBooleanCheckbox style="margin-left:-680px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" /></td>
 
 				</tr>				
