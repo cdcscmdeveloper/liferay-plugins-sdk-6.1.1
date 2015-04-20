@@ -168,7 +168,7 @@ public class SupplierUserActivationBackingBean extends
 			
 			//ensure password is not same as loginId
 			if(password.equalsIgnoreCase(loginId)){
-				throw new EpException(MessageConst.ERROR_721037);
+				throw new EpException(MessageConst.ERROR_721038);
 			}
 			
 			String keyStr = supplierId + personnelId + this.getTempPassword();
