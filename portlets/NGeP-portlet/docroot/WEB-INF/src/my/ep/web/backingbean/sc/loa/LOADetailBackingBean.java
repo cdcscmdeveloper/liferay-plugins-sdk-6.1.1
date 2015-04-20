@@ -357,6 +357,11 @@ public class LOADetailBackingBean extends
 				getManagedBean().setBondAmountWord(
 						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 			}
+			
+			// loa signer
+			if(scLoa.getContractSigner() != null){
+				getManagedBean().setContractSignerUser(scLoa.getContractSigner());
+			}
 
 			generateDeclarationFromVelocity(scLoa,scQt);
 			
@@ -1537,7 +1542,11 @@ public class LOADetailBackingBean extends
 		context.put("contractEffDate", contractEffDate);
 
 		if(getManagedBean().getContractSignerUser() != null){
-			context.put("loaSigner", getManagedBean().getContractSignerUser().getUserName());
+			if(getManagedBean().getContractSignerUser().getUserName() == null){
+				context.put("loaSigner", "-");
+			}else{
+				context.put("loaSigner", getManagedBean().getContractSignerUser().getUserName());	
+			}
 		}
 		context.put("loaSignerDesignation", scLoa.getLoaSignerDesig());
 
