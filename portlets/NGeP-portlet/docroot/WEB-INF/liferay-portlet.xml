@@ -1533,6 +1533,16 @@
 			<css-class-wrapper>softcertreg-portlet</css-class-wrapper>
 		</portlet>
 		<portlet>
+			<portlet-name>MySoftCert</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>mysoftcert-portlet</css-class-wrapper>
+		</portlet>
+		<portlet>
 			<portlet-name>publicCatalogue</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
