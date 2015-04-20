@@ -43,10 +43,11 @@
 						<h:outputText value="#{lbl['lbl.ct.action']}"/>
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
-					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
-					 <p:commandLink process="@this" partialSubmit="true" action="#{agreementBackingBean.downloadDocFile(contentsVar)}">
-							<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
-					 </p:commandLink>
+				  	<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementTemplateDoc}">
+						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}" immediate="true">
+							<p:graphicImage library="ep/images/design" name="download.png"
+								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+						</h:commandLink>
 					 <p:spacer width="2"/>
 					 <p:commandLink
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
