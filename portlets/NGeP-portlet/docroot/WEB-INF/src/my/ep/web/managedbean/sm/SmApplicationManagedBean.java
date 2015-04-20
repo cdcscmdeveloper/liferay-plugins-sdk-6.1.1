@@ -139,6 +139,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmStaffAcademic> selectedShrHldrAcademics;
 	private SmStaffAcademic selectedStaffAcademic;
 	private boolean valueReqd;
+	private boolean rejectReasonReqd;
 	private boolean showParentMsg;
 	private SmPersonnelAddress shareHolderPermAddr;
 	private SmPersonnelAddress shareHolderMailAddr;
@@ -269,6 +270,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> uomSelectItems;
 	private List<SelectItem> raceSelectItems;
 	List<PmReasonDesc> reasonDescList;
+	private Long rejectionOtherReasonId;
 	private List<PmStatusDesc> regStatusDescList;
 
 	private String currentStatus;
@@ -2701,6 +2703,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setMofNumber(String mofNumber) {
 		this.mofNumber = mofNumber;
+	}
+
+	public boolean isRejectReasonReqd() {
+		return rejectReasonReqd;
+	}
+
+	public void setRejectReasonReqd(boolean rejectReasonReqd) {
+		this.rejectReasonReqd = rejectReasonReqd;
+	}
+
+	public Long getRejectionOtherReasonId() {
+		return rejectionOtherReasonId;
+	}
+
+	public void setRejectionOtherReasonId(Long rejectionOtherReasonId) {
+		this.rejectionOtherReasonId = rejectionOtherReasonId;
 	}
 
 }
