@@ -2966,8 +2966,7 @@ public class EvaluationBackingBean extends
 				}
 				EvaluationResDTO speczone = evaluationSo
 						.retrieveFinSpecDetailsByCheckListId(specDtls);
-				calculateFinSpecPackageVarieance(this.getManagedBean()
-						.getScQt(), speczone.getScoreOfferPrices());
+
 				if (null != speczone.getZones()
 						&& !speczone.getZones().isEmpty()) {
 					retriveFinancialSpecZones(speczone);
@@ -2975,6 +2974,9 @@ public class EvaluationBackingBean extends
 				} else {
 					// rertriveFinSpecDtlsByChecklistId() withoutzone
 					// retriveProposalChecklistByzone() withzonespec
+					calculateFinSpecPackageVarieance(this.getManagedBean()
+							.getScQt(), speczone.getScoreOfferPrices(), this
+							.getManagedBean().getSelectedZone());
 					if (null != speczone.getScoreOfferPrices()) {
 						this.getManagedBean().setOfferPricePackage(
 								speczone.getScoreOfferPrices());
@@ -3111,6 +3113,10 @@ public class EvaluationBackingBean extends
 							speczone.getScoreOfferPrices());
 					this.getManagedBean().setWithInVarieance(
 							speczone.getWithinVarieancePackage());
+					calculateFinSpecPackageVarieance(this.getManagedBean()
+							.getScQt(), this.getManagedBean()
+							.getOfferPricePackage(), this.getManagedBean()
+							.getSelectedZone());
 					/*
 					 * finSpecZone = new SummaryZoneBaen(speczone.getZones()
 					 * .get(i), zoneResDTO.getComplianceResultBean()
@@ -3167,25 +3173,89 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 */
 	private void calculateFinSpecPackageVarieance(ScQt scQt,
-			ScQtScoreOfferPrice packageOfferPrice) {
-		if (null != packageOfferPrice) {
-			BigDecimal estimatedPrice = scQt.getEstimatedAmount();
-			if (null != packageOfferPrice.getFromVariance()) {
-				int fromvarieance = estimatedPrice.intValue()
-						* packageOfferPrice.getFromVariance().intValue() / 100;
-				int packageamount = estimatedPrice.intValue() - fromvarieance;
-				this.getManagedBean().setPackageFromVarieance(
-						new BigDecimal(packageamount));
+			ScQtScoreOfferPrice packageOfferPrice, TplSpecZoneDtl specZoneDtl) {
+		ITemplateSpecSO templateSpecSo;
+		TemplateSpecResDTO zoneSpecresDTO;
+		try {
+			if (null != packageOfferPrice) {
+				if (!scQt.isZonal()) {
+					BigDecimal estimatedPrice = scQt.getEstimatedAmount();
+					this.getManagedBean().setFinSpecZoneEstimatedPrice(
+							estimatedPrice);
+					if (null != packageOfferPrice.getFromVariance()) {
+						int fromvarieance = estimatedPrice.intValue()
+								* packageOfferPrice.getFromVariance()
+										.intValue() / 100;
+						int packageamount = estimatedPrice.intValue()
+								- fromvarieance;
+						this.getManagedBean().setPackageFromVarieance(
+								new BigDecimal(packageamount));
+
+					}
+					if (null != packageOfferPrice.getToVariance()) {
+						int tovarieance = estimatedPrice.intValue()
+								* packageOfferPrice.getToVariance().intValue()
+								/ 100;
+						int toamount = estimatedPrice.intValue() + tovarieance;
+						this.getManagedBean().setPackageToVarieance(
+								new BigDecimal(toamount));
+
+					}
+				} else {
+					if (null != specZoneDtl) {
+						templateSpecSo = BusinessDelegate.getInstance()
+								.getServiceObject(
+										ModuleCodeConst.COMMON_COMPONENT,
+										ITemplateSpecSO.class);
+						TemplateSpecReqDTO zonePriceReqDto = new TemplateSpecReqDTO();
+						zonePriceReqDto.setQtId(scQt.getQtId());
+						zonePriceReqDto.setSpecZoneId(specZoneDtl
+								.getSpecZoneId());
+						zoneSpecresDTO = templateSpecSo
+								.retrieveTotalSpecEstimationsByQtIdAndZone(zonePriceReqDto);
+						this.getManagedBean()
+								.setFinSpecZoneEstimatedPrice(null);
+						this.getManagedBean().setPackageFromVarieance(null);
+						this.getManagedBean().setPackageToVarieance(null);
+						if (null != zoneSpecresDTO
+								&& null != zoneSpecresDTO.getEstimatedPrices()) {
+
+							if (null != packageOfferPrice.getFromVariance()) {
+								int fromvarieance = zoneSpecresDTO
+										.getEstimatedPrices().intValue()
+										* packageOfferPrice.getFromVariance()
+												.intValue() / 100;
+								int packageamount = zoneSpecresDTO
+										.getEstimatedPrices().intValue()
+										- fromvarieance;
+								this.getManagedBean().setPackageFromVarieance(
+										new BigDecimal(packageamount));
+
+							}
+							if (null != packageOfferPrice.getToVariance()) {
+								int tovarieance = zoneSpecresDTO
+										.getEstimatedPrices().intValue()
+										* packageOfferPrice.getToVariance()
+												.intValue() / 100;
+								int toamount = zoneSpecresDTO
+										.getEstimatedPrices().intValue()
+										+ tovarieance;
+								this.getManagedBean().setPackageToVarieance(
+										new BigDecimal(toamount));
+
+							}
+
+							this.getManagedBean().setFinSpecZoneEstimatedPrice(
+									zoneSpecresDTO.getEstimatedPrices());
+
+						}
+
+					}
+
+				}
 
 			}
-			if (null != packageOfferPrice.getToVariance()) {
-				int tovarieance = estimatedPrice.intValue()
-						* packageOfferPrice.getToVariance().intValue() / 100;
-				int toamount = estimatedPrice.intValue() + tovarieance;
-				this.getManagedBean().setPackageToVarieance(
-						new BigDecimal(toamount));
-
-			}
+		} finally {
 
 		}
 
@@ -3349,8 +3419,7 @@ public class EvaluationBackingBean extends
 				}
 				EvaluationResDTO speczone = evaluationSo
 						.retrieveFinSpecDetailsByCheckListId(specDtls);
-				calculateFinSpecPackageVarieance(this.getManagedBean()
-						.getScQt(), speczone.getScoreOfferPrices());
+
 				if (null != speczone.getZones()
 						&& !speczone.getZones().isEmpty()) {
 
@@ -3359,6 +3428,9 @@ public class EvaluationBackingBean extends
 				} else {
 					// rertriveFinSpecDtlsByChecklistId() withoutzone
 					// retriveProposalChecklistByzone() withzonespec
+					calculateFinSpecPackageVarieance(this.getManagedBean()
+							.getScQt(), speczone.getScoreOfferPrices(), this
+							.getManagedBean().getSelectedZone());
 					if (null != speczone.getScoreOfferPrices()) {
 						this.getManagedBean().setOfferPricePackage(
 								speczone.getScoreOfferPrices());
@@ -3492,6 +3564,10 @@ public class EvaluationBackingBean extends
 					if (null != zoneResDTO.getComplianceResultBean()
 							&& zoneResDTO.getComplianceResultBean()
 									.getTotalRecord() > 0) {
+						calculateFinSpecPackageVarieance(this.getManagedBean()
+								.getScQt(), this.getManagedBean()
+								.getOfferPricePackage(), this.getManagedBean()
+								.getSelectedZone());
 						/*
 						 * calculateFinacialSpecSupplierPackageScore(zoneResDTO
 						 * .getComplianceResultBean().getResultList(),
