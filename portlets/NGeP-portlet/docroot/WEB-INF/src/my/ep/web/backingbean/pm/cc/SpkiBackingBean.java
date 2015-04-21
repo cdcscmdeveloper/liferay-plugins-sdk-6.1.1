@@ -137,7 +137,7 @@ public class SpkiBackingBean {
 
 				default:
 				System.err.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-				throw new EpException(MessageConst.ERROR_776051);
+//				throw new EpException(MessageConst.ERROR_776051);
 //				return;
 			}
 
@@ -241,7 +241,7 @@ public class SpkiBackingBean {
 			default:
 //				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-//				signedData = "DEFAULT SIGNED TEXT1";
+				signedData = "DEFAULT SIGNED TEXT1";
 //				break;
 		}
 			
