@@ -15,7 +15,7 @@
 					activeIndex="#{evaluationBackingBean.managedBean.prepareActiveIndex}"
 					style="display : table-caption;">
 
-					<p:menuitem value="#{lbl['lbl.sc.eva.prepare.mtng.dtls']}"
+					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
 						action="#{evaluationBackingBean.retriveMeetingDtls(null,evaluationBackingBean.managedBean.committeeType,0)}"
 						update="@form" />
 
@@ -27,7 +27,7 @@
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.mtng.opn.committee']}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.opn.committee']}"
 							action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
 							update="@form" />
 					</c:if>
@@ -46,7 +46,7 @@
 							action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
 							update="@form" />
 					</c:if>
-					<p:menuitem value="#{lbl['lbl.sc.eva.prepare.turut.hadir']}"
+					<p:menuitem value="#{lbl['lbl.sc.turut.hadir']}"
 						action="#{evaluationBackingBean.retriveTurutHadirDtls(2)}"
 						update="@form" />
 				</p:tabMenu>

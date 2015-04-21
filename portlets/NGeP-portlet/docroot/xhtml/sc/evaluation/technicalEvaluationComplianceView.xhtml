@@ -17,14 +17,14 @@
 			<p:commandButton value="#{lbl['lbl.btn.back']}"
 				style="float:left;"/>
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				style="float:right;" />
 		</div>
 
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 					<td><p:selectOneMenu>
 							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
 						</p:selectOneMenu></td>
@@ -33,7 +33,7 @@
 		</p:panel>
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 			<p:dataTable var="complianceTechnicalSupplier" rows="10"
 				id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
@@ -41,27 +41,27 @@
 				<ac:paginator for="complianceTechnicalSupplier" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 					style="width:30%">
 
 					<h:outputText></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}">
+				<p:column headerText="#{lbl['lbl.sc.document']}">
 					<h:outputText></h:outputText>
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}">
+				<p:column headerText="#{lbl['lbl.sc.submission.status']}">
 					<h:outputText></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}">
+				<p:column headerText="#{lbl['lbl.sc.compliance.status']}">
 					<h:outputText></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}">
+				<p:column headerText="#{lbl['lbl.sc.remarks']}">
 					<p:inputTextarea></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
