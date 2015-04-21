@@ -129,7 +129,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalCategory;
-import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -1414,16 +1413,15 @@ public class QTDetailBackingBean extends
 			
 			committeTabs = new ArrayList<TabBean>();
 			// BO and specification committe is common for both evaluations..
-			ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType("BO", qtId);
-			String tabType = boCommitte.getScCommittee().getCommitteeType().getParameterCode();
+			String tabType = ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER;
+			ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
 			committeTabs.add(new TabBean(
 					parameterHelper.getParameterDesc(parameterType, tabType), 
 					tabType,
 					boCommitte));
 
-			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(
-					CommitteType.getValue("SpecificationCommittee"), qtId);
-			tabType = specCommitte.getScCommittee().getCommitteeType().getParameterCode();
+			tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
+			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
 			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
 					.getScCommittee().getCommitteStatus().getStatusId())) {
 				this.getManagedBean().setCloneNeeded(true);
@@ -1436,10 +1434,8 @@ public class QTDetailBackingBean extends
 					specCommitte));
 			// evaluation type is one tier only oc is added..
 			if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
-
-				ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
-						CommitteType.getValue("EvaluationCommittee"), qtId);
-				tabType = evalCommitte.getScCommittee().getCommitteeType().getParameterCode();
+				tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
+				ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
 				if (isApprovalReq) {
 					evalCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
@@ -1450,10 +1446,8 @@ public class QTDetailBackingBean extends
 			}
 			// evaluation type is two tier below committe are added
 			else {
-
-				ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
-						CommitteType.getValue("OpeningCommittee"), qtId);
-				tabType = openingCommitte.getScCommittee().getCommitteeType().getParameterCode();
+				tabType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
+				ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
 				if (isApprovalReq) {
 					openingCommitte.getScCommittee().setApprovalReq(
 							isApprovalReq);
@@ -1463,11 +1457,8 @@ public class QTDetailBackingBean extends
 						tabType,
 						openingCommitte));
 
-				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
-						CommitteType
-								.getValue(ParameterConst.DOCTYPE_TEC_COMMITTE),
-						qtId);
-				tabType = tecCommitte.getScCommittee().getCommitteeType().getParameterCode();
+				tabType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
 				if (isApprovalReq) {
 					tecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
@@ -1475,11 +1466,9 @@ public class QTDetailBackingBean extends
 						parameterHelper.getParameterDesc(parameterType, tabType),
 						tabType,
 						tecCommitte));
-				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
-						CommitteType
-								.getValue(ParameterConst.DOCTYPE_FEC_COMMITTE),
-						qtId);
-				tabType = fecCommitte.getScCommittee().getCommitteeType().getParameterCode();
+				
+				tabType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
+				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
 				if (isApprovalReq) {
 					fecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}

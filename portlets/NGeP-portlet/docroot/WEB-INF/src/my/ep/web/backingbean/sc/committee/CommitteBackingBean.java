@@ -75,7 +75,6 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -584,8 +583,9 @@ public class CommitteBackingBean extends
 	public String editAction(ScQtCommittee scQtCommittee) {
 		debugLogger("editAction");
 		this.getManagedBean().setHeaderTitle(
-				CommitteType.getValue(scQtCommittee.getScCommittee()
-						.getCommitteeType().getParameterCode()));
+				ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.SC_COMMITTEE_TYPE,
+						scQtCommittee.getScCommittee().getCommitteeType().getParameterCode()));
 		log.info("Title : " + getManagedBean().getHeaderTitle());
 		this.getManagedBean().setScCommittee(scQtCommittee.getScCommittee());
 		String committeeType = getManagedBean().getScCommittee()
@@ -961,8 +961,9 @@ public class CommitteBackingBean extends
 						+ committeeMember.getScCommittee().getCommitteeType()
 								.getParameterCode());
 				this.getManagedBean().setCommTypeTitle(
-						CommitteType.getValue(committeeMember.getScCommittee()
-								.getCommitteeType().getParameterCode()));
+						ParameterHelper.getInstance().getParameterDesc(
+								ParameterTypeConst.SC_COMMITTEE_TYPE,
+								committeeMember.getScCommittee().getCommitteeType().getParameterCode()));
 				logger.info("Committee Type : "
 						+ this.getManagedBean().getCommTypeTitle());
 			}
@@ -1337,8 +1338,10 @@ public class CommitteBackingBean extends
 		}
 		if (isMemberExists(scCommittee.getScCommitteeMembers(), memberList)) {
 			throw new EpException(MessageConst.ERROR_760048,
-					new String[] { CommitteType.getValue(scCommittee
-							.getCommitteeType().getParameterCode()) });
+					new String[] { 
+						ParameterHelper.getInstance().getParameterDesc(
+								ParameterTypeConst.SC_COMMITTEE_TYPE,
+								scCommittee.getCommitteeType().getParameterCode()) });
 
 		}
 		sortMemberList(memberList);
@@ -1566,8 +1569,10 @@ public class CommitteBackingBean extends
 		}
 		if (isMemberExists(scCommittee.getScCommitteeMembers(), tobeAddedList)) {
 			throw new EpException(MessageConst.ERROR_760048,
-					new String[] { CommitteType.getValue(scCommittee
-							.getCommitteeType().getParameterCode()) });
+					new String[] { 
+						ParameterHelper.getInstance().getParameterDesc(
+								ParameterTypeConst.SC_COMMITTEE_TYPE,
+								scCommittee.getCommitteeType().getParameterCode()) });
 
 		}
 		memberList.addAll(tobeAddedList);
@@ -1901,8 +1906,9 @@ public class CommitteBackingBean extends
 			String committeeType = qtCommittee.getScCommittee()
 					.getCommitteeType().getParameterCode();
 			this.getManagedBean().setHeaderTitle(
-					CommitteType.getValue(qtCommittee.getScCommittee()
-							.getCommitteeType().getParameterCode()));
+					ParameterHelper.getInstance().getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE,
+							qtCommittee.getScCommittee().getCommitteeType().getParameterCode()));
 			this.getManagedBean().setScCommittee(qtCommittee.getScCommittee());
 			this.getManagedBean().setQt(qtCommittee.getScQt());
 			String representitiveType = null;
