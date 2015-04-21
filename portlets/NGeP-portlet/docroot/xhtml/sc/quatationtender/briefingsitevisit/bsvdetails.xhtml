@@ -77,8 +77,7 @@
 					rendered="#{QTStatusConst.BSV_COMPLETED ne briefingdtls.bsvStatus.statusId}"
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+					<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
@@ -175,8 +174,7 @@
 							rendered="#{QTStatusConst.BSV_COMPLETED ne sitevisitdtls.bsvStatus.statusId}"
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
 							partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
-							<p:graphicImage library="ep/images/design" name="edit.png"
-								value="/resources/ep/images/design/edit.png" />
+							<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>

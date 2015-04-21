@@ -68,7 +68,7 @@
 				<td class="TableFieldLeft"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.supp.doc']}" /></td>
 				<td class="TableFieldRight">
-					<table style="width: 150px;">
+					<table style="width: 200px;">
 						<tr>
 							<td colspan="2"><p:commandButton
 									oncomplete="committeeApproverAttachDlg.show();return false;"
@@ -85,9 +85,7 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage library="ep/images/design"
-													name="#{approvalBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
+												<h:graphicImage value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
 											</td>
 											<td><h:outputText
 													value="#{attachFile.createdUser.userName}" />, <h:outputText
