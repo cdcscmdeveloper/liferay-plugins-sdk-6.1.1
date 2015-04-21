@@ -881,6 +881,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 			reqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
+			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 			
 			ScPurchaseInDefault pid = quote.getPurchaseInDefault();
 			
@@ -1488,6 +1489,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 			reqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
+			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 			
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
