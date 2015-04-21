@@ -54,13 +54,23 @@
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
 		<p:column selectionMode="multiple" style="width:2%" />
-			<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
-				<p:inputText value="#{interviewee.name}" id="intName"  maxlength="50" size="55" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.userprofile.designation']}">
-				<p:inputText value="#{interviewee.designation}" id="intDesignation"  maxlength="50" size="55" />
-			</p:column>
+		
+		<p:column>	
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.sm.person.composition.name']}" />
+			</f:facet>
+			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="true" />
+		</p:column>
+		
+		<p:column>	
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.sm.userprofile.designation']}" />
+			</f:facet>
+			<p:inputText value="#{interviewee.designation}" label="#{lbl['lbl.sm.userprofile.designation']}" id="intDesignation"  maxlength="50" size="55"  required="true" />
+		</p:column>
+		
 		</p:dataTable>
 
 		<div align="right">
