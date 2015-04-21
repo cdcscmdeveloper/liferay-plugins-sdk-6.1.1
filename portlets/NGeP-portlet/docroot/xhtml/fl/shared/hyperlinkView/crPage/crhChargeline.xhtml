@@ -48,9 +48,9 @@
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<p:graphicImage library="ep/images/design" name="tick.png" rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue == 'Y' }"
+				<p:graphicImage rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue == 'Y' }"
 					value="/css/images/design/tick.png" title="#{chargeLineNode.coaValue}" />		
-				<p:graphicImage library="ep/images/design" name="reject.png" rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue != 'Y' }"
+				<p:graphicImage  rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue != 'Y' }"
 					value="/css/images/design/reject.png" title="#{chargeLineNode.coaValue}" />					
 			</p:column>
 			<p:column sortBy="#{chargeLineNode.cmItem.extensionCode}">
@@ -129,8 +129,7 @@
 					action="#{contractRequestBackingBean.showItemQuery(chargeLineNode)}"
 					rendered="#{contractRequestBackingBean.managedBean.queryDisplay and chargeLineNode.parent == 'false' and chargeLineNode.flFulfilmentItem.flQuery != null}"
 					update=":form:queryDialog,@(.orderSummaryChange)">
-					<p:graphicImage library="ep/images/design" name="exclamation.png"
-						value="/resources/ep/images/design/exclamation.png"
+					<p:graphicImage value="/css/images/design/exclamation.png"
 						title="Query" />
 			</p:commandLink>
 			</p:column>

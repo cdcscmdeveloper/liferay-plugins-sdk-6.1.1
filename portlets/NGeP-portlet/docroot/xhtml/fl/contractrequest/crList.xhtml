@@ -138,8 +138,7 @@
 			<p:column headerText="Action" style="width:58px;text-align:center">
 				<p:commandLink id="crBasepageLink" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
 					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}'}])">
-					<p:graphicImage library="ep/images/design" name="revise.png"
-						value="/resources/ep/images/design/revise.png"
+					<p:graphicImage value="/css/images/design/revise.png"
 						title="Contract Request" />
 				</p:commandLink>
 			</p:column>
@@ -179,8 +178,7 @@
 					<p:column style="width:58px;text-align:center">
 						<p:commandLink id="crBasepageLink" 
 							onclick="procure([{name:'contractId',value:'#{contractExpansion.contractId}'},{name:'scheduleNo',value:'#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}'}])">
-							<p:graphicImage library="ep/images/design" name="revise.png"
-								value="/resources/ep/images/design/revise.png"
+							<p:graphicImage value="/css/images/design/revise.png"
 								title="Contract Request" />
 						</p:commandLink>
 					</p:column>
