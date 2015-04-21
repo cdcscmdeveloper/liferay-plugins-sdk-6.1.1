@@ -1073,31 +1073,50 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()){
 					   if(panelItem.isSelectedCheckBox()){
 						   List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
+							List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
+							
 						   if(panelItem.getPanelCoverageId() == null || panelItem.getPanelCoverageId().getParameterCode() == null){
 							   panelCoverageICode = getItemGeneralCode(panelItem.getZoneAllParamterId()); 
 						   } else {
 							   panelCoverageICode = panelItem.getPanelCoverageId().getParameterCode();
 						   }
 						   
-						   
-							 /*  if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE) 
+
+						   /*  if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE) 
 									   && getManagedBean().getSelectedPanelZone() == null){
 										   throw new EpException(MessageConst.ERROR_100022, 
 												new String[]{"Create panel zone"});
 						 	   }
 							   */
+						   
+						   if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
+							   ctPanelSuppliers =  panelItem.getCtPanelSuppliers();
+						    }								      
+						 if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
+							    for(CtPanelZone zone : panelItem.getCtPanelZones()){
+							    	ctPanelSuppliers = zone.getCtPanelSuppliers();
+							    }
+						   }
+						 
 						   for (SmSupplier smSupplier : supplierList) {
 								      CtPanelSupplier panelSupplier = new CtPanelSupplier();
 								      panelSupplier.setSupplier(smSupplier);
 								      panelSupplier.setCtPanelItem(getManagedBean().getSelectedPanelItems());
 								      panelSupplier.setCtPanelZone(getManagedBean().getSelectedPanelZone());					
 								      panelSupplierList.add(panelSupplier);
+								      
+								    //Remove if already exist, avoid duplicate
+										for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
+											if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
+												panelSupplierList.remove(panelSupplier);
+											}
+										}
+								      
 						   }
 						  
 						    if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
 							   panelItem.getCtPanelSuppliers().addAll(panelSupplierList);
-						    }
-								      
+						    }								      
 						 if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
 							    for(CtPanelZone zone : panelItem.getCtPanelZones()){
 							    	zone.getCtPanelSuppliers().addAll(panelSupplierList);
@@ -1105,32 +1124,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						   }
 					   }
 				}
-				
-				List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
-				List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
-				
-				 if (this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null) {
-					 ctPanelSuppliers = this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers();
-				 }
-				 else if (!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null) {
-					 ctPanelSuppliers =  this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers();
-				 }
-				
-				for (SmSupplier smSupplier : supplierList) {
-					CtPanelSupplier panelSupplier = new CtPanelSupplier();
-					panelSupplier.setSupplier(smSupplier);
-					panelSupplier.setCtPanelItem( this.getManagedBean().getSelectedPanelItems());
-					panelSupplier.setCtPanelZone(this.getManagedBean().getSelectedPanelZone());					
-					panelSupplierList.add(panelSupplier);
-				   
-					//Remove if already exist, avoid duplicate
-					for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
-						if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
-							panelSupplierList.remove(panelSupplier);
-						}
-					}
-				}
-				ctPanelSuppliers.addAll(panelSupplierList);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
