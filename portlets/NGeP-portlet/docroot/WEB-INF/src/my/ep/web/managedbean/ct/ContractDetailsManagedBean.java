@@ -101,7 +101,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
     private BigDecimal paidInvoiceAmt;
     private Date ctDateStart;
 	private Date ctDateEnd;
-	private Date currentDate = new Date();
+	private Date asAtDate = new Date();
 	private int selectedTabIndex = 0;
 	private int ctStatus;	
 	private int attachFileIndex;
@@ -1087,12 +1087,19 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.selectedListOfAddress = selectedListOfAddress;
 	}
 
-	public Date getCurrentDate() {
-		return currentDate;
+
+	/**
+	 * @return the asAtDate
+	 */
+	public Date getAsAtDate() {
+		return asAtDate;
 	}
 
-	public void setCurrentDate(Date currentDate) {
-		this.currentDate = currentDate;
+	/**
+	 * @param asAtDate the asAtDate to set
+	 */
+	public void setAsAtDate(Date asAtDate) {
+		this.asAtDate = asAtDate;
 	}
 
 	/**

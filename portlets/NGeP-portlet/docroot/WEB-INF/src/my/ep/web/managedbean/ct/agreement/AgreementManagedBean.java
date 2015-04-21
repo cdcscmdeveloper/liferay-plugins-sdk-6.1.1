@@ -22,9 +22,11 @@ import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 
 /**
@@ -71,6 +73,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private CtAgreement ctAgreement;
 	private CtAgreementContent selectedAgreementContent;
 	private PmDigiSign pmDigiSign;	
+	private TreeNode docSectionTN;
+	private Map<TplDocSection, TreeNode> docSectionMap;
 	
 	/**
 	 * @return the action
@@ -556,5 +560,23 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
-	}	
+	}
+
+	public TreeNode getDocSectionTN() {
+		return docSectionTN;
+	}
+
+	public void setDocSectionTN(TreeNode docSectionTN) {
+		this.docSectionTN = docSectionTN;
+	}
+
+	public Map<TplDocSection, TreeNode> getDocSectionMap() {
+		return docSectionMap;
+	}
+
+	public void setDocSectionMap(Map<TplDocSection, TreeNode> docSectionMap) {
+		this.docSectionMap = docSectionMap;
+	}
+	
+	
 }

@@ -158,6 +158,7 @@
 		 </td>
 		 <td width="80%">
 			 	<p:outputPanel id="ctMenuId1"  rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq 0}">
+			 	          <ui:include src="asAtDate.xhtml" />
 			 	        <p:outputPanel id="ctMenuId2" rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		 	               <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
 		 	        </p:outputPanel>
