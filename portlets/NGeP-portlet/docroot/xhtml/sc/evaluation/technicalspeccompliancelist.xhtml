@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup>
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
+		<p:panel header="#{lbl['lbl.sc.compliance.list']}"
 			toggleable="true" collapsed="true">
 			<p:dataTable var="techComplianceList" id="sampleComplianceListId"
 				rows="10"
@@ -18,11 +18,11 @@
 				<ac:paginator for="sampleComplianceListId" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
+				<p:column headerText="#{lbl['lbl.sc.title']}"
 					style="width:90%">
 					<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+				<p:column headerText="#{lbl['lbl.sc.document']}"
 					style="width:10%">
 					<p:commandLink ajax="false"
 						actionListener="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}"
