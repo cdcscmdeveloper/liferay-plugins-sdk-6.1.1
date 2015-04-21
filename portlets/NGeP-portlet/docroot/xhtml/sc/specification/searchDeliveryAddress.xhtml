@@ -93,16 +93,16 @@
 
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{specificationBackingBean.searchDeliveryAddress}"
 					update="deliveryAddress" />
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					resetValues="true" partialSubmit="true" process="@this"
 					update="searDelivery"
 					action="#{specificationBackingBean.deliveryAddressReset}" />
 			</div>
 		</p:panel>
-		<p:panel header="PTJ Delivery Address List">
+		<p:panel header="#{lbl['lbl.sc.ptj.delivery.addr.list']}">
 
 			<p:dataTable id="deliveryAddress" var="deliveryLoc" rows="10"
 				rowKey="#{deliveryLoc}" rowIndexVar="index"
@@ -113,7 +113,7 @@
 				<ac:paginator for="deliveryAddress"></ac:paginator>
 				<p:column selectionMode="multiple"
 					style="width:2%;text-align:center;" />
-				<p:column headerText="Delivery/Service Address">
+				<p:column headerText="#{lbl['lbl.sc.spec.delivery.service.address']}">
 					<h:outputText value="#{deliveryLoc.pmAddress.address1}" size="50"></h:outputText>,<h:outputText
 						value="#{deliveryLoc.pmAddress.address2}" size="50"></h:outputText>,<h:outputText
 						value="#{deliveryLoc.pmAddress.address3}" size="50"></h:outputText>,<h:outputText

@@ -34,7 +34,7 @@
 
 		</p:dataTable>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"
+	<p:panel header="#{lbl['lbl.sc.remark']}"
 		toggleable="true" id="ptjapprovalRemarks">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
@@ -112,13 +112,13 @@
 	<p:dialog id="ptjapprovalAttachDlg" widgetVar="ptjapprovalAttachDlg"
 		modal="true" dynamic="true" hideEffect="explode" resizable="false"
 		width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+		header="#{lbl['lbl.sc.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
 			mode="advanced" id="dlgsuploadsids"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
 			update="committeeremarksupDtls"
 			oncomplete="ptjapprovalAttachDlg.hide()">
 		</p:fileUpload>
