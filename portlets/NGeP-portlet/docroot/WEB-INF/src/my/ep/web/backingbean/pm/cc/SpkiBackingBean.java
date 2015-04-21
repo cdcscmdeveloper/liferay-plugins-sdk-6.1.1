@@ -175,7 +175,7 @@ public class SpkiBackingBean {
 		return tok;
 	}
 	
-	public String spkiSignTransaction(String originalText) throws KMCAPIException, InvalidKMCAPIFieldException {
+	public String spkiSignTransaction(String originalText) {
 		try{
 //			String signedData ;
 			KMCClient client = getClient();
