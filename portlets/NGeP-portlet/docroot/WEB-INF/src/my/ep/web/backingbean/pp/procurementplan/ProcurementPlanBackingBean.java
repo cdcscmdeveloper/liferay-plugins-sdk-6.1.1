@@ -1266,14 +1266,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							PmRole pmRole = new PmRole();
 							pmRole.setRoleCode(RoleCode.PLAN_VERFICATION_OFFICER.value());
 							int seq = 1;
-							for(PmUser user:this.getManagedBean().getVerifierModel().getTarget()){
+//							for(PmUser user:this.getManagedBean().getVerifierModel().getTarget()){ PP20150410-0045
 								planActor = new PpPlanActor();
 								planActor.setUserSeq(seq);
-								planActor.setPmUser(user);
+								planActor.setPmUser(newUser);
 								planActor.setRoleCode(pmRole);
 								ppPlan.addPpPlanActors(planActor);
 								seq++;
-							}
+//							}
 						}
 					}
 					//Remove Unselected Actor
@@ -1282,6 +1282,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							if(!newVerifiers.contains(actor.getPmUser().getUserId())){
 								//Remove
 								actor.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							}else{
+								actor.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							}
 						}
 					}
@@ -1302,14 +1304,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						PmRole pmRole = new PmRole();
 						pmRole.setRoleCode(RoleCode.PLAN_APPROVER.value());
 						int seq = 1;
-						for(PmUser user:this.getManagedBean().getApproverModel().getTarget()){
+//						for(PmUser user:this.getManagedBean().getApproverModel().getTarget()){PP20150410-0045
 							planActor = new PpPlanActor();
 							planActor.setUserSeq(seq);
-							planActor.setPmUser(user);
+							planActor.setPmUser(newUser);
 							planActor.setRoleCode(pmRole);
 							ppPlan.addPpPlanActors(planActor);
 							seq++;
-						}
+//						}
 					}
 				}
 				//Remove Unselected Actor
@@ -1319,6 +1321,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//Remove
 							log.info("remove existing approver");
 							actor.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						}else{
+							actor.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 						}
 					}
 				}
@@ -1871,7 +1875,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 			
-			
+//			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+//            reqDTO.setUserRole(getOneRoleByStatus(ppPlan));
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
 			reqDTO.setJustifications(justifications);
