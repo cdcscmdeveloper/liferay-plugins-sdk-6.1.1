@@ -73,7 +73,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -688,10 +687,10 @@ public class QTCommitteBackingBean extends
 								memberList.clear();
 								throw new EpException(
 										MessageConst.ERROR_760048,
-										new String[] { CommitteType
-												.getValue(cloneCommitte
-														.getCommitteeType()
-														.getParameterCode()) });
+										new String[] { 
+												ParameterHelper.getInstance().getParameterDesc(
+														ParameterTypeConst.SC_COMMITTEE_TYPE,
+														cloneCommitte.getCommitteeType().getParameterCode()) });
 							}
 						}
 					}
@@ -1133,8 +1132,9 @@ public class QTCommitteBackingBean extends
 		}
 		if (isMemberExists(scCommittee.getScCommitteeMembers(), toBeAddedList)) {
 			throw new EpException(MessageConst.ERROR_760048,
-					new String[] { CommitteType.getValue(scCommittee
-							.getCommitteeType().getParameterCode()) });
+					new String[] { ParameterHelper.getInstance().getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE,
+							scCommittee.getCommitteeType().getParameterCode()) });
 
 		}
 
