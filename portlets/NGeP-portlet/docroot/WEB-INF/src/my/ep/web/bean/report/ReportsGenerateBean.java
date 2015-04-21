@@ -166,6 +166,7 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryDateView = false;
 		private boolean smNonMandatoryDateView = false;
 		
+		
 		private boolean smRoleView = false;
 		private boolean smEpNoView = false;
 		private boolean smRegistrationNoView = false;
@@ -182,6 +183,9 @@ public class ReportsGenerateBean {
 		private boolean smIdentficationTypeView = false;
 		private boolean smIdentificationNumberView = false;
 		private boolean smCancellationByView = false;
+		private boolean smMofRegNoTwoView = false;
+		private boolean smRegistrationTypeTwoView = false;
+		private boolean smActiveSubmissiveFromDateView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -442,6 +446,25 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmActiveSubmissiveFromDateView() {
+			return smActiveSubmissiveFromDateView;
+		}
+		public void setSmActiveSubmissiveFromDateView(
+				boolean smActiveSubmissiveFromDateView) {
+			this.smActiveSubmissiveFromDateView = smActiveSubmissiveFromDateView;
+		}
+		public boolean isSmMofRegNoTwoView() {
+			return smMofRegNoTwoView;
+		}
+		public void setSmMofRegNoTwoView(boolean smMofRegNoTwoView) {
+			this.smMofRegNoTwoView = smMofRegNoTwoView;
+		}
+		public boolean isSmRegistrationTypeTwoView() {
+			return smRegistrationTypeTwoView;
+		}
+		public void setSmRegistrationTypeTwoView(boolean smRegistrationTypeTwoView) {
+			this.smRegistrationTypeTwoView = smRegistrationTypeTwoView;
+		}
 		public boolean isSmMandatoryApplicationStatusThreeView() {
 			return smMandatoryApplicationStatusThreeView;
 		}

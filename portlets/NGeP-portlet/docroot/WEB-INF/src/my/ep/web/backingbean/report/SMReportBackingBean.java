@@ -130,9 +130,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryReceivedFromDateView(true);
 	            break;
 		 case ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL:	
-			    rptGenBean.setSmMandatoryCompanyNameView(true);
-				rptGenBean.setSmMandatoryMofRegNoView(true);
-				rptGenBean.setSmMandatoryRegistrationTypeView(true);
+			    rptGenBean.setSmCompanyNameView(true);
+				rptGenBean.setSmMofRegNoTwoView(true);
+				rptGenBean.setSmRegistrationTypeTwoView(true);
 				/*rptGenBean.setSmMandatoryFromDateView(true);
 				rptGenBean.setSmMandatoryDateView(true);*/
 	            break;

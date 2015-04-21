@@ -201,7 +201,23 @@
 								</table>
 							</p:column>
 						</c:if>
-
+                       <c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smRegistrationTypeTwoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smRegistrationType}"
+								style="margin-top:5px;width:300px;">
+								                <f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+													itemValue="#{lbl['lbl.rpt.all']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}"
+													itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
+													itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
+                                                <p:ajax event="change" listener="#{reportBackingBean.changeDateBasedOnRegType}" process="@this"
+					 			                      partialSubmit="true" update="@all"/>
+								
+							</p:selectOneMenu>
+						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
@@ -247,7 +263,15 @@
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
 						</c:if>
-
+                        <c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smMofRegNoTwoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.businessRegNo']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="12"
+								value="#{reportBackingBean.smMofRegNo}"
+								style="margin-top:5px;width:290px;">
+							</p:inputText>
+						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryMofRegNoView}">
 							<p:column >
@@ -554,6 +578,7 @@
 								
 							</p:selectOneMenu>
 						</c:if>
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryRegistrationTypeView}">
 							<p:column>
@@ -1129,6 +1154,39 @@
 			</TABLE>
 		</c:if>
 	</div>
+	<div>
+						<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActiveSubmissiveFromDateView}">
+						<TABLE style="margin-top:10px;width:60%;">
+							<TR>
+							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActivationDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.activationdatefrom']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smSubmissionDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.submissiondatefrom']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+								<TD>
+									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
+									
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@form">																				
+									</p:calendar>
+								</TD>
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:50px;"/>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.toDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
+																							
+									</p:calendar> 
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
 	<div>
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryCreatedFromYearView}">
