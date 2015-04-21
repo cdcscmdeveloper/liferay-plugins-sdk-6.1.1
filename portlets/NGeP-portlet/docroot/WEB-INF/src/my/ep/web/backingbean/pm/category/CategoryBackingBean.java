@@ -477,7 +477,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = null;
 		}
 		
-		return "/xhtml/pm/category/categoryl3.xhtml";
+		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
 	
 	/**
@@ -1867,13 +1867,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			this.getManagedBean().setSpecialCategory(listOfPmParameterDesc);
 			
+			
 			//default value for Special Category
 			if(this.getManagedBean().isNewCategory()){
 				reqDTO.setParameterType("CAT");
 				reqDTO.setParameterCode("-");
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				this.getManagedBean().getPmCategoryL3().setCategoryTypeCodeVal(resDTO.getPmParameter().getParameterId());
-				
 			}
 			
 			//default value for Special Group
@@ -1888,6 +1888,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setSelectedpmMachineCategory(new ArrayList<PmMachineCategory>() );
 			this.getManagedBean().setDeletedpmMachineCategory(new ArrayList<PmMachineCategory>() );
 			this.getManagedBean().setSelectedPmCategoryRestr(new ArrayList<PmCategoryRestr>());
+			
+			/*for(PmParameterDesc pmParameterDesc:listOfPmParameterDesc){
+				System.out.println("is New CAtegory--->"+this.getManagedBean().isNewCategory());
+				System.out.println("---->CATEGORY----->"+pmParameterDesc.getCodeName());
+				System.out.println("----PmParameter_Id---->"+pmParameterDesc.getPmParameter().getParameterId());
+			}*/
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally {
