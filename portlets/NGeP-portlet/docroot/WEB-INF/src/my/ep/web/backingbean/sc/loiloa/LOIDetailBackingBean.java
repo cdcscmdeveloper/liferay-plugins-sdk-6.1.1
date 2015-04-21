@@ -848,16 +848,15 @@ public class LOIDetailBackingBean extends
 	public void addNegotiationLocation() {
 		debugLogger("addNegotiationLocation");
 		ScLoiNegoLocation negoLocation = new ScLoiNegoLocation();
+		List<ScLoiNegoLocation> negoLocations =  getManagedBean().getScLoi().getScNegoLocations();
 
-		List<ScLoiNegoLocation> negoLocationList = getManagedBean()
-				.getNegoLocationList();
-		if (null == negoLocationList) {
-			negoLocationList = new ArrayList<ScLoiNegoLocation>();
+		if (null == negoLocations) {
+			negoLocations = new ArrayList<ScLoiNegoLocation>();
 		}
 		negoLocation.setScLoi(getManagedBean().getScLoi());
-		negoLocationList.add(negoLocation);
-		getManagedBean().getScLoi().setScNegoLocations(negoLocationList);
-		this.getManagedBean().setNegoLocationList(negoLocationList);
+		negoLocations.add(negoLocation);
+		getManagedBean().getScLoi().setScNegoLocations(negoLocations);
+		this.getManagedBean().setNegoLocationList(negoLocations);
 	}
 
 	/**
