@@ -70,9 +70,7 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage library="ep/images/design"
-													name="#{approvalBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
+												<h:graphicImage value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
 											</td>
 											<td><h:outputText value="#{attachFile.user.userName}" />,
 												<h:outputText value="#{attachFile.changedDate}">
@@ -85,8 +83,7 @@
 													styleClass="blue_font" /> <p:commandLink
 													action="#{approvalBackingBean.deleteUploadFile}"
 													immediate="true" update="attachedIds">
-													<h:graphicImage library="ep/images/design"
-														name="icon_trash.png" styleClass="tasklist_title1" />
+													<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
 										</tr>
 									</table>

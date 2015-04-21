@@ -136,14 +136,16 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.address']}">
 					<h:outputText value="#{samplesubmissiondtl.address.address1}" />
+					<h:outputText value="#{samplesubmissiondtl.address.address2}" />,
+					<h:outputText value="#{samplesubmissiondtl.address.address3}" />,
+					<h:outputText value="#{samplesubmissiondtl.address.address4}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
 					<p:commandLink
 						action="#{qTScheduleDetailBackingBean.editAddress(samplesubmissiondtl,rowIndex)}"
 						style="margin-right:20px;" partialSubmit="true" process="@this"
 						update="@(.sampleSubmitionUpdate)">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
+						<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
