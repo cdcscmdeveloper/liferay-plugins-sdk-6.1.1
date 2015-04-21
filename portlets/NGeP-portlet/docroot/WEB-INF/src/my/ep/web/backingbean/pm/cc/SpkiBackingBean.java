@@ -106,8 +106,8 @@ public class SpkiBackingBean {
 		return client;
 	}
 	
-	public void getChallengeQuestions() throws KMCAPIException, InvalidKMCAPIFieldException{ 
-//	try{
+	public void getChallengeQuestions() { 
+	try{
 			KMCClient client = getClient();
 			
 			// Request service for user selected question for authentication
@@ -142,11 +142,11 @@ public class SpkiBackingBean {
 			}
 
 				
-//		} catch (Exception ex)
-//		{
-//			throw new EpException(MessageConst.ERROR_776051);
-////			ex.printStackTrace();
-//		}
+		} catch (Exception ex)
+		{
+			throw new EpException(MessageConst.ERROR_776051);
+//			ex.printStackTrace();
+		}
 	}
 	
 	public String generateSecurityToken(){
