@@ -187,10 +187,11 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 
 			if(scRequestNote != null){
 				requestNoteBackingBean.getManagedBean().setRequestNote(scRequestNote);
-				requestNoteBackingBean.reRecommend(scRequestNote);
 				requestNoteBackingBean.getManagedBean().setEndLoaTaskId(getManagedBean().getTaskId());
 				requestNoteBackingBean.getManagedBean().setEndLoaToken(token);
 				requestNoteBackingBean.getManagedBean().setEndLoaOutcome(outcome);
+				requestNoteBackingBean.getManagedBean().setEndLoaRN(requestNote);
+				requestNoteBackingBean.reRecommend(scRequestNote);
 			}
 		}
 
@@ -204,6 +205,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 				simpleQuoteBackingBean.getManagedBean().setEndLoaTaskId(getManagedBean().getTaskId());
 				simpleQuoteBackingBean.getManagedBean().setEndLoaToken(token);
 				simpleQuoteBackingBean.getManagedBean().setEndLoaOutcome(outcome);
+				simpleQuoteBackingBean.getManagedBean().setEndLoaRN(requestNote);
 				simpleQuoteBackingBean.reQuote(scQuote);
 			}
 		}
