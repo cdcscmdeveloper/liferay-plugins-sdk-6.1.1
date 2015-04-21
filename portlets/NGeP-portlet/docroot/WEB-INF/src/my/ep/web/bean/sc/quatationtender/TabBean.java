@@ -31,11 +31,11 @@ public class TabBean {
 	/** The title name. */
 	private String titleName;
 	
+	/** The tab type */
+	private String tabType;
+	
 	/** The sc qt approval. */
 	private ScQtApproval scQtApproval;
-	
-	/** The sc committee. */
-	private ScCommittee scCommittee;
 	
 	/** The selected sc committee. */
 	private ScCommittee selectedScCommittee;
@@ -62,15 +62,6 @@ public class TabBean {
 	 * Instantiates a new tab bean.
 	 *
 	 * @param titleName the title name
-	 */
-	public TabBean(String titleName) {
-		this.titleName = titleName;
-	}
-
-	/**
-	 * Instantiates a new tab bean.
-	 *
-	 * @param titleName the title name
 	 * @param scQtApproval the sc qt approval
 	 * @param budgetApprovalUsers the budget approval users
 	 */
@@ -86,44 +77,11 @@ public class TabBean {
 	 * Instantiates a new tab bean.
 	 *
 	 * @param titleName the title name
-	 * @param scQtApproval the sc qt approval
-	 */
-	public TabBean(String titleName, ScQtApproval scQtApproval) {
-		this.titleName = titleName;
-		this.scQtApproval = scQtApproval;
-	}
-
-	/**
-	 * Instantiates a new tab bean.
-	 *
-	 * @param titleName the title name
-	 * @param scCommittee the sc committee
-	 */
-	public TabBean(String titleName, ScCommittee scCommittee) {
-		this.titleName = titleName;
-		this.scCommittee = scCommittee;
-
-	}
-
-	/**
-	 * Instantiates a new tab bean.
-	 *
-	 * @param titleName the title name
-	 * @param scQtApprovalList the sc qt approval list
-	 */
-	public TabBean(String titleName, List<ScQtApproval> scQtApprovalList) {
-		this.titleName = titleName;
-		this.scQtApprovalList = scQtApprovalList;
-	}
-
-	/**
-	 * Instantiates a new tab bean.
-	 *
-	 * @param titleName the title name
 	 * @param scQtCommittee the sc qt committee
 	 */
-	public TabBean(String titleName, ScQtCommittee scQtCommittee) {
+	public TabBean(String titleName, String tabType, ScQtCommittee scQtCommittee) {
 		this.titleName = titleName;
+		this.tabType = tabType;
 		this.scQtCommittee = scQtCommittee;
 	}
 
@@ -161,6 +119,20 @@ public class TabBean {
 	}
 
 	/**
+	 * @return the tabType
+	 */
+	public String getTabType() {
+		return tabType;
+	}
+
+	/**
+	 * @param tabType the tabType to set
+	 */
+	public void setTabType(String tabType) {
+		this.tabType = tabType;
+	}
+
+	/**
 	 * Gets the sc qt approval.
 	 *
 	 * @return the sc qt approval
@@ -176,24 +148,6 @@ public class TabBean {
 	 */
 	public void setScQtApproval(ScQtApproval scQtApproval) {
 		this.scQtApproval = scQtApproval;
-	}
-
-	/**
-	 * Gets the sc committee.
-	 *
-	 * @return the sc committee
-	 */
-	public ScCommittee getScCommittee() {
-		return scCommittee;
-	}
-
-	/**
-	 * Sets the sc committee.
-	 *
-	 * @param scCommittee the new sc committee
-	 */
-	public void setScCommittee(ScCommittee scCommittee) {
-		this.scCommittee = scCommittee;
 	}
 
 	/**

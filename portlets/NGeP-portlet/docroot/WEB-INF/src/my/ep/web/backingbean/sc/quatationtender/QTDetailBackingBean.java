@@ -767,8 +767,7 @@ public class QTDetailBackingBean extends
 			qtCommitteList = new ArrayList<ScQtCommittee>();
 			for (int i = 0; i < committeTabs.size(); i++) {
 				TabBean tabBean = committeTabs.get(i);
-				if (!QTConstants.FINALIZATION_SECRETARY_TAB
-						.equalsIgnoreCase(tabBean.getTitleName())) {
+				if (!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType())) {
 
 					qtCommitteList.add(tabBean.getScQtCommittee());
 				}
@@ -1410,14 +1409,21 @@ public class QTDetailBackingBean extends
 		if (null != qtId && null == committeTabs) {
 			String evaluationType = this.getManagedBean().getQt()
 					.getEvaluationType();
+			String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
+			ParameterHelper parameterHelper = ParameterHelper.getInstance();
+			
 			committeTabs = new ArrayList<TabBean>();
 			// BO and specification committe is common for both evaluations..
 			ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType("BO", qtId);
-			committeTabs
-					.add(new TabBean(QTConstants.BUSINESS_OWNER, boCommitte));
+			String tabType = boCommitte.getScCommittee().getCommitteeType().getParameterCode();
+			committeTabs.add(new TabBean(
+					parameterHelper.getParameterDesc(parameterType, tabType), 
+					tabType,
+					boCommitte));
 
 			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(
 					CommitteType.getValue("SpecificationCommittee"), qtId);
+			tabType = specCommitte.getScCommittee().getCommitteeType().getParameterCode();
 			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
 					.getScCommittee().getCommitteStatus().getStatusId())) {
 				this.getManagedBean().setCloneNeeded(true);
@@ -1425,61 +1431,96 @@ public class QTDetailBackingBean extends
 			copyBoMembersToSpecCommitte(specCommitte, boCommitte);
 
 			committeTabs.add(new TabBean(
-					QTConstants.SPECIFICATION_COMMITTEE_TAB, specCommitte));
+					parameterHelper.getParameterDesc(parameterType, tabType), 
+					tabType,
+					specCommitte));
 			// evaluation type is one tier only oc is added..
 			if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
 
 				ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType.getValue("EvaluationCommittee"), qtId);
+				tabType = evalCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					evalCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
 				committeTabs.add(new TabBean(
-						QTConstants.EVALUATION_COMMITTEE_TAB, evalCommitte));
+						parameterHelper.getParameterDesc(parameterType, tabType),
+						tabType,
+						evalCommitte));
 			}
 			// evaluation type is two tier below committe are added
 			else {
 
 				ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType.getValue("OpeningCommittee"), qtId);
+				tabType = openingCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					openingCommitte.getScCommittee().setApprovalReq(
 							isApprovalReq);
 				}
-				committeTabs.add(new TabBean(QTConstants.OPENING_COMMITTEE_TAB,
+				committeTabs.add(new TabBean(
+						parameterHelper.getParameterDesc(parameterType, tabType),
+						tabType,
 						openingCommitte));
 
 				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType
 								.getValue(ParameterConst.DOCTYPE_TEC_COMMITTE),
 						qtId);
+				tabType = tecCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					tecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
 				committeTabs.add(new TabBean(
-						ParameterConst.DOCTYPE_TEC_COMMITTE, tecCommitte));
+						parameterHelper.getParameterDesc(parameterType, tabType),
+						tabType,
+						tecCommitte));
 				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
 						CommitteType
 								.getValue(ParameterConst.DOCTYPE_FEC_COMMITTE),
 						qtId);
+				tabType = fecCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					fecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
 				committeTabs.add(new TabBean(
-						ParameterConst.DOCTYPE_FEC_COMMITTE, fecCommitte));
+						parameterHelper.getParameterDesc(parameterType, tabType),
+						tabType,
+						fecCommitte));
 			}
-			//
-			retrieveFinalizationCommitteeType(qtId);
+			
+			String fcTitleName = null;
+			List<PmParameter> fcSecretaries = retrieveFinalizationCommitteeType(qtId);
 			// Displaying the Secretary Details
 			/*
 			 * List<PmUser> pmUsersList = retrievePmUserSecratryDtl(commType);
 			 * this.getManagedBean().setPmUsersSecretaryList(pmUsersList);
 			 */
+			if (fcSecretaries != null && fcSecretaries.size() > 0) {
+				StringBuilder fcTitleLabel = new StringBuilder("lbl.sc.finalization.committee.secretary.");
+				String fcSecretary = fcSecretaries.get(0).getParameterCode();
+				
+				if (fcSecretary != null) {
+					if (fcSecretary.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
+						fcTitleLabel.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+						tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+					} else if (fcSecretary.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD) >= 0) {
+						fcTitleLabel.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+						tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+					}
+					
+					fcTitleName = ResourceBundleUtils.getMessage(
+							fcTitleLabel.toString().toLowerCase(), 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+				}
+			}
 
-			ScCommittee committee = null;
-
+			ScQtCommittee committee = null;
 			committeTabs.add(new TabBean(
-					QTConstants.FINALIZATION_SECRETARY_TAB, committee));
+					fcTitleName, 
+					tabType,
+					committee));
 
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 
@@ -1490,13 +1531,14 @@ public class QTDetailBackingBean extends
 				committeItem.setUpdate("@this");
 				committeItem.setPartialSubmit(true);
 				committeItem.setProcess("@this");
-				if (!QTConstants.FINALIZATION_SECRETARY_TAB
-						.equalsIgnoreCase(tabBean.getTitleName())) {
-					if (tabBean.getScQtCommittee().getScCommittee()
-							.getCommitteStatus().getStatusId()
-							.equals(QTStatusConst.CMT_COMPLETED)) {
-						committeItem.setIcon("ui-icon-endorse");
-					}
+				if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType()) &&
+						tabBean.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_COMPLETED)) ||
+						(SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType()) && 
+								scQt.getFinalizationCommitte() != null && 
+								scQt.getFinalizationCommitte().getParameterId() != null && 
+								scQt.getFinalizationSecratery() != null &&
+								scQt.getFinalizationSecratery().getUserId() != null)) {
+					committeItem.setIcon("ui-icon-endorse");
 				}
 				committeItem
 						.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : "
@@ -2833,8 +2875,7 @@ public class QTDetailBackingBean extends
 		if (null != commiteTabs) {
 			qtCommittes = new ArrayList<ScQtCommittee>();
 			for (TabBean tabBean : commiteTabs) {
-				if (!QTConstants.FINALIZATION_SECRETARY_TAB
-						.equalsIgnoreCase(tabBean.getTitleName())) {
+				if (!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType())) {
 					qtCommittes.add(tabBean.getScQtCommittee());
 				}
 
