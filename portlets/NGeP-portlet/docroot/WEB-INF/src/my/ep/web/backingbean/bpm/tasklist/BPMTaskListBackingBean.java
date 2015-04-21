@@ -460,6 +460,10 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 				+ SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE,
 				SourcingConstants.QT_APPROVAL_PAGE);
+		
+		temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+				+ SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE,
+				SourcingConstants.QT_APPROVAL_PAGE);
 
 		this.getManagedBean().setBpmMap(temp);
 
