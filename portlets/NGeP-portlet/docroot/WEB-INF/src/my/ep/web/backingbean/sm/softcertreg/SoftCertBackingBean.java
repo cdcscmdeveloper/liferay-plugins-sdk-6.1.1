@@ -265,7 +265,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Update softcert challenge response
+	 * Update soft certificate challenge response
 	 */
 	public void updateChallengeResponse() {
 		try {
@@ -279,7 +279,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Reset softcert PIN number
+	 * Reset soft certificate PIN number
 	 */
 	public void resetPin() {
 		try {
@@ -293,12 +293,27 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Change softcert PIN number
+	 * Change soft certificate PIN number
 	 */
 	public void changePin() {
 		try {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestChangePIN();
+		} catch (Exception ex) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.ERROR_721037);
+		}
+	}
+
+	/**
+	 * Revoke soft certificate
+	 */
+	public void revoke(SmPersonnel smPersonnel) {
+		try {
+			getManagedBean().getSoftCertMaintenanceBackingBean()
+					.RequestRevokeCert(smPersonnel.getIdentificationNo(),
+							smPersonnel.getSmAppl().getSmSupplier().getEpNo());
 		} catch (Exception ex) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
