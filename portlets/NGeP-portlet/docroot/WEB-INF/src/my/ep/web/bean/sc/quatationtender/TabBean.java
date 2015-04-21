@@ -13,7 +13,6 @@ package my.ep.web.bean.sc.quatationtender;
 import java.util.List;
 
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
@@ -37,9 +36,6 @@ public class TabBean {
 	/** The sc qt approval. */
 	private ScQtApproval scQtApproval;
 	
-	/** The selected sc committee. */
-	private ScCommittee selectedScCommittee;
-	
 	/** The budget approval users. */
 	private DualListModel<ScQtApproverSettings> budgetApprovalUsers;
 	
@@ -62,12 +58,14 @@ public class TabBean {
 	 * Instantiates a new tab bean.
 	 *
 	 * @param titleName the title name
+	 * @param tabType	the tab type
 	 * @param scQtApproval the sc qt approval
 	 * @param budgetApprovalUsers the budget approval users
 	 */
-	public TabBean(String titleName, ScQtApproval scQtApproval,
+	public TabBean(String titleName, String tabType, ScQtApproval scQtApproval,
 			DualListModel<ScQtApproverSettings> budgetApprovalUsers) {
 		this.titleName = titleName;
+		this.tabType = tabType;
 		this.scQtApproval = scQtApproval;
 		this.budgetApprovalUsers = budgetApprovalUsers;
 
@@ -77,6 +75,7 @@ public class TabBean {
 	 * Instantiates a new tab bean.
 	 *
 	 * @param titleName the title name
+	 * @param tabType	the tab type
 	 * @param scQtCommittee the sc qt committee
 	 */
 	public TabBean(String titleName, String tabType, ScQtCommittee scQtCommittee) {
@@ -89,12 +88,14 @@ public class TabBean {
 	 * Instantiates a new tab bean.
 	 *
 	 * @param titleName the title name
+	 * @param tabType	the tab type
 	 * @param scQtApproval the sc qt approval
 	 * @param approverSetting the approver setting
 	 */
-	public TabBean(String titleName, ScQtApproval scQtApproval,
+	public TabBean(String titleName, String tabType, ScQtApproval scQtApproval,
 			List<PmParameter> approverSetting) {
 		this.titleName = titleName;
+		this.tabType = tabType;
 		this.scQtApproval = scQtApproval;
 		this.approverCommittes = approverSetting;
 
@@ -148,24 +149,6 @@ public class TabBean {
 	 */
 	public void setScQtApproval(ScQtApproval scQtApproval) {
 		this.scQtApproval = scQtApproval;
-	}
-
-	/**
-	 * Gets the selected sc committee.
-	 *
-	 * @return the selected sc committee
-	 */
-	public ScCommittee getSelectedScCommittee() {
-		return selectedScCommittee;
-	}
-
-	/**
-	 * Sets the selected sc committee.
-	 *
-	 * @param selectedScCommittee the new selected sc committee
-	 */
-	public void setSelectedScCommittee(ScCommittee selectedScCommittee) {
-		this.selectedScCommittee = selectedScCommittee;
 	}
 
 	/**
