@@ -241,6 +241,8 @@ public class SpkiBackingBean {
 			default:
 //				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
+				//TODO Please remove this line if want to turn on the SPKI
+				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				signedData = "DEFAULT SIGNED TEXT1";
 //				break;
 		}
