@@ -34,8 +34,7 @@
 					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
 					disabled="true"
 					style="padding-right:5px" rendered="#{address.receivingGrp!=null}">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+					<p:graphicImage value="/css/images/design/edit.png" />
 				</p:commandLink>
 				<h:outputText rendered="#{address.addressType != null}"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
@@ -69,8 +68,7 @@
 				<p:commandLink oncomplete="addOfficer.show();" process="@this" 
 					action="#{purchaseRequestBackingBean.receivingOfficerList(address)}"
 					update=":form:addReceivingOfficerDialog,@(.orderSummaryChange)">
-					<p:graphicImage library="ep/images/design" name="register.png"
-						value="/resources/ep/images/design/register.png"
+					<p:graphicImage value="/css/images/design/register.png"
 						title="Recv Officer List" />
 				</p:commandLink>
 			</p:column>
@@ -127,8 +125,7 @@
 					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
 					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
 					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
-					<p:graphicImage library="ep/images" name="msginfo.png"
-						value="/resources/ep/images/msginfo.png"
+					<p:graphicImage value="/css/images/msginfo.png"
 						title="Request Item Information" />
 					</p:commandLink>
 					<p:message for="orderedQty" display="icon" />
