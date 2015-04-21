@@ -123,7 +123,10 @@
 
 				<p:column disabledSelection="#{personnel.disableRowSelection}"
 					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
-					<h:outputText value="#{personnel.softcertValidityDate}" />
+					<h:outputText value="#{personnel.softcertValidityDate}" />&#160;&#160;
+					<h:commandLink rendered="#{personnel.softcertFlg eq '1'}"
+						action="#{softCertBackingBean.revoke(personnel)}" target="_blank"
+						process="@this" partialSubmit="true" update=":form" value="#{lbl['lbl.sm.softcert.revoke']}"/>
 				</p:column>
 
 			</p:dataTable>
