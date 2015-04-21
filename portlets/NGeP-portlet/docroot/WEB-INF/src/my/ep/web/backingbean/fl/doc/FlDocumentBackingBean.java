@@ -834,6 +834,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	/**
+	 * Checks if is Auditor General/Internal user.
+	 *
+	 * @return true, if is Auditor General/Internal user
+	 */
+	public boolean isAuditor() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
+	}
+	
+	/**
 	 * Checks if is fl fulfilment govt seller.
 	 *
 	 * @return true, if is fl fulfilment govt seller.
@@ -874,7 +884,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 			}
-			if(isFlFulfilmentApprover()){
+			if(isFlFulfilmentApprover() || isAuditor()){
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -907,7 +917,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 			}
-			if(isFlFulfilmentApprover()){
+			if(isFlFulfilmentApprover() || isAuditor()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
