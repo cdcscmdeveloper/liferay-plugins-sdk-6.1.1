@@ -14,13 +14,13 @@
 			<ac:paginator for="scEndorsement" />
 
 			<p:column style="width:30%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
+				headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText
 					value="#{committeActivity.scCommitteeMember.memberName}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:15%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+				headerText="#{lbl['lbl.sc.identification.no']}">
 				<h:outputText
 					value="#{committeActivity.scCommitteeMember.icPassport}"></h:outputText>
 			</p:column>
@@ -31,20 +31,20 @@
 					value="#{committeActivity.scCommitteeMember.designation}"></h:outputText>
 			</p:column>
 			<p:column style="width:15%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+				headerText="#{lbl['lbl.sc.email']}">
 				<h:outputText value="#{committeActivity.scCommitteeMember.email}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:5%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
+				headerText="#{lbl['lbl.sc.grade']}">
 				<h:outputText value="#{committeActivity.scCommitteeMember.grade}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+			<p:column headerText="#{lbl['lbl.sc.pnp']}">
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}"
+			<p:column headerText="#{lbl['lbl.sc.role']}"
 				style="width:10%;white-space: normal;">
 
 
