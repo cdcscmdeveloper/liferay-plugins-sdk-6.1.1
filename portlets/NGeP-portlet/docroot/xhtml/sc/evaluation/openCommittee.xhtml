@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.mtng.opn.committee']}"
+	<p:panel header="#{lbl['lbl.sc.eva.opn.committee']}"
 		toggleable="true">
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
@@ -34,12 +34,12 @@
 						headerText="#{lbl['lbl.sc.grade']}"
 						style="width:10%" />
 					<p:column colspan="1"
-						headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}" style="width:8%" />
+						headerText="#{lbl['lbl.sc.pnp']}" style="width:8%" />
 
 					<p:column colspan="1"
 						headerText="#{lbl['lbl.sc.role']}" style="width:15%" />
 					<p:column colspan="1"
-						headerText="#{lbl['lbl.sc.eva.committee.attendance']}"
+						headerText="#{lbl['lbl.sc.attendance']}"
 						style="width:2%" />
 
 				</p:row>
@@ -84,7 +84,7 @@
 		</p:dataTable>
 
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"
+	<p:panel header="#{lbl['lbl.sc.remark']}"
 		toggleable="true">
 		<table style="width: 100%" id="remarkslist">
 			<tr>

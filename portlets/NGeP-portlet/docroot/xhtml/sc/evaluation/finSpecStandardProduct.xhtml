@@ -18,7 +18,7 @@
 				style="float:left;"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				style="float:right;"
 				action="#{evaluationBackingBean.saveComplianceSample}" />
 		</div>
@@ -27,10 +27,10 @@
 			<table>
 				<tr>
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
 					<td><p:inputText size="50" disabled="true"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea rows="2" cols="100" disabled="true"></p:inputTextarea></td>
 				</tr>
 			</table>
@@ -38,18 +38,18 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true">
 			<p:dataTable var="finSpecComplianceList" id="finSpecStandardProduct"
 				rowIndexVar="index" style="width:100%" rows="10"
 				rowKey="#{finSpecComplianceList}">
 				<ac:paginator for="finSpecStandardProduct" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
+				<p:column headerText="#{lbl['lbl.sc.title']}"
 					style="width:90%">
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+				<p:column headerText="#{lbl['lbl.sc.document']}"
 					style="width:10%">
 
 				</p:column>
@@ -58,7 +58,7 @@
 
 		</p:panel>
 
-<p:panel header="#{lbl['lbl.sc.eva.fin.spec.item.list']}">
+<p:panel header="#{lbl['lbl.sc.item.list']}">
 </p:panel>
 
 		

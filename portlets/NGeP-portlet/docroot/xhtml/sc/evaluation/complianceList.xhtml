@@ -11,7 +11,7 @@
 			style="float:left;"
 			action="#{evaluationBackingBean.evaluationBackaction}" />
 
-		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+		<p:commandButton value="#{lbl['lbl.btn.save']}"
 			style="float:right;" update="@all"
 			action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 	</div>
@@ -22,11 +22,11 @@
 		<table>
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+						value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
 				<td><p:inputText disabled="true"
 						value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 				<td style="width: 100px;"><h:outputLabel
-						value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+						value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 				<td><p:inputTextarea rows="2" cols="100" disabled="true"
 						style="width:90%"
 						value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
@@ -36,7 +36,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
+	<p:panel header="#{lbl['lbl.sc.compliance.list']}"
 		toggleable="true">
 		<p:dataTable var="techComplianceList" id="sampleComplianceListId"
 			rows="10"
@@ -45,11 +45,11 @@
 			<ac:paginator for="sampleComplianceListId" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
+			<p:column headerText="#{lbl['lbl.sc.title']}"
 				style="width:90%">
 				<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+			<p:column headerText="#{lbl['lbl.sc.document']}"
 				style="width:10%">
 				<p:commandLink ajax="false"
 					actionListener="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}"

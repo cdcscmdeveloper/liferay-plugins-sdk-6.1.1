@@ -9,7 +9,7 @@
 	<!-- <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" />  -->
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.main.menu.endors.stg']}"
+	<p:panel header="#{lbl['lbl.sc.commitee.endorsment']}"
 		toggleable="true">
 
 		<p:dataTable id="evaluationSignOff" var="committeActivity" rows="10"
@@ -19,13 +19,13 @@
 			<ac:paginator for="evaluationSignOff" />
 
 			<p:column style="width:30%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
+				headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText
 					value="#{committeActivity.scCommitteeMember.memberName}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:15%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+				headerText="#{lbl['lbl.sc.identification.no']}">
 				<h:outputText
 					value="#{committeActivity.scCommitteeMember.icPassport}"></h:outputText>
 			</p:column>
@@ -36,23 +36,23 @@
 					value="#{committeActivity.scCommitteeMember.designation}"></h:outputText>
 			</p:column>
 			<p:column style="width:15%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+				headerText="#{lbl['lbl.sc.email']}">
 				<h:outputText value="#{committeActivity.scCommitteeMember.email}"></h:outputText>
 			</p:column>
 
 			<p:column style="width:5%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
+				headerText="#{lbl['lbl.sc.grade']}">
 				<h:outputText value="#{committeActivity.scCommitteeMember.grade}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+			<p:column headerText="#{lbl['lbl.sc.pnp']}">
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
 			<p:column style="width:10%;white-space: normal;">
 				<f:facet name="header">
 
-					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.role']}"></h:outputText>
 				</f:facet>
 
 				<h:outputText
@@ -81,7 +81,7 @@
 		<ui:include src="/xhtml/sc/evaluation/chairPersonSignOff.xhtml" />
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"
+	<p:panel header="#{lbl['lbl.sc.remark']}"
 		toggleable="true">
 
 		<table style="width: 100%" id="remarkslist">
@@ -224,7 +224,7 @@
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
+					<p:commandButton value="#{lbl['lbl.btn.prev']}"
 						actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" 
 						update=":form" />

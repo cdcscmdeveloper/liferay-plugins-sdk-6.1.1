@@ -14,7 +14,7 @@
 
 
 	<h:panelGroup>
-		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 			<p:dataTable var="finSpec" editable="true"
 				id="financialSpecEvaluationStage" rows="10"
@@ -23,14 +23,14 @@
 
 				<ac:paginator for="financialSpecEvaluationStage"></ac:paginator>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 					style="width:10%">
 
 					<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
+				<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}"
 					style="width:10%">
 
 					<h:outputText
@@ -38,7 +38,7 @@
 
 
 				</p:column>
-				<p:column headerText="Total Amount&lt;br /&gt;(Package)(RM)"
+				<p:column headerText="#{lbl['lbl.sc.eva.tot.amount.package']}"
 					style="width:15%">
 					<h:outputLabel
 						value="#{finSpec.scQtProposal.proposalAmount.proposalAmt}"
@@ -77,7 +77,7 @@
 					</h:outputLabel>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.pref.margin']}"
 					style="width:10%">
 
 					<h:outputLabel
@@ -92,15 +92,15 @@
 
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
+				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:15%">
 
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
+					<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 						rendered="#{finSpec.evaluationStatus.statusId eq '61600'}"
 						process="@this"
 						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,index,'F')}"
 						partialSubmit="true" />
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
+					<p:commandButton value="#{lbl['lbl.btn.view']}"
 						rendered="#{finSpec.evaluationStatus.statusId eq '61601'}"
 						process="@this"
 						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,index,'F')}"

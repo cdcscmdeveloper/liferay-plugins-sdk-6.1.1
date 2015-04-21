@@ -10,7 +10,7 @@
 
 	
 
-	<p:panel header="#{lbl['lbl.sc.eva.prepare.turut.hadir']}"
+	<p:panel header="#{lbl['lbl.sc.turut.hadir']}"
 		toggleable="true">
 
 		<p:dataTable var="meetingAttendance" id="turuthadir" rows="10"
@@ -40,12 +40,12 @@
 						rendered="#{!evaluationBackingBean.managedBean.readOnly }">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}" />
+					<h:outputText value="#{lbl['lbl.sc.name']}" />
 				</f:facet>
 				<p:inputText size="55" value="#{meetingAttendance.name}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="attendanceNameId" required="true"
-					label="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}" maxlength="50"></p:inputText>
+					label="#{lbl['lbl.sc.name']}" maxlength="50"></p:inputText>
 				<p:message id="attendanceNameMessageId" for="attendanceNameId"
 					display="icon"></p:message>
 
@@ -57,13 +57,13 @@
 						rendered="#{!evaluationBackingBean.managedBean.readOnly }">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}" />
+					<h:outputText value="#{lbl['lbl.sc.identification.no']}" />
 				</f:facet>
 
 				<p:inputText size="55" value="#{meetingAttendance.icPassport}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="attendacePassportId" required="true"
-					label="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}" maxlength="15"></p:inputText>
+					label="#{lbl['lbl.sc.identification.no']}" maxlength="15"></p:inputText>
 				<p:message id="attendancePassportMessageId"
 					for="attendacePassportId" display="icon"></p:message>
 
@@ -76,11 +76,11 @@
 		<div align="right">
 			<p:commandButton id="turutbutton"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
-				value="#{lbl['lbl.sc.eva.btn.add']}" process="@this,turuthadir"
+				value="#{lbl['lbl.btn.add']}" process="@this,turuthadir"
 				partialSubmit="true" update="turuthadir"
 				oncomplete="tirutWidget.paginator.endLink.click();"
 				action="#{evaluationBackingBean.addTurutDetails}" />
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				process="@this" partialSubmit="true"
 				update="turuthadir"

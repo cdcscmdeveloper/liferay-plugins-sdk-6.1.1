@@ -15,22 +15,22 @@
 					activeIndex="#{evaluationBackingBean.managedBean.complianceActiveIndex}"
 					styleClass="sidemenu" style="display : table-caption;">
 
-					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"
+					<p:menuitem value="#{lbl['lbl.sc.technical']}"
 						action="#{evaluationBackingBean.retriveComplianceTechnical}"
 						update="@form" />
 					<c:if
 						test="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.sample']}"
+						<p:menuitem value="#{lbl['lbl.sc.sample']}"
 							action="#{evaluationBackingBean.retriveComplianceSample}"
 							update="@form" />
 					</c:if>
-					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
+					<p:menuitem value="#{lbl['lbl.sc.financial']}"
 						action="#{evaluationBackingBean.retriveComplianceFinancial}"
 						update="@form" />
 
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and evaluationBackingBean.managedBean.complianceActiveIndex eq '3') or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2') or(evaluationBackingBean.managedBean.complianceOnly eq 'true'))}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
+						<p:menuitem value="#{lbl['lbl.sc.summary']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveComplianceSummary}"
 							update="@form">
@@ -82,7 +82,7 @@
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
+					<p:commandButton value="#{lbl['lbl.btn.prev']}"
 						actionListener="#{evaluationBackingBean.setTabValue('1','0')}"
 						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 				</div></td>

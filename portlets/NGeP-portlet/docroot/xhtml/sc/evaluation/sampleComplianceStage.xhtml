@@ -19,7 +19,7 @@
 				style="float:left;"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 				style="float:right;" update="@all"
 				action="#{evaluationBackingBean.saveComplianceSample}" />
@@ -31,12 +31,12 @@
 			<table>
 				<tr>
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
 					<td><p:inputText size="50"
 							value="#{evaluationBackingBean.managedBean.scQtSampleLbl.scQtProposal.supplierNo}"
 							disabled="true"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.label.no']}"></h:outputLabel></td>
 					<td><p:inputText size="50"
 							value="#{evaluationBackingBean.managedBean.scQtSampleLbl.lableNo}"
 							disabled="true"></p:inputText></td>
@@ -45,7 +45,7 @@
 		
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
+		<p:panel header="#{lbl['lbl.sc.item.list']}"
 			toggleable="true">
 			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
 				rows="10"
@@ -54,14 +54,14 @@
 				<ac:paginator for="sampleItemId" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.item']}"
+				<p:column headerText="#{lbl['lbl.sc.item']}"
 					style="width:35%">
 
 					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.lbl.ext.num']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.lblel.ext.num']}"
 					style="width:10%">
 					<h:outputText value="#{sampleItem.subLableNo}"></h:outputText>
 
@@ -72,11 +72,11 @@
 				<p:column style="width:20%">
 					<f:facet name="header">
 						<h:outputText value="*" styleClass="mandatory"></h:outputText>
-						<h:outputText value="#{lbl['lbl.sc.eva.comp.sub.status']}"></h:outputText>
+						<h:outputText value="#{lbl['lbl.sc.submission.status']}"></h:outputText>
 					</f:facet>
 					<p:selectOneMenu id="sampleSubmissionId"
 						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-						label="#{lbl['lbl.sc.eva.comp.sub.status']}" required="true"
+						label="#{lbl['lbl.sc.submission.status']}" required="true"
 						value="#{sampleItem. submissionStatus.parameterId}">
 
 						<f:selectItems
@@ -86,7 +86,7 @@
 						display="icon"></p:message>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+				<p:column headerText="#{lbl['lbl.sc.remarks']}"
 					style="width:35%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100"
 						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
@@ -96,7 +96,7 @@
 
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.spec']}"
+		<p:panel header="#{lbl['lbl.sc.eva.item.specification']}"
 			toggleable="true">
 			<p:dataTable var="itemspec" id="itemSpecId" editable="true" rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
@@ -104,7 +104,7 @@
 				<ac:paginator for="itemSpecId" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.specification']}"
+				<p:column headerText="#{lbl['lbl.sc.specification']}"
 					style="width:50%">
 
 					<h:outputText

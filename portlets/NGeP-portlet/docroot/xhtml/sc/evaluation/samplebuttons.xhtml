@@ -18,7 +18,7 @@
 					action="#{evaluationBackingBean.technicalBackaction}" />
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}">
-					<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						disabled="#{evaluationBackingBean.managedBean.readOnly}"
 						style="float:right;" update="@all"
 						action="#{evaluationBackingBean.saveProposalScoreDtls}" />
@@ -32,11 +32,11 @@
 			<table>
 				<tr>
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
 					<td><p:inputText disabled="true"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.label.no']}"></h:outputLabel></td>
 					<td><p:inputTextarea rows="2" cols="100" disabled="true"
 							style="width:90%"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
