@@ -346,9 +346,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_BGT_APPROVAL, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.BPK_APPROVE_QT_CHANGE
@@ -360,9 +358,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 			
 			if (CollectionUtils.isNotEmpty(approvalRequests)) {
 
@@ -390,9 +386,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
 				.equalsIgnoreCase(taskName)
@@ -405,9 +399,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
@@ -417,9 +409,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName)
@@ -431,9 +421,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 			List<Long> cmtStatus = new ArrayList<Long>(3);
 			cmtStatus.add(QTStatusConst.CMT_PENDING_SUBMISSION);
@@ -494,7 +482,7 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagPublication());
 			this.getManagedBean().setApprovalType(
-					QTConstants.PUBLICATION_APPROVAL);
+					SourcingConstants.PUBLICATION_APPROVAL);
 			approvalRequests = getApprovalRequests(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
@@ -523,9 +511,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.APPROVE_CANCELATION
 				.equalsIgnoreCase(taskName)) {
@@ -536,9 +522,7 @@ public class ApprovalBackingBean extends
 					approvalCategoryCode,
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
 			
-			this.getManagedBean().setApprovalType(
-					ParameterHelper.getInstance().getParameterDesc(
-							parameterType, approvalCategoryCode));
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		}
 
@@ -592,7 +576,7 @@ public class ApprovalBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"reviceApprovalDlg.show()");
 		} else {
-			if (QTConstants.PUBLICATION_APPROVAL.equalsIgnoreCase(this
+			if (SourcingConstants.PUBLICATION_APPROVAL.equalsIgnoreCase(this
 					.getManagedBean().getApprovalType())) {
 
 				this.setDefaultDateTime(reqDTO.getQtdetail());
