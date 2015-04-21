@@ -14,6 +14,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.search.instruction']}"/>
 			<table width="1100px">
 				<tr>
 					<td style="width:165px"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
@@ -160,10 +161,13 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%">
-						<p:commandLink action="#{qTDetailBB.editAction(scQt)}"
+						<p:commandLink id="editIcon" action="#{qTDetailBB.editAction(scQt)}"
 							style="margin-right:20px;" partialSubmit="true" process="@this">
 							<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
 						</p:commandLink>
+						<p:tooltip for="editIcon">
+							<h:outputText value="#{lbl['lbl.sc.qt.search.edit.tooltip']}" escape="false" />
+						</p:tooltip>
 					</p:column>
 
 				</p:dataTable>
