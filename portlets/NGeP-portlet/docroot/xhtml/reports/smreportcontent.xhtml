@@ -581,7 +581,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
 													itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
                                                 <p:ajax event="change" listener="#{reportBackingBean.changeDateBasedOnRegType}" process="@this"
-					 			                      partialSubmit="true" update="@all,@([id$=Msg])"/>
+					 			                      partialSubmit="true" update="@all"/>
 											</p:selectOneMenu></td>
 										<td><p:message id="RegistrationTypeMsg"
 												for="RegistrationType" display="icon" showDetail="false"/></td>
