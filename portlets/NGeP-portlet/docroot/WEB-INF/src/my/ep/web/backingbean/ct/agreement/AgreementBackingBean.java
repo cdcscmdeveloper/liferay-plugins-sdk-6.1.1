@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,12 +96,14 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.util.template.MergeDocx;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -115,7 +118,9 @@ import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -1147,44 +1152,29 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @throws IOException       if an input or output exception occurred
 	 * @see    IOException
 	 */
-	public String getTemplateContent(CtAgreementContent agreementContent) throws Exception {
+	public void getTemplateContent(CtAgreementContent agreementContent) throws Exception {
 		// TODO download the templateDoc file
 		
-				VelocityContext context = null;
-				String vmFile = null;
-				String content = null;
-			  //  SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-			
-			    context = new VelocityContext();	
-			    String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
-				vmFile = "/ct/agreement/agreement-clause.vm";
-					          
-				context.put("imgUrl", imgUrl);
-			    context.put("documentName", agreementContent.getTitle());
-			    if(agreementContent.getTplDocMaster() != null && agreementContent.getTplDocMaster().getDocName() != null){
-			         context.put("documentTitle", agreementContent.getTplDocMaster().getDocName());
-			        context.put("documentDescription", agreementContent.getTplDocMaster().getDocDesc());
-	           }
-					        /*  if(agreementContent.getTplDocMaster().getProcurementCategory() != null)
-					                  context.put("procrumentCategory",getParameterDesc(agreementContent.getTplDocMaster().getProcurementCategory()));
-					          if(agreementContent.getTplDocMaster().getProcessType() != null)
-					                context.put("processType",getParameterDesc(agreementContent.getTplDocMaster().getProcessType()));*/
-				 if(agreementContent.getTplDocMaster() != null && agreementContent.getTplDocMaster().getTplDocSections() != null
-						 && agreementContent.getTplDocMaster().getTplDocSections().size() > 0){
-			          List<TplDocSection> docList = new ArrayList<TplDocSection>();
-			          for(TplDocSection sectionList : agreementContent.getTplDocMaster().getTplDocSections()){
-			        	   if(sectionList.getSectionTitle() != null && !sectionList.getSectionTitle().equalsIgnoreCase("")){
-			        		   docList.add(sectionList);
-			        	   }
-			          }
-						 context.put("sectionList", docList);
-				 }      	
-				 if (vmFile != null && context != null) {
-					    content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
-				  }			
-					
-				 return content;
-	}
+		if (agreementContent.getTplDocMaster() != null && 
+				agreementContent.getTplDocMaster().getTplDocSections() != null && !agreementContent.getTplDocMaster().getTplDocSections().isEmpty()) {
+			getManagedBean().setDocSectionMap(new HashMap<TplDocSection, TreeNode>());
+			getManagedBean().setDocSectionTN(new DefaultTreeNode("root", "", null));
+
+			Map<Long, TreeNode> secSeqMap = new HashMap<Long, TreeNode>();
+			TreeNode node = null;
+			for (TplDocSection objL1 : agreementContent.getTplDocMaster().getTplDocSections()) {
+				if (objL1.getParent() == null) {
+					node = new DefaultTreeNode(objL1, getManagedBean().getDocSectionTN());
+					getManagedBean().getDocSectionMap().put(objL1, node);
+					secSeqMap.put(objL1.getDocSectionId(), node);
+				} else {
+					node = new DefaultTreeNode(objL1, secSeqMap.get(objL1.getParent().getDocSectionId()));
+					getManagedBean().getDocSectionMap().put(objL1, node);
+					secSeqMap.put(objL1.getDocSectionId(), node);
+				}
+			}
+			}
+		}
 
 	/**
 	 * The method used to download the agreement content.
@@ -1208,7 +1198,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
 				
 				if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
-				      content = getTemplateContent(agreementContent);
+				    getTemplateContent(agreementContent);
+				    content = previewAction();
 				} else {
 					content = getContent(agreementContent.getTitle());
 				}
@@ -1860,4 +1851,107 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
+	
+	public String previewAction() {
+		String combinedContentHtml ="";
+		try {
+			String outputFileName = "Document" + "_"+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
+		    combinedContentHtml = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), outputFileName, "P");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return combinedContentHtml;
+	}
+	
+	public static String mergePreviewAction(TreeNode root, String outputFileName, String action) throws Exception {
+		//action= P-Preview, S-Save
+		if(log.isDebugEnabled()){
+			log.debug("Start mergePreviewAction");
+		}
+	
+		List<TplDocSection> inputStreamList = new ArrayList<TplDocSection>();
+		getDocSectionList(1,root,inputStreamList);
+
+		String combinedContent = "";
+		String combinedContentHtml="";
+		for (TplDocSection obj : inputStreamList) {
+			String text = "";
+			if(obj.getSectionTitle() != null && !obj.getSectionTitle().isEmpty()){
+				text += "<span><strong>" + obj.getSectionTitle() + "</strong></span><br />";
+			}
+			
+			if(obj.getSectionContent() != null && !obj.getSectionContent().isEmpty()){
+				
+				if(obj.getSectionContent().trim().startsWith("<p>") && obj.getSectionContent().trim().endsWith("</p>")){
+					obj.setSectionContent(obj.getSectionContent().trim().replaceFirst("<p>", "<span>"));
+					obj.setSectionContent(obj.getSectionContent().trim().substring(0,obj.getSectionContent().trim().length()-4)+ "</span>");
+				}
+				text += obj.getSectionContent();
+			}
+						
+			text = insertNumberingAndIndentHtml(text,  obj.getSectionNumber(), obj.getSectionLevel());
+			
+			combinedContent += text;
+		}
+		
+		if(action.equals("P")){
+						
+			//=========================== START PDF ======================================
+//			log.info("combinedContent ==== " + combinedContent);
+			
+			combinedContentHtml = "<html><body>" 
+					+ combinedContent + "</body></html>";	
+			
+	    	//=========================== END PDF ======================================
+			
+		}
+		
+		if(action.equals("S")){
+//			DocumentSettingsPart dsp = target.getMainDocumentPart().getDocumentSettingsPart();
+//			ObjectFactory factory = new ObjectFactory();
+//			CTDocProtect protection = factory.createCTDocProtect();
+//			protection.setEdit(STDocProtect.READ_ONLY);
+//			protection.setEnforcement(false);
+//			dsp.getJaxbElement().setDocumentProtection(protection);					
+//			target.save(new java.io.File(templateFilePath+outputFileName+".docx"));
+		}
+		
+		
+    	if(log.isDebugEnabled()){
+			log.debug("End mergePreviewAction");
+		}
+		return combinedContentHtml;
+
+	}
+	
+	private static String insertNumberingAndIndentHtml(String text, String indexKey, int templateLevel){		
+		String newText = "";
+		text = text.replaceAll("&nbsp;", "&#160;");
+		int width = 5 + (templateLevel-2)*3 ;
+		
+		switch (templateLevel) {
+		case 1:
+			newText = "<table width=\"100%\"><tr><td width=\"5%\" valign=\"top\">" + indexKey + "</td><td width=\"95%\">" + text + "</td></tr></table>";
+			break;
+			
+		default:
+			newText = "<table width=\"100%\"><tr><td width=\""+width+"%\">&#160;</td><td width=\"5%\" valign=\"top\">" + indexKey + "</td><td width=\""+(95-width)+"%\">" + text + "</td></tr></table>";
+			
+		}
+		return newText;
+	}
+
+public static void getDocSectionList(int level,TreeNode node,List<TplDocSection> inputStreamList){
+	if(node != null && node.getData() != null){
+		for(TreeNode parent : node.getChildren()){
+			TplDocSection docSec = (TplDocSection) parent.getData();
+			docSec.setSectionLevel(level);
+			inputStreamList.add(docSec);
+			if(!parent.isLeaf()){
+				getDocSectionList(level+1,parent,inputStreamList);
+				
+			}
+		}
+	}
+}
 }

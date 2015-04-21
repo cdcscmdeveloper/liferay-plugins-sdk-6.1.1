@@ -86,6 +86,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
+import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -173,6 +174,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtDeductionClause[] selectedDeductionClauses;
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
+	SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+	
 	
 	/**
 	 * The constructor used for initializing the variable.
@@ -1888,7 +1891,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private void scheduleDate() {	
 		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {			   
 			if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 				String fromDate = dateFormat.format(ctSchedules.getFromDate());
 				ctSchedules.setStartMonth(fromDate.substring(3, 5));
 				ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
@@ -1906,8 +1908,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private void progressiveDate() {	
 		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {			   
 			if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-                String fromDate = dateFormat.format(ctSchedules.getFromDate());
+			    String fromDate = dateFormat.format(ctSchedules.getFromDate());
 			    ctSchedules.setStartMonth(fromDate.substring(3, 5));
 				ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
 			   
@@ -2020,14 +2021,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				for (CtSchedule schedule : this.getManagedBean().getContractVer().getCtSchedules()) {
 					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
 						Date d1 = new Date();
-						SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-						String localDate = format.format(d1);
+						String localDate = dateFormat.format(d1);
 						String date = localDate.substring(0, 2);
 						String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
 						String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
 						try {
-							schedule.setFromDate(format.parse(fromDate));
-							schedule.setToDate(format.parse(toDate));
+							schedule.setFromDate(dateFormat.parse(fromDate));
+							schedule.setToDate(dateFormat.parse(toDate));
 						} catch (ParseException e) {
 							e.printStackTrace();
 						}
@@ -2041,14 +2041,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				for (CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
 						Date d1 = new Date();
-						SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-						String localDate = format.format(d1);
+						String localDate = dateFormat.format(d1);
 						String date = localDate.substring(0, 2);
 						String fromDate = date + "/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
 						String toDate = date + "/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
 						try {
-							schedule.setFromDate(format.parse(fromDate));
-							schedule.setToDate(format.parse(toDate));
+							schedule.setFromDate(dateFormat.parse(fromDate));
+							schedule.setToDate(dateFormat.parse(toDate));
 						} catch (ParseException e) {
 							log.debug(e.getMessage());
 						}
@@ -2860,8 +2859,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public List<SelectItem> retrieveStartMonthList(String  tableStartYear) {
 		List<SelectItem> selectItems = null;
 	   	Map<String, String> months = null;
-	   	SimpleDateFormat dateFormat = null;
-        
+	    
 	   	try {
 	   		months = new HashMap<>();
 			months.put("01", "January");
@@ -2878,7 +2876,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			months.put("12", "December");  
 					
 			int schedStartYear = 0;
-			dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			String fromdate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 			int startMonth = Integer.valueOf(fromdate.substring(3, 5));
 			int startYear = Integer.valueOf(fromdate.substring(6, 10));
@@ -2929,7 +2926,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public List<SelectItem> retrieveEndMonthList(String tableEndYear) {
 		List<SelectItem> selectItems = null;
 		Map<String, String> months = null;
-		SimpleDateFormat dateFormat = null;
 		
 		try {
 			months = new HashMap<>();
@@ -2947,7 +2943,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			months.put("12", "December");  
 						
 		    int schedEndYear =0;
-			dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			String fromdate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 			int startMonth = Integer.valueOf(fromdate.substring(3, 5));
 			int startYear = Integer.valueOf(fromdate.substring(6, 10));
@@ -3032,9 +3027,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public List<String> getYearList() {	 
 		if (getManagedBean().getYearList() == null) {
 			getManagedBean().setYearList(new ArrayList<String>());
-		    SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		    int startYear = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
-		    int endYear = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
+		    int startYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
+		    int endYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
 		    for (int i = startYear; i <= endYear; i++) {
 		    	getManagedBean().getYearList().add(String.valueOf(i));
 		    }
@@ -3501,23 +3495,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     public void updateAsperDate(){
     	
-    	IContractSO contractSO = null;
-		ContractResDTO resDTO = null;
-		ContractReqDTO reqDTO = null;
-		
-		try {
-			reqDTO = new ContractReqDTO();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			reqDTO.setContractVerId(getManagedBean().getContractVer().getContractVerId());
-			reqDTO.setCurrentDate(getManagedBean().getCurrentDate());
-			resDTO = contractSO.retrieveContractAmount(reqDTO);
-			getManagedBean().getContractVer().getCtContractValue().setContractAmount(resDTO.getContractAmount().getContractAmount());		
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally{
-			contractSO = null;
-			resDTO = null;
-			reqDTO = null;
-       }
-    }
-}
+    	      CtContractAmount contractAmtObj = null;
+			  for(CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
+				  if(getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() && getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
+					      contractAmtObj = contractAmt;
+				   }
+			  }
+	        getManagedBean().getContractVer().getCtContractValue().setContractAmount(contractAmtObj.getContractAmount());
+        }
+   }
