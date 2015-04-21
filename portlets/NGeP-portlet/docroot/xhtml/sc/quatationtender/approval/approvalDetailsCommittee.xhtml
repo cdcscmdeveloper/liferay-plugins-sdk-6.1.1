@@ -105,8 +105,7 @@
 												<p:commandLink action="#{approvalBackingBean.deleteFile}"
 													disabled="#{qTDetailBB.approvalDtlsEditable(commiteApproverCategory)}"
 													immediate="true" update="@([id$=attachFileIds])">
-													<h:graphicImage library="ep/images/design"
-														name="icon_trash.png" styleClass="tasklist_title1" />
+													<h:graphicImage value="/css/images/design/trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
 										</tr>
 									</table>
@@ -118,8 +117,6 @@
 			</tr>
 		</table>
 	</p:panel>
-
-
 
 	<p:dialog id="attachDlgids" widgetVar="committeeAttachDlg" modal="true"
 		dynamic="true" resizable="false" width="700px" height="200"
