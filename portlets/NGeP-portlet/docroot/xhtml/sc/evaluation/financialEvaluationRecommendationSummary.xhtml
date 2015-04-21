@@ -9,10 +9,10 @@
 
 	<table>
 		<tr>
-			<td><h:outputLabel value="#{lbl['lbl.sc.eva.summary.view.by']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.sc.view.by']}" /></td>
 			<td><p:selectOneMenu
 					value="#{evaluationBackingBean.managedBean.financialSummaryView}">
-					<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="Package Preference Margin" itemValue="FPM"></f:selectItem>
 					<f:selectItem itemLabel="Item" itemValue="FI"></f:selectItem>
 					<p:ajax event="change" process="@this" partialSubmit="true"

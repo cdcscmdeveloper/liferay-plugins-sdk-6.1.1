@@ -7,12 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="#{lbl['lbl.sc.eva.present.request.head']}"
+	<p:dialog header="#{lbl['lbl.sc.request.present.demo']}"
 		widgetVar="requestPresentation" modal="true" width="400" height="300">
 		<p:panel id="requestpresentationdemo"
-			header="#{lbl['lbl.sc.eva.present.request.head']}" toggleable="true">
+			header="#{lbl['lbl.sc.request.present.demo']}" toggleable="true">
 
-			<p:commandLink value="#{lbl['lbl.sc.eva.present.request.tech.list']}"></p:commandLink>
+			<p:commandLink value="#{lbl['lbl.sc.tech.supplier.list']}"></p:commandLink>
 			<p:dataTable id="requestDemo" var="reminderpopup" rows="10"
 				value="#{evaluationBackingBean.managedBean.s2TechSupplier}"
 				selection="#{evaluationBackingBean.managedBean.requestDemoSelect}"
@@ -21,7 +21,7 @@
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="" style="width:2%" />
-						<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+						<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 							style="width:98%" />
 					</p:row>
 				</p:columnGroup>
@@ -33,17 +33,17 @@
 			</p:dataTable>
 			<p:spacer height="15"></p:spacer>
 			<h:panelGrid columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.remarks']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.remarks']}" />
 				<p:inputTextarea rows="3" cols="50" autoResize="false"></p:inputTextarea>
 			</h:panelGrid>
 		</p:panel>
 
 		<div align="left">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.close']}"
+			<p:commandButton value="#{lbl['lbl.btn.close']}"
 				style="float:right;"
 				oncomplete="requestPresentation.hide();"></p:commandButton>
 
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.submit']}"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				style="float:right;" oncomplete="requestPresentation.hide();"
 			action="#{evaluationBackingBean.requestPresentDemoSaveAction}"></p:commandButton>
 

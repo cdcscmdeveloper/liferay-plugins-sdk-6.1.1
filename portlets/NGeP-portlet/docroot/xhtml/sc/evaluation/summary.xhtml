@@ -10,10 +10,10 @@
 	<!--  <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" />  -->
 
 <!-- 
-	<p:panel header="#{lbl['lbl.sc.eva.summary.head']}" toggleable="true">
-		<p:commandLink value="#{lbl['lbl.sc.eva.summary.list']}"></p:commandLink>
+	<p:panel header="#{lbl['lbl.sc.summary']}" toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.location.list']}"></p:commandLink>
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
-			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.multile']}"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.eva.multiple.locality']}"></h:outputLabel>
 			<p:inputText value="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ? 'Yes' : 'No'}" readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
 		<ui:fragment rendered="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ne 'No'}">
@@ -22,7 +22,7 @@
 			value="#{evaluationBackingBean.managedBean.locationList}">
 			<ac:paginator for="evaluationsummaryLocation" />
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.loc']}"
+			<p:column headerText="#{lbl['lbl.sc.location']}"
 				style="width:20%">
 				<h:outputText value="#{zones.zoneName}"></h:outputText>
 			</p:column>
@@ -31,14 +31,14 @@
 		</ui:fragment>
 		<p:spacer height="20" /> -->
 		<p:panel>
-		<p:commandLink value="#{lbl['lbl.sc.eva.summary.qualified']}"></p:commandLink>
+		<p:commandLink value="#{lbl['lbl.sc.qualified.supplier.list']}"></p:commandLink>
 		<p:dataTable id="evaluationsummarysupplier" var="qualified" rows="10"
 		value="#{evaluationBackingBean.managedBean.qualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
 			<ac:paginator for="evaluationsummarysupplier" />
 
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:20%">
 				<h:outputText value="#{qualified.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 			</p:column>
@@ -48,21 +48,21 @@
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
 
 
-			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.total']}"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.total']}"></h:outputLabel>
 			<p:inputText></p:inputText>
 
 
 
 		</h:panelGrid>
 		<p:spacer height="20" />
-		<p:commandLink value="#{lbl['lbl.sc.eva.summary.disqualified']}"></p:commandLink>
+		<p:commandLink value="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"></p:commandLink>
 
 		<p:dataTable id="evaluationsummarydisqualified" var="disqualified" rows="10"
 		value="#{evaluationBackingBean.managedBean.qualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
 			<ac:paginator for="evaluationsummarydisqualified" />
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:30%">
 				<h:outputText value="#{disqualified.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 			</p:column>
@@ -82,7 +82,7 @@
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
+					<p:commandButton value="#{lbl['lbl.btn.prev']}"
 						actionListener="#{evaluationBackingBean.setTabValue('3','1')}"
 						action="#{evaluationBackingBean.updateSmAppl}"
 						update=":form" />	

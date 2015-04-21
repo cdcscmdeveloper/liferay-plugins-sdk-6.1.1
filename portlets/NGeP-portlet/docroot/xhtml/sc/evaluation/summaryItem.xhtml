@@ -8,7 +8,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 
 		<p:dataTable var="summaryItem" id="evaluationSummaryItem"
 			editable="true" value="#{itemList}" rows="10"
@@ -19,7 +19,7 @@
 
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 				update="@form" listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.item']}"
+			<p:column headerText="#{lbl['lbl.sc.item']}"
 				style="width:35%">
 
 				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
@@ -31,7 +31,7 @@
 
 	<h:panelGroup id="summaryItemQualified">
 
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
+		<p:panel header="#{lbl['lbl.sc.qualified.supplier.list']}"
 			toggleable="true">
 
 			<p:dataTable var="summaryqualSup"
@@ -42,14 +42,14 @@
 
 				<ac:paginator for="evaluationSummaryItemQualifiedSuppliers"></ac:paginator>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
+				<p:column headerText="#{lbl['lbl.sc.ranking']}">
 
 					<h:outputLabel value="#{summaryqualSup.evalRank}"
 						style="text-align:right"></h:outputLabel>
 				</p:column>
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 					style="width:30%">
 
 					<h:outputText
@@ -59,7 +59,7 @@
 				</p:column>
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
+				<p:column headerText="#{lbl['lbl.sc.total.score']}">
 					<h:outputLabel value="#{summaryqualSup.totalScore}"
 						style="text-align:right"></h:outputLabel>
 				</p:column>
@@ -73,7 +73,7 @@
 		<table>
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.passing.score']}" /></td>
+						value="#{lbl['lbl.sc.passing.score']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
 						style="text-align:right"
 						value="#{passingScore}"></p:inputText></td>
@@ -81,7 +81,7 @@
 			
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+						value="#{lbl['lbl.sc.total']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
 						style="text-align:right"
 						value="#{evaluationBackingBean.managedBean.itemTotQualSuppliers}"></p:inputText></td>
@@ -92,7 +92,7 @@
 	</h:panelGroup>
 
 	<h:panelGroup id="summaryItemDisQualified">
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
+		<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"
 			toggleable="true">
 
 			<p:dataTable var="disQualifiedSupplier"
@@ -102,7 +102,7 @@
 
 				<ac:paginator for="evaluationSummaryItemDisQualifiedSuppliers"></ac:paginator>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 					style="width:30%">
 
 					<h:outputText
@@ -110,7 +110,7 @@
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
+				<p:column headerText="#{lbl['lbl.sc.total.score']}">
 					<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
 						style="text-align:right"></h:outputLabel>
 				</p:column>
@@ -126,7 +126,7 @@
 
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+						value="#{lbl['lbl.sc.total']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
 						style="text-align:right"
 						value="#{evaluationBackingBean.managedBean.itemTotDisQualSuppliers}"></p:inputText></td>

@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="#{lbl['lbl.sc.eva.report.contents']}"
+	<p:panel header="#{lbl['lbl.sc.contents']}"
 		toggleable="true">
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget"
@@ -15,13 +15,13 @@
 
 			<ac:paginator for="evaluationreport" />
 
-			<p:column headerText="#{lbl['lbl.sc.eva.report.content']}"
+			<p:column headerText="#{lbl['lbl.sc.contents']}"
 				style="width:58%white-space: normal;">
 				<h:outputText value="#{scQtEvaluationReport.title}" />
 			</p:column>
 
 			<p:column style="width:14%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.report.type']}">
+				headerText="#{lbl['lbl.sc.type']}">
 				#{evaluationBackingBean.getParameterDesc(scQtEvaluationReport.definationType)}
 			</p:column>
 
@@ -56,40 +56,40 @@
 			<td><div align="left" style="width: 99%">
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
 					</ui:fragment>
 
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','3')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
 					</ui:fragment>
 
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','1')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
 					</ui:fragment>
 
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','3')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and !evaluationBackingBean.managedBean.scQt.demoRequired}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update="@form" />
 					</ui:fragment>

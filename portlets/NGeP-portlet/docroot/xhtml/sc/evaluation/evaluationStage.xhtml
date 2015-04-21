@@ -15,13 +15,13 @@
 					styleClass="sidemenu" style="display : table-caption;">
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"
+						<p:menuitem value="#{lbl['lbl.sc.technical']}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
 							update="@form" />
 					</c:if>
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
+						<p:menuitem value="#{lbl['lbl.sc.financial']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
 							update="@form" />
 					</c:if>
@@ -40,7 +40,7 @@
 					</c:if>
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'))}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
+						<p:menuitem value="#{lbl['lbl.sc.summary']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
 							update="@form" />
@@ -124,13 +124,13 @@
 			<td><div align="left" style="width: 99%">
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('2','1')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' or evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						<p:commandButton value="#{lbl['lbl.btn.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('2','0')}"
 							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 					</ui:fragment>

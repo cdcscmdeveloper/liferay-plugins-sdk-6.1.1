@@ -46,7 +46,7 @@
 			<p:column style="white-space : normal">
 				<h:outputText
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' or techList.scQtCheckList.definationType.parameterCode eq 'NA'}"
-					value="#{lbl['lbl.sc.attachment']}" />
+					value="#{lbl['lbl.sc.attachment.msg']}" />
 				<h:outputText
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')

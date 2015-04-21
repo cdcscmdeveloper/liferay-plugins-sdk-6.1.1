@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true"
 			rows="10"
@@ -19,14 +19,14 @@
 			<ac:paginator for="demoSupplierId" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:30%">
 
 				<h:outputText value="#{demoSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+			<p:column headerText="#{lbl['lbl.sc.document']}"
 				style="width:15%">
 
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
@@ -46,7 +46,7 @@
 
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.user.scores']}"
+			<p:column headerText="#{lbl['lbl.sc.user.score']}"
 				style="width:15%">
 				<p:inputText value="#{demoSupplier.totalScore}"
 					style="text-align:right" maxlength="18"
@@ -63,7 +63,7 @@
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:40%">
 				<p:inputTextarea rows="2" cols="40" value="#{demoSupplier.remark}"></p:inputTextarea>
 			</p:column>
@@ -81,7 +81,7 @@
 
 
 				<td class="TableFieldLeft"><p:outputLabel
-						value="#{lbl['lbl.sc.eva.report.attachment']}" /></td>
+						value="#{lbl['lbl.sc.attachment']}" /></td>
 				<td class="TableFieldRight">
 					<table style="width: 150px;">
 						<tr>

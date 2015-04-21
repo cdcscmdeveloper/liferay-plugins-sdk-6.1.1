@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
-<!-- 	<p:panel header="#{lbl['lbl.sc.eva.prepare.head']}" toggleable="true">
+<!-- 	<p:panel header="#{lbl['lbl.sc.eva.proposal.evaluation']}" toggleable="true">
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
-			<h:outputLabel value="#{lbl['lbl.sc.eva.prepare.award']}" />
+			<h:outputLabel value="#{lbl['lbl.sc.eva.award.type.by']}" />
 			<p:selectOneRadio value="#{evaluationBackingBean.managedBean.checklistEvaluation.scQtCheckList.scQtSpec.awardType}">
 				<f:selectItem itemLabel="Line Item" itemValue="L" />
 				<f:selectItem itemLabel="Package" itemValue="P" />
@@ -17,8 +17,8 @@
 			</p:selectOneRadio>
 		</h:panelGrid>
 	</p:panel> -->
-
-	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
+lbl.sc.eva.proposal.evaluation
+	<p:panel header="#{lbl['lbl.sc.meeting.details']}"
 		toggleable="true">
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
@@ -29,14 +29,14 @@
 			<ac:paginator for="evaluationmeetingDetails" />
 
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
+			<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
 				style="width:30%">
 
 
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"></p:calendar>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.loc']}">
+			<p:column headerText="#{lbl['lbl.sc.location']}">
 
 
 				<p:inputText value="#{meeting.meetingLocation}" size="70"></p:inputText>
@@ -47,18 +47,18 @@
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails"/>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"/>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"/>
 
 		</div>
 
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.committee.details']}"
+	<p:panel header="#{lbl['lbl.sc.committee.details']}"
 		toggleable="true">
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember" rows="10"
@@ -70,12 +70,12 @@
 				<p:row>
 
 					<p:column colspan="1"
-						headerText="#{lbl['lbl.sc.eva.committee.name']}" style="width:48%" />
+						headerText="#{lbl['lbl.sc.committee.name']}" style="width:48%" />
 
 					<p:column colspan="1"
-						headerText="#{lbl['lbl.sc.eva.committee.role']}" style="width:25%" />
+						headerText="#{lbl['lbl.sc.role']}" style="width:25%" />
 					<p:column colspan="1"
-						headerText="#{lbl['lbl.sc.eva.committee.attendance']}"
+						headerText="#{lbl['lbl.sc.attendance']}"
 						style="width:2%" />
 
 				</p:row>
