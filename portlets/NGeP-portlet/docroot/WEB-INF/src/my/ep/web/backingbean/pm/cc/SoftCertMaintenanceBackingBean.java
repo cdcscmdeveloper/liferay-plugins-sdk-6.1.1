@@ -139,11 +139,11 @@ public class SoftCertMaintenanceBackingBean {
 		System.out.println("Encoded URL " + url3);	 
 	}
 	
-	public void RequestRevokeCert() throws IOException, PortalException, SystemException {
+	public void RequestRevokeCert(String digiCertUserId) throws IOException, PortalException, SystemException {
 	    String token = generateSecurityToken(); 
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + getDigiCertUserId() + "&orgid=" + getSupplierEpNo() + "&token=" + encodedtoken;
+		String url4 = "https://kmcep-dev.digicert.com.my/kmc/RequestRevokeCert.aspx?userID=" + digiCertUserId + "&orgid=" + getSupplierEpNo() + "&token=" + encodedtoken;
 		externalContext.redirect(url4);
 		System.out.println("Encoded encodedtoken " + encodedtoken);
 		System.out.println("Encoded URL " + url4);	 
