@@ -18,7 +18,8 @@
 			severity="error, info" />
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				immediate="true" action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
+				immediate="true"
+				action="#{specificationBackingBean.businessOwnerTemplateSpecBackAction}" />
 
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
@@ -31,8 +32,7 @@
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				style="float:right;"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
 				update="@all" />
@@ -80,8 +80,7 @@
 
 				<tr>
 
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.status']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<td><h:outputLabel
@@ -102,8 +101,9 @@
 			</table>
 
 			<p:dialog id="bocreateEditTechnicalDialog"
-				widgetVar="createTechnicalDialog" header="#{lbl['lbl.sc.cancel.confirm']}"
-				resizable="false" width="325" height="75" closable="false">
+				widgetVar="createTechnicalDialog"
+				header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
+				width="325" height="75" closable="false">
 				<table>
 					<tr>
 						<td align="center"><p:outputLabel
@@ -122,12 +122,10 @@
 
 		</p:panel>
 
-
-
 		<ac:templateSpec
+			newable="#{specificationBackingBean.managedBean.specNewable}"
 			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}"
 			editable="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}" />
-
 
 
 

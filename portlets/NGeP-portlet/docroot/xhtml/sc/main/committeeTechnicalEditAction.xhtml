@@ -48,8 +48,7 @@
 
 			<table>
 				<tr>
-					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
+					<td valign="top"><h:outputLabel value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							style="margin-bottom:5px;" maxlength="200"
@@ -80,8 +79,7 @@
 
 				<tr>
 
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.status']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<td><h:outputLabel
@@ -102,8 +100,9 @@
 			</table>
 
 			<p:dialog id="specCommitteeEditTechnicalDialog"
-				widgetVar="createTechnicalDialog" header="#{lbl['lbl.sc.cancel.confirm']}"
-				resizable="false" width="325" height="75" closable="false">
+				widgetVar="createTechnicalDialog"
+				header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
+				width="325" height="75" closable="false">
 				<table>
 					<tr>
 						<td align="center"><p:outputLabel
@@ -124,6 +123,7 @@
 
 
 		<ac:templateSpec
+			newable="#{specificationBackingBean.managedBean.specNewable}"
 			editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
 
