@@ -122,7 +122,7 @@ public class SpkiBackingBean {
 				{
 					System.err.println("No challanges found for the user! ");
 //					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
-					throw new EpException(MessageConst.ERROR_776051);
+//					throw new EpException(MessageConst.ERROR_776051);
 //					return;
 				}else{
 					setChallengeQues1(challs.get(0));
