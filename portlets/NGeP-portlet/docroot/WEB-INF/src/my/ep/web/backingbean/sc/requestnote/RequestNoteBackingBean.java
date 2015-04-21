@@ -306,6 +306,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 	    requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 	    requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
+	    requestNoteReqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 
 	    Long prInqId = getManagedBean().getPrInquiryId();
 	    Long pidId = getManagedBean().getPurchaseInDefaultId();
@@ -504,6 +505,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 			requestNoteReqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
+			requestNoteReqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);

@@ -260,6 +260,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The end loa outcome. */
 	private String endLoaOutcome;
+	
+	/** The end loa rn. */
+	private ScRequestNote endLoaRN;
     
     /**
      * Instantiates a new request note managed bean.
@@ -1562,6 +1565,24 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setEndLoaOutcome(String endLoaOutcome) {
 		this.endLoaOutcome = endLoaOutcome;
+	}
+	
+	/**
+	 * Gets the end loa rn.
+	 *
+	 * @return the endLoaRN
+	 */
+	public ScRequestNote getEndLoaRN() {
+		return endLoaRN;
+	}
+
+	/**
+	 * Sets the end loa rn.
+	 *
+	 * @param endLoaRN the endLoaRN to set
+	 */
+	public void setEndLoaRN(ScRequestNote endLoaRN) {
+		this.endLoaRN = endLoaRN;
 	}
 	
 }
