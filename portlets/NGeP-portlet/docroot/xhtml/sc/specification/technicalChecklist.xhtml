@@ -66,8 +66,8 @@
 
 				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.title']}"
-						value="#{stageTwoTechnical.title}" size="30" maxlength="1000">
+						label="#{lbl['lbl.sc.title']}" value="#{stageTwoTechnical.title}"
+						size="30" maxlength="1000">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalChecklisttypes"
 							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
@@ -119,8 +119,7 @@
 
 
 						<p:selectOneMenu style="width:100px;" required="true"
-							id="techChecklistTitlenullType"
-							label="#{lbl['lbl.sc.type']}"
+							id="techChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -140,8 +139,7 @@
 
 
 						<p:selectOneMenu style="width:100px;" required="true"
-							id="techChecklistTitlenotnullType"
-							label="#{lbl['lbl.sc.type']}"
+							id="techChecklistTitlenotnullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -318,8 +316,8 @@
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="compilencestageTwo" />
-			<p:commandButton value="Create Specification" process="@this"
-				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}" process="@this"
+				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
