@@ -67,7 +67,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.sc.ApprovalCategory;
-import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -77,11 +76,10 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.type.sc.quationtender.ApprovalStatus;
-
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -872,13 +870,18 @@ public class ApprovalBackingBean extends
 	 */
 	public List<TabBean> constructCommitteTabBean(
 			List<ScQtCommittee> qtCommittees) {
+		
+		String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
+		ParameterHelper parameterHelper = ParameterHelper.getInstance();
 		List<TabBean> committeTabs = new ArrayList<TabBean>();
+		
 		for (ScQtCommittee scQtCommittee : qtCommittees) {
-			if (!"BO".equalsIgnoreCase(scQtCommittee.getScCommittee()
-					.getCommitteeType().getParameterCode())) {
+			String committeeType = scQtCommittee.getScCommittee().getCommitteeType().getParameterCode();
+			
+			if (!ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER.equals(committeeType)) {
 				TabBean bean = new TabBean(
-						CommitteType.getValue(scQtCommittee.getScCommittee()
-								.getCommitteeType().getParameterCode()),
+						parameterHelper.getParameterDesc(parameterType, committeeType),
+						committeeType,
 						getQtCommitteeTypeDtl(scQtCommittee.getScCommittee()
 								.getCommitteeType().getParameterCode(),
 								scQtCommittee.getScQt().getQtId()));

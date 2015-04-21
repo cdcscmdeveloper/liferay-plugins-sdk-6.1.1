@@ -16,7 +16,7 @@
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
 						size="30" readonly="true" disabled="true" /></td>
 				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}"
-						disabled="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee'}" /></td>
+						disabled="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee}" /></td>
 				<td style="width: 130px"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.send.for.approval']}" style="word-wrap: break-word;"/></td>
 			</tr>

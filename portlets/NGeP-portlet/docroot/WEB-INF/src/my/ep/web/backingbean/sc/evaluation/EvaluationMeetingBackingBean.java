@@ -72,7 +72,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -343,23 +342,9 @@ public class EvaluationMeetingBackingBean extends
 	 * committee details add popup.
 	 */
 	public void addCommitteeDetails() {
-		if (QTConstants.DOCTYPE_EVAL_COMMITTE.equalsIgnoreCase(this
-				.getManagedBean().getCommitteeType())) {
-			this.getManagedBean().setCommitteeTypeDesc(
-					QTConstants.EVALUATION_COMMITTEE_TAB);
-		} else if (QTConstants.DOCTYPE_OPENING_COMMITTE.equalsIgnoreCase(this
-				.getManagedBean().getCommitteeType())) {
-			this.getManagedBean().setCommitteeTypeDesc(
-					QTConstants.OPENING_COMMITTEE_TAB);
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			this.getManagedBean().setCommitteeTypeDesc(
-					QTConstants.FINANCIAL_COMMITTEE_TAB);
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			this.getManagedBean().setCommitteeTypeDesc(
-					QTConstants.TECHNICAL_COMMITTEE_TAB);
-		}
+		this.getManagedBean().setCommitteeTypeDesc(
+				ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.SC_COMMITTEE_TYPE, this.getManagedBean().getCommitteeType()));
 
 		getManagedBean().setName(null);
 		getManagedBean().setIdentificationType(null);

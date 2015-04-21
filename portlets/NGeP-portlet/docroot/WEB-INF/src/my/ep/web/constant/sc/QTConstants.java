@@ -103,15 +103,6 @@ public interface QTConstants {
 	public static final String DP_NON_FIXED = "NF";
 	public static final String DP_OTHERS = "OT";
 
-	// committee Appointment
-	public static final String BUSINESS_OWNER = "Business Owner";
-	public static final String SPECIFICATION_COMMITTEE_TAB = "Specification Committee";
-	public static final String OPENING_COMMITTEE_TAB = "Opening Committee";
-	public static final String TECHNICAL_COMMITTEE_TAB = "Technical Evaluation Committee";
-	public static final String FINANCIAL_COMMITTEE_TAB = "Financial Evaluation Committee";
-	public static final String EVALUATION_COMMITTEE_TAB = "Evaluation Committee";
-	public static final String FINALIZATION_SECRETARY_TAB = "Finalization Secretary";
-
 	public static final String USER_NAME = "userName";
 	public static final String IDENTIFICATION_NO = "identificationNo";
 	public static final String IDENTIFICATION_TYPE = "identificationCode";
