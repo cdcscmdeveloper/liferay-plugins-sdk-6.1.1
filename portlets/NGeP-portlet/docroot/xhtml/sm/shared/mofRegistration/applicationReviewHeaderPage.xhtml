@@ -57,16 +57,16 @@
 		<br />
 		<table style="width: 30%;float:left;" >
 			<tr>
+				<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
 				<td>
-					<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
-						<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" >
-							<p:outputLabel value="#{lbl['lbl.sm.view.previous.appr.appl']}" />
-							<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
-							<f:param name="applicationType" value="#{backingBean.managedBean.revisionApplType}"/>
-							<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
-						</h:outputLink>
-					</c:if>
+					<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" >
+						<p:outputLabel value="#{lbl['lbl.sm.view.previous.appr.appl']}" />
+						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
+						<f:param name="applicationType" value="#{backingBean.managedBean.revisionApplType}"/>
+						<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
+					</h:outputLink>
 				</td>
+				</c:if>
 				<td>
 					<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank" >
 						<p:outputLabel value="#{lbl['lbl.sm.view.original.appl']}" />
