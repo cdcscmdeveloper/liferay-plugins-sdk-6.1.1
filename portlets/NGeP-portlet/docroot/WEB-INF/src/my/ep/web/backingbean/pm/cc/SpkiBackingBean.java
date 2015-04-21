@@ -176,7 +176,7 @@ public class SpkiBackingBean {
 	}
 	
 	public String spkiSignTransaction(String originalText) throws KMCAPIException, InvalidKMCAPIFieldException {
-//		try{
+		try{
 //			String signedData ;
 			KMCClient client = getClient();
 
@@ -241,15 +241,15 @@ public class SpkiBackingBean {
 			default:
 //				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
-				throw new EpException(MessageConst.ERROR_776052);
 //				signedData = "DEFAULT SIGNED TEXT1";
 //				break;
 		}
 			
-//		} catch (Exception ex)
-//		{
-//			ex.printStackTrace();
-//		}
+		} catch (Exception ex)
+		{
+			throw new EpException(MessageConst.ERROR_776052);
+
+		}
 		return signedData;
 	}
 
