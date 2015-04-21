@@ -84,17 +84,17 @@
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
 			rowIndexVar="rowIndex">
 
-			<p:column headerText="#{lbl['lbl.sm.itemsLbl']}">
+			<p:column headerText="#{lbl['lbl.sm.itemsLbl']}" styleClass="colAlignTop">
 				#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.svoFinChecklist,finLsItem.pmParameter.parameterCode)}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.availableLbl']}">
+			<p:column headerText="#{lbl['lbl.sm.availableLbl']}" styleClass="colAlignTop">
 				<p:selectBooleanCheckbox value="#{finLsItem.valid}" disabled="#{viewFlag}">
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
-				<p:inputTextarea rows="5" cols="100" autoResize="false" disabled="#{viewFlag}" maxlength="500"
+				<p:inputTextarea rows="5" cols="80" autoResize="false" disabled="#{viewFlag}" maxlength="500"
 					value="#{finLsItem.remark}" />
 			</p:column>
 		</p:dataTable>
