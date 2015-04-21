@@ -4017,7 +4017,7 @@ public class QTDetailBackingBean extends
 				if (approver == null || approver.getUserId() == null) {
 					throw new EpException(MessageConst.ERROR_100022,
 							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.sc.qt.secretary.name",
+									"lbl.sc.secretary.name",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
 				}
