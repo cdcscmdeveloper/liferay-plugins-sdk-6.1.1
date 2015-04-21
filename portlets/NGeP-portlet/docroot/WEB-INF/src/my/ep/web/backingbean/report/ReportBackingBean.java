@@ -651,8 +651,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;//240508; 220152;
+	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	private Long lngUserId = (long)240575;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3507,14 +3507,14 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 	
 	public void changeDateBasedOnRegType() {
-		getManagedBean().getRptGenBean().setSmMandatoryFromDateView(false);
+		getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(false);
 		getManagedBean().getRptGenBean().setSmActivationDateView(false);
 		getManagedBean().getRptGenBean().setSmSubmissionDateView(false);
 		if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_BASIC))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
-			getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
+			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
 			getManagedBean().getRptGenBean().setSmActivationDateView(true);
 		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_MOF))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
-			getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
+			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
 			getManagedBean().getRptGenBean().setSmSubmissionDateView(true);
 		}
 	}
