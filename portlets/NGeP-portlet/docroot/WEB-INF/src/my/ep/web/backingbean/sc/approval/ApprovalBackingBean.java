@@ -336,7 +336,6 @@ public class ApprovalBackingBean extends
 		}
 		this.getManagedBean().setQuotationTenderDataType(obj);
 
-		String parameterType = ParameterTypeConst.APPROVAL_CATEGORY;
 		String approvalCategoryCode = null;
 		List<ScQtApprovalRequest> approvalRequests = null;
 
