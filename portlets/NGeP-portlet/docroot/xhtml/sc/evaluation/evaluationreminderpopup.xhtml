@@ -7,13 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="#{lbl['lbl.sc.eva.reminder']}"
+	<p:dialog header="#{lbl['lbl.sc.reminder']}"
 		widgetVar="evaluationreminder" position="top" width="600" height="400">
 		<p:panel>
 			<p:dataTable id="evaluationcommitteereminder" var="reminderpopup"
 				editable="true">
 				<ac:paginator for="evaluationcommitteereminder" />
-				<p:column headerText="#{lbl['lbl.sc.eva.reminder.name']}"
+				<p:column headerText="#{lbl['lbl.sc.name']}"
 					style="width:100%">
 					<h:outputText value="readOnly"></h:outputText>
 				</p:column>
@@ -22,16 +22,16 @@
 		</p:panel>
 
 		<p:panel id="evaluationRemainderId"
-			header="#{lbl['lbl.sc.eva.reminder.dtls']}" toggleable="true">
+			header="#{lbl['lbl.sc.reminder.dtls']}" toggleable="true">
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.committee.subject']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.subject']}" />
 
 				<p:inputText size="75" maxlength="100"
 					value="#{evaluationBackingBean.managedBean.subject}"></p:inputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.committee.message']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.message']}" />
 
 				<p:inputTextarea rows="5" cols="75" maxlength="1000"
 					value="#{evaluationBackingBean.managedBean.message}"></p:inputTextarea>
@@ -39,9 +39,9 @@
 			</h:panelGrid>
 
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					style="float:right;" oncomplete="evaluationreminder.hide();"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}"
+				<p:commandButton value="#{lbl['lbl.btn.send']}"
 					style="float:right;" oncomplete="evaluationreminder.hide();"
 					process="@this,evaluationRemainderId" partialSubmit="true"
 					actionListener="#{evaluationBackingBean.secretarySubmitTask}"></p:commandButton>

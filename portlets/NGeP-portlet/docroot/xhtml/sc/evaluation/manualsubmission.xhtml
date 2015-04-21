@@ -14,11 +14,11 @@
 
 			<h:panelGrid columns="2">
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel>
 
 				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true"></p:inputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.tech.ovearall']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.eva.ovearall.result']}" />
 
 
 				<p:inputText id="overAllResult" value="#{evaluationBackingBean.managedBean.overAllResult}" readonly="true"></p:inputText>
@@ -36,7 +36,7 @@
 					<p:ajax event="rowSelectCheckbox" listener="#{evaluationBackingBean.onManualRowSelect}"></p:ajax>
 						<p:ajax event="rowUnselectCheckbox" listener="#{evaluationBackingBean.onManualRowUnSelect}"></p:ajax>
                  <p:column selectionMode="multiple" style="width:2%;text-align:center;" />
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.label']}"
+				<p:column headerText="#{lbl['lbl.sc.label.no']}"
 					style="width:35%">
 					<p:selectOneMenu  value="#{manuals1evaluation.proposalLabel.proposalLabelId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
@@ -48,7 +48,7 @@
 
 				
 
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.user.score']}"
+				<p:column headerText="#{lbl['lbl.sc.user.score']}"
 					style="width:20%">
 					<p:selectOneMenu value="#{manuals1evaluation.userScore}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
@@ -59,7 +59,7 @@
 					</p:selectOneMenu>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}"
+				<p:column headerText="#{lbl['lbl.sc.remarks']}"
 					style="width:25%">
 					<p:inputTextarea value="#{manuals1evaluation.remark}"></p:inputTextarea>
 				</p:column>
@@ -69,11 +69,11 @@
 			<p:spacer height="10"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,manualpopupresults" partialSubmit="true"
 				action="#{evaluationBackingBean.adds1ManualAction}"
 				update="manualpopupresults"/>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			action="#{evaluationBackingBean.deleteManualSubmission}" update="manualpopupresults"/>
             
 		</div>
@@ -88,10 +88,10 @@
 		</p:panel>
 
 		<div align="left">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				style="float:right;" oncomplete="manual.hide();"></p:commandButton>
 
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				style="float:right;" oncomplete="manual.hide();"
 				 action="#{evaluationBackingBean.manualSaveAction}"></p:commandButton>
 

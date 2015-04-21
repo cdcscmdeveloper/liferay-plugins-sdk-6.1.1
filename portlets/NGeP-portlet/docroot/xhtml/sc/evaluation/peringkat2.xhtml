@@ -9,16 +9,16 @@
 
 	<p:dialog header="Peringkat2" widgetVar="peringkat2" modal="true"
 		width="1000" height="600">
-		<p:panel id="s2Techpopup" header="#{lbl['lbl.sc.eva.s2.peng.head']}" toggleable="true">
+		<p:panel id="s2Techpopup" header="#{lbl['lbl.sc.eva.stage2.peng.syarikat']}" toggleable="true">
 
 			<h:panelGrid columns="2">
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel>
 
 				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true"></p:inputText>
 
 
-				<p:outputLabel value="#{lbl['lbl.sc.eva.s1.tech.ovearall.score']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.eva.ovearall.score']}" />
 
 				<p:inputText value="Readonly" readonly="true"></p:inputText>
 
@@ -30,9 +30,9 @@
 		</p:panel>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}" style="float:right;"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" style="float:right;"
 				onclick="peringkat2.hide();"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" style="float:right;" action="#{evaluationBackingBean.stageTwoSaveAction}" process="@all"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;" action="#{evaluationBackingBean.stageTwoSaveAction}" process="@all"
 				oncomplete="peringkat2.hide()" ></p:commandButton>
 
 

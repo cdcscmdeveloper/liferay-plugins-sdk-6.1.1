@@ -10,7 +10,7 @@
 
 	<h:panelGroup>
 
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.tech.proposal']}"
+		<p:panel header="#{lbl['lbl.sc.technical.proposal']}"
 			toggleable="true">
 
 			<p:dataTable var="technicalEvaluate" id="technicalEvaluation"
@@ -21,14 +21,14 @@
 				<!-- 	<ac:paginator for="technicalEvaluation" /> -->
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
+				<p:column headerText="#{lbl['lbl.sc.title']}"
 					style="width:55%;white-space: normal;">
 
 					<h:outputText value="#{technicalEvaluate.title}"></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.type']}"
+				<p:column headerText="#{lbl['lbl.sc.type']}"
 					style="width:20%;white-space: normal;">
 
 
@@ -39,7 +39,7 @@
 				</p:column>
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.evaluation.status']}"
+				<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
 					style="width:15%;white-space: normal;">
 
 
@@ -48,16 +48,16 @@
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
+				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:10%">
 
 					<ui:fragment rendered="#{technicalEvaluate.scoringReq eq 'false'}">
-						<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
+						<p:commandButton value="#{lbl['lbl.btn.view']}"
 							process="@this" partialSubmit="true"
 							action="#{evaluationBackingBean.viewTechnicalEvaluation(technicalEvaluate,index,'ET')}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{technicalEvaluate.scoringReq ne 'false'}">
-						<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
+						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 							action="#{evaluationBackingBean.evaluateTechnicalEvaluation(technicalEvaluate,index,'ET')}"
 							process="@this" partialSubmit="true" />
 					</ui:fragment>

@@ -11,7 +11,7 @@
 
 	<h:panelGroup>
 		<h:panelGroup id="sampleItemList">
-			<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
+			<p:panel header="#{lbl['lbl.sc.item.list']}"
 				toggleable="true">
 				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="10"
 					value="#{evaluationBackingBean.managedBean.sampleItemList}"
@@ -20,12 +20,12 @@
 					<ac:paginator for="techSampleEvaluateId" />
 
 
-					<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.item.name']}"
+					<p:column headerText="#{lbl['lbl.sc.item.name']}"
 						style="width:70%">
 						<h:outputText
 							value="#{sampleItem.scRequestItem.tplSpecQuestion.clItem}"></h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.lbl.ext.num']}"
+					<p:column headerText="#{lbl['lbl.sc.eva.lblel.ext.num']}"
 						style="width:30%">
 						<h:outputText value="#{sampleItem.scQtSampleLable.lableNo}"></h:outputText>
 					</p:column>
@@ -36,11 +36,11 @@
 
 					<tr>
 
-						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+						<td><h:outputText value="#{lbl['lbl.sc.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" /></td>
 						<td><p:inputText id="sampleaddressUserScoreId"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
-								label="#{lbl['lbl.sc.eva.s1.user.score']}"
+								label="#{lbl['lbl.sc.user.score']}"
 								disabled="#{evaluationBackingBean.managedBean.readOnly}"
 								required="true"
 								value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
@@ -67,7 +67,7 @@
 
 
 		<h:panelGroup id="samplespecLists">
-			<p:panel header="#{lbl['lbl.sc.eva.smpl.item.spec']}"
+			<p:panel header="#{lbl['lbl.sc.eva.item.specification']}"
 				toggleable="true">
 				<p:dataTable var="itemspec" id="techSampleSpecId" editable="true"
 					rows="10"
@@ -76,7 +76,7 @@
 					<ac:paginator for="techSampleSpecId" />
 
 
-					<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.specification']}"
+					<p:column headerText="#{lbl['lbl.sc.specification']}"
 						style="width:50%">
 						<h:outputText
 							value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>

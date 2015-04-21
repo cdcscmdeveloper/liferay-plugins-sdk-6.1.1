@@ -11,7 +11,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
+	<p:panel header="#{lbl['lbl.sc.meeting.details']}"
 		toggleable="true">
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
@@ -39,7 +39,7 @@
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
+			<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
 				style="width:20%">
 
 				<f:facet name="header">
@@ -47,13 +47,13 @@
 						rendered="#{!evaluationBackingBean.managedBean.readOnly}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.date']}" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
 					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					id="evaluationMeetingId"
-					label="#{lbl['lbl.sc.eva.prepare.meeting.date']}" required="true"
+					label="#{lbl['lbl.sc.meeting.date']}" required="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
 				<p:message id="meetingEvaluationid" for="evaluationMeetingId"
 					display="icon"></p:message>
@@ -65,13 +65,13 @@
 						rendered="#{!evaluationBackingBean.managedBean.readOnly }">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" />
+					<h:outputText value="#{lbl['lbl.sc.location']}" />
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					maxlength="255" cols="40" id="evaluationMeetingLocation"
-					required="true" label="#{lbl['lbl.sc.eva.prepare.meeting.loc']}"></p:inputTextarea>
+					required="true" label="#{lbl['lbl.sc.location']}"></p:inputTextarea>
 				<p:message id="meetingEvaluationLocationid"
 					for="evaluationMeetingLocation" display="icon"></p:message>
 			</p:column>
@@ -83,13 +83,13 @@
 						rendered="#{!evaluationBackingBean.managedBean.readOnly}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.eva.mtng.status']}" />
+					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 
 				<p:selectOneMenu id="meetingstatus" required="true"
 					style="width:100px;"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					label="#{lbl['lbl.sc.eva.mtng.status']}"
+					label="#{lbl['lbl.sc.status']}"
 					value="#{meeting.meetingStatus.statusId}">
 					<f:selectItems
 						value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}" />
@@ -99,7 +99,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:34%">
 
 
@@ -109,7 +109,7 @@
 
 			</p:column>
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}">
+			<!-- <p:column headerText="#{lbl['lbl.sc.action']}">
 			
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -122,12 +122,12 @@
 		<div align="right">
 			<p:commandButton id="meetingbutton"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
-				value="#{lbl['lbl.sc.eva.btn.add']}"
+				value="#{lbl['lbl.btn.add']}"
 				oncomplete="evaluationMeeting.paginator.endLink.click();"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" />
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				update="evaluationmeetingDetails"

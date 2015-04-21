@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="SendEmail" widgetVar="sendEmail" modal="true"
+	<p:dialog header="#{lbl['lbl.sc.send.email']}" widgetVar="sendEmail" modal="true"
 		width="800" height="400">
-		<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
+		<p:panel header="#{lbl['lbl.sc.meeting.details']}"
 			toggleable="true">
 
 			<p:dataTable id="evaluationemail" var="simpleQuote5"
@@ -19,7 +19,7 @@
 
 				<p:column selectionMode="multiple" style="width:5%" />
 
-				<p:column headerText="#{lbl['lbl.sc.eva.committee.comitname']}"
+				<p:column headerText="#{lbl['lbl.sc.committee.name']}"
 					style="width:95%">
 					<h:outputText value="committee#{index+1}"></h:outputText>
 				</p:column>
@@ -31,22 +31,22 @@
 		</p:panel>
 
 
-		<p:panel id="emailpopup" header="EVALUATION REPORT">
+		<p:panel id="emailpopup" header="#{lbl['lbl.sc.eva.report']}">
 			<h:panelGrid columns="2">
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.prepare.meeting.location']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.meeting.location']}"></h:outputLabel>
 
 
 				<p:inputText value="#{evaluationBackingBean.managedBean.meeting.meetingLocation}"></p:inputText>
 
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.prepare.meeting.date']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.meeting.date']}"></h:outputLabel>
 
 
 				<p:calendar value="#{evaluationBackingBean.managedBean.meeting.meetingDate}" showOn="button"></p:calendar>
 
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.prepare.meeting.msg']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.message']}"></h:outputLabel>
 
 
 				<p:inputTextarea rows="3" cols="50" value="#{evaluationBackingBean.managedBean.meeting.meetingDate}"></p:inputTextarea>
@@ -59,10 +59,10 @@
 		</p:panel>
 		<div align="right">
 
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				style="float:right;" onclick="sendEmail.hide();"></p:commandButton>
 
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.ok']}"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}"
 				style="float:right;" onclick="sendEmail.hide();"
 				oncomplete="simpleQuoteBid.hide();"></p:commandButton>
 		</div>

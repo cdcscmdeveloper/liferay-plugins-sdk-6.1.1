@@ -7,18 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="Evaluation" widgetVar="evaluation" modal="true"
+	<p:dialog header="#{lbl['lbl.sc.evaluation']}" widgetVar="evaluation" modal="true"
 		width="800" height="500">
-		<p:panel id="s1popup" header="#{lbl['lbl.sc.eva.s1.tech.compliance.head']}"
+		<p:panel id="s1popup" header="#{lbl['lbl.sc.eva.stage1.compliance.checklst']}"
 			toggleable="true">
 
 			<h:panelGrid columns="2">
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel>
 
 				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true"></p:inputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.tech.ovearall']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.eva.ovearall.result']}" />
 
 
 				<p:inputText id="stageOneResult" value="#{evaluationBackingBean.managedBean.stageOneoverAllResult}" readonly="true"></p:inputText>
@@ -33,17 +33,17 @@
               
 				<ac:paginator for="evaluationresults" />
 
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.title']}"
+				<p:column headerText="#{lbl['lbl.sc.title']}"
 					style="width:35%">
 					<h:outputText value="#{evaluations1.scQtCheckList.title}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.system']}"
+				<p:column headerText="#{lbl['lbl.sc.system.score']}"
 					style="width:20%">
 					<h:outputText value="#{evaluations1.autoScore}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.user']}"
+				<p:column headerText="#{lbl['lbl.sc.user.score']}"
 					style="width:20%">
 					<p:selectOneMenu value="#{evaluations1.userScore}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
@@ -54,7 +54,7 @@
 					</p:selectOneMenu>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}"
+				<p:column headerText="#{lbl['lbl.sc.remarks']}"
 					style="width:25%">
 					<p:inputTextarea value="#{evaluations1.remark}"></p:inputTextarea>
 				</p:column>
@@ -71,10 +71,10 @@
 		</p:panel>
 
 		<div align="left">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				style="float:right;" onclick="evaluation.hide();"></p:commandButton>
 
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				style="float:right;" onclick="evaluation.hide();"
 				action="#{evaluationBackingBean.complianceSaveAction}"></p:commandButton>
 

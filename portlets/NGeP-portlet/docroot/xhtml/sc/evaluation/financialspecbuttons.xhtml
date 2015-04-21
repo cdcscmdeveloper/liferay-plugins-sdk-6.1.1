@@ -16,7 +16,7 @@
 					immediate="true"
 					action="#{evaluationBackingBean.financialSpecBackaction}" />
 
-				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				<p:commandButton value="#{lbl['lbl.sc.save']}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					style="float:right;" update="@all"
 					action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
@@ -29,11 +29,11 @@
 			<table>
 				<tr>
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
 					<td><p:inputText disabled="true"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+							value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea rows="2" cols="100" disabled="true"
 							style="width:90%"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>

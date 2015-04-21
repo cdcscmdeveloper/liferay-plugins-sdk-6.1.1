@@ -12,7 +12,7 @@
 	<!-- <ac:title value="#{lbl['lbl.sc.eva.evaluation.Meeting']}"></ac:title> -->
 	<div align="right">
 
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" process="@all"
+		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
 			update="@all" />
 
@@ -29,7 +29,7 @@
 	</div>
 	<ui:include src="evaluationMeetingHeader.xhtml"></ui:include>
 
-	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
+	<p:panel header="#{lbl['lbl.sc.meeting.details']}"
 		toggleable="true">
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails"
@@ -56,12 +56,12 @@
 			<p:column style="width:25%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.date']}" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 				</f:facet>
 
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
 					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
-					id="meetingDate" label="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
+					id="meetingDate" label="#{lbl['lbl.sc.meeting.date']}"
 					required="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
 				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
@@ -70,17 +70,17 @@
 			<p:column style="width:73%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" />
+					<h:outputText value="#{lbl['lbl.sc.location']}" />
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					style="width:75%;" maxlength="255"
-					label="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" id="locationId"
+					label="#{lbl['lbl.sc.location']}" id="locationId"
 					required="true" cols="140"></p:inputTextarea>
 				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>
 			</p:column>
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}">
+			<!-- <p:column headerText="#{lbl['lbl.sc.action']}">
 			
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -91,12 +91,12 @@
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.addMeetingAction}"
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" />
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.scQtMeetings,evaluationMeetingBackingBean.managedBean.meetingRemoveList)}"
 				update="evaluationmeetingDetails">
@@ -112,7 +112,7 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.cmt.member.list']}"
+	<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 		toggleable="true">
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
@@ -168,7 +168,7 @@
 			</p:column>
 
 			<p:column style="width:6%;white-space: normal;"
-				headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+				headerText="#{lbl['lbl.sc.pnp']}">
 				<h:outputText
 					value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
@@ -176,18 +176,18 @@
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory"></h:outputText>
 					<p:spacer width="5"></p:spacer>
-					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.role']}"></h:outputText>
 				</f:facet>
 				<ui:fragment
 					rendered="#{committeeMember.memberRole.parameterCode eq 'S'}">
-					<h:outputText value="Secretary"
+					<h:outputText value="#{lbl['lbl.sc.secretary']}"
 						rendered="#{committeeMember.memberRole.parameterCode eq 'S'}" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{committeeMember.memberRole.parameterCode ne 'S'}">
 
 					<p:selectOneMenu id="meetingRoleId" required="true"
-						label="#{lbl['lbl.sc.eva.committee.role']}"
+						label="#{lbl['lbl.sc.role']}"
 						value="#{committeeMember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
@@ -204,18 +204,18 @@
 
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.clone']}"
+			<p:commandButton value="#{lbl['lbl.btn.clone']}"
 				process="@this" partialSubmit="true" oncomplete="screen2.show();"
 				actionListener="#{evaluationMeetingBackingBean.addCloneCommittee}"
 				update="form:cloneid" />
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.add']}" process="@this"
+			<p:commandButton value="#{lbl['lbl.sc.btn.add']}" process="@this"
 				partialSubmit="true"
 				actionListener="#{evaluationMeetingBackingBean.addCommitteeDetails}"
 				update=":form:newspecificationcommitteeid"
 				oncomplete="newspecificationcommittee.show();" />
 
 
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this" partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.committeeMemberActivity,evaluationMeetingBackingBean.managedBean.removeCommitteeList)}"
 				update="evaluationpreparecommittee">
@@ -229,7 +229,7 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"
+	<p:panel header="#{lbl['lbl.sc.remark']}"
 		toggleable="true">
 		<table style="width: 100%" id="remarkslist">
 			<tr>

@@ -30,7 +30,7 @@
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 			</ui:repeat>
 		</ui:fragment>
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+		<p:commandButton value="#{lbl['lbl.btn.save']}"
 			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
@@ -41,7 +41,7 @@
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
-							value="Are you sure to send for Revise?" /></td>
+							value="#{lbl['lbl.sc.spec.dialog.yesbtn.message']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />

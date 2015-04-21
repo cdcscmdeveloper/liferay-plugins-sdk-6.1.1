@@ -19,7 +19,7 @@
 
 				<tr>
 					<td><h:outputLabel style="width:122px;"
-							value="#{lbl['lbl.sc.eva.compliance.smpl.opn.date']}" /></td>
+							value="#{lbl['lbl.sc.eva.smpl.open.date']}" /></td>
 					<td><p:inputText
 							value="#{evaluationBackingBean.managedBean.scQt.sampleClosingDate}"
 							readonly="true" disabled="true">
@@ -29,7 +29,7 @@
 
 				<tr>
 					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.count.down']}" /></td>
+							value="#{lbl['lbl.sc.count.down.days']}" /></td>
 					<td><p:inputText
 							value="#{evaluationBackingBean.managedBean.countDays}"
 							readonly="true" disabled="true"></p:inputText></td>
@@ -41,7 +41,7 @@
 
 	<ui:fragment
 		rendered="#{evaluationBackingBean.managedBean.countDays le 0}">
-		<p:panel header="#{lbl['lbl.sc.eva.compliance.smpl.sup.list']}"
+		<p:panel header="#{lbl['lbl.sc.supplier.list']}"
 			toggleable="true">
 
 			<p:dataTable var="complianceSample" id="complianceSample" rows="10"
@@ -52,14 +52,14 @@
 				<ac:paginator for="complianceSample" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 					style="width:60%">
 
 					<h:outputText value="#{complianceSample.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.smpl.lbl.no']}"
+				<p:column headerText="#{lbl['lbl.sc.label.no']}"
 					style="width:30%">
 
 
@@ -67,10 +67,10 @@
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
+				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:10%">
 
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
+					<p:commandButton value="#{lbl['lbl.sc.btn.compliance']}"
 						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}" />
 
