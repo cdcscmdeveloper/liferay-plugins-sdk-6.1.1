@@ -23,19 +23,19 @@
 					rowKey="#{checkListScoring}">
 					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
 					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
+					<p:column headerText="#{lbl['lbl.sc.from']}"
 						style="width:40%"
 						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
 						<h:outputLabel value="#{checkListScoring.rangeFrom}"
 							style="text-align:right"></h:outputLabel>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
+					<p:column headerText="#{lbl['lbl.sc.to']}"
 						style="width:30%"
 						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
 						<h:outputLabel value="#{checkListScoring.rangeTo}"
 							style="text-align:right"></h:outputLabel>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
+					<p:column headerText="#{lbl['lbl.sc.score']}"
 						style="width:30%">
 						<h:outputLabel value="#{checkListScoring.score}"
 							style="text-align:right"></h:outputLabel>
@@ -63,19 +63,19 @@
 					rowKey="#{checkListScoring}">
 					<ac:paginator for="#{scoringPnlId}"></ac:paginator>
 					<!-- 	<p:column selectionMode="multiple" style="width:2px;"></p:column> -->
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
+					<p:column headerText="#{lbl['lbl.sc.from']}"
 						style="width:40%"
 						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
 						<h:outputLabel value="#{checkListScoring.rangeFrom}"
 							style="text-align:right"></h:outputLabel>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
+					<p:column headerText="#{lbl['lbl.sc.to']}"
 						style="width:30%"
 						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
 						<h:outputLabel value="#{checkListScoring.rangeTo}"
 							style="text-align:right"></h:outputLabel>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
+					<p:column headerText="#{lbl['lbl.sc.score']}"
 						style="width:30%">
 						<h:outputLabel value="#{checkListScoring.score}"
 							style="text-align:right"></h:outputLabel>
