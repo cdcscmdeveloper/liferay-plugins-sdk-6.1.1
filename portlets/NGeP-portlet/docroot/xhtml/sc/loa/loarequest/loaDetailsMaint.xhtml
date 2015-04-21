@@ -8,17 +8,20 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
 	<ui:define name="contentSection">
 		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
 		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
 		<ui:param name="isPendingSubmissionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
-		<ui:param name="isEditableStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION || ((lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL || lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION) and !empty lOADetailBackingBean.managedBean.taskId)}" />
+		
+		<ui:param name="isPendingApprovalStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL" />
+		<ui:param name="isPendingRevisionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION)" />
+
+		<ui:param name="isEditableStatus" value="#{isPendingSubmissionStatus || ((isPendingApprovalStatus|| isPendingRevisionStatus) and !empty lOADetailBackingBean.managedBean.taskId)}" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
-		 <ui:param name="isFulfillmentType"
+		<ui:param name="isFulfillmentType"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen}" />
 		
 		<ui:include src="loaButtons.xhtml" />
