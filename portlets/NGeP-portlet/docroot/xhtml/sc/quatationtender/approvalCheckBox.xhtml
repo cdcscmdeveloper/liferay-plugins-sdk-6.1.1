@@ -34,7 +34,7 @@
 			rendered="#{qTDetailBB.managedBean.approvalMenuModel != null}" />
 
 		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Budget Approval'}">
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryBudget}">
 			<ui:param name="budgetList"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.budgetApprovalUsers}" />
 			<ui:param name="budgetApprovalRemarkList"
@@ -47,7 +47,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'BPK Approval'}">
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryBpk}">
 			<ui:param name="bpkApproverCategory"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
 			<ui:param name="approvalDtlsList"
@@ -62,7 +62,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Committee Appointment Approval'}">
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryCommitteeeApointment}">
 			<ui:param name="committeeApprovalDtlsList"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalDtls}" />
 			<ui:param name="commiteList"
@@ -81,7 +81,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'PTJ Approval'}">
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryPtj}">
 			<ui:param name="ptjApprovalDtlsList"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalDtls}" />
 			<ui:param name="ptjList"
@@ -96,7 +96,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Finalization Committee Approval'}">
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryFinalizationCommittee}">
 			<ui:param name="fcaApprovalTab"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean}" />
 			<ui:param name="fcaApprovalRemarkList"
@@ -109,7 +109,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Others Approval'}">
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryOthers}">
 			<ui:param name="othersApprovalDtlsList"
 				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
 			<ui:include
