@@ -87,6 +87,7 @@ import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -652,8 +653,8 @@ public class QTCommitteBackingBean extends
 
 			for (int beanCount = 0; beanCount < tabs.size(); beanCount++) {
 				List<ScCommitteeMember> memberList = new ArrayList<ScCommitteeMember>();
-				if (tabs.get(beanCount).getTitleName()
-						.equalsIgnoreCase(CommitteType.getValue(committeType))) {
+				if (tabs.get(beanCount).getTabType()
+						.equalsIgnoreCase(committeType)) {
 					if (null == tabs.get(beanCount).getMembers()) {
 						tabs.get(beanCount).setMembers(
 								new ArrayList<ScCommitteeMember>());
@@ -866,9 +867,9 @@ public class QTCommitteBackingBean extends
 					.getScCommitteeMemberTabList();
 			for (int i = 0; i < tabs.size(); i++) {
 				TabBean tabBean = tabs.get(i);
-				log.debug("Title Name : " + tabBean.getTitleName());
+				log.debug("Title Name : " + tabBean.getTabType());
 				if (tabBean
-						.getTitleName()
+						.getTabType()
 						.equalsIgnoreCase(
 								ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
 					List<ScCommitteeMember> existingMembers = tabBean
@@ -877,7 +878,8 @@ public class QTCommitteBackingBean extends
 					if (isMemberExists(existingMembers, selectedList)) {
 						throw new EpException(
 								MessageConst.ERROR_760048,
-								new String[] { QTConstants.TECHNICAL_COMMITTEE_TAB });
+								new String[] { ParameterHelper.getInstance().getParameterDesc(
+										ParameterTypeConst.SC_COMMITTEE_TYPE, ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE) });
 					}
 					List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
 
@@ -1440,8 +1442,8 @@ public class QTCommitteBackingBean extends
 		for (TabBean tabBean : this.getManagedBean()
 				.getScCommitteeMemberTabList()) {
 
-			if (QTConstants.SPECIFICATION_COMMITTEE_TAB
-					.equalsIgnoreCase(tabBean.getTitleName())) {
+			if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
+					.equalsIgnoreCase(tabBean.getTabType())) {
 				committe = tabBean.getScQtCommittee().getScCommittee();
 
 				break;
@@ -1541,14 +1543,15 @@ public class QTCommitteBackingBean extends
 		TabBean selectedCommitteTabBean = this.getManagedBean()
 				.getSelectedTabBean();
 		if (null != selectedCommitteTabBean) {
-			ScCommittee committee = selectedCommitteTabBean.getScCommittee();
-			if (CollectionUtils.isNotEmpty(committee.getScCommitteeMembers())) {
-				isChairpersonRequired(committee.getScCommitteeMembers());
-				isSecretaryRequired(committee.getScCommitteeMembers());
-				isAtleastOneMemebersReq(committee.getScCommitteeMembers());
-			} else {
-				throw new EpException("");
-
+			ScQtCommittee qtCommittee = selectedCommitteTabBean.getScQtCommittee();
+			if (qtCommittee != null) {
+				ScCommittee committee = qtCommittee.getScCommittee();
+				
+				if (CollectionUtils.isNotEmpty(committee.getScCommitteeMembers())) {
+					isChairpersonRequired(committee.getScCommitteeMembers());
+					isSecretaryRequired(committee.getScCommitteeMembers());
+					isAtleastOneMemebersReq(committee.getScCommitteeMembers());
+				}
 			}
 		}
 	}
