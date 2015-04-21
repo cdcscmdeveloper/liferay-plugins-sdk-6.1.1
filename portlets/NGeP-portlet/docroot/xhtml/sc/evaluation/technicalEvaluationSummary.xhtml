@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
+	<p:panel header="#{lbl['lbl.sc.qualified.supplier.list']}"
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
@@ -16,7 +16,7 @@
 			<ac:paginator for="complianceQualifiedSupplier" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:30%">
 
 				<p:inputText size="70"></p:inputText>
@@ -35,7 +35,7 @@
 
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+						value="#{lbl['lbl.sc.total']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
 			</tr>
 
@@ -44,7 +44,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
+	<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"
 		toggleable="true">
 
 		<p:dataTable var="disQualifiedSupplier"
@@ -54,7 +54,7 @@
 			<ac:paginator for="complianceDisQualifiedSupplier" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:30%">
 
 				<p:inputText size="70"></p:inputText>
@@ -73,7 +73,7 @@
 
 			<tr>
 				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+						value="#{lbl['lbl.sc.total']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
 			</tr>
 

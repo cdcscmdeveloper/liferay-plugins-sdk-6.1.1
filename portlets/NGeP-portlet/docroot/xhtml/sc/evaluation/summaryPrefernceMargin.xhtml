@@ -9,7 +9,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
+	<p:panel header="#{lbl['lbl.sc.qualified.supplier.list']}"
 		toggleable="true">
 
 		<p:dataTable var="prefQualSupplier"
@@ -22,7 +22,7 @@
 
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.ranking']}"
+			<p:column headerText="#{lbl['lbl.sc.ranking']}"
 				style="width:10%">
 
 				<h:outputLabel value="#{prefQualSupplier.evalRank}"
@@ -32,7 +32,7 @@
 
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:10%">
 
 				<h:outputText
@@ -41,13 +41,13 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:10%">
 				<h:outputLabel value="#{prefQualSupplier.totalScore}"
 					style="text-align:right"></h:outputLabel>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
+			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}"
 				style="width:15%">
 
 				<h:outputText
@@ -67,7 +67,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.price.diff']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.price.diff']}"
 				style="width:15%">
 
 				<h:outputLabel
@@ -80,7 +80,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.diff']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.difference']}"
 				style="width:15%">
 
 				<h:outputLabel
@@ -93,7 +93,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.pref.margin']}"
 				style="width:25%">
 
 				<h:outputLabel
@@ -117,14 +117,14 @@
 	<table>
 		<tr>
 			<td><h:outputLabel
-					value="#{lbl['lbl.sc.eva.compliance.passing.score']}" /></td>
+					value="#{lbl['lbl.sc.passing.score']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					style="text-align:right" value="#{passingScore}">
 				</p:inputText></td>
 		</tr>
 		<tr>
 			<td><h:outputLabel
-					value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+					value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					style="text-align:right"
 					value="#{evaluationBackingBean.managedBean.evaTotQualifiedSuppliers}"></p:inputText></td>
@@ -135,7 +135,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
+	<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"
 		toggleable="true">
 
 		<p:dataTable var="disQualifiedSupplier"
@@ -146,7 +146,7 @@
 				for="evaluationSummaryPreferencemarginDisQualifiedSuppliers" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:15%">
 
 				<h:outputText
@@ -155,13 +155,13 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}"
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:10%">
 				<h:outputLabel value="#{disQualifiedSupplier.totalScore}"
 					style="text-align:right"></h:outputLabel>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
+			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}"
 				style="width:25%">
 
 				<h:outputText
@@ -181,7 +181,7 @@
 
 		<tr>
 			<td><h:outputLabel
-					value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+					value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					style="text-align:right"
 					value="#{evaluationBackingBean.managedBean.evaTotDisQualifiedSuppliers}"></p:inputText></td>
