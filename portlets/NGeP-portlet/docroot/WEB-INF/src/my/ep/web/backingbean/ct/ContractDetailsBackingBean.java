@@ -3501,6 +3501,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					      contractAmtObj = contractAmt;
 				   }
 			  }
-	        getManagedBean().getContractVer().getCtContractValue().setContractAmount(contractAmtObj.getContractAmount());
+	        getManagedBean().getContractVer().setCtContractAmount(contractAmtObj);
         }
    }
