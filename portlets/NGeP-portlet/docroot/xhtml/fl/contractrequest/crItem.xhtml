@@ -263,7 +263,7 @@
 					<td width="220"><p:selectOneMenu id="manCountry"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Country"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="countryList"
@@ -280,7 +280,7 @@
 					<td width="220"><p:selectOneMenu id="manState"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="State"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="stateList"
@@ -299,13 +299,13 @@
 					<td><p:inputText id="address1" label="Address Line 1"
 							maxlength="255" 
 							required="#{contractRequestBackingBean.managedBean.required}"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address1}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td><p:message for="address1" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 					<td><p:selectOneMenu id="manDivison"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDivision.divisionId}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmDivision.divisionId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="divisionList"
@@ -323,7 +323,7 @@
 				<tr>
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address2}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
@@ -332,7 +332,7 @@
 					<td><p:selectOneMenu id="manDistrict"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="District"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmDistrict.districtId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="districtList"
@@ -351,7 +351,7 @@
 				<tr>
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address3}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
@@ -360,7 +360,7 @@
 					<td><p:selectOneMenu id="manCity"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="City"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityId}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="cityList"
@@ -372,7 +372,7 @@
 				<tr>
 					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.address4}"
 							size="35" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></td>
 					<td></td>
@@ -381,7 +381,7 @@
 					<td><p:inputText id="postCode"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Post Code" maxlength="10"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmAddress.postcode}"
 							validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
 							size="34"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
@@ -393,7 +393,7 @@
 					<td><p:inputText id="email"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Email" maxlength="80"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).email}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).email}"
 							validatorMessage="#{lbl['lbl.fl.email.msg']}"
 							size="35" ><f:validateRegex disabled="#{contractRequestBackingBean.managedBean.emailValidate}"
        						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" 
@@ -423,7 +423,7 @@
 					<td><p:inputText id="telNo"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.telno']}" maxlength="20"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).phoneNo}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).phoneNo}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
 							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" 
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }"/></p:inputText>
@@ -435,7 +435,7 @@
 					<td><p:inputText id="contactPerson"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="#{lbl['lbl.fl.supp.contact.person']}" maxlength="20"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).contactName}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).contactName}"
 							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
 							size="35"></p:inputText>
 							</td>
@@ -445,7 +445,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
 					<td><p:inputText maxlength="20"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).faxNo}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).faxNo}"
 							validatorMessage="#{lbl['lbl.fl.fax.no.msg']}"
 							size="35"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
@@ -455,7 +455,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td><p:inputText maxlength="20"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmAddressTypes.get(0).pmContacts.get(0).mobileNo}"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.addressType.pmContacts.get(0).mobileNo}"
 							validatorMessage="#{lbl['lbl.fl.mobile.no.msg']}"
 							size="35" required="false"
 							onkeypress="if (event.keyCode == 13) { addManualDelAddrBtn.jq.click(); return false; }" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
