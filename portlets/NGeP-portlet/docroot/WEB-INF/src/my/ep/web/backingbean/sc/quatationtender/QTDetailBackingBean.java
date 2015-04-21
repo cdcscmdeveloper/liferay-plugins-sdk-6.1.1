@@ -27,7 +27,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.sc.QTRuleDataBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -129,6 +128,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalCategory;
+import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -1084,10 +1084,9 @@ public class QTDetailBackingBean extends
 		quationTenderReqDTO
 				.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
 
-		if (this.getManagedBean().isMaintanceFlow()) {
-			quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
-					.getAmendMentBean());
-		}
+		quationTenderReqDTO.setAmendMentBean(this.getManagedBean()
+				.getAmendMentBean());
+
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
 		return quationTenderReqDTO;
@@ -1413,15 +1412,16 @@ public class QTDetailBackingBean extends
 			
 			committeTabs = new ArrayList<TabBean>();
 			// BO and specification committe is common for both evaluations..
-			String tabType = ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER;
-			ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+			ScQtCommittee boCommitte = getQtCommiteDtlsByQtIdNType("BO", qtId);
+			String tabType = boCommitte.getScCommittee().getCommitteeType().getParameterCode();
 			committeTabs.add(new TabBean(
 					parameterHelper.getParameterDesc(parameterType, tabType), 
 					tabType,
 					boCommitte));
 
-			tabType = ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE;
-			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+			ScQtCommittee specCommitte = getQtCommiteDtlsByQtIdNType(
+					CommitteType.getValue("SpecificationCommittee"), qtId);
+			tabType = specCommitte.getScCommittee().getCommitteeType().getParameterCode();
 			if (QTStatusConst.CMT_COMPLETED.equals(specCommitte
 					.getScCommittee().getCommitteStatus().getStatusId())) {
 				this.getManagedBean().setCloneNeeded(true);
@@ -1434,8 +1434,10 @@ public class QTDetailBackingBean extends
 					specCommitte));
 			// evaluation type is one tier only oc is added..
 			if (QTConstants.EVALUATION_ONE_TIER.equals(evaluationType)) {
-				tabType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
-				ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+
+				ScQtCommittee evalCommitte = getQtCommiteDtlsByQtIdNType(
+						CommitteType.getValue("EvaluationCommittee"), qtId);
+				tabType = evalCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					evalCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
@@ -1446,8 +1448,10 @@ public class QTDetailBackingBean extends
 			}
 			// evaluation type is two tier below committe are added
 			else {
-				tabType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
-				ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+
+				ScQtCommittee openingCommitte = getQtCommiteDtlsByQtIdNType(
+						CommitteType.getValue("OpeningCommittee"), qtId);
+				tabType = openingCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					openingCommitte.getScCommittee().setApprovalReq(
 							isApprovalReq);
@@ -1457,8 +1461,11 @@ public class QTDetailBackingBean extends
 						tabType,
 						openingCommitte));
 
-				tabType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
-				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+				ScQtCommittee tecCommitte = getQtCommiteDtlsByQtIdNType(
+						CommitteType
+								.getValue(ParameterConst.DOCTYPE_TEC_COMMITTE),
+						qtId);
+				tabType = tecCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					tecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
@@ -1466,9 +1473,11 @@ public class QTDetailBackingBean extends
 						parameterHelper.getParameterDesc(parameterType, tabType),
 						tabType,
 						tecCommitte));
-				
-				tabType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
-				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+				ScQtCommittee fecCommitte = getQtCommiteDtlsByQtIdNType(
+						CommitteType
+								.getValue(ParameterConst.DOCTYPE_FEC_COMMITTE),
+						qtId);
+				tabType = fecCommitte.getScCommittee().getCommitteeType().getParameterCode();
 				if (isApprovalReq) {
 					fecCommitte.getScCommittee().setApprovalReq(isApprovalReq);
 				}
@@ -2093,13 +2102,9 @@ public class QTDetailBackingBean extends
 			// approval
 			if (menuModel.getContents() != null
 					&& menuModel.getContents().size() > 0) {
-				/*
-				 * this.getManagedBean().setSelectedApprovalTabBean(
-				 * tabBeans.get(0));
-				 */
+				this.getManagedBean().setSelectedTabIndex(0);
 				this.getManagedBean().setSelectedApprovalTabBean(
-						tabBeans.get(this.getManagedBean()
-								.getSelectedApprovalTabIndex()));
+						tabBeans.get(0));
 				this.getManagedBean().setTabList(tabBeans);
 			}
 		} finally {
@@ -2960,47 +2965,15 @@ public class QTDetailBackingBean extends
 						}
 					}
 					if (getManagedBean().getQt().getEstimatedAmount() != null) {
-						if (getManagedBean().getQt().getEstimatedAmount()
-								.intValue() >= SourcingConstants.ESTMT_TWANTY_THOUSAND
-								&& getManagedBean().getQt()
-										.getEstimatedAmount().intValue() <= SourcingConstants.ESTMT_FIFTY_THOUSAND) {
-							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-								getManagedBean().getQt().setQtValidityPeriod(
-										SourcingConstants.SIXTY_DAYS);
-							}
-							/*
-							 * if (getManagedBean().getQt().getPublishPeriod()
-							 * == null) {
-							 * getManagedBean().getQt().setPublishPeriod(
-							 * SourcingConstants.PUBLISH_THREE_DAYS); }
-							 */
-						} else if (getManagedBean().getQt()
-								.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIFTY_THOUSAND
-								&& getManagedBean().getQt()
-										.getEstimatedAmount().intValue() <= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
-							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-								getManagedBean().getQt().setQtValidityPeriod(
-										SourcingConstants.NINTY_DAYS);
-							}
-							/*
-							 * if (getManagedBean().getQt().getPublishPeriod()
-							 * == null) {
-							 * getManagedBean().getQt().setPublishPeriod(
-							 * SourcingConstants.PUBLISH_SEVEN_DAYS); }
-							 */
-						} else if (getManagedBean().getQt()
-								.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
-							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-								getManagedBean().getQt().setQtValidityPeriod(
-										SourcingConstants.NINTY_DAYS);
-							}
-							/*
-							 * if (getManagedBean().getQt().getPublishPeriod()
-							 * == null) { getManagedBean() .getQt()
-							 * .setPublishPeriod(
-							 * SourcingConstants.PUBLISH_TWENTYONE_DAYS); }
-							 */
+						if (getManagedBean().getQt().getQtValidityPeriod() == null) {
+							getManagedBean().getQt().setQtValidityPeriod(
+									SourcingConstants.SIXTY_DAYS);
 						}
+						if (getManagedBean().getQt().getQtValidityPeriod() == null) {
+							getManagedBean().getQt().setQtValidityPeriod(
+									SourcingConstants.NINTY_DAYS);
+						}
+
 					}
 				}
 				if (this.getManagedBean().getGosodos() == null) {
@@ -3750,12 +3723,11 @@ public class QTDetailBackingBean extends
 					scQtBsv.setMinSiteVisitAttend(0);
 				}
 			}
-			/*if (!scQtBsv.isAllBriefingReq()) {
-				if (scQtBsv.getMinBriefingAttend() < 1) {
-					throw new EpException(
-							"Min Briefing Attendance is greater than 0");
-				}
-			}*/
+			/*
+			 * if (!scQtBsv.isAllBriefingReq()) { if
+			 * (scQtBsv.getMinBriefingAttend() < 1) { throw new EpException(
+			 * "Min Briefing Attendance is greater than 0"); } }
+			 */
 			if (!scQtBsv.isAllSiteVisitReq()) {
 				if (scQtBsv.getMinSiteVisitAttend() < 1) {
 					throw new EpException(
@@ -3835,7 +3807,6 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setSaveFlow(false);
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			// validateQtDetails();
 
 			List<TabBean> tabList = this.getManagedBean().getTabList();
 			if (CollectionUtils.isEmpty(tabList)) {
@@ -4043,7 +4014,8 @@ public class QTDetailBackingBean extends
 			qt.setScQtCommittees(null);
 			qt.setScQtBriefings(null);
 			qt.setScQtStatus(null);
-			ScQtApproval approval = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval();
+			ScQtApproval approval = this.getManagedBean()
+					.getSelectedApprovalTabBean().getScQtApproval();
 			finalizeRemarks(approval.getScQtApprovalRemarks());
 
 			List<ScQtApproverSettings> approverSettings = approval
@@ -4185,13 +4157,8 @@ public class QTDetailBackingBean extends
 				amendMentBean.setOldTitle((String) oldValue);
 
 			}
-			if (!amendMentBean.getOldTitle()
-					.equalsIgnoreCase((String) newValue)) {
-				amendMentBean.setNewTitle((String) newValue);
-			} else {
-				amendMentBean.setNewTitle(null);
 
-			}
+			amendMentBean.setNewTitle((String) newValue);
 
 		} else if ("estprice".equalsIgnoreCase(componentId)) {
 
@@ -4199,9 +4166,8 @@ public class QTDetailBackingBean extends
 				amendMentBean.setOldEstmtPrice((BigDecimal) oldValue);
 
 			}
-			if (!amendMentBean.getOldEstmtPrice().equals((BigDecimal) newValue)) {
-				amendMentBean.setNewEstmtPrice((BigDecimal) newValue);
-			}
+
+			amendMentBean.setNewEstmtPrice((BigDecimal) newValue);
 
 		} else if ("proposalvalidity".equalsIgnoreCase(componentId)) {
 
@@ -4209,9 +4175,8 @@ public class QTDetailBackingBean extends
 				amendMentBean.setOldValidityPeriodDays((Integer) oldValue);
 
 			}
-			if (amendMentBean.getOldValidityPeriodDays() != (Integer) newValue) {
-				amendMentBean.setNewValidityPeriodDays((Integer) newValue);
-			}
+
+			amendMentBean.setNewValidityPeriodDays((Integer) newValue);
 
 		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
 
@@ -4219,9 +4184,8 @@ public class QTDetailBackingBean extends
 				amendMentBean.setOldPublishPeriodDays((Integer) oldValue);
 
 			}
-			if (amendMentBean.getOldPublishPeriodDays() != (Integer) newValue) {
-				amendMentBean.setNewPublishPeriodDays((Integer) newValue);
-			}
+
+			amendMentBean.setNewPublishPeriodDays((Integer) newValue);
 
 		}
 		this.getManagedBean().setAmendMentBean(amendMentBean);
@@ -4272,69 +4236,23 @@ public class QTDetailBackingBean extends
 	}
 
 	public void publishPeriodDaysChanged(ValueChangeEvent changeEvent) {
-		Long currentStatus = this.getManagedBean().getCurrentStatusId();
 
-		createRuleDataForQt(this.getManagedBean().getQt().getEstimatedAmount(),
-				null);
-		PmParameter procureMentMode = this.getManagedBean().getQt()
-				.getProcurementMode();
-		if (null != procureMentMode)
-			if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-					.equalsIgnoreCase(procureMentMode.getParameterCode())) {
-				if (this.getManagedBean().getRuleDataBean()
-						.getPublishPeriodDays() > ((Integer) changeEvent
-						.getNewValue()).intValue()) {
-
-					throw new EpException(MessageConst.ERROR_760260,
-							new String[] { String
-									.valueOf(((Integer) changeEvent
-											.getOldValue()).intValue()) });
-
-				}
-			}
-		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) <= 0) {
-			updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
-					changeEvent.getOldValue(), changeEvent.getNewValue());
-			// Logic not to reduce the publish period after publish. if
-			if (this.getManagedBean().getAmendMentBean()
-					.getOldPublishPeriodDays() >= (((Integer) changeEvent
-					.getNewValue()).intValue())) {
-
-				throw new EpException(MessageConst.ERROR_760260,
-						new String[] { String.valueOf(((Integer) changeEvent
-								.getOldValue()).intValue()) });
-			}
-
-		}
+		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
+				changeEvent.getOldValue(), changeEvent.getNewValue());
 
 	}
 
 	public void estimateAmtChanged(ValueChangeEvent changeEvent) {
-		Long currentStatus = this.getManagedBean().getCurrentStatusId();
 
-		createRuleDataForQt((BigDecimal) changeEvent.getOldValue(), null);
-
-		estmatedAmountValidations((BigDecimal) changeEvent.getNewValue());
-
-		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
-			updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
-					changeEvent.getOldValue(), changeEvent.getNewValue());
-		}
+		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
+				changeEvent.getOldValue(), changeEvent.getNewValue());
 
 	}
 
 	public void proposalValidityChanged(ValueChangeEvent changeEvent) {
 
-		Long currentStatus = this.getManagedBean().getCurrentStatusId();
-		createRuleDataForQt(this.getManagedBean().getQt().getEstimatedAmount(),
-				null);
-		proposalValidityDaysValidations(((Integer) changeEvent.getNewValue())
-				.intValue());
-
-		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(currentStatus) < 0) {
-			updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
-					changeEvent.getOldValue(), changeEvent.getNewValue());
-		}
+		updateQtAmmendMentDtls(changeEvent.getComponent().getId(),
+				changeEvent.getOldValue(), changeEvent.getNewValue());
 
 	}
 
@@ -4495,138 +4413,6 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-	}
-
-	private void proposalValidityDaysValidations(int changedDays) {
-		PmParameter procureMentMode = this.getManagedBean().getQt()
-				.getProcurementMode();
-		if (null != procureMentMode)
-			if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-					.equalsIgnoreCase(procureMentMode.getParameterCode())) {
-				int validityDays = this.getManagedBean().getRuleDataBean()
-						.getProposalValidityDays();
-
-				if (validityDays < changedDays) {
-					throw new EpException(MessageConst.ERROR_760044,
-							new String[] { String.valueOf(validityDays) });
-				}
-			}
-	}
-
-	private void estmatedAmountValidations(BigDecimal estmtAmount) {
-		String belowRange = this.getManagedBean().getRuleDataBean()
-				.getBelowEstimatedAmount();
-
-		String aboveRange = this.getManagedBean().getRuleDataBean()
-				.getAboveEstimatedAmount();
-		if (null != belowRange) {
-			String operator = findOperator(belowRange);
-			if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN_OR_EQUAL)) {
-				belowRange = belowRange.replace(
-						QTConstants.LESSER_THAN_OR_EQUAL, "");
-				if (new BigDecimal(belowRange).compareTo(estmtAmount) <= 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
-									String.valueOf(belowRange) });
-				}
-			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
-				belowRange = belowRange.replace(QTConstants.LESSER_THAN, "");
-				if (new BigDecimal(belowRange).compareTo(estmtAmount) < 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.LESSER_THAN,
-									String.valueOf(belowRange) });
-				}
-			} else if (operator
-					.equalsIgnoreCase(QTConstants.GREATER_THAN_OR_EQUAL)) {
-				belowRange = belowRange.replace(
-						QTConstants.GREATER_THAN_OR_EQUAL, "");
-				if (new BigDecimal(belowRange).compareTo(estmtAmount) >= 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
-									String.valueOf(belowRange) });
-				}
-			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
-				belowRange = belowRange.replace(QTConstants.GREATER_THAN, "");
-				if (new BigDecimal(belowRange).compareTo(estmtAmount) > 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.GREATER_THAN,
-									String.valueOf(belowRange) });
-				}
-			}
-		}
-		if (null != aboveRange) {
-			String operator = findOperator(aboveRange);
-			if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN_OR_EQUAL)) {
-				aboveRange = aboveRange.replace(
-						QTConstants.LESSER_THAN_OR_EQUAL, "");
-				if (new BigDecimal(aboveRange).compareTo(estmtAmount) <= 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.LESSER_THAN_OR_EQUAL,
-									String.valueOf(aboveRange) });
-				}
-			} else if (operator.equalsIgnoreCase(QTConstants.LESSER_THAN)) {
-				aboveRange = aboveRange.replace(QTConstants.LESSER_THAN, "");
-				if (new BigDecimal(aboveRange).compareTo(estmtAmount) < 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.LESSER_THAN,
-									String.valueOf(aboveRange) });
-				}
-			} else if (operator
-					.equalsIgnoreCase(QTConstants.GREATER_THAN_OR_EQUAL)) {
-				aboveRange = aboveRange.replace(
-						QTConstants.GREATER_THAN_OR_EQUAL, "");
-				if (new BigDecimal(aboveRange).compareTo(estmtAmount) >= 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.GREATER_THAN_OR_EQUAL,
-									String.valueOf(aboveRange) });
-				}
-			} else if (operator.equalsIgnoreCase(QTConstants.GREATER_THAN)) {
-				aboveRange = aboveRange.replace(QTConstants.GREATER_THAN, "");
-				if (new BigDecimal(aboveRange).compareTo(estmtAmount) > 0) {
-
-					throw new EpException(MessageConst.ERROR_760259,
-							new String[] { QTConstants.GREATER_THAN,
-									String.valueOf(aboveRange) });
-				}
-			}
-		}
-
-	}
-
-	private void createRuleDataForQt(BigDecimal estmtAmount, String qtType) {
-		QTRuleDataBean ruleDataBean = this.getManagedBean().getRuleDataBean();
-		if (null == ruleDataBean) {
-			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
-			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-			quationTenderReqDTO.setEstmtAmount(estmtAmount);
-			quationTenderReqDTO.setQtType(qtType);
-			QuationTenderResDTO resDTO = detailSO
-					.retrieveRuleDetailsByEstmtAmount(quationTenderReqDTO);
-			this.getManagedBean().setRuleDataBean(resDTO.getRuleDataBean());
-		}
-
-	}
-
-	private String findOperator(String estmtAmout) {
-		if (estmtAmout.contains(QTConstants.LESSER_THAN_OR_EQUAL)) {
-			return QTConstants.LESSER_THAN_OR_EQUAL;
-		} else if (estmtAmout.contains(QTConstants.LESSER_THAN)) {
-			return QTConstants.LESSER_THAN;
-		} else if (estmtAmout.contains(QTConstants.GREATER_THAN_OR_EQUAL)) {
-			return QTConstants.GREATER_THAN_OR_EQUAL;
-		} else if (estmtAmout.contains(QTConstants.GREATER_THAN)) {
-			return QTConstants.GREATER_THAN;
-		}
-		return null;
 	}
 
 	public void qtMaiantanceValueChangeListner(ValueChangeEvent event) {
