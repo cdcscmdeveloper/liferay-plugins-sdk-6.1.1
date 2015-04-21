@@ -1697,6 +1697,12 @@ public class QTDetailBackingBean extends
 		if (CollectionUtils.isEmpty(tabList)) {
 			retrieveApprovalTabDtl();
 		}
+		
+		// Code will be called if user didn't visit the supplier qualification tab.
+		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
+		if (null == supplierCriteria.getScQtLocCriteria() || supplierCriteria.getScQtLocCriteria().isEmpty()) {
+			retrieveSuppQualificationTabDtl();
+		}
 
 		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
 
