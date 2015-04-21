@@ -7,45 +7,51 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.store.details']}" toggleable="true"
-		rendered="#{backingBean.managedBean.showStorePanel}" id="smStrDtPanel">
+		id="smStrDtPanel">
+		<p:outputPanel rendered="#{backingBean.managedBean.showStorePanel}">
+			<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{backingBean.managedBean.applStoreFacilities}"
+				selection="#{backingBean.managedBean.selectedStoreFacilities}"
+				rowKey="#{stor}" rowIndexVar="index" id="storeDt">
+				<ac:paginator for="storeDt" />
+				<p:column selectionMode="multiple" width="5%" />
 
-		<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{backingBean.managedBean.applStoreFacilities}"
-			selection="#{backingBean.managedBean.selectedStoreFacilities}"
-			rowKey="#{stor}" rowIndexVar="index" id="storeDt">
-			<ac:paginator for="storeDt" />
-			<p:column selectionMode="multiple" width="5%" />
+				<p:column headerText="#{lbl['lbl.sm.store.name']}">
+					<h:outputText value="#{stor.facilityName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.store.address']}"
+					style="width :60%;white-space : normal">
+					<h:outputText value="#{backingBean.getFullAddress(stor.smAddress)}"
+						style="float : left" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.action']}">
+					<p:commandLink process="@this" partialSubmit="true"
+						action="#{backingBean.assignSelStore(stor)}"
+						update=":form:tt:storeDialog" style="padding-right:5px">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.store.name']}">
-				<h:outputText value="#{stor.facilityName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.store.address']}"
-				style="width :60%;white-space : normal">
-				<h:outputText value="#{backingBean.getFullAddress(stor.smAddress)}"
-					style="float : left" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.action']}">
-				<p:commandLink process="@this" partialSubmit="true"
-					action="#{backingBean.assignSelStore(stor)}"
-					update=":form:tt:storeDialog" style="padding-right:5px">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-			</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					action="#{backingBean.assignNewStoreBean}"
+					update=":form:tt:storeDialog" partialSubmit="true" process="@this" />
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					process="smStrDtPanel" partialSubmit="true"
+					action="#{backingBean.deleteSelectedStores}"
+					update=":form:tt:storeDt" />
+			</div>
+			<br />
+		</p:outputPanel>
+		<p:outputPanel rendered="#{!backingBean.managedBean.showStorePanel}">
+			<h:outputText style="float:left"
+				value="#{lbl['lbl.sm.store.notApplicable']}" />
+		</p:outputPanel>
 
-		</p:dataTable>
-		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-				action="#{backingBean.assignNewStoreBean}"
-				update=":form:tt:storeDialog" partialSubmit="true" process="@this" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-				process="smStrDtPanel" partialSubmit="true"
-				action="#{backingBean.deleteSelectedStores}"
-				update=":form:tt:storeDt" />
-		</div>
-		<br />
 	</p:panel>
 	<p:dialog width="500px" height="500px"
 		header="#{lbl['lbl.sm.store.information']}" widgetVar="storeDialog"
@@ -185,11 +191,11 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td>
-					<p:outputPanel id="postCodeFacStorePanelId">
+				<td><p:outputPanel id="postCodeFacStorePanelId">
 						<p:outputPanel
 							rendered="#{backingBean.managedBean.selectedStoreFacility.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="5" required="#{backingBean.managedBean.valueReqd}"
+							<p:inputText maxlength="5"
+								required="#{backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.postcode']}" id="smFacStorePosCodeMy"
 								value="#{backingBean.managedBean.selectedStoreFacility.smAddress.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -201,7 +207,8 @@
 						</p:outputPanel>
 						<p:outputPanel
 							rendered="#{backingBean.managedBean.selectedStoreFacility.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="10" required="#{backingBean.managedBean.valueReqd}"
+							<p:inputText maxlength="10"
+								required="#{backingBean.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.postcode']}" id="smFacStorePosCodeForeign"
 								value="#{backingBean.managedBean.selectedStoreFacility.smAddress.postcode}"
 								size="35">
@@ -210,8 +217,7 @@
 								for="smFacStorePosCodeForeign" showSummary="true"
 								showDetail="false" display="icon" />
 						</p:outputPanel>
-					</p:outputPanel>
-				</td>
+					</p:outputPanel></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
