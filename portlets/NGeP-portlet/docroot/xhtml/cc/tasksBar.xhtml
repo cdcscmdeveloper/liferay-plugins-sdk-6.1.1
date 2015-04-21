@@ -157,7 +157,10 @@
 					<tr>
 						<td
 							style="text-align: left; font-size: 14px; color: green; padding-left: 40px;">
-							#{lbl['lbl.cc.task.summary.catalog.item.pending.published']}</td>
+							<h:outputFormat value="#{lbl['lbl.cc.task.summary.catalog.item.pending.published']}">
+								<f:param value="#{bpmTaskDashSumBackingBean.pendingPublishedItemsNum}" />
+								</h:outputFormat>
+							</td>
 						<td style="align: right;"><p:commandLink
 								action="#{bpmTaskDashSumBackingBean.redirectToCatalogueMaintenance('A')}">
 						
@@ -182,7 +185,10 @@
 					<tr>
 						<td
 							style="text-align: left; font-size: 14px; color: green; padding-left: 40px;">
-							#{lbl['lbl.cc.task.summary.catalog.item.rejected']}</td>
+						
+							<h:outputFormat value="#{lbl['lbl.cc.task.summary.catalog.item.rejected']}">
+								<f:param value="#{bpmTaskDashSumBackingBean.rejectedItemsNum}" />
+								</h:outputFormat></td>
 						<td style="align: right;"><p:commandLink
 								action="#{bpmTaskDashSumBackingBean.redirectToCatalogueMaintenance('R')}">
 								
