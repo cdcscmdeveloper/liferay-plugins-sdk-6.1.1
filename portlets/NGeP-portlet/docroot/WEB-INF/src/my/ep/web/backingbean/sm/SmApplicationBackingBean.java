@@ -6635,7 +6635,7 @@ public class SmApplicationBackingBean extends
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
 		try {
-
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
 					.getStatusId();
 			retriveCurrentAppl();
@@ -6647,6 +6647,7 @@ public class SmApplicationBackingBean extends
 			ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 			reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IReviewApplicationSO.class);
+			reqDTO.setPoLoginId(pmUser.getLoginId());
 			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
 			reqDTO.setApplNo(this.getManagedBean().getSmAppl().getApplNo());
 			reqDTO.setOutcome(res);
