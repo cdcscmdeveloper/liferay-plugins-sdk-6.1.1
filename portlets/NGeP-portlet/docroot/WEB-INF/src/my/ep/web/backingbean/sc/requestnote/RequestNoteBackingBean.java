@@ -713,6 +713,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				// Weather item product or server
 				scRequestNoteDtl.setProdAndServiceFlag(checkServiceOrProduct(scRequestNoteDtl));
+				
+				// set condition field for saved request note
+				if(!scRequestNoteDtl.isReRecommend()) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("requestNoteItem.requestNoteItemId^");
+					sb.append(scRequestNoteDtl.getRequestItem().getRequestNoteItemId());
+					scRequestNoteDtl.setConditionField(sb.toString());
+				}
 
 				//scRequestNoteDtl = getPidForRequestItem(scRequestNoteDtl);
 

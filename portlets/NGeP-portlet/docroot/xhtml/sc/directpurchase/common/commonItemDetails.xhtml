@@ -138,7 +138,7 @@
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
 									 update="@form"
-									 rendered="#{requestNoteDtl.brandNew}"  
+									 rendered="#{requestNoteDtl.brandNew and !requestNoteDtl.reRecommend}"  
 									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
@@ -148,8 +148,8 @@
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
 									 update="@form"
 									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
-									 conditionField="requestNoteItem.requestNoteItemId^#{requestNoteDtl.requestItem.requestNoteItemId}"
-			                         rendered="#{!requestNoteDtl.brandNew}">    
+									 conditionField="#{requestNoteDtl.conditionField}"
+			                         rendered="#{!requestNoteDtl.brandNew or requestNoteDtl.reRecommend}">    
 								</ac:lov>
 			             </p:column>
 			             <p:column  styleClass="ppPanelGrid" style="border:none !important; padding-left: 2px;padding-right: 0px;vertical-align: super">
