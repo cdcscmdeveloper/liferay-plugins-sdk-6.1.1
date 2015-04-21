@@ -39,34 +39,34 @@
 			</p:panelGrid>
 
 			<c:if
-				test="${approvalBackingBean.managedBean.approvalType == 'Budget Approval'}">
+				test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryBudget}">
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="approveremarksdetails.xhtml" />
 			</c:if>
 			<c:if
-				test="${approvalBackingBean.managedBean.approvalType == 'BPK Approval'}">
+				test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryBpk}">
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="bpkApproval.xhtml" />
 				<ui:include src="approveremarksdetails.xhtml" />
 			</c:if>
 			<c:if
-				test="${approvalBackingBean.managedBean.approvalType == 'PTJ Approval'}">
+				test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryPtj}">
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="ptjApprovalextendcls.xhtml" />
 			</c:if>
 			<c:if
-				test="${approvalBackingBean.managedBean.approvalType == 'Committee Appointment Approval'}">
+				test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryCommitteeeApointment}">
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="approverCommittee.xhtml" />
 			</c:if>
 			<c:if
-				test="${approvalBackingBean.managedBean.approvalType == 'Publication Approval'}">
+				test="${approvalBackingBean.managedBean.approvalType == SourcingConstants.publicationApproval}">
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="publicApproval.xhtml" />
 			</c:if>
 			
 			<c:if
-				test="${approvalBackingBean.managedBean.approvalType == 'Finalization Committee Approval'}">
+				test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryFinalizationCommittee}">
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="FinalaizationCommitteeApproval.xhtml" />
 				<ui:include src="approveremarksdetails.xhtml" />

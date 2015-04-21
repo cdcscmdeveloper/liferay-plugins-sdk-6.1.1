@@ -195,7 +195,6 @@ public interface QTConstants {
 	public static final int CHECKLIST_USER_SCORE = 2;
 
 	public static final String OTHERS_APPROVAL = "Others Approval";
-	public static final String PUBLICATION_APPROVAL = "Publication Approval";
 	public static final String QT_ALL = "A";
 	public static final String QT_BUMIPUTRA = "B";
 	public static final String QT_OPEN = "Open";
