@@ -1211,7 +1211,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			sb.append(getManagedBean().getContractVer().getDocType());
 			sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 			sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
 			sb.append(action);			
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(action);
@@ -1722,7 +1722,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 * @return new contract amount
 	 */
 	public BigDecimal newContractAmt() {
-		return getManagedBean().getContractVer().getCtContractValue().getContractAmount().add(
+		return getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
 				getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
 	}
 	
@@ -2931,13 +2931,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				}
 			}
 		} else if (rulesType == 3) { // change coontract value
-			if ((getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() / getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()) > 0.5) {
+			if ((getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() / getManagedBean().getContractVer().getCtContractAmount().getContractAmount().doubleValue()) > 0.5) {
 				return true;
 			}			
 			if (getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() > maxAdditionalLimit) {
 				return true;
 			}
-			if ((getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()+getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue()) > maxTotalLimit) {
+			if ((getManagedBean().getContractVer().getCtContractAmount().getContractAmount().doubleValue()+getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue()) > maxTotalLimit) {
 				return true;
 			}
 		}
@@ -3623,8 +3623,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			context.put("sourcingTitle",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
 			context.put("successfulSupplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			
-			BigDecimal contractValue = getManagedBean().getContractVer().getCtContractValue().getContractAmount() != null 
-					? getManagedBean().getContractVer().getCtContractValue().getContractAmount() : BigDecimal.ZERO;			
+			BigDecimal contractValue = getManagedBean().getContractVer().getCtContractAmount().getContractAmount() != null 
+					? getManagedBean().getContractVer().getCtContractAmount().getContractAmount() : BigDecimal.ZERO;			
 			context.put("contractValue", amountDF.format(contractValue));
 				
 			if (getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() !=null) {
