@@ -197,28 +197,32 @@
 
 					<p:separator />
 					<div>
-						<c:choose>
-							<c:when
-								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
-								<h:outputText value="#{lbl['lbl.sm.po.splNotes1']}"
-									styleClass="splNotesFonts" escape="false" />
+						<table style="width: 100%">
+							<tr>
+								<td><c:choose>
+										<c:when
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes1']}"
+												styleClass="splNotesFonts" escape="false" />
 
-							</c:when>
-							<c:when
-								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
-								<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
-									styleClass="splNotesFonts" escape="false" />
-							</c:when>
-							<c:when
-								test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
-								<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
-									styleClass="splNotesFonts" escape="false" />
-							</c:when>
-							<c:otherwise>
-								<h:outputText value="#{lbl['lbl.sm.po.splNotes']}"
-									styleClass="splNotesFonts" escape="false" />
-							</c:otherwise>
-						</c:choose>
+										</c:when>
+										<c:when
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
+												styleClass="splNotesFonts" escape="false" />
+										</c:when>
+										<c:when
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
+												styleClass="splNotesFonts" escape="false" />
+										</c:when>
+										<c:otherwise>
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes']}"
+												styleClass="splNotesFonts" escape="false" />
+										</c:otherwise>
+									</c:choose></td>
+							</tr>
+						</table>
 					</div>
 					<!-- <div align="center">
 			<p:splitButton value=" Select Decision ">

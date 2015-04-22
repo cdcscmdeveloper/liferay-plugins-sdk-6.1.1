@@ -54,8 +54,8 @@
 		<p:column>
 			<p:inputTextarea id="otherDescR" maxlength="100"
 				label="#{lbl['lbl.sm.catCodes.othDesc']}"
-				value="#{catBeanR.otherDesc}"
-				rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}">
+				value="#{catBeanR.otherDesc}" style="width : auto;" rows="5"
+				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}">
 				<p:ajax event="blur" process="@this" partialSubmit="true"
 					listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
 					update=":form:tt:catCodeInfPan" />
@@ -65,6 +65,7 @@
 				rendered="#{not empty catBeanR.approvedDate and (catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) and not empty catBeanR.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
 			<p:tooltip for="prevOtherDescR">
 				<p:inputTextarea readonly="true" disabled="true" rows="5" cols="20"
+					style="width : auto;"
 					value="#{lbl['lbl.sm.catCodes.prevDesc']} #{catBeanR.prevOtherDesc}" />
 			</p:tooltip>
 			<p:message for="otherDescR" showDetail="false" showSummary="true"
@@ -139,7 +140,8 @@
 		</p:column>
 		<p:column rendered="#{backingBean.managedBean.poUser}">
 			<p:inputTextarea value="#{catBeanR.poRemarks}" maxlength="200"
-				rendered="#{backingBean.managedBean.poUser}"
+				rendered="#{backingBean.managedBean.poUser}" style="width : auto;"
+				rows="5" cols="20"
 				label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
 				id="poCatRDecisionRmrk"
 				required="#{catBeanR.poDecFlg == 0 and empty param['disableValidation']}" />
@@ -167,7 +169,7 @@
 		</p:column>
 		<p:column rendered="#{backingBean.managedBean.approverUser}">
 			<p:inputTextarea value="#{catBeanR.approverRemarks}"
-				id="apprvrCatRDecisionRmrk"
+				id="apprvrCatRDecisionRmrk" style="width : auto;" rows="5" cols="20"
 				rendered="#{(catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}"
 				label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
 				maxlength="200"

@@ -57,7 +57,7 @@
 			</p:dataTable>
 		</p:outputPanel>
 		<br />
-		<p:panel id="catCodeInfPan">
+		<p:outputPanel id="catCodeInfPan" layout="block">
 			<c:if test="#{backingBean.managedBean.overLappedCategoryExists}">
 				<table style="width: 100%">
 					<tr>
@@ -138,7 +138,7 @@
 			</c:choose>
 
 			<br />
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 
 

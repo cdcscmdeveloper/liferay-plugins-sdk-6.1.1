@@ -38,8 +38,8 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="equiInfPan">
+
+		<p:outputPanel id="equiInfPan" layout="block">
 			<p:blockUI block=":form:tt:equiInfPan" widgetVar="buiPoEqui"
 				id="poBasEqui"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.equityCompVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.equityCompVerifed : false)}" />
@@ -123,7 +123,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="500px" height="450px"
 		header="#{lbl['lbl.sm.equiComp.dialHdr']}" id="eqiCompDialog"
@@ -300,33 +300,35 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td>
-					<p:outputPanel id="postCodeSuppEquiPanelId">
-							<p:outputPanel
-								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
-								<p:inputText maxlength="5" required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy"
-									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
-									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-									size="35">
-									<f:validator validatorId="postcodeValidator" />
-								</p:inputText>
-								<p:message id="suppEquiCompPostCodeMyMsg" for="suppEquiCompPostCodeMy"
-									showSummary="true" showDetail="false" display="icon" />
-							</p:outputPanel>
-							<p:outputPanel
-								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
-								<p:inputText maxlength="10" required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeForeign"
-									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
-									size="35">
-								</p:inputText>
-								<p:message id="suppEquiCompPostCodeForeignMsg"
-									for="suppEquiCompPostCodeForeign" showSummary="true"
-									showDetail="false" display="icon" />
-							</p:outputPanel>
+				<td><p:outputPanel id="postCodeSuppEquiPanelId">
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="5"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy"
+								value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
+								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+								size="35">
+								<f:validator validatorId="postcodeValidator" />
+							</p:inputText>
+							<p:message id="suppEquiCompPostCodeMyMsg"
+								for="suppEquiCompPostCodeMy" showSummary="true"
+								showDetail="false" display="icon" />
 						</p:outputPanel>
-					</td>
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+							<p:inputText maxlength="10"
+								required="#{backingBean.managedBean.valueReqd}"
+								label="#{lbl['lbl.sm.postcode']}"
+								id="suppEquiCompPostCodeForeign"
+								value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
+								size="35">
+							</p:inputText>
+							<p:message id="suppEquiCompPostCodeForeignMsg"
+								for="suppEquiCompPostCodeForeign" showSummary="true"
+								showDetail="false" display="icon" />
+						</p:outputPanel>
+					</p:outputPanel></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
