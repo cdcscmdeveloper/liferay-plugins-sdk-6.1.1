@@ -16,10 +16,10 @@
 				listener="#{supplierProposalDetailBackingBean.onRowSelectionListener}"
 				update="@([id$=cheque])" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.act.no']}" style="width : 30%;">
+			<p:column headerText="#{lbl['lbl.sc.account.no']}" style="width : 30%;">
 				<p:outputLabel value="#{bankDtls.accountNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}" style="width : 35%;">
+			<p:column headerText="#{lbl['lbl.sc.bank.name']}" style="width : 35%;">
 				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.address']}" style="white-space : normal; width : 35%;">

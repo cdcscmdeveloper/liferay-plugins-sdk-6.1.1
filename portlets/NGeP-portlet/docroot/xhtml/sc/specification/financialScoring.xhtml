@@ -122,7 +122,7 @@
 			<table>
 				<tr>
 					<td style="width: 100px;"><h:outputText
-							value="#{lbl['lbl.sc.spec.pasing.score']}" /></td>
+							value="#{lbl['lbl.sc.passing.score']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
@@ -206,7 +206,7 @@
 		<table>
 			<tr>
 				<td style="width: 100px;"><h:outputText
-						value="#{lbl['lbl.sc.spec.pasing.score']}" /></td>
+						value="#{lbl['lbl.sc.passing.score']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.passingScore}">
@@ -225,7 +225,7 @@
 
 				<p:row>
 					<p:column colspan="1">#{lbl['lbl.sc.item']}</p:column>
-					<p:column colspan="1">#{lbl['lbl.sc.spec.others']}</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.others']}</p:column>
 					<p:column colspan="1">#{lbl['lbl.sc.spec.score']}</p:column>
 				</p:row>
 			</f:facet>
