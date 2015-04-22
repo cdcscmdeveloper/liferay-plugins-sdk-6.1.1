@@ -101,7 +101,7 @@
 				</c:if>
 			</p:column>
 
-			<p:column headerText="Negotiate" rendered="#{isPendingSubmissionStatus}">
+			<p:column headerText="Negotiate" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
 				<p:selectBooleanCheckbox value="#{negoTerm.selected}" disabled="#{empty negoTerm.pmTerm}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
