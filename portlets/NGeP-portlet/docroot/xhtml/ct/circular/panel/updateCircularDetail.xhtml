@@ -57,7 +57,8 @@
 			   		</p:inputText>	 
 			   		
 			   		<p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
-			   	        <p:selectBooleanCheckbox id="extensionId" value="#{panelBackingBean.managedBean.circularExtension}">
+			   	        <p:selectBooleanCheckbox id="extensionId" value="#{panelBackingBean.managedBean.circularExtension}"
+			   	        	disabled="#{panelBackingBean.managedBean.viewContract}">
 			                 <p:ajax event="change" update=":form:pc" listener="#{panelBackingBean.chkCircularExtension}" process="@this"/> 
 			           </p:selectBooleanCheckbox>
 			           
@@ -65,7 +66,9 @@
 			   		
 			    <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" rendered="#{panelBackingBean.managedBean.circularExtension}" />
 			    <p:calendar  value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
-			         maxdate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}"
+			         maxdate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" 
+			         mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}"
+			         disabled="#{panelBackingBean.managedBean.viewContract}"
 			         rendered="#{panelBackingBean.managedBean.circularExtension}"  size="10"  id="popupButtonCal5" showOn="button"
 				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 		       </p:calendar>
@@ -74,6 +77,7 @@
 		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"  rendered="#{panelBackingBean.managedBean.circularExtension}"  />
 		   <p:calendar size="10"  value="#{panelBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{panelBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
+				   disabled="#{panelBackingBean.managedBean.viewContract}"
 				   rendered="#{panelBackingBean.managedBean.circularExtension}" 
 				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
 				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
