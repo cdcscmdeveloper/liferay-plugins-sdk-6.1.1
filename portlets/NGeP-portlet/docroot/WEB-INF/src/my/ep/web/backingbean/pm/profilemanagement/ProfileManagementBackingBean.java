@@ -31,8 +31,13 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -69,10 +74,13 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
+import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
 import my.ep.web.util.DateUtils;
@@ -936,9 +944,17 @@ public class ProfileManagementBackingBean extends
 							.get(index));
 			int status = this.getManagedBean().getSelectedUserOrg()
 					.getRecordStatusFlg();
-			if (status == 0) {// if inactive set expire Date to SyetemDate
-				this.getManagedBean().getSelectedUserOrg()
+			if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {// if inactive set expire Date to SyetemDate
+		
+					if(isAnyPendingTaskForUser(this.getManagedBean().getSelectedUser().getLoginId())){
+						//revert it to active
+						 this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						//hit error and exit
+						throw new EpException(MessageConst.ERROR_770167);
+					}else{
+			        	this.getManagedBean().getSelectedUserOrg()
 						.setExpDateDisplay(getCurrentDate());
+					}
 			}
 			if (this.getManagedBean().getSelectedUserOrg() != null
 					&& this.getManagedBean().getSelectedUserOrg()
@@ -952,14 +968,23 @@ public class ProfileManagementBackingBean extends
 			for (PmAddressType addressType : this.getManagedBean()
 					.getSelectedReceivingAddrTypes()) {
 				addressType
-						.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						.setRecordStatusFlg(status);
 			}
 		}
 	}
 
 	public void userStatusChange() {
 		logger.info("userStatusChange");
+		//check for any pending tasks belong to this user
+		
 		if (this.getManagedBean().getSelectedUser().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			if(isAnyPendingTaskForUser(this.getManagedBean().getSelectedUser().getLoginId())){
+				//revert it to active
+				this.getManagedBean().getSelectedUser().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				//hit error and exit
+				throw new EpException(MessageConst.ERROR_770166);
+			}else{
+				
 			if (this.getManagedBean().getSelectedUser().getPmUserOrgs() != null
 					&& !this.getManagedBean().getSelectedUser().getPmUserOrgs()
 							.isEmpty()) {
@@ -981,6 +1006,7 @@ public class ProfileManagementBackingBean extends
 					}
 				}
 			}
+		}
 		}
 	}
 
@@ -3183,7 +3209,68 @@ public class ProfileManagementBackingBean extends
 		}
 
 	}
+	private boolean isAnyPendingTaskForUser(String loginId){
+		logger.info("isAnyPendingTaskForUser");
+		boolean anyPendingTask = false;
+		
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		String token = null;
+//		List<Integer> statusIds = null;
+		TaskAssignmentSearchBean taskSearchBean = null;
+		SearchResultBean<WorklistItemVO> resultBean = null;
+		
+		try {
+			
+			if(loginId!=null && loginId.length() > 0){
+//				statusIds = retrieveAvailableStatusId();
+//				token = getFacesScopes().getBPMAuthenticationCtxToken();
+				
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+//				token = bpmSO.authenticate("weblogic","welcome1"); //TODO
+				  
+				reqDTO = new BpmRequestDTO();
 
+			
+				logger.info("BPM loginId******"+loginId);
+//				System.out.println("BPM statusIds******"+statusIds.size());
+							
+//				if(token==null){
+//					throw new EpException(MessageConst.ERROR_770099);
+//				}
+//				logger.info("BPM auth******" + token);
+				
+				// set useful info
+//				reqDTO.setCtxToken(token);
+//		        reqDTO.setStatusList(statusIds);
+		        reqDTO.setUserId(loginId);
+//		        reqDTO.setDocNumber(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+		        
+//		        if(getManagedBean().getTaskAssignmentSearchBean().getDocType() !=null && getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter() !=null ){
+//		        	reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());
+//		        }
+//		        
+
+				// Invoke BPM 
+				responseDTO = bpmSO.getReassignedItems(reqDTO);
+				
+				if (responseDTO.getWorklistVO() != null) {
+					logger.info("BPM size******" + responseDTO.getWorklistVO().getWorklistItem().size());
+					logger.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
+				 if(responseDTO.getWorklistVO().getTotal() > 0){
+					 anyPendingTask = true;
+				 }
+				}
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			bpmSO = null;
+		}
+		return anyPendingTask;
+	}
 	/*
 	 * private boolean checkOldPassword(PmUser pmUser) throws PortalException,
 	 * SystemException{ logger.info("checkOldPassword"); boolean result = false;
