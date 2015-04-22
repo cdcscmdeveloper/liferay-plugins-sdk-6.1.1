@@ -11,25 +11,26 @@
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedWorkers}" rowKey="#{svWorker}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 		<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
-		<p:ajax event="rowSelectCheckbox" disabled="#{viewFlag}" />
 			<p:column>
 					<f:facet name="header">
 						#{lbl['lbl.sm.worker.specialization']}
 					</f:facet>
-					<p:inputText id="workerSpecializationId" value="#{svWorker.expertise}" disabled="#{viewFlag}" maxlength="100"/>
+					<p:inputText id="workerSpecializationId" value="#{svWorker.expertise}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.specialization']}"
+					maxlength="100" required="#{empty param['disabledValidation']}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 						#{lbl['lbl.sm.worker.name']}
 					</f:facet>
-				<p:inputText id="workerNameId" value="#{svWorker.name}" disabled="#{viewFlag}"  maxlength="50" />
+				<p:inputText id="workerNameId" value="#{svWorker.name}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.name']}"
+				maxlength="50" required="#{empty param['disabledValidation']}"/>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 						#{lbl['lbl.sm.worker.icno']}
 					</f:facet>
-				<p:inputText id="identificationNoId" value="#{svWorker.identificationNo}" disabled="#{viewFlag}" 
-				maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}"> 
+				<p:inputText id="identificationNoId" value="#{svWorker.identificationNo}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.icno']}"
+				maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}" required="#{empty param['disabledValidation']}"> 
 				<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
                 </p:inputText>                				
 			</p:column>
@@ -37,18 +38,21 @@
 				<f:facet name="header">
 						#{lbl['lbl.sm.worker.experience']}
 				</f:facet>
-				<p:inputText id="workExpYearId" value="#{svWorker.workExpYear}" disabled="#{viewFlag}"  maxlength="2"/>
+				<p:inputText id="workExpYearId" value="#{svWorker.workExpYear}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.experience']}"
+				maxlength="2" required="#{empty param['disabledValidation']}" />
 			</p:column>
 		</p:dataTable>		
 		
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" 
 				action="#{svoSiteVisitBackingBean.addWorkshopWorker}" rendered="#{!viewFlag}"
 				update="pnlSvWorkerId" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				action="#{svoSiteVisitBackingBean.removeWorkshopWorker}" rendered="#{!viewFlag}"
-				update="pnlSvWorkerId" />
+				update="pnlSvWorkerId">
+				<f:param name="disabledValidation" value="true" />
+			</p:commandButton>
 		</div>
 	</p:panel>
 </ui:composition>
