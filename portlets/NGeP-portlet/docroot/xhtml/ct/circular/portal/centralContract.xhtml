@@ -43,11 +43,7 @@
 			          </p:column>
 		
 			          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-				           <p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}" style="width:70px;"
-					            disabled="#{!centralContractBackingBean.managedBean.updateAction or centralContractBackingBean.managedBean.viewContract}">
-					            <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-					            <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-				           </p:selectOneMenu>
+				            <h:outputText value="#{circularContractsVar.recordStatusFlg == 1 ? 'Active' : 'Inactive' }" style="width:70px;" />
 			          </p:column>
 		         </p:dataTable>
 		         <p:spacer height="2" />
@@ -74,30 +70,30 @@
 						<h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:10%;">
-						<p:inputText styleClass="colFloatRight" style="width:120px;"
+						 <h:outputText styleClass="colFloatRight" style="width:120px;"
 							value="#{itemVar.minimumOrderQty}" maxlength="14"
 							label="#{lbl['lbl.ct.min.order.qty']}"
 							disabled="true">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.uom.uomCode)}" />
-						</p:inputText>
+						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:15%;white-space:pre-line;">
-						<p:inputText styleClass="colFloatRight" style="width:120px;"
+						 <h:outputText styleClass="colFloatRight" style="width:120px;"
 							value="#{itemVar.minimumOrderAmt}" maxlength="19"
 							label="#{lbl['lbl.ct.min.order.amount']}" disabled="true">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:inputText>
+						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.purchase.limit']}"
 						style="width:15%;white-space:pre-line;">
-						<p:inputText styleClass="colFloatRight" style="width:120px;"
+						 <h:outputText styleClass="colFloatRight" style="width:120px;"
 							value="#{itemVar.maxProcureAmt}" maxlength="19"
 							label="#{lbl['lbl.ct.contract.purchase.limit']}" disabled="true">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:inputText>
+						</h:outputText>
 					</p:column>
 				</p:dataTable>
 			</h:panelGroup>

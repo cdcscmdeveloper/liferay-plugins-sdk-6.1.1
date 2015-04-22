@@ -16,15 +16,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"   />	
 		  
 			  <p:column headerText="#{lbl['lbl.ct.panel.coverage']}" style="white-space:pre-line;width:6%;">
-			        <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" style="width:95%;" />
+			        <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.panelCoverageId)}" />
 			   </p:column>
 			 
 			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%">
-			         <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}" style="width:95%;" />
+			         <h:outputText value="#{panelBackingBean.getParameterDesc(panelItemsVar.itemCategoryId)}"  />
 		      </p:column>
 		      
 		      <p:column headerText="#{lbl['lbl.ct.item.group']}" style="white-space:pre-line;width:10%">
-			         <h:outputText value="#{panelItemsVar.ctPanelItemGroup.groupName}" style="width:95%;" />
+			         <h:outputText value="#{panelItemsVar.ctPanelItemGroup.groupName}" />
 		      </p:column>
 		 	
               <p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:15%;">
@@ -37,19 +37,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
               </p:column>
 			
 			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="white-space:pre-line; width:6%;">
-			 		<h:outputText value="#{panelItemsVar.pmUom.uomName}" style="width:95%;" />
+			 		<h:outputText value="#{panelItemsVar.pmUom.uomName}"  />
 		      </p:column>
 			  
 			  <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="white-space:pre-line;width:8%;">
-			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:95%;text-align:right;" disabled="true">
+			       <h:outputText value="#{panelItemsVar.minimumOrderQty}">
 			           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" /> 
-			       </p:inputText>
+			       </h:outputText>
 			  </p:column>
 			 
 			  <p:column headerText="#{lbl['lbl.ct.purchase.limit']}" style="white-space:pre-line;width:7%;">
-			       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:95%;text-align:right;"  disabled="true">
+			       <h:outputText value="#{panelItemsVar.maxProcureAmt}" style="text-align:right;">
 			          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			       </p:inputText>
+			       </h:outputText>
 			  </p:column>
 			  
 			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
@@ -77,12 +77,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			  
 			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;">
-		           <p:selectOneMenu  value="#{panelItemsVar.recordStatusFlg}"  disabled="true" style="width:95%;">
-				       <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-			           <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-			       </p:selectOneMenu>
-			  </p:column>	
-			  												
+		           <h:outputText  value="#{panelItemsVar.recordStatusFlg == 1 ? 'active' : 'inactive'}"   />
+			  </p:column>												
 		    </p:dataTable>
 		    <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
 	   			styleClass="pop_up_top" modal="true" width="700" height="450">
@@ -133,10 +129,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				    	 <h:outputText value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.status']}" style="width:20%">
-                      <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"   disabled="#{true}" style="width:100px;">
-				              <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-			                  <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-			          </p:selectOneMenu>
+                         <h:outputText  value="#{panelZoneVar.recordStatusFlg == 1 ? 'Active' : 'Inactive'}"  />
                     </p:column>
 					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:20%">
 					  <p:commandLink
@@ -215,19 +208,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      </p:column>
 				      
 				      <p:column headerText="#{lbl['lbl.ct.bank.account.name']}"  style="width:15%;">
-				           <p:selectOneMenu id="accountId"   disabled="true"
-				                  style="width:250px;margin-bottom: 5px;"  value="#{supVar.bankAccountNo}">
-						          <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						          <f:selectItems value="#{panelBackingBean.populateBankAccountList(supVar.supplier)}" />
-					         </p:selectOneMenu>
+				           <h:outputText  id="accountId"    value="#{supVar.bankAccountNo}"/>
+						          
 					  </p:column>
 				   
 				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-				         <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
-                             disabled="true" style="width:70px;">
-				             <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
-			                 <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
-			          </p:selectOneMenu>
+				        <h:outputText  value="#{supVar.recordStatusFlg == 1 ? 'Active' : 'Inactive' }"  />
 				    </p:column>
 		
 			</p:dataTable>
