@@ -30,7 +30,7 @@
 						value="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="evaluationmeetingDetails"
-							listener="#{evaluationBackingBean.selectAll(evaluationBackingBean.managedBean.templateSpecBean.selectAll, evaluationBackingBean.managedBean.scQtMeetings)}" />
+							listener="#{evaluationBackingBean.selectEvaluationMeetingAll(evaluationBackingBean.managedBean.templateSpecBean.selectAll, evaluationBackingBean.managedBean.scQtMeetings)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
@@ -131,7 +131,7 @@
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				update="evaluationmeetingDetails"
-				action="#{evaluationBackingBean.markDeleteSelectedRowsAction(evaluationBackingBean.managedBean.scQtMeetings,evaluationBackingBean.managedBean.meetingRemoveList)}">
+				action="#{evaluationBackingBean.markDeleteSelectedEvaluationRowsAction(evaluationBackingBean.managedBean.scQtMeetings,evaluationBackingBean.managedBean.meetingRemoveList)}">
 				<f:setPropertyActionListener
 					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
