@@ -9679,7 +9679,7 @@ public class EvaluationBackingBean extends
 					throw new EpException(MessageConst.ERROR_760146);
 				}
 
-				deleteRowsEvaluationAction(list, markDeletedList);
+				deleteMeetingRowsEvaluationAction(list, markDeletedList);
 			} else {
 				throw new EpException(MessageConst.ERROR_760146);
 			}
@@ -9688,7 +9688,7 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	private <ENTITY_CLASS> void deleteRowsEvaluationAction(
+	private <ENTITY_CLASS> void deleteMeetingRowsEvaluationAction(
 			List<ScQtMeeting> list, List<ScQtMeeting> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
