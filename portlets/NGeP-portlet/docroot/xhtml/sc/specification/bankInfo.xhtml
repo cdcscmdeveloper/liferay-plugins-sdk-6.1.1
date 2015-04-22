@@ -18,10 +18,10 @@
 			<p:ajax event="rowSelect" update=":form:cheque"
 				listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
 
-			<p:column headerText="#{lbl['lbl.sc.spec.act.no']}">
+			<p:column headerText="#{lbl['lbl.sc.account.no']}">
 				<h:outputText value="#{bankDtls.accountNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}">
+			<p:column headerText="#{lbl['lbl.sc.bank.name']}">
 				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.address']}">
