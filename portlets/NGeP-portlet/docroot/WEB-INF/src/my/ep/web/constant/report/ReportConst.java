@@ -369,6 +369,9 @@ public class ReportConst {
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
 	public static final String SM_VIRTUAL_VERIFICATION_BUMI_jsp = "SM_VIRTUAL_VERIFICATION_BUMI.jsp";
 	
+	// SM - Supplier Profile
+	public static final String SM_SUPPLIER_PROFILE_REPORT = "SM_APPLICATION_DETAILS.jsp";
+	
 	//CT Module reports start	
 	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
 	public static final String CT_LST_OF_CONTRACT_USERS_CONTRCT_NO_RPT_VAL = "CT_002";	
