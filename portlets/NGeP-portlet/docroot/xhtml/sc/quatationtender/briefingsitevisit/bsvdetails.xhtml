@@ -27,7 +27,7 @@
 			<ac:paginator for="briefingdtlid" />
 			<p:column selectionMode="multiple" style="width:2%"
 				disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
-			<p:column headerText="#{lbl['lbl.sc.desc']}"
+			<p:column headerText="#{lbl['lbl.sc.description']}"
 				style="white-space: normal;word-wrap: break-word;">
 				<h:panelGroup
 					rendered="#{QTStatusConst.BSV_COMPLETED eq briefingdtls.bsvStatus.statusId}">
@@ -123,7 +123,7 @@
 					<p:column selectionMode="multiple" style="width:2%"
 						disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
 
-					<p:column headerText="#{lbl['lbl.sc.desc']}"
+					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="white-space: normal;word-wrap: break-word;">
 						<h:panelGroup
 							rendered="#{QTStatusConst.BSV_COMPLETED eq sitevisitdtls.bsvStatus.statusId}">
