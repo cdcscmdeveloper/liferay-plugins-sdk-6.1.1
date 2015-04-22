@@ -266,7 +266,7 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
 							<p:ajax event="change"
 								listener="#{categoryBackingBean.updateSpecialGroup}"
-								update="groupdetails"/>
+								update="groupdetails,@form"/>
 						</p:selectBooleanCheckbox></td>
 				</tr>
 				<tr>
@@ -470,6 +470,8 @@
 			action="#{categoryBackingBean.populateToSaveLOV}" />
 		<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"
 			modal="true" width="700" position="top">
+			<p:ajax event="close" listener="#{categoryBackingBean.resetLOV}"
+				update="lovPopupCategory" />
 			<f:facet name="header">
 				<h:panelGroup id="lovTitle">#{lbl['lbl.pm.select.category']}</h:panelGroup>
 			</f:facet>
@@ -569,9 +571,9 @@
 					<tr>
 						<td style="text-align: right;"><p:commandButton id="slbtn"
 								value="#{lbl['lbl.btn.select']}" update="searchPanel"
-								oncomplete="updateCategory();lovPopupCategory.hide();" />
-
-							<ui:remove>
+								oncomplete="updateCategory();lovPopupCategory.hide();" /> 
+								
+								<ui:remove>
 								<p:commandButton icon="ui-icon-cancel"
 									value="#{lbl['lbl.btn.cancel']}"
 									action="#{categoryBackingBean.resetLOV}"
@@ -589,6 +591,10 @@
 			action="#{categoryBackingBean.populateToSavePmMachineLOV}" />
 		<p:dialog id="lovPopupPmMachine" widgetVar="lovPopupPmMachine"
 			modal="true" width="700" position="top">
+			<p:ajax event="close"
+				listener="#{categoryBackingBean.resetPmMachineLOV}"
+				update="lovPopupPmMachine" />
+
 			<f:facet name="header">
 				<h:panelGroup id="lovTitle2">#{lbl['lbl.pm.special.equipment']}</h:panelGroup>
 			</f:facet>
@@ -599,18 +605,18 @@
 						cellspacing="0">
 
 						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchFieldValue[0]}">
+							value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{categoryBackingBean.managedBean.searchField}" />
 						</p:selectOneMenu>
 						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchOperatorValue[0]}">
+							value="#{categoryBackingBean.managedBean.searchOperatorValue[1]}">
 							<f:selectItems
 								value="#{categoryBackingBean.managedBean.searchOperator}" />
 						</p:selectOneMenu>
 						<p:inputText
-							value="#{categoryBackingBean.managedBean.searchValue[0]}"
+							value="#{categoryBackingBean.managedBean.searchValue[1]}"
 							style="margin-top:-03px;" />
 
 						<!-- <p:selectOneMenu
@@ -675,8 +681,7 @@
 					<tr>
 						<td style="text-align: right;"><p:commandButton id="slbtn2"
 								value="#{lbl['lbl.btn.select']}" update="searchPanel2"
-								oncomplete="updatePmMachine();lovPopupPmMachine.hide();" />
-						</td>
+								oncomplete="updatePmMachine();lovPopupPmMachine.hide();" /></td>
 					</tr>
 				</table>
 			</p:panel>
