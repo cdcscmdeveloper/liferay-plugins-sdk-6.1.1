@@ -14,6 +14,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -32,6 +33,8 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -61,6 +64,7 @@ import my.ep.dto.pm.common.userattachment.UserAttachmentReqDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
@@ -982,10 +986,47 @@ public class PmCommonUtil {
 		return pmUsers;
 	}
 	
-
 	
+	/**
+	 * retrieve the Ministry by ptj org profile id
+	 * @param Long orgProfileId
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrieveMinistryByOrgProfileId(Long orgProfileId){
+		IOrgProfileSO orgProfileSO = null;
+		PmOrgProfile ministryProfile = null;
+		try{
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = new OrgProfileResDTO();
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			reqDTO.setOrgProfileId(orgProfileId);
+			resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+			ministryProfile = resDTO.getPmOrgProfile();
+		}finally{
+			orgProfileSO = null;
+		}
+		return ministryProfile;
+	}
 	
-	
-	
+	/**
+	 * retrieve the Jabatan by ptj org profile id
+	 * @param Long orgProfileId
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrieveJabatanByOrgProfileId(Long orgProfileId){
+		IOrgProfileSO orgProfileSO = null;
+		PmOrgProfile jabatanProfile = null;
+		try{
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = new OrgProfileResDTO();
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			reqDTO.setOrgProfileId(orgProfileId);
+			resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+			jabatanProfile = resDTO.getPmOrgProfile();
+		}finally{
+			orgProfileSO = null;
+		}
+		return jabatanProfile;
+	}
 	
 }
