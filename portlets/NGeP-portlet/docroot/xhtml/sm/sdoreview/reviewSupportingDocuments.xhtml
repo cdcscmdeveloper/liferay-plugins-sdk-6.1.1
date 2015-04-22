@@ -14,6 +14,7 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
+		<f:event listener="#{sdoReviewBackingBean.preRenderView}" type="preRenderView" />
 		<!-- HEADER -->
 		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
@@ -67,7 +68,7 @@
 						<td>#{lbl['lbl.sm.supportingdoc.inquiry']}</td>
 					</tr>
 					<tr>
-						<td><p:inputTextarea id="resInquiryId" rows="10" cols="150" 
+						<td><p:inputTextarea id="resInquiryId" rows="10" cols="150" style="width:auto;"
 								autoResize="false" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquiryText}" /></td>
 					</tr>
@@ -90,7 +91,7 @@
 						<td>#{lbl['lbl.sm.supportingdoc.response']} :</td>
 					</tr>
 					<tr>
-						<td><p:inputTextarea id="responseTextId" rows="10" cols="150"
+						<td><p:inputTextarea id="responseTextId" rows="10" cols="150" style="width:auto;"
 								autoResize="false" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.responseText}" /></td>
 					</tr>
