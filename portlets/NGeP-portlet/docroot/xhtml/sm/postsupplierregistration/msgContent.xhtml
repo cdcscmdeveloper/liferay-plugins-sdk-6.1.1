@@ -16,11 +16,7 @@
 			</c:forEach>
 		</p:outputPanel>
 		
-		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">
-			<h:outputText value="Congratulations!!" style="font-size:30;" /><br />
-			<h:outputText value="You have successfully activated the eP account." /><br />
-			<h:outputText value="Please proceed to the following step to complete the registration." /><br />
-			<br />
+		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">;
 			<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" /> 
 			<p:commandLink  value="- click here to continue"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 		</p:outputPanel>
