@@ -11,8 +11,8 @@
 			<p:graphicImage id="trxNtwTipImg" library="ep/images/design"
 				name="tooltips.png" style="padding-left : 10px;" />
 			<p:tooltip id="trxNtwTipImgtt" for="trxNtwTipImg">
-				<p:inputTextarea escape="false" readonly="true" disabled="true" rows="5" cols="50"
-					value="#{lbl['lbl.sm.busNtw.panHdrToolTip']}" />
+				<p:inputTextarea escape="false" readonly="true" disabled="true"
+					rows="5" cols="50" value="#{lbl['lbl.sm.busNtw.panHdrToolTip']}" />
 			</p:tooltip>
 		</f:facet>
 		<table style="width: 350px">
@@ -46,8 +46,8 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="trxInfPan">
+
+		<p:outputPanel id="trxInfPan" layout="block">
 			<p:blockUI block=":form:tt:trxInfPan" widgetVar="buiPoTrx"
 				id="poTrxBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.trnsNetworkVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.trnsNetworkVerified : false)}" />
@@ -118,6 +118,6 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 </ui:composition>

@@ -47,9 +47,7 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-
-		<p:panel id="brnInfPan">
+		<p:outputPanel id="brnInfPan" layout="block">
 			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.branchVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.branchVerified : false)}" />
@@ -160,7 +158,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="450px" height="430px"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"

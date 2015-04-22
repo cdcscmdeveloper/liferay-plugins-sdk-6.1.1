@@ -48,8 +48,8 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="assocInfPan">
+
+		<p:outputPanel id="assocInfPan" layout="block">
 			<p:blockUI block=":form:tt:assocInfPan" widgetVar="buiPoAssoc"
 				id="poAssocBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.associateVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.associateVerified : false)}" />
@@ -131,7 +131,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="500px" height="435px" closable="false"
 		header="#{lbl['lbl.sm.assocCmpny.assocDiaHdr']}" id="asDisp"

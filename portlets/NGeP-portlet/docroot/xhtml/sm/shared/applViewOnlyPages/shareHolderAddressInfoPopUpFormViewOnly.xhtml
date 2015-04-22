@@ -9,7 +9,7 @@
 
 	<table style="width: 100%;table-layout:fixed">
 		<tr>
-			<td valign="top" width="50%"><p:panel id="permAddrPan">
+			<td valign="top" width="50%"><p:outputPanel id="permAddrPan" layout="block">
 					<table style="width: 100%;table-layout:fixed">
 						<tr>
 							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.permAddr']} " /></td>
@@ -54,8 +54,8 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
-				</p:panel></td>
-			<td valign="top"><p:panel id="mailAddrPan">
+				</p:outputPanel></td>
+			<td valign="top"><p:outputPanel id="mailAddrPan" layout="block">
 					<table style="width: 100%;table-layout:fixed">
 						<tr>
 							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.mailAddr']} " /></td>
@@ -100,13 +100,13 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
-				</p:panel></td>
+				</p:outputPanel></td>
 		</tr>
 	</table>
 
 	<table style="width: 100%;table-layout:fixed">
 		<tr>
-			<td valign="top" width="50%"><p:panel id="resiAddrPan">
+			<td valign="top" width="50%"><p:outputPanel id="resiAddrPan" layout="block">
 					<table style="width: 100%;table-layout:fixed">
 						<tr>
 							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.resiAddr']} " /></td>
@@ -151,8 +151,8 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
-				</p:panel></td>
-			<td valign="top"><p:panel id="offcAddrPan">
+				</p:outputPanel></td>
+			<td valign="top"><p:outputPanel id="offcAddrPan" layout="block">
 					<table style="width: 100%;table-layout:fixed">
 						<tr>
 							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.offAddr']} " /></td>
@@ -197,7 +197,7 @@
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
-				</p:panel></td>
+				</p:outputPanel></td>
 		</tr>
 	</table>
 </ui:composition>

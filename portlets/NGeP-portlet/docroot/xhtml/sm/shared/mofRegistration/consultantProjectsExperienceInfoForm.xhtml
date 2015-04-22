@@ -38,8 +38,7 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="consInfPan">
+		<p:outputPanel id="consInfPan" layout="block">
 			<p:blockUI block=":form:tt:consInfPan" widgetVar="buiPoCons"
 				id="poConsBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
@@ -134,7 +133,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="consDialog" id="consDialog" resizable="false"

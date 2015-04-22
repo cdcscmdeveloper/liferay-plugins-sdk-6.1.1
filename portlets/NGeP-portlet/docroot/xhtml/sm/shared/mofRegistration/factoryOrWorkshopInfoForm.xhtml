@@ -48,9 +48,15 @@
 			</div>
 			<br />
 		</p:outputPanel>
-		<p:outputPanel rendered="#{!backingBean.managedBean.showFactoryPanel}">
-			<h:outputText style="float:left"
-				value="#{lbl['lbl.sm.factory.notApplicable']}" />
+		<p:outputPanel rendered="#{!backingBean.managedBean.showFactoryPanel}"
+			layout="block">
+			<table style="width: 100%">
+				<tr>
+					<td><h:outputText style="float:left"
+							value="#{lbl['lbl.sm.factory.notApplicable']}" /></td>
+				</tr>
+			</table>
+
 		</p:outputPanel>
 
 	</p:panel>

@@ -47,9 +47,15 @@
 			</div>
 			<br />
 		</p:outputPanel>
-		<p:outputPanel rendered="#{!backingBean.managedBean.showStorePanel}">
-			<h:outputText style="float:left"
-				value="#{lbl['lbl.sm.store.notApplicable']}" />
+		<p:outputPanel rendered="#{!backingBean.managedBean.showStorePanel}"
+			layout="block">
+
+			<table style="width: 100%">
+				<tr>
+					<td><h:outputText style="float:left"
+							value="#{lbl['lbl.sm.store.notApplicable']}" /></td>
+				</tr>
+			</table>
 		</p:outputPanel>
 
 	</p:panel>
