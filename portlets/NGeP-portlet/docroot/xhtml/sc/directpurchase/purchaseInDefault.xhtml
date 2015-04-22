@@ -10,10 +10,10 @@
 	 rendered="#{purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 	   <table>
 	         <tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="46" id="ctitle" required="true"
-						maxlength="100" label="#{lbl['lbl.sc.title']}" disabled="#{!isPendingSubmissionStatus}"
+						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}" disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px;" /> 
 						<p:message id="ctitleMsg" for="ctitle" display="icon" /></td>
@@ -114,10 +114,10 @@
 	<p:panel header="#{lbl['lbl.sc.purchase.in.default.panel.item.detail']}" toggleable="true" rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 	  <table>
 	  	 <tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="46" id="ptitle" required="true"
-						maxlength="100" label="#{lbl['lbl.sc.title']}" disabled="#{!isPendingSubmissionStatus}"
+						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}" disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.title}"
 						style="margin-bottom: 5px;" /> 
 						<p:message id="ptitleMsg" for="ptitle" display="icon" /></td>
