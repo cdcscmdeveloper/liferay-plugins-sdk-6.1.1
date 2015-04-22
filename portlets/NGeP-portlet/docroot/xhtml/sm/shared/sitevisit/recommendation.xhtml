@@ -29,7 +29,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<p:selectOneRadio id="recommendationId" label="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" required="#{!empty param['disableValidation']}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.recommended}">
@@ -40,7 +40,7 @@
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.bumirecommend']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.bumirecommend']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<p:selectOneRadio id="bumiRecommendId" label="#{lbl['lbl.sm.sitevisit.bumirecommend']}" required="#{!empty param['disableValidation']}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.bumiRecommended}">
