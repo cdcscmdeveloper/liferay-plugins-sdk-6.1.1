@@ -14,7 +14,6 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<f:event listener="#{sdoReviewBackingBean.preRenderView}" type="preRenderView" />
 		<!-- HEADER -->
 		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
@@ -42,7 +41,7 @@
 		</p:dialog>
 
 		<p:outputPanel id="resOutPanelId">
-			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="auto">
+			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500">
 				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
 					<table>
 					<tr>
