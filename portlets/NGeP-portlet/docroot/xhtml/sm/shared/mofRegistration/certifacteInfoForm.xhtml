@@ -39,8 +39,8 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="certInfPan">
+
+		<p:outputPanel id="certInfPan" layout="block">
 			<p:blockUI block=":form:tt:certInfPan" widgetVar="buiPoCert"
 				id="poCertBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.certVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.certVerified : false)}" />
@@ -130,7 +130,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="500px" height="275px"
 		header="#{lbl['lbl.sm.cert.certDiaHdrMsg']}" widgetVar="certDialog"

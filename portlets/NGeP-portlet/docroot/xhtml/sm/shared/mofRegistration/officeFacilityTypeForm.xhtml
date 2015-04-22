@@ -38,8 +38,7 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="offInfPan">
+		<p:outputPanel id="offInfPan" layout="block">
 			<p:blockUI block=":form:tt:offInfPan" widgetVar="buiPoOff"
 				id="poOffBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.officeFacilityVerfied : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.officeFacilityVerfied : false)}" />
@@ -370,6 +369,6 @@
 
 				</p:outputPanel>
 			</table>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 </ui:composition>

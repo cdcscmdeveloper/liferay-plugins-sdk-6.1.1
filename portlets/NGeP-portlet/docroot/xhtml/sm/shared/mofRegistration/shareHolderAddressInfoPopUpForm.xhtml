@@ -9,7 +9,8 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td valign="top" width="50%"><p:panel id="permAddrPan">
+			<td valign="top" width="50%"><p:outputPanel id="permAddrPan"
+					layout="block">
 					<table style="width: 100%">
 						<tr>
 							<td><u><b><h:outputText
@@ -22,42 +23,37 @@
 									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.address']}"
 									required="true" maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}"
-									size="35" >
-									<p:ajax process="@this" partialSubmit="true" update="@this,equiPersPermAddrLineMsg" />
-								</p:inputText> 
-									
-								<p:message id="equiPersPermAddrLineMsg"
-								for="equiPersPermAddrLine" showSummary="true"
-								showDetail="false" display="icon" />
-							</td>
+									size="35">
+									<p:ajax process="@this" partialSubmit="true"
+										update="@this,equiPersPermAddrLineMsg" />
+								</p:inputText> <p:message id="equiPersPermAddrLineMsg"
+									for="equiPersPermAddrLine" showSummary="true"
+									showDetail="false" display="icon" /></td>
 						</tr>
 
 						<tr>
 							<td></td>
 							<td><p:inputText maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"
-									size="35" >
+									size="35">
 									<p:ajax process="@this" partialSubmit="true" update="@this" />
-								</p:inputText>
-							</td>
+								</p:inputText></td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><p:inputText maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"
-									size="35" >
+									size="35">
 									<p:ajax process="@this" partialSubmit="true" update="@this" />
-								</p:inputText>
-							</td>
+								</p:inputText></td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><p:inputText maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address4}"
-									size="35" >
+									size="35">
 									<p:ajax process="@this" partialSubmit="true" update="@this" />
-								</p:inputText>
-							</td>
+								</p:inputText></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -141,47 +137,52 @@
 										value="#{backingBean.managedBean.shrHldrPermCities}"
 										itemValue="#{shrPermCity.cityId}"
 										itemLabel="#{shrPermCity.cityName}" />
-									<p:ajax event="change" process="@this" update="@this" partialSubmit="true"/>
+									<p:ajax event="change" process="@this" update="@this"
+										partialSubmit="true" />
 								</p:selectOneMenu> <p:message id="shrPermCityMsg" for="shrPermCity"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td>
-								<p:outputPanel id="postCodePermPanelId">
-									<p:outputPanel rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
-										<p:inputText maxlength="5"
-												required="true"
-												label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersPermAddrPostCodeMy"
-												value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
-												validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-												size="35" >
-												<f:validator validatorId="postcodeValidator" />
-												<p:ajax process="@this" partialSubmit="true" update="@this,equiPersPermAddrPostCodeMyMsg" />
-												</p:inputText>
-												<p:message id="equiPersPermAddrPostCodeMyMsg"
-												for="equiPersPermAddrPostCodeMy" showSummary="true" showDetail="false"
-												display="icon" />
+							<td><p:outputPanel id="postCodePermPanelId">
+									<p:outputPanel
+										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+										<p:inputText maxlength="5" required="true"
+											label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
+											id="equiPersPermAddrPostCodeMy"
+											value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
+											validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+											size="35">
+											<f:validator validatorId="postcodeValidator" />
+											<p:ajax process="@this" partialSubmit="true"
+												update="@this,equiPersPermAddrPostCodeMyMsg" />
+										</p:inputText>
+										<p:message id="equiPersPermAddrPostCodeMyMsg"
+											for="equiPersPermAddrPostCodeMy" showSummary="true"
+											showDetail="false" display="icon" />
 									</p:outputPanel>
-									<p:outputPanel rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
-										<p:inputText maxlength="10"
-												required="true"
-												label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersPermAddrPostCodeForeign"
-												value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
-												size="35" >
-												<p:ajax process="@this" partialSubmit="true" update="@this,equiPersPermAddrPostCodeForeignMsg" />
-												</p:inputText>
-												<p:message id="equiPersPermAddrPostCodeForeignMsg"
-												for="equiPersPermAddrPostCodeForeign" showSummary="true" showDetail="false"
-												display="icon" />
+									<p:outputPanel
+										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+										<p:inputText maxlength="10" required="true"
+											label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
+											id="equiPersPermAddrPostCodeForeign"
+											value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true"
+												update="@this,equiPersPermAddrPostCodeForeignMsg" />
+										</p:inputText>
+										<p:message id="equiPersPermAddrPostCodeForeignMsg"
+											for="equiPersPermAddrPostCodeForeign" showSummary="true"
+											showDetail="false" display="icon" />
 									</p:outputPanel>
-								</p:outputPanel>
-							</td>
+								</p:outputPanel></td>
 						</tr>
 					</table>
-				</p:panel></td>
-			<td valign="top"><p:panel id="mailAddrPan" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}">
+				</p:outputPanel></td>
+			<td valign="top"><p:outputPanel id="mailAddrPan"
+					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
+					layout="block">
 					<table style="width: 100%">
 						<tr>
 							<td><u><b><h:outputText
@@ -214,10 +215,10 @@
 											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}"
-											size="35" > 
-												<p:ajax process="@this" partialSubmit="true" update="@this,equiPersMailAddrLineMsg" />
-											</p:inputText>
-											<p:message id="equiPersMailAddrLineMsg"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true"
+												update="@this,equiPersMailAddrLineMsg" />
+										</p:inputText> <p:message id="equiPersMailAddrLineMsg"
 											for="equiPersMailAddrLine" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -228,10 +229,9 @@
 											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
-											size="35" >
+											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -239,10 +239,9 @@
 											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"
-											size="35" >
+											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -252,8 +251,7 @@
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -265,7 +263,8 @@
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrMailContry"
 												value="#{backingBean.managedBean.countryLs}"
 												itemValue="#{shrMailContry.countryId}"
@@ -291,7 +290,8 @@
 											style="width: 207px;margin-bottom: 5px;"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}"
 											id="shrMailState">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrMailState"
 												value="#{backingBean.managedBean.shrHldrMailStates}"
 												itemValue="#{shrMailState.stateId}"
@@ -316,7 +316,8 @@
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrMailDist"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrMailDist"
 												value="#{backingBean.managedBean.shrHldrMailDistricts}"
 												itemValue="#{shrMailDist.districtId}"
@@ -338,61 +339,69 @@
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrMailCity"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrMailCity"
 												value="#{backingBean.managedBean.shrHldrMailCities}"
 												itemValue="#{shrMailCity.cityId}"
 												itemLabel="#{shrMailCity.cityName}" />
-											<p:ajax event="change" process="@this" update="shrMailCityMsg,@this" partialSubmit="true"/>
+											<p:ajax event="change" process="@this"
+												update="shrMailCityMsg,@this" partialSubmit="true" />
 										</p:selectOneMenu> <p:message id="shrMailCityMsg" for="shrMailCity"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td>
-										<p:outputPanel id="postCodeMailPanelId">
-											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+									<td><p:outputPanel id="postCodeMailPanelId">
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="5"
-														required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-														disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-														label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersMailAddrPostCodeMy"
-														value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
-														validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-														size="35" >
-														<f:validator validatorId="postcodeValidator" />
-														<p:ajax process="@this" partialSubmit="true" update="@this,equiPersMailAddrPostCodeMyMsg" />
-														</p:inputText>
-														<p:message id="equiPersMailAddrPostCodeMyMsg"
-														for="equiPersMailAddrPostCodeMy" showSummary="true" showDetail="false"
-														display="icon" />
+													required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
+													id="equiPersMailAddrPostCodeMy"
+													value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
+													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+													size="35">
+													<f:validator validatorId="postcodeValidator" />
+													<p:ajax process="@this" partialSubmit="true"
+														update="@this,equiPersMailAddrPostCodeMyMsg" />
+												</p:inputText>
+												<p:message id="equiPersMailAddrPostCodeMyMsg"
+													for="equiPersMailAddrPostCodeMy" showSummary="true"
+													showDetail="false" display="icon" />
 											</p:outputPanel>
-											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="10"
-														required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-														disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
-														label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersMailAddrPostCodeForeign"
-														value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
-														size="35" >
-														<p:ajax process="@this" partialSubmit="true" update="@this,equiPersMailAddrPostCodeForeignMsg" />
-														</p:inputText>
-														<p:message id="equiPersMailAddrPostCodeForeignMsg"
-														for="equiPersMailAddrPostCodeForeign" showSummary="true" showDetail="false"
-														display="icon" />
+													required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
+													id="equiPersMailAddrPostCodeForeign"
+													value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
+													size="35">
+													<p:ajax process="@this" partialSubmit="true"
+														update="@this,equiPersMailAddrPostCodeForeignMsg" />
+												</p:inputText>
+												<p:message id="equiPersMailAddrPostCodeForeignMsg"
+													for="equiPersMailAddrPostCodeForeign" showSummary="true"
+													showDetail="false" display="icon" />
 											</p:outputPanel>
-										</p:outputPanel>
-									</td>
+										</p:outputPanel></td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
 					</table>
-				</p:panel></td>
+				</p:outputPanel></td>
 		</tr>
 	</table>
 
 	<table style="width: 100%">
 		<tr>
-			<td valign="top" width="50%"><p:panel id="resiAddrPan" rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
+			<td valign="top" width="50%"><p:outputPanel id="resiAddrPan"
+					layout="block"
+					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
 					<table style="width: 100%">
 
 						<tr>
@@ -426,13 +435,12 @@
 											readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address1}"
-											size="35" > 
-												<p:ajax process="@this" partialSubmit="true" update="@this,equiPersResiAddrLineMsg" />
-											</p:inputText>
-											<p:message id="equiPersResiAddrLineMsg"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true"
+												update="@this,equiPersResiAddrLineMsg" />
+										</p:inputText> <p:message id="equiPersResiAddrLineMsg"
 											for="equiPersResiAddrLine" showSummary="true"
-											showDetail="false" display="icon" />
-									</td>
+											showDetail="false" display="icon" /></td>
 								</tr>
 
 								<tr>
@@ -441,10 +449,9 @@
 											readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address2}"
-											size="35" >
+											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -454,8 +461,7 @@
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address3}"
 											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -463,10 +469,9 @@
 											readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address4}"
-											size="35" >
+											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -478,7 +483,8 @@
 											id="equiPersResiCntry"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrResCountry"
 												value="#{backingBean.managedBean.countryLs}"
 												itemValue="#{shrResCountry.countryId}"
@@ -504,7 +510,8 @@
 											style="width: 207px;margin-bottom: 5px;"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}"
 											id="shrResState">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrResState"
 												value="#{backingBean.managedBean.shrHldrResdStates}"
 												itemValue="#{shrResState.stateId}"
@@ -529,7 +536,8 @@
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrResDist"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrResDist"
 												value="#{backingBean.managedBean.shrHldrResdDistricts}"
 												itemValue="#{shrResDist.districtId}"
@@ -551,56 +559,63 @@
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrResCity"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrResCity"
 												value="#{backingBean.managedBean.shrHldrResdCities}"
 												itemValue="#{shrResCity.cityId}"
 												itemLabel="#{shrResCity.cityName}" />
-											<p:ajax event="change" process="@this" update="shrResCityMsg,@this" partialSubmit="true"/>
+											<p:ajax event="change" process="@this"
+												update="shrResCityMsg,@this" partialSubmit="true" />
 										</p:selectOneMenu> <p:message id="shrResCityMsg" for="shrResCity"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td>
-										<p:outputPanel id="postCodeResdPanelId">
-											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+									<td><p:outputPanel id="postCodeResdPanelId">
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="5"
-														required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-														disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-														label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.postcode']}" id="equiPersResdAddrPostCodeMy"
-														value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
-														validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-														size="35" >
-														<f:validator validatorId="postcodeValidator" />
-														<p:ajax process="@this" partialSubmit="true" update="@this,equiPersResdAddrPostCodeMyMsg" />
-														</p:inputText>
-														<p:message id="equiPersResdAddrPostCodeMyMsg"
-														for="equiPersResdAddrPostCodeMy" showSummary="true" showDetail="false"
-														display="icon" />
+													required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+													disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.postcode']}"
+													id="equiPersResdAddrPostCodeMy"
+													value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"
+													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+													size="35">
+													<f:validator validatorId="postcodeValidator" />
+													<p:ajax process="@this" partialSubmit="true"
+														update="@this,equiPersResdAddrPostCodeMyMsg" />
+												</p:inputText>
+												<p:message id="equiPersResdAddrPostCodeMyMsg"
+													for="equiPersResdAddrPostCodeMy" showSummary="true"
+													showDetail="false" display="icon" />
 											</p:outputPanel>
-											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="10"
-														required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-														disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
-														label="#{lbl['lbl.sm.person.resiAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersResdAddrPostCodeForeign"
-														value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
-														size="35" >
-														<p:ajax process="@this" partialSubmit="true" update="@this,equiPersResdAddrPostCodeForeignMsg" />
-														</p:inputText>
-														<p:message id="equiPersResdAddrPostCodeForeignMsg"
-														for="equiPersResdAddrPostCodeForeign" showSummary="true" showDetail="false"
-														display="icon" />
+													required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+													disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.resiAddr']} -#{lbl['lbl.sm.postcode']}"
+													id="equiPersResdAddrPostCodeForeign"
+													value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"
+													size="35">
+													<p:ajax process="@this" partialSubmit="true"
+														update="@this,equiPersResdAddrPostCodeForeignMsg" />
+												</p:inputText>
+												<p:message id="equiPersResdAddrPostCodeForeignMsg"
+													for="equiPersResdAddrPostCodeForeign" showSummary="true"
+													showDetail="false" display="icon" />
 											</p:outputPanel>
-										</p:outputPanel>
-									</td>
+										</p:outputPanel></td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
 					</table>
-				</p:panel></td>
-			<td valign="top"><p:panel id="offcAddrPan" rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
+				</p:outputPanel></td>
+			<td valign="top"><p:outputPanel id="offcAddrPan" layout="block"
+					rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
 					<table style="width: 100%">
 						<tr>
 							<td width="150px"><u><b><h:outputText
@@ -633,13 +648,12 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address1}"
-											size="35" >
-											<p:ajax process="@this" partialSubmit="true" update="@this,equiPersOffcAddrLineMsg" />
-										</p:inputText> 
-										<p:message id="equiPersOffcAddrLineMsg"
-										for="equiPersOffcAddrLine" showSummary="true"
-										showDetail="false" display="icon" />
-									</td>
+											size="35">
+											<p:ajax process="@this" partialSubmit="true"
+												update="@this,equiPersOffcAddrLineMsg" />
+										</p:inputText> <p:message id="equiPersOffcAddrLineMsg"
+											for="equiPersOffcAddrLine" showSummary="true"
+											showDetail="false" display="icon" /></td>
 								</tr>
 
 								<tr>
@@ -648,10 +662,9 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address2}"
-											size="35" >
+											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -659,10 +672,9 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address3}"
-											size="35" >
+											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -670,10 +682,9 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address4}"
-											size="35" >
+											size="35">
 											<p:ajax process="@this" partialSubmit="true" update="@this" />
-										</p:inputText>
-									</td>
+										</p:inputText></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -684,7 +695,8 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrOffCountry"
 												value="#{backingBean.managedBean.countryLs}"
 												itemValue="#{shrOffCountry.countryId}"
@@ -710,7 +722,8 @@
 											style="width: 207px;margin-bottom: 5px;"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}"
 											id="shrOffState">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrOffState"
 												value="#{backingBean.managedBean.shrHldrOffStates}"
 												itemValue="#{shrOffState.stateId}"
@@ -735,7 +748,8 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrOffDist"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrOffDist"
 												value="#{backingBean.managedBean.shrHldrOffDistricts}"
 												itemValue="#{shrOffDist.districtId}"
@@ -757,56 +771,61 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrOffCity"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
 											<f:selectItems var="shrOffCity"
 												value="#{backingBean.managedBean.shrHldrOffCities}"
 												itemValue="#{shrOffCity.cityId}"
 												itemLabel="#{shrOffCity.cityName}" />
-											<p:ajax event="change" process="@this" update="shrOffCityMsg,@this" partialSubmit="true"/>
+											<p:ajax event="change" process="@this"
+												update="shrOffCityMsg,@this" partialSubmit="true" />
 										</p:selectOneMenu> <p:message id="shrOffCityMsg" for="shrOffCity"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td>
-										<p:outputPanel id="postCodeOffAddrPanelId">
-											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+									<td><p:outputPanel id="postCodeOffAddrPanelId">
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="5"
-														required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-														label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.postcode']}" id="equiPersOffcAddrPostCodeMy"
-														value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
-														validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-														size="35" >
-														<f:validator validatorId="postcodeValidator" />
-														<p:ajax process="@this" partialSubmit="true" update="@this,equiPersOffcAddrPostCodeMyMsg" />
-														</p:inputText>
-														<p:message id="equiPersOffcAddrPostCodeMyMsg"
-														for="equiPersOffcAddrPostCodeMy" showSummary="true" showDetail="false"
-														display="icon" />
+													required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
+													disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.postcode']}"
+													id="equiPersOffcAddrPostCodeMy"
+													value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"
+													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+													size="35">
+													<f:validator validatorId="postcodeValidator" />
+													<p:ajax process="@this" partialSubmit="true"
+														update="@this,equiPersOffcAddrPostCodeMyMsg" />
+												</p:inputText>
+												<p:message id="equiPersOffcAddrPostCodeMyMsg"
+													for="equiPersOffcAddrPostCodeMy" showSummary="true"
+													showDetail="false" display="icon" />
 											</p:outputPanel>
-											<p:outputPanel rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="10"
-														required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-														disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
-														label="#{lbl['lbl.sm.person.offAddr']} -#{lbl['lbl.sm.postcode']}" id="equiPersOffcAddrPostCodeForeign"
-														value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
-														size="35" >
-														<p:ajax process="@this" partialSubmit="true" update="@this,equiPersOffcAddrPostCodeForeignMsg" />
-														</p:inputText>
-														<p:message id="equiPersOffcAddrPostCodeForeignMsg"
-														for="equiPersOffcAddrPostCodeForeign" showSummary="true" showDetail="false"
-														display="icon" />
+													required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
+													disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.offAddr']} -#{lbl['lbl.sm.postcode']}"
+													id="equiPersOffcAddrPostCodeForeign"
+													value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"
+													size="35">
+													<p:ajax process="@this" partialSubmit="true"
+														update="@this,equiPersOffcAddrPostCodeForeignMsg" />
+												</p:inputText>
+												<p:message id="equiPersOffcAddrPostCodeForeignMsg"
+													for="equiPersOffcAddrPostCodeForeign" showSummary="true"
+													showDetail="false" display="icon" />
 											</p:outputPanel>
-										</p:outputPanel>
-										
-									</td>
+										</p:outputPanel></td>
 								</tr>
 							</c:otherwise>
 						</c:choose>
 					</table>
-				</p:panel></td>
+				</p:outputPanel></td>
 		</tr>
 	</table>
 </ui:composition>
