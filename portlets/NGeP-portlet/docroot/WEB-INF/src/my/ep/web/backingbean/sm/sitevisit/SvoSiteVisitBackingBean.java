@@ -270,6 +270,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param viewMode
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
+		this.getManagedBean().setAppId(1257118);//Dev
 		//this.getManagedBean().setAppId(1257676); //FT
 		//this.getManagedBean().setAppId(1257345);//FT
 		//this.getManagedBean().setAppId(1257944);//FT
@@ -2068,6 +2069,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				setSelectedMachineToSmSvMachineLs(svTemplate);
 			}
 			
+			//validate duplicate Workers
+			if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
+				validateDuplicateWorker(svTemplate.getSmSvWorkers());
+			}
+			
 			//to add/ remove svTemplateAddress based on the selectedAddress
 			if(svTemplate.getSmSvTemplateAddresses().size() > 0){
 				if(svTemplate.getSelectedAddresses().length < 1){
@@ -2296,6 +2302,22 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					svMachine.setSmMachineDtl(smMachineDtl);
 					svTemplate.getSmSvMachines().add(svMachine);
 				}
+			}
+		}
+	}
+	
+	/**
+	 * Validate duplicate Worker
+	 */
+	private void validateDuplicateWorker(List<SmSvWorker> svWorkers){
+		if(svWorkers.size() > 1){
+			List<String> workerLs = new ArrayList<String>();
+			
+			for(SmSvWorker worker : svWorkers){
+				if(workerLs.contains(worker.getIdentificationNo())){
+					throw new EpException(MessageConst.ERROR_721303);
+				}
+				workerLs.add(worker.getIdentificationNo());
 			}
 		}
 	}
