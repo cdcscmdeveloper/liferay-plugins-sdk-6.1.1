@@ -82,10 +82,11 @@
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userStatus}">  
-		          
+		                        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
+		                        <f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />		   
 								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
 									itemValue="0" />
-								<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+								
 				   
 	              	</p:selectOneMenu> 
 				</td>
