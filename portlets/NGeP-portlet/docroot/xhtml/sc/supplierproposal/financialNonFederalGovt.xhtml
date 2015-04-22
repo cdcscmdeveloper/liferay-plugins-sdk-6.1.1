@@ -33,7 +33,7 @@
 					#{financenongovt.contractNo}
 				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}"
+			<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 				style=" width : 10%;">
 				<h:outputText value="#{financenongovt.effectiveDate}">
 					<f:convertDateTime
@@ -41,7 +41,7 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}"
+			<p:column headerText="#{lbl['lbl.sc.exp.date']}"
 				style=" width : 10%;">
 				<h:outputText value="#{financenongovt.expiryDate}">
 					<f:convertDateTime
@@ -78,7 +78,7 @@
 				<p:message id="contractAmtMsg" for="contractAmt" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.remarks']}"
+			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="white-space : normal;  width : 15%;">
 				<p:inputTextarea value="#{financenongovt.remark}" rows="3" cols="17"
 					disabled="#{statusHide}" />
@@ -90,7 +90,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 170px"><p:outputLabel
-							value="#{lbl['lbl.ss.sp.ttl.cotract.amt']}" /></td>
+							value="#{lbl['lbl.sc.sp.ttl.cotract.amt']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalContractAmount}"
 							readonly="true" disabled="true" size="15">
@@ -98,19 +98,19 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
 					<td style="width: 80px;"><h:outputText
-							value="#{lbl['lbl.sc.eva.auto.score']}"
+							value="#{lbl['lbl.sc.auto.score']}"
 							rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
 							rendered="#{checklistScoreType eq '2' and !pageDisable}">
 							<h:outputText value="* " styleClass="mandatory" />
 
 
-						</ui:fragment> <h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+						</ui:fragment> <h:outputText value="#{lbl['lbl.sc.user.score']}"
 							rendered="#{ checklistScoreType eq '2'}" /></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							id="financialNonDederalGovernmenUserScoreId"
-							label="#{lbl['lbl.sc.eva.s1.user.score']}"
+							label="#{lbl['lbl.sc.user.score']}"
 							value="#{noOfContracts.userScore}" maxlength="18" required="true"
 							disabled="#{pageDisable}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '2'}">
