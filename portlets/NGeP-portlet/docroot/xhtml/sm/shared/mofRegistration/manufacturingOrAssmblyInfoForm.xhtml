@@ -38,8 +38,7 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="manuInfPan">
+		<p:outputPanel id="manuInfPan" layout="block">
 			<p:blockUI block=":form:tt:manuInfPan" widgetVar="buiPoManu"
 				id="poManuBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.manufacturingVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.manufacturingVerified : false)}" />
@@ -123,7 +122,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="600px" height="350px"
 		header="#{lbl['lbl.sm.manufacture.diaHdr']}"
