@@ -32,7 +32,7 @@
 			<p:column headerText="#{lbl['lbl.sc.sp.zone']}">
 				<h:outputText value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.sp.address']}">
+			<p:column headerText="#{lbl['lbl.sc.address']}">
 				<p:outputLabel style="float : left"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.address)}" />
 			</p:column>
@@ -46,7 +46,7 @@
 
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.label.no']}" /></td>
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
@@ -71,7 +71,7 @@
 					</p:inputText></td>
 			</tr>
 			<tr valign="top">
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.address']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.address']}" /></td>
 				<td><p:inputTextarea
 						value="#{supplierProposalDetailBackingBean.getFullAddress(supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.address)}"
 						cols="32" rows="3" readonly="true" disabled="true" /></td>
@@ -82,7 +82,7 @@
 				<td colspan="4"><br />#{lbl['lbl.sc.sp.note3']}</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.label.no']}" /></td>
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
@@ -98,7 +98,7 @@
 			style="width : 100%" editable="true" rowIndexVar="rowIndex"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
-			<p:column headerText="#{lbl['lbl.sc.sp.item']}">
+			<p:column headerText="#{lbl['lbl.sc.item']}">
 				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
