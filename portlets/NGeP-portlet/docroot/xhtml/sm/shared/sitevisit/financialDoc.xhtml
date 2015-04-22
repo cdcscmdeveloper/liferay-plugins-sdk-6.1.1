@@ -55,23 +55,26 @@
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
 			<p:column>
 				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
 						#{lbl['lbl.sm.financial.doc']}
 					</f:facet>
-				<p:inputText value="#{addFinDoc.docName}" maxlength="100" disabled="#{viewFlag}"></p:inputText>
+				<p:inputText value="#{addFinDoc.docName}" maxlength="100" disabled="#{viewFlag}" label="#{lbl['lbl.sm.financial.doc']}" required="#{empty param['disabledValidation']}"></p:inputText>
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
 						#{lbl['lbl.sm.financial.reference']}
 					</f:facet>
-				<p:inputText value="#{addFinDoc.docRef}" maxlength="80" disabled="#{viewFlag}" />
+				<p:inputText value="#{addFinDoc.docRef}" maxlength="80" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}" label="#{lbl['lbl.sm.financial.reference']}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
 						#{lbl['lbl.sm.financial.date.issued']}
 					</f:facet>
-				<p:calendar id="dateIssuedCalId" navigator="true" disabled="#{viewFlag}"
+				<p:calendar id="dateIssuedCalId" navigator="true" disabled="#{viewFlag}" required="#{empty param['disabledValidation']}"
 					label="#{lbl['lbl.sm.financial.date.issued']}" value="#{addFinDoc.docDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 					readonlyInput="true" size="15" showOn="button" />
@@ -94,7 +97,9 @@
 					update="dtAddFinDocId" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!viewFlag}"
 					action="#{svoSiteVisitBackingBean.removeFinancialDoc}"
-					update="dtAddFinDocId" />
+					update="dtAddFinDocId">
+					<f:param name="disabledValidation" value="true" />
+				</p:commandButton>
 			</div>
 	</p:panel>
 </ui:composition>
