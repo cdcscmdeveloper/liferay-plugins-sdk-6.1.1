@@ -8,7 +8,6 @@
 
 
 	<p:panel styleClass="scMemberDtl">
-		<p:spacer height="2" />
 		<table style="width: 50%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
@@ -21,7 +20,6 @@
 						value="#{lbl['lbl.sc.qt.send.for.approval']}" style="word-wrap: break-word;"/></td>
 			</tr>
 		</table>
-		<p:spacer height="2" />
 		<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
 			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
 			rowIndexVar="index" rowKey="#{specificationcommittee}"
