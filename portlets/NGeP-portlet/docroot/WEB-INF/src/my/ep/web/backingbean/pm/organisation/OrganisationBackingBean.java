@@ -276,47 +276,59 @@ public class OrganisationBackingBean extends
 				&& oSearchBean.getOrgTypeCode().trim().length() > 0) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("orgTypeCode.parameterId",
-							SearchOperator.OPERATOR_LIKE.value(),
+							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getOrganisationSearchBean()
 									.getOrgTypeCode()));
 			
-			PmParameter orgTypeParameter = getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,OrganizationType.DIVISION.value());
+			PmParameter orgTypeParameter = 
+					getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,OrganizationType.DIVISION.value());
 			if(orgTypeParameter != null && orgTypeParameter.getParameterId().toString().equals(oSearchBean.getOrgTypeCode())){
 				//ministry admin or ptj admin
-				PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), true);
+				PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
 				PmOrgProfile orgProfile = null;
 				if(user != null){
 					orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
 				}
-				if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {					
-					if(orgProfile !=null){
+				
+				if(orgProfile !=null){
+					Set<Long> orgProfileSet = null;
+					if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+						orgProfileSet = new HashSet<Long>(); 
+						for(PmOrgProfile childOrgProfile : orgProfile.getChildOrgProfiles()){
+							orgProfileSet.add(childOrgProfile.getOrgProfileId());
+						}
+						searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("parentOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
+						
+					}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
 						searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("parentOrgProfile.orgProfileId",
 									SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+						
+					}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {						
+							// Naik Taraf / Group Org.
+							if(orgProfile.isGroupOrg()){
+								orgProfileSet = new HashSet<Long>(); 							
+								//add current org profile
+								orgProfileSet.add(orgProfile.getOrgProfileId());
+								//loop and add authorized profile (child list)
+								for(PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()){
+									orgProfileSet.add(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
+								}	
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("orgProfileId",
+												SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
+							}else{
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("orgProfileId",
+												SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+							}
+						
 					}
 					
-				}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {	
-					if(orgProfile !=null ){
-						// Naik Taraf / Group Org.
-						if(orgProfile.isGroupOrg()){
-							Set<Long> orgProfileSet = new HashSet<Long>(); 							
-							//add current org profile
-							orgProfileSet.add(orgProfile.getOrgProfileId());
-							//loop and add authorized profile (child list)
-							for(PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()){
-								orgProfileSet.add(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
-							}	
-							List<Long> orgProfileIds = new ArrayList<Long>(orgProfileSet); 
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("orgProfileId",
-											SearchOperator.OPERATOR_IN.value(),orgProfileIds));
-						}else{
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("orgProfileId",
-											SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
-						}
-					}
 				}
+				
 			}
 			
 		}
@@ -481,17 +493,23 @@ public class OrganisationBackingBean extends
 							.getPmZone());
 
 		}
+		
+		// PTJ
+		if (getManagedBean().getOrgType().equalsIgnoreCase(
+						OrganizationType.DEPARTMENT.value())) {
+			retrieveMinistryList();
+		}
 		// PTJ
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
-			retrieveMinistryList();
+			//retrieveMinistryList();
 
-			if (orgProfile.getParentOrgProfile() == null) {
-				orgProfile.setParentOrgProfile(new PmOrgProfile());
-				getManagedBean().setEmptyMinistry(true);
-			} else {
-				getManagedBean().setEmptyMinistry(false);
-			}
+//			if (orgProfile.getParentOrgProfile() == null) {
+//				orgProfile.setParentOrgProfile(new PmOrgProfile());
+//				getManagedBean().setEmptyMinistry(true);
+//			} else {
+//				getManagedBean().setEmptyMinistry(false);
+//			}
 			if (getManagedBean().getOrgProfile().getPmAddressTypes() != null
 					&& !getManagedBean().getOrgProfile().getPmAddressTypes()
 							.isEmpty()) {
@@ -1505,7 +1523,7 @@ public class OrganisationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(OrganizationType.EP_PROFILE.value());
-		recommendList.add(OrganizationType.DEPARTMENT.value());
+	//	recommendList.add(OrganizationType.DEPARTMENT.value());
 		recommendList.add(OrganizationType.FACTORING_COMPANY.value());
 		recommendList.add(OrganizationType.SUPPLIER.value());
 		recommendList.add(OrganizationType.OTHERS.value());
@@ -1519,8 +1537,19 @@ public class OrganisationBackingBean extends
 			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
 			recommendList.add(OrganizationType.SUPPORT.value());
 			
-			// check if user is ministry admin or ptj admin
+			// check if user is ministry admin,jabatan admin or ptj admin
 			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {			
+				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+						.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+				recommendList
+						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+			}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+				recommendList.add(OrganizationType.MINISTRY.value());
 				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
 						.value());
 				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
@@ -1532,6 +1561,7 @@ public class OrganisationBackingBean extends
 						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
 			}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
 				recommendList.add(OrganizationType.MINISTRY.value());
+				recommendList.add(OrganizationType.DEPARTMENT.value());
 				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
 						.value());
 				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
@@ -1959,8 +1989,24 @@ public class OrganisationBackingBean extends
 	 **/
 	public String constuctConditionFields() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("parentOrgProfile.orgProfileId^");
-		sb.append(getManagedBean().getOrgProfile().getParentOrgProfile()
+		PmOrgProfile ministryProfile = PmCommonUtil.retrieveMinistryByOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
+		PmOrgProfile parentProfile = getManagedBean().getOrgProfile();
+		boolean loop = true;
+		while(loop){
+			if(ministryProfile != null 
+					&& ministryProfile.getOrgProfileId() == 
+							parentProfile.getOrgProfileId()){
+				loop = false;
+			}else{
+				sb.append("parentOrgProfile.");
+				parentProfile = parentProfile.getParentOrgProfile();
+			}
+		}
+		if(sb.length() == 0){
+			sb.append("parentOrgProfile.");
+		}
+		sb.append("orgProfileId^");
+		sb.append(parentProfile
 				.getOrgProfileId());
 		sb.append("|recordStatus^1");
 		sb.append("|groupOrg^0");
@@ -2099,6 +2145,21 @@ public class OrganisationBackingBean extends
 		return facesScopes;
 	}
 	
+	public boolean isEPAdmin(){
+		if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public PmOrgProfile retrieveMinistry(){
+		return PmCommonUtil.retrieveMinistryByOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
+	}
+	
+	public PmOrgProfile retrieveJabatan(){
+		return PmCommonUtil.retrieveJabatanByOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
+	}
 	
 	
 	/**
