@@ -367,7 +367,7 @@
 					<property name="columnName" value="contractName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.so.contract.name" />
+					<property name="bundleKey" value="lbl.sc.contract.name" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 			</list>
