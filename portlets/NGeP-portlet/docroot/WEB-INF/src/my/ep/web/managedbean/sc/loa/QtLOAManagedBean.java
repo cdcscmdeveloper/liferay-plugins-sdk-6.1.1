@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.loa;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -70,6 +71,9 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	
 	/** The supp loi loa list. */
 	private List<SuppLoiLoaBean> suppLoiLoaList;
+	
+	/** The map supp scloiloa list */
+	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;
 
 
 	/**
@@ -330,6 +334,20 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setSuppLoiLoaList(List<SuppLoiLoaBean> suppLoiLoaList) {
 		this.suppLoiLoaList = suppLoiLoaList;
+	}
+
+	/**
+	 * @return the suppLoiLoaMap
+	 */
+	public Map<Long, List<ScLoiLoa>> getSuppLoiLoaMap() {
+		return suppLoiLoaMap;
+	}
+
+	/**
+	 * @param suppLoiLoaMap the suppLoiLoaMap to set
+	 */
+	public void setSuppLoiLoaMap(Map<Long, List<ScLoiLoa>> suppLoiLoaMap) {
+		this.suppLoiLoaMap = suppLoiLoaMap;
 	}
 
 }
