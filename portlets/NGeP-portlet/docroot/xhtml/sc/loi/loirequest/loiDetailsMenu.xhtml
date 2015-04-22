@@ -169,6 +169,8 @@
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+							<p:ajax event="change" listener="#{lOIDetailBackingBean.approverRequiredEvent}"
+						    partialSubmit="true" process="@this" />
 					</p:selectOneRadio></td>
 			</tr>
 			
