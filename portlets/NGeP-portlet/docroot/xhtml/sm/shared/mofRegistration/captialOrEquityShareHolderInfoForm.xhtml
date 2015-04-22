@@ -40,8 +40,8 @@
 					</tr>
 				</p:outputPanel>
 			</table>
-			<br />
-			<p:panel id="shrInfPan" styleClass="shareHolderInfPanelClass">
+			<p:outputPanel id="shrInfPan" styleClass="shareHolderInfPanelClass"
+				layout="block">
 				<p:blockUI block=":form:tt:shrInfPan" widgetVar="buiPoShr"
 					id="poShrBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.shareholderVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.shareholderVerifed : false)}" />
@@ -102,13 +102,11 @@
 							oncomplete="blockWidget.hide()"
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
 							update=":form" style="padding-right:5px;">
-							<p:outputPanel
-								rendered="#{shareBean.prevApprovedEquityOwner}">
+							<p:outputPanel rendered="#{shareBean.prevApprovedEquityOwner}">
 								<p:graphicImage library="ep/images/design" name="document.png"
 									value="/resources/ep/images/design/document.png" />
 							</p:outputPanel>
-							<p:outputPanel
-								rendered="#{!shareBean.prevApprovedEquityOwner}">
+							<p:outputPanel rendered="#{!shareBean.prevApprovedEquityOwner}">
 								<p:graphicImage library="ep/images/design" name="edit.png"
 									value="/resources/ep/images/design/edit.png" />
 							</p:outputPanel>
@@ -120,12 +118,12 @@
 
 				<p:spacer height="2px;" />
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.sm.button.add']}" onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()"
+					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
 						update=":form" />
-					<p:commandButton value="#{lbl['lbl.sm.button.delete']}" onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()"
+					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
 						update=":form:tt:shrPerDt" />
 				</div>
@@ -165,7 +163,7 @@
 						</tr>
 					</table>
 				</p:outputPanel>
-			</p:panel>
+			</p:outputPanel>
 		</p:panel>
 	</h:panelGroup>
 

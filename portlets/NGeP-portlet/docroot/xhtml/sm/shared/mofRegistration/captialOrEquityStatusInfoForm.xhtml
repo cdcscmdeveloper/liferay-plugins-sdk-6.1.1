@@ -47,8 +47,8 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="capInfPan">
+
+		<p:outputPanel id="capInfPan" layout="block">
 			<p:blockUI block=":form:tt:capInfPan" widgetVar="buiPoCap"
 				id="poCapBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.captialVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.captialVerified : false)}" />
@@ -393,6 +393,6 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 </ui:composition>

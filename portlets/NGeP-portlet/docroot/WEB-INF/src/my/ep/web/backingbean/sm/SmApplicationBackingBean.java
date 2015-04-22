@@ -4056,6 +4056,14 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelMachineSaveorUpdate() {
 		assignValReqdToFalse();
+		if (getManagedBean().getSelectedMachine().getMachineDtlId() == null) {
+			getManagedBean().getSelectedMachine().setValue(
+					new BigDecimal(SupplierManagementConst.MIN_AMT_RANGE));
+		} else {
+			getManagedBean().getSelectedMachine().setValue(
+					getManagedBean().getRentPrevVal());
+		}
+
 		RequestContext.getCurrentInstance().reset(":form:tt:equipmentDialog");
 		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
 	}
@@ -4069,6 +4077,7 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setSelectedMachine(macBean);
+		getManagedBean().setRentPrevVal(macBean.getValue());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
 	}

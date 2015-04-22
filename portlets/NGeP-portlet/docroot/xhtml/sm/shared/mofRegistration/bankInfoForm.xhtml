@@ -39,8 +39,8 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="bankInfPan">
+
+		<p:outputPanel id="bankInfPan" layout="block">
 			<p:blockUI block=":form:tt:bankInfPan" widgetVar="buiPoBank"
 				id="poBankBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.bankVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.bankVerified : false)}" />
@@ -169,7 +169,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="570px" height="470px"
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
@@ -412,7 +412,7 @@
 					<td><p:inputTextarea maxlength="1000"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.chequesign.tnc']}" id="banCqTnc"
-							value="#{backingBean.managedBean.selectedBank.signatureInstruction}" 
+							value="#{backingBean.managedBean.selectedBank.signatureInstruction}"
 							validatorMessage="#{lbl['lbl.sm.bankDtls.chequesign.tnc']} - #{lbl['lbl.sm.banktnc.length.validMsg']}"
 							cols="36">
 							<f:validateLength maximum="1000" />
