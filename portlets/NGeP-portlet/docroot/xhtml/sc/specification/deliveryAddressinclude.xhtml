@@ -13,22 +13,32 @@
 			rows="10" style="width:100%" widgetVar="deliveryService"
 			rowIndexVar="index" value="#{deliveryList}"
 			selection="#{selectDeliveryList}" rowKey="#{delivery}">
-			<ac:paginator for="pjtDelivered"></ac:paginator>
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<ac:paginator for="pjtDelivered" />
+			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.sc.ptj']}"
 				style="width:25%;white-space: normal;">
 				<ui:fragment
 					rendered="#{delivery.pmAddressType.pmOrgProfile ne null}">
 					<h:outputText
-						value="#{delivery.pmAddressType.pmOrgProfile.orgName}"></h:outputText>
+						value="#{delivery.pmAddressType.pmOrgProfile.orgName}" />
 				</ui:fragment>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.delivery.service.address']}"
 				style="width:73%;white-space: normal;">
-				<h:outputText value="#{delivery.deliveryAddress}"></h:outputText>
+				<h:outputText value="#{delivery.deliveryAddress}" />
 			</p:column>
 		</p:dataTable>
-
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+				partialSubmit="true" update="@([id$=deliveryAddrDlg])"
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
+				action="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
+				oncomplete="deliveryAddress.show();" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this,pjtDelivered" partialSubmit="true" update="@form"
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
+				actionListener="#{specificationBackingBean.deleteDeliveryZone(zoneName)}" />
+		</div>
 	</p:panel>
 </ui:composition>

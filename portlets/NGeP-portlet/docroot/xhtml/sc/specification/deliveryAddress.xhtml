@@ -7,46 +7,27 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup>
-
-
 		<ui:fragment
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal ne 'false'}">
 			<p:accordionPanel id="panelNoaccordpnllist" dynamic="true"
 				value="#{specificationBackingBean.managedBean.deliveryLocBean}"
 				var="zonePnlList">
-
-
-
 				<c:if
 					test="#{specificationBackingBean.managedBean.scQt.panel ne 'false'}">
 					<ui:param name="zoneName"
-						value="#{zonePnlList.tplSpecZoneDtl.panelZone.name}"></ui:param>
+						value="#{zonePnlList.tplSpecZoneDtl.panelZone.name}" />
 				</c:if>
 				<c:if
 					test="#{specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 					<ui:param name="zoneName"
-						value="#{zonePnlList.tplSpecZoneDtl.zoneName}"></ui:param>
+						value="#{zonePnlList.tplSpecZoneDtl.zoneName}" />
 				</c:if>
-
 				<p:tab title="#{zoneName}">
 					<ui:param name="deliveryList"
-						value="#{zonePnlList.deliveryLocList}"></ui:param>
+						value="#{zonePnlList.deliveryLocList}" />
 					<ui:param name="selectDeliveryList"
-						value="#{specificationBackingBean.managedBean.selectDeliveryList}"></ui:param>
-					<!-- 	<ui:param name="pjtDelivered" value="#{zonePnlList.zoneName}"></ui:param> -->
-					<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.btn.add']}"
-							process="@this" partialSubmit="true" update=":form:searDelivery"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							actionListener="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
-							onclick="deliveryAddress.show();" />
-						<p:commandButton value="#{lbl['lbl.btn.delete']}"
-							process="@this,pjtDelivered" partialSubmit="true" update="@form"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							actionListener="#{specificationBackingBean.deleteDeliveryZone(zoneName)}" />
-
-					</div>
+						value="#{specificationBackingBean.managedBean.selectDeliveryList}" />
+					<ui:include src="deliveryAddressinclude.xhtml" />
 				</p:tab>
 			</p:accordionPanel>
 		</ui:fragment>
@@ -54,27 +35,11 @@
 		<ui:fragment
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal eq 'false'}">
 			<ui:param name="deliveryList"
-				value="#{specificationBackingBean.managedBean.deliveryNonZoneList}"></ui:param>
+				value="#{specificationBackingBean.managedBean.deliveryNonZoneList}" />
 			<ui:param name="selectDeliveryList"
-				value="#{specificationBackingBean.managedBean.selectDeliveryList}"></ui:param>
-			<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this" partialSubmit="true"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					update=":form:searDelivery" oncomplete="deliveryAddress.show();" />
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					update="@form" process="@this,pjtDelivered"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
-					partialSubmit="true"
-					actionListener="#{specificationBackingBean.deleteDeliveryDtls}" />
-			</div>
+				value="#{specificationBackingBean.managedBean.selectDeliveryList}" />
+			<ui:include src="deliveryAddressinclude.xhtml" />
 		</ui:fragment>
-
-
-
-
-		<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
+		<ui:include src="searchDeliveryAddress.xhtml" />
 	</h:panelGroup>
-
 </ui:composition>
