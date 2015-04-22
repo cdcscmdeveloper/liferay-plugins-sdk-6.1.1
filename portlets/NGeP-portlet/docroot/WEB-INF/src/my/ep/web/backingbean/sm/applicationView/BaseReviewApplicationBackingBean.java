@@ -1827,7 +1827,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void printSupplierProfile() throws IOException {
 		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(" PAPPLNO", getManagedBean().getSmAppl().getApplNo());
+		paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
 		generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 	}
 
