@@ -186,6 +186,7 @@ public class ReportsGenerateBean {
 		private boolean smMofRegNoTwoView = false;
 		private boolean smRegistrationTypeTwoView = false;
 		private boolean smActiveSubmissiveFromDateView = false;
+		private boolean smActSubmisAllDateView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -446,6 +447,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmActSubmisAllDateView() {
+			return smActSubmisAllDateView;
+		}
+		public void setSmActSubmisAllDateView(boolean smActSubmisAllDateView) {
+			this.smActSubmisAllDateView = smActSubmisAllDateView;
+		}
 		public boolean isSmActiveSubmissiveFromDateView() {
 			return smActiveSubmissiveFromDateView;
 		}
