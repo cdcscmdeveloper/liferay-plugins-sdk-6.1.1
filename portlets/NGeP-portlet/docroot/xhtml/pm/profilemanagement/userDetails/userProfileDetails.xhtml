@@ -220,7 +220,7 @@
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.userStatusChange()}"
 									partialSubmit="true" process="@this"
-									update=":form:tvRoleReceivingAddr , :form:dtOrgUnit" />
+									update="@this, :form:tvRoleReceivingAddr , :form:dtOrgUnit" />
 
 							</p:selectOneMenu> &#160;&#160; <p:graphicImage id="giUserStatus"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
