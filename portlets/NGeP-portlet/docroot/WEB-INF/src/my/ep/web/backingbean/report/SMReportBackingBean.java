@@ -133,6 +133,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmCompanyNameView(true);
 				rptGenBean.setSmMofRegNoTwoView(true);
 				rptGenBean.setSmRegistrationTypeTwoView(true);
+				rptGenBean.setSmActiveSubmissiveFromDateView(true);
+				rptGenBean.setSmActSubmisAllDateView(true);
 				/*rptGenBean.setSmMandatoryFromDateView(true);
 				rptGenBean.setSmMandatoryDateView(true);*/
 	            break;

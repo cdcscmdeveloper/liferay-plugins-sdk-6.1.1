@@ -1168,6 +1168,11 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.submissiondatefrom']}" style="width:158px;"/>
 								</TD>
 								</c:if>
+								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActSubmisAllDateView}">
+								<TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.subactdatefrom']}" style="width:180px;"/>
+								</TD>
+								</c:if>
 								<TD>
 									<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true" value="#{reportBackingBean.fromDate}" 
 									
