@@ -2622,6 +2622,15 @@ public class LOIDetailBackingBean extends
 			scLoiApproval.setApproverActionDate(new Date());
 
 			scLoi.setScLoiApproval(scLoiApproval);
+		} 
+		
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+			if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId) ||
+					QTStatusConst.LOI_PENDING_REVISION.equals(statusId)) {
+				if (!scLoi.isApprovalReq()){
+					scLoi.setScLoiApproval(null);
+				}
+			}
 		}
 
 		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
@@ -2638,17 +2647,20 @@ public class LOIDetailBackingBean extends
 		scLoi.setScLoiRemarks(finalizeRemarks(scLoi.getScLoiRemarks()));
 
 		// nego terms
-		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
-			List<ScLoiTerm> selectedTerms = new ArrayList<ScLoiTerm>();
-			for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
-				if(loiTerm.isSelected()){
-					selectedTerms.add(loiTerm);
+		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId) ||
+				QTStatusConst.LOI_PENDING_REVISION.equals(statusId) || QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+			if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
+				List<ScLoiTerm> selectedTerms = new ArrayList<ScLoiTerm>();
+				for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
+					if(loiTerm.isSelected()){
+						selectedTerms.add(loiTerm);
+					}
 				}
+				scLoi.setScNegoTerms(selectedTerms);
 			}
-			scLoi.setScNegoTerms(selectedTerms);
 		}
 
-		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())){
+		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)){
 			if(("P").equals(getManagedBean().getScQt().getScheduleType())){
 				this.saveProgressivePaymntList();
 			}else if(("F").equals(getManagedBean().getScQt().getScheduleType())){
@@ -2839,6 +2851,29 @@ public class LOIDetailBackingBean extends
 			}
 		}
 	}
+
+	/**
+	 * Approver required event.
+	 */
+	public void approverRequiredEvent() {
+		debugLogger("approverRequiredEvent");
+		ScLoi scLoi = getManagedBean().getScLoi();
+		// approvers
+		if(scLoi.isApprovalReq()){
+			ScLoiApproval scLoiApproval = scLoi.getScLoiApproval();
+			PmUser approverUser = null;
+			if (scLoiApproval != null) {
+				approverUser = scLoiApproval.getApprover();
+			}
+			if (approverUser == null) {
+				approverUser = new PmUser();
+			}
+			getManagedBean().setApproverUser(approverUser);
+		} else{
+			getManagedBean().setApproverUser(new PmUser());
+		}
+	} 
+
 
 	/**
 	 * Adds the schedule details.
