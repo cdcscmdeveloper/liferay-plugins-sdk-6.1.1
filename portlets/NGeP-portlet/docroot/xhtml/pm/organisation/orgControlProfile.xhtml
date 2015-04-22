@@ -7,35 +7,36 @@
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.control']}"
 		toggleable="true">
-		<h:panelGrid columns="2">
-
+		<h:panelGrid columns="2" rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">				
+			<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
+			<p:inputText label="#{lbl['lbl.pm.organisation.orgName']}" size="50"
+				value="#{(organisationBackingBean.retrieveMinistry()).pmOrgValidity.orgName}"
+				styleClass="ppDisplayTextL" disabled="true" />
 			<p:outputLabel value="#{lbl['lbl.pm.organisation.ptjGroup']}" />
 			<p:inputText label="#{lbl['lbl.pm.organisation.orgName']}" size="50"
-				value="#{organisationBackingBean.managedBean.orgProfile.pmPtjGroup.groupName}"
+				value="#{(organisationBackingBean.retrieveJabatan()).pmOrgValidity.orgName}"
 				styleClass="ppDisplayTextL" disabled="true" />
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.businessArea']}"></h:outputLabel>
 			<p:inputText label="#{lbl['lbl.pm.organisation.orgName']}" size="50"
 				value="#{organisationBackingBean.managedBean.orgProfile.pmAgOffice.officeName}"
 				styleClass="ppDisplayTextL" disabled="true" />
-			<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
-			<p:selectOneMenu disabled="#{(organisationBackingBean.managedBean.orgProfile.recordStatusFlg == 1 )? 'false': 'true'}"
-				label="#{lbl['lbl.pm.org.ministryName']}" 
-				value="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgProfileId}"
-				styleClass="ppDropDownWidthL" style="width: 335px;margin-bottom: 5px;"
-				required="true" id="ministryNameSelect">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-					itemValue="#{null}" />
-				<f:selectItems var="orgProfileLs"
-					value="#{organisationBackingBean.managedBean.orgProfileList}"
-					itemLabel="#{orgProfileLs.pmOrgValidity.orgName}"
-					itemValue="#{orgProfileLs.orgProfileId}" />
-				<p:ajax event="change" partialSubmit="true" process="@this" 
-					listener ="#{organisationBackingBean.resetProfileGroup()}"/> 
-			</p:selectOneMenu>
-
-
 		</h:panelGrid>
-
+		<h:panelGrid columns="2" rendered="#{organisationBackingBean.managedBean.orgType eq 'FJA'}">
+				<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
+				<p:selectOneMenu disabled="#{(organisationBackingBean.managedBean.orgProfile.recordStatusFlg == 1 )? 'false': 'true'}"
+					label="#{lbl['lbl.pm.org.ministryName']}" 
+					value="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgProfileId}"
+					styleClass="ppDropDownWidthL" style="width: 335px;margin-bottom: 5px;"
+					required="true" id="ministryNameSelect">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
+					<f:selectItems var="orgProfileLs"
+						value="#{organisationBackingBean.managedBean.orgProfileList}"
+						itemLabel="#{orgProfileLs.pmOrgValidity.orgName}"
+						itemValue="#{orgProfileLs.orgProfileId}" />
+					<p:ajax event="change" partialSubmit="true" process="@this" 
+						listener ="#{organisationBackingBean.resetProfileGroup()}"/> 
+				</p:selectOneMenu>
+		</h:panelGrid>
 	</p:panel>
-
 </ui:composition>

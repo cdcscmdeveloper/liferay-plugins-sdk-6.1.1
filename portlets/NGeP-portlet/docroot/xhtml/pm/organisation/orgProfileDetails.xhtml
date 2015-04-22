@@ -129,7 +129,7 @@
 		</table>
 	</p:panel>
 	<ui:fragment
-		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
+		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FJA'}">
 		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
 	</ui:fragment>
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
