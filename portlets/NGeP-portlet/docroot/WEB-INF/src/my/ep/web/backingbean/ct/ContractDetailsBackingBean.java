@@ -787,6 +787,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().setDisableScheduleRadio(true);
 			getManagedBean().setFrequencySchedule("P");
 		}
+		// Retrieve contract amount
+		for (CtContractAmount ctContractAmount : getManagedBean().getContractVer().getCtContractAmounts()) {
+			if (ctContractAmount.getEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()
+					&& ctContractAmount.getExpDate().getTime() >= DateUtils.getCurrentDateWithoutTime().getTime()) {
+				getManagedBean().setCtContractAmount(ctContractAmount);
+			}
+		}
+		
 		// Retrieve latest amendment
 		if (getManagedBean().getCtContract().getLatestContractVer() != null) {
 			IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
@@ -967,15 +975,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					if (getManagedBean().getCtContract().getLatestContractVer() != null 
 							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds() != null
 							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds().size() > 0
-							&& (contractVer.getCtPerformanceBonds() == null || contractVer.getCtPerformanceBonds().isEmpty())) {
+							&& (getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null || getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
 						throw new EpException(MessageConst.ERROR_100022, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", 
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}				
-				if (contractVer.getCtPerformanceBonds() != null && contractVer.getCtPerformanceBonds().size() > 0) {
+				if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null && getManagedBean().getCtContractAmount().getCtPerformanceBonds().size() > 0) {
 					double bondAmount = 0.0;
-					for (CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
+					for (CtPerformanceBond performanceBond : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 						bondAmount = bondAmount + performanceBond.getBondAmount();
 						if (performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
 							throw new EpException(MessageConst.ERROR_100022,
@@ -1830,11 +1838,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * The method used to set status of performance bond.
 	 * The record status is true when the flag value is 1.
 	 * 
-	 * @param  contractVar  an object of contract version
+	 * @param  contractVer  an object of contract version
      */
-    private void setBondRecordStatus(CtContractVer contractVar) {
-    	if (contractVar.getCtPerformanceBonds().size() > 0) {
-    		for (CtPerformanceBond bond : contractVar.getCtPerformanceBonds()) {
+    private void setBondRecordStatus(CtContractVer contractVer) {
+    	if (contractVer.getCtPerformanceBonds().size() > 0) {
+    		for (CtPerformanceBond bond : contractVer.getCtPerformanceBonds()) {
     			if (bond.getRecordStatusFlg().intValue() == 1 &&  !bond.isRecordStatus()) {
     				bond.setRecordStatus(true);
   			  	} else if (bond.isRecordStatus() && bond.getRecordStatusFlg().intValue() != 1) {
@@ -2355,7 +2363,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
         cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
         cal.add(Calendar.YEAR, 1); 
         newBond.setExpDate(cal.getTime());
-     	getManagedBean().getContractVer().getCtPerformanceBonds().add(newBond);
+     	getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 	}
 	
 	/**
@@ -2363,7 +2371,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
      */
 	public void selectAllBond() {
 		if (getManagedBean().isSelectAll()) {
-			for (CtPerformanceBond bonds : getManagedBean().getContractVer().getCtPerformanceBonds()) {
+			for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 				bonds.setSelectedCheckBox(true);
 			}
 		}
@@ -2374,8 +2382,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
      */
 	public void removePerformanceBond() {
 		try {
-			if (getManagedBean().getContractVer().getCtPerformanceBonds() != null) {
-				Iterator<CtPerformanceBond> performanceBond = getManagedBean().getContractVer().getCtPerformanceBonds().iterator();
+			if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
+				Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
 				while (performanceBond.hasNext()) {
 					CtPerformanceBond  bond = performanceBond.next();
 					if (bond.isSelectedCheckBox()) {
@@ -3319,7 +3327,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
 	    
-	    for (CtPerformanceBond ctPerformanceBond : getManagedBean().getContractVer().getCtPerformanceBonds()) {
+	    for (CtPerformanceBond ctPerformanceBond : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 	    	if (ctPerformanceBond.equals(getManagedBean().getCtPerformanceBond())) {
 	    		ctPerformanceBond.setFileName(item.getFileName());
 	    		ctPerformanceBond.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
@@ -3501,6 +3509,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					      contractAmtObj = contractAmt;
 				   }
 			  }
-	        getManagedBean().getContractVer().setCtContractAmount(contractAmtObj);
+	        getManagedBean().setCtContractAmount(contractAmtObj);
         }
    }

@@ -34,6 +34,7 @@ import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
+import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -150,6 +151,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private CtContractZone selectedCtZone;
 	private CtAmendment ctAmendment;
 	private CtAgency selectedAgency;
+	private CtContractAmount ctContractAmount;	
 	private TreeNode ctZoneTrees;
 	private MenuModel fulfilmentMenuModel;	
 	private SmAddress smAddress;
@@ -1322,6 +1324,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedAgency(CtAgency selectedAgency) {
 		this.selectedAgency = selectedAgency;
+	}	
+
+	/**
+	 * @return the ctContractAmount
+	 */
+	public CtContractAmount getCtContractAmount() {
+		return ctContractAmount;
+	}
+
+	/**
+	 * @param ctContractAmount the ctContractAmount to set
+	 */
+	public void setCtContractAmount(CtContractAmount ctContractAmount) {
+		this.ctContractAmount = ctContractAmount;
 	}
 
 	/**
