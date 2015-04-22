@@ -18,14 +18,12 @@
 					<h:outputLink value="#{viewSmApplBackingBean.managedBean.portletUrl}" >
 						<p:outputLabel value="#{viewSmApplBackingBean.managedBean.portletUrlLabel}" />
 						<f:param name="supplierId" value="#{viewSmApplBackingBean.managedBean.supplierIdParam}"/>
-					</h:outputLink>
-					<br />
+					</h:outputLink>&#160;&#160;
 					<p:commandButton
 						value="#{lbl['lbl.btn.print']}"
 						ajax="false">
 						<p:fileDownload value="#{viewSmApplBackingBean.printSupplierProfile()}" />
 					</p:commandButton>
-					<br />
 				</td>
 			</tr>
 		</table>
