@@ -11,14 +11,16 @@
 	<ui:define name="contentSection">
 		<p:outputPanel rendered="#{postSupplierRegBB.validMofUser() or postSupplierRegBB.validBasicSupplier()}" id="mofPanelId">
 			<c:forEach items="#{postSupplierRegBB.managedBean.userActionMap}" var="entry">
-				#{entry.key}
-				<p:commandLink  value="- click here to continue" action="#{postSupplierRegBB.pageRedirect(entry.value)}"></p:commandLink><br />
+				<h:outputText value="#{entry.key}" />
+				<h:outputText value=" - " />
+				<p:commandLink  value="#{lbl['lbl.sm.basic.click.to.continue']}" action="#{postSupplierRegBB.pageRedirect(entry.value)}"></p:commandLink><br />
 			</c:forEach>
 		</p:outputPanel>
 		
 		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">;
 			<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" /> 
-			<p:commandLink  value="- click here to continue"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+			<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}"/> 
+			<p:commandLink  value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 		</p:outputPanel>
 		<br /><br />
 	</ui:define>
