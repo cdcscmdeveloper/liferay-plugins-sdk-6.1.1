@@ -15,7 +15,7 @@
 		!contractDetailsBackingBean.managedBean.directPurchase}">
 		 <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/> -->
 		 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
-			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
+			  value="#{contractDetailsBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"
 			  rowKey="#{rowKeyObj}"
 			  first="#{contractDetailsBackingBean.managedBean.firstRowSelected}">
 			  <ac:paginator for="tableBond" />
@@ -55,6 +55,7 @@
 			
 			<p:column style="width:8%;" headerText="#{lbl['lbl.ct.effective.date']}">
 				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
+					disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 					showOn="button" readonlyInput="true" navigator="true"
 					mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"
@@ -75,6 +76,7 @@
 			<p:column styleClass="column-align-center" style="width:35%;" headerText="#{lbl['lbl.txt.attachment']}" >
 				<h:panelGroup id="uploadBondPg" columns="2">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"  
+							rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
 					     style="float:left;" icon="iconAttachment" update=":form:tableBond, :form:uploadBondDlg">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
