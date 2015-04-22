@@ -88,24 +88,17 @@
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:5%" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
-				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
-					disabled="#{centralContractBackingBean.managedBean.viewContract}"
-				   	style="width:95%;" label="#{lbl['lbl.ct.contact.person.name']}" />
+			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;white-space:normal;">
+				<h:outputText id="cperson" value="#{contactPersonsVar.name}"  />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
-				<p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200"
-					disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;white-space:normal;">
+				<h:outputText value="#{contactPersonsVar.address}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;">
-				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
-				     style="width:95%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
-				     disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;white-space:normal;">
+				  <h:outputText id="validateEmail" value="#{contactPersonsVar.email}"   />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;">
-				<p:inputText id="validPhone" style="width:95%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
-				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
-				   disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
+			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;white-space:normal;">
+				<h:outputText id="validPhone"   value="#{contactPersonsVar.phoneNo}"  />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
