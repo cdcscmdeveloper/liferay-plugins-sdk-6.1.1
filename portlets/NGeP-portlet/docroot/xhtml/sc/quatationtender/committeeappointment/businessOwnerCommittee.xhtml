@@ -18,7 +18,6 @@
 				<td />
 			</tr>
 		</table>
-		<p:spacer height="2" />
 		<p:dataTable id="businessownercommitteeId"
 			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
 			rowIndexVar="index" editable="true"
@@ -60,10 +59,8 @@
 			</p:column>
 
 		</p:dataTable>
-		<p:spacer height="5px" />
 		<br />
 	</p:panel>
-	<p:spacer height="5px" />
 	<p:panel header="#{lbl['lbl.sc.qt.specification.approval']}"
 		toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
@@ -76,7 +73,6 @@
 			</p:selectBooleanCheckbox>
 			<h:outputLabel value="#{lbl['lbl.sc.qt.req.approval.specification']}" />
 		</h:panelGrid>
-		<p:spacer height="5px" />
 
 		<h:panelGroup id="approvalSpec">
 			<p:panel
