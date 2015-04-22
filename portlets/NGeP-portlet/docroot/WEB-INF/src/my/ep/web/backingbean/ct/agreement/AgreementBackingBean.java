@@ -18,6 +18,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1162,6 +1164,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 			Map<Long, TreeNode> secSeqMap = new HashMap<Long, TreeNode>();
 			TreeNode node = null;
+		
+			Collections.sort(agreementContent.getTplDocMaster().getTplDocSections(), new Comparator<TplDocSection>() {
+				public int compare(TplDocSection o1,  TplDocSection o2) {
+					  return o1.getDocSectionId().compareTo(o2.getDocSectionId());
+				}});
+		
 			for (TplDocSection objL1 : agreementContent.getTplDocMaster().getTplDocSections()) {
 				if (objL1.getParent() == null) {
 					node = new DefaultTreeNode(objL1, getManagedBean().getDocSectionTN());
