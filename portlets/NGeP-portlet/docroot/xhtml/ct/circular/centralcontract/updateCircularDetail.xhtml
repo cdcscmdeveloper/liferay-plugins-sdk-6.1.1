@@ -42,7 +42,8 @@
 				    <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 				
 				  <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
-			   	        <p:selectBooleanCheckbox id="extensionId" value="#{centralContractBackingBean.managedBean.circularExtension}">
+			   	        <p:selectBooleanCheckbox id="extensionId" value="#{centralContractBackingBean.managedBean.circularExtension}"
+			   	        	 disabled="#{centralContractBackingBean.managedBean.viewContract}">
 			                 <p:ajax event="change" update=":form:ccc" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> 
 			           </p:selectBooleanCheckbox>
 		        
@@ -56,6 +57,7 @@
 			    <p:calendar  value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
 			         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
+			         disabled="#{centralContractBackingBean.managedBean.viewContract}"
 			         rendered="#{centralContractBackingBean.managedBean.circularExtension}"  size="10"  id="popupButtonCal5" showOn="button"
 				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 		       </p:calendar>
@@ -64,6 +66,7 @@
 		      <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}"  rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
 		   <p:calendar size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
+				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
 				   rendered="#{centralContractBackingBean.managedBean.circularExtension}" 
 				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
 				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
