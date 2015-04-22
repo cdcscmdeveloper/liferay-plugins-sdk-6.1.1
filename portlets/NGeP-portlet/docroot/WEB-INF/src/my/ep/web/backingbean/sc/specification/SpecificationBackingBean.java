@@ -216,7 +216,7 @@ public class SpecificationBackingBean extends
 	private IPagingDataModel<TplSpecMaster> templateSpecCreate = new CreateTemplateSpecPagingDataModel();
 
 	/** The search delivery address. */
-	private IPagingDataModel<PmAddressType> searchDeliveryAddress = new DeliveryPagingDataModel();
+	//private IPagingDataModel<PmAddressType> searchDeliveryAddress = new DeliveryPagingDataModel();
 
 	/** The log. */
 	private static Logger log = Logger
@@ -3684,11 +3684,11 @@ public class SpecificationBackingBean extends
 	 *            (Long stateId).
 	 */
 	public void districtBystate(AjaxBehaviorEvent event) {
+		log.info("districtBystate - START");
 		IDistrictSO districtSo = null;
 		DistrictResDTO resDto = null;
 		try {
-			Long stateId = (Long) event.getComponent().getAttributes()
-					.get("value");
+			Long stateId = (Long) event.getComponent().getAttributes().get("value");
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			if (stateId != null) {
 				reqDTO.setStateId(stateId);
@@ -3696,7 +3696,6 @@ public class SpecificationBackingBean extends
 				for (PmState sate : stateList) {
 					if (sate.getStateId().equals(stateId)) {
 						this.getManagedBean().setStateCode(sate.getStateCode());
-
 					}
 				}
 			} else {
@@ -3704,29 +3703,86 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setDistrictList(null);
 			this.getManagedBean().setDivisionList(null);
-			if (ParameterConst.SARAK_SK_CODE.equalsIgnoreCase(this
-					.getManagedBean().getStateCode())) {
-
-				this.getManagedBean().setDivisionList(
-						PmCommonUtil.retrievePmDivisionList(stateId));
-			} else {
-
-				districtSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
-				resDto = districtSo.retriveDistrictListByStateID(reqDTO);
-
-				if (resDto != null) {
-					this.getManagedBean().setDistrictList(
-							resDto.getDistrictList());
+			
+			if (getManagedBean().getScQt().isZonal()) {
+				PmParameter zonelocationLavel = this.getManagedBean().getScQt().getZoneLocationLevel();
+				if (null != zonelocationLavel && null != zonelocationLavel.getParameterId()) {
+					PmParameter parameter = getPmParameter(zonelocationLavel.getParameterId());
+					this.getManagedBean().setLocationLevel(parameter.getParameterCode());
 				}
-
+				String locationLevel = this.getManagedBean().getLocationLevel();
+				List<String> codes = new ArrayList<String>();
+				List<PmState> pmStates = new ArrayList<PmState>();
+				List<PmDistrict> districts = new ArrayList<PmDistrict>();
+				List<PmDivision> divisions = new ArrayList<PmDivision>();
+				
+				if (null != this.getManagedBean().getTplSpecZoneDtl()) {
+					for (TplSpecZoneLoc specZoneLoc : this.getManagedBean().getTplSpecZoneDtl().getTplSpecZoneLocs()) {
+						if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(locationLevel)) {
+							PmState pmState = specZoneLoc.getPmState();
+							if (null != pmState) {
+								if (!codes.contains(pmState.getStateCode())) {
+									codes.add(pmState.getStateCode());
+									pmStates.add(pmState);
+								}
+							}
+							this.getManagedBean().setStateList(pmStates);
+						} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(locationLevel)) {
+							if (getManagedBean().getStateCode().equals(specZoneLoc.getPmState().getStateCode())) {
+								PmDistrict district = specZoneLoc.getPmDistrict();
+								if (null != district) {
+									if (!codes.contains(district.getDistrictCode())) {
+										codes.add(district.getDistrictCode());
+										districts.add(district);
+									}
+								}
+							}
+							this.getManagedBean().setDistrictList(districts);
+						} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(locationLevel)) {
+							PmDivision divison = specZoneLoc.getPmDivision();
+							if (null != divison) {
+								if (!codes.contains(divison.getDivisionCode())) {
+									codes.add(divison.getDivisionCode());
+									divisions.add(divison);
+								}
+							}
+							this.getManagedBean().setDivisionList(divisions);
+						}
+					}
+				}
+			} else {
+				if (ParameterConst.SARAK_SK_CODE.equalsIgnoreCase(this.getManagedBean().getStateCode())) {
+					this.getManagedBean().setDivisionList(PmCommonUtil.retrievePmDivisionList(stateId));
+				} else {
+					districtSo = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+					resDto = districtSo.retriveDistrictListByStateID(reqDTO);
+					if (resDto != null) {
+						this.getManagedBean().setDistrictList(resDto.getDistrictList());
+					}
+				}
 			}
 		} finally {
 			districtSo = null;
 		}
-
+		log.info("districtBystate - END");
 	}
 
+	/**
+	 * @param parameterId
+	 * @return
+	 */
+	private PmParameter getPmParameter(Long parameterId) {
+		IParameterSO parameterSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterId(parameterId);
+		return parameterSO.retrieveParameterById(parameterReqDTO)
+				.getPmParameter();
+
+	}
+	
 	/**
 	 * Retrieve division district.retrieve all the District list information by
 	 * division for Delivery Addresses.
@@ -3878,10 +3934,9 @@ public class SpecificationBackingBean extends
 				orgProfileSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDDListByOrgType(reqDTO);
 
-				this.getManagedBean().setPtjtList(resDTO.getOrgProfileList());
+				this.getManagedBean().setPtjProfileDDList(resDTO.getOrgProfileDDList());
 			} else {
 				// this.getManagedBean().setPtjId(null);
 				this.getManagedBean()
@@ -7926,13 +7981,41 @@ public class SpecificationBackingBean extends
 	 *            (TplSpecZoneDtl zoneDetail).
 	 */
 	public void deliveryList(TplSpecZoneDtl zoneDetail) {
-		try {
-			this.getManagedBean().setTplSpecZoneDtl(zoneDetail);
-
-		} finally {
-
+		log.info("deliveryList - START");
+		getManagedBean().setStateId(null);
+		getManagedBean().setDistrictId(null);
+		this.getManagedBean().setStateCode(null);
+		this.getManagedBean().setDistrictCode(null);
+		this.getManagedBean().setDivisionCode(null);
+		this.getManagedBean().setDeliveryAddressSelect(null);
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		
+		IPagingDataModel<PmAddressType> searchDeliveryAddress = getManagedBean().getSearchDeliveryAddressDataModel();
+		if (searchDeliveryAddress == null) {
+			getManagedBean().setSearchDeliveryAddressDataModel(new DeliveryPagingDataModel("deliveryAddress"));
 		}
-
+		getManagedBean().getSearchDeliveryAddressDataModel().resetData();
+		
+		if (getManagedBean().getScQt().isZonal()) {
+			this.getManagedBean().setTplSpecZoneDtl(zoneDetail);
+			List<String> codes = new ArrayList<String>();
+			List<PmState> pmStates = new ArrayList<PmState>();
+			if (null != zoneDetail.getTplSpecZoneLocs()) {
+				for (TplSpecZoneLoc specZoneLoc : zoneDetail.getTplSpecZoneLocs()) {
+					PmState pmState = specZoneLoc.getPmState();
+					if (null != pmState) {
+						if (!codes.contains(pmState.getStateCode())) {
+							codes.add(pmState.getStateCode());
+							pmStates.add(pmState);
+						}
+					}
+					this.getManagedBean().setStateList(pmStates);
+				}
+			}
+		} else {
+			log.info("Non Zonal");
+		}
+		log.info("deliveryList - END");
 	}
 
 	/**
@@ -8144,76 +8227,79 @@ public class SpecificationBackingBean extends
 	 *            the delivery zone name
 	 */
 	public void deleteDeliveryZone(String deliveryZoneName) {
-		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
-				.getDeliveryLocBean();
-		List<ScQtDeliveryLoc> locationRemoveList = this.getManagedBean()
-				.getDeliveryLocRemoveList();
-		if (null == locationRemoveList) {
-			locationRemoveList = new ArrayList<ScQtDeliveryLoc>();
-		}
-		if (!this.getManagedBean().getScQt().isPanel()) {
-			for (BriefingZoneBean zonebean : deliveryBean) {
-				if (zonebean.getTplSpecZoneDtl().getZoneName()
-						.equalsIgnoreCase(deliveryZoneName)) {
-
-					List<ScQtDeliveryLoc> deliveryList = zonebean
-							.getDeliveryLocList();
-
-					List<ScQtDeliveryLoc> selectdeliveryList = this
-							.getManagedBean().getSelectDeliveryList();
-					if (null == selectdeliveryList
-							|| selectdeliveryList.isEmpty()) {
-						throw new EpException(MessageConst.ERROR_760146);
-					}
-					locationRemoveList.addAll(selectdeliveryList);
-					if (deliveryList.size() == selectdeliveryList.size()) {
-
-						deliveryList.clear();
-
-					} else {
-
-						for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
-							delLoc.setDeleted(true);
-							deliveryList.remove(delLoc);
-
+		log.info("deleteDeliveryZone - START");
+		if (getManagedBean().getScQt().isZonal()) {
+			List<BriefingZoneBean> deliveryBean = this.getManagedBean().getDeliveryLocBean();
+			List<ScQtDeliveryLoc> locationRemoveList = this.getManagedBean().getDeliveryLocRemoveList();
+			if (null == locationRemoveList) {
+				locationRemoveList = new ArrayList<ScQtDeliveryLoc>();
+			}
+			if (!this.getManagedBean().getScQt().isPanel()) {
+				for (BriefingZoneBean zonebean : deliveryBean) {
+					if (zonebean.getTplSpecZoneDtl().getZoneName().equalsIgnoreCase(deliveryZoneName)) {
+						List<ScQtDeliveryLoc> deliveryList = zonebean.getDeliveryLocList();
+						List<ScQtDeliveryLoc> selectdeliveryList = this.getManagedBean().getSelectDeliveryList();
+						if (null == selectdeliveryList || selectdeliveryList.isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760146);
+						}
+						locationRemoveList.addAll(selectdeliveryList);
+						if (deliveryList.size() == selectdeliveryList.size()) {
+							deliveryList.clear();
+						} else {
+							for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+								delLoc.setDeleted(true);
+								deliveryList.remove(delLoc);
+							}
 						}
 					}
+					this.getManagedBean().setDeliveryLocRemoveList(locationRemoveList);
 				}
-				this.getManagedBean().setDeliveryLocRemoveList(
-						locationRemoveList);
-
+			} else {
+				for (BriefingZoneBean zonebean : deliveryBean) {
+					if (zonebean.getTplSpecZoneDtl().getPanelZone().getName().equalsIgnoreCase(deliveryZoneName)) {
+						List<ScQtDeliveryLoc> deliveryList = zonebean.getDeliveryLocList();
+						List<ScQtDeliveryLoc> selectdeliveryList = this.getManagedBean().getSelectDeliveryList();
+						if (null == selectdeliveryList || selectdeliveryList.isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760146);
+						}
+						locationRemoveList.addAll(selectdeliveryList);
+						if (deliveryList.size() == selectdeliveryList.size()) {
+							deliveryList.clear();
+						} else {
+							for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+								delLoc.setDeleted(true);
+								deliveryList.remove(delLoc);
+							}
+						}
+					}
+					this.getManagedBean().setDeliveryLocRemoveList(locationRemoveList);
+				}
 			}
 		} else {
-			for (BriefingZoneBean zonebean : deliveryBean) {
-				if (zonebean.getTplSpecZoneDtl().getPanelZone().getName()
-						.equalsIgnoreCase(deliveryZoneName)) {
-					List<ScQtDeliveryLoc> deliveryList = zonebean
-							.getDeliveryLocList();
-
-					List<ScQtDeliveryLoc> selectdeliveryList = this
-							.getManagedBean().getSelectDeliveryList();
-					if (null == selectdeliveryList
-							|| selectdeliveryList.isEmpty()) {
-						throw new EpException(MessageConst.ERROR_760146);
-					}
-					locationRemoveList.addAll(selectdeliveryList);
-					if (deliveryList.size() == selectdeliveryList.size()) {
-
-						deliveryList.clear();
-
-					} else {
-
-						for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
-							delLoc.setDeleted(true);
-							deliveryList.remove(delLoc);
-						}
-					}
-				}
-				this.getManagedBean().setDeliveryLocRemoveList(
-						locationRemoveList);
+			List<ScQtDeliveryLoc> nonzone = this.getManagedBean().getDeliveryNonZoneList();
+			if (null == nonzone) {
+				nonzone = new ArrayList<ScQtDeliveryLoc>();
 			}
+			List<ScQtDeliveryLoc> locationRemoveList = this.getManagedBean().getDeliveryLocRemoveList();
+			if (null == locationRemoveList) {
+				locationRemoveList = new ArrayList<ScQtDeliveryLoc>();
+			}
+			List<ScQtDeliveryLoc> selectdeliveryList = this.getManagedBean().getSelectDeliveryList();
+			if (null == selectdeliveryList || selectdeliveryList.isEmpty()) {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
+			locationRemoveList.addAll(selectdeliveryList);
+			if (nonzone.size() == selectdeliveryList.size()) {
+				nonzone.clear();
+			} else {
+				for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+					delLoc.setDeleted(true);
+					nonzone.remove(delLoc);
+				}
+			}
+			this.getManagedBean().setDeliveryLocRemoveList(locationRemoveList);
 		}
-
+		log.info("deleteDeliveryZone - END");
 	}
 
 	/**
@@ -10705,7 +10791,7 @@ public class SpecificationBackingBean extends
 	 * Search delivery address.Event handle search delivery addresses.
 	 */
 	public void searchDeliveryAddress() {
-		searchDeliveryAddress.reloadData();
+		getManagedBean().getSearchDeliveryAddressDataModel().reloadData();
 	}
 
 	/**
@@ -10883,10 +10969,8 @@ public class SpecificationBackingBean extends
 		/**
 		 * Instantiates a new delivery paging data model.
 		 */
-		public DeliveryPagingDataModel() {
-
-			super("deliveryAddress");
-
+		public DeliveryPagingDataModel(String componentId) {
+			super(componentId, false);
 		}
 
 		/*
@@ -10896,6 +10980,7 @@ public class SpecificationBackingBean extends
 		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
 		 * .biz.bean.search.ISearchBean)
 		 */
+		@Override
 		public ISearchResultBean<PmAddressType> pageChangeListener(
 				ISearchBean<PmAddressType> searchBean) {
 			IAddressSO addressSO;
@@ -11033,26 +11118,6 @@ public class SpecificationBackingBean extends
 	 */
 	public void setOutputTab(int outputTab) {
 		this.outputTab = outputTab;
-	}
-
-	/**
-	 * Gets the search delivery address.
-	 * 
-	 * @return the search delivery address
-	 */
-	public IPagingDataModel<PmAddressType> getSearchDeliveryAddress() {
-		return searchDeliveryAddress;
-	}
-
-	/**
-	 * Sets the search delivery address.
-	 * 
-	 * @param searchDeliveryAddress
-	 *            the new search delivery address
-	 */
-	public void setSearchDeliveryAddress(
-			IPagingDataModel<PmAddressType> searchDeliveryAddress) {
-		this.searchDeliveryAddress = searchDeliveryAddress;
 	}
 
 	/*

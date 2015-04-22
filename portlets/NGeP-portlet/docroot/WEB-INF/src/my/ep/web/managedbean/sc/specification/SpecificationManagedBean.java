@@ -55,6 +55,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
@@ -65,7 +66,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SpecificationManagedBean.
  * 
@@ -487,6 +487,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The ptjt list. */
 	private List<PmOrgProfile> ptjtList;
+	
+	/** The ptj profile dd list. */
+	private List<Object[]> ptjProfileDDList;
 
 	/** The delivery address select. */
 	private List<PmAddressType> deliveryAddressSelect;
@@ -733,7 +736,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> financialChecklistAction;
 
 	/** The templatespec Newable. */
-	private boolean specNewable = true;
+	private boolean specNewable = Boolean.TRUE;
 
 	/** For Create Specification Screen. */
 	private QtnTenderSearchBean qtnTendertemplateSearchBean;
@@ -741,7 +744,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	/** The temp zone name. */
 	private String tempZoneName;
 
-	private boolean isCheckAllList = false;
+	private boolean isCheckAllList = Boolean.FALSE;
 
 	/** The financial Item score setting. */
 	private ScQtScoreSetting finacialItemScoreSetting;
@@ -750,6 +753,15 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	private BigDecimal totalScore = new BigDecimal(0);
 
+	private String locationLevel;
+	
+	
+	/** The search supplier data model. */
+	private IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel;
+	
+    /** The auto update. */
+    private boolean autoUpdate = Boolean.TRUE;
+	
 	/**
 	 * Checks if is spec complete.
 	 * 
@@ -4984,6 +4996,63 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setTotalScore(BigDecimal totalScore) {
 		this.totalScore = totalScore;
+	}
+
+	/**
+	 * @return the locationLevel
+	 */
+	public String getLocationLevel() {
+		return locationLevel;
+	}
+
+	/**
+	 * @param locationLevel the locationLevel to set
+	 */
+	public void setLocationLevel(String locationLevel) {
+		this.locationLevel = locationLevel;
+	}
+
+	/**
+	 * @return the ptjProfileDDList
+	 */
+	public List<Object[]> getPtjProfileDDList() {
+		return ptjProfileDDList;
+	}
+
+	/**
+	 * @param ptjProfileDDList the ptjProfileDDList to set
+	 */
+	public void setPtjProfileDDList(List<Object[]> ptjProfileDDList) {
+		this.ptjProfileDDList = ptjProfileDDList;
+	}
+
+	/**
+	 * @return the searchDeliveryAddressDataModel
+	 */
+	public IPagingDataModel<PmAddressType> getSearchDeliveryAddressDataModel() {
+		return searchDeliveryAddressDataModel;
+	}
+
+	/**
+	 * @param searchDeliveryAddressDataModel the searchDeliveryAddressDataModel to set
+	 */
+	public void setSearchDeliveryAddressDataModel(
+			IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel) {
+		this.searchDeliveryAddressDataModel = searchDeliveryAddressDataModel;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 
 }
