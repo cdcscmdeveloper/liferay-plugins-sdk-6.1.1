@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -68,6 +70,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -1806,7 +1809,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					if (desc.getPmLanguage() != null
 							&& desc.getPmLanguage().getLanguageCode()
 									.equalsIgnoreCase(langCode)) {
-						sb.append(i+") "+desc.getReasonDesc()).append("<br />");
+						sb.append(i + ") " + desc.getReasonDesc()).append(
+								"<br />");
 						i++;
 					}
 				}
@@ -1814,6 +1818,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Print Supplier Profile
+	 * 
+	 * @throws IOException
+	 */
+	public void printSupplierProfile() throws IOException {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(" PAPPLNO", getManagedBean().getSmAppl().getApplNo());
+		generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 	}
 
 }
