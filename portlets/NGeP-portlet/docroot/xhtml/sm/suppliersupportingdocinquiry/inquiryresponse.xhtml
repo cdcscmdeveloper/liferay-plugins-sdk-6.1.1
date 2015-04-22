@@ -28,7 +28,7 @@
 		</p:dialog>
 
 		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.supportingdocinquiry']}">
-			<table style="width: 100%;">
+			<table style="width: 85%;">
 				<tr>
 					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.subject']}" /></td>
 					<td><p:inputText size="50" disabled="true"
@@ -43,8 +43,8 @@
 				</tr>
 				
 				<tr>
-					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry']}" /></td>
-					<td style="width:85%;" colspan="3"><p:inputTextarea id="inquiryDetailId" rows="20" cols="180"
+					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry']}" /></td>
+					<td colspan="3"><p:inputTextarea id="inquiryDetailId" rows="20" cols="150" style="width:auto;"
 							disabled="true" autoResize="false"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
 				</tr>
@@ -52,10 +52,10 @@
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.response']}">
-			<table style="width: 100%;">
+			<table style="width: 85%;">
 				<tr>
 					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.panel.response']}" /></td>
-					<td style="width:85%;"><p:inputTextarea id="inquiryResId" rows="10" cols="100" maxlength="1000"
+					<td><p:inputTextarea id="inquiryResId" rows="10" cols="100" maxlength="1000" style="width:auto;"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.responseText}"
 							autoResize="false" /></td>
 				</tr>
