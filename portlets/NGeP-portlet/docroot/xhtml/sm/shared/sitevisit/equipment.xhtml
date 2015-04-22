@@ -36,7 +36,7 @@
 					<p:inputText value="#{equipMaint.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" id="dtlEquipMainQtySetId" maxlength="8"
 						converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
 						validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
-						disabled="#{viewFlag || !equipMaint.equipmentAvailable}" required="#{equipMaint.equipmentAvailable}" >
+						disabled="#{viewFlag || !equipMaint.equipmentAvailable}" required="#{equipMaint.equipmentAvailable and empty param['disableMsgAutoUpdate']}" >
 						<f:validateLongRange minimum="1"  for="dtlEquipMainQtySetId"></f:validateLongRange>
 					</p:inputText>
 			</p:column>
@@ -72,7 +72,7 @@
 					<p:inputText value="#{equipBinding.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8" id="dtlEquipBeatingQtySetId"
 						converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
 						validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
-						disabled="#{viewFlag || !equipBinding.equipmentAvailable}" required="#{equipBinding.equipmentAvailable}">
+						disabled="#{viewFlag || !equipBinding.equipmentAvailable}" required="#{equipBinding.equipmentAvailable and empty param['disableMsgAutoUpdate']}">
 							<f:validateLongRange minimum="1" for="dtlEquipBeatingQtySetId"></f:validateLongRange>
 					</p:inputText>
 			</p:column>
