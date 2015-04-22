@@ -39,9 +39,7 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-
-		<p:panel id="bsInfPan">
+		<p:outputPanel id="bsInfPan" layout="block">
 			<p:blockUI block=":form:tt:bsInfPan" widgetVar="buiPoBas"
 				id="poBasBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.basicVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.basicVerified : false)}" />
@@ -379,7 +377,7 @@
 
 				</p:outputPanel>
 			</table>
-		</p:panel>
+		</p:outputPanel>
 
 	</p:panel>
 </ui:composition>

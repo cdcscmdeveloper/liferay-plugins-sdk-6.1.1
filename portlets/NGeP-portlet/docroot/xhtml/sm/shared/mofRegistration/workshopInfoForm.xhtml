@@ -49,9 +49,15 @@
 			<br />
 		</p:outputLabel>
 		<p:outputPanel
-			rendered="#{!backingBean.managedBean.showWorkShopPanel}">
-			<h:outputText style="float:left"
-				value="#{lbl['lbl.sm.workShop.notApplicable']}" />
+			rendered="#{!backingBean.managedBean.showWorkShopPanel}"
+			layout="block">
+
+			<table style="width: 100%">
+				<tr>
+					<td><h:outputText style="float:left"
+							value="#{lbl['lbl.sm.workShop.notApplicable']}" /></td>
+				</tr>
+			</table>
 		</p:outputPanel>
 
 	</p:panel>

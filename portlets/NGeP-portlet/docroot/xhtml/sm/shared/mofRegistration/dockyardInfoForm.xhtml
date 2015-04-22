@@ -48,9 +48,16 @@
 			<br />
 		</p:outputPanel>
 		<p:outputPanel
-			rendered="#{!backingBean.managedBean.showDockyardPanel}">
-			<h:outputText style="float:left"
-				value="#{lbl['lbl.sm.dockyard.notApplicable']}" />
+			rendered="#{!backingBean.managedBean.showDockyardPanel}"
+			layout="block">
+
+			<table style="width: 100%">
+				<tr>
+					<td><h:outputText style="float:left"
+							value="#{lbl['lbl.sm.dockyard.notApplicable']}" /></td>
+				</tr>
+			</table>
+
 		</p:outputPanel>
 
 	</p:panel>

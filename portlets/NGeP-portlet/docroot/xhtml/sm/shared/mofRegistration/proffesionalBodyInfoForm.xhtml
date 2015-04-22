@@ -38,8 +38,8 @@
 				</tr>
 			</p:outputPanel>
 		</table>
-		<br />
-		<p:panel id="profInfPan">
+
+		<p:outputPanel id="profInfPan" layout="block">
 			<p:blockUI block=":form:tt:profInfPan" widgetVar="buiPoProf"
 				id="poProfBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.assocBodyVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.assocBodyVerified : false)}" />
@@ -123,7 +123,7 @@
 					</tr>
 				</table>
 			</p:outputPanel>
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="630px"
 		header="#{lbl['lbl.sm.profBody.profBodDiaHdr']}"
