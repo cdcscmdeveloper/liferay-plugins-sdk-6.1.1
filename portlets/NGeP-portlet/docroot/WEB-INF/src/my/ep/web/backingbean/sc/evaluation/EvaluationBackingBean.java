@@ -8615,6 +8615,7 @@ public class EvaluationBackingBean extends
 			commType = true;
 			context.put("oc", commType);
 			context.put("committeeActivities", committeeActivities);
+			context.put("meetingAttendances", meetingAttendancesList);
 			context.put("bean", this);
 		}
 
