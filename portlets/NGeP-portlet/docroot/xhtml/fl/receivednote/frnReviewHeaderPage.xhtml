@@ -14,7 +14,6 @@
 				<td class="header-info-text">
 					<p:commandLink value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.deliveryOrderNo}" immediate="true"
 					 action="#{receivedNoteBackingBean.navigateDocument(ParameterConst.doctypeDeliveryOrder)}"/>
-					
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.no']}"/>
 				</td>
 				<td><p:outputLabel
@@ -27,10 +26,14 @@
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " />
-				</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.getStatusDescById(receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId)}
+				</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" /></td>
+				<td class="header-info-text">
+					<p:commandLink value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.flFulfilmentOrder.docNo}" immediate="true"
+						action="#{receivedNoteBackingBean.navigateDocument(receivedNoteBackingBean.managedBean.fulfilmentRequest.flFulfilmentOrder.docType)}"></p:commandLink> 
 				</td>
 			</tr>
 		</table>
