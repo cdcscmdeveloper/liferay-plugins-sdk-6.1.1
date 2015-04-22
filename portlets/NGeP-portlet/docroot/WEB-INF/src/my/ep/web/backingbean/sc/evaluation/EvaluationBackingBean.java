@@ -97,6 +97,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -6915,6 +6916,8 @@ public class EvaluationBackingBean extends
 					&& !this.getManagedBean().getScQtMeetings().isEmpty()) {
 				qtCommittee.setScQtMeetings(this.getManagedBean()
 						.getScQtMeetings());
+			} else {
+				qtCommittee.setScQtMeetings(null);
 			}
 			if (null != this.getManagedBean().getCommitteeMemberList()
 					&& !this.getManagedBean().getCommitteeMemberList()
@@ -6926,6 +6929,8 @@ public class EvaluationBackingBean extends
 					&& !getManagedBean().getMeetingAttendanceList().isEmpty()) {
 				qtCommittee.setMeetingAttendances(getManagedBean()
 						.getMeetingAttendanceList());
+			} else {
+				qtCommittee.setMeetingAttendances(null);
 			}
 
 			reqDtO.setRemovedmeetingList(getMeetingToBeRemoveList());
@@ -9631,4 +9636,66 @@ public class EvaluationBackingBean extends
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * To select checkbox check/Uncheck in meeting details.
+	 * 
+	 * @param selected
+	 *            (boolean)
+	 * @param list
+	 */
+	public <ENTITY_CLASS extends BaseEntity> void selectEvaluationMeetingAll(
+			boolean selected, List<ENTITY_CLASS> list) {
+		if (list != null) {
+			for (ENTITY_CLASS entity : list) {
+				entity.setSelected(selected);
+			}
+		}
+	}
+
+	/**
+	 * To remove records for existing .
+	 * 
+	 * @param list
+	 * @param toBeRemovedList
+	 */
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedEvaluationRowsAction(
+			List<ScQtMeeting> list, List<ScQtMeeting> markDeletedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("markDeleteSelectedRowsAction");
+		}
+		try {
+			if (list != null) {
+				if (markDeletedList == null) {
+					markDeletedList = new ArrayList<ScQtMeeting>();
+				}
+
+				for (ScQtMeeting entity : list) {
+					if (entity.isSelected()) {
+						entity.setDeleted(true);
+						markDeletedList.add(entity);
+					}
+				}
+				if (markDeletedList.size() == 0) {
+					throw new EpException(MessageConst.ERROR_760146);
+				}
+
+				deleteRowsEvaluationAction(list, markDeletedList);
+			} else {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
+		} finally {
+
+		}
+	}
+
+	private <ENTITY_CLASS> void deleteRowsEvaluationAction(
+			List<ScQtMeeting> list, List<ScQtMeeting> toBeRemovedList) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteRowAction");
+		}
+		if (list != null && toBeRemovedList != null) {
+			this.getManagedBean().setMeetingRemoveList(toBeRemovedList);
+			list.removeAll(toBeRemovedList);
+		}
+	}
 }
