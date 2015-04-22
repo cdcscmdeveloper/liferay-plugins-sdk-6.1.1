@@ -118,6 +118,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setQt(resDTO.getScQt());
 				List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
+				getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
 				if (loiLoaList != null && loiLoaList.size() > 0) {
 					getManagedBean().setScLoiLoaList(loiLoaList);
 					getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
@@ -142,26 +143,27 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			AwardSupplierResDTO resDTO = null;
 			List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
 			if (getManagedBean().getSelectedLoiLoa() != null) {
-				for (ScLoi scLoi : getManagedBean().getSelectedLoiLoa()
-						.getScLois()) {
-					suppLoaLoi = new SuppLoiLoaBean();
-					suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
-					suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
-					suppLoaLoi.setStatus(scLoi.getScWorkFlowStatus().getPmStatus());
-					suppLoaLoi.setScLoi(scLoi);
-					suppLoiLoaList.add(suppLoaLoi);
-				}
+				Long supplierId = getManagedBean().getSelectedLoiLoa().getSmSupplier().getSupplierId();
+				for(ScLoiLoa loiLoa : getManagedBean().getSuppLoiLoaMap().get(supplierId)) {
+					for (ScLoi scLoi : loiLoa.getScLois()) {
+						suppLoaLoi = new SuppLoiLoaBean();
+						suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
+						suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
+						suppLoaLoi.setStatus(scLoi.getScWorkFlowStatus().getPmStatus());
+						suppLoaLoi.setScLoi(scLoi);
+						suppLoiLoaList.add(suppLoaLoi);
+					}
 
-				for (ScLoa scLoa : getManagedBean().getSelectedLoiLoa()
-						.getScloas()) {
-					suppLoaLoi = new SuppLoiLoaBean();
-					suppLoaLoi.setLoiLoaNo(scLoa.getLoaNo());
-					suppLoaLoi.setType(SourcingConstants.SUPP_LOA_TYPE);
-					suppLoaLoi.setStatus(scLoa.getPmStatus());
-					reqDTO.setLoaId(scLoa.getLoaId());
-					resDTO = qtAwardSO.retrieveLOADtlByLoaId(reqDTO);
-					suppLoaLoi.setScLoa(resDTO.getScLoa());
-					suppLoiLoaList.add(suppLoaLoi);
+					for (ScLoa scLoa : loiLoa.getScloas()) {
+						suppLoaLoi = new SuppLoiLoaBean();
+						suppLoaLoi.setLoiLoaNo(scLoa.getLoaNo());
+						suppLoaLoi.setType(SourcingConstants.SUPP_LOA_TYPE);
+						suppLoaLoi.setStatus(scLoa.getPmStatus());
+						reqDTO.setLoaId(scLoa.getLoaId());
+						resDTO = qtAwardSO.retrieveLOADtlByLoaId(reqDTO);
+						suppLoaLoi.setScLoa(resDTO.getScLoa());
+						suppLoiLoaList.add(suppLoaLoi);
+					}
 
 				}
 
