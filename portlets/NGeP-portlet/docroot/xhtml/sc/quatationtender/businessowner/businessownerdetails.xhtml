@@ -10,6 +10,7 @@
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.sc.qt.business.owner']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.qt.business.owner.tooltip']}" />
 		</f:facet>
 		<p:dataTable id="businessownerId"
 			value="#{qTDetailBB.managedBean.scCommitteeMemberList}"
@@ -39,7 +40,7 @@
 				<h:outputText value="#{businessowner.memberName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
-				style="width : 15%">
+				style="width : 15%; white-space: normal;">
 				<h:outputText value="#{businessowner.icPassport}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.designation']}"
@@ -52,7 +53,7 @@
 			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width : 5%">
 				<h:outputText value="#{businessowner.grade}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.pnp']}" style="width : 6%">
+			<p:column headerText="#{lbl['lbl.sc.pnp']}" style="width : 6%; white-space: normal;">
 				<h:outputText
 					value="#{lbl[businessowner.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
@@ -61,6 +62,7 @@
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.consolidate']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.qt.consolidate.tooltip']}" />
 				</f:facet>
 			</p:column>
 		</p:dataTable>
@@ -85,7 +87,7 @@
 			</c:if>
 		</div>
 	</p:panel>
-	<p:panel header="Specification Approval" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.specification.approval']}" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
 			columnClasses="columnWidth10" style="margin-left: 26px;">
 			<p:selectBooleanCheckbox disabled="#{readOnly}"
