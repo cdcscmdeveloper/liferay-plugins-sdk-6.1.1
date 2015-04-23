@@ -22,6 +22,7 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	
 	private boolean hyperlink;
 	private Map<String,String> userActionMap;
+	private boolean bannerImage;
 	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -53,6 +54,14 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 
 	public void setUserActionMap(Map<String, String> userActionMap) {
 		this.userActionMap = userActionMap;
+	}
+
+	public boolean isBannerImage() {
+		return bannerImage;
+	}
+
+	public void setBannerImage(boolean bannerImage) {
+		this.bannerImage = bannerImage;
 	}
 
 }
