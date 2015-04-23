@@ -1851,14 +1851,7 @@ public class SmCommonUtil {
 	 * @return BigDecimal
 	 */
 	public static BigDecimal getGstCurrentRate() {
-		RuleReqDTO reqDTO = new RuleReqDTO();
-		reqDTO.setRuleType(SupplierManagementConst.GST_RULE_VALUE);
-		List<PmConfigRuleValue> gstValue = SmServiceLookup.getRuleSO()
-				.getRuleValuesByRuleType(reqDTO).getRuleValueList();
-		if (gstValue != null && !gstValue.isEmpty()) {
-			return new BigDecimal(gstValue.get(0).getRuleValue());
-		} else {
-			return BigDecimal.ZERO;
-		}
+		return SmServiceLookup.getPaymentSO().retrieveGstCurrentRate()
+				.getGstCurrRate();
 	}
 }
