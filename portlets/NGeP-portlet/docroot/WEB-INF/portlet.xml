@@ -5976,8 +5976,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Retry Log</title>
-			<short-title>NewJSFPortlet</short-title>
+			<title>OSB Retry Log</title>
+			<short-title>NewJSFPortlet</short-title>0
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
