@@ -7714,10 +7714,14 @@ public class SpecificationBackingBean extends
 					scqtlist.setManditory(false);
 					scqtlist.setScoringReq(document.isScoringReq());
 					scqtlist.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
-					scqtlist.setChecklistSeq(document.getDisplaySeq());
+					//scqtlist.setChecklistSeq(document.getDisplaySeq());
 					scqtlist.setPmDocument(document);
 					setUserDetails(scqtlist);
-
+					if (null == document.getDisplaySeq()) {
+						scqtlist.setChecklistSeq(new Integer(10));
+					} else {
+						scqtlist.setChecklistSeq(document.getDisplaySeq());
+					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
 					// scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
@@ -7867,9 +7871,13 @@ public class SpecificationBackingBean extends
 					scqtlist.setAction(document.getChecklistActionCode());
 					// scqtlist.setEvaluationStage("2");
 					scqtlist.setManditory(false);
-					scqtlist.setChecklistSeq(document.getDisplaySeq());
+					//scqtlist.setChecklistSeq(document.getDisplaySeq());
 					scqtlist.setPmDocument(document);
-
+					if (null == document.getDisplaySeq()) {
+						scqtlist.setChecklistSeq(new Integer(10));
+					} else {
+						scqtlist.setChecklistSeq(document.getDisplaySeq());
+					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
 					setUserDetails(scqtlist);
