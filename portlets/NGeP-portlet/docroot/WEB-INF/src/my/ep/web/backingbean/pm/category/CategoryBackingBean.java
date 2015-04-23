@@ -758,11 +758,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			
 			if(this.getManagedBean().getPmCategoryL1().getPmCategoryL2s()!=null && !this.getManagedBean().getPmCategoryL1().getPmCategoryL2s().isEmpty()){
 				for(PmCategoryL2 pmCategoryL2:this.getManagedBean().getPmCategoryL1().getPmCategoryL2s())
-				{
-					for(PmCategoryL3 pmCategoryL3:pmCategoryL2.getPmCategoryL3s())
-					{
-						pmCategoryL3.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());					
-					}
+				{	
 					pmCategoryL2.setRecordStatusFlg(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg());
 				}			
 			}
@@ -776,8 +772,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
             
 			if(this.getManagedBean().isNewCategory()){
 			if (resDTO.isSuccessful()) {
+				
 				result = resDTO.isSuccessful();
-				resetCategory();
+				//resetCategory();
 				FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -790,7 +787,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}else  {		
 
 				result = resDTO.isSuccessful();
-				resetCategory();
+				//resetCategory();
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -866,7 +863,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				
 				if(this.getManagedBean().isNewCategory()){
 					result = resDTO.isSuccessful();
-					resetCategory();
+					//resetCategory();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -878,7 +875,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}	
 				else{
 					result = resDTO.isSuccessful();
-					resetCategory();
+					//resetCategory();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
