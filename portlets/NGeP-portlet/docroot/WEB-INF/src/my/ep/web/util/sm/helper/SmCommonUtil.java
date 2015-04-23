@@ -53,6 +53,7 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -68,6 +69,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
@@ -1840,6 +1842,23 @@ public class SmCommonUtil {
 			return resDTO.getWorkflowStatus();
 		} else {
 			return null;
+		}
+	}
+
+	/**
+	 * Get the latest GST rate from Pm Config Rule Value
+	 * 
+	 * @return BigDecimal
+	 */
+	public static BigDecimal getGstCurrentRate() {
+		RuleReqDTO reqDTO = new RuleReqDTO();
+		reqDTO.setRuleType(SupplierManagementConst.GST_RULE_VALUE);
+		List<PmConfigRuleValue> gstValue = SmServiceLookup.getRuleSO()
+				.getRuleValuesByRuleType(reqDTO).getRuleValueList();
+		if (gstValue != null && !gstValue.isEmpty()) {
+			return new BigDecimal(gstValue.get(0).getRuleValue());
+		} else {
+			return BigDecimal.ZERO;
 		}
 	}
 }
