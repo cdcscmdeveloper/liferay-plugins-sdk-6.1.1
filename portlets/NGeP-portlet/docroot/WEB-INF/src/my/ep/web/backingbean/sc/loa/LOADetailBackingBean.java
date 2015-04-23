@@ -268,7 +268,7 @@ public class LOADetailBackingBean extends
 	 * @param scLoa the sc loa
 	 * @return the big decimal
 	 */
-	private BigDecimal  calcBondAmount(ScLoa scLoa){
+	private ScLoa  calcBondAmount(ScLoa scLoa){
 		BigDecimal loaAmt  = BigDecimal.ZERO;
 		BigDecimal bondAmt  = BigDecimal.ZERO; 
 		double totalDuration = 0;
@@ -310,14 +310,16 @@ public class LOADetailBackingBean extends
 				String percentage = roleResDTO.getRuleValueStrList().get(0);
 				double res = Double.valueOf(percentage);
 				bondPercentage = res/100;
+				scLoa.setBondPercentage(new BigDecimal(percentage));
 			}
 			if(bondPercentage >0 && loaAmtForBondPercentage >0){
 				double total  = loaAmtForBondPercentage * bondPercentage;
 				bondAmt  = new BigDecimal(String.valueOf(total));
 				bondAmt  = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+				scLoa.setBondAmt(bondAmt);
 			}
 		}
-		return bondAmt;
+		return scLoa;
 	}
 
 	/**
@@ -370,7 +372,7 @@ public class LOADetailBackingBean extends
 			}
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			
-			scLoa.setBondAmt(calcBondAmount(scLoa));
+			scLoa = calcBondAmount(scLoa);
 			
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
@@ -569,13 +571,14 @@ public class LOADetailBackingBean extends
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
 		
-		// calculate performance bond amt for S2
-		if (!ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			scLoa.setBondAmt(calcBondAmount(scLoa));
-		}
 		// calc total award details
 		if(scLoa.getScLoiLoaItems() != null && scLoa.getScLoiLoaItems().size()>0){
 			scLoa.setLoaAmt(calcTotalAmount(scLoa.getScLoiLoaItems()));
+		}
+
+		// calculate performance bond amt for S2
+		if (!ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+			scLoa = calcBondAmount(scLoa);
 		}
 
 		// Supplier Branch
