@@ -3936,6 +3936,7 @@ public class LOADetailBackingBean extends
 		log.info("backToPrevious");
 		retrieveLOILOAList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
+		getManagedBean().setSelectedTabIndex(1);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
