@@ -99,7 +99,7 @@
 					<ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.sp.effectivedt']}" />
+					<h:outputText value="#{lbl['lbl.sc.effective.date']}" />
 				</f:facet>
 				<h:outputText value="#{technongovt.effectiveDate}"
 					rendered="#{technongovt.brandNew eq false}">
@@ -112,7 +112,7 @@
 					mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMinDate}"
 					maxdate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMaxDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" required="true"
-					label="#{lbl['lbl.sc.sp.effectivedt']}"
+					label="#{lbl['lbl.sc.effective.date']}"
 					rendered="#{technongovt.brandNew eq true}">
 					<p:ajax event="dateSelect" process="@this" partialSubmit="true"
 						update="@this,effectiveDateMsg,@([id$=expDatePanelGroupID])"
