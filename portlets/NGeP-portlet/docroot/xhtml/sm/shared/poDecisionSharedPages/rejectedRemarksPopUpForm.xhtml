@@ -13,7 +13,7 @@
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" />
+				<td style="vertical-align: top"><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true" id="applRejectSelBox"
@@ -35,12 +35,12 @@
 	<p:outputPanel id="rejRemarksPanelTst">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 13.5%"><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}"
+				<td style="vertical-align: top;width: 14.5%"><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}"
 						id="rejReasonLbl"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
 						value="*" styleClass="mandatory" id="rejReasonLblMndty"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
-				<td style="padding-top: 5px;"><p:inputTextarea cols="132"
+				<td style="padding-top: 5px;"><p:inputTextarea cols="122"
 						style="width : auto;"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}"
 						value="#{backingBean.managedBean.applnRejectionRemarks}"

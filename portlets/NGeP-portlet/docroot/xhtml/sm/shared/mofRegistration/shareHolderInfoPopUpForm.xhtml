@@ -264,11 +264,14 @@
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
 				<td><p:graphicImage id="tooltip3" library="ep/images/design"
-						name="tooltips.png" /> <p:tooltip id="toolinfo3" for="tooltip3">
+						style="padding-bottom : 7px;" name="tooltips.png" /> <p:tooltip
+						id="toolinfo3" for="tooltip3">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
 					</p:tooltip></td>
 			</tr>
+		</table>
+		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" />
@@ -336,6 +339,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
 				<td><p:graphicImage id="tooltip5" library="ep/images/design"
+						style="padding-bottom : 7px;"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}"
 						name="tooltips.png" /> <p:tooltip id="toolinfo5" for="tooltip5">
@@ -857,9 +861,9 @@
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.contrat.year']}" />
+				<td style="width: 30%"><p:outputLabel value="#{lbl['lbl.sc.spec.contrat.year']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
+				<td colspan="2"><p:inputText style="margin-bottom : 5px;" maxlength="4"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sc.spec.contrat.year']}" id="equiStfAcaYr"
 						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
@@ -871,7 +875,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.institute']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
+				<td colspan="2"><p:inputText
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.institute']}" id="equiStfAcaInst"
 						maxlength="50"
@@ -883,7 +887,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<td style="width:40%"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
 						value="#{backingBean.managedBean.selectedStaffAcademic.qualificationLevelId}">
@@ -900,7 +904,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.education.field']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<td colspan="2"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.education.field']}" id="equiStfAcaEduFld"
 						value="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}">
@@ -915,7 +919,7 @@
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.major.in']}" /></td>
-				<td><p:inputText maxlength="50"
+				<td colspan="2"><p:inputText maxlength="50"
 						value="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}"
 						size="35" /></td>
 			</tr>

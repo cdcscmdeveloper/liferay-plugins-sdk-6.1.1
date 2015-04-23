@@ -10,9 +10,9 @@
 		test="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
+				<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 						src="smMofApplnSideMenuItem.xhtml" /></td>
-				<td><ui:include
+				<td style="vertical-align: top;"><ui:include
 						src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
 					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/staffInfoForm.xhtml" /> <ui:include
@@ -34,7 +34,8 @@
 								<td></td>
 								<td>
 									<div align="right" style="width: 99%" class="button-wrapper">
-										<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(0,1)}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 											update=":form" />
@@ -72,7 +73,8 @@
 					<td></td>
 					<td>
 						<div align="right" style="width: 99%" class="button-wrapper">
-							<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{backingBean.setTabValue(0,1)}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 								update=":form" />
