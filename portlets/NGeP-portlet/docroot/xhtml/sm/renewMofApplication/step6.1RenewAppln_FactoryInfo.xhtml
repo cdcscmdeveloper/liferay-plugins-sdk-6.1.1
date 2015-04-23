@@ -7,10 +7,11 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
+			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 					src="smRenewApplnSideMenuItem.xhtml" /></td>
-			<td><p:panel header="#{lbl['lbl.sm.factoryStepLbl']}"
-					id="splRenCatFacDtlsHdr" toggleable="true">
+			<td style="vertical-align: top;"><p:panel
+					header="#{lbl['lbl.sm.factoryStepLbl']}" id="splRenCatFacDtlsHdr"
+					toggleable="true">
 					<p:outputPanel id="renewStep61OnlySuppPan"
 						rendered="#{backingBean.managedBean.supplierUser}">
 						<div align="right" style="width: 99%" class="button-wrapper">
