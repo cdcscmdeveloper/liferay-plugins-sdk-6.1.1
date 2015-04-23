@@ -9225,7 +9225,13 @@ public class SmApplicationBackingBean extends
 				.handleNavigation(fc, null,
 						"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 	}
-	
+
+	/**
+	 * Redirect to Previous or Original Application Details
+	 * 
+	 * @param String
+	 *            linkType
+	 */
 	public void redirectToRevisionSupplierProfilePage(String linkType) {
 		String applNo = linkType.equals("O") ? getManagedBean()
 				.getRevisionSupplierAppNoParam() : getManagedBean()
