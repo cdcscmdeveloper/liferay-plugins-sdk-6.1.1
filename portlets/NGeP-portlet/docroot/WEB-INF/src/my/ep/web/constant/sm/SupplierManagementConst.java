@@ -218,6 +218,9 @@ public class SupplierManagementConst {
 	public static final int SOFT_CERT_PROCESSING = 3;
 	public static final int SOFT_CERT_PENDING_REQ = 4;
 	public static final int SOFT_CERT_ISSUED = 1;
+	
+	//GST rule value constant
+	public static String GST_RULE_VALUE = "GST";
 
 	public static final long PM_STAT_PENDING_PAYMENT = 20401;
 	public static final long PM_STAT_FAILED_PAYMENT = 20402;
