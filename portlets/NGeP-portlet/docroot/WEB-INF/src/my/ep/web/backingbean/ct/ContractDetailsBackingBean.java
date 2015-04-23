@@ -788,12 +788,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().setFrequencySchedule("P");
 		}
 		// Retrieve contract amount
-		for (CtContractAmount ctContractAmount : getManagedBean().getContractVer().getCtContractAmounts()) {
-			if (ctContractAmount.getEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()
-					&& ctContractAmount.getExpDate().getTime() >= DateUtils.getCurrentDateWithoutTime().getTime()) {
-				getManagedBean().setCtContractAmount(ctContractAmount);
-			}
+		// Default to current date when view/update contract
+		if (getManagedBean().getContractVer().getAsAtDate() == null 
+				|| getManagedBean().isViewContract()
+				|| getManagedBean().isUpdateContract()) {
+			getManagedBean().getContractVer().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 		}
+		updateAsAtDate();
 		
 		// Retrieve latest amendment
 		if (getManagedBean().getCtContract().getLatestContractVer() != null) {
@@ -3280,6 +3281,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	/**
+	 * The method used to set the upload index for
+	 * file upload purpose.
+	 * The index is used to differentiate what type of file has
+	 * been uploaded.
+	 * 
+	 * @param index index of the uploaded file
+	 */
+    public void setIndexProperty(int index){
+    	  getManagedBean().setIndex(index);
+    }
+    
+	/**
 	 * The method used to upload agency file.
 	 * 
 	 * @param  event      the upload event for file upload from screen
@@ -3287,7 +3300,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * @see    Exception
 	 */
 	public void agencyFileUpload(FileUploadEvent event) throws Exception {
-		FacesScopes facesScopes = new FacesScopes();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		UploadedFile item = event.getFile();		
@@ -3307,6 +3319,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
 	 
 	}
+	
+	/**
+	 * The method used to delete the uploaded agency file.
+	 */    
+    public void deleteAgencyAttachement(){
+    	CtAgency agency =  getManagedBean().getContractVer().getCtAgencies().get(getManagedBean().getIndex());
+ 	    getManagedBean().getContractVer().getCtAgencies().remove(getManagedBean().getIndex());
+ 	    agency.setFileName(null);
+ 	    agency.setFilePath(null);
+ 	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
+    }
     
 	/**
 	 * The method used to upload performance bond file.
@@ -3388,6 +3411,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
 		return portletTitle;
+	}
+	
+	/**
+   	 * The method used to update the as at date and refresh the
+   	 * contract amount and performance bond base on as at date
+   	 */
+	public void updateAsAtDate() {
+    	CtContractAmount contractAmtObj = null;
+    	for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
+    		if (getManagedBean().getContractVer().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
+    				&& getManagedBean().getContractVer().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
+    			contractAmtObj = contractAmt;
+    			break;
+    		}
+    	}
+    	getManagedBean().setCtContractAmount(contractAmtObj);
 	}
 	
 	/**
@@ -3487,28 +3526,4 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
-    
-    public void setIndexProperty(int index){
-    	  getManagedBean().setIndex(index);
-    }
-    
-    public void deleteAgencyAttachement(){
-    	
-    	 CtAgency agency =  getManagedBean().getContractVer().getCtAgencies().get(getManagedBean().getIndex());
- 	    getManagedBean().getContractVer().getCtAgencies().remove(getManagedBean().getIndex());
- 	    agency.setFileName(null);
- 	    agency.setFilePath(null);
- 	    getManagedBean().getContractVer().getCtAgencies().add(getManagedBean().getIndex(), agency);
-    }
-    
-    public void updateAsperDate(){
-    	
-    	      CtContractAmount contractAmtObj = null;
-			  for(CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
-				  if(getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() && getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-					      contractAmtObj = contractAmt;
-				   }
-			  }
-	        getManagedBean().setCtContractAmount(contractAmtObj);
-        }
-   }
+}
