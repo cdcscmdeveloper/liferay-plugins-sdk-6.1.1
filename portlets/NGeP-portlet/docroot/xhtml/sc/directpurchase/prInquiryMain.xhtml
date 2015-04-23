@@ -25,11 +25,11 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			<c:if
 				test="#{isPendingSubmissionStatus}">
 				<p:commandButton immediate="true"
-					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+					value="#{lbl['lbl.btn.item.search']}"
 					partialSubmit="true" process="@this" style="float:left;"
 					action="#{purchaseInquiryBackingBean.backToPrevious}" />
 
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					partialSubmit="true" process="@form"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}"
 					style="float:right;" onstart="blockWidget.show();"
@@ -50,13 +50,13 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 										test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 										<p:commandButton
 											rendered="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable eq 1}"
-											value="#{lbl['lbl.sc.common.proceed.btn']}"
+											value="#{lbl['lbl.btn.proceed']}"
 											partialSubmit="true" process="@form"
 											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
 											action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
 
-										<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+										<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 											style="float:right;" partialSubmit="true" process="@form"
 											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"

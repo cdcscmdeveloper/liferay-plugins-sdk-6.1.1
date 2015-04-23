@@ -9,29 +9,29 @@
 			<table style="width: 100%">
 				<tr>
 					<td style="width:8%"><h:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.header.simple.quote.no']}" /></td>
+							value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
 					<td class="header-info-text">
 						#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}</td>
 
 					<td style="width:9%"><h:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.header.proc.type']}" /></td>
+							value="#{lbl['lbl.sc.procurement.type']}" /></td>
 					<td class="header-info-text">
 						#{simpleQuoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode)}
 					</td>
 
 					<td style="width:5%"><h:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.header.ptn.name']}" /></td>
+							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td class="header-info-text">
 						#{simpleQuoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
 					</td>
 
 					<td style="width:9%"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.created.by']}" /></td>
+							value="#{lbl['lbl.sc.prepared.by']}" /></td>
 					<td class="header-info-text">
 						#{simpleQuoteBackingBean.managedBean.createdBy}</td>
 
 					<td style="width:6%"><h:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.header.status']}" /></td>
+							value="#{lbl['lbl.sc.status']}" /></td>
 					<td class="header-info-text">
 						#{simpleQuoteBackingBean.getStatusDescById(simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId)}
 					</td>

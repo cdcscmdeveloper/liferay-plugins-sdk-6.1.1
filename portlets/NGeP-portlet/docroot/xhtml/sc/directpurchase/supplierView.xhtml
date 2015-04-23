@@ -11,15 +11,15 @@
 		<p:spacer height="10px" />
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.criteria.ep.no']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.supplier.ep.no']}" /></td>
 				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.smSupplier.epNo}"/></td>
 
 				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}" /></td>
+						value="#{lbl['lbl.sc.supplier']}" /></td>
 				<td><p:inputText disabled="true"  size="55" value="#{simpleQuoteBackingBean.managedBean.smSupplier.companyName}"/></td>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.mof.no']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.mof.reg.no']}" /></td>
 				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.smSupplier.smMofAccounts[0].mofNo}"/> 
 				
 				</td>
@@ -51,7 +51,7 @@
 				
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /></td>
+							value="#{lbl['lbl.sc.sq.zonal']}" /></td>
 					<td>
 						<table>
 							<tr>
@@ -78,7 +78,7 @@
 				</tr>
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /></td>
+							value="#{lbl['lbl.sc.start.date']}" /></td>
 					<td><p:calendar
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 							value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
@@ -86,7 +86,7 @@
 				</tr>
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /></td>
+							value="#{lbl['lbl.sc.end.date']}" /></td>
 					<td><p:calendar
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 							value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
@@ -94,17 +94,17 @@
 				</tr>
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /></td>
+							value="#{lbl['lbl.sc.sq.simple.quote.type']}" /></td>
 					<td>
 						<table>
 							<tr>
 								<td><p:selectOneRadio
 										value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}"
 										disabled="true">
-										<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
+										<f:selectItem itemLabel="#{lbl['lbl.sc.sq.single']}"
 											itemValue="false" />
 										<f:selectItem
-											itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
+											itemLabel="#{lbl['lbl.sc.sq.multiple']}"
 											itemValue="true" />
 									</p:selectOneRadio></td>
 								<td style="margin-top: -3px"><ac:iconTooltip

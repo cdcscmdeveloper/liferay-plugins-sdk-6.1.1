@@ -15,19 +15,19 @@
 	     <table style="width: 900px;">
 	     
 	     <tr>
-			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.clone.item.spec.sq.no']}" /></td>
+			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.simple.quote.no']}" /></td>
 			<td style="width: 200px;"> <p:inputText  value="#{simpleQuoteBackingBean.managedBean.searchQuoteNo}"
 						style="margin-bottom: 5px;" /></td>
 		</tr>
 	     
 	     <tr>
-			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.clone.item.spec.title']}" /></td>
+			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 			<td style="width: 200px;" colspan="4"> <p:inputText size="100" value="#{simpleQuoteBackingBean.managedBean.searchTitle}"
 						style="margin-bottom: 5px;" /></td>
 		</tr>
 		
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sc.sq.clone.item.spec.proc.type']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 			<td><p:selectOneMenu style="margin-bottom: 5px;"  
 			 	value="#{simpleQuoteBackingBean.managedBean.searchProcType}">
 			   <f:selectItems
@@ -36,13 +36,13 @@
 			   </p:selectOneMenu></td>
 		</tr>
 		<tr>
-			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.clone.item.spec.created.date.from']}" /></td>
+			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 			<td><p:calendar showOn="button"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.searchFromCreatedDate}">
 				<p:ajax event="dateSelect" update="toDate"/>
 				</p:calendar>
 			 </td>
 			
-			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.clone.item.spec.created.date.to']}" /></td>
+			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 			<td><p:calendar showOn="button"  mindate="#{simpleQuoteBackingBean.managedBean.searchFromCreatedDate}" id="toDate"
 			      pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.searchToCreatedDate}">
 				</p:calendar>
@@ -52,11 +52,11 @@
 	    </table>
       <br /> <br />
       
-	   <p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.reset']}" style="float:right;" action="#{simpleQuoteBackingBean.reset}" update="@([id$=cloneItemSpecId])"
+	   <p:commandButton value="#{lbl['lbl.btn.reset']}" style="float:right;" action="#{simpleQuoteBackingBean.reset}" update="@([id$=cloneItemSpecId])"
 		    resetValues="true" partialSubmit="true"
 		    process="@this" />
 
-	   <p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.search']}" style="float:right;" action="#{simpleQuoteMB.searchCloneItemSpec}"  id="cloneItemSearchBtn"
+	   <p:commandButton value="#{lbl['lbl.btn.search']}" style="float:right;" action="#{simpleQuoteMB.searchCloneItemSpec}"  id="cloneItemSearchBtn"
 				update="scQuoteDataModel" process="@this ,cloneItemSpecId"/>
 				
 	 
@@ -72,26 +72,26 @@
 					rowIndexVar="index" lazy="true">
 					<ac:paginator for="scQuoteDataModel" />
 
-					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.sq.no']}">
+					<p:column headerText="#{lbl['lbl.sc.sq.simple.quote.no']}">
 						<h:outputText value="#{scQuote.quoteNo}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.title']}">
+					<p:column headerText="#{lbl['lbl.sc.title']}">
 						<h:outputText value="#{scQuote.title}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.proc.type']}">
+					<p:column headerText="#{lbl['lbl.sc.procurement.type']}">
 						<h:outputText value="#{requestNoteBackingBean.getParameterDesc(scQuote.procurementType)}" />
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.created.date']}">
+					<p:column headerText="#{lbl['lbl.sc.created.date']}">
 						<h:outputText value="#{scQuote.createdDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					
-					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.created.by']}">
+					<p:column headerText="#{lbl['lbl.sc.prepared.by']}">
 						<h:outputText value="#{simpleQuoteBackingBean.showCreatedBy(scQuote.createdBy)}" />
 					</p:column>
 				</p:dataTable>
@@ -100,11 +100,11 @@
            <br />
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.ok']}" action="#{simpleQuoteBackingBean.addCloneItemSpec(simpleQuoteBackingBean.managedBean.productOrService)}"
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" action="#{simpleQuoteBackingBean.addCloneItemSpec(simpleQuoteBackingBean.managedBean.productOrService)}"
 					partialSubmit="true" process="@this citemId" update="@([id$=itemListMainId])" 
 					oncomplete="cloneItemSpec.hide()" />
 
-				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.cancel']}" onclick="cloneItemSpec.hide()"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="cloneItemSpec.hide()"
 					immediate="true" />
 			</div>
 

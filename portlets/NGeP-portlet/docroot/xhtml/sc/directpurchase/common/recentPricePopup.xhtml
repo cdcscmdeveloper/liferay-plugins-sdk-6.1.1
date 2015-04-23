@@ -7,12 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:dialog id="recentPrice" widgetVar="recentPricePopup" position="center"
-		header="#{lbl['lbl.sc.view.recent.price.header']}" modal="true"
+		header="#{lbl['lbl.sc.view.recent.price']}" modal="true"
 		width="500" height="100" >
 		<table>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.view.recent.price.duration']}" /> <p:outputLabel
+						value="#{lbl['lbl.sc.duration.days']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="duration"
 						value="#{requestNoteBackingBean.managedBean.recentPriceDuration}">
@@ -25,12 +25,12 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton
-						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
+						value="#{lbl['lbl.btn.view']}"
 						ajax="false">
 						<p:fileDownload value="#{requestNoteBackingBean.viewRecentPrice()}" />
 					</p:commandButton>
 
-					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 					    oncomplete="recentPricePopup.hide();"
 						partialSubmit="true" />
 				</p:column>

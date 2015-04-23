@@ -18,7 +18,7 @@
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byLocId" />
 				</p:selectBooleanCheckbox>
-				<h:outputText value="#{lbl['lbl.sc.sq.supp.by.locality']}" />
+				<h:outputText value="#{lbl['lbl.sc.sq.by.locality']}" />
 				<ac:iconTooltip value="#{lbl['lbl.sc.sq.locality.tooltip']}" />
 
 				<p:selectBooleanCheckbox id="byBussNatureId"
@@ -28,7 +28,7 @@
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byBussNatureId" />
 				</p:selectBooleanCheckbox>
-				<h:outputText value="#{lbl['lbl.sc.sq.supp.by.busi.nature']}" />
+				<h:outputText value="#{lbl['lbl.sc.sq.by.business.nature']}" />
 				<ac:iconTooltip value="#{lbl['lbl.sc.sq.businessnature.tooltip']}" />
 			</h:panelGrid>
 		</h:panelGroup>
@@ -38,7 +38,7 @@
 				<p:ajax event="tabChange"
 					listener="#{simpleQuoteBackingBean.onTabChange}" />
 				<!-- BY LOCATION -->
-				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.locality']}"
+				<p:tab title="#{lbl['lbl.sc.sq.supplier.location']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.byLocality}">
 					<p:panel id="locPanel">
 						<table style="width: 100%">
@@ -63,7 +63,7 @@
 								var="locationTree" rowIndexVar="index">
 
 								<p:column
-									headerText="#{lbl['lbl.sc.sq.supp.criteria.loc.name']}">
+									headerText="#{lbl['lbl.sc.location.name']}">
 									<p:tree value="#{locationTree}" var="location"
 										selectionMode="checkbox">
 										<p:ajax event="select"
@@ -83,7 +83,7 @@
 
 									</p:tree>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.action']}">
+								<p:column headerText="#{lbl['lbl.sc.action']}">
 									<p:commandLink
 										actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}"
 										rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
@@ -99,13 +99,13 @@
 						<div align="right" style="width: 100%">
 							<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 								<p:commandButton
-									value="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
+									value="#{lbl['lbl.btn.add']}"
 									process="@this ,locLevels" update="@form" partialSubmit="true"
 									oncomplete="locationPopup.show();"
 									actionListener="#{simpleQuoteBackingBean.showLocationPopup}" />
 
 								<p:commandButton
-									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+									value="#{lbl['lbl.btn.delete']}"
 									process="@all, locationDataTable" partialSubmit="true"
 									action="#{simpleQuoteBackingBean.deleteLocationTreeNode()}"
 									update="@([id$=locationDataTable])" />
@@ -118,7 +118,7 @@
 				</p:tab>
 
 				<!-- BY BUSINESS NATURE -->
-				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.busi.nature']}"
+				<p:tab title="#{lbl['lbl.sc.sq.business.nature']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.byBusinessNature}">
 					<p:panel>
 						<p:dataTable id="byBusNatureDtl" var="busiNatureCriteria"
@@ -127,14 +127,14 @@
 							value="#{simpleQuoteBackingBean.managedBean.businessNatureCriterias}">
 							<ac:paginator for="byBusNatureDtl" />
 							<p:column selectionMode="multiple" style="width:2%" />
-							<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.code']}"
+							<p:column headerText="#{lbl['lbl.sc.code']}"
 								style="width:15%">
 								<h:outputText
 									value="#{busiNatureCriteria.pmBusinessNature.levelCode}" />
 							</p:column>
 
 							<p:column
-								headerText="#{lbl['lbl.sc.sq.supp.criteria.bus.nature.desc']}"
+								headerText="#{lbl['lbl.sc.business.nature.desc']}"
 								style="width:30%">
 								<h:outputText
 									value="#{busiNatureCriteria.pmBusinessNature.levelName}" />
@@ -154,13 +154,13 @@
 															lovId="PM_BUSINESS_NATURE"
 															postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
 															headerText="Business Nature"
-															buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
+															buttonLabel="#{lbl['lbl.btn.add']}"
 															selectionMode="multiple"
 															saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
 															conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
 															update="@form" /></td>
 													<td><p:commandButton
-															value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+															value="#{lbl['lbl.btn.delete']}"
 															process="@this,byBusNatureDtl" partialSubmit="true"
 															action="#{simpleQuoteBackingBean.deleteBusinessNature}"
 															update="@form" /></td>
@@ -175,7 +175,7 @@
 				</p:tab>
 
 				<!--  BY SUPPLIER   -->
-				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.supp.list']}"
+				<p:tab title="#{lbl['lbl.sc.supplier.list']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
 					<p:panel>
 						<p:dataTable id="supplierItemDt" var="quoteSupplier"
@@ -184,18 +184,18 @@
 							value="#{simpleQuoteBackingBean.managedBean.supplierList}">
 							<ac:paginator for="supplierItemDt" />
 							<p:column selectionMode="multiple" style="width:2%" />
-							<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.ep.no']}"
+							<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 								style="width:10%">
 								<h:outputText value="#{quoteSupplier.smSupplier.epNo}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.mof.no']}"
+							<p:column headerText="#{lbl['lbl.sc.mof.no']}"
 								style="width:10%">
 								<h:outputText value="#{quoteSupplier.mofNumber}" />
 							</p:column>
 
 							<p:column
-								headerText="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}"
+								headerText="#{lbl['lbl.sc.supplier']}"
 								style="width:30%">
 								<h:outputText value="#{quoteSupplier.smSupplier.companyName}" />
 							</p:column>
@@ -213,13 +213,13 @@
 															lovId="SM_SUPPLIER"
 															postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 															headerText="Supplier List"
-															buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
+															buttonLabel="#{lbl['lbl.btn.add']}"
 															selectionMode="multiple" update="@form"
 															saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
 															conditionField="#{simpleQuoteBackingBean.supplierListCriteria}" />
 													</td>
 													<td><p:commandButton
-															value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+															value="#{lbl['lbl.btn.delete']}"
 															process="@this,supplierItemDt" partialSubmit="true"
 															action="#{simpleQuoteBackingBean.deleteSupplier}"
 															update="@form" /></td>
@@ -234,7 +234,7 @@
 				</p:tab>
 
 				<!--  BY Government Seller   -->
-				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.govt.seller']}"
+				<p:tab title="#{lbl['lbl.sc.agency']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag}">
 					<p:panel>
 						<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
@@ -243,19 +243,19 @@
 							value="#{simpleQuoteBackingBean.managedBean.govtSellers}">
 							<ac:paginator for="govtSellerId" />
 							<p:column selectionMode="multiple" style="width:2%" />
-							<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.ep.no']}"
+							<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 								style="width:10%">
 								<h:outputText value="#{data.smSupplier.epNo}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.org.type']}"
+							<p:column headerText="#{lbl['lbl.sc.sq.organization.type']}"
 								style="width:10%">
 								<h:outputText
 									value="#{simpleQuoteBackingBean.getParameterDesc(data.smSupplier.pmOrgProfile.orgTypeCode)}" />
 							</p:column>
 
 							<p:column
-								headerText="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}"
+								headerText="#{lbl['lbl.sc.supplier']}"
 								style="width:30%">
 								<h:outputText value="#{data.smSupplier.companyName}" />
 							</p:column>
@@ -274,13 +274,13 @@
 															lovId="PM_ORG_PROFILE"
 															postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
 															headerText="Government Seller"
-															buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
+															buttonLabel="#{lbl['lbl.btn.add']}"
 															selectionMode="multiple"
 															saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
 															conditionField="recordStatus^1|govtSeller^1"
 															update="@form" /></td>
 													<td><p:commandButton
-															value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+															value="#{lbl['lbl.btn.delete']}"
 															process="@this,govtSellerId" partialSubmit="true"
 															action="#{simpleQuoteBackingBean.deleteGovtSeller}"
 															update="govtSellerId" /></td>
@@ -295,7 +295,7 @@
 				</p:tab>
 
 				<!-- Panel Supplier   -->
-				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.panel.supplier']}"
+				<p:tab title="#{lbl['lbl.sc.sq.panel.supplier']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
 					<p:dataTable id="bypanelItemId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
@@ -305,23 +305,23 @@
 						<ac:paginator for="bypanelItemId" />
 						<p:column selectionMode="multiple" style="width:2%" />
 
-						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.ep.no']}"
+						<p:column headerText="#{lbl['lbl.sc.supplier.ep.no']}"
 							style="width:10%">
 							<h:outputText value="#{data.smSupplier.epNo}" />
 						</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.mof.no']}"
+						<p:column headerText="#{lbl['lbl.sc.mof.no']}"
 							style="width:10%">
 							<h:outputText value="#{quoteSupplier.mofNumber}" />
 
 						</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}"
+						<p:column headerText="#{lbl['lbl.sc.supplier']}"
 							style="width:30%">
 							<h:outputText value="#{data.smSupplier.companyName}" />
 						</p:column>
 						<c:if test="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}">
-							<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.Zone']}"
+							<p:column headerText="#{lbl['lbl.sc.zone']}"
 								style="width:20%">
 								<h:outputText value="#{data.tplSpecZoneDtl.zoneName}" />
 							</p:column>
@@ -337,7 +337,7 @@
 										<table>
 											<tr>
 												<td><p:commandButton
-														value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+														value="#{lbl['lbl.btn.delete']}"
 														process="@this,bypanelItemId" partialSubmit="true"
 														action="#{simpleQuoteBackingBean.deletePanelSupplier}"
 														update="bypanelItemId"
