@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
