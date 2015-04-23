@@ -9225,4 +9225,18 @@ public class SmApplicationBackingBean extends
 				.handleNavigation(fc, null,
 						"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 	}
+	
+	public void redirectToRevisionSupplierProfilePage(String linkType) {
+		String applNo = linkType.equals("O") ? getManagedBean()
+				.getRevisionSupplierAppNoParam() : getManagedBean()
+				.getRevisionApproverAppNoParam();
+		String applType = linkType.equals("O") ? getManagedBean().getSmAppl()
+				.getApplType() : getManagedBean().getRevisionApplType();
+		String currTab = Integer.toString(getManagedBean().getTabActiveIndex());
+		SmCommonUtil.redirectToExternalUrl(getManagedBean()
+				.getRevisionBaseUrl()
+				+ "?applicationNo="
+				+ applNo
+				+ "&applicationType=" + applType + "&currentTab=" + currTab);
+	}
 }
