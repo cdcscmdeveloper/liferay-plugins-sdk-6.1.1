@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true"
 		id="basHdPan">
-		<p:panel id="bsInfPan">
+		<p:outputPanel id="bsInfPan" layout="block">
 			<table style="width: 100%;table-layout:fixed">
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
 					<tr>
@@ -114,7 +114,7 @@
 				</tr>
 			</table>
 				
-		</p:panel>
+		</p:outputPanel>
 		
 		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.basicRemark}" 
