@@ -9,6 +9,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.technical.specification']}"
 		toggleable="true">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.specification.instruction']}"/>
 
 		<p:dataTable id="templateTechSpecification" var="technicalSpec"
 			style="width:100%" rowIndexVar="index" rows="10"
@@ -49,9 +51,8 @@
 				process="@this"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval' or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel)}"
 				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
-				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
-
-
+				partialSubmit="true" oncomplete="createOwnerSpec.show();"
+				title="#{lbl['lbl.sc.spec.create.specification.tooltip']}" />
 		</div>
 
 
