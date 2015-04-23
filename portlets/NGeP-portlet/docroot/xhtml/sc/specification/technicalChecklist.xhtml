@@ -271,7 +271,7 @@
 					<h:commandLink
 						value="#{stageTwoTechnical.scQtCheckListAttachment.fileName}"
 						styleClass="blue_font" immediate="true"
-						action="#{supplierProposalDetailBackingBean.downloadFile(stageTwoTechnical.scQtCheckListAttachment)}" />
+						action="#{specificationBackingBean.downloadFile(stageTwoTechnical.scQtCheckListAttachment)}" />
 					<p:commandLink
 						rendered="#{stageTwoTechnical.scQtCheckListAttachment.fileName ne null}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
