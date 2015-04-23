@@ -1710,7 +1710,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		} else{
 			Locale locale = new FacesScopes().getUserLocale();
-			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.supp.tab.supp.list",
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.supplier.list",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}
@@ -1731,7 +1731,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		} else {
 			Locale locale = new FacesScopes().getUserLocale();
-			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.supp.tab.govt.seller",
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.agency",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}
@@ -1753,7 +1753,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		} else {
 			Locale locale = new FacesScopes().getUserLocale();
-			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.supp.tab.panel.supplier",
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.panel.supplier",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}	
@@ -1908,7 +1908,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		} else{
-			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.sq.zone.location",
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.zone.location",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
         
