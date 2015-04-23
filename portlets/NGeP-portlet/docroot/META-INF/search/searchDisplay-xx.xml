@@ -470,13 +470,13 @@
 					<property name="columnName" value="levelCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.code" />
+					<property name="bundleKey" value="lbl.sc.code" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="levelName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.bus.nature.desc" />
+					<property name="bundleKey" value="lbl.sc.business.nature.desc" />
 				</bean>
 			</list>
 		</property>
@@ -493,19 +493,19 @@
 					<property name="columnName" value="supplier.companyName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.supp.name" />
+					<property name="bundleKey" value="lbl.sc.supplier" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="supplier.epNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.ep.no" />
+					<property name="bundleKey" value="lbl.sc.supplier.ep.no" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="supplier.regNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.mof.no" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
 				</bean>
 
 			</list>
@@ -522,7 +522,7 @@
 					<property name="columnName" value="mofNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.mof.no" />
+					<property name="bundleKey" value="lbl.sc.mof.no" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="smSupplier.companyName" />
@@ -997,13 +997,13 @@
 					<property name="columnName" value="levelCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.code" />
+					<property name="bundleKey" value="lbl.sc.code" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="levelName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.sq.supp.criteria.bus.nature.desc" />
+					<property name="bundleKey" value="lbl.sc.business.nature.desc" />
 				</bean>
 			</list>
 		</property>

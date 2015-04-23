@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:dialog header="#{lbl['lbl.sc.sq.supp.criteria.locality.tab.name']}" widgetVar="locationPopup" modal="true" resizable="false" 
+	<p:dialog header="#{lbl['lbl.sc.sq.supplier.locality']}" widgetVar="locationPopup" modal="true" resizable="false" 
 		width="470" height="410">
 		 <p:messages id="LocMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  severity="error, info"/>
 		<p:panel id="locPopupPanel">
@@ -44,7 +44,7 @@
 				process="@all" update="@form" partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateLocation}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.cancel']}"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				onclick="locationPopup.hide();" />
 		</div>
 

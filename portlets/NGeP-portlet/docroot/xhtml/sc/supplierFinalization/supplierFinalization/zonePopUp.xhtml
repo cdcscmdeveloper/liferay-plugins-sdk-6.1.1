@@ -9,18 +9,18 @@
 	<p:dialog id="popZone" widgetVar="popZone" resizable="false"
 		styleClass="pop_up_top" header="" width="600" height="500">
 
-		<p:panel id="zoneListtblId" header="Zone Details">
+		<p:panel id="zoneListtblId" header="#{lbl['lbl.sc.zone.details']}">
 			<table styleClass="noBorders tr,noBorders td">
 				<tr>
 					<td width="20%" valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.sf.zone.name']}" /></td>
+							value="#{lbl['lbl.sc.zone.name']}" /></td>
 					<td width="80%"><p:inputText readonly="true"
 							value="#{suppFinalizationBackingBean.managedBean.scQtZoneCriteria.zoneName}"
 							size="30" /></td>
 				</tr>
 				<tr>
 					<td width="20%" valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.sf.loc.name']}" /></td>
+							value="#{lbl['lbl.sc.location.name']}" /></td>
 					<td width="80%"><p:panel></p:panel> <p:tree id="treeZoneLocPopup"
 							value="#{suppFinalizationBackingBean.managedBean.rootLocationTree}"
 							var="deliveryloc"
@@ -35,7 +35,7 @@
 		</p:panel>
 
 		<p:spacer height="25px" />
-		<p:commandButton value="#{lbl['lbl.sc.sf.cancel']}"
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 			style="float:right;" onclick="popZone.hide();">
 		</p:commandButton>
 

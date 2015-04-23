@@ -12,19 +12,19 @@
 			<table style="width: 100%">
 			<tr>
 				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.simple.quote.no']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
 				</td>
 				<td class="header-info-text">
 					#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}
 				</td>
 				<td style="width: 6%">
-					<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.ptj.name']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.ptj.name']}" />
 				</td>
 				<td class="header-info-text">
 				    #{simpleQuoteBackingBean.managedBean.scQuote.requestNotes[0].pmOrgProfile.orgName}
 				</td>
 				<td style="width: 8%">
-					<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.req.date']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.sq.request.date']}" />
 				</td>
 				<td class="header-info-text">
 				  <p:calendar  pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.scQuote.createdDate}" disabled="true"/>

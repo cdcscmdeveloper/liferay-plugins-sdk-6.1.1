@@ -15,7 +15,7 @@
 						<tr>
 							<td><p:selectOneRadio id="panel" required="true"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
-									label="#{lbl['lbl.sc.sq.gen.info.panel']}" disabled="true">
+									label="#{lbl['lbl.sc.panel']}" disabled="true">
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								</p:selectOneRadio></td>
@@ -28,12 +28,12 @@
 			</tr>
 			<tr>
 				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.title']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:inputText size="95" id="title" required="true" maxlength="100"
-									label="#{lbl['lbl.sc.sq.gen.info.title']}"
+									label="#{lbl['lbl.sc.title']}"
 									disabled="#{!isPendingSubmissionStatus}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									style="margin-bottom: 5px;" /></td>
@@ -43,14 +43,14 @@
 			  </tr>
 			<tr>
 				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.proc.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio style="margin-bottom: 5px;"
 									disabled="#{!isPendingSubmissionStatus}"
 									id="procurementType" required="true"
-									label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
+									label="#{lbl['lbl.sc.procurement.type']}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
@@ -108,13 +108,13 @@
 			</tr>
 			<tr>
 				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="zonal" required="true"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
-									label="#{lbl['lbl.sc.sq.gen.info.zonal']}"
+									label="#{lbl['lbl.sc.sq.zonal']}"
 									disabled="#{!isPendingSubmissionStatus or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -131,14 +131,14 @@
 			
 			<tr>
 				<td style="width: 15%;">
-				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<p:outputLabel value="#{lbl['lbl.sc.start.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td style="width: 30%;">
 					<table><tr><td> 
 							<p:calendar showOn="button" id="startDate"  
 							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
 							        required="true"
 							        disabled="#{!isPendingSubmissionStatus}"
-									label="#{lbl['lbl.sc.sq.gen.info.start.date']}" 
+									label="#{lbl['lbl.sc.start.date']}" 
 									readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}">
@@ -150,11 +150,11 @@
 					</table>
 				  </td>
 				   <td style="width: 15%;">
-				     <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				     <p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				    <td style="width: 40%;">
 					      <table><tr><td><p:calendar showOn="button" id="endDate"
-									label="#{lbl['lbl.sc.sq.gen.info.end.date']}"
+									label="#{lbl['lbl.sc.end.date']}"
 									mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
 									readonlyInput="true" required="true"
 									disabled="#{!isPendingSubmissionStatus}"
@@ -171,11 +171,11 @@
 				     </tr>
 					 <tr>
 						<td><p:outputLabel
-									value="#{lbl['lbl.sc.sq.gen.info.duration']}" /></td>
+									value="#{lbl['lbl.sc.sq.duration']}" /></td>
 						<td colspan="3"><p:outputPanel autoUpdate="true"
 									id="durationId">
 									<p:inputText size="6"
-										label="#{lbl['lbl.sc.sq.gen.info.duration']}" maxlength="5"
+										label="#{lbl['lbl.sc.sq.duration']}" maxlength="5"
 										value="#{simpleQuoteBackingBean.managedBean.duration}"
 										disabled="true" style="text-align:right; margin-top: 4px">
 										<f:convertNumber pattern="##0.0" />
@@ -188,20 +188,20 @@
 
 					<tr>
 						<td><p:outputLabel
-									value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel
+									value="#{lbl['lbl.sc.sq.simple.quote.type']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td colspan="3">
 								<table>
 									<tr>
 										<td><p:selectOneRadio id="noOfQuote"
-												label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}"
+												label="#{lbl['lbl.sc.sq.simple.quote.type']}"
 												required="true" disabled="#{!isPendingSubmissionStatus}"
 												value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
 												<f:selectItem
-													itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
+													itemLabel="#{lbl['lbl.sc.sq.single']}"
 													itemValue="false" />
 												<f:selectItem
-													itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
+													itemLabel="#{lbl['lbl.sc.sq.multiple']}"
 													itemValue="true" />
 												<p:ajax event="change" update="@([id$=mainTabMenu])"
 													process="@this" partialSubmit="true"
