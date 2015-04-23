@@ -1163,7 +1163,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
 			financeSpecList = resDto.getFinancialCheckLists();
 			for (ScQtCheckList qtCheckList : financeSpecList) {
-				if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+				if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						|| qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 					uploadFinanceSpecList.add(qtCheckList);
 				}
 			}
@@ -1200,7 +1201,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
 			techSpecList = resDto.getTechnicalCheckList();
 			for (ScQtCheckList qtCheckList : techSpecList) {
-				if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+				if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						|| qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 					uploadTechSpecList.add(qtCheckList);
 					isTechOff = true;
 				}
@@ -1681,6 +1683,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			QtDetailsSO = null;
 		}
     	
+ 		context.put("bsvReq", qt.isBsvRequired());
     	boolean isZone = false;
        	IQTBriefingSO qTBriefingSO = null;
     	ScQtBsv qtBsv = null;
