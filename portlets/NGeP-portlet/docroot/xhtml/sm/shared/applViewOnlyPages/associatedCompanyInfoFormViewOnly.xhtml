@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true"
 		id="assocPanel">
-		<p:panel id="assocInfPan">
+		<p:outputPanel id="assocInfPan" layout="block">
 			<p:dataTable var="assocBean" widgetVar="assocDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smAssociateCompanies}"
 				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">
@@ -38,7 +38,7 @@
 			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.associateRemark}" 
 						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.associateRemark}" />
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog style="max-height:350px;width:500px" 
 		header="#{lbl['lbl.sm.assocCmpny.assocDiaHdr']}" id="asDisp"
