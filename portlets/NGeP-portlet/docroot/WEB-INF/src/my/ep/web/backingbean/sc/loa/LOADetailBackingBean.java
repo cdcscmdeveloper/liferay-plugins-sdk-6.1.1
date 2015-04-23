@@ -269,35 +269,54 @@ public class LOADetailBackingBean extends
 	 * @return the big decimal
 	 */
 	private BigDecimal  calcBondAmount(ScLoa scLoa){
-		BigDecimal  contractDuration = BigDecimal.ZERO;
 		BigDecimal loaAmt  = BigDecimal.ZERO;
 		BigDecimal bondAmt  = BigDecimal.ZERO; 
-		BigDecimal bondPercentage = BigDecimal.ZERO;
+		double totalDuration = 0;
+		double loaAmtForBondPercentage = 0;
+		double bondPercentage =0;
 		if(scLoa.getLoaAmt() != null){
-			loaAmt  = scLoa.getLoaAmt();
+			BigDecimal  lamt  = scLoa.getLoaAmt();
+			lamt =  lamt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+			double loaAmount =  lamt.doubleValue();
+
+			if(scLoa.getContractDuration() != null){
+				BigDecimal  duration  = scLoa.getContractDuration();
+				duration = duration.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+				double cduration =  duration.doubleValue();
+				if(cduration >0){
+					totalDuration = cduration/12;
+				}
+
+				if(totalDuration >0){
+					loaAmtForBondPercentage = loaAmount/totalDuration;
+				}
+
+				if(loaAmtForBondPercentage >0){
+					loaAmt  = new BigDecimal(String.valueOf(loaAmtForBondPercentage));
+					loaAmt =  loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+				}
+			}
+
 			// Get performance bond rule percentage
 			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(ParameterTypeConst.RULE_BOND_PERCENTAGE_TYPE);
-			ruleReqDTO.setCompareValue(scLoa.getLoaAmt().toString());
+			ruleReqDTO.setCompareValue(loaAmt.toString());
 			RuleResDTO roleResDTO = ruleSO.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
-			MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
+
 			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueStrList() != null 
 					&& roleResDTO.getRuleValueStrList().size() > 0) {
 				String percentage = roleResDTO.getRuleValueStrList().get(0);
-				bondPercentage = new BigDecimal(percentage).divide(new BigDecimal("100"), mc);
+				double res = Double.valueOf(percentage);
+				bondPercentage = res/100;
 			}
-
-			if(scLoa.getContractDuration() != null){
-				DecimalFormat df = new DecimalFormat("#.##"); 
-				contractDuration = scLoa.getContractDuration();
-				BigDecimal  duration = contractDuration.divide(new BigDecimal(12), mc); 
-				double total  = loaAmt.divide(duration, mc).multiply(bondPercentage).doubleValue();
-				bondAmt  = new BigDecimal(df.format(total));
+			if(bondPercentage >0 && loaAmtForBondPercentage >0){
+				double total  = loaAmtForBondPercentage * bondPercentage;
+				bondAmt  = new BigDecimal(String.valueOf(total));
+				bondAmt  = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 			}
 		}
-
 		return bondAmt;
 	}
 
