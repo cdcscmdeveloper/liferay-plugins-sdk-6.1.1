@@ -9,7 +9,7 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']}" /></td>
 				<td class="header-info-text">
-					<p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docNo}"
+					<p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docNo}" immediate="true"
 					action="#{paymentMatchBackingBean.navigateDocument(paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docType)}"/>
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.no']}" /></td>
