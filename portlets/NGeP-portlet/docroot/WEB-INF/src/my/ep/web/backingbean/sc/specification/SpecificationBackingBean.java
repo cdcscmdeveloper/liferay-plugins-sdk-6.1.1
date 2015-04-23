@@ -3578,28 +3578,11 @@ public class SpecificationBackingBean extends
 	 * information and display in Specification committee.
 	 */
 	private void retriveDeliveryDetails() {
+		log.info("retriveDeliveryDetails - START");
 		IQTSpecSO specSo = null;
-
 		try {
-
-			retriveStateList();
-			if (null != this.getManagedBean().getScQt().getPmOrgProfile()) {
-				if (null != this.getManagedBean().getScQt().getPmOrgProfile()
-						.getParentOrgProfile()) {
-					this.getManagedBean().setMinistryId(
-							this.getManagedBean().getScQt().getPmOrgProfile()
-									.getParentOrgProfile().getOrgProfileId());
-					this.getManagedBean().setPtjId(
-							this.getManagedBean().getScQt().getPmOrgProfile()
-									.getOrgProfileId());
-					ptjByDepartMent(this.getManagedBean().getMinistryId());
-				}
-			}
-			retriveMinistryList();
-
 			if (this.getManagedBean().getDeliveryNonZoneList() == null
 					&& null == this.getManagedBean().getDeliveryLocBean()) {
-
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				specSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -3613,18 +3596,13 @@ public class SpecificationBackingBean extends
 					if (deliveryLoc == null) {
 						deliveryLoc = new ArrayList<ScQtDeliveryLoc>();
 					}
-
 					this.getManagedBean().setDeliveryNonZoneList(
 							resDTO.getAddressResultBean());
-
 				} else {
-
 					this.getManagedBean().setDeliveryZones(
 							resDTO.getSpecZoneDtls());
-
 					for (TplSpecZoneDtl tplSpecZoneDtl : this.getManagedBean()
 							.getDeliveryZones()) {
-
 						reqDTO.setQtId(this.getManagedBean().getScQt()
 								.getQtId());
 						reqDTO.setZoneId(tplSpecZoneDtl.getSpecZoneId());
@@ -3636,13 +3614,13 @@ public class SpecificationBackingBean extends
 						BriefingZoneBean bean = new BriefingZoneBean(
 								tplSpecZoneDtl, resDTO.getAddressResultBean());
 						this.getManagedBean().getDeliveryLocBean().add(bean);
-
 					}
 				}
 			}
 		} finally {
 			specSo = null;
 		}
+		log.info("retriveDeliveryDetails - END");
 	}
 
 	/**
@@ -3650,6 +3628,7 @@ public class SpecificationBackingBean extends
 	 * Addresses.
 	 */
 	private void retriveStateList() {
+		log.info("retriveStateList - START");
 		IStateSO stateSo = null;
 		StateResDTO resDto = null;
 		ICountrySO countrySo = null;
@@ -3676,7 +3655,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			stateSo = null;
 		}
-
+		log.info("retriveStateList - END");
 	}
 
 	/**
@@ -8019,7 +7998,19 @@ public class SpecificationBackingBean extends
 					new DeliveryPagingDataModel("deliveryAddress"));
 		}
 		getManagedBean().getSearchDeliveryAddressDataModel().resetData();
-
+		if (null != this.getManagedBean().getScQt().getPmOrgProfile()) {
+			if (null != this.getManagedBean().getScQt().getPmOrgProfile()
+					.getParentOrgProfile()) {
+				this.getManagedBean().setMinistryId(
+						this.getManagedBean().getScQt().getPmOrgProfile()
+								.getParentOrgProfile().getOrgProfileId());
+				this.getManagedBean().setPtjId(
+						this.getManagedBean().getScQt().getPmOrgProfile()
+								.getOrgProfileId());
+				ptjByDepartMent(this.getManagedBean().getMinistryId());
+			}
+		}
+		retriveMinistryList();
 		if (getManagedBean().getScQt().isZonal()) {
 			this.getManagedBean().setTplSpecZoneDtl(zoneDetail);
 			List<String> codes = new ArrayList<String>();
@@ -8038,6 +8029,7 @@ public class SpecificationBackingBean extends
 				}
 			}
 		} else {
+			retriveStateList();
 			log.info("Non Zonal");
 		}
 		log.info("deliveryList - END");
@@ -11011,7 +11003,7 @@ public class SpecificationBackingBean extends
 		 * Instantiates a new delivery paging data model.
 		 */
 		public DeliveryPagingDataModel(String componentId) {
-			super(componentId, false);
+			super(componentId);
 		}
 
 		/*
