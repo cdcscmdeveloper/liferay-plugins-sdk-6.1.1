@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.profBody.panHdr']}" toggleable="true">
-		<p:panel id="profInfPan">
+		<p:outputPanel id="profInfPan" layout="block">
 			<p:dataTable var="profBean" widgetVar="suppProfBodyDtWidVar"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smAssociationBodies}"
 				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
@@ -32,7 +32,7 @@
 				</p:column>
 			</p:dataTable>
 				
-		</p:panel>
+		</p:outputPanel>
 		
 		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.assocBodyRemark}" 
