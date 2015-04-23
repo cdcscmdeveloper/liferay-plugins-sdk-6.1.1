@@ -60,13 +60,13 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.title']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 				style="width:42%;white-space: normal;">
 
 
 				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.title']}" value="#{stageTwoTechnical.title}"
+						label="#{lbl['lbl.sc.spec.checklist.title']}" value="#{stageTwoTechnical.title}"
 						size="30" maxlength="1000">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalChecklisttypes"

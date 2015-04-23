@@ -16,8 +16,8 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="17%"><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.answer.type']}" /></td>
-		<td width="30%">
+		<td width="21%"><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.answer.type']}" /></td>
+		<td width="26%">
 			<p:inputText id="answerType" value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.answerTypeCode)}" disabled="true" size="15" />
 		</td>
 		<td width="17%">
@@ -173,7 +173,7 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.compliance']}"/>
 				</f:facet>
-				#{tplSpecScoring.compliance ? 'Yes' : 'No'}
+				#{lbl[tplSpecScoring.compliance ? 'lbl.txt.yes' : 'lbl.txt.no']}
 			</p:column>
 			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial}">
 				<f:facet name="header">
