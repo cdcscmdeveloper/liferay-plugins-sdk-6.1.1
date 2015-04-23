@@ -1012,6 +1012,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean paidupcapital;
 	
 	private QTRuleDataBean ruleDataBean;
+	private List<TplSpecZoneDtl> templateSpecZoneDtls;
 	
 	/**
 	 * Sets the panel suppliers.
@@ -6374,6 +6375,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setRuleDataBean(QTRuleDataBean ruleDataBean) {
 		this.ruleDataBean = ruleDataBean;
+	}
+
+	/**
+	 * @return the templateSpecZoneDtls
+	 */
+	public List<TplSpecZoneDtl> getTemplateSpecZoneDtls() {
+		return templateSpecZoneDtls;
+	}
+
+	/**
+	 * @param templateSpecZoneDtls the templateSpecZoneDtls to set
+	 */
+	public void setTemplateSpecZoneDtls(List<TplSpecZoneDtl> templateSpecZoneDtls) {
+		this.templateSpecZoneDtls = templateSpecZoneDtls;
 	}
 
 }
