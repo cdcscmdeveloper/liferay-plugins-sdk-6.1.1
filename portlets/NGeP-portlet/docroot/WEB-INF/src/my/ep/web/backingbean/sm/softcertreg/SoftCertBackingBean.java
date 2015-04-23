@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
@@ -52,6 +53,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 		initAuthorizedPersonnels();
+		getManagedBean().setGstRate(SmCommonUtil.getGstCurrentRate());
 		SmCommonUtil.redirectToPage("softCertUserSearch.xhtml", "");
 	}
 
@@ -160,7 +162,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			i++;
 		}
 		BigDecimal gst = amount.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
-				: new BigDecimal(6).divide(new BigDecimal(100))
+				: getManagedBean().getGstRate().divide(new BigDecimal(100))
 						.multiply(amount);
 		getManagedBean()
 				.setTotalGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
