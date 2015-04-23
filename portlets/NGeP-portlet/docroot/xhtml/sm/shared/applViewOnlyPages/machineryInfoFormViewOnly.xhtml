@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true">
-		<p:panel id="machInfPan">
+		<p:outputPanel id="machInfPan" layout="block">
 			<p:dataTable var="macBean" widgetVar="smMachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smMachineDtls}"
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
@@ -41,7 +41,7 @@
 				</p:column>
 
 			</p:dataTable>
-		</p:panel>
+		</p:outputPanel>
 		
 		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" 

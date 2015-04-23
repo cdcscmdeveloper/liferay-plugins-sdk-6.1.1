@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.equiComp.panHdr']}" toggleable="true">
 		
-		<p:panel id="equiInfPan">
+		<p:outputPanel id="equiInfPan" layout="block">
 			
 			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smEquityCompanies}"
@@ -41,7 +41,7 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-		</p:panel>
+		</p:outputPanel>
 		
 		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.equityCompRemark}" 
