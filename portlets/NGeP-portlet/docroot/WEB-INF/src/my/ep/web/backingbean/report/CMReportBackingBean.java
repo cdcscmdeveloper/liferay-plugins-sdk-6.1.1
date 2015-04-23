@@ -27,7 +27,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		switch (getManagedBean().getReportValue()) {		
 	        case ReportConst.LST_PUB_CAT_ITM_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);
-				rptGenBean.setCmItemStatusView(true);
+	        	//rptGenBean.setCmItemStatusView(true);
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
 				//rptGenBean.setCmExtentionCodeView(true);
