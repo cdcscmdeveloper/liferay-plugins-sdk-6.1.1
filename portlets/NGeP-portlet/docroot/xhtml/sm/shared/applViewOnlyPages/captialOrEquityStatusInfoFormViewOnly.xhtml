@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.equiStatus.panHdr']}" toggleable="true">
-		<p:panel id="capInfPan">
+		<p:outputPanel id="capInfPan" layout="block">
 
 			<table style="width: 100%;table-layout:fixed">
 				<c:if
@@ -183,6 +183,6 @@
 			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.capitalRemark}" 
 						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.capitalRemark}" />
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 </ui:composition>
