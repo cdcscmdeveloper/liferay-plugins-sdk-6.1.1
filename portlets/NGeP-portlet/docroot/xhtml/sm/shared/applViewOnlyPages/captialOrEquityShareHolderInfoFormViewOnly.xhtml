@@ -10,7 +10,7 @@
 		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
 			toggleable="true">
 			
-			<p:panel id="shrInfPan">
+			<p:outputPanel id="shrInfPan" layout="block">
 				
 				<p:dataTable var="shareBean" widgetVar="suppCapShrHldrDtWidVar"
 					value="#{viewSmApplBackingBean.managedBean.smapplShareHolders}"
@@ -37,7 +37,7 @@
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.shareholderRemark}" 
 						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.shareholderRemark}" />
 			
-			</p:panel>
+			</p:outputPanel>
 		</p:panel>
 	</h:panelGroup>
 
