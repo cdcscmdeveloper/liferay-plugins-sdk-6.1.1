@@ -87,13 +87,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		SmSupplier supplier = getSupplierProfile();
 		String path = null;
 		String desc = null;
-
+		
 		if(supplier != null){
 			log.info("Supplier is not null===>" + supplier.getSupplierId());
 			this.getManagedBean().setSmSupplier(supplier);
 
 			SmAppl appl = retrieveInProcessAppl(supplier.getSupplierId());
-
+			this.getManagedBean().setBannerImage(false);
 			if(appl != null){
 				log.info("*****In Progress*********");			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
@@ -120,7 +120,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					log.info("Supplier appl type===>" + supplier.getSmAppl().getApplType());
 					if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 						path = MOF_REG_PATH;
-						desc = getLabelFromProperties("lbl.sm.basic.mof.registration"); 
+						desc = getLabelFromProperties("lbl.sm.mof.upgrade.image"); 
+						this.getManagedBean().setBannerImage(true);
 					}else{
 						log.info("****Basic********");
 						List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
@@ -128,7 +129,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 						if(suppItems.size() < 1){
 							path = CATALOGUE_UPLOAD_PATH;							
-							desc = getLabelFromProperties("lbl.sm.basic.catalogue.upload");
+							desc = getLabelFromProperties("lbl.sm.catalogue.upload.image");
+							this.getManagedBean().setBannerImage(true);
 						}else{
 							/*
 							 * check the supplier item status
@@ -153,12 +155,15 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									desc = getLabelFromProperties("lbl.sm.basic.catalogue.pending.approval"); 
 								}else{
 									path = CATALOGUE_MAINT;
-									desc = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
+									//desc = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
+									desc = getLabelFromProperties("lbl.sm.catalogue.upload.image"); 
+									this.getManagedBean().setBannerImage(true);
 								}
 							}else{
 								log.info("********Published Catalogue******");
 								path = SOFT_CERT_PATH;
-								desc = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
+								desc = getLabelFromProperties("lbl.sm.softcert.request.image"); 
+								this.getManagedBean().setBannerImage(true);
 							}
 						}
 					}
@@ -458,8 +463,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		SmCompanyBasic companyBasic = retrieveSmCompanyBasic(supplier.getSupplierId());
 		if(companyBasic.isWithFederal() && supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
-				String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
-				mofActionMap.put(msg, MOF_SOFTCERT_REQUEST);
+				//String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
+				String softCertImg = getLabelFromProperties("lbl.sm.softcert.request.image");
+				mofActionMap.put(softCertImg, MOF_SOFTCERT_REQUEST);
 			}
 			
 			List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
@@ -474,8 +480,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			}
 			
 			if(!publishedStatus){
-				String msg = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
-				mofActionMap.put(msg, MOF_CODIFICATION_SEARCH);
+				//String msg = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
+				String catUploadImg = getLabelFromProperties("lbl.sm.catalogue.upload.image");
+				mofActionMap.put(catUploadImg, MOF_CODIFICATION_SEARCH);
 			}
 		}
 		
@@ -527,7 +534,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @return boolean
 	 */
 	public boolean validMofUser(){
-		log.info("*******validMofUser********");
+		log.info("*******check validMofUser********");
 		if(new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){ 
 			return true;
 		}
@@ -552,7 +559,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private void basicSupplierAction(SmSupplier supplier){
 		Map<String,String> basicActionMap = new HashMap<String, String>();
 		
-		String msg = "Upgrade to MOF Account to enjoys more benefits.";
+		//String msg = "Upgrade to MOF Account to enjoys more benefits.";
+		String msg = getLabelFromProperties("lbl.sm.mof.upgrade.image");
 		basicActionMap.put(msg, UPGRADE_TO_MOF);
 		
 		getManagedBean().setUserActionMap(basicActionMap);
