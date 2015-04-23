@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.panHdr.certInfo']}" toggleable="true"
 		id="certPanHead">
-		<p:panel id="certInfPan">
+		<p:outputPanel id="certInfPan" layout="block">
 			<p:dataTable var="certBean" editable="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				widgetVar="suppCertDtWidVar"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCerts}"
@@ -40,7 +40,7 @@
 				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.certRemark}" 
 				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.certRemark}" />
 				
-		</p:panel>
+		</p:outputPanel>
 		
 	</p:panel>
 	<p:dialog style="max-height:350px;width:500px"
