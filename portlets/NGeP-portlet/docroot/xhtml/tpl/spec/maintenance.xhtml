@@ -73,14 +73,14 @@
 				</tr>		
 				<tr>
 					<td class="TableFieldLeft" width="16%">
-						<p:outputLabel value="#{lbl['lbl.tpl.spec.item.type']}" />
+						<p:outputLabel value="#{lbl['lbl.sc.item.type']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="TableFieldRight" width="34%">
 						<p:selectOneMenu id="itemType" style="width:148px" 
 							value="#{templateSpecBackingBean.managedBean.templateSpecBean.specMaster.itemTypeCode.parameterId}"
 							required="true"
-							label="#{lbl['lbl.tpl.spec.item.type']}">
+							label="#{lbl['lbl.sc.item.type']}">
 							<f:selectItems value="#{templateSpecBackingBean.itemTypeDropdownList}" />
 							<p:ajax event="change" partialSubmit="true" process="@this" update="spg" listener="#{templateSpecBackingBean.itemTypeChange()}" />
 						</p:selectOneMenu>

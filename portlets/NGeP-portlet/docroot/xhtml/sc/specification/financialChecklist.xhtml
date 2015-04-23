@@ -60,7 +60,7 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.title']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 				style="width:42%;white-space: normal;">
 
 
@@ -70,7 +70,7 @@
 				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
 					<p:inputText value="#{stageTwofunctional.title}" size="30"
 						maxlength="1000" required="true" id="finChecklistTitle"
-						label="#{lbl['lbl.sc.title']}">
+						label="#{lbl['lbl.sc.spec.checklist.title']}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialCheckListtitle"
 							listener="#{specificationBackingBean.financialCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
