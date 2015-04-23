@@ -55,28 +55,16 @@
 	
 	<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
 		<br />
-		<table style="width: 30%;float:left;" >
-			<tr>
-				<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
-				<td>
-					<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" >
-						<p:outputLabel value="#{lbl['lbl.sm.view.previous.appr.appl']}" />
-						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
-						<f:param name="applicationType" value="#{backingBean.managedBean.revisionApplType}"/>
-						<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
-					</h:outputLink>
-				</td>
-				</c:if>
-				<td>
-					<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank" >
-						<p:outputLabel value="#{lbl['lbl.sm.view.original.appl']}" />
-						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionSupplierAppNoParam}"/>
-						<f:param name="applicationType" value="#{backingBean.managedBean.smAppl.applType}"/>
-						<f:param name="currentTab" value="#{backingBean.managedBean.tabActiveIndex}"/>
-					</h:outputLink>
-				</td>
-			</tr>
-		</table>
+		<div align="left">
+			<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
+				<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('P')}" 
+					process="@this" partialSubmit="true" update=":form" target="_blank"
+					value="#{lbl['lbl.sm.view.previous.appr.appl']}"/>&#160;&#160;
+			</c:if>
+			<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('O')}" 
+					process="@this" partialSubmit="true" update=":form" target="_blank"
+					value="#{lbl['lbl.sm.view.original.appl']}"/>
+		</div>
 		<br /><br />
 	</c:if>
 	
