@@ -10,7 +10,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
+		<p:messages id="messages" showDetail="true" autoUpdate="true" 
 			closable="true" severity="error,info" showSummary="false"></p:messages>
 		<table style="width: 100%;">
 			<tr>
@@ -26,7 +26,7 @@
 				</td>
 			   	<td><p:commandButton
 						value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.create'] : lbl['lbl.btn.update']}"
-						action="#{categoryBackingBean.saveSubDivision}" update=":form"						
+						action="#{categoryBackingBean.saveSubDivision}" update=":form"												
 						style="float:right;" />
 						</td>
 			</tr>
@@ -192,8 +192,8 @@
 		</ui:remove>
 
 
-		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
-			id="catLevel">
+		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true" 
+			id="catLevel"  widgetVar="catLevel">
 			<table style="width: 100%;">
 				<tr>
 					<td width="255"><p:outputLabel

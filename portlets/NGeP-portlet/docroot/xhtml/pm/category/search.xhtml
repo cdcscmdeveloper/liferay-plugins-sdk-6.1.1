@@ -8,8 +8,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 
-		<p:messages id="catSrchMsg" showDetail="true" closable="true"
-			showSummary="false"></p:messages>
+		<p:messages id="catSrchMsg" showDetail="true" closable="true" autoUpdate="true"
+			severity="error,info" showSummary="false"></p:messages>
 		<ui:remove>
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
