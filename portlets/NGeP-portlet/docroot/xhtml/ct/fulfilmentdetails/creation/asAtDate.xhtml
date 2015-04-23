@@ -16,13 +16,14 @@
 			  <p:outputLabel value="As At Date" style="float:right;"></p:outputLabel>
 			  </td>
 			  	<td style="width: 15%"> 
-			  		<p:calendar id="selectedDateId" value="#{contractDetailsBackingBean.managedBean.asAtDate}"  navigator="true" size="8"
+			  		<p:calendar id="selectedDateId" value="#{contractDetailsBackingBean.managedBean.contractVer.asAtDate}"  navigator="true" size="8"
 		               readonlyInput="true" 
 		               mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" 
 		               maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"			             
-		               showOn="button"  rendered="#{contractDetailsBackingBean.managedBean.viewContract}"
+		               showOn="button" disabled="#{!contractDetailsBackingBean.managedBean.updateContract
+		               and !contractDetailsBackingBean.managedBean.viewContract}"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-		               <p:ajax event="dateSelect"  process="@this"   listener="#{contractDetailsBackingBean.updateAsperDate()}" update=":form" ></p:ajax>
+		               <p:ajax event="dateSelect"  process="@this" listener="#{contractDetailsBackingBean.updateAsAtDate()}" update=":form" ></p:ajax>
 		             </p:calendar>
 			  </td>
 			</tr>

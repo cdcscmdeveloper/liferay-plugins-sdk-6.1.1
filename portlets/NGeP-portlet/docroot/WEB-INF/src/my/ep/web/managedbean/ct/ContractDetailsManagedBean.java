@@ -102,7 +102,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
     private BigDecimal paidInvoiceAmt;
     private Date ctDateStart;
 	private Date ctDateEnd;
-	private Date asAtDate = new Date();
 	private int selectedTabIndex = 0;
 	private int ctStatus;	
 	private int attachFileIndex;
@@ -1087,21 +1086,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedListOfAddress(List<CtAgencyAddress> selectedListOfAddress) {
 		this.selectedListOfAddress = selectedListOfAddress;
-	}
-
-
-	/**
-	 * @return the asAtDate
-	 */
-	public Date getAsAtDate() {
-		return asAtDate;
-	}
-
-	/**
-	 * @param asAtDate the asAtDate to set
-	 */
-	public void setAsAtDate(Date asAtDate) {
-		this.asAtDate = asAtDate;
 	}
 
 	/**
