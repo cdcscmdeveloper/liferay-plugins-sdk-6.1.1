@@ -5009,7 +5009,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemName() != null) && (this.getCmItemName() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmItemType() != null) && (this.getCmItemType() != ReportConst.EMPTY_VAL))
-				|| ((this.getCmItemStatus() != null) && (this.getCmItemStatus() != ReportConst.EMPTY_VAL))
+				/*|| ((this.getCmItemStatus() != null) && (this.getCmItemStatus() != ReportConst.EMPTY_VAL))*/
 				|| ((this.getCmUnspscCode() != null) && (this.getCmUnspscCode() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmUnspscTitle() != null) && (this.getCmUnspscTitle() != ReportConst.EMPTY_VAL))
 				|| ((this.getCmExtentionType() != null) && (this.getCmExtentionType() != ReportConst.EMPTY_VAL))
@@ -5036,12 +5036,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setItemTypeTotVar(ReportConst.CM_AMP_ITEM_TYPE_EQ
 						+ this.getCmItemType());
 			}
-			if ((this.getCmItemStatus() != null)
+			/*if ((this.getCmItemStatus() != null)
 					&& (this.getCmItemStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
 						.setItemStatusTotVar(ReportConst.CM_AMP_ITEM_STATUS_EQ
 								+ this.getCmItemStatus());
-			}
+			}*/
 			if ((this.getCmUnspscCode() != null)
 					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
