@@ -37,6 +37,7 @@
 			<p:inputText value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.scoreTypeCode)}" 
 				disabled="true" size="15"
 				rendered="#{!editable or templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
+			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
 		</td>
 	</tr>
 	<tr>
@@ -78,6 +79,7 @@
 				</p:inputText>
 				#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.percentage']}
 				<p:message id="weightageMsg" for="weightage" display="icon" />
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
 			</h:panelGroup>
 		</td>
 	</tr>
@@ -90,6 +92,11 @@
 		header="#{lbl['lbl.tpl.spec.content.scoring.scoring.title']}" 
 		toggleable="true"
 		rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}">
+		
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title']}" />
+			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}" />
+		</f:facet>
 		
 		<ui:param name="isCompliance" value="#{templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
 		
@@ -231,7 +238,8 @@
 					process="@this, scoringTbl" partialSubmit="true"
 					action="#{templateSpecBackingBean.addScoringAction(templateSpecBean.selectedSpecQuestion)}"
 					update="scoringTbl" 
-					rendered="#{!isCompliance and !isSpecTypeFinancial and editable}" />
+					rendered="#{!isCompliance and !isSpecTypeFinancial and editable}"
+					title="#{lbl['lbl.tpl.spec.content.scoring.settings.btn.add.tooltip']}" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this" partialSubmit="true"
 					action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings)}"
