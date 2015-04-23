@@ -9761,6 +9761,7 @@ public class SpecificationBackingBean extends
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			if (this.getManagedBean().getScQt().isPanel()) {
+				this.getManagedBean().setSpecComplete(false);
 				retriveSupplierQualificationCriteria("BO");
 				retriveTechnicalSpecification();
 			}
