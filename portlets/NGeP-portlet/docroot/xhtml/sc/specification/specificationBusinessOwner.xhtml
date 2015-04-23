@@ -133,19 +133,27 @@
 						</p:selectOneRadio>
 					</ui:fragment> <ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or specificationBackingBean.managedBean.scQt.estimatedAmount gt '50000'}">
-						<p:selectOneRadio required="true" id="evalType"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							label=" #{lbl['lbl.sc.evaluation.type']}"
-							value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
-							<f:selectItems
-								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form"
-								listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
-
-						</p:selectOneRadio>
-						<ac:iconTooltip value="#{lbl['lbl.sc.evaluation.type.tooltip']}" />
-						<p:message id="evalMsg" for="evalType" display="icon" />
+						<table>
+							<tr>
+								<td>
+									<p:selectOneRadio required="true" id="evalType"
+										disabled="#{specificationBackingBean.managedBean.readOnly}"
+										label=" #{lbl['lbl.sc.evaluation.type']}"
+										value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
+										<f:selectItems
+											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											update="@form"
+											listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
+			
+									</p:selectOneRadio>
+									<p:message id="evalMsg" for="evalType" display="icon" />
+								</td>
+								<td style="margin-top: -3px">
+									<ac:iconTooltip value="#{lbl['lbl.sc.evaluation.type.tooltip']}" />
+								</td>
+							</tr>
+						</table>
 					</ui:fragment></td>
 			</tr>
 			<tr>
@@ -155,17 +163,26 @@
 							value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 
-					<td><p:selectOneRadio id="techEvaluation" required="true"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
-							value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
-							<f:selectItems
-								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{specificationBackingBean.techEvaluationReqChanged}"></p:ajax>
-						</p:selectOneRadio>
-						<ac:iconTooltip value="#{lbl['lbl.sc.spec.requir.tech.eval.tooltip']}" />
-						<p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
+					<td>
+						<table>
+							<tr>
+								<td>
+									<p:selectOneRadio id="techEvaluation" required="true"
+										disabled="#{specificationBackingBean.managedBean.readOnly}"
+										label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
+										value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
+										<f:selectItems
+											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+										<p:ajax event="change" process="@this" partialSubmit="true"
+											listener="#{specificationBackingBean.techEvaluationReqChanged}"></p:ajax>
+									</p:selectOneRadio>
+									<p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
+								</td>
+								<td style="margin-top: -3px">
+									<ac:iconTooltip value="#{lbl['lbl.sc.spec.requir.tech.eval.tooltip']}" />
+								</td>
+							</tr>
+						</table>
 					</td>
 				</ui:fragment>
 			</tr>
@@ -173,17 +190,26 @@
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}">
 					<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-					<td><p:selectOneRadio
-							disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.scQt.panel ne 'No'}"
-							value="#{specificationBackingBean.managedBean.scQt.zonal}">
-							<f:selectItems
-								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-
-							<p:ajax event="change" partialSubmit="true"
-								update="generalLocationList" process="@this"
-								listener="#{specificationBackingBean.zoneRadioChange}"></p:ajax>
-						</p:selectOneRadio>
-						<ac:iconTooltip value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" />
+					<td>
+						<table>
+							<tr>
+								<td>
+									<p:selectOneRadio
+										disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.scQt.panel ne 'No'}"
+										value="#{specificationBackingBean.managedBean.scQt.zonal}">
+										<f:selectItems
+											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+			
+										<p:ajax event="change" partialSubmit="true"
+											update="generalLocationList" process="@this"
+											listener="#{specificationBackingBean.zoneRadioChange}"></p:ajax>
+									</p:selectOneRadio>
+								</td>
+								<td style="margin-top: -3px">
+									<ac:iconTooltip value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" />
+								</td>
+							</tr>
+						</table>
 					</td>
 				</ui:fragment>
 			</tr>
@@ -192,18 +218,28 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="procCategory" required="true"
-						style="margin-bottom:5px;"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						label="#{lbl['lbl.sc.procurement.category']}"
-						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
-						<f:selectItems
-							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
-						<p:ajax event="change"
-							listener="#{specificationBackingBean.procurementChange}"></p:ajax>
-					</p:selectOneMenu>
-					<ac:iconTooltip value="#{lbl['lbl.sc.procurement.category.tooltip']}" />
-					<p:message id="titleMsg" for="procCategory" display="icon" /></td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<p:selectOneMenu id="procCategory" required="true"
+									style="margin-bottom:5px;"
+									disabled="#{specificationBackingBean.managedBean.readOnly}"
+									label="#{lbl['lbl.sc.procurement.category']}"
+									value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
+									<f:selectItems
+										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+									<p:ajax event="change"
+										listener="#{specificationBackingBean.procurementChange}"></p:ajax>
+								</p:selectOneMenu> 
+								<p:message id="titleMsg" for="procCategory" display="icon" />
+							</td>
+							<td style="margin-top: -3px">
+								<ac:iconTooltip value="#{lbl['lbl.sc.procurement.category.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 
 			<tr>
