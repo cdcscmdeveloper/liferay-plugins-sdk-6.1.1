@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true"
 		id="sample" >
-		<p:panel id="brnInfPan">
+		<p:outputPanel id="brnInfPan" layout="block">
 			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches}"
 				rowKey="#{branchBean}" rowIndexVar="index">
@@ -62,7 +62,7 @@
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.branchRemark}" 
 						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.branchRemark}" />
 			
-		</p:panel>
+		</p:outputPanel>
 	</p:panel>
 	
 	<p:dialog style="max-height:350px;width:500px"
