@@ -320,7 +320,16 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 						orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
 					}
 					reqDTO.setOrgProfileId(orgProfileId);
-				}					
+				}
+				
+				if(isAuditor()) {
+					FacesScopes facesScopes = new FacesScopes();
+					if(facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+						reqDTO.setUserRole(RoleCode.AUDITOR_GENERAL.value());
+					} else {
+						reqDTO.setUserRole(RoleCode.AUDITOR_INTERNAL.value());
+					}
+				}
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
@@ -529,6 +538,16 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	}
 	
 	/**
+	 * Checks if is Auditor General/Internal user.
+	 *
+	 * @return true, if is Auditor General/Internal user
+	 */
+	public boolean isAuditor() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
+	}
+	
+	/**
 	 * Checks if is fl fulfilment requisitioner.
 	 *
 	 * @return true, if is fl fulfilment requisitioner
@@ -591,7 +610,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 			}
-			if(isFlFulfilmentApprover()){
+			if(isFlFulfilmentApprover() || isAuditor()){
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -614,7 +633,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 			}
-			if(isFlFulfilmentApprover()){
+			if(isFlFulfilmentApprover() || isAuditor()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
