@@ -1831,4 +1831,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 	}
 
+	/**
+	 * Redirect to Supplier Profile or Supplier History Page
+	 */
+	public void redirectToSupplierProfileOrHistoryPage() {
+		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl()
+				+ "?supplierId=" + getManagedBean().getSupplierIdParam());
+	}
+
 }
