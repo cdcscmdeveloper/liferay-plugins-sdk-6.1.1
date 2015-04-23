@@ -9,56 +9,49 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
 	<ui:define name="contentSection">
 
-		<p:panel>
+		<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
+			width="100%">
+			<p:column>
+				<div style="float: right;">
+					<ui:repeat var="bpmAction"
+						value="#{bsvAttendanceBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel"
+							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button"
+							action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}" />
+					</ui:repeat>
+				</div>
+			</p:column>
+			<p:messages id="messages" showDetail="true" autoUpdate="true"
+				closable="true" severity="error, info" />
+		</h:panelGrid>
 
-
-			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
-				width="100%">
-				<p:column>
-					<div style="float: right;">
-						<ui:repeat var="bpmAction"
-							value="#{bsvAttendanceBackingBean.managedBean.outComes}">
-							<ui:param name="buttonLabel"
-								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button"
-								action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}" />
-						</ui:repeat>
-					</div>
-				</p:column>
-				<p:messages id="messages" showDetail="true" autoUpdate="true"
-					closable="true" severity="error, info" />
-			</h:panelGrid>
-
-			<div align="left" class="header-info">
-				<table style="width: 100%">
-					<tr>
-						<td style="width: 13%"><h:outputLabel
-								value="#{lbl['lbl.sc.qtn.no']}" /></td>
-						<td style="width: 15%" class="header-info-text">
-							#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}</td>
-						<td style="width: 13%"><h:outputLabel
-								value="#{lbl['lbl.sc.ptj']}" /></td>
-						<td style="width: 25%" class="header-info-text">
-							#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgCode}
-							-
-							#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgName}
-
-						</td>
-						<td style="width: 13%" class="header-info-text"><h:outputLabel
-								value="#{lbl['lbl.sc.status']}" /></td>
-						<td style="width: 21%" class="header-info-text">
-
-							#{bsvAttendanceBackingBean.getStatusDescById(bsvAttendanceBackingBean.managedBean.scQt.qtStatus.statusId)}
-						</td>
-					</tr>
-				</table>
-			</div>
-			<p:spacer height="10px"></p:spacer>
-		</p:panel>
+		<div align="left" class="header-info">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 15%"><h:outputLabel
+							value="#{lbl['lbl.sc.qtn.no']}" /></td>
+					<td class="header-info-text">
+						#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td class="header-info-text">
+						#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgCode}
+						-
+						#{bsvAttendanceBackingBean.managedBean.scQt.pmOrgProfile.orgName}
+					</td>
+					<td style="width: 10%"><h:outputLabel
+							value="#{lbl['lbl.sc.status']}" /></td>
+					<td class="header-info-text">
+						#{bsvAttendanceBackingBean.getStatusDescById(bsvAttendanceBackingBean.managedBean.scQt.qtStatus.statusId)}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<p:spacer height="10px" />
 		<ui:include src="bsvattandencedtls.xhtml"></ui:include>
 	</ui:define>
 </ui:composition>
