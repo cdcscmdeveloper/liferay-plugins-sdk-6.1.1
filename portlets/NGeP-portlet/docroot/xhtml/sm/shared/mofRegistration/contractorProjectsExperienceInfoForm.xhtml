@@ -145,9 +145,10 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="500"
+				<td style="width: 30%"><p:outputLabel
+						value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="2"><p:inputText maxlength="500"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
@@ -159,7 +160,8 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.contrVal']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 
-				<td><p:inputText label="#{lbl['lbl.sm.projDtls.contrVal']}"
+				<td colspan="2"><p:inputText
+						label="#{lbl['lbl.sm.projDtls.contrVal']}"
 						disabled="#{!backingBean.managedBean.valueReqd}"
 						id="contractorContractVal" maxlength="17"
 						required="#{backingBean.managedBean.valueReqd}"
@@ -180,8 +182,8 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.payMthd']}" />
 				</td>
-				<td><p:selectOneMenu label="#{lbl['lbl.sm.projDtls.payMthd']}"
-						id="supCntrctPayMthd"
+				<td colspan="2"><p:selectOneMenu
+						label="#{lbl['lbl.sm.projDtls.payMthd']}" id="supCntrctPayMthd"
 						value="#{backingBean.managedBean.selectedCompanyExperience.paymentMethodId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItems value="#{backingBean.getDropdownValues('PYM')}" />
@@ -191,7 +193,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procMode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
+				<td colspan="2"><p:selectOneMenu
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.procMode']}" id="supCntrPrcMod"
 						value="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}"
@@ -202,7 +204,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
-				<td><p:selectOneRadio
+				<td style="width: 39%"><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
 							itemValue="F" />
@@ -210,8 +212,8 @@
 							itemValue="O" />
 					</p:selectOneRadio></td>
 				<td>&#160; <p:graphicImage id="tooltip"
-						library="ep/images/design" name="tooltips.png" /> <p:tooltip
-						id="toolinfo" for="tooltip">
+						style="padding-bottom : 7px;" library="ep/images/design"
+						name="tooltips.png" /> <p:tooltip id="toolinfo" for="tooltip">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
 					</p:tooltip>&#160;
@@ -220,7 +222,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputTextarea maxlength="255"
+				<td colspan="2"><p:inputTextarea maxlength="255"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.statBody']}" id="supCntrStuBdy"
 						value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
@@ -233,7 +235,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sm.projDtls.workProgress']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneRadio
+				<td colspan="2"><p:selectOneRadio
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.workProgress']}" id="supCntrPrgSts"
 						value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
@@ -249,7 +251,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procDate']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:calendar showOn="button" navigator="true"
+				<td colspan="2"><p:calendar showOn="button" navigator="true"
 						display="inline" readonlyInput="true"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.procDate']}" id="supCntrPrcDate"
