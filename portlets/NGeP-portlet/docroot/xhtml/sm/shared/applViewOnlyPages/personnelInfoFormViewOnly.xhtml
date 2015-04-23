@@ -291,8 +291,8 @@
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
 
-			<p:panel id="persInfPan">
-				<p:panel id="persInfoDtPanel">
+			<p:outputPanel id="persInfPan" layout="block">
+				<p:outputPanel id="persInfoDtPanel" layout="block">
 					<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
 						value="#{viewSmApplBackingBean.managedBean.smAppl.smPersonnels}"
 						rowKey="#{person}" rowIndexVar="index" id="personDt">
@@ -349,8 +349,8 @@
 						</p:column>
 
 					</p:dataTable>
-				</p:panel>
-			</p:panel>
+				</p:outputPanel>
+			</p:outputPanel>
 			
 			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.personnelRemark}" 
