@@ -14,7 +14,8 @@
 				partialSubmit="true"
 				process="@this"
 				update="@this"
-				style="float:left;" />
+				style="float:left;"
+				rendered="#{!qTDetailBB.managedBean.qt.brandNew}" />
 			<c:if
 				test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
