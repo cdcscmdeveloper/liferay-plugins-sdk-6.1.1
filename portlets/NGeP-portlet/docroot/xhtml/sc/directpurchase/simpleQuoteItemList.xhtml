@@ -14,7 +14,7 @@
 			title="#{lbl['lbl.sc.simple.quote.product.list']}" />
 
 			<div class="ppRightBtn" style="width: 100%">
-				<p:commandButton value="#{lbl['lbl.sc.sq.clone']}"
+				<p:commandButton value="#{lbl['lbl.btn.clone']}"
 					id="cloneButtonProduct"
 					action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
 					process="@this productListId" update="@([id$=cloneItemSpec])"
@@ -36,7 +36,7 @@
 			title="#{lbl['lbl.sc.simple.quote.service.list']}" />
 			
 		<div class="ppRightBtn" style="width: 100%">
-		  <p:commandButton value="#{lbl['lbl.sc.sq.clone']}"
+		  <p:commandButton value="#{lbl['lbl.btn.clone']}"
 			id="cloneButtonService"
 			action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
 		    process="@this serviceListId"

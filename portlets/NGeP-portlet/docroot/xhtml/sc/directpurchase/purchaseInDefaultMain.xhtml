@@ -33,7 +33,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					<td align="right">
 					   <p:commandButton immediate="true"
 							partialSubmit="true" process="@this"
-							value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+							value="#{lbl['lbl.btn.item.search']}"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 							style="float:left;"
 							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
@@ -43,7 +43,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 							rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
 						<p:commandButton
-							value="#{lbl['lbl.sc.common.submit']}"
+							value="#{lbl['lbl.btn.submit']}"
 							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form" process="@all" partialSubmit="true"

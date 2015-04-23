@@ -12,10 +12,10 @@
 				<TR>
 					<TD width="30%" valign="top">
 					 <p:outputLabel	value="*" styleClass="mandatory" />
-					 <p:outputLabel value="#{lbl['lbl.sc.sq.zone.name']}"></p:outputLabel>
+					 <p:outputLabel value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel>
 				    
 					</TD>
-					<TD width="70%"><p:inputText id="zoneNameId" size="44" label="#{lbl['lbl.sc.sq.zone.name']}"
+					<TD width="70%"><p:inputText id="zoneNameId" size="44" label="#{lbl['lbl.sc.zone.name']}"
 							value="#{simpleQuoteBackingBean.managedBean.zoneName}"
 							required="#{simpleQuoteBackingBean.managedBean.required}">
 						</p:inputText> <p:message id="zoneNameMsg" for="zoneNameId" display="icon" /> </TD>
@@ -49,11 +49,11 @@
 		<p:spacer height="3px" />
 		<div class="ppRightBtn" style="width: 100%">
 			<p:commandButton id="proceedBtn"
-				value="#{lbl['lbl.sc.common.proceed.btn']}" process="@all"
+				value="#{lbl['lbl.btn.proceed']}" process="@all"
 				update="@this, zoneLocationDataTable" partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.cancel']}" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 				process="@this" action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
 
 		</div>

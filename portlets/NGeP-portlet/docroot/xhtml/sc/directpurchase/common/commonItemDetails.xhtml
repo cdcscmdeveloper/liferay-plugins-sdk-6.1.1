@@ -309,7 +309,7 @@
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</h:selectOneMenu>
 					<p:spacer width="5px;"/>
-					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
+					<p:commandButton value="#{lbl['lbl.sc.btn.apply.all']}"
 					    partialSubmit="true"  process="@this prepareBy"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
@@ -318,7 +318,7 @@
 				<p:column width="100%" style="text-align:right">
 				 <c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
 					<p:commandButton
-						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+						value="#{lbl['lbl.btn.delete']}"
 						process="@this" partialSubmit="true" onsuccess="sqConformDlg.show();"
 						update="@([id$=requestListDataTable])" />
 				</c:if>
