@@ -7,24 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="Add2" position="top" resizable="false"
-		header="New #{committeBackingBean.managedBean.headerTitle}"
+		header="#{lbl['lbl.sc.add']} #{committeBackingBean.managedBean.headerTitle}"
 		width="970" widgetVar="screen3" modal="true" styleClass="addQCMember">
 		<p:panel>
 			<p:messages id="committeemessagesid" showDetail="true"
 				autoUpdate="true" closable="true" showSummary="false" />
-			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel value="#{lbl['lbl.sc.selection']}" />
-				<p:selectOneRadio id="selectradioid"
-					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
-					<f:selectItems
-						value="#{committeBackingBean.managedBean.selections}" />
-					<p:ajax event="click"
-						listener="#{committeBackingBean.userSelcetionAction}"
-						update="newProfile" />
-				</p:selectOneRadio>
-				<p:message id="selectradioidMsg" for="selectradioid" display="icon" />
-			</h:panelGrid>
 			<p:panel id="newProfile" style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
@@ -66,7 +53,7 @@
 							process="@this" />
 					</div>
 					<p:spacer height="5" />
-					<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true">
+					<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
 						<p:dataTable id="userexistid"
 							value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
 							selection="#{committeBackingBean.managedBean.selectedPmUser}"
