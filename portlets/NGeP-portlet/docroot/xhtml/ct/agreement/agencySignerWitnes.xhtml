@@ -110,12 +110,12 @@
 		
 		                <p:column headerText="#{lbl['lbl.ct.name']}" style="width:35%;">
 		                      <p:inputText value="#{signAgWitnessVar.officerName}" 
-		                          style="width:90%" maxlength="20" validator="#{webappBean.checkInputField}"/>
+		                          style="width:90%" maxlength="20" />
 		                </p:column> 
 		
 		                <p:column headerText="#{lbl['lbl.ct.ic.no']}" style="width:20%;">
 		                    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%"
-		                        label="#{lbl['lbl.ct.ic.no']}"  maxlength="12" validator="#{webappBean.checkIntegerField}">
+		                        label="#{lbl['lbl.ct.ic.no']}"  maxlength="12">
 		                    <p:ajax event="blur" process="@form" listener="#{agreementBackingBean.addAgencyWitnes(1)}"
 		                       onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
 		                    </p:inputText>
