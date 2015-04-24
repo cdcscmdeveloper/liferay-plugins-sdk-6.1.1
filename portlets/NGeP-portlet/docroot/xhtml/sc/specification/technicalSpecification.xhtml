@@ -9,8 +9,9 @@
 
 	<p:panel header="#{lbl['lbl.sc.technical.specification']}"
 		toggleable="true">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.specification.instruction']}"/>
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.specification.instruction']}" />
 
 		<p:dataTable id="templateTechSpecification" var="technicalSpec"
 			style="width:100%" rowIndexVar="index" rows="10"
@@ -38,8 +39,7 @@
 				style="width:10%;text-align: center;">
 				<p:commandLink ajax="false"
 					action="#{specificationBackingBean.specEditAction(technicalSpec,index,'T')}">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+					<h:graphicImage value="/css/images/design/edit.png" />
 
 				</p:commandLink>
 			</p:column>

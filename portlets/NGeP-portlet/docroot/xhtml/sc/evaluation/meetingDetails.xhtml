@@ -11,8 +11,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.meeting.details']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
 			widgetVar="evaluationMeeting"
@@ -52,8 +51,8 @@
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
 					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
-					id="evaluationMeetingId"
-					label="#{lbl['lbl.sc.meeting.date']}" required="true"
+					id="evaluationMeetingId" label="#{lbl['lbl.sc.meeting.date']}"
+					required="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
 				<p:message id="meetingEvaluationid" for="evaluationMeetingId"
 					display="icon"></p:message>
@@ -99,8 +98,7 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remarks']}"
-				style="width:34%">
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:34%">
 
 
 				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="40"
@@ -109,14 +107,7 @@
 
 			</p:column>
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.action']}">
-			
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
 
-				</p:commandLink>
-			</p:column> -->
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">

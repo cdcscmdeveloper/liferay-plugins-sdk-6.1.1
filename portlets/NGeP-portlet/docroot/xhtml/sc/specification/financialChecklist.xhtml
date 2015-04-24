@@ -120,8 +120,7 @@
 
 
 						<p:selectOneMenu style="width:100px;" required="true"
-							id="finhChecklistTitlenullType"
-							label="#{lbl['lbl.sc.type']}"
+							id="finhChecklistTitlenullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwofunctional.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getFinancialChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -141,8 +140,7 @@
 
 
 						<p:selectOneMenu style="width:100px;" required="true"
-							id="finChecklistTitlenotnullType"
-							label="#{lbl['lbl.sc.type']}"
+							id="finChecklistTitlenotnullType" label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwofunctional.definationType.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getFinancialChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
@@ -277,8 +275,7 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						update="financeProposaltwo"
 						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
-						<p:graphicImage library="ep/images/design" name="upload.png"
-							value="/resources/ep/images/design/upload.png" />
+						<h:graphicImage value="/css/images/design/upload.png" />
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
@@ -294,8 +291,8 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwofunctional.scQtCheckListAttachment)}"
 						immediate="true" update="@form">
-						<h:graphicImage library="ep/images/design" name="trash.png"
-							styleClass="tasklist_title1" />
+						<h:graphicImage styleClass="tasklist_title1"
+							value="/css/images/design/trash.png" />
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 					</p:commandLink>
@@ -318,8 +315,7 @@
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD') and (stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'))}">
 
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
+						<h:graphicImage value="/css/images/design/edit.png" />
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
@@ -329,8 +325,7 @@
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
 
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
+						<h:graphicImage value="/css/images/design/edit.png" />
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 

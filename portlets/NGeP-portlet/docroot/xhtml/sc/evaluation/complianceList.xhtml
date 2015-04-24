@@ -7,22 +7,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div>
-		<p:commandButton value="#{lbl['lbl.btn.back']}"
-			style="float:left;"
+		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 			action="#{evaluationBackingBean.evaluationBackaction}" />
 
-		<p:commandButton value="#{lbl['lbl.btn.save']}"
-			style="float:right;" update="@all"
-			action="#{evaluationBackingBean.saveProposalScoreDtls}" />
+		<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
+			update="@all" action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 	</div>
 	<p:spacer height="25" />
-		<br />
-		<br />
+	<br />
+	<br />
 	<p:panel>
 		<table>
 			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
 				<td><p:inputText disabled="true"
 						value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 				<td style="width: 100px;"><h:outputLabel
@@ -36,8 +33,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.compliance.list']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true">
 		<p:dataTable var="techComplianceList" id="sampleComplianceListId"
 			rows="10"
 			value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
@@ -45,17 +41,14 @@
 			<ac:paginator for="sampleComplianceListId" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.title']}"
-				style="width:90%">
+			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:90%">
 				<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.document']}"
-				style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 				<p:commandLink ajax="false"
 					actionListener="#{evaluationBackingBean.downloadEncryptedFile(techComplianceList.scQtProposalChecklistAttachment)}"
 					process="@this" partialSubmit="true">
-					<p:graphicImage library="ep/images/design"
-						value="/resources/ep/images/design/icon_txt.png" />
+					<h:graphicImage value="/css/images/design/icon_txt.png" />
 
 				</p:commandLink>
 			</p:column>

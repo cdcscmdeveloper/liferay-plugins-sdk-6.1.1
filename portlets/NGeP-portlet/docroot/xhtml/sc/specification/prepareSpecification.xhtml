@@ -27,7 +27,8 @@
 					size="50"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.created.by']}" style="width:30%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.created.by']}"
+				style="width:30%;white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.retriveUserName(financialSpec.createdBy)}"
 					size="50"></h:outputText>
@@ -36,8 +37,7 @@
 				style="width:10%;text-align: center;">
 				<p:commandLink process="@this" partialSubmit="true"
 					action="#{specificationBackingBean.committeeSpecEditAction(index,financialSpec,'T')}">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+					<h:graphicImage value="/css/images/design/edit.png" />
 
 				</p:commandLink>
 			</p:column>
