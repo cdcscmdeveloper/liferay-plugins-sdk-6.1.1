@@ -66,8 +66,8 @@
 
 				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.spec.checklist.title']}" value="#{stageTwoTechnical.title}"
-						size="30" maxlength="1000">
+						label="#{lbl['lbl.sc.spec.checklist.title']}"
+						value="#{stageTwoTechnical.title}" size="30" maxlength="1000">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalChecklisttypes"
 							listener="#{specificationBackingBean.technicalCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
@@ -261,8 +261,7 @@
 						styleClass="sample#{index}"
 						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
 						update="stageTwotechProposal">
-						<p:graphicImage library="ep/images/design" name="upload.png"
-							value="/resources/ep/images/design/upload.png" />
+						<h:graphicImage value="/css/images/design/upload.png" />
 						<f:setPropertyActionListener value="#{stageTwoTechnical}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
@@ -277,7 +276,7 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwoTechnical.scQtCheckListAttachment)}"
 						immediate="true" update="@form">
-						<h:graphicImage library="ep/images/design" name="trash.png"
+						<h:graphicImage value="/css/images/design/trash.png"
 							styleClass="tasklist_title1" />
 						<f:setPropertyActionListener value="#{stageTwoTechnical}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
@@ -299,8 +298,7 @@
 					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF'}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+					<h:graphicImage value="/css/images/design/edit.png" />
 					<f:setPropertyActionListener value="#{stageTwoTechnical}"
 						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 				</p:commandLink>
@@ -316,7 +314,8 @@
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="compilencestageTwo" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}" process="@this"
+			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
+				process="@this"
 				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 

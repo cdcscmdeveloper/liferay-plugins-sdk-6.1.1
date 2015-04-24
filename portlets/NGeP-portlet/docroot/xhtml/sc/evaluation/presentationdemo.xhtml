@@ -26,14 +26,12 @@
 
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.document']}"
-				style="width:15%">
+			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:15%">
 
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					update="demoSupplierId">
-					<p:graphicImage library="ep/images/design" name="upload.png"
-						value="/resources/ep/images/design/upload.png" />
+					<h:graphicImage value="/css/images/design/upload.png" />
 					<f:setPropertyActionListener value="#{demoSupplier}"
 						target="#{evaluationBackingBean.managedBean.qtProposalChecklist}" />
 
@@ -46,8 +44,7 @@
 
 
 
-			<p:column headerText="#{lbl['lbl.sc.user.score']}"
-				style="width:15%">
+			<p:column headerText="#{lbl['lbl.sc.user.score']}" style="width:15%">
 				<p:inputText value="#{demoSupplier.totalScore}"
 					style="text-align:right" maxlength="18"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}">
@@ -63,8 +60,7 @@
 					value="/#{evaluationBackingBean.managedBean.userScores}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.remarks']}"
-				style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:40%">
 				<p:inputTextarea rows="2" cols="40" value="#{demoSupplier.remark}"></p:inputTextarea>
 			</p:column>
 		</p:dataTable>
@@ -101,7 +97,7 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage library="ep/images/design"
+												<h:graphicImage
 													name="#{evaluationBackingBean.determineIcon(attachFile)}"
 													height="30" width="30" />
 											</td>
@@ -120,8 +116,8 @@
 													disabled="#{evaluationBackingBean.managedBean.readOnly}"
 													action="#{evaluationBackingBean.deleteDemoUploadFile}"
 													immediate="true" update="@form">
-													<h:graphicImage library="ep/images/design" name="trash.png"
-														styleClass="tasklist_title1" />
+													<h:graphicImage styleClass="tasklist_title1"
+														value="/css/images/design/trash.png" />
 												</p:commandLink></td>
 										</tr>
 									</table>

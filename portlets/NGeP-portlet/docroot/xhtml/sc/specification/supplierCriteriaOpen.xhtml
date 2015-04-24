@@ -39,12 +39,13 @@
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>
-			
+
 		</p:dataTable>
-		
+
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this,openPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
+				process="@this,openPnlId" partialSubmit="true"
+				update="@([id$=catCodePopup])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
@@ -55,8 +56,8 @@
 				disabled="#{specificationBackingBean.managedBean.readOnly}" />
 
 		</div>
-		
-		<ac:categoryCodePopup 
+
+		<ac:categoryCodePopup
 			okAction="specificationBackingBean.addNewCategoryAction"
 			update="@([id$=openPnlId])" />
 	</p:panel>
@@ -158,9 +159,9 @@
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index"
 						rowKey="#{zoneTree}">
-						
+
 						<ac:paginator for="zoneLocationDataTable" />
-						
+
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -191,19 +192,22 @@
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
-								<p:graphicImage library="ep/images/design" name="edit.png"
-									value="/resources/ep/images/design/edit.png" />
+								<h:graphicImage value="/css/images/design/edit.png" />
 							</p:commandLink>
 						</p:column>
 
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right">
-					<p:selectBooleanCheckbox id="checkAll" style="float:left;margin-top: 13px;margin-right: -4px;">
-						<p:ajax event="change" partialSubmit="true" process="@all" update="zoneLocationDataTable" listener="#{specificationBackingBean.checkAllConditions}" />
+					<p:selectBooleanCheckbox id="checkAll"
+						style="float:left;margin-top: 13px;margin-right: -4px;">
+						<p:ajax event="change" partialSubmit="true" process="@all"
+							update="zoneLocationDataTable"
+							listener="#{specificationBackingBean.checkAllConditions}" />
 					</p:selectBooleanCheckbox>
 					<p:spacer width="1" />
-					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
+					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+						style="float:left;margin-top: 12px;;margin-left: 10px;" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -259,9 +263,9 @@
 					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
-						
+
 						<ac:paginator for="zoneyesDataTable" />
-						
+
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
@@ -290,15 +294,13 @@
 
 							</p:tree>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.action']}"
-							style="width:10%">
+						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
-								<p:graphicImage library="ep/images/design" name="edit.png"
-									value="/resources/ep/images/design/edit.png" />
+								<h:graphicImage value="/css/images/design/edit.png" />
 							</p:commandLink>
 						</p:column>
 
@@ -306,11 +308,15 @@
 
 				</h:panelGrid>
 				<div align="right" style="width: 100%">
-					<p:selectBooleanCheckbox id="checkAllZones" style="float:left;margin-top: 13px;margin-right: -4px;">
-						<p:ajax event="change" partialSubmit="true" process="@all" update="zoneyesDataTable" listener="#{specificationBackingBean.checkAllConditions}" />
+					<p:selectBooleanCheckbox id="checkAllZones"
+						style="float:left;margin-top: 13px;margin-right: -4px;">
+						<p:ajax event="change" partialSubmit="true" process="@all"
+							update="zoneyesDataTable"
+							listener="#{specificationBackingBean.checkAllConditions}" />
 					</p:selectBooleanCheckbox>
 					<p:spacer width="1" />
-					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
+					<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+						style="float:left;margin-top: 12px;;margin-left: 10px;" />
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 						update="@([id$=zonePopupPanel])"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -357,11 +363,16 @@
 						<tr>
 							<td>
 								<div class="ppRightBtn">
-									<p:selectBooleanCheckbox id="popupCheckAlls"  style="float:left;margin-top: 13px;margin-right: -4px;" value="#{specificationBackingBean.managedBean.checkAllList}">
-										<p:ajax event="change" partialSubmit="true" process="@all" update=":form:treeZoneLocationPopup" listener="#{specificationBackingBean.checkAllPopUpConditions(specificationBackingBean.managedBean.checkAllList)}" />
+									<p:selectBooleanCheckbox id="popupCheckAlls"
+										style="float:left;margin-top: 13px;margin-right: -4px;"
+										value="#{specificationBackingBean.managedBean.checkAllList}">
+										<p:ajax event="change" partialSubmit="true" process="@all"
+											update=":form:treeZoneLocationPopup"
+											listener="#{specificationBackingBean.checkAllPopUpConditions(specificationBackingBean.managedBean.checkAllList)}" />
 									</p:selectBooleanCheckbox>
 									<p:spacer width="1" />
-									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
+									<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+										style="float:left;margin-top: 12px;;margin-left: 10px;" />
 									<p:commandButton value="#{lbl['lbl.btn.ok']}"
 										onclick="ZoneLocation.hide();" process="@all"
 										update="@this, zoneLocationDataTable, zonePopupPanel, zoneyesDataTable"

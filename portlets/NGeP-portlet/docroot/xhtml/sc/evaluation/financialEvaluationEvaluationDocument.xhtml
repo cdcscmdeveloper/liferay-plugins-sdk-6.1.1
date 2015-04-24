@@ -21,8 +21,8 @@
 					action="#{evaluationBackingBean.evaluationBackaction}"
 					immediate="true" />
 
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					style="float:right;" update="@all"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
+					update="@all"
 					action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
 			</div>
 			<p:spacer height="25" />
@@ -40,8 +40,7 @@
 
 
 
-			<p:panel header="#{lbl['lbl.sc.supplier.list']}"
-				toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 				<p:dataTable var="evaFinSupplier" rows="10"
 					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
@@ -57,14 +56,12 @@
 
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.document']}"
-						style="width:10%">
+					<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 						<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
 							<p:commandLink ajax="false"
 								actionListener="#{evaluationBackingBean.downloadEncryptedFile(evaFinSupplier.scQtProposalChecklistAttachment)}"
 								process="@this" partialSubmit="true">
-								<p:graphicImage library="ep/images/design"
-									value="/resources/ep/images/design/icon_txt.png" />
+								<h:graphicImage value="/css/images/design/icon_txt.png" />
 							</p:commandLink>
 						</ui:fragment>
 
@@ -105,8 +102,7 @@
 							for="financialuploadNoActionUserScoreId" display="icon"></p:message>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.remarks']}"
-						style="width:25%">
+					<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%">
 						<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
 							<p:inputTextarea rows="2" cols="40" maxlength="200"
 								disabled="#{evaluationBackingBean.managedBean.readOnly}"

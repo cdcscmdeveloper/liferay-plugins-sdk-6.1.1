@@ -42,8 +42,7 @@
 			</h:panelGroup>
 
 			<h:panelGroup>
-				<p:panel header="#{lbl['lbl.sc.supplier.list']}"
-					toggleable="true">
+				<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 					<p:dataTable var="complianceTechnicalSupplier" rows="10"
 						value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
@@ -61,16 +60,14 @@
 
 
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.document']}"
-							style="width:10%">
+						<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 							<ui:fragment
 								rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
 								<p:commandLink ajax="false"
 									disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 									actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
 									process="@this" partialSubmit="true">
-									<p:graphicImage library="ep/images/design"
-										value="/resources/ep/images/design/icon_txt.png" />
+									<h:graphicImage value="/css/images/design/icon_txt.png" />
 
 								</p:commandLink>
 							</ui:fragment>
