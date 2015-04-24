@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -53,8 +52,6 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
-import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -1823,7 +1820,7 @@ public class SPDetailBackingBean extends
 
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zones = resDTO.getZones();
-				if (null != zones) {
+				if (CollectionUtils.isNotEmpty(zones)) {
 					this.getManagedBean().setZones(zones);
 					for (TplSpecZoneDtl specZone : zones) {
 						this.getManagedBean().setSelectedZone(specZone);
