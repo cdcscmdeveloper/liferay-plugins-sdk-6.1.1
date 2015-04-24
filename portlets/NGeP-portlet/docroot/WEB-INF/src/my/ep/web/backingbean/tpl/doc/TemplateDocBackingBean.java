@@ -55,6 +55,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.tpl.doc.TemplateDocManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.MergeDocx;
 
@@ -138,7 +139,10 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 	public List<SelectItem> getFlowList() {
 		List<SelectItem> flowList = new ArrayList<SelectItem>();
-		flowList.add(new SelectItem("", "- Select One -"));
+		flowList.add(new SelectItem("", ResourceBundleUtils.getMessage(
+				"lbl.txt.select", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
 		flowList.add(new SelectItem("M", "Modify Template"));
 		return flowList;
 	}
@@ -151,7 +155,10 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		TemplateDocResDTO resDTO = templateSO.getTemplateCategoryList(null);
 		if (resDTO.getCategoryList() != null
 				&& !resDTO.getCategoryList().isEmpty()) {
-			templateCategoryList.add(new SelectItem("", "- Select One -"));
+			templateCategoryList.add(new SelectItem("", ResourceBundleUtils.getMessage(
+					"lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())));
 			List<TplCategory> categoryListDB = resDTO.getCategoryList();
 			for (TplCategory obj : categoryListDB) {
 				templateCategoryList.add(new SelectItem(obj.getCategoryId(),
@@ -325,7 +332,10 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 	public List<SelectItem> getVariableList() {
 		List<SelectItem> variableList = new ArrayList<SelectItem>();
-		variableList.add(new SelectItem("", "- Select One -"));
+		variableList.add(new SelectItem("", ResourceBundleUtils.getMessage(
+				"lbl.txt.select", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
 		variableList.add(new SelectItem("1001, 7005, 5552", "Kod Bidang"));
 		variableList.add(new SelectItem("Mr. Abc Cde", "Supplier Name"));
 		variableList.add(new SelectItem("40", "Supplier Age"));

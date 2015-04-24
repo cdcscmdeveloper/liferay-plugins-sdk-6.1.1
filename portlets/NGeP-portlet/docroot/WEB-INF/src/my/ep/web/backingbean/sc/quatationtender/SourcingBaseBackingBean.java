@@ -167,7 +167,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public List<SelectItem> toOrgProfileSelectItems(
 			List<PmOrgProfile> orgProfile) {
 		List<SelectItem> orgProfileSelectItems = new ArrayList<SelectItem>();
-		orgProfileSelectItems.add(new SelectItem("", "Select One"));
+		orgProfileSelectItems.add(new SelectItem("", ResourceBundleUtils.getMessage(
+				"lbl.txt.select", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())));
 		for (PmOrgProfile pmOrgProfile : orgProfile) {
 			orgProfileSelectItems.add(new SelectItem(pmOrgProfile
 					.getOrgProfileId().toString(), pmOrgProfile.getOrgCode()));

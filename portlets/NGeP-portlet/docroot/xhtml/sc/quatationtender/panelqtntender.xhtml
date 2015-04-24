@@ -39,7 +39,7 @@
 	
 	<ui:include src="supplierlist.xhtml" />	
 	
-	<p:dialog id="suppPopup" header="Search Supplier" widgetVar="suppdlg" modal="false" appendToBody="false" width="800" height="400">
+	<p:dialog id="suppPopup" header="#{lbl['lbl.sc.qt.search.supplier']}" widgetVar="suppdlg" modal="false" appendToBody="false" width="800" height="400">
 		<ui:include src="panelSupplierSearch.xhtml" />
 		<div>           
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" style="float:right;" oncomplete="suppdlg.hide()" />

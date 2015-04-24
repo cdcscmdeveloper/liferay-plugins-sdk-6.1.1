@@ -164,7 +164,7 @@
 						<p:column style="width:90%">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
-								<h:outputText value="Location" />
+								<h:outputText value="#{lbl['lbl.sc.location']}" />
 							</f:facet>
 							<p:tree value="#{zoneTree}" var="location"
 								selectionMode="checkbox">
@@ -185,7 +185,7 @@
 							</p:tree>
 						</p:column>
 
-						<p:column headerText="Action" style="width:10%">
+						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"

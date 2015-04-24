@@ -8,7 +8,7 @@
 
 	<ui:fragment
 		rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.ctzones eq 'true'}">
-		<p:panel id="ctZonepnlid" header="Location Details" toggleable="true">
+		<p:panel id="ctZonepnlid" header="#{lbl['lbl.sc.qt.zone.location.info']}" toggleable="true">
 			<p:dataTable id="ctSupplierTreeZones"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
 				var="ctZones" rowIndexVar="index" dynamic="true">
