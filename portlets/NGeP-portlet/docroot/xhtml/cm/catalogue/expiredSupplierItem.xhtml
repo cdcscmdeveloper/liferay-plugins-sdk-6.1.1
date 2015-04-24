@@ -73,7 +73,13 @@
 				action="#{catalogueBackingBean.navigateToExpiredItemDet(rowIndex)}">
 				<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-
+			<p:commandLink style="margin-left: 10px;" 
+				title="#{lbl['lbl.btn.delete']}" 
+				oncomplete="confirmation1.show();" 
+				action="#{catalogueBackingBean.setItemToDelete(expired.supplierItemId)}" >
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:param name="index" value="#{rowIndex}"></f:param>
+			</p:commandLink>
 		</p:column>
 	</p:dataTable>
 
