@@ -110,7 +110,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME
 				+ ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
 		temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME,
-				"cancel-circular");
+				"cancel-circular-approval");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME
 				+ CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME,
 				"review-factoring-request");
