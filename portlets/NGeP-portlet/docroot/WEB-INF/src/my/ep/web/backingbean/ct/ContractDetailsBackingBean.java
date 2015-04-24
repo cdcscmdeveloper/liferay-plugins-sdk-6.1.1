@@ -130,6 +130,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.AddressUtils;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
@@ -796,7 +797,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				|| getManagedBean().isUpdateContract()) {
 			getManagedBean().getContractVer().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 		}
-		updateAsAtDate();		
+		updateAsAtDate();
 		
 		// Get performance bond rule amount
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1166,11 +1167,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					}
 					
 					if (ctAgency.isAp178() == true && (ctAgency.getRefNo() == null  || ctAgency.getRefNo().equalsIgnoreCase(""))) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] {"File Reference No."});
+						throw new EpException(MessageConst.ERROR_100022, 
+	           					new String[] {ResourceBundleUtils.getMessage("lbl.ct.file.ref.no", 
+	           							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
-				if (ceilingAmt > getManagedBean().getCtContractAmount().getContractAmount().doubleValue()) {
-					throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+				if (ceilingAmt > getManagedBean().getContractVer().getCtContractAmount().getContractAmount().doubleValue()) {
+					CommonUtils commonUtils = new CommonUtils();
+					DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+							CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+					throw new EpException(MessageConst.ERROR_750007, 
+							new String[] {nf.format(getManagedBean().getContractVer().getCtContractAmount().getContractAmount())}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 				}
 			}			
 			// Validation for ceiling quantity
@@ -2593,9 +2600,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 			}
-			if (ceilingAmt >  this.getManagedBean().getCtContractAmount().getContractAmount().doubleValue()) {
+			if (ceilingAmt >  this.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().doubleValue()) {
 				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
-				throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+				CommonUtils commonUtils = new CommonUtils();
+				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+				throw new EpException(MessageConst.ERROR_750007,
+						new String[] {nf.format(getManagedBean().getContractVer().getCtContractAmount().getContractAmount())}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
     	}
     }
