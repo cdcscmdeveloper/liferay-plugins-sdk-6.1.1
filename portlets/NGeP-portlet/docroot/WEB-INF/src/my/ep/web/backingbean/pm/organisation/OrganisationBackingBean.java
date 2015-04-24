@@ -282,8 +282,7 @@ public class OrganisationBackingBean extends
 			
 			PmParameter orgTypeParameter = 
 					getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,OrganizationType.DIVISION.value());
-			if(orgTypeParameter != null && orgTypeParameter.getParameterId().toString().equals(oSearchBean.getOrgTypeCode())){
-				//ministry admin or ptj admin
+			if(orgTypeParameter != null && orgTypeParameter.getParameterId().toString().equals(oSearchBean.getOrgTypeCode())){			
 				PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
 				PmOrgProfile orgProfile = null;
 				if(user != null){
@@ -1576,6 +1575,7 @@ public class OrganisationBackingBean extends
 			// recommendList.add(OrganizationType.OTHERS.value());
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
 			recommendList.add(OrganizationType.MINISTRY.value());
+			recommendList.add(OrganizationType.DEPARTMENT.value());
 			recommendList.add(OrganizationType.DIVISION.value());
 			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
 					.value());
@@ -1991,15 +1991,16 @@ public class OrganisationBackingBean extends
 		StringBuilder sb = new StringBuilder();
 		PmOrgProfile ministryProfile = PmCommonUtil.retrieveMinistryByOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
 		PmOrgProfile parentProfile = getManagedBean().getOrgProfile();
-		boolean loop = true;
-		while(loop){
+		int loop = 0;
+		while(loop <= ProfileManagementConst.PARENT_ORG_MAX_LOOP){
 			if(ministryProfile != null 
 					&& ministryProfile.getOrgProfileId() == 
 							parentProfile.getOrgProfileId()){
-				loop = false;
+				break;
 			}else{
 				sb.append("parentOrgProfile.");
 				parentProfile = parentProfile.getParentOrgProfile();
+				loop ++;
 			}
 		}
 		if(sb.length() == 0){
