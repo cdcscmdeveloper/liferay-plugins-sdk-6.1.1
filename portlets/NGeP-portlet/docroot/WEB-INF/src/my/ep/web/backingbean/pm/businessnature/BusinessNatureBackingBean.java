@@ -47,6 +47,8 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	
 	public BusinessNatureBackingBean() {
 		log.info("inside constructor");
+		
+		resetBusinessNatureSearch();
 
 	}
 	
@@ -63,6 +65,8 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */		
 	public String redirectBusinessSearch() {
 		debugLogger("redirectBusinessSearch");
+		
+		this.getManagedBean().setLazy(false);
 
 		return "/xhtml/pm/businessnature/businessNatureMain.xhtml?faces-redirect=true";
 
@@ -90,9 +94,13 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		this.getManagedBean().setItemLevelCode(new String());
 		this.getManagedBean().setItemLevelName(new String());
 		
-		this.getManagedBean().setCategoryLvl(0L);
+		this.getManagedBean().setCategoryLvl(null);
 		
-		businessNatureDataModel.reloadData();
+		this.getManagedBean().setStatus(null);
+		
+		this.getManagedBean().setLazy(false);
+		
+//		businessNatureDataModel.reloadData();
 	}
 	
 	
@@ -159,14 +167,6 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */
 	public SelectItem[] getBusinessNatureCategoryLv(){
 		
-//		SelectItem[] items = new SelectItem[6];
-//		items[0] = new SelectItem(null, "- Select One -");
-//		items[1] = new SelectItem(10, "SECTION");
-//		items[2] = new SelectItem(20, "DIVISION");
-//		items[3] = new SelectItem(30, "GROUP");
-//		items[4] = new SelectItem(40, "CLASS");
-//		items[5] = new SelectItem(50, "ITEM");
-		
 		SelectItem[] items =  new SelectItem[6];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -222,6 +222,13 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 				
+				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+					codesSearchBean.setSearchField("recordStatusFlg");
+					codesSearchBean.setSearchValue(getManagedBean().getStatus());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
 			}
 			
 			//division
@@ -255,6 +262,13 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 					codesSearchBean.setSearchField("parentBusinessNature.levelName");
 					codesSearchBean.setCaseInsensitive(true);
 					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				
+				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+					codesSearchBean.setSearchField("parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchValue(getManagedBean().getStatus());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 			}
@@ -306,6 +320,12 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.levelName");
 					codesSearchBean.setCaseInsensitive(true);
 					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchValue(getManagedBean().getStatus());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 			}
@@ -373,6 +393,12 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.levelName");
 					codesSearchBean.setCaseInsensitive(true);
 					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
+				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchValue(getManagedBean().getStatus());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 			}
@@ -458,6 +484,13 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 					codesSearchBean.setSearchValue(getManagedBean().getSecLevelName());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
+				
+				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
+					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchValue(getManagedBean().getStatus());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+				}
 			}
 		}
 
@@ -484,7 +517,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		private static final long serialVersionUID = 1L;
 
 		public BusinessNaturePagingDataModel() {
-			super("businessNatureDataModel");
+			super("businessNatureDataModel",getManagedBean().isLazy());
 		}
 
 		@Override
@@ -602,6 +635,9 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		IBusinessNatureSO iBusinessNatureSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IBusinessNatureSO.class);	
 		try{
 			PmBusinessNature businessnature = getManagedBean().getPmBusinessNature();
+			businessnature.setLevelCode(businessnature.getLevelCode().toUpperCase());
+			
+			updateCategoryLevel(Integer.valueOf(businessnature.getBusinessLevel()));
 			
 			if (!validationMessage(businessnature)){
 				return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
@@ -659,25 +695,27 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 			return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 	 }
 	
-	public void updateCategoryLevel(){ResourceBundleUtils.getMessage(	"lbl.sm.businessnature.lvl5.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-			new FacesScopes().getUserLocale());
-		log.info("getManagedBean().getCategoryLvl() "+getManagedBean().getCategoryLvl());
-		if(getManagedBean().getCategoryLvl()==10){
+	public void updateCategoryLevel(int businessLvlCode){
+		
+//		ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl5.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS,	new FacesScopes().getUserLocale());
+		log.info("businessLvlCode  :"+businessLvlCode);
+	
+		if(10==businessLvlCode){
 			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl1.section", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
-		}else if(getManagedBean().getCategoryLvl()==20){
+		}else if(20==businessLvlCode){
 			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl2.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
-		}else if(getManagedBean().getCategoryLvl()==30){
+		}else if(30==businessLvlCode){
 			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl3.group", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 			
-		}else if(getManagedBean().getCategoryLvl()==40){
+		}else if(40==businessLvlCode){
 			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl4.class", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 			
-		}else if(getManagedBean().getCategoryLvl()==50){
-			getManagedBean().setTaskName(ResourceBundleUtils.getMessage(	"lbl.sm.businessnature.lvl5.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		}else if(50==businessLvlCode){
+			getManagedBean().setTaskName(ResourceBundleUtils.getMessage("lbl.sm.businessnature.lvl5.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 			
 		}
