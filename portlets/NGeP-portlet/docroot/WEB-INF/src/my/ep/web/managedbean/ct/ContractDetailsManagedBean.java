@@ -31,7 +31,6 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
-import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -148,7 +147,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private CtDeduction selectedDeduction;
 	private CtPerformanceBond ctPerformanceBond;
 	private CtContractZone selectedCtZone;
-	private CtAmendment ctAmendment;
 	private CtAgency selectedAgency;
 	private CtContractAmount ctContractAmount;	
 	private TreeNode ctZoneTrees;
@@ -1280,20 +1278,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedCtZone(CtContractZone selectedCtZone) {
 		this.selectedCtZone = selectedCtZone;
-	}
-
-	/**
-	 * @return the ctAmendment
-	 */
-	public CtAmendment getCtAmendment() {
-		return ctAmendment;
-	}
-
-	/**
-	 * @param ctAmendment the ctAmendment to set
-	 */
-	public void setCtAmendment(CtAmendment ctAmendment) {
-		this.ctAmendment = ctAmendment;
 	}
 
 	/**

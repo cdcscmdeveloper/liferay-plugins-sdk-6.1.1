@@ -685,7 +685,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 						context.put("approverDesignation", getManagedBean().getContractVer().getApprover().getDesignation());
 					}
 					// Extra For Termination Notice
-					context.put("contractAmount", getManagedBean().getContractVer().getCtContractValue().getContractAmount().toString());
+					context.put("contractAmount", getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString());
 					context.put("effDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 					context.put("expDate", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
 					if(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()!=null) {
@@ -1142,7 +1142,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			sb.append(getManagedBean().getContractVer().getDocType());
 			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 			sb.append(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
 			sb.append(outcome);			
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);

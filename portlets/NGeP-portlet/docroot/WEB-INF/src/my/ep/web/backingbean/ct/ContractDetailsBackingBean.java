@@ -84,6 +84,7 @@ import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -307,7 +308,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public BigDecimal getPaidPercentage() {
 		paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(
 				BigDecimal.valueOf(100)).divide(
-						this.getManagedBean().getContractVer().getCtContractValue().getContractAmount(), 2, RoundingMode.HALF_UP));
+						this.getManagedBean().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
 		return paidPercentage;
 	}
 
@@ -373,7 +374,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
-	
+
 	/**
 	 * @return the agencyDataModel
 	 */
@@ -787,6 +788,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().setDisableScheduleRadio(true);
 			getManagedBean().setFrequencySchedule("P");
 		}
+		
 		// Retrieve contract amount
 		// Default to current date when view/update contract
 		if (getManagedBean().getContractVer().getAsAtDate() == null 
@@ -794,15 +796,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				|| getManagedBean().isUpdateContract()) {
 			getManagedBean().getContractVer().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 		}
-		updateAsAtDate();
+		updateAsAtDate();		
 		
-		// Retrieve latest amendment
-		if (getManagedBean().getCtContract().getLatestContractVer() != null) {
-			IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-			ContractAmendmentResDTO resAmendDto = amendSO.getLatestAmendmentLoaByContractId(getManagedBean().getCtContract().getContractId());
-			getManagedBean().setCtAmendment(resAmendDto.getAmendment());
-		}
 		// Get performance bond rule amount
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
@@ -1013,11 +1008,25 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						double bondAmendAmount = 0.0;
 						DecimalFormat df = new DecimalFormat("#.00");
 						
-						if (getManagedBean().getCtAmendment() != null 
-								&& getManagedBean().getCtAmendment().getAmendmentLoa() != null
-								&& getManagedBean().getCtAmendment().getAmendmentLoa().isBondReq()) {
-							bondAmendAmount = bondAmendAmount+ getManagedBean().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
-						}				
+						// Retrieve amendment list
+						if (getManagedBean().getCtContract().getLatestContractVer() != null) {
+							IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+							ContractAmendmentResDTO resAmendDto = amendSO.getCtAmendmentByContractId(getManagedBean().getCtContract().getContractId());
+
+							if (resAmendDto.getAmendmentList() != null && !resAmendDto.getAmendmentList().isEmpty()) {
+								for (CtAmendment ctAmendment : resAmendDto.getAmendmentList()){
+									if (getManagedBean().getContractVer().getAsAtDate().getTime() >= ctAmendment.getAmendmentEffDate().getTime() 
+						    				&& getManagedBean().getContractVer().getAsAtDate().getTime() <= ctAmendment.getCtContractVer().getCtContractValue().getExpDate().getTime()){
+						    			if (ctAmendment.getAmendmentLoa() != null && ctAmendment.getAmendmentLoa().isBondReq()) {
+											bondAmendAmount = bondAmendAmount + ctAmendment.getAmendmentLoa().getBondAmt().doubleValue();
+										}				
+						    			break;
+						    		}						    		
+						    	}
+							}
+						}						
+						
 						if (contractVer.getCtContract().getLoa().getBondAmt() == null 
 							&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 									ParameterConst.CONTRACT_TYPE_MINISTRY)) {
@@ -1160,7 +1169,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						throw new EpException(MessageConst.ERROR_100022, new String[] {"File Reference No."});
 					}
 				}
-				if (ceilingAmt > contractVer.getCtContractValue().getContractAmount().doubleValue()) {
+				if (ceilingAmt > getManagedBean().getCtContractAmount().getContractAmount().doubleValue()) {
 					throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 				}
 			}			
@@ -1185,45 +1194,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					}
 				}
 			}
-		}		
-		
-		if (contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)) {
-			if (contractVer.getCtContractValue().getContractAmount().doubleValue() < ContractConst.CONTRACT_THRESHOLD_VALUE) {
-				if (contractVer.getCtAmendment().isItemPriceChange() || contractVer.getCtAmendment().isQuantityChange() 
-						|| contractVer.getCtAmendment().isValueChange()) {
-					throw new EpException(MessageConst.ERROR_750011);// If original contract value is less than RM500k (threshold value for tender), 
-					//CA only can extend the contract period and change the clause.
-				}
-			}
-			if (contractVer.getCtAmendment().isContractExtend()) {
-				Calendar c = Calendar.getInstance();
-				c.add(Calendar.DATE, ContractConst.CONTRACT_EXTEND_BEFORE_DAYS);
-				
-				if (contractVer.getCtContractValue().getExpDate().before(c.getTime())) {
-					throw new EpException(MessageConst.ERROR_750012);//CA only can extend the contract period 3 months before contract expired.
-				}
-			}
-			for (CtContractItem ctContractItem : contractVer.getCtContractItems()) {
-				double sumOfCeilingQuantites = 0l;
-				BigDecimal maxCeilingQty = new BigDecimal(0);
-				if (ctContractItem.getCtItemMaxQties().size() != 0) {
-					for (CtItemMaxQty ctItemMaxQty : ctContractItem.getCtItemMaxQties()) {
-						if (ctItemMaxQty.getEffDate()==contractVer.getCtAmendment().getAmendmentEffDate()) {
-							maxCeilingQty = ctItemMaxQty.getMaxQuantity();
-							break;
-						}
-					}
-					for (CtItemCeilingQty ctItemCeilingQty : ctContractItem.getCtItemCeilingQties()) {
-						if (ctItemCeilingQty.getExpDate() == contractVer.getCtContractValue().getExpDate()) {
-							sumOfCeilingQuantites = sumOfCeilingQuantites + ctItemCeilingQty.getCeilingQuantity().doubleValue();
-						}
-					}
-					if (sumOfCeilingQuantites < maxCeilingQty.doubleValue()) {
-						throw new EpException(MessageConst.ERROR_750013);//Total ceiling amount for all PTJ defined in contract must be equals to contract amount.
-					}
-				}
-			}
-		}		
+		}
 		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& getManagedBean().getApproverModel().getTarget().size() == 0) {
@@ -1261,7 +1232,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			sb.append(contractVer.getDocType());
 			sb.append(contractVer.getCtContractValue().getEffDate());
 			sb.append(contractVer.getCtContractValue().getExpDate());
-			sb.append(contractVer.getCtContractValue().getContractAmount());
+			sb.append(getManagedBean().getCtContractAmount().getContractAmount());
 			sb.append(outcome);			
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
@@ -2254,11 +2225,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 *         false, if the criteria is not fulfilled
      */
 	public boolean checkAmendmentAllow(VCtContract vCtContract) {
-		if (vCtContract.getCtContract().getLatestContractVer() != null) {
-			double contractAmount = vCtContract.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().doubleValue();
-			if (contractAmount <= 200000) {
+		if (vCtContract.getCtContract().getLatestContractVer() != null) {			
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractVerId(vCtContract.getCtContract().getLatestContractVer().getContractVerId());
+			// Amendment always get the latest contract amount
+			reqDTO.setAsAtDate(vCtContract.getCtContract().getLatestContractVer().getCtContractValue().getExpDate());
+			
+			ContractResDTO resDTO = contractSO.retrieveContractAmount(reqDTO);			
+			double contractAmount = resDTO.getCtContractAmount().getContractAmount().doubleValue();
+			if (contractAmount <= ContractConst.CONTRACT_THRESHOLD_200k) {
 				return false;
-			} else if (contractAmount <= 500000) {
+			} else if (contractAmount <= ContractConst.CONTRACT_THRESHOLD_500k) {
 				if (vCtContract.getCtContract().isAgreement()) {
 					return true;
 				} else {
@@ -2270,8 +2250,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		} else {
 			return false;
 		}
-	}
-	
+	}	
 
     /**
 	 * The method used to get the modifiability of contract physical no.
@@ -2614,7 +2593,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 			}
-			if (ceilingAmt >  this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()) {
+			if (ceilingAmt >  this.getManagedBean().getCtContractAmount().getContractAmount().doubleValue()) {
 				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
 				throw new EpException(MessageConst.ERROR_750007); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
@@ -3418,15 +3397,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
    	 * contract amount and performance bond base on as at date
    	 */
 	public void updateAsAtDate() {
-    	CtContractAmount contractAmtObj = null;
     	for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
     		if (getManagedBean().getContractVer().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
     				&& getManagedBean().getContractVer().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-    			contractAmtObj = contractAmt;
+    			getManagedBean().setCtContractAmount(contractAmt);
     			break;
     		}
     	}
-    	getManagedBean().setCtContractAmount(contractAmtObj);
 	}
 	
 	/**

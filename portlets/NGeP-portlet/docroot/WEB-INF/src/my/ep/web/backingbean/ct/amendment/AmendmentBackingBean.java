@@ -1625,7 +1625,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 					ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
 				originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
-				if (originalContractAmount != null && originalContractAmount.doubleValue() <= 500000) {
+				if (originalContractAmount != null && originalContractAmount.doubleValue() <= ContractConst.CONTRACT_THRESHOLD_500k) {
 					return true;
 				}
 			}
@@ -1636,7 +1636,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 					ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
 				originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
-				if (originalContractAmount != null && originalContractAmount.doubleValue() > 500000) {
+				if (originalContractAmount != null && originalContractAmount.doubleValue() > ContractConst.CONTRACT_THRESHOLD_500k) {
 					return true;
 				}
 			}
@@ -2890,26 +2890,26 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 * @return false  if not breach the AP201 rule
 	 */
 	public boolean breachAP201Rules(int rulesType) {
-		double maxAdditionalLimit = 7500000;
-		double maxTotalLimit = 25000000;
+		double maxAdditionalLimit = ContractConst.CONTRACT_THRESHOLD_7_5m;
+		double maxTotalLimit = ContractConst.CONTRACT_THRESHOLD_25m;
 		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 				ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
-			maxAdditionalLimit = 250000;
-			maxTotalLimit = 750000;
+			maxAdditionalLimit = ContractConst.CONTRACT_THRESHOLD_250k;
+			maxTotalLimit = ContractConst.CONTRACT_THRESHOLD_750k;
 		} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 				ParameterConst.PROCUREMENT_MODE_TENDER)) {
-			maxAdditionalLimit = 7500000;
-			maxTotalLimit = 25000000;
+			maxAdditionalLimit = ContractConst.CONTRACT_THRESHOLD_7_5m;
+			maxTotalLimit = ContractConst.CONTRACT_THRESHOLD_25m;
 		} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 				ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
 			BigDecimal originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
 			if (originalContractAmount != null) {
-				if (originalContractAmount.doubleValue() > 500000) {
-					maxAdditionalLimit = 7500000;
-					maxTotalLimit = 25000000;
+				if (originalContractAmount.doubleValue() > ContractConst.CONTRACT_THRESHOLD_500k) {
+					maxAdditionalLimit = ContractConst.CONTRACT_THRESHOLD_7_5m;
+					maxTotalLimit = ContractConst.CONTRACT_THRESHOLD_25m;
 				} else {
-					maxAdditionalLimit = 250000;
-					maxTotalLimit = 750000;
+					maxAdditionalLimit = ContractConst.CONTRACT_THRESHOLD_250k;
+					maxTotalLimit = ContractConst.CONTRACT_THRESHOLD_750k;
 				}
 			}
 		} 
