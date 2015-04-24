@@ -309,7 +309,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public BigDecimal getPaidPercentage() {
 		paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(
 				BigDecimal.valueOf(100)).divide(
-						this.getManagedBean().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
+						this.getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
 		return paidPercentage;
 	}
 
@@ -1176,7 +1176,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	           							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
-				if (ceilingAmt > getManagedBean().getContractVer().getCtContractAmount().getContractAmount().doubleValue()) {
+				double latestContractAmount = 0.0;
+				for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
+		    		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
+		    				&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
+		    			latestContractAmount = contractAmt.getContractAmount().doubleValue();
+		    			break;
+		    		}
+		    	}
+				if (ceilingAmt >  latestContractAmount) {
 					CommonUtils commonUtils = new CommonUtils();
 					DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
 							CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -2604,7 +2612,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 			}
-			if (ceilingAmt >  this.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().doubleValue()) {
+			double latestContractAmount = 0.0;
+			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
+	    		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
+	    				&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
+	    			latestContractAmount = contractAmt.getContractAmount().doubleValue();
+	    			break;
+	    		}
+	    	}
+			if (ceilingAmt >  latestContractAmount) {
 				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
 				CommonUtils commonUtils = new CommonUtils();
 				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
