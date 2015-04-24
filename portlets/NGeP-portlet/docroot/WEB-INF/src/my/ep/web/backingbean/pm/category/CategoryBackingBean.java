@@ -480,7 +480,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = null;
 		}
 		
-		return "/xhtml/pm/category/categoryl3.xhtml";
+		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
 	
 	/**
