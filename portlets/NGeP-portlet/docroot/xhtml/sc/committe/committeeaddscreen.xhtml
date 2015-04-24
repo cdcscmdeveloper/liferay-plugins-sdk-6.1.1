@@ -7,26 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="newcommitteeseids" position="top" resizable="false"
-		header="New #{committeBackingBean.managedBean.headerTitle}"
+		header="#{lbl['lbl.sc.add']} #{committeBackingBean.managedBean.headerTitle}"
 		width="970" widgetVar="newcommittees" modal="true"
 		styleClass="addCommitteeMember">
 		<p:panel>
 			<p:messages id="committeemessages" showDetail="true"
 				autoUpdate="true" closable="true" showSummary="false" />
-			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel value="#{lbl['lbl.sc.selection']}" />
-				<p:selectOneRadio id="selectionradio"
-					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
-					<f:selectItems
-						value="#{committeBackingBean.managedBean.selections}" />
-					<p:ajax event="click"
-						listener="#{committeBackingBean.userSelcetionAction}"
-						update="newCommitteeProfile" />
-				</p:selectOneRadio>
-				<p:message id="selectionradioMsg" for="selectionradio"
-					display="icon" />
-			</h:panelGrid>
 			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
@@ -67,7 +53,7 @@
 								process="@this" />
 						</div>
 					</p:panel>
-					<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true">
+					<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
 						<p:dataTable id="existingsearchid"
 							value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
 							selection="#{committeBackingBean.managedBean.selectedPmUser}"
@@ -115,7 +101,7 @@
 									<p:selectOneMenu id="appaction"
 										value="#{existcommitteeuser.memberRole.parameterId}"
 										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 										<f:selectItems var="role"
 											value="#{qTCommitteBackingBean.managedBean.roleTypes}"
 											itemLabel="#{role.codeName}"
