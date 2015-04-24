@@ -11,14 +11,21 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class TrackingDiaryManagedBean extends BaseManagedBean { 
 	private static final long serialVersionUID = 1L;
 
-	private String moduleSelect;
+	private String moduleSelected;
+	private String moduleChanged;
 
-	public String getModuleSelect() {
-		return moduleSelect;
+	public String getModuleSelected() {
+		return moduleSelected;
+	}
+	public void setModuleSelected(String moduleSelected) {
+		this.moduleSelected = moduleSelected;
+	}
+	public String getModuleChanged() {
+		return moduleChanged;
+	}
+	public void setModuleChanged(String moduleChanged) {
+		this.moduleChanged = moduleChanged;
 	}
 
-	public void setModuleSelect(String moduleSelect) {
-		this.moduleSelect = moduleSelect;
-	}
 
 }
