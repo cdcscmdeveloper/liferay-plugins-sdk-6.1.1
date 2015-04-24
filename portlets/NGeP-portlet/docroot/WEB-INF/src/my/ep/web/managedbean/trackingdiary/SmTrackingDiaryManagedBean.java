@@ -79,6 +79,8 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 					System.out.println("getApplicationNo");
 					reqDTO.setApplType(getApplicationType());
 				}
+				// to retrieve all statuses suppliers, including inactive suppliers.
+				reqDTO.setAllStatuses(true);
 				System.out.println("*********b4***********");
 				SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
 
