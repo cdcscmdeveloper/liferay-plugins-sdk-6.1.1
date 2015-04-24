@@ -797,6 +797,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				|| getManagedBean().isUpdateContract()) {
 			getManagedBean().getContractVer().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
 		}
+		// Default to contract expire date when contract is expired
+		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() < DateUtils.getCurrentDateWithoutTime().getTime()) {
+			getManagedBean().getContractVer().setAsAtDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		}
 		updateAsAtDate();
 		
 		// Get performance bond rule amount
