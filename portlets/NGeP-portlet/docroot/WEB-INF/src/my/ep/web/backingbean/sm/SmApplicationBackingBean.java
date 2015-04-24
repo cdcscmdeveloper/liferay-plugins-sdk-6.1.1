@@ -4302,6 +4302,7 @@ public class SmApplicationBackingBean extends
 			if (smPersonnel.getPersonnelId() == null) {
 				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
 					smPersonnel.setSoftcertFlg(0);
+					smPersonnel.setContractSignerFlg(0);
 				} else {
 					smPersonnel
 							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
@@ -4311,6 +4312,7 @@ public class SmApplicationBackingBean extends
 					if (smPersonnel.getEpRole()
 							.equals(RoleCode.CM_USER.value())) {
 						smPersonnel.setSoftcertFlg(0);
+						smPersonnel.setContractSignerFlg(0);
 					} else {
 						if (smPersonnel.getPmUser() != null
 								&& SmApplicationUtil
@@ -4331,6 +4333,7 @@ public class SmApplicationBackingBean extends
 					if (smPersonnel.getEpRole()
 							.equals(RoleCode.CM_USER.value())) {
 						smPersonnel.setSoftcertFlg(0);
+						smPersonnel.setContractSignerFlg(0);
 					} else {
 						smPersonnel
 								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
