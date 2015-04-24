@@ -1511,9 +1511,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					PmUserGroup pmUserGroup = new PmUserGroup();
 					getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
 				}
-				List<String> source = new ArrayList<String>(); 
-				List<String> target = new ArrayList<String>();  
-				getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+				if(getManagedBean().getApproverModel()==null) {
+					List<String> source = new ArrayList<String>(); 
+					List<String> target = new ArrayList<String>();  
+					getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+				}
 				getManagedBean().getUserGroupList().clear();
 				
 				//new
@@ -1531,6 +1533,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						}
 					}
 					
+					List<String> source = new ArrayList<String>(); 
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						if(getManagedBean().getApproverModel().getSource().size()==0) {
 							getManagedBean().getApproverModel().setSource(source);
