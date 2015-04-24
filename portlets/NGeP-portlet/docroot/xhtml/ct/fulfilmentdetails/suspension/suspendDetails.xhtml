@@ -204,7 +204,7 @@
 			  </h:panelGrid>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3" 
-		     rendered="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractAmount > suspensionBackingBean.managedBean.performanceBondRuleAmt
+		     rendered="#{suspensionBackingBean.managedBean.ctContract.loa.loaAmt > suspensionBackingBean.managedBean.performanceBondRuleAmt
 		     	and suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
 		     	and suspensionBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 			 <p:selectBooleanCheckbox value="#{suspensionBackingBean.managedBean.ctContract.bondReq ? false : true}"

@@ -612,7 +612,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			sb.append(getManagedBean().getContractVer().getDocType());
 			sb.append(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 			sb.append(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			sb.append(getManagedBean().getContractVer().getCtContractValue().getContractAmount());
+			sb.append(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
 			sb.append(outcome);			
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
