@@ -330,18 +330,18 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}" /></td>
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
 				<td><p:graphicImage id="tooltip5" library="ep/images/design"
 						style="padding-bottom : 7px;"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}"
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}"
 						name="tooltips.png" /> <p:tooltip id="toolinfo5" for="tooltip5">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
