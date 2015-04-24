@@ -45,15 +45,15 @@
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}"
 				style="width:5%">
 
-				<p:commandLink rendered="#{businessNature.businessLevel=='10'}"
+				<p:commandLink rendered="#{businessNature.businessLevel!='50'}"
 					action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
 					style="margin-right: 10px;" update="@form">
 					<p:graphicImage library="ep/images/design" name="add.png"
 						title="#{lbl['lbl.pm.add.division.category']}"
 						value="/css/images/design/add.png" />
-				</p:commandLink>
+			</p:commandLink>
 
-				<p:commandLink rendered="#{businessNature.businessLevel=='20'}"
+			<ui:remove><p:commandLink rendered="#{businessNature.businessLevel=='20'}"
 					action="#{businessNatureBackingBean.createBusinessNature(businessNature)}"
 					style="margin-right: 10px;" update="@form">
 					<p:graphicImage library="ep/images/design" name="add.png"
@@ -76,7 +76,7 @@
 						title="#{lbl['lbl.pm.add.item.category']}"
 						value="/css/images/design/add.png" />
 				</p:commandLink>
-
+             </ui:remove>	
 				<p:commandLink
 					action="#{businessNatureBackingBean.goToBusinessMaintaincePage(businessNature)}"
 					process="@this" partialSubmit="true">
