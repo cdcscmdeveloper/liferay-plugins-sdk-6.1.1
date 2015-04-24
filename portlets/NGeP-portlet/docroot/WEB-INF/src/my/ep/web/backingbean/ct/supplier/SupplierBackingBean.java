@@ -743,7 +743,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			sb = new StringBuilder();
 			sb.append(getManagedBean().getCtContract().getContractNo());
 			sb.append(getManagedBean().getCtContract().getCurrentContractVer().getDocType());
-			sb.append(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractAmount());
+			//sb.append(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractAmount());
 			sb.append(outcome);			
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
