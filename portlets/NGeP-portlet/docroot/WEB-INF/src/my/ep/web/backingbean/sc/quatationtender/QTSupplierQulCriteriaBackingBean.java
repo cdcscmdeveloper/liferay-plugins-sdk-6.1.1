@@ -97,6 +97,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -1101,7 +1103,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 		SelectItem[] items = null;
 		try {
 			items = new SelectItem[types.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
+			items[0] = new SelectItem(null, 
+					ResourceBundleUtils.getMessage(
+							"lbl.txt.select", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
 			int i = 1;
 			for (String location : types) {
 				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(locationLevel);

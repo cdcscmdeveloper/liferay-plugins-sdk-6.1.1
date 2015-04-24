@@ -78,7 +78,7 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.qt.goso.list']}" toggleable="true"
-		rendered="#{!qTDetailBB.managedBean.qt.planned}">
+		rendered="#{!qTDetailBB.managedBean.qt.planned and false}">
 		<p:dataTable id="gosodoList"
 			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
 			selection="#{qTDetailBB.managedBean.selectedGosodoBudgets}"

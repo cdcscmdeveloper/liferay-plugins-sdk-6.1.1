@@ -23,7 +23,7 @@
             			value="#{qTDetailBB.managedBean.qt.ministryOrgProfile.orgProfileId}"
 	            		styleClass="minstryclass"
     	        		style="width: 220px;">
-        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+        	    		<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
             			<f:selectItems value="#{qTDetailBB.managedBean.userMinistryList}"
             				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
             			<p:ajax event="change" listener="#{qTDetailBB.handleMinistryProfileChanged}"
@@ -52,7 +52,7 @@
             			value="#{qTDetailBB.managedBean.qt.departmentOrgProfile.orgProfileId}"
 	            		styleClass="deptclass"
     	        		style="width: 220px;">
-        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+        	    		<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
             			<f:selectItems value="#{qTDetailBB.managedBean.userDepartmentList}"
             				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
             			<p:ajax event="change" listener="#{qTDetailBB.handleDepartmentProfileChanged}"
@@ -81,7 +81,7 @@
            				value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}"
 	           			styleClass="divisionclass"
     	        		style="width: 220px;">
-        	   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+        	   			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
            				<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
            					var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
            				<p:ajax event="change" 

@@ -823,25 +823,6 @@ public class LOIDetailBackingBean extends
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
 
-	/*
-	 * public List<SelectItem> getApproverNames() {
-	 * debugLogger("getApproverNames"); List<SelectItem> selectItems = new
-	 * ArrayList<SelectItem>();
-	 * 
-	 * try { IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-	 * ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class); List<PmUser>
-	 * comitteeUsersUsers = new ArrayList<PmUser>(); if
-	 * (getManagedBean().getComitteeUsers() == null) { UserReqDTO reqDTO = new
-	 * UserReqDTO(); reqDTO.setRoleCode(RoleCode.APPROVER.value()); UserResDTO
-	 * resDTO = userSO.retrieveUserListByRole(reqDTO); comitteeUsersUsers =
-	 * resDTO.getUserList(); } selectItems.add(new SelectItem(null,
-	 * "--Select One--")); for (int i = 0; i < comitteeUsersUsers.size(); i++) {
-	 * PmUser user = (PmUser) comitteeUsersUsers.get(i); selectItems.add(new
-	 * SelectItem(user.getUserId(), user .getUserName())); }
-	 * this.getManagedBean().setComitteeUsers(selectItems); } catch (Exception
-	 * e) { e.printStackTrace(); } return getManagedBean().getComitteeUsers(); }
-	 */
-
 	/**
 	 * Adds the negotiation location in negotiation details.
 	 */
@@ -2987,7 +2968,11 @@ public class LOIDetailBackingBean extends
 		try {
 			int year = Calendar.getInstance().get(Calendar.YEAR);
 
-			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(null, 
+					ResourceBundleUtils.getMessage(
+						"lbl.txt.select", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(year, String.valueOf(year)));
 			for (int i = 0; i < 20; i++) {
 				year = year + 1;

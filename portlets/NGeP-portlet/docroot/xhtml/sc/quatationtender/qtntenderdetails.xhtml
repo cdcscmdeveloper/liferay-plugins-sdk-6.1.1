@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="qtdetailsid" header="Details" toggleable="true">
+	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.qt.details']}" toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 190px;"><p:outputLabel
@@ -90,8 +90,10 @@
 						valueChangeListener="#{qTDetailBB.proposalValidityChanged}"
 						style="text-align:right">
 						<f:ajax></f:ajax>
-					</p:inputMask> <p:message id="proposalvalidityMsg" for="proposalvalidity"
-						display="icon" /></td>
+					</p:inputMask> 
+					<p:message id="proposalvalidityMsg" for="proposalvalidity" display="icon" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" />
+				</td>
 			</tr>
 			<ui:fragment rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
 				<tr>
@@ -119,7 +121,7 @@
 		<p:dataTable id="zoneGeneralDataTable"
 			value="#{qTDetailBB.managedBean.zoneGeneralTrees}" var="zoneTree"
 			style="width:100%" rowIndexVar="index">
-			<p:column headerText="Location">
+			<p:column headerText="#{lbl['lbl.sc.zone.location']}">
 				<p:tree value="#{zoneTree}" var="location">
 					<p:treeNode type="zone">
 						<h:outputText value="#{location.zoneName}" />

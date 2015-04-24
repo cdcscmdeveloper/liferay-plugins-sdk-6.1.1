@@ -19,7 +19,7 @@
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.scQt.ministryOrgProfile.orgProfileId}"
 					styleClass="minstryclass" style="width: 220px;">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.ministryList}"
 						var="pmOrgProfile"
@@ -39,7 +39,7 @@
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.scQt.departmentOrgProfile.orgProfileId}"
 					styleClass="deptclass" style="width: 220px;">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.departmentList}"
 						var="pmOrgProfile"
@@ -60,7 +60,7 @@
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId}"
 					styleClass="divisionclass" style="width: 220px;">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.divisionList}"
 						var="pmOrgProfile"
@@ -105,7 +105,7 @@
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.pmState.stateId}"
 					styleClass="stateclass" style="width: 220px;">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{noticeBoardBackingBean.managedBean.states}"
 						var="state" itemLabel="#{state.stateName}"
 						itemValue="#{state.stateId}" />
@@ -123,7 +123,7 @@
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.pmDistrict.districtId}"
 					styleClass="districtclass" style="width: 220px;">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.districts}"
 						var="district" itemLabel="#{district.districtName}"
@@ -142,7 +142,7 @@
 					styleClass="catcode1class" style="width: 220px;">
 					<p:ajax event="change"
 						listener="#{noticeBoardBackingBean.handleL2CategoryChange}" />
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.categoryL1s}"
 						var="catL1Opt" itemLabel="#{catL1Opt.categoryL1Code}"
@@ -160,7 +160,7 @@
 					styleClass="catcode2class" style="width: 220px;">
 					<p:ajax event="change"
 						listener="#{noticeBoardBackingBean.handleL3CategoryChange}" />
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.categoryL2s}"
 						var="catL2Opt" itemLabel="#{catL2Opt.categoryL2Code}"
@@ -174,7 +174,7 @@
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.categoryL3Id}"
 					styleClass="catcode3class" style="width: 220px;">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}"
 						var="catL3Opt" itemLabel="#{catL3Opt.categoryL3Code}"
