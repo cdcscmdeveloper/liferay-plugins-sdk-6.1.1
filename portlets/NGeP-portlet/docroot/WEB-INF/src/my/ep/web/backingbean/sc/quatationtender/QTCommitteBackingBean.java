@@ -687,10 +687,13 @@ public class QTCommitteBackingBean extends
 								memberList.clear();
 								throw new EpException(
 										MessageConst.ERROR_760048,
-										new String[] { 
-												ParameterHelper.getInstance().getParameterDesc(
+										new String[] { ParameterHelper
+												.getInstance()
+												.getParameterDesc(
 														ParameterTypeConst.SC_COMMITTEE_TYPE,
-														cloneCommitte.getCommitteeType().getParameterCode()) });
+														cloneCommitte
+																.getCommitteeType()
+																.getParameterCode()) });
 							}
 						}
 					}
@@ -877,8 +880,11 @@ public class QTCommitteBackingBean extends
 					if (isMemberExists(existingMembers, selectedList)) {
 						throw new EpException(
 								MessageConst.ERROR_760048,
-								new String[] { ParameterHelper.getInstance().getParameterDesc(
-										ParameterTypeConst.SC_COMMITTEE_TYPE, ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE) });
+								new String[] { ParameterHelper
+										.getInstance()
+										.getParameterDesc(
+												ParameterTypeConst.SC_COMMITTEE_TYPE,
+												ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE) });
 					}
 					List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
 
@@ -1132,9 +1138,11 @@ public class QTCommitteBackingBean extends
 		}
 		if (isMemberExists(scCommittee.getScCommitteeMembers(), toBeAddedList)) {
 			throw new EpException(MessageConst.ERROR_760048,
-					new String[] { ParameterHelper.getInstance().getParameterDesc(
-							ParameterTypeConst.SC_COMMITTEE_TYPE,
-							scCommittee.getCommitteeType().getParameterCode()) });
+					new String[] { ParameterHelper.getInstance()
+							.getParameterDesc(
+									ParameterTypeConst.SC_COMMITTEE_TYPE,
+									scCommittee.getCommitteeType()
+											.getParameterCode()) });
 
 		}
 
@@ -1408,7 +1416,7 @@ public class QTCommitteBackingBean extends
 				selectedList.remove(selectedList.get(i--));
 			}
 		}
-		
+
 		this.getManagedBean().setToBeDelCommitteMemebers(selectedList);
 
 	}
@@ -1496,7 +1504,9 @@ public class QTCommitteBackingBean extends
 
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
-					.getManagedBean().getCurrentStatusId())) {
+					.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.CMT_PENDING_REVISION
+							.equals(committeStatus)) {
 				return true;
 			}
 		}
@@ -1547,11 +1557,13 @@ public class QTCommitteBackingBean extends
 		TabBean selectedCommitteTabBean = this.getManagedBean()
 				.getSelectedTabBean();
 		if (null != selectedCommitteTabBean) {
-			ScQtCommittee qtCommittee = selectedCommitteTabBean.getScQtCommittee();
+			ScQtCommittee qtCommittee = selectedCommitteTabBean
+					.getScQtCommittee();
 			if (qtCommittee != null) {
 				ScCommittee committee = qtCommittee.getScCommittee();
-				
-				if (CollectionUtils.isNotEmpty(committee.getScCommitteeMembers())) {
+
+				if (CollectionUtils.isNotEmpty(committee
+						.getScCommitteeMembers())) {
 					isChairpersonRequired(committee.getScCommitteeMembers());
 					isSecretaryRequired(committee.getScCommitteeMembers());
 					isAtleastOneMemebersReq(committee.getScCommitteeMembers());
