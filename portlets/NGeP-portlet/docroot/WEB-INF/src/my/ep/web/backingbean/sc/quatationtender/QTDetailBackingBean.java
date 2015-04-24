@@ -3581,9 +3581,15 @@ public class QTDetailBackingBean extends
 				break;
 
 			case 5:
-				if (isinvokeValidations(getManagedBean().getQt())) {
-					detailSO.validateScheduleDetails(reqDTO);
+				if (!this.getManagedBean().isMaintanceFlow()) {
+					if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+							&& getManagedBean().getQt().getQtStatus()
+									.getStatusId() < QTStatusConst.QT_BRIEFING_SITE_VISIT) {
+
+						detailSO.validateScheduleDetails(reqDTO);
+					}
 				}
+
 				break;
 
 			case 6:
@@ -3597,11 +3603,14 @@ public class QTDetailBackingBean extends
 			case 8:
 				break;
 			case 9:
-				if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-						&& getManagedBean().getQt().getQtStatus().getStatusId() < QTStatusConst.QT_BRIEFING_SITE_VISIT) {
+				if (!this.getManagedBean().isMaintanceFlow()) {
+					if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+							&& getManagedBean().getQt().getQtStatus()
+									.getStatusId() < QTStatusConst.QT_BRIEFING_SITE_VISIT) {
 
-					reqDTO.getQtdetail().setCallPTJValidation(true);
-					detailSO.validateApprovalDetails(reqDTO);
+						reqDTO.getQtdetail().setCallPTJValidation(true);
+						detailSO.validateApprovalDetails(reqDTO);
+					}
 				}
 				break;
 			}
