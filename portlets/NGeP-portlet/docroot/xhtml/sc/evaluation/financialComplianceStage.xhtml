@@ -16,12 +16,11 @@
 			autoUpdate="true" closable="true" severity="error,info"
 			showSummary="false" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;" 
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				style="float:right;" update="@all"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
+				update="@all"
 				action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
 		</div>
 
@@ -52,16 +51,15 @@
 						value="#{complianceFinancialSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.document']}"
-					style="width:10%">
-						<ui:fragment rendered="#{complianceFinancialSupplier.submitted eq 'true'}">
-					<p:commandLink ajax="false"
+				<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
+					<ui:fragment
+						rendered="#{complianceFinancialSupplier.submitted eq 'true'}">
+						<p:commandLink ajax="false"
 							actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceFinancialSupplier.scQtProposalChecklistAttachment)}"
-						process="@this" partialSubmit="true">
-						<p:graphicImage library="ep/images/design"
-							value="/resources/ep/images/design/icon_txt.png" />
+							process="@this" partialSubmit="true">
+							<h:graphicImage value="/css/images/design/icon_txt.png" />
 
-					</p:commandLink>
+						</p:commandLink>
 					</ui:fragment>
 
 				</p:column>
@@ -81,12 +79,12 @@
 					</p:selectOneMenu>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.remarks']}"
-					style="width:35%">
-					<ui:fragment rendered="#{complianceFinancialSupplier.submitted eq 'true'}">
-					<p:inputTextarea rows="2" cols="40" maxlength="200"
-						value="#{complianceFinancialSupplier.remark}"></p:inputTextarea>
-						</ui:fragment>
+				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
+					<ui:fragment
+						rendered="#{complianceFinancialSupplier.submitted eq 'true'}">
+						<p:inputTextarea rows="2" cols="40" maxlength="200"
+							value="#{complianceFinancialSupplier.remark}"></p:inputTextarea>
+					</ui:fragment>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

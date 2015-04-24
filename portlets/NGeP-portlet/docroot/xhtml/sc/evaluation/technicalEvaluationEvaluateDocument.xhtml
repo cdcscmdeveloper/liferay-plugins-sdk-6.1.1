@@ -20,8 +20,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 					action="#{evaluationBackingBean.evaluationBackaction}" />
 
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					style="float:right;" update="@all"
+				<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
+					update="@all"
 					action="#{evaluationBackingBean.saveEvalutionStageUploadDtls}" />
 			</div>
 			<p:spacer height="25" />
@@ -39,8 +39,7 @@
 
 
 
-			<p:panel header="#{lbl['lbl.sc.supplier.list']}"
-				toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 				<p:dataTable var="complianceTechnicalSupplier" rows="10"
 					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
@@ -58,15 +57,13 @@
 
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.document']}"
-						style="width:10%">
+					<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 						<ui:fragment
 							rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 							<p:commandLink ajax="false"
 								actionListener="#{evaluationBackingBean.downloadEncryptedFile(complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"
 								process="@this" partialSubmit="true">
-								<p:graphicImage library="ep/images/design"
-									value="/resources/ep/images/design/icon_txt.png" />
+								<h:graphicImage value="/css/images/design/icon_txt.png" />
 							</p:commandLink>
 						</ui:fragment>
 
@@ -88,9 +85,8 @@
 						style="width:15%">
 						<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
 							id="technicaluploadNoActionUserScoreId"
-							label="#{lbl['lbl.sc.user.scoring']}"
-							style="text-align:right;" size="40" maxlength="18"
-							required="true"
+							label="#{lbl['lbl.sc.user.scoring']}" style="text-align:right;"
+							size="40" maxlength="18" required="true"
 							disabled="#{evaluationBackingBean.managedBean.readOnly}">
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -106,8 +102,7 @@
 							for="technicaluploadNoActionUserScoreId" display="icon"></p:message>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.remarks']}"
-						style="width:25%">
+					<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:25%">
 						<ui:fragment
 							rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
 							<p:inputTextarea rows="2" cols="40" maxlength="200"

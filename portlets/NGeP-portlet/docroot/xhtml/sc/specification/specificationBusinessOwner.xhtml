@@ -50,15 +50,14 @@
 			<tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
-					<td><h:outputLabel
-							value=" #{lbl['lbl.sc.justification']}" /></td>
+					<td><h:outputLabel value=" #{lbl['lbl.sc.justification']}" /></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="143"
 							style="margin-bottom:5px;width: 80%;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							maxlength="200"
 							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
 							readonly="#{specificationBackingBean.managedBean.readOnly}"></p:inputTextarea>
-							<ac:iconTooltip value="#{lbl['lbl.sc.justification.tooltip']}" /></td>
+						<ac:iconTooltip value="#{lbl['lbl.sc.justification.tooltip']}" /></td>
 				</ui:fragment>
 
 			</tr>
@@ -66,8 +65,7 @@
 
 
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.qttentype']}" /> <ui:fragment
+				<td><p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> <ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
@@ -111,16 +109,16 @@
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" listener="#{specificationBackingBean.openForChange}"></p:ajax>
+								update="@form"
+								listener="#{specificationBackingBean.openForChange}"></p:ajax>
 						</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
 				</ui:fragment>
 			</tr>
 
 
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.evaluation.type']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '50000'}">
 						<p:selectOneRadio
@@ -135,8 +133,7 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or specificationBackingBean.managedBean.scQt.estimatedAmount gt '50000'}">
 						<table>
 							<tr>
-								<td>
-									<p:selectOneRadio required="true" id="evalType"
+								<td><p:selectOneRadio required="true" id="evalType"
 										disabled="#{specificationBackingBean.managedBean.readOnly}"
 										label=" #{lbl['lbl.sc.evaluation.type']}"
 										value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
@@ -145,13 +142,10 @@
 										<p:ajax event="change" process="@this" partialSubmit="true"
 											update="@form"
 											listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
-			
-									</p:selectOneRadio>
-									<p:message id="evalMsg" for="evalType" display="icon" />
-								</td>
-								<td style="margin-top: -3px">
-									<ac:iconTooltip value="#{lbl['lbl.sc.evaluation.type.tooltip']}" />
-								</td>
+
+									</p:selectOneRadio> <p:message id="evalMsg" for="evalType" display="icon" /></td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
 							</tr>
 						</table>
 					</ui:fragment></td>
@@ -166,8 +160,7 @@
 					<td>
 						<table>
 							<tr>
-								<td>
-									<p:selectOneRadio id="techEvaluation" required="true"
+								<td><p:selectOneRadio id="techEvaluation" required="true"
 										disabled="#{specificationBackingBean.managedBean.readOnly}"
 										label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
 										value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
@@ -175,12 +168,10 @@
 											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 										<p:ajax event="change" process="@this" partialSubmit="true"
 											listener="#{specificationBackingBean.techEvaluationReqChanged}"></p:ajax>
-									</p:selectOneRadio>
-									<p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
-								</td>
-								<td style="margin-top: -3px">
-									<ac:iconTooltip value="#{lbl['lbl.sc.spec.requir.tech.eval.tooltip']}" />
-								</td>
+									</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation"
+										display="icon"></p:message></td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.spec.requir.tech.eval.tooltip']}" /></td>
 							</tr>
 						</table>
 					</td>
@@ -193,21 +184,18 @@
 					<td>
 						<table>
 							<tr>
-								<td>
-									<p:selectOneRadio
+								<td><p:selectOneRadio
 										disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.scQt.panel ne 'No'}"
 										value="#{specificationBackingBean.managedBean.scQt.zonal}">
 										<f:selectItems
 											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-			
+
 										<p:ajax event="change" partialSubmit="true"
 											update="generalLocationList" process="@this"
 											listener="#{specificationBackingBean.zoneRadioChange}"></p:ajax>
-									</p:selectOneRadio>
-								</td>
-								<td style="margin-top: -3px">
-									<ac:iconTooltip value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" />
-								</td>
+									</p:selectOneRadio></td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
 							</tr>
 						</table>
 					</td>
@@ -221,8 +209,7 @@
 				<td>
 					<table>
 						<tr>
-							<td>
-								<p:selectOneMenu id="procCategory" required="true"
+							<td><p:selectOneMenu id="procCategory" required="true"
 									style="margin-bottom:5px;"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									label="#{lbl['lbl.sc.procurement.category']}"
@@ -231,12 +218,10 @@
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 									<p:ajax event="change"
 										listener="#{specificationBackingBean.procurementChange}"></p:ajax>
-								</p:selectOneMenu> 
-								<p:message id="titleMsg" for="procCategory" display="icon" />
+								</p:selectOneMenu> <p:message id="titleMsg" for="procCategory" display="icon" />
 							</td>
-							<td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl['lbl.sc.procurement.category.tooltip']}" />
-							</td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.procurement.category.tooltip']}" /></td>
 						</tr>
 					</table>
 				</td>
@@ -276,10 +261,9 @@
 								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 							<p:ajax event="change" update="generalLocationList"
 								listener="#{specificationBackingBean.selectZoneLocationLevel}"></p:ajax>
-						</p:selectOneMenu>
-						<ac:iconTooltip value="#{lbl['lbl.sc.zone.location.level.tooltip']}" />
-						<p:message id="withzone" for="locationLevels" display="icon"></p:message>
-					</td>
+						</p:selectOneMenu> <ac:iconTooltip
+							value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message
+							id="withzone" for="locationLevels" display="icon"></p:message></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -319,25 +303,27 @@
 							</p:treeNode>
 						</p:tree>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.action']}"
-						style="width:10%">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
 						<p:commandLink
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							actionListener="#{specificationBackingBean.editZones(zoneTree,index)}"
 							process="@this" update="@([id$=dlgId])"
 							oncomplete="ZoneGeneral.show();">
-							<p:graphicImage library="ep/images/design" name="edit.png"
-								value="/resources/ep/images/design/edit.png" />
+							<h:graphicImage value="/css/images/design/edit.png" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
-				<p:selectBooleanCheckbox id="checkAllZonesList" style="float:left;margin-top: 13px;margin-right: -4px;">
-					<p:ajax event="change" partialSubmit="true" process="@all" update="zoneGeneralDataTable" listener="#{specificationBackingBean.checkAllZoneGeneral}" />
+				<p:selectBooleanCheckbox id="checkAllZonesList"
+					style="float:left;margin-top: 13px;margin-right: -4px;">
+					<p:ajax event="change" partialSubmit="true" process="@all"
+						update="zoneGeneralDataTable"
+						listener="#{specificationBackingBean.checkAllZoneGeneral}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="1" />
-				<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
+				<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}"
+					style="float:left;margin-top: 12px;;margin-left: 10px;" />
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
 					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -375,8 +361,8 @@
 				</TR>
 				<TR>
 					<TD valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.location']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></TD>
+							value="#{lbl['lbl.sc.location']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></TD>
 					<TD>
 						<div style="height: 300px; overflow-y: scroll;">
 							<p:tree id="treeZoneGeneralPopup"
@@ -402,26 +388,25 @@
 				</TR>
 				<TR>
 					<TD></TD>
-					<TD>
-						<p:selectBooleanCheckbox id="popupCheck"  style="float:left;margin-top: 13px;margin-right: -4px;" value="#{specificationBackingBean.managedBean.checkAllList}">
-							<p:ajax event="change" partialSubmit="true" process="@all" update=":form:treeZoneGeneralPopup" listener="#{specificationBackingBean.checkAllZoneGeneralPopUp(specificationBackingBean.managedBean.checkAllList)}" />
-						</p:selectBooleanCheckbox>
-						<p:spacer width="1" />
-						<h:outputLabel value="#{lbl['lbl.sc.spec.check.all']}" style="float:left;margin-top: 12px;;margin-left: 10px;" />
-						<p:commandButton
-							value="#{lbl['lbl.btn.cancel']}"
-							style="float:right;" onclick="ZoneGeneral.hide();" />
-							&#160;&#160;
-						<p:commandButton value="#{lbl['lbl.btn.ok']}"
-							style="float:right;" process="@all"
+					<TD><p:selectBooleanCheckbox id="popupCheck"
+							style="float:left;margin-top: 13px;margin-right: -4px;"
+							value="#{specificationBackingBean.managedBean.checkAllList}">
+							<p:ajax event="change" partialSubmit="true" process="@all"
+								update=":form:treeZoneGeneralPopup"
+								listener="#{specificationBackingBean.checkAllZoneGeneralPopUp(specificationBackingBean.managedBean.checkAllList)}" />
+						</p:selectBooleanCheckbox> <p:spacer width="1" /> <h:outputLabel
+							value="#{lbl['lbl.sc.spec.check.all']}"
+							style="float:left;margin-top: 12px;;margin-left: 10px;" /> <p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" style="float:right;"
+							onclick="ZoneGeneral.hide();" /> &#160;&#160; <p:commandButton
+							value="#{lbl['lbl.btn.ok']}" style="float:right;" process="@all"
 							update="@this, zoneGeneralDataTable,zonePopupGeneral"
 							action="#{specificationBackingBean.updateZoneGeneralLocation}">
-						</p:commandButton>
-					</TD>
+						</p:commandButton></TD>
 				</TR>
 			</table>
 		</h:panelGroup>
-		
+
 		<p:ajax event="close"
 			listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
