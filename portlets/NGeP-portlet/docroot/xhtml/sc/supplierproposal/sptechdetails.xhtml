@@ -35,7 +35,7 @@
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)
-						or techList.scQtCheckList.definationType.parameterCode eq 'UP'
+						or (techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O')
 						or techList.scQtCheckList.definationType.parameterCode eq 'NA'}" />
 			</p:column>
 
@@ -77,7 +77,7 @@
 				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' or techList.scQtCheckList.definationType.parameterCode eq 'NA'}">
+					rendered="#{((techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'O') or (techList.scQtCheckList.definationType.parameterCode eq 'NA'))}">
 					<p:commandButton oncomplete="attachmentDlg.show();return false;"
 						rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 						value="#{lbl['lbl.txt.attachment']}" style="width:101px;">
@@ -89,6 +89,18 @@
 						styleClass="blue_font" immediate="true"
 						action="#{supplierProposalDetailBackingBean.downloadEncryptedFile(techList.scQtProposalChecklistAttachment)}"
 						rendered="#{!empty techList.scQtProposalChecklistAttachment}" />
+
+				</ui:fragment>
+
+				<ui:fragment
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP' and techList.scQtCheckList.action.parameterCode eq 'V'}">
+					<h:commandLink
+						value="#{techList.scQtCheckList.scQtCheckListAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{supplierProposalDetailBackingBean.downloadFile(techList.scQtCheckList.scQtCheckListAttachment)}"
+						rendered="#{!empty techList.scQtCheckList.scQtCheckListAttachment}" />
+
+
 
 				</ui:fragment>
 
