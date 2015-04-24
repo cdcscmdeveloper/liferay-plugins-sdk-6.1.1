@@ -9,17 +9,17 @@
 	<p:panel id="businessNatureSearch"
 		header="#{lbl['lbl.pm.search.category']}" toggleable="true">
 
-		<table cellspacing="100" style="width: 100%;">
+		<table style="width: 100%;">
 			<tr>
-				<td><h:outputText value="* " styleClass="mandatory" /> <h:outputLabel
-						value="#{lbl['lbl.pm.category.level']}"></h:outputLabel></td>
-				<td><p:selectOneMenu style="width:205px;margin-bottom:5px;"
+				<td style="width: 14%;"><h:outputLabel
+						value="#{lbl['lbl.pm.category.level']}" /> <h:outputLabel value="*"
+						styleClass="mandatory" /> </td>
+				<td><p:selectOneMenu style="width:215px;margin-bottom:5px;"
 						required="true" label="#{lbl['lbl.pm.category.level']}"
 						value="#{businessNatureBackingBean.managedBean.categoryLvl}">
 						<f:selectItems
 							value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}" />
 						<p:ajax event="change"
-							listener="#{businessNatureBackingBean.updateCategoryLevel()}"
 							update="businessNatureSearch" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -96,6 +96,18 @@
 						size="50"
 						rendered="#{businessNatureBackingBean.managedBean.categoryLvl &gt; 40}" /></td>
 			</tr>
+			<tr>
+				<td width="20%"><h:outputLabel
+						value="#{lbl['lbl.pm.search.status']}">
+					</h:outputLabel></td>
+				<td><p:selectOneMenu style="width:215px"
+						value="#{businessNatureBackingBean.managedBean.status}">
+						<f:selectItems
+							value="#{businessNatureBackingBean.getBusinessNatureStatus()}" />
+					</p:selectOneMenu></td>
+
+			</tr>
+
 		</table>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
