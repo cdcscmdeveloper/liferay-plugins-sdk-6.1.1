@@ -37,6 +37,8 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 
 	private Long status;
 
+	private boolean isLazy = false;
+
 	private PmBusinessNature pmBusinessNature;
 
 	private PmBusinessNature parentBusinessNature;
@@ -177,6 +179,14 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 
 	public void setNewcategory(boolean newcategory) {
 		this.newcategory = newcategory;
+	}
+
+	public boolean isLazy() {
+		return isLazy;
+	}
+
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
 	}
 
 }
