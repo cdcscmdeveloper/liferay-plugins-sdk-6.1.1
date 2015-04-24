@@ -2823,7 +2823,10 @@ public class LOADetailBackingBean extends
 				}
 
 				int noOfYears = expYear - effYear;
-				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
 
 				for (int i = 0; i <= noOfYears +1; i++) {
 

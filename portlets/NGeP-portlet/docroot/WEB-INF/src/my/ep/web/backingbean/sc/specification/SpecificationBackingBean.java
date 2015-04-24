@@ -4281,7 +4281,10 @@ public class SpecificationBackingBean extends
 		SelectItem[] items = null;
 		try {
 			items = new SelectItem[types.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
 			int i = 1;
 			for (String location : types) {
 				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(locationLevel);
@@ -9626,7 +9629,10 @@ public class SpecificationBackingBean extends
 
 		try {
 
-			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(0, "January"));
 			selectItems.add(new SelectItem(1, "February"));
 			selectItems.add(new SelectItem(2, "March"));
@@ -9659,7 +9665,10 @@ public class SpecificationBackingBean extends
 		try {
 			int year = Calendar.getInstance().get(Calendar.YEAR);
 
-			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(year, String.valueOf(year)));
 			for (int i = 0; i < 20; i++) {
 				year = year + 1;
@@ -9683,7 +9692,10 @@ public class SpecificationBackingBean extends
 
 		try {
 
-			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(1, "Auto Score"));
 			selectItems.add(new SelectItem(2, "User Score"));
 
