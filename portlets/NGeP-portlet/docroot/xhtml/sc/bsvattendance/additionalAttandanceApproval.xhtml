@@ -110,7 +110,7 @@
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="Briefing/Site Visit Details" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.brifing.sv.dtls']}" toggleable="true">
 			<!-- <h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
 				<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
 					rendered="#{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.allBriefingReq}"
@@ -153,7 +153,7 @@
 					style="width:5%;white-space: normal;">
 					<h:outputLabel value="#{brfsitdtl.maxNoOfAttendance}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.price.inquiry.status']}"
+				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:9%;white-space: normal;">
 					<h:outputText
 						value="#{qTScheduleDetailBackingBean.getStatusDescById(brfsitdtl.bsvStatus.statusId)}" />
@@ -163,7 +163,7 @@
 
 
 		</p:panel>
-		<p:panel header="ADDITIONAL SUPPLIER LIST FOR BRIEFING DETAILS "
+		<p:panel header="#{lbl['lbl.sc.additionl.supp.list.brif.dtls']}"
 			toggleable="true" id="attRegPnl">
 
 			<p:dataTable id="complisttbl" var="scQtBriefReg" style="width:100%"
