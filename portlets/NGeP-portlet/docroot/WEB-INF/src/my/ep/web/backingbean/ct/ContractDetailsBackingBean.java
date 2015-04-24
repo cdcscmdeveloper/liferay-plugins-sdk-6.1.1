@@ -1714,6 +1714,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    getManagedBean().setViewContract(true);
 	    setValidateContractField(resDTO);
 	    getManagedBean().setSelectedTabIndex(0);
+	    reqDTO.setCtContractVer(resDTO.getCtContractVer());
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
 		return CONTRACT_PAGE;
@@ -1738,6 +1739,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    setValidateContractField(resDTO);
 	    getManagedBean().setSelectedTabIndex(0);
+	    reqDTO.setCtContractVer(resDTO.getCtContractVer());
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
 		return CONTRACT_COMMON_PAGE;
