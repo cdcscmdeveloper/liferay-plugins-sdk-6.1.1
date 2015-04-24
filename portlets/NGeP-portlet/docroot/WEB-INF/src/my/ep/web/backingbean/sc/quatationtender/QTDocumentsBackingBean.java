@@ -34,7 +34,6 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
@@ -51,8 +50,6 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sc.quationtender.BriefingReqDTO;
-import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -74,7 +71,6 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -1684,11 +1680,33 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
     	
  		context.put("bsvReq", qt.isBsvRequired());
-    	boolean isZone = false;
-       	IQTBriefingSO qTBriefingSO = null;
+ 		log.info("BSV Required : " + qt.isBsvRequired());
+ 		boolean isZone = false;
+ 		List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+ 		if (qt.isBsvRequired()) {
+ 			QTDetailBackingBean backingBean = new QTDetailBackingBean();
+			backingBean.retrieveBriefingSitevisitTabDtl();
+			List<BriefingZoneBean> briefingZoneBean = this.getManagedBean().getBriefingZoneBean();
+	 		if (briefingZoneBean != null && !briefingZoneBean.isEmpty()) {
+	 			isZone = true;
+	 			for (BriefingZoneBean zoneBean : this.getManagedBean().getBriefingZoneBean()) {
+	 				zoneBeans.add(zoneBean);
+	 			}
+	 		} else {
+	 			BriefingZoneBean bsvDtlBean = this.getManagedBean().getBsvDtlBean();
+	 			if (null == bsvDtlBean) {
+	 				bsvDtlBean = this.getManagedBean().getBsvDtlBean();
+	 			}
+	 			zoneBeans.add(bsvDtlBean);
+	 		}
+	 		context.put("isZone", isZone);
+			context.put("zoneBeans", zoneBeans);
+ 		}
+    	
+       	/*IQTBriefingSO qTBriefingSO = null;
     	ScQtBsv qtBsv = null;
     	BriefingZoneBean briefingZoneBean = null;
-    	List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+    	// List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
 		try {
 			qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
@@ -1717,9 +1735,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			}
 		} finally {
 			qTBriefingSO = null;
-		}
-		context.put("isZone", isZone);
-		context.put("zoneBeans", zoneBeans);
+		}*/
 
 		boolean isOneOff = false;
     	if (qt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
