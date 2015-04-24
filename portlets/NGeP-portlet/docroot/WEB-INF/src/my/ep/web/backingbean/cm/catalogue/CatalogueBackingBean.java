@@ -669,6 +669,37 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	public void deleteSupplierItem(long supplierItemId) throws Exception {
+		log.info("Supplier item id to delete: " + supplierItemId);
+		ICatalogueSO catalogueSO = null;
+		try {
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			reqDTO.setSupplierItemId(supplierItemId);
+			
+			catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			CatalogueResDTO resDTO = catalogueSO.softDeleteSupplierItem(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				
+				retrieveSupplierItemsBySupplierId(catalogueSO, getSupplierId(), resDTO.getItemStatus());
+				
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_710005,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		} finally {
+			catalogueSO = null;
+		}
+	}
+	
+	public void setItemToDelete(Long supplierItemIdToDelete) {
+		log.info("Supplier item id to delete: " + supplierItemIdToDelete);
+		this.getManagedBean().setItemToDelete(supplierItemIdToDelete);
+	}
 	/**
 	 * Navigate to catalog details page.
 	 * 
@@ -5077,8 +5108,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setItemStatus("A");
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
-				this.getManagedBean().setApprovedItemList(
-						resDTO.getSupplierItemList());
+				this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
+				System.out.println("approved supplier items: " + resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(2);
 				log.info("setTab index to 2 this.getManagedBean().getTabActiveIndex()="+this.getManagedBean().getTabActiveIndex());
 			} else if (itemStatus.equals(CmConst.ITEM_STATUS_REJECTED)) {
@@ -5087,13 +5118,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				this.getManagedBean().setRejectedItemList(
 						resDTO.getSupplierItemList());
+				System.out.println("rejected supplier items: " + resDTO.getSupplierItemList());
 				this.getManagedBean().setTabActiveIndex(3);
 				log.info("setTab index to 3 this.getManagedBean().getTabActiveIndex()="+this.getManagedBean().getTabActiveIndex());
+			} else if (itemStatus.equals(CmConst.ITEM_STATUS_DRAFT)) {
+				reqDTO.setItemStatus(CmConst.ITEM_STATUS_DRAFT);
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(0);
+			} else if(itemStatus.equals(CmConst.ITEM_STATUS_EXPIRED)) {
+				reqDTO.setItemStatus(CmConst.ITEM_STATUS_EXPIRED);
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setExpiredItemList(resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(5);
 			}
 
 		} else {
 		
-			reqDTO.setItemStatus("D");
+			reqDTO.setItemStatus(CmConst.ITEM_STATUS_DRAFT);
 			resDTO = catalogueSO
 					.searchSupplierItemByStatus(reqDTO);
 
@@ -8417,5 +8461,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 		return "/xhtml/sm/postsupplierregistration/catalogueUploadAcknowlegdement.xhtml";
+	}
+	
+	private Long getSupplierId() {
+		if(this.getManagedBean().getSupplierId() == null) {
+			ISupplierSearchSO supplierSearchSO = null;
+			try {
+				supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				supplierReqDTO.setUserId(pmUser.getUserId());
+				SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+				this.getManagedBean().setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+				
+			} finally {
+				supplierSearchSO = null;
+			}
+		}
+		return this.getManagedBean().getSupplierId();
 	}
 }

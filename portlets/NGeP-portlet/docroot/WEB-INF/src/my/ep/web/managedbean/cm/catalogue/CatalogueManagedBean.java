@@ -411,6 +411,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private int resultTabActiveIndex;
 	
+	private Long itemToDelete;
+	
+	private Long supplierId;
+	
 	/**
 	 * The Class SearchPagingDataModel.
 	 */
@@ -3008,15 +3012,21 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.physicalContractNoFilterBean = physicalContractNoFilterBean;
 	}
 
-	
-	
-	
-	
+	public Long getItemToDelete() {
+		return itemToDelete;
+	}
 
+	public void setItemToDelete(Long itemToDelete) {
+		this.itemToDelete = itemToDelete;
+	}
 
+	public Long getSupplierId() {
+		return supplierId;
+	}
 
-	
-	
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
+	}
 
 
 }
