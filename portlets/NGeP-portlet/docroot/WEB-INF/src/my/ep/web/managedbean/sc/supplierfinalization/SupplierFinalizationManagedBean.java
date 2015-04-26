@@ -119,10 +119,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isSubmit;
 	private boolean isSecretaryUser;
 	private boolean isProcCategoryMedicine;
+	private boolean isZoneTabChange;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
-	private TplSpecZoneDtl tplSpecZoneDtl;
+	private TplSpecZoneDtl currentZone;
 	private ScQtEvaluationResultDtl recommendedSupplier;
 	
 	
@@ -135,6 +136,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<SmSupplier> awardSupplierList; 
 	
 	private Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone;
+	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
 	
 	//Committee Endorsement
 	private List<ScQtCommitteeActivity> reminderList;
@@ -561,6 +563,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the isZoneTabChange
+	 */
+	public boolean isZoneTabChange() {
+		return isZoneTabChange;
+	}
+
+	/**
+	 * @param isZoneTabChange 
+	 * 				the isZoneTabChange to set
+	 */
+	public void setZoneTabChange(boolean isZoneTabChange) {
+		this.isZoneTabChange = isZoneTabChange;
+	}
+
+	/**
 	 * @return the shortlistedSupplierList
 	 */
 	public List<ScQtEvaluationResultDtl> getShortlistedSupplierList() {
@@ -669,6 +686,23 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the recommendedSupppliersByZone
+	 */
+	public Map<Long, List<ScQtEvaluationResultDtl>> 
+				getRecommendedSupppliersByZone() {
+		return recommendedSupppliersByZone;
+	}
+
+	/**
+	 * @param recommendedSupppliersByZone 
+	 * 								the recommendedSupppliersByZone to set
+	 */
+	public void setRecommendedSupppliersByZone(
+			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone) {
+		this.recommendedSupppliersByZone = recommendedSupppliersByZone;
+	}
+
+	/**
 	 * @return the scQtFinalization
 	 */
 	public ScQtFinalization getScQtFinalization() {
@@ -761,16 +795,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the tplSpecZoneDtl
 	 */
-	public TplSpecZoneDtl getTplSpecZoneDtl() {
-		return tplSpecZoneDtl;
+	public TplSpecZoneDtl getCurrentZone() {
+		return currentZone;
 	}
 
 	/**
 	 * @param tplSpecZoneDtl 
 	 * 					the tplSpecZoneDtl to set
 	 */
-	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
-		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	public void setCurrentZone(TplSpecZoneDtl currentZone) {
+		this.currentZone = currentZone;
 	}
 
 	/**
