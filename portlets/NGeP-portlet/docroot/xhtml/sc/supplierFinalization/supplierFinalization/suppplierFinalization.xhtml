@@ -215,7 +215,8 @@
 				 			  (suppFinalizationBackingBean.managedBean.recommendSupplier or 
 				 			  	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
 					<td width="16%" style="vertical-align: baseline;">
-						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=zonalMenu],[id$=itemPanel],[id$=supplierPanel])" partialSubmit="true" process="@this" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />
+						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=zonalMenu],[id$=itemPanel],[id$=supplierPanel])" 
+										 partialSubmit="true" process="@this" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />
 						
 						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
 							activeIndex="#{suppFinalizationBackingBean.managedBean.zoneActiveIndex}"
