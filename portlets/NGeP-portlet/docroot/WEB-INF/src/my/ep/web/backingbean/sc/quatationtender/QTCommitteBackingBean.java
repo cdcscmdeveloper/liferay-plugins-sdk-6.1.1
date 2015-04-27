@@ -1145,6 +1145,29 @@ public class QTCommitteBackingBean extends
 											.getParameterCode()) });
 
 		}
+		
+		if (scCommittee.getCommitteeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+			List<TabBean> committeTabs = this.getManagedBean().getScCommitteeMemberTabList();
+			for (int i = 0; i < committeTabs.size(); i++) {
+				TabBean tabBean = committeTabs.get(i);
+				if (tabBean.getTabType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
+					List<ScCommitteeMember> existingMembers = tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers();
+					for (ScCommitteeMember committeeMember : existingMembers) {
+						if (toBeAddedList.get(0).getIcPassport().equalsIgnoreCase(committeeMember.getIcPassport())) {
+							throw new EpException("Committee Member already existed in OC.");
+						}
+					}
+				}
+				if (tabBean.getTabType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+					List<ScCommitteeMember> existingMembers = tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers();
+					for (ScCommitteeMember committeeMember : existingMembers) {
+						if (toBeAddedList.get(0).getIcPassport().equalsIgnoreCase(committeeMember.getIcPassport())) {
+							throw new EpException("Committee Member already existed in TEC.");
+						}
+					}
+				}
+			}
+		}
 
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		java.util.Collections.sort(scCommittee.getScCommitteeMembers());
