@@ -87,21 +87,21 @@
 			#{bondList.bondAmount}
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.eff.date']}"
+		<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 			style="width:15%">
 			<h:outputText value="#{bondList.bondEffDate}">
 				<f:convertDateTime pattern="dd/MM/yyyy" />
 			</h:outputText>
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.exp.date']}"
+		<p:column headerText="#{lbl['lbl.sc.exp.date']}"
 			style="width:15%">
 			<h:outputText value="#{bondList.bondExpDate}">
 				<f:convertDateTime pattern="dd/MM/yyyy" />
 			</h:outputText>
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.att']}"
+		<p:column headerText="#{lbl['lbl.sc.attachment']}"
 			style="width:15%">
 			<h:outputText value="#{bondList.fileName}" />
 		</p:column>
@@ -131,7 +131,7 @@
 			<p:inputText value="#{bondList.bondAmount}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.eff.date']}"
+		<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 			style="width:5%">
 			<h:outputText value="#{bondList.bondEffDate}" style="width:85%" />
 			<p:calendar id="bondeffdate" size="10"
@@ -139,7 +139,7 @@
 				value="#{bondList.bondEffDate}" />
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.exp.date']}"
+		<p:column headerText="#{lbl['lbl.sc.exp.date']}"
 			style="width:5%">
 			<h:outputText value="#{bondList.bondExpDate}" style="width:85%" />
 			<p:calendar id="bondexpdate" size="10"
@@ -147,12 +147,12 @@
 				value="#{bondList.bondExpDate}" />
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.att']}"
+		<p:column headerText="#{lbl['lbl.sc.attachment']}"
 			style="width:5%">
 			<h:outputText value="#{bondList.fileName}" />
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+		<p:column headerText="#{lbl['lbl.sc.action']}"
 			style="width:15%">
 			<p:commandLink oncomplete="attachDlg.show();return false;"
 				update="performancebondtbl" rendered="#{bondList.fileName eq 'null'}">
@@ -168,7 +168,7 @@
 			</p:commandLink>
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.action']}" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.action']}" style="width:5%">
 			<p:commandLink>
 				<p:graphicImage library="ep/images/design" name="edit.png"
 					value="/resources/ep/images/design/edit.png" />
@@ -179,11 +179,11 @@
 	</p:dataTable>
 	<p:spacer height="20px" />
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
+		<p:commandButton value="#{lbl['lbl.btn.add']}"
 			process="@this,performancebondtbl" partialSubmit="true"
 			update="performancebondtbl" />
 
-		<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
+		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			process="@this" partialSubmit="true"  />
 	</div>
 
@@ -211,7 +211,7 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.close']}"
+					<p:commandButton value="#{lbl['lbl.btn.close']}"
 						onclick="bdLetterDlg.hide()" />
 				</p:column>
 			</p:row>
