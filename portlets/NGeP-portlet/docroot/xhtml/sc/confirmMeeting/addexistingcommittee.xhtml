@@ -14,22 +14,7 @@
 		<p:panel id="addexistingNewId">
 			<p:messages id="existingNewid" autoUpdate="true" showDetail="true"
 				showSummary="false" closable="true" />
-			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel value="#{lbl['lbl.sc.selection']}" />
-				<p:selectOneRadio
-					label="#{lbl['lbl.sc.selection']}"
-					id="meetingUserSelect"
-					value="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection}">
-					<f:selectItems
-						value="#{evaluationMeetingBackingBean.managedBean.selections}" />
-					<p:ajax event="click"
-						listener="#{evaluationMeetingBackingBean.userSelcetionAction}"
-						update="newCommitteeProfile" process="@this" />
-				</p:selectOneRadio>
-				<p:message id="userSelectId" for="meetingUserSelect" display="icon" />
-			</h:panelGrid>
-
+			
 			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
