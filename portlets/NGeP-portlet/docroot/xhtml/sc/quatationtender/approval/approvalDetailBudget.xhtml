@@ -19,11 +19,11 @@
 		</div>
 	</p:panel>
 
-	<p:panel header="Remark" toggleable="true" id="budgetuploads">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true" id="budgetuploads">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="Remark" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
 						value="#{budgetApprovalRemarkList}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">
