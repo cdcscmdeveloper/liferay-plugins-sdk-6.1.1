@@ -8,6 +8,8 @@
 	<p:panel id="publicationapprovalTbl"
 		header="#{lbl['lbl.sc.qt.approver.selection']}"
 		toggleable="true">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.public.approval.instruction']}"/>
+		
 		<p:spacer height="3" />
 		<div style="width: 100%">
 			<p:pickList id="publicationapproverid"
@@ -25,7 +27,7 @@
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="Remark" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid
 						value="#{qTDetailBB.managedBean.publicationApproval.scQtApprovalRemarks}"
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">

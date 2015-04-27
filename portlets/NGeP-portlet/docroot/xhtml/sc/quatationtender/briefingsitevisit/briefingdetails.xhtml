@@ -3,29 +3,29 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="briefdlgId" widgetVar="addbsvdtls" position="top"
 		dynamic="true" resizable="false" style="width:692px;height:335px;"
-		modal="true" styleClass="pop_up_top"
-		header="#{lbl['lbl.sc.bsv.details']}">
+		modal="true" styleClass="pop_up_top qtBriefDetails"
+		header="#{lbl['lbl.sc.add']} #{lbl[!empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing and qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvType eq 'B' ? 'lbl.sc.briefing.dtls' : 'lbl.sc.site.visit.dtls']}">
 		<c:if
 			test="#{!empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing}">
-			<p:panel id="bsvdetailsdlg" toggleable="true"
-				styleClass="qtBriefDetails">
+			<p:panel id="bsvdetailsdlg" toggleable="true">
 				<p:messages id="briefmessages" showDetail="true" autoUpdate="true"
 					closable="true" showSummary="false" />
 				<table style="width: 100%" border="0">
 					<tr>
 						<td valign="top"><p:outputLabel
-								value="#{lbl['lbl.sc.qt.brief.desc']}" /> <p:outputLabel value="*"
+								value="#{lbl['lbl.sc.description']}" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
 						<td colspan="4">
 							<table>
 								<tr>
 									<td><p:inputText id="briefdesc"
 											required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-											label="#{lbl['lbl.sc.qt.brief.desc']}"
+											label="#{lbl['lbl.sc.description']}"
 											value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}"
 											style="margin-top:5px;" size="95" maxlength="500" /></td>
 									<td><p:message id="briefdescMsg" for="briefdesc"
@@ -35,12 +35,12 @@
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.qt.brief.date.andtime']}" /> <p:outputLabel
+						<td><p:outputLabel value="#{lbl['lbl.sc.date.time']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:calendar id="briefdate"
 								mindate="#{qTBriefingSiteVisitBackingBean.managedBean.today}"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-								label="#{lbl['lbl.sc.qt.brief.date.andtime']}"
+								label="#{lbl['lbl.sc.date.time']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
 								showOn="button" readonlyInput="true" /> <p:message
@@ -125,12 +125,12 @@
 						<td><p:inputText
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address3}"
 								size="30" maxlength="255" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sc.qt.city.ortown']}" /> <p:outputLabel
+						<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu styleClass="briefdistrictCity"
 								style="width: 218px;margin-bottom: 5px;" id="briefcity"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-								label="#{lbl['lbl.sc.qt.city.ortown']}"
+								label="#{lbl['lbl.sc.town']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmCity.cityId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="city"
@@ -143,11 +143,11 @@
 						<td><p:inputText
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address4}"
 								size="30" maxlength="255" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sc.qt.postcode']}" /> <p:outputLabel
+						<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="briefpost"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-								label="#{lbl['lbl.sc.qt.postcode']}"
+								label="#{lbl['lbl.sc.post.code']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.postcode}"
 								size="38" >
 								<p:ajax event="blur" partialSubmit="true" process="@this"
@@ -166,9 +166,12 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.max.attendance']}" /></td>
-						<td colspan="3"><p:inputText
+						<td colspan="3">
+							<p:inputText
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.maxNoOfAttendance}"
-								size="30" maxlength="2" /></td>
+								size="30" maxlength="2" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.qt.max.attendance.tooltip']}" />
+						</td>
 					</tr>
 				</table>
 				<div class="ppRightBtn">

@@ -8,7 +8,7 @@
 	<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true" styleClass="briefingList">
 		<table style="width: 100%" border="0">
 			<tr>
-				<td style="width: 150px;"><p:outputLabel
+				<td style="width: 150px;white-space:nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.briefing.sameas.sv']}" /></td>
 				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}">
@@ -200,7 +200,7 @@
 					<tr>
 						<td style="width: 140px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
-						<td style="width: 130px;"><p:selectOneRadio
+						<td style="width: 130px;white-space:nowrap;"><p:selectOneRadio
 								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 								value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
 								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
@@ -216,7 +216,9 @@
 										readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" />
 								</ui:fragment>
 							</h:panelGroup></td>
-						<td />
+						<td>
+							<ac:iconTooltip value="#{lbl['lbl.sc.qt.attendance.tooltip']}" />
+						</td>
 					</tr>
 				</table>
 			</p:panel>
