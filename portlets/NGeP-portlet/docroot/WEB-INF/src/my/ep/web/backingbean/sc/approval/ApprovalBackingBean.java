@@ -1053,8 +1053,8 @@ public class ApprovalBackingBean extends
 						isRevise = true;
 						break;
 					}
-				} else if (ParameterConst.APPROVAL_REQUEST_OPEN_FOR_BUMIPUTRA_ALL
-						.equalsIgnoreCase(approvalType)) {
+				} else if (ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI.equals(approvalType) ||
+						ParameterConst.APPROVAL_REQUEST_BUMI_TO_OPEN.equals(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
