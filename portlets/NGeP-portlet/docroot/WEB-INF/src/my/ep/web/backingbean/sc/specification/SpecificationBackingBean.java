@@ -9535,6 +9535,16 @@ public class SpecificationBackingBean extends
 		}
 		return this.getManagedBean().getScoreTypeList();
 	}
+	
+	/**
+	 * Populate values for Clone Template radio button(s)
+	 * 
+	 * @return an array of recommend type(s)
+	 */
+	public SelectItem[] getCloneTemplateRadioBtn() {
+		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.TEMPLATE_CLONE);
+		return items;
+	}	
 
 	/**
 	 * Check list file upload.Event handle to upload technical and financial
