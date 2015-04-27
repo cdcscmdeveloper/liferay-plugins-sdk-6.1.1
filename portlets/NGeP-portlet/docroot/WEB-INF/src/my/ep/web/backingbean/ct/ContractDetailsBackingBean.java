@@ -2622,7 +2622,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    			break;
 	    		}
 	    	}
-			if (ceilingAmt >  latestContractAmount) {
+			if (ceilingAmt > latestContractAmount) {
 				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
 				CommonUtils commonUtils = new CommonUtils();
 				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
