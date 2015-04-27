@@ -23,6 +23,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -70,6 +71,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -91,6 +93,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
@@ -537,9 +540,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			flush();
 			//getManagedBean().getContractVer().getCtTermination().setRemedyStartDate(null);
 		    String parameterCode = retrieveParameterById(new Long(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()));
-			if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
+			if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
 				  getManagedBean().setRemedy(true);
-			} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
+			} else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
 				  getManagedBean().setTermination(true);
 				  if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null 
 							|| getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length() == 0) {
@@ -549,7 +552,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					  				getManagedBean().getContractVer().getCtAgencies().get(0).getOrgProfile().getOrgName());
 					  	}
 					}
-			} else if (parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+			} else if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_MUTUAL_TERMINATE)) {
 				  getManagedBean().setMutualTermination(true);
 			}
 						
@@ -566,7 +569,54 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 getManagedBean().setRemedy(false);
 		 getManagedBean().setMutualTermination(false);
 		 setViewNoticeFlag(false);
-	 }	 
+	 }
+	 
+	 /**
+	  * The method used for generating a list of available ministry
+	  * for searching agency as selection.
+	  * 
+	  * @return the selection list of ministry
+	  */
+	 public SelectItem[] getDecisionTypeDropdown() {
+			boolean remedy = false;
+			SelectItem[] items = null;
+		ISearchBean<PmParameterDesc> searchBean = null;
+		try {
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);			
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			
+			reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+			ContractResDTO resDTO = contractSO.retrieveTerminationHistoryList(reqDTO);
+			
+			for (CtTermination ctTermination : resDTO.getTerminationHistoryList()) {
+				if (ctTermination.getDecisionType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
+					remedy = true;
+					break;
+				}
+			}			
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
+			items = (remedy) ? new SelectItem[parameterDescs.size() + 1] : new SelectItem[parameterDescs.size()];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		    int i = 1;
+		    for (PmParameterDesc parameterDesc : parameterDescs) {
+		    	if (!remedy && parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(
+		    			ParameterConst.TERMINATE_DECISION_TERMINATE)) {
+		    		continue;
+		    	}
+		    	items[i++] = new SelectItem(
+		    			parameterDesc.getPmParameter().getParameterId(), 
+		    			parameterDesc.getCodeName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
 	
 	 /**
 	 * @return the viewNoticeFlag
