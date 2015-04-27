@@ -198,7 +198,7 @@
 				<tr>
 					<td style="width:17%"><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu label="#{lbl['lbl.pm.bn.level']}"
+					<td><p:selectOneMenu 
 							style="width: 43%;margin-bottom: 5px;" disabled="true"
 							value="#{categoryBackingBean.managedBean.catLevel}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
@@ -231,8 +231,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.category']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 
-					<td><p:selectOneMenu style="width: 46%;margin-bottom: 5px;"
-							label="#{lbl['lbl.pm.special.category']}"
+					<td><p:selectOneMenu style="width: 46%;margin-bottom: 5px;"							
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
@@ -244,7 +243,7 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{categoryBackingBean.updateSpecialCategory}"
 								update="@form" />
-						</p:selectOneMenu> <p:selectOneMenu label="#{lbl['lbl.pm.special.category']}"
+						</p:selectOneMenu> <p:selectOneMenu 
 							style="width: 46%;margin-bottom: 5px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
@@ -274,8 +273,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 
-					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
-							label="#{lbl['lbl.pm.bumi.percentage']}"
+					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"							
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}">
 							<f:selectItem itemLabel="0%" itemValue="0" />
 							<f:selectItem itemLabel="51%" itemValue="51" />
@@ -292,7 +290,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu label="#{lbl['lbl.pm.supplier.type']}"
+					<td><p:selectOneMenu 
 							style="width: 43%;margin-bottom: 5px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}">
@@ -301,7 +299,7 @@
 								value="#{categoryBackingBean.managedBean.supplierType}"
 								var="supplierType" itemLabel="#{supplierType.codeName}"
 								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu> <p:selectOneMenu label="#{lbl['lbl.pm.supplier.type']}"
+						</p:selectOneMenu> <p:selectOneMenu 
 							style="width: 43%;margin-bottom: 5px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
