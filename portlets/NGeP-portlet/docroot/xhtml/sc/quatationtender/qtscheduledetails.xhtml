@@ -262,7 +262,7 @@
 							disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address4}"
 							size="30" maxlength="255" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sc.qt.city.ortown']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
@@ -270,7 +270,7 @@
 								<td><p:selectOneMenu styleClass="sampledistrictCity"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										style="width: 218px;margin-bottom: 5px;" id="samplecity1"
-										required="true" label="#{lbl['lbl.sc.qt.city.ortown']}"
+										required="true" label="#{lbl['lbl.sc.town']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="" />
@@ -287,14 +287,14 @@
 				<tr>
 					<td />
 					<td />
-					<td><p:outputLabel value="#{lbl['lbl.sc.qt.postcode']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
 								<td><p:inputText id="samplepost1" required="true"
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-										label="#{lbl['lbl.sc.qt.postcode']}"
+										label="#{lbl['lbl.sc.post.code']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"
 										size="30" maxlength="10" /></td>
 								<td><p:message id="samplepostpost1Msg" for="samplepost1"
@@ -333,7 +333,7 @@
 					style="width: 120px;" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.mail']}">
+			<p:column headerText="#{lbl['lbl.sc.email']}">
 				<h:inputText value="#{contactpersondetails.email}" />
 			</p:column>
 		</p:dataTable>
@@ -361,7 +361,7 @@
 
 			<ac:paginator for="doaaid" />
 
-			<p:column headerText="Name">
+			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<p:selectOneMenu value="#{deskofficeradmin.user.userId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
