@@ -4295,6 +4295,7 @@ public class SmApplicationBackingBean extends
 	 * @param smPersonnel
 	 */
 	private void setPersonnelSoftcertFlagOnSelectEpRole(SmPersonnel smPersonnel) {
+		SmPersonnel prevPersonnel = getPrevApprovedPersonnel(smPersonnel);
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			if (smPersonnel.getPersonnelId() == null) {
@@ -4303,7 +4304,10 @@ public class SmApplicationBackingBean extends
 					smPersonnel.setContractSignerFlg(0);
 				} else {
 					smPersonnel
-							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+							.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
+									: smPersonnel.getSoftcertFlg());
+					smPersonnel.setContractSignerFlg(prevPersonnel == null ? 0
+							: smPersonnel.getContractSignerFlg());
 				}
 			} else {
 				if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -4312,25 +4316,12 @@ public class SmApplicationBackingBean extends
 						smPersonnel.setSoftcertFlg(0);
 						smPersonnel.setContractSignerFlg(0);
 					} else {
-						if (smPersonnel.getPmUser() != null) {
-							SmSoftcertRequest softcertReq = SmApplicationUtil
-									.getPersonnelSoftcertRequest(
-											getManagedBean().getSmSupplier()
-													.getSupplierId(),
-											smPersonnel.getPmUser().getUserId());
-							if (softcertReq != null) {
-								smPersonnel
-										.setSoftcertFlg(softcertReq
-												.getPmDigiCert() != null ? SupplierManagementConst.SOFT_CERT_ISSUED
-												: SupplierManagementConst.SOFT_CERT_PROCESSING);
-							} else {
-								smPersonnel
-										.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-							}
-						} else {
-							smPersonnel
-									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-						}
+						smPersonnel
+								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
+										: smPersonnel.getSoftcertFlg());
+						smPersonnel
+								.setContractSignerFlg(prevPersonnel == null ? 0
+										: smPersonnel.getContractSignerFlg());
 					}
 				} else {
 					if (smPersonnel.getEpRole()
@@ -4339,12 +4330,17 @@ public class SmApplicationBackingBean extends
 						smPersonnel.setContractSignerFlg(0);
 					} else {
 						smPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
+										: smPersonnel.getSoftcertFlg());
+						smPersonnel
+								.setContractSignerFlg(prevPersonnel == null ? 0
+										: smPersonnel.getContractSignerFlg());
 					}
 				}
 			}
 		} else {
 			smPersonnel.setSoftcertFlg(0);
+			smPersonnel.setContractSignerFlg(0);
 		}
 	}
 
@@ -9250,5 +9246,28 @@ public class SmApplicationBackingBean extends
 				+ "?applicationNo="
 				+ applNo
 				+ "&applicationType=" + applType + "&currentTab=" + currTab);
+	}
+
+	/**
+	 * Get previous approved personnel
+	 * 
+	 * @param currPersonnel
+	 * @return SmPersonnel
+	 */
+	private SmPersonnel getPrevApprovedPersonnel(SmPersonnel currPersonnel) {
+		SmPersonnel retVal = null;
+		if (currPersonnel != null
+				&& StringUtils.isNotBlank(currPersonnel.getIdentificationNo())
+				&& getManagedBean().getPrevApprovedPersonnels() != null
+				&& !getManagedBean().getPrevApprovedPersonnels().isEmpty()) {
+			for (SmPersonnel prevPersonnel : getManagedBean()
+					.getPrevApprovedPersonnels()) {
+				if (prevPersonnel.getIdentificationNo().equals(
+						currPersonnel.getIdentificationNo())) {
+					retVal = prevPersonnel;
+				}
+			}
+		}
+		return retVal;
 	}
 }
