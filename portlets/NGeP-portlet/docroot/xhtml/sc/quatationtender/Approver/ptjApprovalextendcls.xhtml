@@ -16,10 +16,10 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.from']}">
+			<p:column headerText="#{lbl['lbl.sc.from.value']}">
 				<h:outputText value="#{requestdetails.originalValue}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.to']}">
+			<p:column headerText="#{lbl['lbl.sc.to.value']}">
 				<h:panelGroup
 					rendered="#{requestdetails.changedValue eq 'B' or requestdetails.changedValue eq 'A'}">
 					<h:outputText
