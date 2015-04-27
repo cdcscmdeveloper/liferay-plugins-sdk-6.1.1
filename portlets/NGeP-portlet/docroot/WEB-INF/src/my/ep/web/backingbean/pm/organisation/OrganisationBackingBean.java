@@ -113,13 +113,15 @@ public class OrganisationBackingBean extends
 	public static final int PROFILE_DETAIL = 0;
 	public static final int GOV_SELLER = 1;
 	public static final int RESPONSIBLE_PROFILE = 2;
+	
 	// Navigation Details
-	public static final String NAV_TO_SEARCH = "organisationMain";
+	public static final String NAV_TO_SEARCH = "organisationMain.xhtml?faces-redirect=true";
 	public static final String NAV_TO_MAINTAIN = "maintainOrganisation";
 
 	// Org Category values
 	public static final int FEDERAL_GOVT = 0;
 	public static final int OTHERS = 1;
+	
 
 	/**
 	 * The constructor used for save user logging.
@@ -516,7 +518,9 @@ public class OrganisationBackingBean extends
 						.getOrgProfile().getPmAddressTypes()) {
 
 					if (pmAddressType.getAddressType().equalsIgnoreCase(
-							AddressType.DELIVERY_ADDRESS.value())) {
+							AddressType.DELIVERY_ADDRESS.value()) && 
+							(DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg() ||
+								DbValueConst.RECORD_STATUS_SUSPENDED == pmAddressType.getRecordStatusFlg())) {
 
 						this.getManagedBean().getAddressTypesList()
 								.add(pmAddressType);
@@ -1518,87 +1522,100 @@ public class OrganisationBackingBean extends
 	 * 
 	 */
 	public SelectItem[] getOrgTypeDropdownValues() {
-
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(OrganizationType.EP_PROFILE.value());
-	//	recommendList.add(OrganizationType.DEPARTMENT.value());
-		recommendList.add(OrganizationType.FACTORING_COMPANY.value());
-		recommendList.add(OrganizationType.SUPPLIER.value());
-		recommendList.add(OrganizationType.OTHERS.value());
-
-		if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT) {
-			recommendList.add(OrganizationType.JABATAN_AUDIT_NEGARA.value());
-			recommendList.add(OrganizationType.GOVERNMENT_LINK_COMPANIES
-					.value());
-			recommendList.add(OrganizationType.LOCAL_AUTHORITY.value());
-			recommendList.add(OrganizationType.STATUTORY_BODIES.value());
-			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
-			recommendList.add(OrganizationType.SUPPORT.value());
-			
-			// check if user is ministry admin,jabatan admin or ptj admin
-			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {			
-				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
-						.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
-				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
-				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
-				recommendList
-						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
-			}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
-				recommendList.add(OrganizationType.MINISTRY.value());
-				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
-						.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
-				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
-				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
-				recommendList
-						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
-			}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-				recommendList.add(OrganizationType.MINISTRY.value());
-				recommendList.add(OrganizationType.DEPARTMENT.value());
-				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
-						.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
-				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
-				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
-				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
-				recommendList
-						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
-			}
-			
-			// recommendList.add(OrganizationType.OTHERS.value());
-		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
-			recommendList.add(OrganizationType.MINISTRY.value());
-			recommendList.add(OrganizationType.DEPARTMENT.value());
-			recommendList.add(OrganizationType.DIVISION.value());
-			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
-					.value());
-			recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
-			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
-			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
-			recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
-			recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
-			recommendList
-					.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+		ISearchBean<PmParameterDesc> searchBean = null;
+		if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT){
+			searchBean = getOrgTypeSearchBean("orgTypeFederalList");
+		}else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
+			searchBean = getOrgTypeSearchBean("orgTypeOthersList");
 		}
+		
+		//List<String> recommendList = new ArrayList<String>();
+//		recommendList.add(OrganizationType.EP_PROFILE.value());
+//	//	recommendList.add(OrganizationType.DEPARTMENT.value());
+//		recommendList.add(OrganizationType.FACTORING_COMPANY.value());
+//		recommendList.add(OrganizationType.SUPPLIER.value());
+//		recommendList.add(OrganizationType.OTHERS.value());
+//
+//		if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT) {
+//			recommendList.add(OrganizationType.JABATAN_AUDIT_NEGARA.value());
+//			recommendList.add(OrganizationType.GOVERNMENT_LINK_COMPANIES
+//					.value());
+//			recommendList.add(OrganizationType.LOCAL_AUTHORITY.value());
+//			recommendList.add(OrganizationType.STATUTORY_BODIES.value());
+//			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
+//			recommendList.add(OrganizationType.SUPPORT.value());
+//			
+//			// check if user is ministry admin,jabatan admin or ptj admin
+//			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {			
+//				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+//						.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+//				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+//				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+//				recommendList
+//						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+//			}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+//				recommendList.add(OrganizationType.MINISTRY.value());
+//				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+//						.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+//				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+//				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+//				recommendList
+//						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+//			}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+//				recommendList.add(OrganizationType.MINISTRY.value());
+//				recommendList.add(OrganizationType.DEPARTMENT.value());
+//				recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+//						.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+//				recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+//				recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+//				recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+//				recommendList
+//						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+//			}
+//			
+//			// recommendList.add(OrganizationType.OTHERS.value());
+//		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
+//			recommendList.add(OrganizationType.MINISTRY.value());
+//			recommendList.add(OrganizationType.DEPARTMENT.value());
+//			recommendList.add(OrganizationType.DIVISION.value());
+//			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+//					.value());
+//			recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+//			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+//			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+//			recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+//			recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+//			recommendList
+//					.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+//		}
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
-		searchBean.getSortColumns();
-
-		SelectItem[] items = getDropdownValuesBySearchBean(
-				ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+//		searchBean.getDataFilterBeans().add(
+//				new SearchFilterBean("pmParameter.parameterCode",
+//						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		SelectItem[] items = null;
+		if(searchBean != null){
+			searchBean.getSortColumns();
+			items = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		}		
 
 		return items;
 	}
 
+	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {		
+		ISearchBean<PmParameterDesc> orgTypeSearchBean = super.createSearchBean(
+						PmParameterDesc.class, componentId);
+		return orgTypeSearchBean;
+	}
+	
 	/**
 	 * The method used for generating a list of available display type of new
 	 * org type as selection.
@@ -1607,43 +1624,53 @@ public class OrganisationBackingBean extends
 	 */
 	public SelectItem[] getNewOrgTypeDropdownValues() {
 
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(OrganizationType.EP_PROFILE.value());
-		recommendList.add(OrganizationType.DEPARTMENT.value());
-		recommendList.add(OrganizationType.FACTORING_COMPANY.value());
-		recommendList.add(OrganizationType.SUPPLIER.value());
-		recommendList.add(OrganizationType.OTHERS.value());
-		recommendList.add(OrganizationType.DIVISION.value());
-		//recommendList.add(OrganizationType.SUPPORT.value());
-
-		if (getManagedBean().getOrgCategory() == FEDERAL_GOVT) {
-			recommendList.add(OrganizationType.JABATAN_AUDIT_NEGARA.value());
-			recommendList.add(OrganizationType.GOVERNMENT_LINK_COMPANIES
-					.value());
-			recommendList.add(OrganizationType.LOCAL_AUTHORITY.value());
-			recommendList.add(OrganizationType.STATUTORY_BODIES.value());
-			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
-		} else if (getManagedBean().getOrgCategory() == OTHERS) {
-			recommendList.add(OrganizationType.MINISTRY.value());
-			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
-					.value());
-			recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
-			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
-			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
-			recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
-			recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
-			recommendList
-					.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+		ISearchBean<PmParameterDesc> searchBean = null;
+		if (getManagedBean().getOrgCategory() == FEDERAL_GOVT){
+			searchBean = getOrgTypeSearchBean("newOrgTypeFederalList");
+		}else if (getManagedBean().getOrgCategory() == OTHERS) {
+			searchBean = getOrgTypeSearchBean("newOrgTypeOtherList");
 		}
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
-		searchBean.getSortColumns();
-
-		SelectItem[] items = getDropdownValuesBySearchBean(
-				ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		
+		
+//		List<String> recommendList = new ArrayList<String>();
+//		recommendList.add(OrganizationType.EP_PROFILE.value());
+//		recommendList.add(OrganizationType.DEPARTMENT.value());
+//		recommendList.add(OrganizationType.FACTORING_COMPANY.value());
+//		recommendList.add(OrganizationType.SUPPLIER.value());
+//		recommendList.add(OrganizationType.OTHERS.value());
+//		recommendList.add(OrganizationType.DIVISION.value());
+//		//recommendList.add(OrganizationType.SUPPORT.value());
+//
+//		if (getManagedBean().getOrgCategory() == FEDERAL_GOVT) {
+//			recommendList.add(OrganizationType.JABATAN_AUDIT_NEGARA.value());
+//			recommendList.add(OrganizationType.GOVERNMENT_LINK_COMPANIES
+//					.value());
+//			recommendList.add(OrganizationType.LOCAL_AUTHORITY.value());
+//			recommendList.add(OrganizationType.STATUTORY_BODIES.value());
+//			recommendList.add(OrganizationType.STATE_GOVERNMENT.value());
+//		} else if (getManagedBean().getOrgCategory() == OTHERS) {
+//			recommendList.add(OrganizationType.MINISTRY.value());
+//			recommendList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+//					.value());
+//			recommendList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+//			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+//			recommendList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+//			recommendList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+//			recommendList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+//			recommendList
+//					.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+//		}
+//
+//		searchBean.getDataFilterBeans().add(
+//				new SearchFilterBean("pmParameter.parameterCode",
+//						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		SelectItem[] items = null;
+		if(searchBean != null){
+			searchBean.getSortColumns();
+			items = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		}		
+		
 		return items;
 	}
 
@@ -2144,14 +2171,6 @@ public class OrganisationBackingBean extends
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
-	}
-	
-	public boolean isEPAdmin(){
-		if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
-			return true;
-		}else {
-			return false;
-		}
 	}
 	
 	public PmOrgProfile retrieveMinistry(){

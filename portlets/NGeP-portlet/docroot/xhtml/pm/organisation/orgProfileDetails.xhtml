@@ -32,15 +32,29 @@
 							</p:selectOneMenu>
 						</c:when>
 						<c:otherwise>
-							<p:selectOneMenu id="orgtypeId" styleClass="ppDropDownWidthM"
-								label="#{lbl['lbl.pm.organisation.orgType']}"
-								value="#{organisationBackingBean.managedBean.orgTypeId}"
-								style="width: 275px;margin-bottom: 5px;" required="true">
-								<f:selectItems
-									value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
-								<p:ajax event="change" update="@form"
-									listener="#{organisationBackingBean.resetOrgProfile}" />
-							</p:selectOneMenu>
+							<p:outputPanel id="orgtypeId">
+								<p:selectOneMenu id="newOrgTypeFederalList"
+									rendered="#{organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.federalGovt}" 
+									styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+									value="#{organisationBackingBean.managedBean.orgTypeId}">
+									<f:selectItems
+										value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
+									<p:ajax event="change" update="@form"
+										listener="#{organisationBackingBean.resetOrgProfile}" />
+								</p:selectOneMenu>
+							
+								<p:selectOneMenu id="newOrgTypeOtherList" 
+									rendered="#{organisationBackingBean.managedBean.orgCategory eq organisationBackingBean.others}" 
+									styleClass="ppDropDownWidthL"
+									label="#{lbl['lbl.pm.organisation.orgType']}"
+									value="#{organisationBackingBean.managedBean.orgTypeId}"
+									style="width: 275px;margin-bottom: 5px;" required="true">
+									<f:selectItems
+										value="#{organisationBackingBean.getNewOrgTypeDropdownValues()}" />
+									<p:ajax event="change" update="@form"
+										listener="#{organisationBackingBean.resetOrgProfile}" />
+								</p:selectOneMenu>
+							</p:outputPanel>
 						</c:otherwise>
 					</c:choose></td>
 				<td><p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
