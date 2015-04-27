@@ -15,10 +15,10 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.from']}">
+			<p:column headerText="#{lbl['lbl.sc.from.value']}">
 				<h:outputText value="#{requestdetails.originalValue}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.to']}">
+			<p:column headerText="#{lbl['lbl.sc.to.value']}">
 				<h:panelGroup
 					rendered="#{requestdetails.changedValue eq 'B' or requestdetails.changedValue eq 'A'}">
 					<h:outputText
@@ -39,7 +39,7 @@
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(requestdetails.approverAction)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.date']}">
+			<p:column headerText="#{lbl['lbl.sc.decision.date']}">
 				<h:outputText value="#{requestdetails.approverActionDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
