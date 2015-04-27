@@ -55,34 +55,30 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}" rendered="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
+		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<c:if test="#{isEditableStatus}">
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.approver']}" />
-			</td>
-			<td>
-				<p:selectOneMenu id="approver"
-					value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
-					disabled="#{!lOADetailBackingBean.managedBean.scLoa.approvalReq}"
-					style="width: 280px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-					<f:selectItems
-						value="#{lOADetailBackingBean.managedBean.approverList}"
-						var="pmUser" itemLabel="#{pmUser.userName}"
-						itemValue="#{pmUser.userId}" />
-					<p:ajax event="change"
-						listener="#{lOADetailBackingBean.approverChanged()}"
-						partialSubmit="true" process="@this"
-						update="@this" />
-				</p:selectOneMenu>
-			</td>
-		</tr>
-		</c:if>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.approver']}" />
+				</td>
+				<td><p:selectOneMenu id="approver"
+						value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
+						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						style="width: 280px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{lOADetailBackingBean.managedBean.approverList}"
+							var="pmUser" itemLabel="#{pmUser.userName}"
+							itemValue="#{pmUser.userId}" />
+						<p:ajax event="change"
+							listener="#{lOADetailBackingBean.approverChanged()}"
+							partialSubmit="true" process="@this" update="@this" />
+					</p:selectOneMenu></td>
+			</tr>
 		</table>
 	</p:panel>
-	
+
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
