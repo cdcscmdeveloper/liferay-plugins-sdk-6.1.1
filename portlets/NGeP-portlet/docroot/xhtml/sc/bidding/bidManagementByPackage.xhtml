@@ -84,7 +84,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}">
 				<h:outputText
-					value="#{(item.scBidSupplier.smSupplier.bumi)? 'Yes' : 'No' }" />
+					value="#{(item.scBidSupplier.smSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
 				<h:outputText style="float : right"

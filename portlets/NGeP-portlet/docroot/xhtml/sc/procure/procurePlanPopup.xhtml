@@ -13,7 +13,7 @@
 
 
 		<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
-			<p:outputLabel value="#{lbl['lbl.pp.planed.number']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.pp.planed.number']}" />
 			<p:inputText disabled="true"
 				value="#{procurementPlanBackingBean.managedBean.currentPlan.planNo}" />
 
@@ -23,7 +23,7 @@
 				disabled="true" style="margin-bottom:5px" />
 
 
-			<p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" />
 
 			<p:inputText disabled="true"
 				value="#{procurementPlanBackingBean.getParameterDesc(procurementPlanBackingBean.managedBean.currentPlan.procurementModeParam)}" />
@@ -34,7 +34,7 @@
 			<p:inputText disabled="true"
 				value="#{procurementPlanBackingBean.managedBean.currentPlan.actualAmt}" />
 
-			<p:outputLabel value="#{lbl['lbl.pp.status']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.status']}" />
 			<p:inputText disabled="true"
 				value="#{procurementPlanBackingBean.managedBean.currentPlan.pmStatus.pmStatusDescs.statusName}" />
 
@@ -44,7 +44,7 @@
 				value="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 			</p:inputText>
-			<p:outputLabel value="Notification Date" />
+			<p:outputLabel value="#{lbl['lbl.sc.pp.notification.date']}" />
 			<p:calendar id="notificationDaysSelection" showOn="button"
 				maxdate="#{procurementPlanBackingBean.managedBean.currentPlan.ppPlanActivities[0].planStartDate}"
 				value="#{procurementPlanBackingBean.managedBean.notificationDate}"
@@ -67,11 +67,11 @@
 			width="100%">
 			<p:column>
 				<div style="float: right;">
-					<p:commandButton process="@this" value="Ok"
+					<p:commandButton process="@this" value="#{lbl['lbl.btn.ok']}"
 						action="#{procurementPlanBackingBean.updatePlannedInfo}"
 						oncomplete="procurePlanPopup.hide();" partialSubmit="true"
 						update="dtPlanResult" />
-					<p:commandButton value="Cancel" onclick="procurePlanPopup.hide()"/>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="procurePlanPopup.hide()"/>
 				</div>
 			</p:column>
 		</h:panelGrid>

@@ -496,19 +496,19 @@ public class LOADetailBackingBean extends
 		Calendar EndDate = null;
 		
 		if(scQtSchedule.getStartYear() == null || scQtSchedule.getStartYear().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.freq.schedule.start.year",
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.year",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
 		}
 		if(scQtSchedule.getStartMonth() == null || scQtSchedule.getStartMonth().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.start.month",
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.month",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
 		}
 		if(scQtSchedule.getEndYear() == null || scQtSchedule.getEndYear().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.freq.schedule.end.year",
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.year",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
 		}
 		if(scQtSchedule.getEndMonth() == null || scQtSchedule.getEndMonth().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.spec.end.month",
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.month",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
 		}
 		
