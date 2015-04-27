@@ -5,12 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Remarks" style="width: 100%" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" style="width: 100%" toggleable="true">
 
 		<table style="width: 50%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" width="24%"><h:outputLabel
-						value="Remark" /></td>
+						value="#{lbl['lbl.sc.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid id="remarklist"
 						value="#{qTDetailBB.managedBean.scQtRemarks}" var="remarkVar"
 						rowIndexVar="remarkIndex" columns="1">
