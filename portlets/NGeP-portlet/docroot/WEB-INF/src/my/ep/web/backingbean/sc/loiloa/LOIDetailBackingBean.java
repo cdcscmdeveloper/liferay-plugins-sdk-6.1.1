@@ -1347,15 +1347,22 @@ public class LOIDetailBackingBean extends
 	private void populateLOIDetails(AwardSupplierResDTO resDTO) {
 		ScLoi scLoi = resDTO.getScLoi();
 		getManagedBean().setScLoi(scLoi);
-		boolean termPriceFound = false;
-		
+		boolean isTermPriceFound = Boolean.FALSE;
+		boolean isBiddingAward = Boolean.FALSE;
 		
 		// check nego term price
-		termPriceFound = checkNegoTermPrice(scLoi);
+		isTermPriceFound = checkNegoTermPrice(scLoi);
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
-		//
+
+		if(scLoi.getScLoiLoa().getRecommendBy() != null){
+			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
+			if(recommendedBy.getParameterCode().equals(ParameterConst.REC_TYPE_ONLINE_BIDDING)){
+               isBiddingAward = Boolean.TRUE;
+			}
+		}
+		
 		// calc total items in award details
-		if(termPriceFound){
+		if(isTermPriceFound || isBiddingAward){
 			if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
 				BigDecimal subTotal = null;
 				BigDecimal  totalAmount = BigDecimal.valueOf(0d);
