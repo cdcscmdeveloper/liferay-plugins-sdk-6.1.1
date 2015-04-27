@@ -14,9 +14,14 @@
 				<td><p:inputText
 						value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scEvaluationType, qTDetailBB.managedBean.qt.evaluationType)}"
 						style="margin-right:5px;" disabled="true" size="30"
-						readonly="true" /></td>
+						readonly="true" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.evaluation.type.tooltip']}" />
+				</td>
 			</tr>
 		</table>
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}"/>
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.clone']}" disabled="#{qTCommitteBackingBean.isEnableCloneButton()}"
 				action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
