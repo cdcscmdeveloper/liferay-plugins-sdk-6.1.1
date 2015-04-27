@@ -4318,9 +4318,15 @@ public class SmApplicationBackingBean extends
 											getManagedBean().getSmSupplier()
 													.getSupplierId(),
 											smPersonnel.getPmUser().getUserId());
-							smPersonnel
-									.setSoftcertFlg(softcertReq.getPmDigiCert() != null ? SupplierManagementConst.SOFT_CERT_ISSUED
-											: SupplierManagementConst.SOFT_CERT_PROCESSING);
+							if (softcertReq != null) {
+								smPersonnel
+										.setSoftcertFlg(softcertReq
+												.getPmDigiCert() != null ? SupplierManagementConst.SOFT_CERT_ISSUED
+												: SupplierManagementConst.SOFT_CERT_PROCESSING);
+							} else {
+								smPersonnel
+										.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+							}
 						} else {
 							smPersonnel
 									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
