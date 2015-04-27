@@ -10,7 +10,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="18%">
-				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.acc.no']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.account.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
 			</td>
 			<td width="82%">
@@ -19,7 +19,7 @@
 						value="#{lOADetailBackingBean.managedBean.selectedBankId}"
 						style="width: 280px;margin-bottom: 5px;"
 						required="true"
-						label="#{lbl['lbl.sc.loiloa.loa.acc.no']}">
+						label="#{lbl['lbl.sc.account.no']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.bankList}"
@@ -37,7 +37,7 @@
 		</tr>
 		<tr>
 			<td>
-				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bank.name']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.bank.name']}" />
 			</td>
 			<td>
 				<p:inputText id="bankName" value="#{lOADetailBackingBean.managedBean.scLoa.bankName}" disabled="true" size="50" />
@@ -45,7 +45,7 @@
 		</tr>
 		<tr>
 			<td>
-				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bank.branch']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.bank.branch']}" />
 			</td>
 			<td>
 				<p:inputText id="bankBranch" value="#{lOADetailBackingBean.managedBean.scLoa.bankBranch}" disabled="true" size="50" />
@@ -53,7 +53,7 @@
 		</tr>
 		<tr>
 			<td valign="top">
-				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bank.addr']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.bank.address']}" />
 			</td>
 			<td>
 				<p:inputTextarea id="bankAddress" cols="50" rows="5" 
