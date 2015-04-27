@@ -12,20 +12,7 @@
 		<p:panel toggleable="true" styleClass="qtAddMember" id="bopanel">
 			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
-			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel value="#{lbl['lbl.sc.selection']}" />
-				<p:selectOneRadio id="selection"
-					value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection}">
-					<f:selectItems
-						value="#{qTBusinessOwnerBackingBean.managedBean.selections}" />
-					<p:ajax event="click"
-						listener="#{qTBusinessOwnerBackingBean.userSelcetionAction}"
-						update="newProfile"></p:ajax>
-				</p:selectOneRadio>
-				<p:message id="selectionMsg" for="selection" display="icon" />
-			</h:panelGrid>
-
+			
 			<p:panel id="newProfile">
 				<c:if
 					test="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection eq 'E' }">
