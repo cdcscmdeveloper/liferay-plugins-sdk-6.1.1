@@ -50,17 +50,14 @@
 		</table>
 	</p:panel>
 
-
-	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}"
+	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}" rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 		id="approvalId" toggleable="true">
 		<table style="width: 100%">
-			<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.approver']}" /></td>
-				<td><p:selectOneMenu id="approversId" 
+				<td><p:outputLabel value="#{lbl['lbl.sc.approver']}" /></td>
+				<td><p:selectOneMenu id="approversId"
 						value="#{lOIDetailBackingBean.managedBean.approverUser.userId}"
-						disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -70,7 +67,6 @@
 							itemValue="#{appName.userId}" />
 					</p:selectOneMenu></td>
 			</tr>
-			</c:if>
 		</table>
 	</p:panel>
 
