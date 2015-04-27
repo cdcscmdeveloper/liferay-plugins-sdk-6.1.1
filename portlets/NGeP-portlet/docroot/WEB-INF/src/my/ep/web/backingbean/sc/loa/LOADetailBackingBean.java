@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -19,6 +17,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -85,6 +84,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
@@ -1252,6 +1252,13 @@ public class LOADetailBackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateBondLetterFromVelocityToPdf((ScAttachment) scLoaReportAttachment,scLoa);
+					}else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						if(getManagedBean().getSuppLoiLoaMap() != null && getManagedBean().getSuppLoiLoaMap().size()>0){
+							generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment, getManagedBean().getSuppLoiLoaMap());
+						}
 					}
 					
 				}else if(scLoaReportAttachment != null && 
@@ -1299,6 +1306,7 @@ public class LOADetailBackingBean extends
 
 		return scLoaReportAttachment;
 	}
+
 
 	/**
 	 * Download all reports as  pdf or xlsx files in Letter of Acceptance.
@@ -1782,6 +1790,38 @@ public class LOADetailBackingBean extends
 		}
 
 		return loaStreamContent;
+	}
+
+	/**
+	 * Generate negotiation result pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
+
+	private void generateNegotiationResultPdf(ScAttachment attachment, Map<Long, List<ScLoiLoa>> suppLoiLoaMap) throws Exception {
+		attachment.setFileName("Negotiation_Result.pdf");
+		populateAttachmentDetails(attachment);
+		List<ScLoi> lois = new ArrayList<ScLoi>();
+
+		for (Long key : suppLoiLoaMap.keySet()) {
+			List<ScLoiLoa> loiloas = suppLoiLoaMap.get(key);
+			if(loiloas != null && loiloas.size()>0){
+
+				for (ScLoiLoa scLoiLoa : loiloas) {
+					if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
+						lois.addAll(scLoiLoa.getScLois()) ;
+					}
+				}
+			}
+			VelocityContext context = new VelocityContext();
+			context.put("scLois", lois);
+			context.put("bean", this);
+
+			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT , 
+					context, new FileOutputStream(getActualFilePath(attachment)));
+		}
 	}
 
 	/**
@@ -3939,7 +3979,7 @@ public class LOADetailBackingBean extends
 		log.info("backToPrevious");
 		retrieveLOILOAList(getManagedBean().getSourceId());
 		getManagedBean().setEditFlag(false);
-		getManagedBean().setSelectedTabIndex(1);
+		getManagedBean().setSelectedTabIndex(0);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
 	}
