@@ -21,7 +21,7 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loi.rec.by']}" /></td>
+						value="#{lbl['lbl.sc.loiloa.recommended.by']}" /></td>
 				<td><p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType ne ParameterConst.directAward}"
 						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy)}"
 						size="30" />
@@ -34,7 +34,7 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.item.list']}" toggleable="false">
+	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="false">
 		<p:dataTable id="afterNegoItemList" var="loiloaItem"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
@@ -46,7 +46,7 @@
 						headerText="#{lbl['lbl.sc.zone']}" />
 				
 					<p:column style="width:15%;white-space:normal;"
-						headerText="#{lbl['lbl.sc.loiloa.loi.item']}" />
+						headerText="#{lbl['lbl.sc.item']}" />
 
 					<p:column style="white-space:normal;text-align:right;"
 						headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" />
@@ -61,8 +61,8 @@
 					<p:column style="white-space:normal;text-align:right;"
 						headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
 
-					<p:column headerText="#{lbl['lbl.sc.loiloa.loi.qty']}" />
-					<p:column headerText="#{lbl['lbl.sc.loiloa.loi.uom']}" />
+					<p:column headerText="#{lbl['lbl.sc.loiloa.qty']}" />
+					<p:column headerText="#{lbl['lbl.sc.uom']}" />
 				</p:row>
 			
 			</p:columnGroup>
