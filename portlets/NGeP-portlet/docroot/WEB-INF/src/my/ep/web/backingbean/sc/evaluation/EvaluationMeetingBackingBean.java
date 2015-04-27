@@ -344,7 +344,8 @@ public class EvaluationMeetingBackingBean extends
 	public void addCommitteeDetails() {
 		this.getManagedBean().setCommitteeTypeDesc(
 				ParameterHelper.getInstance().getParameterDesc(
-						ParameterTypeConst.SC_COMMITTEE_TYPE, this.getManagedBean().getCommitteeType()));
+						ParameterTypeConst.SC_COMMITTEE_TYPE,
+						this.getManagedBean().getCommitteeType()));
 
 		getManagedBean().setName(null);
 		getManagedBean().setIdentificationType(null);
@@ -357,6 +358,7 @@ public class EvaluationMeetingBackingBean extends
 		committeeMember.setUserSelection("E");
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
+		searchExistingUser.reloadData();
 
 	}
 
@@ -800,6 +802,7 @@ public class EvaluationMeetingBackingBean extends
 				new QtnTenderSearchBean());
 		this.getManagedBean().setCloneCommitteMemebers(
 				new ArrayList<ScCommitteeMember>());
+		searchQuotatioTender.reloadData();
 	}
 
 	/**
