@@ -1517,6 +1517,7 @@ public class QTDetailBackingBean extends
 				committeItem.setUpdate("@this");
 				committeItem.setPartialSubmit(true);
 				committeItem.setProcess("@this");
+				
 				if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION
 						.equals(tabBean.getTabType()) && tabBean
 						.getScQtCommittee().getScCommittee()
@@ -1531,6 +1532,16 @@ public class QTDetailBackingBean extends
 								.getFinalizationSecratery().getUserId() != null)) {
 					committeItem.setIcon("ui-icon-endorse");
 				}
+				
+				if (!ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER.equals(tabBean.getTabType()) &&
+						!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType())) {
+					
+					committeItem.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.qt.committee.appointment." + tabBean.getTabType().toLowerCase() +".tooltip", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+				}
+				
 				committeItem
 						.setOncomplete("committeTabChangeAction([ {name : 'selectedCommitteeTabIndex', value : "
 								+ zoneTabIndex + "}]);");
@@ -2084,6 +2095,14 @@ public class QTDetailBackingBean extends
 				approvalItem
 						.setOncomplete("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : "
 								+ approvalTabIndex + "}]);");
+				
+				if (ParameterConst.APPROVAL_CATEGORY_OTHERS.equals(approvalTabBean.getTabType())) {					
+					approvalItem.setTitle(ResourceBundleUtils.getMessage(
+							"lbl.sc.qt.approval." + approvalTabBean.getTabType().toLowerCase() +".tooltip", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+				}
+				
 				menuModel.addMenuItem(approvalItem);
 				approvalTabIndex++;
 			}

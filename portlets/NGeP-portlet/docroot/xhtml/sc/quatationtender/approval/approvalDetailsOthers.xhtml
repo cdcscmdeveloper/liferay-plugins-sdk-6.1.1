@@ -7,6 +7,8 @@
 
 	<p:spacer height="5" />
 	<p:panel>
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.instruction']}"/>
+	
 		<p:dataTable id="otherreqdtlsid"
 			value="#{othersApprovalDtlsList.scQtApprovalDtls}"
 			var="otherrequestdetails" rowIndexVar="index" editable="true"
