@@ -280,9 +280,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		}
 		getManagedBean().setTotalAmountBeforeGst(
 				ttlAmount.setScale(2, BigDecimal.ROUND_UP));
-		BigDecimal gst = getManagedBean().isSoftcertPayment() ? new BigDecimal(
-				6).divide(new BigDecimal(100)).multiply(ttlAmount)
-				: BigDecimal.ZERO;
+		BigDecimal gst = getManagedBean().isSoftcertPayment() ? SmCommonUtil
+				.getGstCurrentRate().divide(new BigDecimal(100))
+				.multiply(ttlAmount) : BigDecimal.ZERO;
 		getManagedBean().setGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
 		this.getManagedBean().setTotalAmount(
 				gst.add(ttlAmount).setScale(2, BigDecimal.ROUND_UP));
