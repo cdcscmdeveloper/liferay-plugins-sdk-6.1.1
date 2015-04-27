@@ -1484,6 +1484,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
     	VelocityContext context = new VelocityContext();
     	
+    	FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		context.put("hostUrl", hostUrl);
+    	
     	IAddressSO addressSO = null;
     	PmAddressType pmAddressType = null;
 		try {
@@ -1572,6 +1576,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
     	VelocityContext context = new VelocityContext();
+    	
+    	FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		context.put("hostUrl", hostUrl);
+		
     	context.put("commonUtils", commonUtils);
     	context.put("ministry", qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
     	context.put("agency", qt.getPmOrgProfile().getOrgName());
