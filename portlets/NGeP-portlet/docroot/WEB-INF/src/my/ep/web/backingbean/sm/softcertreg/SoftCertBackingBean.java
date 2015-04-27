@@ -31,6 +31,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -320,6 +321,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					SmApplicationUtil.getApplicationErrorPage(),
 					MessageConst.ERROR_721037);
 		}
+	}
+	
+	/**
+	 * Call confirmation dialog
+	 */
+	public void showConfirmDialog(){
+		RequestContext.getCurrentInstance().execute(
+				"confirmDialog.show()");
 	}
 
 	/**
