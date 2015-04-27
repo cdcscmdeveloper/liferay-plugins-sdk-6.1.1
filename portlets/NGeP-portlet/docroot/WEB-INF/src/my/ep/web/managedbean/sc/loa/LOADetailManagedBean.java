@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.loa;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -14,6 +15,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -217,6 +219,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The service template spec bean. */
 	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
+	
+	/** The map supp scloiloa list */
+	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;
 	
 	/** The item type id. */
 	private long itemTypeId = 1;// Item type Id
@@ -1286,6 +1291,24 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setItemTypeId(long itemTypeId) {
 		this.itemTypeId = itemTypeId;
+	}
+
+	/**
+	 * Gets the supp loi loa map.
+	 *
+	 * @return the supp loi loa map
+	 */
+	public Map<Long, List<ScLoiLoa>> getSuppLoiLoaMap() {
+		return suppLoiLoaMap;
+	}
+
+	/**
+	 * Sets the supp loi loa map.
+	 *
+	 * @param suppLoiLoaMap the supp loi loa map
+	 */
+	public void setSuppLoiLoaMap(Map<Long, List<ScLoiLoa>> suppLoiLoaMap) {
+		this.suppLoiLoaMap = suppLoiLoaMap;
 	}
 	
 	
