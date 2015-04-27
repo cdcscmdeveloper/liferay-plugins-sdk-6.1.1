@@ -58,7 +58,7 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}">
-				<h:outputText value="#{(price.bumi) ? 'Yes' : 'No'}" />
+				<h:outputText value="#{(price.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.starting.price']}">

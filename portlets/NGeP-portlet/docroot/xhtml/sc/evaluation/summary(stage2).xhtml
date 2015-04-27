@@ -21,7 +21,7 @@
 		<p:commandLink value="#{lbl['lbl.sc.location.list']}"></p:commandLink>
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20" >
 			<h:outputLabel value="#{lbl['lbl.sc.eva.multiple.locality']}"></h:outputLabel>
-			<p:inputText value="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ? 'Yes' : 'No'}" readonly="true" disabled="true"></p:inputText>
+			<p:inputText value="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
 	<ui:fragment rendered="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality eq 'Yes'}">
 		<p:dataTable id="evaluationsummarystage2Location" var="zones" rows="10"

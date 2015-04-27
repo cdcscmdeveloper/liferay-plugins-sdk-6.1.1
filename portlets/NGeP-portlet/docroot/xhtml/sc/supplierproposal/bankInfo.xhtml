@@ -41,7 +41,7 @@
 				<h:outputText value="#{cheque.smPersonnel.identificationNo}" ></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width : 25%;">
-				<h:outputText value="#{(cheque.smPersonnel.bumi) ? 'Yes' : 'No'}" ></h:outputText>
+				<h:outputText value="#{(cheque.smPersonnel.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" ></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.position']}" style="width : 25%;">
 				<h:outputText value="#{cheque.smPersonnel.designation}" ></h:outputText>

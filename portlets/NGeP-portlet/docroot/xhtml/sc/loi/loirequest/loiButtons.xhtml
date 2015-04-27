@@ -17,13 +17,13 @@
 			action="#{lOIDetailBackingBean.previewLetter}"/>
 			
 					
-		<p:commandButton value="#{lbl['lbl.so.save']}"
+		<p:commandButton value="#{lbl['lbl.btn.save']}"
 			action="#{lOIDetailBackingBean.saveAction}" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 			process="@form" update="@form" />
 			
 		<c:choose>
 			<c:when test="#{isPendingSubmissionStatus}">
-				<p:commandButton value="#{lbl['lbl.so.submit']}" 
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" 
 					action="#{lOIDetailBackingBean.submitAction}" 
 					process="@form" update="@form"  />
 			</c:when>
