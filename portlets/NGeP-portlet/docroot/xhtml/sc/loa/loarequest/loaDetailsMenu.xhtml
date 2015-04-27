@@ -230,7 +230,7 @@
 			<td><p:selectOneRadio id="approvalReq"
 						value="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 						required="true" label="#{lbl['lbl.sc.loiloa.loa.appr.req']}"
-						disabled="#{!(isPendingSubmissionStatus || isPendingRevisionStatus)}">
+						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio> <p:message id="approvalReqMsg" for="approvalReq" display="icon" />
@@ -239,7 +239,8 @@
 		</table>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.details']}" toggleable="true" 
+	    id="contractDetailsId">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td>
@@ -258,7 +259,7 @@
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
-							update="contractAgencyPG,contractAdmin" />
+							update="contractDetailsId" />
 					</p:selectOneMenu>
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
@@ -398,24 +399,34 @@
 					disabled="true"	/>
 			</td>
 		</tr>
-		<c:if test="#{isDocTypeQuotation}">
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.agree']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-			</td>
-			<td>
-				<p:selectOneRadio id="agreementReq"
-					value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
-					required="true"
-					label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-					disabled="#{!isEditableStatus}">
-					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-				</p:selectOneRadio>
-				<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
-			</td>
-		</tr>
-		</c:if>
+			<tr>
+				<c:if test="#{isDocTypeQuotation}">
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.loiloa.loa.req.agree']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					</td>
+					<td><p:selectOneRadio id="agreementReq"
+							value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
+							required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+							disabled="#{!isEditableStatus}">
+							<f:selectItems
+								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						</p:selectOneRadio> <p:message id="agreementReqMsg" for="agreementReq" display="icon" />
+					</td>
+				</c:if>
+				<h:panelGroup id="followLoaAmtId"
+					rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+					<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.is.follow.loa.amt']}" /> </td>
+					<td><p:selectOneRadio id="isFollowLOAAmt"
+							value="#{lOADetailBackingBean.managedBean.scLoa.followLoaAmt}"
+							required="true"
+							disabled="#{!isEditableStatus}">
+							<f:selectItems
+								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						</p:selectOneRadio> <p:message id="isFollowLOAAmtMsg" for="isFollowLOAAmt"
+							display="icon" /></td>
+				</h:panelGroup>
+			</tr>
 		</table>
 	</p:panel>
 	
