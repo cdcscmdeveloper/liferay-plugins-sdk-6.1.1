@@ -42,7 +42,6 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -67,8 +66,6 @@ import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
-import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -114,6 +111,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -4314,16 +4312,15 @@ public class SmApplicationBackingBean extends
 						smPersonnel.setSoftcertFlg(0);
 						smPersonnel.setContractSignerFlg(0);
 					} else {
-						if (smPersonnel.getPmUser() != null
-								&& SmApplicationUtil
-										.isPersonnelAlreadyRequestSoftcert(
-												getManagedBean()
-														.getSmSupplier()
-														.getSupplierId(),
-												smPersonnel.getPmUser()
-														.getUserId())) {
+						if (smPersonnel.getPmUser() != null) {
+							SmSoftcertRequest softcertReq = SmApplicationUtil
+									.getPersonnelSoftcertRequest(
+											getManagedBean().getSmSupplier()
+													.getSupplierId(),
+											smPersonnel.getPmUser().getUserId());
 							smPersonnel
-									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_ISSUED);
+									.setSoftcertFlg(softcertReq.getPmDigiCert() != null ? SupplierManagementConst.SOFT_CERT_ISSUED
+											: SupplierManagementConst.SOFT_CERT_PROCESSING);
 						} else {
 							smPersonnel
 									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);

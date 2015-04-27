@@ -5156,7 +5156,7 @@ public class SmApplicationUtil {
 	 * 
 	 * @param Long supplierId
 	 * @param Long userId
-	 * @return
+	 * @return SmSoftcertRequest
 	 */
 	public static SmSoftcertRequest getPersonnelSoftcertRequest(
 			Long supplierId, Long userId) {
