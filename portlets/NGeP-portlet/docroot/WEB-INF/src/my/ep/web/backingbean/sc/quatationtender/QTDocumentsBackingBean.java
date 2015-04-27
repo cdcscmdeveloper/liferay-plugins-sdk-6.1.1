@@ -1680,7 +1680,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
     	
  		context.put("bsvReq", qt.isBsvRequired());
- 		log.info("BSV Required : " + qt.isBsvRequired());
  		boolean isZone = false;
  		List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
  		if (qt.isBsvRequired()) {
