@@ -5143,16 +5143,30 @@ public class SmApplicationUtil {
 	public static boolean isPersonnelAlreadyRequestSoftcert(Long supplierId,
 			Long userId) {
 		boolean retVal = false;
+		SmSoftcertRequest softcertRequest = getPersonnelSoftcertRequest(
+				supplierId, userId);
+		if (softcertRequest != null) {
+			retVal = true;
+		}
+		return retVal;
+	}
+
+	/**
+	 * Get personnel softcert request
+	 * 
+	 * @param Long supplierId
+	 * @param Long userId
+	 * @return
+	 */
+	public static SmSoftcertRequest getPersonnelSoftcertRequest(
+			Long supplierId, Long userId) {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
 		reqDTO.setUserId(userId);
 		SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO()
 				.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO)
 				.getSoftcertRequest();
-		if (softcertRequest != null) {
-			retVal = true;
-		}
-		return retVal;
+		return softcertRequest;
 	}
 
 	/**
