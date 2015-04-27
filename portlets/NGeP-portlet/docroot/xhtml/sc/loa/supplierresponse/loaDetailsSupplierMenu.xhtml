@@ -50,7 +50,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.branch']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.branch']}" />
 			</td>
 			<td>
 				<p:inputText id="branch" size="50"
@@ -109,7 +109,7 @@
 		</tr>
 		<tr>
 			<td rowspan="3" valign="top" width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td rowspan="3" width="32%">
@@ -119,11 +119,11 @@
 					style=" margin-bottom:5px;"
 					required="true"
 					maxlength="200"
-					label="#{lbl['lbl.sc.loiloa.address']}" />
+					label="#{lbl['lbl.sc.address']}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
 			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td width="32%">
@@ -132,13 +132,13 @@
 					required="true"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.loiloa.tel.no']}" />
+					label="#{lbl['lbl.sc.tel.no']}" />
 				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.fax.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td>
@@ -147,33 +147,33 @@
 					required="true"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.loiloa.fax.no']}" />
+					label="#{lbl['lbl.sc.fax.no']}" />
 				<p:message id="faxNoMsg" for="faxNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" />
 			</td>
 			<td>
 				<p:inputText id="mobileNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.mobileNo}"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+					label="#{lbl['lbl.sc.mobile.no']}" />
 				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
 			<td colspan="3">
 				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.email}"				
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"
-					label="#{lbl['lbl.sc.loiloa.email']}" />
+					label="#{lbl['lbl.sc.email']}" />
 				<p:message id="emailMsg" for="email" display="icon" />
 			</td>
 		</tr>

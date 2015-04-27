@@ -8,7 +8,7 @@
 	<ui:param name="isZonal" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
 	
 	<p:dialog id="ItemDetailsPopup" widgetVar="ItemDetailsPopup" dynamic="true"
-		modal="true" resizable="false" header="Item Details"  styleClass="pop_up_top" width="570">
+		modal="true" resizable="false" header="#{lbl['lbl.sc.item.details']}"  styleClass="pop_up_top" width="570">
 		<h:panelGroup>
 			<p:spacer height="15px" />
 			<p:dataTable id="itemDtl" var="loiloaItem"
@@ -26,17 +26,17 @@
 					</p:commandLink>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loi.item']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:10%">
 					#{loiloaItem.scRequestItem.itemName}
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loi.qty']}" style="width:10%; text-align:right;">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.qty']}" style="width:10%; text-align:right;">
 					<h:outputText value="#{loiloaItem.qty}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loi.uom']}"
+				<p:column headerText="#{lbl['lbl.sc.uom']}"
 					style="width:20%">
 					#{loiloaItem.scRequestItem.uom.uomCode}
 				</p:column>
@@ -47,7 +47,7 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.close']}"
+					<p:commandButton value="#{lbl['lbl.btn.close']}"
 						onclick="ItemDetailsPopup.hide()" />
 				</p:column>
 			</p:row>

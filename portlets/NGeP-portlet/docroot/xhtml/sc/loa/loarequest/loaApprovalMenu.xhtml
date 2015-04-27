@@ -60,7 +60,7 @@
 		<c:if test="#{isEditableStatus}">
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.approver']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.approver']}" />
 			</td>
 			<td>
 				<p:selectOneMenu id="approver"
@@ -120,16 +120,16 @@
 			
 			<ac:paginator for="apprHistTbl" />
 			
-			<p:column headerText="#{lbl['lbl.sc.qt.appby']}" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.approved.by']}" style="width:40%">
 				#{scLoaApproval.approver.userName}
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.qt.status']}" style="width:35%">
+			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:35%">
 				#{lOADetailBackingBean.getApprovalActionDisplayName(scLoaApproval.approverAction)}
 		
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.qt.date']}" style="width:25%">
+			<p:column headerText="#{lbl['lbl.sc.date']}" style="width:25%">
 				<h:outputText value="#{scLoaApproval.approverActionDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
