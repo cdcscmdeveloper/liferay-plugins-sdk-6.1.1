@@ -24,8 +24,17 @@
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgType']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></th>
-				<td><p:selectOneMenu id="orgTypeSelectList" styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+				<td><p:selectOneMenu id="orgTypeFederalList"
+						rendered="#{organisationBackingBean.managedBean.searchOrgCategory eq organisationBackingBean.federalGovt}" 
+						styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
 						value="#{organisationBackingBean.managedBean.organisationSearchBean.orgTypeCode}">
+						<f:selectItems
+							value="#{organisationBackingBean.getOrgTypeDropdownValues()}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu id="orgTypeOthersList" 
+							rendered="#{organisationBackingBean.managedBean.searchOrgCategory eq organisationBackingBean.others}" 
+							styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+							value="#{organisationBackingBean.managedBean.organisationSearchBean.orgTypeCode}">
 						<f:selectItems
 					value="#{organisationBackingBean.getOrgTypeDropdownValues()}" />
 					</p:selectOneMenu></td>
@@ -70,12 +79,12 @@
 				<td colspan="4">
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{organisationBackingBean.searchOrganisation}"
-							update="searchOrganisation" process="orgSearchPanel"
+							update="searchOrganisation" process="orgSearchPanel" 
 							
 							 />
 						&#160;
 						<p:commandButton value="#{lbl['lbl.btn.reset']}" partialSubmit="true" process="@this"
-							update="orgSearchPanel,:form:searchOrganisation" 
+							update="orgSearchPanel,:form:searchOrganisation"  
 							action="#{organisationBackingBean.resetOrganisationSearchBean}" />
 					</div>
 
