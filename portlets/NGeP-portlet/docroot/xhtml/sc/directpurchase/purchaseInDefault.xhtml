@@ -220,7 +220,7 @@
 											partialSubmit="true" process="@this"
 											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
 									</p:selectOneMenu> 
-									<p:commandLink style="text-align:left"  partialSubmit="true" process="@this"
+									<p:commandLink style="text-align:left" ajax="false"  partialSubmit="true" process="@this"
 									   immediate="true" action="#{purchaseInDefaultBackingBean.viewMarketResearch(purchaseInDefaultBackingBean.managedBean.purchaseInDefault)}">
 								     <p:spacer width="3px"></p:spacer>
 								     <p:graphicImage library="ep/images/design" name="evaluate.png"
