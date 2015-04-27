@@ -38,7 +38,7 @@
 				</p:commandLink>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}">
+			<p:column headerText="#{lbl['lbl.sc.item']}">
 				#{scLoiLoaItem.scRequestItem.itemName}
 			</p:column>
 			
@@ -68,13 +68,13 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column style="width:12%;" headerText="#{lbl['lbl.sc.loiloa.item.uom']}">
+			<p:column style="width:12%;" headerText="#{lbl['lbl.sc.uom']}">
 				#{scLoiLoaItem.scRequestItem.uom.uomName}
 			</p:column>
 
-			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.loiloa.item.unit.price']}">
+			<p:column style="width:12%; text-align:right;" headerText="#{lbl['lbl.sc.loiloa.unit.price']}">
 				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.sc.loiloa.item.total']}" />
+					<h:outputText value="#{lbl['lbl.sc.total']}" />
 				</f:facet>	
 				
 				<h:outputText value="#{scLoiLoaItem.unitPrice}">
