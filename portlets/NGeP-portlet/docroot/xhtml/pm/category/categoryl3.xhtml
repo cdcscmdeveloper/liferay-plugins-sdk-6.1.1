@@ -199,7 +199,7 @@
 					<td style="width:17%"><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.bn.level']}"
-							style="width: 46%;margin-bottom: 5px;" disabled="true"
+							style="width: 43%;margin-bottom: 5px;" disabled="true"
 							value="#{categoryBackingBean.managedBean.catLevel}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
@@ -220,7 +220,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:44%"
+					<td><p:inputText style="width:41%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
 							size="33" maxlength="2"
 							rendered="#{categoryBackingBean.managedBean.newCategory}" /> <p:inputText style="width:60%"
@@ -258,7 +258,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:44%"
+					<td><p:inputText style="width:41%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
 							size="33" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>
@@ -274,7 +274,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 
-					<td><p:selectOneMenu style="width: 46%;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 43%;margin-bottom: 5px;"
 							label="#{lbl['lbl.pm.bumi.percentage']}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}">
 							<f:selectItem itemLabel="0%" itemValue="0" />
@@ -293,7 +293,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.type']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.supplier.type']}"
-							style="width: 46%;margin-bottom: 5px;"
+							style="width: 43%;margin-bottom: 5px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
 							rendered="#{!categoryBackingBean.managedBean.newCategory}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
@@ -302,7 +302,7 @@
 								var="supplierType" itemLabel="#{supplierType.codeName}"
 								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
 						</p:selectOneMenu> <p:selectOneMenu label="#{lbl['lbl.pm.supplier.type']}"
-							style="width: 46%;margin-bottom: 5px;"
+							style="width: 43%;margin-bottom: 5px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
 							rendered="#{categoryBackingBean.managedBean.newCategory}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
@@ -319,7 +319,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.status']}"
-							required="true" style="width: 46%;margin-bottom: 5px;"
+							required="true" style="width: 43%;margin-bottom: 5px;"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.recordStatusFlg}"
 							disabled="false">
 							<f:selectItems
