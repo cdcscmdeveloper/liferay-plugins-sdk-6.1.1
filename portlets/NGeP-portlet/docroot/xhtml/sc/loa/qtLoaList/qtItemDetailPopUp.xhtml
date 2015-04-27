@@ -21,12 +21,12 @@
 				#{scLoiLoaItem.tplSpecZoneDtl.zoneName}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}">
+			<p:column headerText="#{lbl['lbl.sc.item']}">
 				#{scLoiLoaItem.scRequestItem.itemName}
 			</p:column>
 			
 				<p:column style="width:7%;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+					headerText="#{lbl['lbl.sc.loiloa.frequency.per.uom']}">
 					<h:outputText
 						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency}">
 						<f:convertNumber
@@ -35,19 +35,19 @@
 				</p:column>
 	
              <p:column style="width:7%;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+					headerText="#{lbl['lbl.sc.loiloa.no.uom.per.day']}">
 					<h:outputText
 						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay}" />
 				</p:column>
 	
 				<p:column style="width:8%;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+					headerText="#{lbl['lbl.sc.loiloa.no.uom.per.month']}">
 					<h:outputText
 						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
 				</p:column>
 	
 				<p:column style="width:7%;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.duration.month']}">
+					headerText="#{lbl['lbl.sc.loiloa.duration.month']}">
 					<h:outputText
 						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth}">
 						<f:convertNumber
@@ -65,7 +65,7 @@
 			</p:column>
 
 			<p:column style="width:15%;"
-				headerText="#{lbl['lbl.sc.loiloa.item.uom']}">
+				headerText="#{lbl['lbl.sc.uom']}">
 				#{scLoiLoaItem.scRequestItem.uom.uomName}
 			</p:column>
 
@@ -73,7 +73,7 @@
 
 		<p:spacer height="3px" />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.sc.close']}" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
 						onclick="qtItemDtlDlg.hide()"/>
 		</div>
 		
