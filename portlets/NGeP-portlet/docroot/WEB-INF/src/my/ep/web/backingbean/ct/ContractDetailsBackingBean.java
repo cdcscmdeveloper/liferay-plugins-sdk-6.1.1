@@ -1189,7 +1189,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
 							CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 					throw new EpException(MessageConst.ERROR_750007, 
-							new String[] {nf.format(getManagedBean().getContractVer().getCtContractAmount().getContractAmount())}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+							new String[] {nf.format(latestContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 				}
 			}			
 			// Validation for ceiling quantity
@@ -2628,7 +2628,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
 						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 				throw new EpException(MessageConst.ERROR_750007,
-						new String[] {nf.format(getManagedBean().getContractVer().getCtContractAmount().getContractAmount())}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+						new String[] {nf.format(latestContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
     	}
     }
