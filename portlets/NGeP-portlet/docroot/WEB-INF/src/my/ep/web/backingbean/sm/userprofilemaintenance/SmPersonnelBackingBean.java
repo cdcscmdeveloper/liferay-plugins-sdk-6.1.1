@@ -1499,7 +1499,10 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
 		reqDTO.setSmSupplierId(SmApplicationUtil.getCurrentSupplier()
 				.getSupplierId());
-		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+		reqDTO.setOldAdminRecordStatusFlg(getManagedBean()
+				.getUpdateSmPersonnel().getEpRole()
+				.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? DbValueConst.RECORD_STATUS_ACTIVE
+				: DbValueConst.RECORD_STATUS_DELETED);
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = SmServiceLookup.getPersonnelSO().reassignNewSupplierAdmin(
