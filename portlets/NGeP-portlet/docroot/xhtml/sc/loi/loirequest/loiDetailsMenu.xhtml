@@ -29,7 +29,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.branch']}"/>
+				<p:outputLabel value="#{lbl['lbl.sc.branch']}"/>
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
@@ -37,7 +37,7 @@
 					<p:selectOneMenu id="branch"
 						value="#{lOIDetailBackingBean.managedBean.branchName}"
 						style="width: 280px;margin-bottom: 5px;"
-						label="#{lbl['lbl.sc.loiloa.branch']}">
+						label="#{lbl['lbl.sc.branch']}">
 						<f:selectItem itemLabel="HQ" itemValue="#{null}" />
 						<f:selectItems
 							value="#{lOIDetailBackingBean.managedBean.branchsList}"
@@ -58,7 +58,7 @@
 		</tr>
 		<tr>
 			<td rowspan="3" valign="top" width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</td>
 			<td rowspan="3" width="32%">
 				<p:inputTextarea id="suppAddr" cols="50"
@@ -67,7 +67,7 @@
 					style=" margin-bottom:5px;" disabled="true" />
 			</td>
 			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
 			<td width="32%">
 				<p:inputText id="suppPhoneNo" size="30"
@@ -77,7 +77,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.fax.no']}" />
 			</td>
 			<td>
 				<p:inputText id="suppFaxNo" size="30"
@@ -87,7 +87,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" />
 			</td>
 			<td>
 				<p:inputText id="suppMobNo" size="30"
@@ -97,7 +97,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.contact.person']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
 			<td>
 				<p:inputText id="suppContact" size="50"
@@ -105,7 +105,7 @@
 					disabled="true" />
 			</td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
 			<td>
 				<p:inputText id="suppEmail" size="30" style=" margin-bottom:5px;"
@@ -120,7 +120,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td width="18%"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loi.title']}" /></td>
+						value="#{lbl['lbl.sc.title']}" /></td>
 				<td><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputText
@@ -162,7 +162,7 @@
 			</tr>
 			<tr>
 				<td width="18%"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" />
+						value="#{lbl['lbl.sc.loiloa.appr.req']}" />
 						<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" /></td>
 				<td><p:selectOneRadio
 						disabled="#{!(isPendingSubmissionStatus || isPendingRevisionStatus || isPendingNegotiation)}"

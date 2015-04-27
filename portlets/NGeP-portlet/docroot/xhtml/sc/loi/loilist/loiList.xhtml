@@ -28,7 +28,7 @@
 
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.loiloa.loi.rec.by']}" /></td>
+							value="#{lbl['lbl.sc.loiloa.recommended.by']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,
 					lOIDetailBackingBean.managedBean.docType)}"
@@ -48,11 +48,11 @@
 					listener="#{lOIDetailBackingBean.onRowRecSupplierAction}"
 					update=":form:loiLoaId" />
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}">
+				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
 
-	            <p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+	            <p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:30%">
 					<p:commandButton  value="Create LOI" rendered="#{!loiLoa.loiCreated}" 
 						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
@@ -73,11 +73,11 @@
 						rendered="#{loiloaBean.scLoa ne null}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.type']}" style="width:20%">
+				<p:column headerText="#{lbl['lbl.sc.type']}" style="width:20%">
 					<h:outputText value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loi.item']}" style="width:15%">
+				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:15%">
 					<p:commandButton  value="view"
 						partialSubmit="true" process="@this"
 						action="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
@@ -86,11 +86,11 @@
 					</p:commandButton>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.status']}" style="width:15%">
+				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:15%">
 					<h:outputText value="#{loiloaBean.loiLoaStatus}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:15%">
 
 					<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LI'}">

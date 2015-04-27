@@ -41,7 +41,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.branch']}"/>
+				<p:outputLabel value="#{lbl['lbl.sc.branch']}"/>
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
@@ -49,7 +49,7 @@
 					<p:selectOneMenu id="branch"
 						value="#{lOADetailBackingBean.managedBean.selectedSupplierBranchName}"
 						style="width: 280px;margin-bottom: 5px;"
-						label="#{lbl['lbl.sc.loiloa.branch']}">
+						label="#{lbl['lbl.sc.branch']}">
 						<f:selectItem itemLabel="HQ" itemValue="#{null}" />
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.branchsList}"
@@ -70,7 +70,7 @@
 		</tr>
 		<tr>
 			<td rowspan="3" valign="top" width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</td>
 			<td rowspan="3" width="32%">
 				<p:inputTextarea id="suppAddr" cols="50"
@@ -79,7 +79,7 @@
 					style=" margin-bottom:5px;" disabled="true" />
 			</td>
 			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
 			<td width="32%">
 				<p:inputText id="suppPhoneNo" size="30"
@@ -89,7 +89,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.fax.no']}" />
 			</td>
 			<td>
 				<p:inputText id="suppFaxNo" size="30"
@@ -99,7 +99,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" />
 			</td>
 			<td>
 				<p:inputText id="suppMobNo" size="30"
@@ -109,7 +109,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.contact.person']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
 			<td>
 				<p:inputText id="suppContact" size="50"
@@ -117,7 +117,7 @@
 					disabled="true" />
 			</td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
 			<td>
 				<p:inputText id="suppEmail" size="30" style=" margin-bottom:5px;"
@@ -468,7 +468,7 @@
 		</tr>
 		<tr>
 			<td rowspan="3" valign="top" width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td rowspan="3" width="32%">
@@ -478,12 +478,12 @@
 					style=" margin-bottom:5px;"
 					required="true"
 					maxlength="200"
-					label="#{lbl['lbl.sc.loiloa.address']}"
+					label="#{lbl['lbl.sc.address']}"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
 			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td width="32%">
@@ -492,14 +492,14 @@
 					required="true"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.loiloa.tel.no']}"
+					label="#{lbl['lbl.sc.tel.no']}"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.fax.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td>
@@ -508,35 +508,35 @@
 					required="true"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.loiloa.fax.no']}"
+					label="#{lbl['lbl.sc.fax.no']}"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="faxNoMsg" for="faxNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" />
 			</td>
 			<td>
 				<p:inputText id="mobileNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.mobileNo}"			
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.loiloa.mobile.no']}"
+					label="#{lbl['lbl.sc.mobile.no']}"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
 			<td colspan="3">
 				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"
-					label="#{lbl['lbl.sc.loiloa.email']}"
+					label="#{lbl['lbl.sc.email']}"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="emailMsg" for="email" display="icon" />
 			</td>
