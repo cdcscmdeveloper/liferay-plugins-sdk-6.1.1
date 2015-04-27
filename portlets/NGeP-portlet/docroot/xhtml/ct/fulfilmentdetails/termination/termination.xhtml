@@ -239,7 +239,7 @@
 	          	 disabled="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate
 	          	 or terminationBackingBean.isApprover() or terminationBackingBean.managedBean.viewContract}"
 				 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
-				 <f:selectItems value="#{terminationBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
+				 <f:selectItems value="#{terminationBackingBean.getDecisionTypeDropdown()}" />
 				 <p:ajax event="change" update=":form:terminateContract" process="@this"
 						listener="#{terminationBackingBean.changeField}" />
 			  </p:selectOneMenu>
