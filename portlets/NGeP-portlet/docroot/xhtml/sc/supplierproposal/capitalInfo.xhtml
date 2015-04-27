@@ -148,7 +148,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.citizen']}" style="width : 15%;">
 					<p:outputLabel style="float : left;"
-						value="#{(sharePerson.pmCountry.countryCode eq 'MY') ? 'Yes' : 'No'}"></p:outputLabel>
+						value="#{(sharePerson.pmCountry.countryCode eq 'MY') ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.planned.amount']}" style="width : 15%;">
 					<p:outputLabel value="#{sharePerson.shareAmt}"></p:outputLabel>

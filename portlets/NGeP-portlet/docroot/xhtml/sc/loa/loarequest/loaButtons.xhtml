@@ -16,14 +16,14 @@
 				rendered="#{lOADetailBackingBean.managedBean.editFlag}"
 				style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
 
-			<p:commandButton value="#{lbl['lbl.so.save']}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				action="#{lOADetailBackingBean.saveAction}"
 				rendered="#{isEditableStatus}" process="@form" update="@form"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 			<c:choose>
 				<c:when test="#{isPendingSubmissionStatus}">
-					<p:commandButton value="#{lbl['lbl.so.submit']}"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
 						action="#{lOADetailBackingBean.submitAction}" process="@form"
 						update="@form" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" />

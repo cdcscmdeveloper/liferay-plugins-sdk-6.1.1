@@ -8,18 +8,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
 		<h:panelGrid id="planSearchDtls" border="0" cellpadding="0"
 			cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20">
 
-			<p:outputLabel value="#{lbl['lbl.pp.plan.number']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.pp.plan.number']}" />
 
 			<p:inputText
 				value="#{procurementPlanBackingBean.managedBean.planNumber}" />
 
 
-			<p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" />
 
 			<p:selectOneMenu id="somProcureMode" styleClass="ppDropDownWidthM"
 				value="#{procurementPlanBackingBean.managedBean.procurementMode}"
@@ -30,7 +30,7 @@
 			</p:selectOneMenu>
 
 
-			<p:outputLabel value="#{lbl['lbl.pp.status']}" />
+			<p:outputLabel value="#{lbl['lbl.sc.status']}" />
 
 
 			<p:selectOneMenu styleClass="ppDropDownWidthM"
@@ -65,20 +65,20 @@
 	</p:panel>
 
 	<!-- Result List -->
-	<p:panel header="#{lbl['lbl.pp.result']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.result']}" toggleable="true">
 		<p:dataTable id="dtPlanResult" styleClass="ppTableFull" var="ppPlan"
 			value="#{procurementPlanBackingBean.planDataModel}"
 			rowIndexVar="index" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			style="width:100%" lazy="true">
 			<ac:paginator for="dtPlanResult" />
 
-			<p:column headerText="#{lbl['lbl.pp.planed.number']}">
+			<p:column headerText="#{lbl['lbl.sc.pp.planed.number']}">
 				<h:outputText value="#{ppPlan.planNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pp.plan.description']}">
 				<h:outputText value="#{ppPlan.planDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">
+			<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 				<h:outputText
 					value="#{procurementPlanBackingBean.getParameterDesc(ppPlan.procurementModeParam)}" />
 			</p:column>
@@ -86,7 +86,7 @@
 			<p:column headerText="#{lbl['lbl.sc.planned.amount']}">
 				<h:outputLabel value="#{ppPlan.actualAmt}"></h:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pp.status']}">
+			<p:column headerText="#{lbl['lbl.sc.status']}">
 				<h:outputText
 					value="#{procurementPlanBackingBean.getStatusDescById(ppPlan.pmStatus.statusId)}" />
 			</p:column>
@@ -104,7 +104,7 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.pp.action']}">
+			<p:column headerText="#{lbl['lbl.sc.action']}">
 				<p:commandLink
 					actionListener="#{procurementPlanBackingBean.editPlan(ppPlan,rowIndex)}"
 					oncomplete="procurePlanPopup.show();" update="@(.planDailog)">
