@@ -209,9 +209,10 @@
 							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
 						</p:selectOneMenu></td>
 
-					<td style="width:8%"><p:outputLabel value="#{lbl['lbl.pm.paid.capital']}" /> <p:outputLabel
-							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:60%"
+					<td style="width: 12%"><p:outputLabel
+							value="#{lbl['lbl.pm.paid.capital']}" />
+						<p:outputLabel value="* " styleClass="mandatory" /></td>
+					<td><p:inputText style="width:44%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
 							size="33"
 							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}" /></td>
@@ -219,7 +220,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:60%"
+					<td><p:inputText style="width:44%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
 							size="33" maxlength="2"
 							rendered="#{categoryBackingBean.managedBean.newCategory}" /> <p:inputText style="width:60%"
@@ -257,7 +258,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.desc']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
-					<td><p:inputText style="width:60%"
+					<td><p:inputText style="width:44%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
 							size="33" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>
@@ -333,7 +334,7 @@
 			<table style="width: 100%;">
 				<tr>
 					<td style="width:17%"><p:outputLabel value="#{lbl['lbl.pm.sub.category.code']}" /></td>
-					<td><p:inputText style="width:60%"
+					<td><p:inputText style="width:85%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.categoryL2Code}"
 							size="33" disabled="true" readonly="true" /></td>
 
@@ -346,7 +347,7 @@
 				<tr>
 					<td style="width: 17%"><p:outputLabel
 							value="#{lbl['lbl.pm.main.category.code']}" /></td>
-					<td><p:inputText 
+					<td><p:inputText style="width:85%"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"
 							size="33" disabled="true" readonly="true" /></td>
 
