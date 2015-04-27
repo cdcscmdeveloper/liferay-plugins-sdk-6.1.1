@@ -284,11 +284,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-			SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
 			
-			log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
+			if(smResDTO.getResultBean().getResultList().size() > 0){
+				SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
+				log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
+				return smSupp;
+			}
 			
-			return smSupp;
 		}
 		
 		
