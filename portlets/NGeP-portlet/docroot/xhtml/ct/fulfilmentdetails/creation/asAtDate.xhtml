@@ -4,33 +4,33 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:blockUI id="blockAsAtDateId" block=":form" widgetVar="blockAsAtDateWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
 	<div align="left">
-		<p:blockUI id="blockAsAtDateId" block=":form" widgetVar="blockAsAtDateWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif" />
-		</p:blockUI>
+		
 		<table style="width: 100%">
 		<tr>
-		<td style="width: 15%">  </td>
+			<td style="width: 15%">  </td>
+			<td style="width: 15%">  </td>
 			<td style="width: 20%">  </td>
-				<td style="width: 20%">  </td>
-					<td style="width: 15%">  </td>
+			<td style="width: 15%">  </td>
 			<td style="width: 15%"> 
-		
-			  <p:outputLabel value="As At Date" style="float:right;"></p:outputLabel>
-			  </td>
-			  	<td style="width: 15%"> 
-			  		<p:calendar id="selectedDateId" value="#{contractDetailsBackingBean.managedBean.contractVer.asAtDate}"  navigator="true" size="8"
-		               readonlyInput="true" 
-		               mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" 
-		               maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"			             
-		               showOn="button" disabled="#{!contractDetailsBackingBean.managedBean.updateContract
-		               and !contractDetailsBackingBean.managedBean.viewContract}"
-		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-		               <p:ajax event="dateSelect"  process="@this" listener="#{contractDetailsBackingBean.updateAsAtDate()}" update=":form" 
-		               	onstart="blockAsAtDateWidget.show()" oncomplete="blockAsAtDateWidget.hide()"></p:ajax>
-		             </p:calendar>
-			  </td>
-			</tr>
+				<p:outputLabel value="#{lbl['lbl.ct.as.at.date']}" style="float:right;"></p:outputLabel>
+			</td>
+			<td style="width: 15%"> 
+		  		<p:calendar id="selectedDateId" value="#{contractDetailsBackingBean.managedBean.contractVer.asAtDate}"  navigator="true" size="8"
+	               readonlyInput="true" 
+	               mindate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" 
+	               maxdate="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"			             
+	               showOn="button" disabled="#{!contractDetailsBackingBean.managedBean.updateContract
+	               and !contractDetailsBackingBean.managedBean.viewContract}"
+	               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+	               <p:ajax event="dateSelect"  process="@this" listener="#{contractDetailsBackingBean.updateAsAtDate()}" update=":form" 
+	               	onstart="blockAsAtDateWidget.show()" oncomplete="blockAsAtDateWidget.hide()"></p:ajax>
+	             </p:calendar>
+			</td>
+		</tr>
 		</table>
 	</div>
 </ui:composition>
