@@ -4349,7 +4349,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmPaidUpCapitalFrm() != null) && (this.getSmPaidUpCapitalFrm() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaidUpCapitalTo() != null) && (this.getSmPaidUpCapitalTo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaidUpCapitalNaccum() != null) && (this.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL))
-				|| ((this.getSmRole() != null) && (this.getSmRole() != ReportConst.EMPTY_VAL))
+				//|| ((this.getSmRole() != null) && (this.getSmRole() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmEpNo() != null) && (this.getSmEpNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmRegistrationNo() != null) && (this.getSmRegistrationNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSupportingDocumentMode() != null) && (this.getSmSupportingDocumentMode() != ReportConst.EMPTY_VAL))
@@ -4507,11 +4507,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setSmPaidUpCapitalNaccumVar(ReportConst.AMP_SM_PAIDUP_CPTL_R_ACLTD_EQ
 						+ this.getSmPaidUpCapitalNaccum());
 			}
-			if ((this.getSmRole() != null)
+			/*if ((this.getSmRole() != null)
 					&& (this.getSmRole() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setSmRoleVar(ReportConst.AMP_SM_ROLE_EQ
 						+ this.getSmRole());
-			}
+			}*/
 			if ((this.getSmEpNo() != null)
 					&& (this.getSmEpNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setSmEpNoVar(ReportConst.AMP_SM_EP_NO_EQ
@@ -4608,7 +4608,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getSmPaidUpCapitalFrmVar()
 						+ rptGenBean.getSmPaidUpCapitalToVar()
 						+ rptGenBean.getSmPaidUpCapitalNaccumVar()
-						+ rptGenBean.getSmRoleVar()
+						//+ rptGenBean.getSmRoleVar()
 						+ rptGenBean.getSmEpNoVar()
 						+ rptGenBean.getSmRegistrationNoVar()
 						+ rptGenBean.getSmSupportingDocumentModeVar()
