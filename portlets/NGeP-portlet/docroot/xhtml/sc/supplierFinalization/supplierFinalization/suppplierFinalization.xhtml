@@ -214,7 +214,7 @@
 				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal() and
 				 			  (suppFinalizationBackingBean.managedBean.recommendSupplier or 
 				 			  	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
-					<td width="16%" style="vertical-align: baseline;">
+					<td width="16%" style="vertical-align: baseline;" class="sidemenutd">
 						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=zonalMenu],[id$=itemPanel],[id$=supplierPanel])" 
 										 partialSubmit="true" process="@this" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />
 						
