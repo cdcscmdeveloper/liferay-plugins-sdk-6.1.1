@@ -1373,8 +1373,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 		BigDecimal checkTotalAmt = prevSumAmt.add(sumOrderedAmt);
-		if(checkTotalAmt.doubleValue()>flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().doubleValue()) {
-			throw new EpException(MessageConst.ERROR_740002, new String[]{flRequest.getCtContract().getLatestContractVer().getCtContractValue().getContractAmount().toString()});
+		
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractReqDTO contractReqDTO = new ContractReqDTO();
+		contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+		contractReqDTO.setAsAtDate(new Date());
+		BigDecimal contractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount().getContractAmount();
+		
+		if(checkTotalAmt.doubleValue()>contractAmount.doubleValue()) {
+			throw new EpException(MessageConst.ERROR_740002, new String[]{contractAmount.toString()});
 		}
 	}
 	/**
