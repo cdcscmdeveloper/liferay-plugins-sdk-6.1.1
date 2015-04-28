@@ -14,7 +14,7 @@
 		<p:panel id="addexistingNewId">
 			<p:messages id="existingNewid" autoUpdate="true" showDetail="true"
 				showSummary="false" closable="true" />
-			
+
 			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
@@ -39,7 +39,8 @@
 								<td />
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" /></td>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.identification.no']}" /></td>
 								<td><p:inputText maxlength="20"
 										value="#{evaluationMeetingBackingBean.managedBean.identificationNo}"
 										size="30" /></td>
@@ -48,15 +49,17 @@
 							</tr>
 						</table>
 						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.reset']}"
-								action="#{evaluationMeetingBackingBean.reset}"
-								update="newCommitteeProfile" resetValues="true"
-								partialSubmit="true" process="@this" />
+
 
 							<p:commandButton value="#{lbl['lbl.btn.search']}"
 								action="#{evaluationMeetingBackingBean.existingCommitteeSearchAction}"
 								update="@(.existingCommitteeResults)" partialSubmit="true"
 								process="@parent" />
+
+							<p:commandButton value="#{lbl['lbl.btn.reset']}"
+								action="#{evaluationMeetingBackingBean.reset}"
+								update="newCommitteeProfile" resetValues="true"
+								partialSubmit="true" process="@this" />
 						</div>
 					</p:panel>
 					<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
@@ -122,15 +125,13 @@
 					<p:panel header="New user" toggleable="true">
 						<table>
 							<tr>
-								<td><p:outputLabel
-										value="#{lbl['lbl.sc.name']}" /> <p:outputLabel
+								<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="4">
 									<table>
 										<tr>
 											<td><p:inputText maxlength="50" id="newUserName"
-													label="#{lbl['lbl.sc.name']}"
-													required="true"
+													label="#{lbl['lbl.sc.name']}" required="true"
 													value="#{evaluationMeetingBackingBean.managedBean.committeMember.memberName}"
 													size="30" /></td>
 											<td><p:message id="newUserId" for="newUserName"
@@ -141,14 +142,13 @@
 							</tr>
 							<tr>
 								<td style="width: 125px;"><p:outputLabel
-										value="#{lbl['lbl.sc.id.type']}" /> <p:outputLabel
-										value="*" styleClass="mandatory" /></td>
+										value="#{lbl['lbl.sc.id.type']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
 								<td colspan="4">
 									<table>
 										<tr>
 											<td><p:selectOneMenu id="identification"
-													label="#{lbl['lbl.sc.id.type']}"
-													required="true"
+													label="#{lbl['lbl.sc.id.type']}" required="true"
 													value="#{evaluationMeetingBackingBean.managedBean.committeMember.idType}"
 													style="width: 178px;margin-bottom: 5px;">
 													<f:selectItems
@@ -168,8 +168,7 @@
 									<table>
 										<tr>
 											<td><p:inputText maxlength="15" id="identificationNum"
-													label="#{lbl['lbl.sc.identification.no']}"
-													required="true"
+													label="#{lbl['lbl.sc.identification.no']}" required="true"
 													value="#{evaluationMeetingBackingBean.managedBean.committeMember.icPassport}"
 													size="30" /></td>
 											<td><p:message id="identificationNumId"
@@ -180,15 +179,13 @@
 
 							</tr>
 							<tr>
-								<td><p:outputLabel
-										value="#{lbl['lbl.sc.grade']}" /> <p:outputLabel
+								<td><p:outputLabel value="#{lbl['lbl.sc.grade']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="4">
 									<table>
 										<tr>
 											<td><p:inputText maxlength="10" id="grade"
-													label="#{lbl['lbl.sc.grade']}"
-													required="true"
+													label="#{lbl['lbl.sc.grade']}" required="true"
 													value="#{evaluationMeetingBackingBean.managedBean.committeMember.grade}"
 													size="30" /></td>
 											<td><p:message id="gradeId" for="grade" display="icon" /></td>
@@ -250,8 +247,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel
-										value="#{lbl['lbl.sc.role']}" /> <p:outputLabel
+								<td><p:outputLabel value="#{lbl['lbl.sc.role']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="4">
 									<table>
