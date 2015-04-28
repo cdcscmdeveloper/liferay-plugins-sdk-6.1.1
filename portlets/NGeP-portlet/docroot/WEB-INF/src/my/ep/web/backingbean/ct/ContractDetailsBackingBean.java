@@ -3439,6 +3439,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	}
 	}
 	
+	public boolean contractCreationProcess() {
+		if (getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_SUBMISSION.longValue()
+				|| getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_CONTRACT_CREATION.longValue()
+				|| getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_APPROVAL.longValue()
+				|| getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_REVISION.longValue()
+				|| getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_REVISION_APPROVAL.longValue()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	/**
    	 * The method used to retrieve current date from system.
    	 *  

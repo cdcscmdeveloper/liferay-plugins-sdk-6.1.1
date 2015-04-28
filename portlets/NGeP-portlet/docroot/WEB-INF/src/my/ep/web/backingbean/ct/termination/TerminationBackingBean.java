@@ -600,13 +600,13 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			}			
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
 					ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
-			items = (remedy) ? new SelectItem[parameterDescs.size() + 1] : new SelectItem[parameterDescs.size()];
+			items = (remedy || getManagedBean().isViewContract()) ? new SelectItem[parameterDescs.size() + 1] : new SelectItem[parameterDescs.size()];
 		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		    int i = 1;
 		    for (PmParameterDesc parameterDesc : parameterDescs) {
-		    	if (!remedy && parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(
-		    			ParameterConst.TERMINATE_DECISION_TERMINATE)) {
+		    	if (!getManagedBean().isViewContract() && !remedy 
+		    			&& parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
 		    		continue;
 		    	}
 		    	items[i++] = new SelectItem(
