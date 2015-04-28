@@ -779,6 +779,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			if (resDto.isSuccessful()) {
 				getManagedBean().setBidHistoryPriceList(resDto.getBidPrices());
+				getManagedBean().setHistoryPrice(resDto.getBidPrices().get(0));
 			}
 		}
 
