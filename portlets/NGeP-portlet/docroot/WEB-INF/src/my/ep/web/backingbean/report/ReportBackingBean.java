@@ -2370,6 +2370,23 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
+	public List<SelectItem> getAllModuleList(){
+		 moduleList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+			
+					List<Object[]> moduleLst = reportSO.retrieveModuleList("en","MOD");			
+					for (Object[] object : moduleLst) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[0].toString());
+						selectItem.setLabel(object[1].toString());
+						moduleList.add(selectItem);
+					}
+			}
+		return moduleList;
+	 }
 	public void retrieveIdentificationType(){
 		identificationTypeList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2781,6 +2798,19 @@ public class ReportBackingBean extends
 	    	processItemsByModule(items);	    	
     	}
 	}
+    /*public void getAllModulelist() {
+    	rptGenBean = new ReportsGenerateBean();
+		this.setReportValue(null);
+    	String paramModule = null;
+    	items = null; 
+    	if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+	    	if ((this.getModuleValue()) != null){
+	    		paramModule="MOD";
+	    	}
+	    	items=super.getRadioButtonCodeValuesBySearchBean(paramModule,this.getReportSearchBean());
+	    	//processItemsByModule(items);	    	
+    	}
+	}*/
 	private void processItemsByModule(SelectItem[] items) {
 		Map<String,List<SelectItem>> localModuleItemMap=new HashMap<String,List<SelectItem>>();
 		if(null!=items){
@@ -2803,7 +2833,7 @@ public class ReportBackingBean extends
 
 	public ISearchBean<PmParameterDesc> getReportSearchBean() {		
 		return super.createSearchBean(
-				PmParameterDesc.class, "reportName");
+				PmParameterDesc.class, "moduleName");
 	}
 	public void populateExperienceSubChildCategoryByChild(long childId,
 			PmCategoryL3 catL3) {
@@ -2929,7 +2959,9 @@ public class ReportBackingBean extends
 		selectItem6.setLabel(CommonMethod
 				.getMessageCommon(ReportConst.MOD_PP_TTL));
 		selectItem6.setValue(ReportConst.PP_MOD_VAL);
-		moduleList.add(selectItem6);		
+		moduleList.add(selectItem6);
+		
+		//getAllModulelist();
 		return moduleList;
 	}
 
