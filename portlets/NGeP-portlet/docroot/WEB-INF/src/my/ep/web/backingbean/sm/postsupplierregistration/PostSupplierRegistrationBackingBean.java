@@ -65,12 +65,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
 	private static final String CATALOGUE_UPLOAD_PATH = "supptemp-codification-search";
 	private static final String CATALOGUE_MAINT = "supptemp-catalogue-maint";
-	private static final String SUPPLIER_TYPE_SELECTION_PATH = "supptemp-registration-cont";
+	//private static final String SUPPLIER_TYPE_SELECTION_PATH = "supptemp-registration-cont";
 	private static final String SOFT_CERT_PATH = "supptemp-request-soft-cert";
 	private static final String MOF_REG_PATH = "supptemp-mof-registration";
 	private static final String TASK_LIST_PATH = "task-list";
 	//private static final String DASHBOARD = "dashboard";
-	private static final String DASHBOARD_PATH = "welcome";
+	//private static final String DASHBOARD_PATH = "welcome";
 	private static final String SUPPLIER_TYPE_SELECTION_XHTML = "/xhtml/sm/supplierregistrationcont/supplierTypeSelection.xhtml";
 	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
@@ -91,6 +91,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		if(supplier != null){
 			log.info("Supplier is not null===>" + supplier.getSupplierId());
 			this.getManagedBean().setSmSupplier(supplier);
+			getManagedBean().setFlowStatus(0);
 
 			SmAppl appl = retrieveInProcessAppl(supplier.getSupplierId());
 			this.getManagedBean().setBannerImage(false);
@@ -122,6 +123,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						path = MOF_REG_PATH;
 						desc = getLabelFromProperties("lbl.sm.mof.upgrade.image"); 
 						this.getManagedBean().setBannerImage(true);
+						this.getManagedBean().setFlowStatus(1);
 					}else{
 						log.info("****Basic********");
 						List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
@@ -131,10 +133,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							path = CATALOGUE_UPLOAD_PATH;							
 							desc = getLabelFromProperties("lbl.sm.catalogue.upload.image");
 							this.getManagedBean().setBannerImage(true);
+							this.getManagedBean().setFlowStatus(1);
 						}else{
 							/*
 							 * check the supplier item status
 							 */
+							this.getManagedBean().setFlowStatus(1);
 							boolean publishedStatus = false;
 							boolean pending = false;
 							for(CmSupplierItem cmSuppItem : suppItems){
@@ -160,6 +164,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									this.getManagedBean().setBannerImage(true);
 								}
 							}else{
+								this.getManagedBean().setFlowStatus(2);
 								log.info("********Published Catalogue******");
 								path = SOFT_CERT_PATH;
 								desc = getLabelFromProperties("lbl.sm.softcert.request.image"); 
@@ -285,12 +290,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
 			
-			if(smResDTO.getResultBean().getResultList().size() > 0){
-				SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
-				log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
-				return smSupp;
+			if(smResDTO.getResultBean() != null){
+				if(smResDTO.getResultBean().getResultList().size() > 0){
+					SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
+					log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
+					return smSupp;
+				}
 			}
-			
 		}
 		
 		
@@ -429,26 +435,72 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		Integer sc = statusCode.intValue();
 		
 		switch(sc){
-		case 20100 : 
+		case 20100 : //Pending Application Declaration
+			getManagedBean().setFlowStatus(1);
 			getManagedBean().setHyperlink(true);
 			break;
 
-		case 20114 :
+		case 20114 : //Pending Payment (Processing fee)
+			getManagedBean().setFlowStatus(2);
 			getManagedBean().setHyperlink(true);
 			break;
 
-		case 20200 :
+		case 20200 : //Pending Application Inquiry
+			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(true);
 			break;
 
-		case 20251 :
+		case 20251 : //Pending Payment
+			getManagedBean().setFlowStatus(4);
 			getManagedBean().setHyperlink(true);
 			break;
 			
-		case 20107 :
-			getManagedBean().setHyperlink(true);
+			
+		case 20101 : //Pending Supporting Document Verification
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
 			break;
 
+		case 20104 : //Pending Review Application
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+			
+		case 20105 : //Pending Site Visit
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+		
+		case 20106 : //Pending Re-Site Visit
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+			
+		case 20107 : //Pending Reply Inquiry by Processing Officer
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(true);
+			break;
+		
+		case 20108 : //Pending Application Approval
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+			
+		case 20109 : //Pending Application Re-Approval
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+		
+		case 20110 : //Pending Site Visit Assignment - Before Approval
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+		
+		case 20111 : //Pending Site Visit Assignment - Before Approval
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+			
 		default :
 			getManagedBean().setHyperlink(false);
 			break;
