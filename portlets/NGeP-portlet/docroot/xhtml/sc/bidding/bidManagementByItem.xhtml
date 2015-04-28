@@ -13,8 +13,7 @@
 			var="bidItem" rowIndexVar="index" rowKey="#{bidItem.bidItemId}"
 			selection="#{biddingBB.managedBean.selectedBidItem}">
 
-			<p:ajax event="rowSelect"
-				listener="#{biddingBB.rowSelectListener}"
+			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
 				update="@([id$=itemPriceLineChartPanel])" />
 			<ac:paginator for="biddingListBMBI"></ac:paginator>
 
@@ -134,8 +133,8 @@
 				</p:column>
 				<p:column style=" align : center; width : 15%"
 					headerText="#{lbl['lbl.sc.cost.saving']}">
-					<h:outputText
-						id="savingVBI" style="float : right" value="#{biddingBB.managedBean.selectedBidItem.estimatedCost - bidPriceItem.bidPriceTotal}">
+					<h:outputText id="savingVBI" style="float : right"
+						value="#{biddingBB.managedBean.selectedBidItem.estimatedCost - bidPriceItem.bidPriceTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -145,13 +144,13 @@
 		</p:panel>
 	</h:panelGroup>
 
-	<p:panel id="historyPricePopupPanel">
-		<p:dialog rendered="#{biddingBB.managedBean.rendered}"
-			header="#{lbl['lbl.sc.history.price']}" widgetVar="priceHistory"
-			showEffect="fade" hideEffect="fade" modal="true" id="historyPrice">
-			<ui:include src="/xhtml/sc/bidding/BMByItemHistoryPricePopup.xhtml"></ui:include>
-		</p:dialog>
-	</p:panel>
+
+	<p:dialog rendered="#{biddingBB.managedBean.rendered}"
+		header="#{lbl['lbl.sc.history.price']}" widgetVar="priceHistory"
+		showEffect="fade" hideEffect="fade" modal="true" id="historyPrice">
+		<ui:include src="/xhtml/sc/bidding/BMByItemHistoryPricePopup.xhtml"></ui:include>
+	</p:dialog>
+
 
 
 </ui:composition>
