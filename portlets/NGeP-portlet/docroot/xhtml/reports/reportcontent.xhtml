@@ -35,7 +35,7 @@
 												value="#{reportBackingBean.moduleValue}" required="true"
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-												<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
+												<f:selectItems value="#{reportBackingBean.getAllModuleList()}"></f:selectItems>
 												<p:ajax event="change" listener="#{reportBackingBean.retrieveReportListByAuthorization}" process="@this"
 												 partialSubmit="true"  update="@all"/>
 											</p:selectOneMenu></td>
