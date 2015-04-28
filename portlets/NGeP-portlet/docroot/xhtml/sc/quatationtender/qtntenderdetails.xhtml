@@ -77,8 +77,10 @@
 						size="30" style="text-align:right">
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
-					</p:inputMask> <p:message id="publishperiodMsg" for="publishperiod"
-						display="icon" /></td>
+					</p:inputMask> 
+					<p:message id="publishperiodMsg" for="publishperiod" display="icon" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" />
+				</td>
 				<td style="width: 210px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>

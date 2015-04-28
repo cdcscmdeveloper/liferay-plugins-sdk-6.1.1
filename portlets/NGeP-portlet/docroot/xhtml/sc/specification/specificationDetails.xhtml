@@ -108,7 +108,9 @@
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@form"
 							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
-					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
+					</p:selectOneMenu> 
+					<p:message id="fulfilType" for="fulfilId" display="icon" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.fullfillent.type.tooltip']}" />
 				</td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <ui:fragment
@@ -124,7 +126,8 @@
 						style="text-align:right;">
 						<p:ajax process="@this" partialSubmit="true"
 							update="@this,contract" />
-					</p:inputMask> <h:outputText value="(Month)" /> <p:message id="completion"
+					</p:inputMask> 
+					<p:message id="completion"
 						for="contract" display="icon"></p:message></td>
 			</tr>
 		</table>
