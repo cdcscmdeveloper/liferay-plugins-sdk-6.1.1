@@ -15,7 +15,7 @@
 		!contractDetailsBackingBean.managedBean.directPurchase}">
 	
 	 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
-			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}">
+			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds}">
 			  <ac:paginator for="tableBond" />
 			
 			<p:column style="width:10%;" headerText="#{lbl['lbl.ct.ref.no']}">
