@@ -22,6 +22,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -99,6 +100,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
 
 // TODO: Auto-generated Javadoc
 public class SmCommonUtil {
@@ -1866,5 +1871,27 @@ public class SmCommonUtil {
 		reqDTO.setSmSupplierId(supplierId);
 		return SmServiceLookup.getPersonnelSO()
 				.retrieveBasicPersonnelsBySuppId(reqDTO).getSmPersonnelList();
+	}
+
+	/**
+	 * Get EPerolehan based url
+	 * 
+	 * @return String
+	 */
+	public static String getEpBaseUrl() {
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		Layout layout = themeDisplay.getLayout();
+
+		String portalUrl = themeDisplay.getURLPortal();
+		String currentUrl = themeDisplay.getURLCurrent();
+		currentUrl = currentUrl.substring(0,
+				currentUrl.indexOf(layout.getFriendlyURL()));
+
+		String url = portalUrl + currentUrl;
+		return url;
 	}
 }

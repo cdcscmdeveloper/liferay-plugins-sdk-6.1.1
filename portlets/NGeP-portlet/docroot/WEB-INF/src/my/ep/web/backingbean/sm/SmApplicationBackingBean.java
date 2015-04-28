@@ -8574,20 +8574,7 @@ public class SmApplicationBackingBean extends
 	 * Sets the url for revision application.
 	 */
 	public void setRevUrl() {
-		FacesContext fCtx = FacesContext.getCurrentInstance();
-		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
-				.getRequest();
-		ThemeDisplay themeDisplay = (ThemeDisplay) req
-				.getAttribute(WebKeys.THEME_DISPLAY);
-		Layout layout = themeDisplay.getLayout();
-		log.info("layout.getFriendlyURL():" + layout.getFriendlyURL());
-
-		String portalUrl = themeDisplay.getURLPortal();
-		String currentUrl = themeDisplay.getURLCurrent();
-		currentUrl = currentUrl.substring(0,
-				currentUrl.indexOf(layout.getFriendlyURL()));
-
-		String url = portalUrl + currentUrl + "/view-revision-application";
+		String url = SmCommonUtil.getEpBaseUrl() + "/view-revision-application";
 
 		String revApprvrAppNo = "";
 		String revSupplAppNo = "";
