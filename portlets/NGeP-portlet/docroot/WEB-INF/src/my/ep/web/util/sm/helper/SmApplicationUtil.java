@@ -5202,15 +5202,11 @@ public class SmApplicationUtil {
 		} else {
 			if (currAppl.getSupplierType().equalsIgnoreCase(
 					SupplierManagementConst.STYPE_CONSULTANT)) {
-				currPersonnel
-						.setEpRole(prevPersonnel != null
-								&& StringUtils.isNotBlank(prevPersonnel
-										.getEpRole()) ? prevPersonnel
-								.getEpRole() : RoleCode.MOF_SUPPLIER_USER
-								.value());
+				currPersonnel.setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
 				currPersonnel.setSoftcertFlg(0);
 				currPersonnel.setContractSignerFlg(0);
 			} else {
+				// newly added
 				if (currPersonnel.getPersonnelId() == null) {
 					if (currPersonnel.getEpRole().equals(
 							RoleCode.CM_USER.value())) {
@@ -5218,13 +5214,12 @@ public class SmApplicationUtil {
 						currPersonnel.setContractSignerFlg(0);
 					} else {
 						currPersonnel
-								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-										: prevPersonnel.getSoftcertFlg());
-						currPersonnel
-								.setContractSignerFlg(prevPersonnel == null ? 0
-										: prevPersonnel.getContractSignerFlg());
+								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+						currPersonnel.setContractSignerFlg(0);
 					}
-				} else {
+				}
+				// already exist in db
+				else {
 					if (currPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						if (currPersonnel.getEpRole().equals(
 								RoleCode.CM_USER.value())) {
@@ -5238,6 +5233,31 @@ public class SmApplicationUtil {
 									.setContractSignerFlg(prevPersonnel == null ? 0
 											: prevPersonnel
 													.getContractSignerFlg());
+
+							// if epRole blank set back to prev approved role if
+							// exist
+							if (StringUtils.isBlank(currPersonnel.getEpRole())) {
+								String epRole = "";
+								if (prevPersonnel != null
+										&& StringUtils.isNotBlank(prevPersonnel
+												.getEpRole())) {
+									if (prevPersonnel.getEpRole().equals(
+											RoleCode.BASIC_SUPPLIER_USER
+													.value())) {
+										epRole = RoleCode.MOF_SUPPLIER_USER
+												.value();
+									} else if (prevPersonnel
+											.getEpRole()
+											.equals(RoleCode.BASIC_SUPPLIER_ADMIN
+													.value())) {
+										epRole = RoleCode.MOF_SUPPLIER_ADMIN
+												.value();
+									} else {
+										epRole = prevPersonnel.getEpRole();
+									}
+								}
+								currPersonnel.setEpRole(epRole);
+							}
 						}
 					} else {
 						if (currPersonnel.getEpRole().equals(
