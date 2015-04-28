@@ -4305,9 +4305,9 @@ public class SmApplicationBackingBean extends
 				} else {
 					smPersonnel
 							.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-									: smPersonnel.getSoftcertFlg());
+									: prevPersonnel.getSoftcertFlg());
 					smPersonnel.setContractSignerFlg(prevPersonnel == null ? 0
-							: smPersonnel.getContractSignerFlg());
+							: prevPersonnel.getContractSignerFlg());
 				}
 			} else {
 				if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -4318,10 +4318,10 @@ public class SmApplicationBackingBean extends
 					} else {
 						smPersonnel
 								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-										: smPersonnel.getSoftcertFlg());
+										: prevPersonnel.getSoftcertFlg());
 						smPersonnel
 								.setContractSignerFlg(prevPersonnel == null ? 0
-										: smPersonnel.getContractSignerFlg());
+										: prevPersonnel.getContractSignerFlg());
 					}
 				} else {
 					if (smPersonnel.getEpRole()
@@ -4331,10 +4331,10 @@ public class SmApplicationBackingBean extends
 					} else {
 						smPersonnel
 								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-										: smPersonnel.getSoftcertFlg());
+										: prevPersonnel.getSoftcertFlg());
 						smPersonnel
 								.setContractSignerFlg(prevPersonnel == null ? 0
-										: smPersonnel.getContractSignerFlg());
+										: prevPersonnel.getContractSignerFlg());
 					}
 				}
 			}
