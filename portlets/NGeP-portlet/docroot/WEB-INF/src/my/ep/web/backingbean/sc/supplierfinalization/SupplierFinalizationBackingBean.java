@@ -1292,6 +1292,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setSubmit(true);
 
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		SuppFinalizationReqDTO reqDTO = null;
 
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		ScQtFinalization scQtFinalization = getManagedBean()
@@ -1326,7 +1327,7 @@ public class SupplierFinalizationBackingBean extends
 
 					// Check and navigate to Preparation tab
 					if (activeIndex == 2) {
-						SuppFinalizationReqDTO reqDTO = validateInfo(activeIndex);
+						reqDTO = validateInfo(activeIndex);
 						SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 								.saveSupplierFinalization(reqDTO);
 						reloadData(resDTO);
@@ -1410,7 +1411,7 @@ public class SupplierFinalizationBackingBean extends
 			if (activeIndex != 2) {
 
 				// By default validate SupplierFinalization Tab content
-				validateInfo(2);
+				reqDTO = validateInfo(2);
 			}
 		}
 
@@ -1455,15 +1456,15 @@ public class SupplierFinalizationBackingBean extends
 			} else if (isDigiSigningRequired(RoleCode.PBB_CHAIRPERSON.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else {
-				updateBPMTask(outcome, null);
+				updateBPMTask(outcome, null, reqDTO);
 			}
 		} else {
 			signOff();
-			updateBPMTask(outcome, null);
+			updateBPMTask(outcome, null, reqDTO);
 		}
 	}
 
-	private void updateBPMTask(String outcome, PmDigiSign digiSign) {
+	private void updateBPMTask(String outcome, PmDigiSign digiSign, SuppFinalizationReqDTO reqDTO) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		String taskId = this.getManagedBean().getTaskId();
@@ -1481,7 +1482,9 @@ public class SupplierFinalizationBackingBean extends
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
-			SuppFinalizationReqDTO reqDTO = validateInfo(activeIndex);
+			if (reqDTO == null) {
+				reqDTO = validateInfo(activeIndex);
+			}			
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(taskId);
