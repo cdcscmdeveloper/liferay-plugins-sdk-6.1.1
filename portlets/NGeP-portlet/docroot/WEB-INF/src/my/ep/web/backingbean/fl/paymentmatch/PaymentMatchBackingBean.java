@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +49,7 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -566,7 +568,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				BigDecimal perc = new BigDecimal(100);
 				Double newTotalAmt = new Double(0);
 				BigDecimal percAmt = new BigDecimal(0);
-				BigDecimal contractValue = getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getContractAmount();
+				
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractVerId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
+				contractReqDTO.setAsAtDate(new Date());
+				BigDecimal contractValue = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount().getContractAmount();
+				
 				resDTO = contractSO.calAdvancePaymentTracking(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 				if(resDTO.getPaidInvoiceAmt() == null){
 					resDTO.setPaidInvoiceAmt(new BigDecimal(0));
