@@ -11,13 +11,13 @@
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></TD>
 				<TD><p:inputText id="hPopupItemName"
-						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
+						value="#{biddingBB.managedBean.selectedBidItem.scRequestItem.itemName}"
 						size="20" disabled="true" /></TD>
 			</tr>
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
 				<TD><p:inputText id="hPopupUOM"
-						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
+						value="#{biddingBB.managedBean.selectedBidItem.scRequestItem.uom.uomName}"
 						size="20" disabled="true" /></TD>
 			</tr>
 			<tr>
@@ -25,7 +25,7 @@
 				<TD>
 					<div style="align: right">
 						<p:inputText id="hPopupQty" style="float : right"
-							value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.qty}"
+							value="#{biddingBB.managedBean.selectedBidItem.qty}"
 							size="20" disabled="true">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomCode)}" />
