@@ -23,6 +23,7 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private boolean hyperlink;
 	private Map<String,String> userActionMap;
 	private boolean bannerImage;
+	private int flowStatus;
 	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -62,6 +63,14 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 
 	public void setBannerImage(boolean bannerImage) {
 		this.bannerImage = bannerImage;
+	}
+
+	public int getFlowStatus() {
+		return flowStatus;
+	}
+
+	public void setFlowStatus(int flowStatus) {
+		this.flowStatus = flowStatus;
 	}
 
 }
