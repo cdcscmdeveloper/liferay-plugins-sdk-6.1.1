@@ -5154,8 +5154,10 @@ public class SmApplicationUtil {
 	/**
 	 * Get personnel softcert request
 	 * 
-	 * @param Long supplierId
-	 * @param Long userId
+	 * @param Long
+	 *            supplierId
+	 * @param Long
+	 *            userId
 	 * @return SmSoftcertRequest
 	 */
 	public static SmSoftcertRequest getPersonnelSoftcertRequest(
@@ -5182,5 +5184,78 @@ public class SmApplicationUtil {
 		MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
 				.retrieveLatestSmApplWithChildBySupplierId(reqDTO);
 		return resDTO.getSmAppl();
+	}
+
+	/**
+	 * Set personnel authorized information when edit in personnel section
+	 * 
+	 * @param currAppl
+	 * @param prevPersonnel
+	 * @param currPersonnel
+	 */
+	public static void setPersonnelAuthorizedChangeInformation(SmAppl currAppl,
+			SmPersonnel prevPersonnel, SmPersonnel currPersonnel) {
+		if (currPersonnel.getAuthorizedFlg() == 0) {
+			currPersonnel.setSoftcertFlg(0);
+			currPersonnel.setContractSignerFlg(0);
+			currPersonnel.setEpRole("");
+		} else {
+			if (currAppl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONSULTANT)) {
+				currPersonnel
+						.setEpRole(prevPersonnel != null
+								&& StringUtils.isNotBlank(prevPersonnel
+										.getEpRole()) ? prevPersonnel
+								.getEpRole() : RoleCode.MOF_SUPPLIER_USER
+								.value());
+				currPersonnel.setSoftcertFlg(0);
+				currPersonnel.setContractSignerFlg(0);
+			} else {
+				if (currPersonnel.getPersonnelId() == null) {
+					if (currPersonnel.getEpRole().equals(
+							RoleCode.CM_USER.value())) {
+						currPersonnel.setSoftcertFlg(0);
+						currPersonnel.setContractSignerFlg(0);
+					} else {
+						currPersonnel
+								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
+										: prevPersonnel.getSoftcertFlg());
+						currPersonnel
+								.setContractSignerFlg(prevPersonnel == null ? 0
+										: prevPersonnel.getContractSignerFlg());
+					}
+				} else {
+					if (currPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						if (currPersonnel.getEpRole().equals(
+								RoleCode.CM_USER.value())) {
+							currPersonnel.setSoftcertFlg(0);
+							currPersonnel.setContractSignerFlg(0);
+						} else {
+							currPersonnel
+									.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
+											: prevPersonnel.getSoftcertFlg());
+							currPersonnel
+									.setContractSignerFlg(prevPersonnel == null ? 0
+											: prevPersonnel
+													.getContractSignerFlg());
+						}
+					} else {
+						if (currPersonnel.getEpRole().equals(
+								RoleCode.CM_USER.value())) {
+							currPersonnel.setSoftcertFlg(0);
+							currPersonnel.setContractSignerFlg(0);
+						} else {
+							currPersonnel
+									.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
+											: prevPersonnel.getSoftcertFlg());
+							currPersonnel
+									.setContractSignerFlg(prevPersonnel == null ? 0
+											: prevPersonnel
+													.getContractSignerFlg());
+						}
+					}
+				}
+			}
+		}
 	}
 }

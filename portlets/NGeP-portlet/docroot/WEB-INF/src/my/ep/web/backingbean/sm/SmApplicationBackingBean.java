@@ -2023,14 +2023,6 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
 			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
-			if (getManagedBean().getSelectedShareHolder().getEpRole() != null
-					&& getManagedBean()
-							.getSelectedShareHolder()
-							.getEpRole()
-							.equalsIgnoreCase(
-									RoleCode.MOF_SUPPLIER_USER.value())) {
-				getManagedBean().getSelectedShareHolder().setEpRole("");
-			}
 			getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
 			getManagedBean().setRemoveEpRole(true);
 		} else {
@@ -2051,19 +2043,11 @@ public class SmApplicationBackingBean extends
 			role.setValue(getManagedBean().getSelectedShareHolder().getEpRole());
 			getManagedBean().getePRoleList().add(role);
 		}
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null
-						|| getManagedBean().getSelectedShareHolder()
-								.getEpRole().isEmpty() || getManagedBean()
-						.getSelectedShareHolder().getEpRole()
-						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))) {
-			getManagedBean().getSelectedShareHolder().setEpRole(
-					RoleCode.MOF_SUPPLIER_USER.value());
-		}
-		if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
-			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
-		}
+		SmApplicationUtil.setPersonnelAuthorizedChangeInformation(
+				getManagedBean().getSmAppl(),
+				getPrevApprovedPersonnel(getManagedBean()
+						.getSelectedShareHolder()), getManagedBean()
+						.getSelectedShareHolder());
 	}
 
 	/**
@@ -2073,23 +2057,11 @@ public class SmApplicationBackingBean extends
 	 *            - AjaxBehaviorEvent object
 	 */
 	public void assignShareHolderPrivilegeByEpRole(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSelectedShareHolder().getEpRole()
-				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
-			if (getManagedBean().getSmAppl().getSmCompanyBasic() != null
-					&& !getManagedBean().getSmAppl().getSmCompanyBasic()
-							.isWithFederal()) {
-				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
-						0);
-			} else {
-				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
-						0);
-			}
-		} else if (!getManagedBean().getSelectedShareHolder().getEpRole()
-				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
-			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
-		}
-		setPersonnelSoftcertFlagOnSelectEpRole(getManagedBean()
-				.getSelectedShareHolder());
+		SmApplicationUtil.setPersonnelAuthorizedChangeInformation(
+				getManagedBean().getSmAppl(),
+				getPrevApprovedPersonnel(getManagedBean()
+						.getSelectedShareHolder()), getManagedBean()
+						.getSelectedShareHolder());
 	}
 
 	/**
@@ -4286,61 +4258,6 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * Set personnel soft certificate flag when selecting eprole
-	 * 
-	 * @param smPersonnel
-	 */
-	private void setPersonnelSoftcertFlagOnSelectEpRole(SmPersonnel smPersonnel) {
-		SmPersonnel prevPersonnel = getPrevApprovedPersonnel(smPersonnel);
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			if (smPersonnel.getPersonnelId() == null) {
-				if (smPersonnel.getEpRole().equals(RoleCode.CM_USER.value())) {
-					smPersonnel.setSoftcertFlg(0);
-					smPersonnel.setContractSignerFlg(0);
-				} else {
-					smPersonnel
-							.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-									: prevPersonnel.getSoftcertFlg());
-					smPersonnel.setContractSignerFlg(prevPersonnel == null ? 0
-							: prevPersonnel.getContractSignerFlg());
-				}
-			} else {
-				if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					if (smPersonnel.getEpRole()
-							.equals(RoleCode.CM_USER.value())) {
-						smPersonnel.setSoftcertFlg(0);
-						smPersonnel.setContractSignerFlg(0);
-					} else {
-						smPersonnel
-								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-										: prevPersonnel.getSoftcertFlg());
-						smPersonnel
-								.setContractSignerFlg(prevPersonnel == null ? 0
-										: prevPersonnel.getContractSignerFlg());
-					}
-				} else {
-					if (smPersonnel.getEpRole()
-							.equals(RoleCode.CM_USER.value())) {
-						smPersonnel.setSoftcertFlg(0);
-						smPersonnel.setContractSignerFlg(0);
-					} else {
-						smPersonnel
-								.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-										: prevPersonnel.getSoftcertFlg());
-						smPersonnel
-								.setContractSignerFlg(prevPersonnel == null ? 0
-										: prevPersonnel.getContractSignerFlg());
-					}
-				}
-			}
-		} else {
-			smPersonnel.setSoftcertFlg(0);
-			smPersonnel.setContractSignerFlg(0);
 		}
 	}
 
