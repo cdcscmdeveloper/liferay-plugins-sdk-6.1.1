@@ -58,18 +58,14 @@ public class PublicCatalogueBackingBean extends
 	private static Logger log = Logger
 			.getLogger(PublicCatalogueBackingBean.class);
 
-/*	public PublicCatalogueBackingBean(){
-		System.out.println("in constructor:::::::::");
-//		this.getManagedBean().setItemName(null);
-	}*/
 	/**
- * Auto complete item name.
- * 
- * @param query
- *           (String query(mandatory))
- * @return List<String>
- */
-public List<String> autoCompleteItemName(String query) {
+	 * Auto complete item name.
+	 * 
+	 * @param query
+	 *           (String query(mandatory))
+	 * @return List<String>
+	 */
+	public List<String> autoCompleteItemName(String query) {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 
@@ -142,8 +138,9 @@ public List<String> autoCompleteItemName(String query) {
 						MessageUtils.getMessage(MessageConst.ERROR_716008,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-	  return null;
-      }
+    	  return null;
+      	}
+      
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -163,16 +160,12 @@ public List<String> autoCompleteItemName(String query) {
 		this.getManagedBean().getBrandCriteria().clear();
 		this.getManagedBean().setCommodityCode(null);
 		this.getManagedBean().setFamilyCode(null);
+		
 		try {
 			reqDTO.setItemName(this.getManagedBean().getItemName());
 			CatalogueResDTO resDTO = catalogueSO
 					.searchPublicCatalogueBy(reqDTO);
-//			System.out
-//			.println("end calling method////");
-//			System.out
-//					.println("resDTO.getViewPublicSuppItemResultBean().getResultList():"
-//							+ resDTO.getViewPublicSuppItemResultBean()
-//									.getResultList());
+
 			List<String> itemNames = new ArrayList<String>();
 			for (VCmPubSuppItem cat : resDTO.getViewPublicSuppItemResultBean()
 					.getResultList()) {
@@ -222,19 +215,15 @@ public List<String> autoCompleteItemName(String query) {
 			}
 			for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean()
 					.getResultList()) {
-//                System.out.println("................................view.getCmSupplierItem()="+view.getCmSupplierItem());
 				this.getManagedBean().getCatalogueList()
 						.add(view);
 			}
-
-//		} catch (Exception ex) {
 
 		} finally {
 			catalogueSO = null;
 			codificationSO = null;
 		}
-		// return "publicCatalogueView";
-		return null;
+		return "publicCatalogueView?faces-redirect=true";
 	}
 
 	/**
@@ -316,11 +305,7 @@ public List<String> autoCompleteItemName(String query) {
 		log.debug("ViewPublicSuppItemResultBean().getResultList(): " + resDTO.getViewPublicSuppItemResultBean().getResultList());
 
 		for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean().getResultList()) {
-//			System.out.println("******view.getCmSupplierItem().getCmItem().getItemName()="+view.getCmSupplierItem().getCmItem().getItemName());
-//			System.out.println("******view.getCmSupplierItem().getCmStandardPricing().getPrice()="+view.getCmSupplierItem().getCmStandardPricing().getPrice());
-			
-			this.getManagedBean().getCatalogueList()
-					.add(view);
+			this.getManagedBean().getCatalogueList().add(view);
 		}
 
 	}
@@ -429,49 +414,21 @@ public List<String> autoCompleteItemName(String query) {
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueResDTO resDTO = null;
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-//		reqDTO.setSupplierItemId(vpsi.getCmSupplierItem().getSupplierItemId());
 		reqDTO.setSupplierItemId(vpsi.getSupplierItemId());
 		resDTO = catalogueSO.getSupplierItem(reqDTO);
 		
 
 
 		CatalogueBackingBean bb = new CatalogueBackingBean();
-		// PmUser pmUser = new FacesScopes().getUserSessionBean();
-		// supplierReqDTO.setUserId(pmUser.getUserId());
 
 		try {
-			// smResDTO =
-			// supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-
-			// System.out.println("getSmSupplier" +
-			// smResDTO.getResultBean().getResultList().get(0));
-
-//			reqDTO.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
-//			log.info("supplierItem.getSmSupplier().getSupplierId() = "
-//					+ vpsi.getCmSupplierItem().getSmSupplier().getSupplierId());
-
-//			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-
-//			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
-//			bb.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-
-//			reqDTO.setSupplierItemId(supplierItem.getSupplierItemId());
-//			resDTO = catalogueSO.findActivePricing(reqDTO);
-//			supplierItem.setCmPricings(resDTO.getPriceLs());
-//			log.info("supplierItem.getCmPricings().size() = "
-//					+ supplierItem.getCmPricings().size());
 			bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 
-		/*} catch (Exception e) {
-			e.printStackTrace();*/
 		} finally {
 			catalogueSO = null;
-//			supplierSearchSO = null;
 		}
 
-		// return "addCatalogView";
-		return "publicCatalogueDetail.xhtml";
-		// return "../catalogue/addCatalogView.xhtml";
+		return "publicCatalogueDetail.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -481,7 +438,7 @@ public List<String> autoCompleteItemName(String query) {
 	 */
 	public String cancelToPublicSearch() {
 		log.debug("..................cancelToPublicSearch..............");
-		return "publicCatalogueView";
+		return "publicCatalogueView?faces-redirect=true";
 	}
 
 	/**
