@@ -47,10 +47,13 @@
 			</c:if>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" /></td>
-				<td><p:inputText
+				<td>
+					<p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishPeriod}"
 						readonly="true" id="publishingperiod" disabled="true" size="14"
-						style="margin-top:5px; text-align:right" /></td>
+						style="margin-top:5px; text-align:right" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" />
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.closing.date']}" /></td>
@@ -61,7 +64,9 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <h:inputText
 						value="12:00 PM" disabled="true" size="4"
-						style="width: 52px;margin-top: 5px;margin-bottom: 0px;" /></td>
+						style="width: 52px;margin-top: 5px;margin-bottom: 0px;" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.closing.date.tooltip']}" />
+				</td>
 			</tr>
 			<c:if
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
@@ -81,6 +86,9 @@
 										disabled="true" size="4" style="width: 52px" /></td>
 								<td><p:message id="sampledate" for="sampleclsdate"
 										display="icon" /></td>
+								<td>
+									<ac:iconTooltip value="#{lbl['lbl.sc.sample.closingdate.tooltip']}" />
+								</td>
 							</tr>
 						</table>
 					</td>
