@@ -572,10 +572,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 }
 	 
 	 /**
-	  * The method used for generating a list of available ministry
-	  * for searching agency as selection.
+	  * The method used for generating a list of available decision type
+	  * as selection. If previously no remedy done before, 
+	  * the list won't include Terminate, only have Remedy
+	  * and Mutual Terminate'. 
 	  * 
-	  * @return the selection list of ministry
+	  * @return the selection list of decision type
 	  */
 	 public SelectItem[] getDecisionTypeDropdown() {
 			boolean remedy = false;
