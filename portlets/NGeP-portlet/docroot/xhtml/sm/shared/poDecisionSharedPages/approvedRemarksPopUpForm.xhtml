@@ -10,23 +10,27 @@
 		showDetail="true" autoUpdate="true" closable="true" />
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
-					value="*" styleClass="mandatory" /></td>
+			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+				<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 
-			<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-					id="approveSelBox" required="#{backingBean.managedBean.valueReqd}"
-					value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
-					style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems value="#{backingBean.managedBean.regStatusDescList}"
-						var="reg" itemLabel="#{reg.statusName}"
-						itemValue="#{reg.pmStatus.statusId}" />
+				<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
+						id="approveSelBox" required="#{backingBean.managedBean.valueReqd}"
+						value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems
+							value="#{backingBean.managedBean.regStatusDescList}" var="reg"
+							itemLabel="#{reg.statusName}"
+							itemValue="#{reg.pmStatus.statusId}" />
 
-				</p:selectOneMenu> <p:message id="approveSelBoxMsg" for="approveSelBox"
-					showSummary="true" showDetail="false" display="icon" /></td>
+					</p:selectOneMenu> <p:message id="approveSelBoxMsg" for="approveSelBox"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</c:if>
 		</tr>
 		<tr>
-			<td style="vertical-align: top"><p:outputLabel value="#{lbl['lbl.sm.remarks.approval']}" /></td>
+			<td style="vertical-align: top"><p:outputLabel
+					value="#{lbl['lbl.sm.remarks.approval']}" /></td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 					style="width : auto;" rows="10"
 					value="#{backingBean.managedBean.applnApprovalRemarks}"
