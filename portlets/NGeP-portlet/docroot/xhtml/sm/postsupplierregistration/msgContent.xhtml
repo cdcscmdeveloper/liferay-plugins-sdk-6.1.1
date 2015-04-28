@@ -23,6 +23,7 @@
 		</p:outputPanel>
 		
 		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">
+			<ui:remove>
 			<p:commandLink  action="#{postSupplierRegBB.pageNavigate}" rendered="#{postSupplierRegBB.managedBean.bannerImage}">
 				<p:graphicImage value="#{postSupplierRegBB.managedBean.statusDesc}"></p:graphicImage>
 			</p:commandLink>
@@ -32,7 +33,147 @@
 				<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}"/> 
 				<p:commandLink  value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 			</p:outputPanel>
+			</ui:remove>
+			
+			<h:outputStylesheet library="ep/css" name="tab.css"  />
+			<div class="container-content">
+				<div class="cover-container-content">
+					<div class="flow-chartbox">
+						<div class="flow-chart">
+							<p class="title">Please proceed to following steps</p>
+							<!-- Basic Account-->
+							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType != ParameterConst.newSmApplnForMof}">
+							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
+								<div class="flow-chart-left lst">
+									<p><strong>Step 1</strong><br /><p:commandLink value="Upload Catalogue" action="#{postSupplierRegBB.pageNavigate}" /></p>
+								</div>
+								<div class="flow-chart-left dmid">
+									<p><strong>Step 2</strong><br /> Request Soft Cert</p>
+								</div>
+								<div class="flow-chart-left dlast">
+									<p><strong>Step 3 </strong><br /><nobr>Registration Completed</nobr></p>
+								</div>
+							</c:if>
+							
+							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
+								<div class="flow-chart-left dlst">
+									<p><strong>Step 1</strong><br /> Upload Caralogue</p>
+								</div>
+								<div class="flow-chart-left mid">
+									<p><strong>Step 2</strong><br /><p:commandLink value="Request Soft Cert" action="#{postSupplierRegBB.pageNavigate}" /></p>
+								</div>
+								<div class="flow-chart-left dlast">
+									<p><strong>Step 3 </strong><br /><nobr>Registration Completed</nobr></p>
+								</div>
+							</c:if>
+							</p:outputPanel>
+							
+							<!-- MOF Account-->
+							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+								<!-- FLOW STATUS 1 -->
+								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
+								<div class="flow-chart-left lst">
+									<p><strong>Step 1</strong><br /><p:commandLink value="Continue MOF Registration" action="#{postSupplierRegBB.pageNavigate}" /></p>
+								</div>
+
+								<div class="flow-chart-left dmid">
+									<p><strong>Step 2</strong><br />Processing Fee</p>
+								</div>
+
+								<div class="flow-chart-left dmid">
+									<p><strong>Step 3</strong><br /> Goverment Processing</p>
+								</div>
+
+								<div class="flow-chart-left dmid">
+									<p><strong>Step 4</strong><br /> Registration Fee</p>
+								</div>
+								
+								<div class="flow-chart-left dlast">
+									<p><strong>Step 5 </strong><br /> Completed</p>
+								</div>
+								</c:if>
+								<!-- FLOW STATUS 1 - END -->
+								
+								<!-- FLOW STATUS 2 -->
+								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
+									<div class="flow-chart-left dlst">
+										<p><strong>Step 1</strong><br /><nobr>Continue MOF Registration</nobr></p>
+									</div>
+									<div class="flow-chart-left mid">
+										<p><strong>Step 2</strong><br /><p:commandLink value="Processing Fee" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									</div>
+									<div class="flow-chart-left dmid">
+										<p><strong>Step 3</strong><br /> Goverment Processing</p>
+									</div>
+									<div class="flow-chart-left dmid">
+										<p><strong>Step 4</strong><br /> Registration Fee</p>
+									</div>
+									<div class="flow-chart-left dlast">
+										<p><strong>Step 5 </strong><br /> Completed</p>
+									</div>
+								</c:if>
+								<!-- FLOW STATUS 2 - END -->
+								
+								<!-- FLOW STATUS 3 -->
+								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 3}">
+									<div class="flow-chart-left dlst">
+										<p><strong>Step 1</strong><br /><nobr>Continue MOF Registration</nobr></p>
+									</div>
+
+									<div class="flow-chart-left dmid">
+										<p><strong>Step 2</strong><br /> Processing Fee</p>
+									</div>
+
+									<div class="flow-chart-left mid">
+										<p><strong>Step 3</strong><br />Goverment Processing</p>
+									</div>
+
+									<div class="flow-chart-left dmid">
+										<p><strong>Step 4</strong><br /> Registration Fee</p>
+									</div>
+
+									<div class="flow-chart-left dlast">
+										<p><strong>Step 5 </strong><br /> Completed</p>
+									</div>
+								</c:if>
+								<!-- FLOW STATUS 3 - END -->
+								
+								<!-- FLOW STATUS 4 -->
+								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 4}">
+									<div class="flow-chart-left dlst">
+										<p><strong>Step 1</strong><br /><nobr>Continue MOF Registration</nobr></p>
+									</div>
+
+									<div class="flow-chart-left dmid">
+										<p><strong>Step 2</strong><br /> Processing Fee</p>
+									</div>
+
+									<div class="flow-chart-left dmid">
+										<p><strong>Step 3</strong><br /> Goverment Processing</p>
+									</div>
+
+									<div class="flow-chart-left mid">
+										<p><strong>Step 4</strong><br /><p:commandLink value="Registration Fee" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									</div>
+
+									<div class="flow-chart-left dlast">
+										<p><strong>Step 5 </strong><br /> Completed</p>
+									</div>
+								</c:if>
+								<!-- FLOW STATUS 4 - END -->
+							</p:outputPanel>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<p:outputPanel rendered="#{postSupplierRegBB.managedBean.flowStatus == 3 and postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
+				<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" /> 
+				<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}"/> 
+				<p:commandLink value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+			</p:outputPanel>
 		</p:outputPanel>
+		
 		<br /><br />
 	</ui:define>
 
