@@ -111,7 +111,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
-import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -9172,19 +9171,26 @@ public class SmApplicationBackingBean extends
 	 * @return SmPersonnel
 	 */
 	private SmPersonnel getPrevApprovedPersonnel(SmPersonnel currPersonnel) {
+		List<SmPersonnel> prevPersonnels = getManagedBean()
+				.getPrevApprovedPersonnels() == null
+				|| getManagedBean().getPrevApprovedPersonnels().isEmpty() ? SmCommonUtil
+				.getBasicPersonnelsBySupplierId(getManagedBean().getSmAppl()
+						.getSmSupplier().getSupplierId()) : getManagedBean()
+				.getPrevApprovedPersonnels();
+
 		SmPersonnel retVal = null;
+
 		if (currPersonnel != null
 				&& StringUtils.isNotBlank(currPersonnel.getIdentificationNo())
-				&& getManagedBean().getPrevApprovedPersonnels() != null
-				&& !getManagedBean().getPrevApprovedPersonnels().isEmpty()) {
-			for (SmPersonnel prevPersonnel : getManagedBean()
-					.getPrevApprovedPersonnels()) {
+				&& prevPersonnels != null && !prevPersonnels.isEmpty()) {
+			for (SmPersonnel prevPersonnel : prevPersonnels) {
 				if (prevPersonnel.getIdentificationNo().equals(
 						currPersonnel.getIdentificationNo())) {
 					retVal = prevPersonnel;
 				}
 			}
 		}
+
 		return retVal;
 	}
 }
