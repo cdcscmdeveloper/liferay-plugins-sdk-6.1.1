@@ -1717,19 +1717,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	private void setSupplierProfileOrHistoryUrl(String baseUrl,
 			String baseUrlLabel, String supplierId) {
-		FacesContext fCtx = FacesContext.getCurrentInstance();
-		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
-				.getRequest();
-		ThemeDisplay themeDisplay = (ThemeDisplay) req
-				.getAttribute(WebKeys.THEME_DISPLAY);
-		Layout layout = themeDisplay.getLayout();
-
-		String portalUrl = themeDisplay.getURLPortal();
-		String currentUrl = themeDisplay.getURLCurrent();
-		currentUrl = currentUrl.substring(0,
-				currentUrl.indexOf(layout.getFriendlyURL()));
-
-		String url = portalUrl + currentUrl + baseUrl;
+		String url = SmCommonUtil.getEpBaseUrl() + baseUrl;
 		getManagedBean().setPortletUrl(url);
 		getManagedBean().setSupplierIdParam(supplierId);
 		getManagedBean().setPortletUrlLabel(baseUrlLabel);
