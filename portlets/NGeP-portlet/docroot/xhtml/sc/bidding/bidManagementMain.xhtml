@@ -11,12 +11,6 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:outputPanel>
-			<p:commandButton id="backButton" value="#{lbl['lbl.btn.back']}"
-				style="float:left;" partialSubmit="true" process="@this"
-				action="#{biddingBB.biddingMonitorBackAction}" />
-		</p:outputPanel>
-
 		<ui:param name="isZonal"
 			value="#{!biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName eq null}" />
 
@@ -26,10 +20,15 @@
 		<ui:param name="isViewByItem"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
 
-		<!-- <p:spacer height="10px"></p:spacer> -->
+		<div style="height: 40px;">
+			<p:commandButton id="backButton" value="#{lbl['lbl.btn.back']}"
+				style="float:left;" partialSubmit="true" process="@this"
+				action="#{biddingBB.biddingMonitorBackAction}" />
+		</div>
+		<p:spacer height="5px"></p:spacer>
 
 		<div align="left" class="header-info">
-			<table style="width: 100%">
+			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel id="biddingNoLbl"
 							value="#{lbl['lbl.sc.bidding.no']}" /></td>
@@ -56,7 +55,7 @@
 			</table>
 		</div>
 
-		<p:spacer height="10px"></p:spacer>
+		<p:spacer height="5px"></p:spacer>
 
 		<p:panel header="#{lbl['lbl.sc.bid.details']}"
 			id="bidDetailsForBidManagement" toggleable="true">
@@ -128,14 +127,14 @@
 			</div>
 
 		</p:panel>
-		<p:panel id="bidManagementPanel">
-			<c:if test="#{isViewByPackage}">
-				<ui:include src="bidManagementByPackage.xhtml"></ui:include>
-			</c:if>
-			<c:if test="#{isViewByItem}">
-				<ui:include src="bidManagementByItem.xhtml"></ui:include>
-			</c:if>
-		</p:panel>
+
+		<c:if test="#{isViewByPackage}">
+			<ui:include src="bidManagementByPackage.xhtml"></ui:include>
+		</c:if>
+		<c:if test="#{isViewByItem}">
+			<ui:include src="bidManagementByItem.xhtml"></ui:include>
+		</c:if>
+
 
 		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="false"
 			header="#{lbl['lb.sc.zone.details']}" modal="true" width="350"
