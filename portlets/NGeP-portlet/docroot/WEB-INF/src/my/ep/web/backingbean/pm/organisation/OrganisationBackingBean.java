@@ -461,9 +461,6 @@ public class OrganisationBackingBean extends
 		OrgProfileResDTO orgResDTO = orgProfileSO
 				.retrieveOrgDetailsByOrgId(reqDTO);
 		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
-
-		this.getManagedBean().setOrgProfile(orgProfile);
-
 		getManagedBean().setOrgType(
 				orgProfile.getOrgTypeCode().getParameterCode());
 
@@ -471,6 +468,20 @@ public class OrganisationBackingBean extends
 				orgProfile.getOrgTypeCode().getParameterId());
 		log.info("orgProfile.getOrgTypeCode().getParameterCode()="
 				+ orgProfile.getOrgTypeCode().getParameterCode());
+	
+		// Kumpulan PTJ
+		if (getManagedBean().getOrgType().equalsIgnoreCase(
+				OrganizationType.DEPARTMENT.value())) {
+			retrieveMinistryList();
+			if(orgProfile.getParentOrgProfile() == null){
+				orgProfile.setParentOrgProfile(new PmOrgProfile());
+			}
+			
+		}
+		
+		this.getManagedBean().setOrgProfile(orgProfile);
+
+		
 
 		// set org category
 		if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT)
@@ -495,11 +506,7 @@ public class OrganisationBackingBean extends
 
 		}
 		
-		// PTJ
-		if (getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.DEPARTMENT.value())) {
-			retrieveMinistryList();
-		}
+	
 		// PTJ
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.DIVISION.value())) {
@@ -527,6 +534,14 @@ public class OrganisationBackingBean extends
 						// this.getManagedBean().setDeliveryContactPerson(pmAddressType.getPmContacts().get(0));
 					}
 				}
+				
+//				if(getManagedBean().getAddressTypesList() != null && !getManagedBean().getAddressTypesList().isEmpty()){
+//					RequestContext requestContext = RequestContext.getCurrentInstance();
+//					requestContext.update("deliveryAddressId");
+//					requestContext.execute(
+//							"deliveryAddres.clearFilters();");
+//				}
+		
 			}
 			// Profile Groups
 			if (orgProfile.getMainProfileGroups() != null
@@ -1428,11 +1443,7 @@ public class OrganisationBackingBean extends
 			}
 		}
 
-		RequestContext.getCurrentInstance().execute("addressPopup.hide();");
-		RequestContext
-				.getCurrentInstance()
-				.execute(
-						"deliveryAddres.paginator.endLink.click();addressPopup.hide();");
+		RequestContext.getCurrentInstance().execute("addressPopup.hide();");	
 
 	}
 

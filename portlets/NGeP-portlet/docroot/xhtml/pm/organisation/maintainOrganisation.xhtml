@@ -25,8 +25,9 @@
 						<!-- <f:param name="disableValidation" value="true" > -->
 					<p:commandButton value="#{lbl['lbl.btn.update']}" 
 						action="#{organisationBackingBean.saveOrganization('UPDATE')}" 
-						update="@([id$=Msg])"  style="float:right;"
-						rendered ="#{!organisationBackingBean.managedBean.orgProfile.brandNew}" />
+						update="@form"  style="float:right;"
+						rendered ="#{!organisationBackingBean.managedBean.orgProfile.brandNew}"
+					/>
 				</td>
 			</tr>
 		</table>
