@@ -5610,7 +5610,7 @@ public class SupplierFinalizationBackingBean extends
 	 *            the digiSign to set
 	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
-		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+		updateBPMTask(this.getManagedBean().getAction(), digiSign, null);
 	}
 
 	/**
