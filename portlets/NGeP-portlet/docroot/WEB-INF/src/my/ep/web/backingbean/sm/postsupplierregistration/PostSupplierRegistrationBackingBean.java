@@ -460,6 +460,16 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
 			break;
+		
+		case 20102 : //Pending Application Verification
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
+		
+		case 20103 : //Pending Review Site Visit Report - Before Approval
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+			break;
 
 		case 20104 : //Pending Review Application
 			getManagedBean().setFlowStatus(3);
