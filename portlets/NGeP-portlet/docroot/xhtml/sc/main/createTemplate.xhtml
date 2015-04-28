@@ -257,15 +257,19 @@
 						style="width:10%;">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
-							<p:commandButton value="#{lbl['lbl.btn.create']}" process="@all"
+							<p:commandButton value="#{lbl['lbl.btn.prepare']}" process="@all"
 								update=":form:searchBospec"
-								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"></p:commandButton>
+								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"
+								title="#{lbl['lbl.sc.spec.prepare.btn.tooltip']}"
+								 />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 							<p:commandButton value="#{lbl['lbl.btn.clone']}"
 								process="@all" update=":form:searchBospec"
-								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"></p:commandButton>
+								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"
+								title="#{lbl['lbl.sc.spec.clone.btn.tooltip']}" 
+								/>
 						</ui:fragment>
 					</p:column>
 
