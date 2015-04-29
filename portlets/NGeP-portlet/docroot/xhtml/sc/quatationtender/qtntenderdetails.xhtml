@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.qt.details']}" toggleable="true">
+	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.qt.details']}"
+		toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 190px;"><p:outputLabel
@@ -43,7 +44,7 @@
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
-									<td style="width: 210px"><p:outputLabel
+									<td style="width: 215px"><p:outputLabel
 											value="#{lbl['lbl.sc.open.for']}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
@@ -67,62 +68,70 @@
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputMask id="publishperiod" mask="9?99" maxlength="3"
-						placeHolder="" label="#{lbl['lbl.sc.qt.publishing.period']}"
-						required="true" value="#{qTDetailBB.managedBean.qt.publishPeriod}"
-						disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
-						valueChangeListener="#{qTDetailBB.publishPeriodDaysChanged}"
-						size="30" style="text-align:right">
-						<p:ajax event="blur" process="@this" partialSubmit="true"
-							listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
-					</p:inputMask> 
-					<p:message id="publishperiodMsg" for="publishperiod" display="icon" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" />
-				</td>
-				<td style="width: 210px;"><p:outputLabel
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.publishing.period']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><table>
+						<tr>
+							<td><p:inputMask id="publishperiod" mask="9?99"
+									maxlength="3" placeHolder=""
+									label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
+									value="#{qTDetailBB.managedBean.qt.publishPeriod}"
+									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_PUBLISH_PERIOD)}"
+									valueChangeListener="#{qTDetailBB.publishPeriodDaysChanged}"
+									size="30" style="text-align:right">
+									<p:ajax event="blur" process="@this" partialSubmit="true"
+										listener="#{qTScheduleDetailBackingBean.handlePublishClosingDate}" />
+								</p:inputMask></td>
+							<td><p:message id="publishperiodMsg" for="publishperiod"
+									display="icon" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" /></td>
+						</tr>
+					</table></td>
+				<td style="width: 215px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputMask id="proposalvalidity" mask="9?9999"
-						maxlength="5" placeHolder=""
-						label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
-						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
-						disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
-						valueChangeListener="#{qTDetailBB.proposalValidityChanged}"
-						style="text-align:right">
-						<f:ajax></f:ajax>
-					</p:inputMask> 
-					<p:message id="proposalvalidityMsg" for="proposalvalidity" display="icon" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" />
-				</td>
+				<td><table>
+						<tr>
+							<td><p:inputMask id="proposalvalidity" mask="9?9999"
+									maxlength="5" placeHolder=""
+									label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
+									value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" size="30"
+									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FILED_QT_VALIDITY_PERIOD)}"
+									valueChangeListener="#{qTDetailBB.proposalValidityChanged}"
+									style="text-align:right">
+									<f:ajax></f:ajax>
+								</p:inputMask></td>
+							<td><p:message id="proposalvalidityMsg"
+									for="proposalvalidity" display="icon" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" /></td>
+						</tr>
+					</table></td>
 			</tr>
 			<ui:fragment rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 					<td><p:inputText
 							value="#{lbl[qTDetailBB.managedBean.qt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-							disabled="true" size="30" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" />
-					</td>
+							disabled="true" size="30" /> <ac:iconTooltip
+							value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
 					<td />
 					<td />
 				</tr>
 			</ui:fragment>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}"
+		toggleable="true"
 		rendered="#{qTDetailBB.managedBean.qt.zonal and qTDetailBB.managedBean.qt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 190px"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /></td>
-				<td colspan="3">
-					<p:inputText
+				<td colspan="3"><p:inputText
 						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.zoneLocationLevel)}"
-						disabled="true" size="30" readonly="true" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.zone.location.level.tooltip']}" />
-				</td>
+						disabled="true" size="30" readonly="true" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /></td>
 			</tr>
 		</table>
 		<p:dataTable id="zoneGeneralDataTable"
