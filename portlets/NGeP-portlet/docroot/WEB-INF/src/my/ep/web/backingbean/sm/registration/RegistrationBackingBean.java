@@ -601,6 +601,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return String
 	 */
 	public String updateOnlineAccount() {
+		boolean deactivateAccount = this.getManagedBean().getSmSupp().getRecordStatusFlg()
+				.intValue() == DbValueConst.RECORD_STATUS_SUSPENDED ? true
+				: false;
+		String retPage = deactivateAccount ? null
+				: "/xhtml/sm/onlinereg/outputMsg";
+		
 		validateGstRegNo();
 
 		log.info("--------------------updateOnlineAccount----------------");
@@ -646,7 +652,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		try{
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IRegistrationSO.class);
+					.getInstance().getServiceObject("sm", IRegistrationSO.class);			
 			RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
 			if (resDTO.isSuccessful()) {
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
@@ -654,8 +660,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						FacesMessage.SEVERITY_INFO,
 						null,
 						MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				renewSesionObject();
-				return "/xhtml/sm/onlinereg/outputMsg";
+				if(deactivateAccount){
+					RequestContext.getCurrentInstance().execute("successDialog.show()");
+				}else{
+					renewSesionObject();
+				}
+				return retPage;
 			} else {
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				throw new EpException(MessageConst.ERROR_721006);
