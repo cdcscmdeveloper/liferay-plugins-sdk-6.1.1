@@ -238,6 +238,7 @@
 		<portlet id="SoftCertReg"></portlet>
 		<portlet id="MySoftCert"></portlet>
 		<portlet id="smDeactivateAdmin"></portlet>
+		<portlet id="supplierPromotion"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
