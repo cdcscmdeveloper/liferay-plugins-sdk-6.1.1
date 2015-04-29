@@ -54,7 +54,7 @@
 
 	            <p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:30%">
-					<p:commandButton  value="Create LOI" rendered="#{!loiLoa.loiCreated}" 
+					<p:commandButton  value="#{lbl['lbl.sc.loiloa.create.loi']}" rendered="#{!loiLoa.loiCreated}" 
 						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
 				</p:column>
 			</p:dataTable>
