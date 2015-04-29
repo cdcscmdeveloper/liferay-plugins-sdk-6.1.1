@@ -10,9 +10,9 @@
 	<p:panel header="#{lbl['lbl.sc.category.code']}" toggleable="true">
 
 
-		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
+		<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
-			rowIndexVar="index" styleClass="openPnlId" rows="10"
+			rowIndexVar="index" rows="10"
 			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
 			rowKey="#{cateGory}">
 
@@ -51,11 +51,23 @@
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this,openPnlId" partialSubmit="true"
-				action="#{specificationBackingBean.deleteCategoryCodes}"
-				update="openPnlId"
+				oncomplete="supplierOpencategoryDeletePopUp.show();"
+				update="@([id$=#{supplierOpencategoryDeleteId}])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}" />
 
 		</div>
+		<ui:param name="supplierOpencategoryDeleteId"
+			value="supplierOpencategoryDeleteId"></ui:param>
+		<ui:param name="supplierOpencategoryDeletePopUp"
+			value="supplierOpencategoryDeletePopUp"></ui:param>
+		<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
+			widget="supplierOpencategoryDeletePopUp"
+			postSignAction="#{specificationBackingBean.deleteCategoryCodes}"
+			title="#{lbl['lbl.sc.category.code']}"
+			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
+			update="@([id$=openPnlId])" />
+
+
 
 		<ac:categoryCodePopup
 			okAction="specificationBackingBean.addNewCategoryAction"
@@ -186,7 +198,7 @@
 							</p:tree>
 						</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
+						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
@@ -213,10 +225,22 @@
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						update="zoneLocationDataTable"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}" />
+						process="@this,zoneLocationDataTable" partialSubmit="true"
+						oncomplete="supplierNonZoneDeletePopUp.show();"
+						update="@([id$=#{supplierNonZoneDeleteId}])"
+						disabled="#{specificationBackingBean.managedBean.readOnly}" />
 				</div>
+				<ui:param name="supplierNonZoneDeleteId"
+					value="supplierNonZoneDeleteId"></ui:param>
+				<ui:param name="supplierNonZoneDeletePopUp"
+					value="supplierNonZoneDeletePopUp"></ui:param>
+				<ac:confirmationPopup id="#{supplierNonZoneDeleteId}"
+					widget="supplierNonZoneDeletePopUp"
+					postSignAction="#{specificationBackingBean.deleteSupplierQualificationTreeNode}"
+					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
+					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
+					update="@([id$=zoneLocationDataTable])" />
+
 			</h:panelGroup>
 
 
@@ -266,7 +290,7 @@
 
 						<ac:paginator for="zoneyesDataTable" />
 
-						<p:column style="width:90%">
+						<p:column style="width:90%;">
 							<f:facet name="header">
 								<h:outputText value="* " styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.location']}" />
@@ -294,7 +318,7 @@
 
 							</p:tree>
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
+						<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
 							<p:commandLink
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editSupplierLocations(zoneTree,index)}"
@@ -323,9 +347,21 @@
 						actionListener="#{specificationBackingBean.showSupplierLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}"
-						update="zoneyesDataTable" />
+						process="@this,zoneyesDataTable" partialSubmit="true"
+						oncomplete="supplierZonalDeletePopUp.show();"
+						update="@([id$=#{supplierZonalDeleteId}])" />
+
+
 				</div>
+				<ui:param name="supplierZonalDeleteId" value="supplierZonalDeleteId"></ui:param>
+				<ui:param name="supplierZonalDeletePopUp"
+					value="supplierZonalDeletePopUp"></ui:param>
+				<ac:confirmationPopup id="#{supplierZonalDeleteId}"
+					widget="supplierZonalDeletePopUp"
+					postSignAction="#{specificationBackingBean.deleteSupplierQualificationTreeNode}"
+					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
+					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
+					update="@([id$=zoneyesDataTable])" />
 			</h:panelGroup>
 
 			<p:dialog header="#{lbl['lbl.sc.add.location']}"
