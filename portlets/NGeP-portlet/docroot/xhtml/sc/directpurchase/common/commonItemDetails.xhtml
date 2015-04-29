@@ -53,16 +53,14 @@
 					<p:commandLink partialSubmit="true" process="@this"
 						actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}"
 						rendered="#{!empty requestNoteDtl.requestItem.purchaseInDefault}">
-							<p:graphicImage library="ep/images/design" name="evaluate.png"
-							style="vertical-align:middle" />
+							<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
 					</p:commandLink>
 					  <p:spacer width="2px;"/>
 			      <h:panelGroup rendered="#{requestNoteDtl.showPurchaseInquiry}">
 					  <p:commandLink partialSubmit="true" process="@this"
 						id="prInquiryResponse"
 						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}">
-							<p:graphicImage library="ep/images/design" name="evaluate.png"
-							style="vertical-align:middle" />
+							<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
 						<p:tooltip for="prInquiryResponse">
 							<h:outputText value="#{lbl['lbl.sc.pi.summary.tooltip']}" escape="false" />
 						</p:tooltip>
@@ -102,8 +100,7 @@
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%; white-space: normal;">
 				    <p:commandLink immediate="true" ajax="false" partialSubmit="true" process="@this" action="#{requestNoteBackingBean.viewMarketResearch(requestNoteDtl)}"
 				    	id="marketSummaryIcon">
-				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
-							style="vertical-align:middle" />
+				      <p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
 						<p:tooltip for="marketSummaryIcon">
 							<h:outputText rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" 
 							value="#{lbl['lbl.sc.summary.searchresult.tooltip']}" escape="false" />
@@ -116,8 +113,7 @@
 				   <h:commandLink immediate="true" 
 						action="#{requestNoteBackingBean.downloadPurchaseInqReport(requestNoteDtl)}"
 						id="prInquirySummaryIcon">
-							<p:graphicImage library="ep/images/design" name="evaluate.png"
-							style="vertical-align:middle" />
+							<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
 						<p:tooltip for="prInquirySummaryIcon">
 							<h:outputText value="#{lbl['lbl.sc.summary.item.tooltip']}" escape="false" />
 						</p:tooltip>
@@ -158,8 +154,7 @@
 						      oncomplete="blockWidget.hide();"
 						      rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}"
 						     update="@([id$=suppDetailsPopup])">
-						    <p:graphicImage library="ep/images/design" name="evaluate.png"
-							  style="vertical-align:middle" />
+						   <p:graphicImage value="/css/images/design/ico-supplier-details-2.png" style="vertical-align:middle"></p:graphicImage>
 					        <f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" target="#{supplierDetailBackingBean.smSupplier}" />
 					     </p:commandLink>
 					  </p:column>
@@ -211,8 +206,7 @@
 								process="@this"
 								actionListener="#{requestNoteBackingBean.showPricing(requestNoteDtl)}"
 								oncomplete="pricingPopup.show();">
-							   <p:graphicImage library="ep/images/design" name="evaluate.png"
-							    style="vertical-align:middle" />
+							    <p:graphicImage value="/css/images/design/ico-price.png" style="vertical-align:middle"></p:graphicImage>
 							</p:commandLink>
 						</h:panelGroup>
 					</h:panelGroup>

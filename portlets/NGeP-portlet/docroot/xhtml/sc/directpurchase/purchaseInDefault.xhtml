@@ -200,17 +200,29 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.pid.reason.instruction']}">
 		</h:outputText>
 	      <h:panelGroup>
-			<table style="width:100%;margin-top: 8px;">
-			<tr>
-			   <td style="width: 22.5%;">
-			   <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.just']}" />  <p:outputLabel value="*" styleClass="mandatory" /></td>
+			<table style="width: 100%; margin-top: 8px;">
+				<tr>
+					<td style="width: 22.5%;"><p:outputLabel
+							value="Tempoh Pengeluaran RN" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="pidvalidDays" maxlength="14" required="true"
+					        label="Tempoh Pengeluaran RN"
+							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
+							styleClass="ppRightBtn" size="32"
+							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}"> 
+						</p:inputText>#{lbl['lbl.sc.days']} <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
+				</tr>
+
+				<tr>
+					<td style="width: 22.5%;"><p:outputLabel
+							value="#{lbl['lbl.sc.purchase.in.default.just']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
 								<td><p:selectOneMenu id="justId"
 										label="#{lbl['lbl.sc.purchase.in.default.just']}"
-										disabled="#{!isPendingSubmissionStatus}"
-										required="true"
+										disabled="#{!isPendingSubmissionStatus}" required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType.reasonCode}"
 										style="margin-bottom: 5px;">
 										<f:selectItems
@@ -219,21 +231,19 @@
 										<p:ajax event="change" update="@([id$=reqDtlId])"
 											partialSubmit="true" process="@this"
 											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
-									</p:selectOneMenu> 
-									<p:commandLink style="text-align:left" ajax="false"  partialSubmit="true" process="@this"
-									   immediate="true" action="#{purchaseInDefaultBackingBean.viewMarketResearch(purchaseInDefaultBackingBean.managedBean.purchaseInDefault)}">
-								     <p:spacer width="3px"></p:spacer>
-								     <p:graphicImage library="ep/images/design" name="evaluate.png"
-							                style="vertical-align:top" />
-									</p:commandLink>
-									</td>
+									</p:selectOneMenu> <p:commandLink style="text-align:left" ajax="false"
+										partialSubmit="true" process="@this" immediate="true"
+										action="#{purchaseInDefaultBackingBean.viewMarketResearch(purchaseInDefaultBackingBean.managedBean.purchaseInDefault)}">
+										<p:spacer width="3px"></p:spacer>
+											<p:graphicImage value="/css/images/design/ico-view.png"></p:graphicImage>
+									</p:commandLink></td>
 								<td><p:message id="justIdMsg" for="justId" display="icon" /></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
-		</table>
-	   </h:panelGroup>
+			</table>
+		</h:panelGroup>
 
 		<h:panelGroup id="orderQty"
 			rendered="#{purchaseInDefaultBackingBean.managedBean.visibleOrderQty}">
@@ -306,7 +316,8 @@
 			    <table>
 				 <tr>
 				    <td rowspan="2" style="vertical-align: top;" align="left">
-					  <h:graphicImage library="ep/images/design" name="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}" height="30" width="30" />
+				       <ui:param name="icon" value="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}"></ui:param>
+					  <p:graphicImage value="/css/images/design/#{icon}" height="30" width="30"> </p:graphicImage>
 					  </td>
 				   <td><h:outputText value="#{attachFile.createdUser.userName}" />, 
 					 <h:outputText  value="#{attachFile.createdDate}">
@@ -317,7 +328,7 @@
 					<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" immediate="true" action="#{purchaseInDefaultBackingBean.downloadFile(attachFile)}"/>
 						<p:commandLink action="#{purchaseInDefaultBackingBean.deleteUploadFile}" immediate="true"  update="attachId"  
 						disabled="#{!isPendingSubmissionStatus}">
-			   			<h:graphicImage library="ep/images/design" name="trash.png" styleClass="tasklist_title1"/>
+						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 			 	 		</p:commandLink>
 			 	  </td>
 				</tr>
