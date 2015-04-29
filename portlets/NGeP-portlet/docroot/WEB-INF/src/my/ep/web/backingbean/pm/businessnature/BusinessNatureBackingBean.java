@@ -510,6 +510,23 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	public void retrieveBusinessNature(){
 		debugLogger("retrieveBusinessNature");
 		
+boolean hasSearchValue = false;
+		
+		if (getManagedBean().getCategoryLvl() != null && getManagedBean().getCategoryLvl().intValue()>0) {
+			hasSearchValue = true;
+		}
+
+		if(!hasSearchValue) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_721110,
+							new String[]{ResourceBundleUtils.getMessage("lbl.pm.category.level",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} 
+		
+		
 		this.getManagedBean().setLazy(true);
 		businessNatureDataModel.reloadData();
 		
