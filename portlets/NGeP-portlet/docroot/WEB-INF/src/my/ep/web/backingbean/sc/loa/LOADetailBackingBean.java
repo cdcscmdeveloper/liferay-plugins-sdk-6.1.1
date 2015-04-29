@@ -1805,15 +1805,17 @@ public class LOADetailBackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		populateAttachmentDetails(attachment);
 		List<ScLoi> lois = new ArrayList<ScLoi>();
-
-		List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
-		if(loiloas != null && loiloas.size()>0){
-			for (ScLoiLoa scLoiLoa : loiloas) {
-				if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
-					lois.addAll(scLoiLoa.getScLois()) ;
+		if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getSmSupplier() != null){
+			List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+			if(loiloas != null && loiloas.size()>0){
+				for (ScLoiLoa scLoiLoa : loiloas) {
+					if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
+						lois.addAll(scLoiLoa.getScLois()) ;
+					}
 				}
-			}
+			} 
 		}
+
 		VelocityContext context = new VelocityContext();
 		context.put("scLois", lois);
 		context.put("bean", this);
