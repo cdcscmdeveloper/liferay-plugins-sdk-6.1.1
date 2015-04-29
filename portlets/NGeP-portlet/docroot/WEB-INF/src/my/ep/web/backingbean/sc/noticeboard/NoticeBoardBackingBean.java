@@ -936,9 +936,9 @@ public class NoticeBoardBackingBean extends
 				String selectedTab = getManagedBean().getSelectedTab();
 				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
 						.equals(selectedTab)) {
-					searchBean.getDataFilterBeans().add(
+					/*searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("IS_CHANGED",
-									SearchOperator.OPERATOR_EQUALS.value(), 1));
+									SearchOperator.OPERATOR_EQUALS.value(), 1));*/
 					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
 					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 
@@ -1175,7 +1175,7 @@ public class NoticeBoardBackingBean extends
 								"to_char(qt.PUBLISH_DATE,'yyyy-MM-dd')", false));
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtSearchBean(searchBean);
-
+				reqDTO.setCurrentTab(selectedTab);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO
 						.searchQTNoticeBoard(reqDTO);
 
