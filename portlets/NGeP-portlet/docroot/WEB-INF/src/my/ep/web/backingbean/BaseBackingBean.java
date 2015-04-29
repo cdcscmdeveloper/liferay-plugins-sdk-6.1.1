@@ -882,12 +882,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	/**
 	 * Redirect to liferay logout url
 	 */
-	public void redirectToLogoutUrl(){
+	public void redirectToLogoutUrl() {
 		FacesContext fCtx = FacesContext.getCurrentInstance();
 		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
 				.getRequest();
 		ThemeDisplay themeDisplay = (ThemeDisplay) req
 				.getAttribute(WebKeys.THEME_DISPLAY);
-		SmCommonUtil.redirectToExternalUrl(themeDisplay.getURLSignOut());
+		String logOutUrl = themeDisplay.getURLSignOut();
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
+				+ logOutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+		SmCommonUtil.redirectToExternalUrl(logOutUrl);
 	}
 }
