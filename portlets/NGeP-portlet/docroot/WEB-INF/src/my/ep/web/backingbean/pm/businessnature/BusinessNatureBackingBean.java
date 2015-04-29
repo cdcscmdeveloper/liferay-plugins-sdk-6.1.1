@@ -60,13 +60,23 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	}
 	
 	/**
+	 * load clean view
+	 */
+	public void preLoading(){
+		debugLogger("preLoading");
+		this.resetBusinessNatureSearch();
+		FacesContext fc = FacesContext.getCurrentInstance(); 
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml");
+	}
+	
+	/**
 	 * reload to business nature search page 
 	 * 
 	 */		
 	public String redirectBusinessSearch() {
 		debugLogger("redirectBusinessSearch");
 		
-		this.getManagedBean().setLazy(false);
+	//	this.getManagedBean().setLazy(true);
 
 		return "/xhtml/pm/businessnature/businessNatureMain.xhtml?faces-redirect=true";
 
@@ -500,6 +510,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	public void retrieveBusinessNature(){
 		debugLogger("retrieveBusinessNature");
 		
+		this.getManagedBean().setLazy(true);
 		businessNatureDataModel.reloadData();
 		
 	}

@@ -255,7 +255,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 * reload back to user group search page
 	 */
 	public String backToMainPages() {
-		this.getManagedBean().setLazy(true);
+	//	this.getManagedBean().setLazy(true);
 		this.getManagedBean().setSelectGrp(false);
 		this.getManagedBean().setOrgProfileId(null);
 		debugLogger("backToMainPages");
@@ -272,6 +272,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	}
 
 	public void searchUserGroupAction() {
+		this.getManagedBean().setLazy(true);
 		getUserGroupList().reloadData();
 	}
 
