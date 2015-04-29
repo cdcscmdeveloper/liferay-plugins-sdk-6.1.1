@@ -1,5 +1,5 @@
 /**
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 // TODO: Auto-generated Javadoc
 package my.ep.web.backingbean.sc.purchaseindefault;
@@ -243,6 +243,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		 //PmReason reason = new PmReason();
 		 scPurchaseInDefault.setReasonType(new PmReason());
 		//getManagedBean().getPurchaseInDefault().setReasonType(reason);
+		 scPurchaseInDefault.setPidValidDays(ParameterConst.DEFAULT_RESP_DAYS); // by default days
 
 		return "purchaseInDefaultMain";
 	}	
