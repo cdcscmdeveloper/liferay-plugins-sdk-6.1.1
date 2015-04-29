@@ -13,7 +13,7 @@
 		toggleable="true">
 
 		<div>
-			<table style="width: 60% ; align: left; ">
+			<table style="width: 60%; align: left;">
 
 				<tr>
 					<td style="width: 15%"><p:outputLabel id="biddingNoLblBS"
@@ -45,8 +45,9 @@
 
 					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
-					<td style="width: 50%" colspan="3"><p:inputText id="bidTitleBS"
-							value="#{biddingBB.managedBean.searchBidTitle}" size="90">
+					<td style="width: 50%" colspan="3"><p:inputText
+							id="bidTitleBS" value="#{biddingBB.managedBean.searchBidTitle}"
+							size="90">
 							<f:validateLength maximum="1000" />
 						</p:inputText></td>
 
@@ -210,7 +211,7 @@
 
 	</p:panel>
 
-	<p:panel id="pauseCancelPopUp">
+	<h:panelGrid id="pauseCancelPopUp">
 
 		<p:dialog
 			header="#{(biddingBB.managedBean.bidAction.actionType eq 'P') ? lbl['lbl.sc.pause.bid'] : lbl['lbl.sc.cancel.bid']}"
@@ -220,10 +221,8 @@
 			<ui:include src="/xhtml/sc/bidding/bsPauseOrCancelBidPopup.xhtml"></ui:include>
 		</p:dialog>
 
-	</p:panel>
-	<p:panel id="rescheduleRebidPopUp">
-
-
+	</h:panelGrid>
+	<h:panelGrid id="rescheduleRebidPopUp">
 		<p:dialog header="#{lbl['lbl.sc.re.schedule.bid']}" width="660px"
 			height="340px" draggable="false" resizable="false"
 			widgetVar="bidRescheduleOrResume" showEffect="fade" hideEffect="fade"
@@ -231,5 +230,5 @@
 			<ui:include
 				src="/xhtml/sc/bidding/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
 		</p:dialog>
-	</p:panel>
+	</h:panelGrid>
 </ui:composition>
