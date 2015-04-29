@@ -33,22 +33,16 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
+	
+		<ui:include src="checklistHeader.xhtml" />
+		
+		<p:spacer height="20" />
 
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea rows="2" cols="100" style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						disabled="true"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
-			toggleable="true">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.gov']}" />
+				<ac:iconTooltip value="#{lbl['lbl.sc.spec.company.exp.fed.gov.tooltip']}" />
+			</f:facet>
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -98,14 +92,16 @@
 					<p:inputText></p:inputText>
 				</p:column>
 			</p:dataTable>
-			<p:spacer height="75"></p:spacer>
+			<p:spacer height="20"></p:spacer>
 
 			<table>
 
 				<tr>
-					<td style="width: 175px;"><h:outputText
+					<td style="width: 230px;"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"></p:inputText>
+					<td>
+						<p:inputText readonly="true" disabled="true"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.contract.amount.tooltip']}" />
 					</td>
 				</tr>
 
@@ -116,7 +112,7 @@
 		</p:panel>
 
 
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 
 		<p:panel id="financialGovernmentContracts"
 			header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
@@ -140,6 +136,9 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="financialGovAutoScoreMsg"
 							for="financialGovAutoScore" display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>

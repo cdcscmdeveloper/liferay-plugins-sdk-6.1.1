@@ -36,22 +36,14 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
+		
+		<ui:include src="checklistHeader.xhtml" />
 
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
 			toggleable="true">
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.bank.statement.instruction']}" escape="false" />
+			
 			<table>
 				<tr>
 					<td style="width: 10%;"><p:outputLabel
@@ -119,7 +111,7 @@
 			</table>
 
 		</h:panelGroup>
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel id="financialBankStmtScore"
 			header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
 			toggleable="true"
@@ -142,6 +134,9 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="bankStatementAutoScoreId"
 							for="bankStatementAutoScore" display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>

@@ -7,8 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<p:panel header="#{lbl['lbl.sc.spec.finance.check.list']}"
-		toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.spec.finance.check.list']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.spec.finance.check.list.tooltip']}" />
+		</f:facet>
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}" escape="false" />
 
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
@@ -82,9 +87,11 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.type']}"
-				style="width:10%;white-space: normal;">
-
+			<p:column style="width:10%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.type']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.type.financial.tooltip']}" />
+				</f:facet>
 
 				<h:panelGroup id="financialCheckListtitle">
 					<ui:fragment rendered="#{stageTwofunctional.qtChecklistId ne null}">

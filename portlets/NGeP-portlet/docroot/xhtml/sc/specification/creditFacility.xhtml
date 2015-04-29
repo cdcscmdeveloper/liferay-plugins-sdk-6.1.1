@@ -34,29 +34,17 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
+		
+		<ui:include src="checklistHeader.xhtml" />
 
-
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel>
-				</td>
-				<td><p:inputTextarea rows="2" cols="100" style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						disabled="true"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.credit.facility']}"
 			toggleable="true">
 			<p:dataTable id="credit" rowIndexVar="index" var="experience"
 				rowKey="#{experience}">
 				<ac:paginator for="credit"></ac:paginator>
 				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
-				<p:column headerText="#{lbl['lbl.sc.bank.name']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}">
 					<p:inputText></p:inputText>
 				</p:column>
 
@@ -67,11 +55,11 @@
 				<p:column headerText="#{lbl['lbl.sc.spec.credit.type']}">
 					<p:inputText></p:inputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.planned.amount']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.amt.credit']}">
 					<p:inputText></p:inputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.amt.paid']}">
+				<p:column headerText="#{lbl['lbl.sc.spec.amt.paid']}">
 
 					<p:inputText>
 
@@ -96,10 +84,13 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.total.credit.percentage.paid']}"></h:outputLabel></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<td>
+					<p:inputText readonly="true" disabled="true"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.credit.percentage.paid.tooltip']}" />
+				</td>
 			</tr>
 		</table>
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel id="financialCreditFacilityScores"
 			header="#{lbl['lbl.sc.spec.score.total.credit.facility']}"
 			toggleable="true"
@@ -122,6 +113,9 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="fincreditFacilityAutoScoreId"
 							for="fincreditFacilityAutoScore" display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>
