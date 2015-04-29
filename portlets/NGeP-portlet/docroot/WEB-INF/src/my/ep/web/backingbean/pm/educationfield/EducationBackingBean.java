@@ -112,7 +112,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 */
 	public void resetSearchEdu() {
 		debugLogger("resetSearchEdu");
-
+		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setFieldCodes(new String());
 		this.getManagedBean().setFieldNames(new String());
 		this.getManagedBean().setStatus(null);
