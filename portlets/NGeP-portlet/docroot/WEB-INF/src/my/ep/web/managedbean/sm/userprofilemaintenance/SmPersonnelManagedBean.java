@@ -88,7 +88,6 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String token;
 	private boolean deactivatePersonnel;
 	private Date currDate;
-	private boolean showParentMsg;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -608,14 +607,6 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public Date getCurrDate() {
 		return currDate;
-	}
-
-	public boolean isShowParentMsg() {
-		return showParentMsg;
-	}
-
-	public void setShowParentMsg(boolean showParentMsg) {
-		this.showParentMsg = showParentMsg;
 	}
 
 	public void setCurrDate(Date currDate) {

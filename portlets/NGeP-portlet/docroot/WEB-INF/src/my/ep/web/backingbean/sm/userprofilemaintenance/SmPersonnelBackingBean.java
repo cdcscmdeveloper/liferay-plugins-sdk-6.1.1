@@ -125,7 +125,6 @@ public class SmPersonnelBackingBean extends
 	 * Pre - render and redirect to Deactivate Supplier Admin screen
 	 */
 	public void preRenderDeactivateSuppAdmin() {
-		getManagedBean().setShowParentMsg(true);
 		boolean isHasSupplierUser = false;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		SmPersonnel adminPersonnel = null;
@@ -1510,7 +1509,6 @@ public class SmPersonnelBackingBean extends
 				reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			getManagedBean().setShowParentMsg(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.addMessage(
 					null,
