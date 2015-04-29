@@ -13,7 +13,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.sc.circular.no']}"></h:outputLabel></td>
 				<td><p:inputText maxlength="50"
 						value="#{specificationBackingBean.managedBean.ctSearchBean.cirCularNo}"
-						size="75" /></td>
+						size="100" /></td>
 			</tr>
 			<tr>
 				<td style="width: 20%"><h:outputLabel
@@ -66,23 +66,19 @@
 						style="width:30%;white-space: normal;">
 					</p:column>
 
-					<p:column
-						headerText="#{lbl['lbl.sc.spec.circular.type']}"
+					<p:column headerText="#{lbl['lbl.sc.spec.circular.type']}"
 						style="width:10%">
 
 					</p:column>
 
 
 
-					<p:column
-						headerText="#{lbl['lbl.sc.effective.date']}"
+					<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 						style="width:10%">
 
 					</p:column>
 
-					<p:column
-						headerText="#{lbl['lbl.sc.exp.date']}"
-						style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.exp.date']}" style="width:15%">
 
 					</p:column>
 
@@ -95,7 +91,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.circular.no']}"
 				style="width:15%;white-space: normal;">
-				<h:outputText value="#{circular.circularNo}" />
+				<h:outputText value="#{circular.circularNo}"
+					style="text-align:right;" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.circular.name']}"
@@ -103,24 +100,21 @@
 				<h:outputText value="#{circular.name}"></h:outputText>
 			</p:column>
 
-			<p:column
-				headerText="#{lbl['lbl.sc.spec.circular.type']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.circular.type']}"
 				style="width:15%">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, circular.docType)}"></h:outputText>
 			</p:column>
 
 
-			<p:column
-				headerText="#{lbl['lbl.sc.effective.date']}"
+			<p:column headerText="#{lbl['lbl.sc.effective.date']}"
 				style="width:10%">
 				<h:outputText value="#{circular.startDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.exp.date']}"
-				style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.exp.date']}" style="width:10%">
 				<h:outputText value="#{circular.endDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -131,13 +125,12 @@
 				disabledSelection="#{specificationBackingBean.circularDateComparision(circular.endDate)}"></p:column>
 		</p:dataTable>
 
-	</p:panel>
-	<h:panelGroup id="panelItemGroupList">
-		<ui:fragment
-			rendered="#{specificationBackingBean.managedBean.circularType eq 'PQ'}">
-			<p:panel header="#{lbl['lbl.sc.spec.circular.item.list']}"
-				toggleable="true">
 
+		<h:panelGroup id="panelItemGroupList">
+			<ui:fragment
+				rendered="#{specificationBackingBean.managedBean.circularType eq 'PQ'}">
+			
+         #{specificationBackingBean.managedBean.ctCircularVer.circularNo}>#{lbl['lbl.sc.spec.circular.item.list']}
 
 				<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
 					style="width:100%" rows="10"
@@ -157,8 +150,7 @@
 
 							</p:column>
 
-							<p:column
-								headerText="#{lbl['lbl.sc.specification']}"
+							<p:column headerText="#{lbl['lbl.sc.specification']}"
 								style="width:15%;white-space: normal;">
 
 							</p:column>
@@ -172,8 +164,7 @@
 
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.uom']}"
-								style="width:15%">
+							<p:column headerText="#{lbl['lbl.sc.uom']}" style="width:15%">
 
 							</p:column>
 
@@ -207,28 +198,27 @@
 						<h:outputText value="#{panelItem.specification}" />
 
 					</p:column>
-					<p:column
-						style="width:10%">
+					<p:column style="width:10%">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.spec.panel.item.category']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.spec.panel.item.category.tooltip']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.panel.item.category.tooltip']}" />
 						</f:facet>
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(panelItem.itemCategoryId)}" />
 					</p:column>
 
-					<p:column 
-						style="width:5%">
+					<p:column style="width:5%">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.spec.panel.coverage']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.spec.panel.coverage.tooltip']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.panel.coverage.tooltip']}" />
 						</f:facet>
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.uom']}"
-						style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.uom']}" style="width:15%">
 						<h:outputText value="#{panelItem.pmUom.uomName}" />
 					</p:column>
 
@@ -240,21 +230,22 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
 						style="width:10%; white-space:normal; text-align:right;">
 						<h:outputText value="#{panelItem.maxProcureAmt}">
-							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 
 
-					<p:column
-						headerText="#{lbl['lbl.sc.selection']}"
+					<p:column headerText="#{lbl['lbl.sc.selection']}"
 						selectionMode="single" style="width:2%" />
 
 				</p:dataTable>
 
 
-			</p:panel>
 
-		</ui:fragment>
-	</h:panelGroup>
+
+			</ui:fragment>
+		</h:panelGroup>
+	</p:panel>
 
 </ui:composition>
