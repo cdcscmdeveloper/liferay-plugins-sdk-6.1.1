@@ -205,6 +205,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			
 			reqDTO.setUserRole(getUserRole());
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 			if(null != getManagedBean().getPmDigiSign()){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
