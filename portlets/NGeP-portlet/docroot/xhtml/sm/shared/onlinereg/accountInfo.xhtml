@@ -67,19 +67,19 @@
 						style="width:310px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" ></p:ajax>
-					</p:selectOneMenu>					
-					&#160; <p:graphicImage id="typeofbusiness"
-						library="ep/images/design" name="tooltips.png" /> <p:tooltip
-						id="businesscomtype" for="typeofbusiness">
-						<p:outputLabel style="text-align:left;" escape="false" rendered="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_BASIC}"
-							value="#{lbl['tt.sm.registration.business.basic.company.type']}"></p:outputLabel>
-						<p:outputLabel style="text-align:left;" escape="false" rendered="#{registrationBackingBean.managedBean.applType eq SupplierManagementConst.ACC_MOF}"
-							value="#{lbl['tt.sm.registration.business.mof.company.type']}"></p:outputLabel>	
-					</p:tooltip>&#160;								
-					<p:message id="busTypeIdMsg" for="busTypeId" display="icon" />
+					</p:selectOneMenu>
 					<p:outputLabel styleClass="outputLabel-view" 
 					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
 					rendered="#{registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" />
+					&#160;
+					<p:graphicImage id="typeofbusiness" library="ep/images/design" name="tooltips.png" />
+					<p:tooltip id="businesscomtype" for="typeofbusiness">
+						<p:outputLabel escape="false" rendered="#{registrationBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_BASIC}"
+							value="#{lbl['tt.sm.registration.business.basic.company.type']}" />
+						<p:outputLabel escape="false" rendered="#{registrationBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_MOF}"
+							value="#{lbl['tt.sm.registration.business.mof.company.type']}" />	
+					</p:tooltip>&#160;					
+					<p:message id="busTypeIdMsg" for="busTypeId" display="icon" />
 				</td>
 				<c:choose>
 					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
