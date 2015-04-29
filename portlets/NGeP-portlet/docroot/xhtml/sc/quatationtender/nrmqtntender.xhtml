@@ -86,7 +86,7 @@
 				<ui:fragment
 					rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}">
 					<tr>
-						<td style="width: 187px"><p:outputLabel
+						<td style="width: 185px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
 						<td><p:inputText size="30" maxlength="18" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
@@ -109,7 +109,7 @@
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 187px"><p:outputLabel
+						<td style="width: 185px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"   disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
@@ -121,7 +121,7 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td style="width: 145px"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locLevels"  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
@@ -200,7 +200,7 @@
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 187px"><p:outputLabel
+						<td style="width: 185px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
@@ -213,7 +213,7 @@
 					</tr>
 
 					<tr>
-						<td style="width: 94px"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locZoneLevels"  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
@@ -349,9 +349,9 @@
 		toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 125px"><p:outputLabel
+				<td style="width: 185px"><p:outputLabel
 						value="#{lbl['lbl.sc.totalsup']}" /></td>
-				<td style="width: 150px"><p:inputText style="margin-right:5px;"
+				<td><p:inputText style="margin-right:5px;"
 						disabled="true"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
 				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
