@@ -45,11 +45,11 @@
 				</ui:fragment>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.qttentype']}" /></td>
+				<td style="width: 200px;"><h:outputLabel value="#{lbl['lbl.sc.qttentype']}" /></td>
 				<td><p:inputText readonly="true" size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true" /></td>
-				<td style="width: 200px;"><h:outputLabel value="Open For" /></td>
+				<td style="width: 250px;"><h:outputLabel value="#{lbl['lbl.sc.open.for']}" /></td>
 				<td><p:inputText readonly="true" size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, specificationBackingBean.managedBean.scQt.openFor)}"
 						disabled="true" /></td>
@@ -74,7 +74,7 @@
 				<td><p:inputText size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, specificationBackingBean.managedBean.scQt.evaluationType)}"
 						readonly="true" disabled="true" /></td>
-				<td style="width: 215px;"><h:outputLabel
+				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 
 				<td><p:inputText size="30"
@@ -96,23 +96,32 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 					</ui:fragment></td>
-				<td><p:selectOneMenu
-						required="#{!specificationBackingBean.managedBean.readOnly}"
-						id="fulfilId" label="#{lbl['lbl.sc.fullfillent.type']}"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
-						style="width: 178px;margin-bottom: 5px;">
-
-						<f:selectItems
-							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@form"
-							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
-					</p:selectOneMenu> 
-					<p:message id="fulfilType" for="fulfilId" display="icon" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.fullfillent.type.tooltip']}" />
+				<td>
+					<table>
+						<tr>
+							<td>
+								<p:selectOneMenu
+									required="#{!specificationBackingBean.managedBean.readOnly}"
+									id="fulfilId" label="#{lbl['lbl.sc.fullfillent.type']}"
+									disabled="#{specificationBackingBean.managedBean.readOnly}"
+									value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
+									style="width: 178px;margin-bottom: 5px;">
+			
+									<f:selectItems
+										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+									<p:ajax event="change" process="@this" partialSubmit="true"
+										update="@form"
+										listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
+								</p:selectOneMenu> 
+								<p:message id="fulfilType" for="fulfilId" display="icon" />
+							</td>
+							<td style="margin-top: -3px">
+								<ac:iconTooltip value="#{lbl['lbl.sc.fullfillent.type.tooltip']}" />
+							</td>
+						</tr>
+					</table>
 				</td>
-				<td><p:outputLabel
+				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
@@ -156,7 +165,7 @@
 			<p:dataTable id="zoneGeneralDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 				var="zoneTree" style="width:100%" rowIndexVar="index">
-				<p:column headerText="Location">
+				<p:column headerText="#{lbl['lbl.sc.zone.location']}">
 					<p:tree value="#{zoneTree}" var="location">
 
 						<p:treeNode type="zone">

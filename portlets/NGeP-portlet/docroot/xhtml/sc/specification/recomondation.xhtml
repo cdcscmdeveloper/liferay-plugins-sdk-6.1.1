@@ -13,8 +13,12 @@
 		<h:panelGroup
 			rendered="#{((specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false') or (specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true') or (specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
 			<p:panel id="package"
-				header="#{lbl['lbl.sc.by.package']}"
 				toggleable="true">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.by.package.recommendation.tooltip']}" />
+				</f:facet>
+				
 				<table>
 					<tr>
 						<td><h:outputLabel
@@ -42,7 +46,7 @@
 					</tr>
 					<tr>
 						<td><h:outputLabel
-								value="#{lbl['lbl.sc.total']}"></h:outputLabel></td>
+								value="#{lbl['lbl.sc.total.percentage']}"></h:outputLabel></td>
 						<td><p:inputText id="totalrecommendation"
 								style="text-align:right"
 								value="#{specificationBackingBean.managedBean.recommendationPackageTotal}"
@@ -57,6 +61,7 @@
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}">
 
 							</p:inputText> 
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
 						</td>
 					</tr>
 				</table>
@@ -64,8 +69,11 @@
 
 
 
-			<p:panel id="item" header="#{lbl['lbl.sc.by.item']}"
-				toggleable="true">
+			<p:panel id="item" toggleable="true">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.by.item']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.by.item.recommendation.tooltip']}" />
+				</f:facet>
 				<table>
 					<tr>
 						<td><h:outputLabel
@@ -75,6 +83,7 @@
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
 							</p:inputText>
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
 						</td>
 					</tr>
 				</table>
@@ -83,8 +92,14 @@
 					<f:facet name="header">
 						<p:row>
 							<p:column styleClass="panelGridHeaders" colspan="1"></p:column>
-							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.item']}</p:column>
-							<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.others']}</p:column>
+							<p:column styleClass="panelGridHeaders" colspan="1">
+								#{lbl['lbl.sc.spec.item']}
+								<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.tooltip']}" />
+							</p:column>
+							<p:column styleClass="panelGridHeaders" colspan="1">
+								#{lbl['lbl.sc.spec.others']}
+								<ac:iconTooltip value="#{lbl['lbl.sc.spec.others.tooltip']}" />
+							</p:column>
 							<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.spec.score']}</p:column>
 						</p:row>
 					</f:facet>
@@ -163,8 +178,11 @@
 		<h:panelGroup
 			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false'}">
 			<p:panel id="recommendTechnicalItem"
-				header="#{lbl['lbl.sc.by.package']}"
 				toggleable="true">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.by.package.recommendation.tooltip']}" />
+				</f:facet>
 				<table>
 
 					<tr>
@@ -176,13 +194,17 @@
 								style="text-align:right">
 
 							</p:inputText>
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
 						</td>
 					</tr>
 				</table>
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.sc.by.item']}"
-				toggleable="true">
+			<p:panel toggleable="true">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.by.item']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.by.item.recommendation.tooltip']}" />
+				</f:facet>
 				<table>
 					<tr>
 						<td><h:outputLabel
@@ -192,6 +214,7 @@
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
 							</p:inputText>
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.passing.score.percentage.tooltip']}" />
 						</td>
 					</tr>
 				</table>
@@ -200,8 +223,14 @@
 
 						<p:row>
 							<p:column colspan="1"></p:column>
-							<p:column colspan="1">#{lbl['lbl.sc.item']}</p:column>
-							<p:column colspan="1">#{lbl['lbl.sc.others']}</p:column>
+							<p:column colspan="1">
+								#{lbl['lbl.sc.spec.item']}
+								<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.tooltip']}" />
+							</p:column>
+							<p:column colspan="1">
+								#{lbl['lbl.sc.spec.others']}
+								<ac:iconTooltip value="#{lbl['lbl.sc.spec.others.tooltip']}" />
+							</p:column>
 							<p:column>#{lbl['lbl.sc.spec.score']}</p:column>
 						</p:row>
 					</f:facet>

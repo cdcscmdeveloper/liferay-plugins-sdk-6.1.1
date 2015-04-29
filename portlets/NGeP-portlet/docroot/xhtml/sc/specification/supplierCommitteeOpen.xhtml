@@ -59,7 +59,7 @@
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 160px;"><p:outputLabel
+				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText disabled="true" size="30" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
@@ -69,7 +69,7 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td style="width: 94px"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
@@ -114,7 +114,7 @@
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 94px"><p:outputLabel
+				<td style="width: 185px"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}"
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
@@ -124,7 +124,7 @@
 
 			</tr>
 			<tr>
-				<td style="width: 160px;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText size="30" maxlength="18" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
@@ -134,7 +134,7 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td style="width: 94px"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
@@ -176,7 +176,7 @@
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
 		<table>
 			<tr>
-				<td style="width: 160px;"><p:outputLabel
+				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}" /></td>
 				<td><p:inputText
 						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
@@ -199,7 +199,7 @@
 		header=" #{lbl['lbl.sc.spec.qualified.suppliers']}">
 		<table>
 			<tr>
-				<td style="width: 150px"><p:outputLabel
+				<td style="width: 185px"><p:outputLabel
 						value="#{lbl['lbl.sc.totalsup']}" /></td>
 				<td><p:inputText style="margin-right:5px;" disabled="true"
 						value="#{specificationBackingBean.managedBean.totalSuppliers}" />

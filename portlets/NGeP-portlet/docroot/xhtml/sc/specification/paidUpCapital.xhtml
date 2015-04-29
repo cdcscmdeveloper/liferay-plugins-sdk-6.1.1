@@ -36,31 +36,21 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
 
+		<ui:include src="checklistHeader.xhtml" />
 
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea rows="2" cols="100" style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						disabled="true"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-		<p:spacer height="25"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
 			toggleable="true">
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="3">
 				<h:outputLabel value="#{lbl['lbl.sc.paid.up.capital.ringgit']}"></h:outputLabel>
 				<p:inputText disabled="true"></p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.sc.paid.up.capital.ringgit.tooltip']}" />
 			</h:panelGrid>
 		</p:panel>
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel id="financialPaidUpCapitalScore"
-			header="Scoring For Paid Up Capital" toggleable="true"
+			header="#{lbl['lbl.sc.eva.score.paid.up.capital']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
@@ -80,6 +70,9 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="paidUpCapitalAutoScoreId"
 							for="paidUpCapitalAutoScore" display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>

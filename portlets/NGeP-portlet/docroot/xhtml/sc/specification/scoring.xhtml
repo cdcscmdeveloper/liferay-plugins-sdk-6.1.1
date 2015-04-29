@@ -37,6 +37,8 @@
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.from']}"
 						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
+					<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}"
+						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
 					<h:outputText value=" #{lbl['lbl.sc.spec.from.month']}"
 						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS'}" />
 				</f:facet>

@@ -31,6 +31,8 @@
 			</tr>
 
 		</table>
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.max.score.instruction']}" escape="false" />
 
 		<p:dataTable id="technicalWeigtage" var="tech"
 			value="#{specificationBackingBean.managedBean.technicalScoring}"
@@ -50,7 +52,8 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.score']}" />
+					<h:outputText value="#{lbl['lbl.sc.spec.max.score']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
@@ -69,9 +72,12 @@
 				<p:message id="techScoreId" for="techScoreWeight" display="icon"></p:message>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
-				style="width:20%;"
+			<p:column style="width:20%;"
 				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
+				</f:facet>
 				<p:inputText value="#{tech.qtScoreWeightage.weightage}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					maxlength="5" style="text-align:right"
@@ -97,9 +103,12 @@
 					<td style="width: 149px;"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 
-					<td><p:inputText readonly="true" disabled="true"
+					<td>
+						<p:inputText readonly="true" disabled="true"
 							style="text-align:right"
-							value="#{specificationBackingBean.managedBean.techPoints}"></p:inputText></td>
+							value="#{specificationBackingBean.managedBean.techPoints}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.points.tooltip']}" />
+					</td>
 				</tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
@@ -107,9 +116,12 @@
 					<tr>
 						<td><h:outputText
 								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
-						<td><p:inputText readonly="true" disabled="true"
+						<td>
+							<p:inputText readonly="true" disabled="true"
 								style="text-align:right"
-								value="#{specificationBackingBean.managedBean.technicalWeightageScore}"></p:inputText></td>
+								value="#{specificationBackingBean.managedBean.technicalWeightageScore}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" />
+						</td>
 					</tr>
 
 				</ui:fragment>
@@ -119,8 +131,11 @@
 
 		</h:panelGroup>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.passing.score']}"
-		toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.passing.score']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.passing.score.technical.tooltip']}" />
+		</f:facet>
 
 		<table>
 			<ui:fragment

@@ -34,22 +34,10 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
+		
+		<ui:include src="checklistHeader.xhtml" />
 
-
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel>
-				</td>
-				<td><p:inputTextarea style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.cash.hand']}" toggleable="true">
 			<p:dataTable id="cashHand" rowIndexVar="index" var="cash"
 				rowKey="#{cash}">
@@ -79,7 +67,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.spec.total.cash']}"></h:outputLabel>
 			<p:inputText readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel id="financialCashOnhandScore"
 			header="#{lbl['lbl.sc.spec.score.total.cash']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -101,6 +89,9 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="cashOnHandAutoScoreId" for="cashOnHandAutoScore"
 							display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>

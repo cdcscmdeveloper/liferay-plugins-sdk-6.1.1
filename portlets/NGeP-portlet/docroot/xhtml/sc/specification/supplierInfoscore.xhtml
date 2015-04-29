@@ -14,19 +14,9 @@
 
 	<ui:define name="contentSection">
 
+		<ui:include src="checklistHeader.xhtml" />
 
-
-
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-
+		<p:spacer height="20" />
 
 		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}"
 			toggleable="true">
