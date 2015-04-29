@@ -646,8 +646,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 */
 	public void setValidateContractField(ContractResDTO resDTO) {
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
-	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	    
-	    setBondRecordStatus(this.getManagedBean().getContractVer());
+	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 	         
 	    // Retrieve Agencies
 	    if (getManagedBean().getContractVer().getCtAgencies() != null 
@@ -848,7 +847,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemList());
          	getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemServiceList());
-         	setBondRecordStatus(getManagedBean().getContractVer());
               
          	if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
          		scheduleProgressiveDate();
@@ -1825,25 +1823,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public String backAction() {
 		getManagedBean().setViewContract(false);
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
-	}    
-	
-    /**
-	 * The method used to set status of performance bond.
-	 * The record status is true when the flag value is 1.
-	 * 
-	 * @param  contractVer  an object of contract version
-     */
-    private void setBondRecordStatus(CtContractVer contractVer) {
-    	if (contractVer.getCtPerformanceBonds().size() > 0) {
-    		for (CtPerformanceBond bond : contractVer.getCtPerformanceBonds()) {
-    			if (bond.getRecordStatusFlg().intValue() == 1 &&  !bond.isRecordStatus()) {
-    				bond.setRecordStatus(true);
-  			  	} else if (bond.isRecordStatus() && bond.getRecordStatusFlg().intValue() != 1) {
-  			  		bond.setRecordStatusFlg(1);
-  			  	}
-  		  	}
-  	  	}
-    }
+	}
 
     /**
 	 * The method used to set status of agency.
