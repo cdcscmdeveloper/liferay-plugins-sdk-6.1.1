@@ -1,5 +1,6 @@
 package my.ep.web.integration.eperunding;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ConsultantProfile {
@@ -22,13 +23,13 @@ public class ConsultantProfile {
 	private String faxCountryCode;
 	private String faxAreaCode;
 	private String faxNo;
-	private float accumulatedCapital;
-	private String authorisedCapital;
-	private String paidUpCapital;
-	private float accumulatedShare;
-	private float bumiputeraPercentage;
-	private float nonBumiPercentage;
-	private int regStatus;
+	private BigDecimal accumulatedCapital;
+	private BigDecimal authorisedCapital;
+	private BigDecimal paidUpCapital;
+	private BigDecimal accumulatedShare;
+	private BigDecimal bumiputeraPercentage;
+	private BigDecimal nonBumiPercentage;
+	private String regStatus;
 	private Date effectDateTo;
 	private Date establishedDate;
 	private Date effectDateFrom;
@@ -184,59 +185,59 @@ public class ConsultantProfile {
 		this.faxNo = faxNo;
 	}
 
-	public float getAccumulatedCapital() {
+	public BigDecimal getAccumulatedCapital() {
 		return accumulatedCapital;
 	}
 
-	public void setAccumulatedCapital(float accumulatedCapital) {
+	public void setAccumulatedCapital(BigDecimal accumulatedCapital) {
 		this.accumulatedCapital = accumulatedCapital;
 	}
 
-	public String getAuthorisedCapital() {
+	public BigDecimal getAuthorisedCapital() {
 		return authorisedCapital;
 	}
 
-	public void setAuthorisedCapital(String authorisedCapital) {
+	public void setAuthorisedCapital(BigDecimal authorisedCapital) {
 		this.authorisedCapital = authorisedCapital;
 	}
 
-	public String getPaidUpCapital() {
+	public BigDecimal getPaidUpCapital() {
 		return paidUpCapital;
 	}
 
-	public void setPaidUpCapital(String paidUpCapital) {
+	public void setPaidUpCapital(BigDecimal paidUpCapital) {
 		this.paidUpCapital = paidUpCapital;
 	}
 
-	public float getAccumulatedShare() {
+	public BigDecimal getAccumulatedShare() {
 		return accumulatedShare;
 	}
 
-	public void setAccumulatedShare(float accumulatedShare) {
+	public void setAccumulatedShare(BigDecimal accumulatedShare) {
 		this.accumulatedShare = accumulatedShare;
 	}
 
-	public float getBumiputeraPercentage() {
+	public BigDecimal getBumiputeraPercentage() {
 		return bumiputeraPercentage;
 	}
 
-	public void setBumiputeraPercentage(float bumiputeraPercentage) {
+	public void setBumiputeraPercentage(BigDecimal bumiputeraPercentage) {
 		this.bumiputeraPercentage = bumiputeraPercentage;
 	}
 
-	public float getNonBumiPercentage() {
+	public BigDecimal getNonBumiPercentage() {
 		return nonBumiPercentage;
 	}
 
-	public void setNonBumiPercentage(float nonBumiPercentage) {
+	public void setNonBumiPercentage(BigDecimal nonBumiPercentage) {
 		this.nonBumiPercentage = nonBumiPercentage;
 	}
 
-	public int getRegStatus() {
+	public String getRegStatus() {
 		return regStatus;
 	}
 
-	public void setRegStatus(int regStatus) {
+	public void setRegStatus(String regStatus) {
 		this.regStatus = regStatus;
 	}
 

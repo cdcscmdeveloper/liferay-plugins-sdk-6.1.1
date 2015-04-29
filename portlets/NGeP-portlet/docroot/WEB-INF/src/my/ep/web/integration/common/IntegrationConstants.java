@@ -14,8 +14,8 @@ public class IntegrationConstants {
 	public static final String FILE_EXTENSION_GFMAS = ".GPG";
 	public static final String SEQUENCE_NO = "001";
 
-	public static final String FILE_PATH = "/batch/Upload/";
-//	public static final String FILE_PATH = "C:/Integration/Upload/";
+//	public static final String FILE_PATH = "/batch/Upload/";
+	public static final String FILE_PATH = "C:/Integration/Upload/";
 
 	public static final String GMAS_UPLOAD = "/batch/1GFMAS/OUT/";
 	public static final String GMAS_DOWNLOAD = "/batch/1GFMAS/IN/";
@@ -28,11 +28,11 @@ public class IntegrationConstants {
 	public static final String EPERUNDING_DOWNLOAD_DIR = "/batch/ePerunding/IN/";
 	public static final String EPERUNDING_ARCHIVE_DIR = "/batch/ePerunding/ARCHIVE/";
 
-	public static final String ENCRYPTED_FILE_PATH="/batch/Encryption/encrypt/";
-//	public static final String ENCRYPTED_FILE_PATH = "C:/Integration/Encryption/encrypt/";
+//	public static final String ENCRYPTED_FILE_PATH="/batch/Encryption/encrypt/";
+	public static final String ENCRYPTED_FILE_PATH = "C:/Integration/Encryption/encrypt/";
 
-	 public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
-//	public static final String DECRYPTED_FILE_PATH = "C:/Integration/Encryption/decrypt/";
+//	 public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
+	public static final String DECRYPTED_FILE_PATH = "C:/Integration/Encryption/decrypt/";
 
 	public static final String SFTP_HOST = "192.168.62.15";    //Stg
 //	public static final String SFTP_HOST = "192.168.120.14";   //Dev
@@ -84,5 +84,18 @@ public class IntegrationConstants {
 	public static final String GL_RECON_NO = "L0190000";
 	
 	public static final String CURRENCY_CODE_MY = "RM";
+	
+	public static final String COUNTRY_CODE_MY = "MY";
+	
+	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1;
+	public static final int RECORD_STATUS_CANCELLED = 2;
+	public static final int RECORD_STATUS_EXPIRED = 3;
+	public static final int RECORD_STATUS_DELETED = 9;
+	
+	public static final String WORK_PROGRESS_CMPLTD = "S";
+	public static final String WORK_PROGRESS_INPGRS = "P";
+	public static final String WORK_PROGRESS_FAILURE = "F";
+	
 
 }

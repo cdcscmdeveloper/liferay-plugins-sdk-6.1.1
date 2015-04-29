@@ -1,86 +1,88 @@
 package my.ep.web.integration.eperunding;
 
+import java.math.BigDecimal;
+
 public class CapitalProportion {
 
-	private String bumi;
-	private String nonBumi;
-	private String nonMalaysian;
-	private String govAgency;
-	private String govEquity;
-	private String localCo;
-	private String foreignCo;
-	private float totalMember;
-	private float totalShare;
+	private BigDecimal bumi;
+	private BigDecimal nonBumi;
+	private BigDecimal nonMalaysian;
+	private BigDecimal govAgency;
+	private BigDecimal govEquity;
+	private BigDecimal localCo;
+	private BigDecimal foreignCo;
+	private BigDecimal totalMember;
+	private BigDecimal totalShare;
 
-	public String getBumi() {
+	public BigDecimal getBumi() {
 		return bumi;
 	}
 
-	public void setBumi(String bumi) {
+	public void setBumi(BigDecimal bumi) {
 		this.bumi = bumi;
 	}
 
-	public String getNonBumi() {
+	public BigDecimal getNonBumi() {
 		return nonBumi;
 	}
 
-	public void setNonBumi(String nonBumi) {
+	public void setNonBumi(BigDecimal nonBumi) {
 		this.nonBumi = nonBumi;
 	}
 
-	public String getNonMalaysian() {
+	public BigDecimal getNonMalaysian() {
 		return nonMalaysian;
 	}
 
-	public void setNonMalaysian(String nonMalaysian) {
+	public void setNonMalaysian(BigDecimal nonMalaysian) {
 		this.nonMalaysian = nonMalaysian;
 	}
 
-	public String getGovAgency() {
+	public BigDecimal getGovAgency() {
 		return govAgency;
 	}
 
-	public void setGovAgency(String govAgency) {
+	public void setGovAgency(BigDecimal govAgency) {
 		this.govAgency = govAgency;
 	}
 
-	public String getGovEquity() {
+	public BigDecimal getGovEquity() {
 		return govEquity;
 	}
 
-	public void setGovEquity(String govEquity) {
+	public void setGovEquity(BigDecimal govEquity) {
 		this.govEquity = govEquity;
 	}
 
-	public String getLocalCo() {
+	public BigDecimal getLocalCo() {
 		return localCo;
 	}
 
-	public void setLocalCo(String localCo) {
+	public void setLocalCo(BigDecimal localCo) {
 		this.localCo = localCo;
 	}
 
-	public String getForeignCo() {
+	public BigDecimal getForeignCo() {
 		return foreignCo;
 	}
 
-	public void setForeignCo(String foreignCo) {
+	public void setForeignCo(BigDecimal foreignCo) {
 		this.foreignCo = foreignCo;
 	}
 
-	public float getTotalMember() {
+	public BigDecimal getTotalMember() {
 		return totalMember;
 	}
 
-	public void setTotalMember(float totalMember) {
+	public void setTotalMember(BigDecimal totalMember) {
 		this.totalMember = totalMember;
 	}
 
-	public float getTotalShare() {
+	public BigDecimal getTotalShare() {
 		return totalShare;
 	}
 
-	public void setTotalShare(float totalShare) {
+	public void setTotalShare(BigDecimal totalShare) {
 		this.totalShare = totalShare;
 	}
 

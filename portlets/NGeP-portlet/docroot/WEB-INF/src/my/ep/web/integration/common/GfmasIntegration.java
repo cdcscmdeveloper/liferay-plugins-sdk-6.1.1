@@ -87,11 +87,18 @@ import my.ep.web.integration.gfmas.masterdatamateriainfo.RqUID_Type;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+/*
+* author @Ganga prasad
+*/
+
 public class GfmasIntegration {
 
 	public static void main(String args[]) {
 		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		gfmasIntegration.masterDataVendorGfmasOutbound();
+//		gfmasIntegration.masterDataVendorGfmasOutbound();
+//		gfmasIntegration.projectGfmasInbound();
+//		gfmasIntegration.sstInformationGfmas();
+		
 
 	}
 
@@ -130,6 +137,10 @@ public class GfmasIntegration {
 
 	ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 			.getInstance().getServiceObject("cm", ICodificationSO.class);
+	
+	IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	
 
 	public void masterDataMaterialInfoGfmas() {
 
@@ -245,8 +256,6 @@ public class GfmasIntegration {
 	}
 
 	public void sstInformationGfmas() {
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
 		SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
 		Date startDate = null;
@@ -262,8 +271,7 @@ public class GfmasIntegration {
 		reqDTO.setStartDate(startDate);
 		reqDTO.setEndDate(endDate);
 
-		AwardSupplierResDTO resDTO = qtAwardSO
-				.retrieveLoaListByDateRange(reqDTO);
+		AwardSupplierResDTO resDTO = qtAwardSO.retrieveLoaListByDateRange(reqDTO);
 
 		List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 		System.out.println("List: " + list.size());
@@ -274,14 +282,10 @@ public class GfmasIntegration {
 			sstInformation = new SSTInformation();
 			sstInformation.setRecordType(0);
 			sstInformation.setSSTNumber(scLoa.getLoaNo());
-			sstInformation
-					.setPhysicalSSTNumber(scLoa.getScLoiLoa().getFileNo());
-			sstInformation.setSapVendorCode(scLoa.getScLoiLoa().getSmSupplier()
-					.getSapVendorCode());
-			sstInformation.setKumpPtj(scLoa.getScLoiLoa().getPmOrgProfile()
-					.getPmOrgValidity().getOrgCode());
-			sstInformation.setSstAcknowledgeDate(fileUtility.formatDate(scLoa
-					.getAckDate()));
+			sstInformation.setPhysicalSSTNumber(scLoa.getScLoiLoa().getFileNo());
+			sstInformation.setSapVendorCode(scLoa.getScLoiLoa().getSmSupplier().getSapVendorCode());
+			sstInformation.setKumpPtj(scLoa.getScLoiLoa().getPmOrgProfile().getPmOrgValidity().getOrgCode());
+			sstInformation.setSstAcknowledgeDate(fileUtility.formatDate(scLoa.getAckDate()));
 			if (null != scLoa.getScLoiLoa().getFileNo())
 				sstInformations.add(sstInformation);
 		}
@@ -296,7 +300,7 @@ public class GfmasIntegration {
 	public void masterDataVendorGfmasOutbound() {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "12-03-2015";
+		String dateInString = "23-04-2015";
 		Date date = null;
 		try {
 			date = sdf.parse(dateInString);
@@ -312,6 +316,8 @@ public class GfmasIntegration {
 			BankAccountInformation accountInformation = null;
 
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+				
+				if(smSupplier.getSupplierId()!=279330){
 
 				if (null != smSupplier.getSmAppl()) {
 
@@ -319,8 +325,10 @@ public class GfmasIntegration {
 					dataVendor.setRecordType(0);
 					dataVendor.setAgencyId(smSupplier.getSupplierId().toString());
 					dataVendor.setVendorIdCode(smSupplier.getEpNo());
-					dataVendor.setEntityCode(smSupplier.getBusinessType());
+					dataVendor.setEntityCode(getEntityType(smSupplier.getBusinessType())); //default set to SSM   
 
+					dataVendor.setEntityCode(new GfmasIntegration().getEntityType(smSupplier.getBusinessType()));
+					
 					if (null != smSupplier.getSmSupplierOwners()
 							&& smSupplier.getSmSupplierOwners().size() > 0) {
 						for (SmSupplierOwner supplierOwner : smSupplier
@@ -335,14 +343,14 @@ public class GfmasIntegration {
 
 						}
 					}
-					if (null != smSupplier.getSmSupplierBusinesses()
-							&& smSupplier.getSmSupplierBusinesses().size() > 0) {
-
-					}
+//					if (null != smSupplier.getSmSupplierBusinesses()
+//							&& smSupplier.getSmSupplierBusinesses().size() > 0) {
+//
+//					}
 					if (null != smSupplier.getSmAppl().getSmPersonnels()) {
 						dataVendor.setEmailAddress(smSupplier.getSmAppl().getSmPersonnels().get(0).getEmail());
 						dataVendor.setGlReconAccount(IntegrationConstants.GL_RECON_NO);
-						dataVendor.setCurrency("RM");
+						dataVendor.setCurrency(IntegrationConstants.CURRENCY_CODE_MY);
 						dataVendor.setIncoTerm(IntegrationConstants.EMPTY_TRING);
 						dataVendor.setPaymentTerm(IntegrationConstants.EMPTY_TRING);
 						dataVendor.setStatus(smSupplier.getRecordStatusFlg());
@@ -418,9 +426,9 @@ public class GfmasIntegration {
 							accountInformation.setRecordType(1);
 							accountInformation.setBankAccount(smSupplierBank.getAccountNo());
 							accountInformation.setAccountHolderName(smSupplier.getCompanyName());
-							accountInformation.setBankCountry("131");
+							accountInformation.setBankCountry(IntegrationConstants.COUNTRY_CODE_MY);
 //							accountInformation.setBankCountry(smSupplierBank.getPmFinancialOrg().getPmCountry().getCountryCode());
-							accountInformation.setCurrency("RM");
+							accountInformation.setCurrency(IntegrationConstants.CURRENCY_CODE_MY);
 							
 							if (null != smSupplierBank.getPmFinancialOrg()) {
 								System.out.println("getPmFinancialOrg :"+smSupplierBank.getPmFinancialOrg().getFinancialOrgId());
@@ -437,13 +445,15 @@ public class GfmasIntegration {
 									i++;
 								}
 							}
-							dataVendors.add(dataVendor);
+							if(!dataVendors.contains(dataVendor))
+								dataVendors.add(dataVendor);
 						}
 					}
 
 				} else {
 					System.out.println("un successful...");
 				}
+			}
 
 			}
 			System.out.println("dataVendors :"+dataVendors.size());
@@ -458,8 +468,6 @@ public class GfmasIntegration {
 
 		String fileName = null;// sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD,
 								// "APOVE");
-		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance()
-				.getServiceObject("sm", ISupplierSearchSO.class);
 
 		if (osbUtility.osbServiceCallInBound("GFM-370")) {
 			fileName = sftpUtility.findFileNameInDirectory(
@@ -500,114 +508,89 @@ public class GfmasIntegration {
 
 	public void pejabatPerakaunanGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLBAC");
-		if (osbUtility.osbServiceCallInBound("GFM-190")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<AgOffice> agOfficeList = fileUtility
-						.pejabatPerakaunanFileInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH
-								+ fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLBAC");
+//		if (osbUtility.osbServiceCallInBound("GFM-190")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLBAC40000120150331001.GPG";
+				List<AgOffice> agOfficeList = fileUtility.pejabatPerakaunanFileInPutStream(filePath+ fileName);
 				AgOfficeReqDTO reqDTO = null;
 				PmAgOffice agOffice = null;
 
 				for (AgOffice office : agOfficeList) {
 					reqDTO = new AgOfficeReqDTO();
 					reqDTO.setAgOfficeCode(office.getCode());
-					AgOfficeResDTO agOfficeDTO = agOfficeSO
-							.retrieveValidAgOfficeByOfficeCode(reqDTO);
-					if (office.getCode().equals(
-							agOfficeDTO.getAgOffice().getOfficeCode())) {
+					AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficeByOfficeCode(reqDTO);
+					if (office.getCode().equals(agOfficeDTO.getAgOffice().getOfficeCode())) {
 						System.out.println("Duplicate Code");
 					} else {
 						reqDTO = new AgOfficeReqDTO();
 						agOffice = new PmAgOffice();
 						agOffice.setOfficeCode(office.getCode());
 						agOffice.setOfficeName(office.getDescription());
-						agOffice.setEffDate(new Timestamp(System
-								.currentTimeMillis()));
+						agOffice.setEffDate(new Timestamp(System.currentTimeMillis()));
 						agOffice.setCreatedBy(1L);
-						agOffice.setCreatedDate(new Timestamp(System
-								.currentTimeMillis()));
+						agOffice.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 						agOffice.setRecordStatusFlg(1);
 						reqDTO.setAgOffice(agOffice);
 						agOfficeSO.saveOrUpdateAgOffice(reqDTO);
 					}
 
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void pegawaiPengawalGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLSEG");
-		if (osbUtility.osbServiceCallInBound("GFM-200")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<AgCtrlOfficer> agOfficeList = fileUtility
-						.pegawaiPengawalInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH
-								+ fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLSEG");
+//		if (osbUtility.osbServiceCallInBound("GFM-200")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName, IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLSEG40000120150331001.GPG";
+				List<AgCtrlOfficer> agOfficeList = fileUtility.pegawaiPengawalInPutStream(filePath + fileName);
 				AgOfficeReqDTO reqDTO = null;
 				PmAgCtrlOfficer agControlOfficer = null;
 				for (AgCtrlOfficer office : agOfficeList) {
 					reqDTO = new AgOfficeReqDTO();
 					reqDTO.setAgOfficerCode(office.getCode());
-					AgOfficeResDTO agOfficeDTO = agOfficeSO
-							.retrieveValidAgOfficerByOfficeCode(reqDTO);
-					if (office.getCode().equals(
-							agOfficeDTO.getAgControlOfficer()
-									.getCtrlOfficerCode())) {
+					AgOfficeResDTO agOfficeDTO = agOfficeSO.retrieveValidAgOfficerByOfficeCode(reqDTO);
+					if (office.getCode().equals(agOfficeDTO.getAgControlOfficer().getCtrlOfficerCode())) {
 						System.out.println("Duplicate Code");
 					} else {
 
 						agControlOfficer = new PmAgCtrlOfficer();
 						agControlOfficer.setCtrlOfficerCode(office.getCode());
-						agControlOfficer
-								.setDescription(office.getDescription());
-						agControlOfficer.setEffDate(new Timestamp(System
-								.currentTimeMillis()));
+						agControlOfficer.setDescription(office.getDescription());
+						agControlOfficer.setEffDate(new Timestamp(System.currentTimeMillis()));
 						agControlOfficer.setCreatedBy(1L);
-						agControlOfficer.setCreatedDate(new Timestamp(System
-								.currentTimeMillis()));
+						agControlOfficer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 						agControlOfficer.setRecordStatusFlg(1);
 						reqDTO.setAgControlOfficer(agControlOfficer);
 						agOfficeSO.saveOrUpdatePmAgCtrlOfficer(reqDTO);
 					}
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void votGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLVOT");
-		if (osbUtility.osbServiceCallInBound("GFM-210")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<VotFund> votList = fileUtility
-						.votInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH
-								+fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLVOT");
+//		if (osbUtility.osbServiceCallInBound("GFM-210")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLVOT40000120150331001.GPG";
+				List<VotFund> votList = fileUtility.votInPutStream(filePath+fileName);
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
 
@@ -615,55 +598,57 @@ public class GfmasIntegration {
 					reqDTO = new VotFundReqDTO();
 					reqDTO.setVotFundCode(vot.getCode());
 					VotFundResDTO votFundDTO = votFundSO.retrieveValidVotFundByVotCode(reqDTO);							
-					if (vot.getCode().equals(
-							votFundDTO.getPmVotFund().getVotFundCode())) {
+					
+					if (vot.getCode().equals(votFundDTO.getPmVotFund().getVotFundCode())) {
 						System.out.println(" Vot Duplicate Code");
 					} else {
 					pmVot = new PmVotFund();
+					
+					OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+					
+					Long orgProfileId = Long.parseLong(vot.getPtjCode());
+					
+					System.out.println("orgProfileId :"+orgProfileId);
+					orgProfileReqDTO.setOrgProfileId(orgProfileId);
+					OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgWithSupplierByProfileId(orgProfileReqDTO);
 
-					PtjGroupReqDTO ptjReqDTO = new PtjGroupReqDTO();
-
-					ptjReqDTO.setPtjGroupCode(vot.getCode());
-					PtjGroupResDTO ptjResDTO = ptgGroupSO
-							.retrievePtjGroupByCode(ptjReqDTO);
-					PmPtjGroup pmPtjGroup = new PmPtjGroup();
-					pmPtjGroup.setPtjGroupId(ptjResDTO.getPtjGroup().get(0)
-							.getPtjGroupId());
+//					PtjGroupReqDTO ptjReqDTO = new PtjGroupReqDTO();
+//
+//					ptjReqDTO.setPtjGroupCode(vot.getPtjCode());
+//					PtjGroupResDTO ptjResDTO = ptgGroupSO.retrievePtjGroupByCode(ptjReqDTO);   // with code it shd be there before
+//					PmPtjGroup pmPtjGroup = new PmPtjGroup();
+//					pmPtjGroup.setPtjGroupId(ptjResDTO.getPtjGroup().get(0).getPtjGroupId());   // here cmng multiple
+//					pmVot.setPmPtjGroup(pmPtjGroup);
+					pmVot.setPmOrgProfile(orgProfileResDTO.getPmOrgProfile());
 					pmVot.setVotFundCode(vot.getCode());
 					pmVot.setDescription(vot.getDescription());
 					pmVot.setEffDate(new Timestamp(System.currentTimeMillis()));
-					pmVot.setPmPtjGroup(pmPtjGroup);
 					pmVot.setCreatedBy(1L);
-					pmVot.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					pmVot.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					pmVot.setRecordStatusFlg(1);
 					reqDTO.setVotFund(pmVot);
 					votFundSO.saveOrUpdateVotFund(reqDTO);
 					}
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void votDanaGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLDNA");
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLDNA");
 
-		if (osbUtility.osbServiceCallInBound("GFM-220")) {
-
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<VotFund> votList = fileUtility
-						.votDanaInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH
-								+ fileName);
+//		if (osbUtility.osbServiceCallInBound("GFM-220")) {
+//
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLDNA40000120150331001.GPG";
+				List<VotFund> votList = fileUtility.votDanaInPutStream(filePath	+ fileName);
 
 				VotFundReqDTO reqDTO = null;
 				PmVotFund pmVot = null;
@@ -672,8 +657,7 @@ public class GfmasIntegration {
 					reqDTO = new VotFundReqDTO();
 					reqDTO.setVotFundCode(vot.getCode());
 					VotFundResDTO votFundDTO = votFundSO.retrieveValidVotFundDanaByVotCode(reqDTO);							
-					if (vot.getCode().equals(
-							votFundDTO.getPmVotFund().getVotFundCode())) {
+					if (vot.getCode().equals(votFundDTO.getPmVotFund().getVotFundCode())) {
 						System.out.println("Vot Dana Duplicate Code");
 					} else {
 					pmVot = new PmVotFund();
@@ -682,33 +666,27 @@ public class GfmasIntegration {
 					pmVot.setVotFundType("A");
 					pmVot.setEffDate(new Timestamp(System.currentTimeMillis()));
 					pmVot.setCreatedBy(1L);
-					pmVot.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					pmVot.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					pmVot.setRecordStatusFlg(1);
 					reqDTO.setVotFund(pmVot);
 					votFundSO.saveOrUpdateVotFund(reqDTO);
 					}
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void programAktivitiGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLPRG");
-		if (osbUtility.osbServiceCallInBound("GFM-230")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<ProgramActivity> votList = fileUtility
-						.programAktiviti(IntegrationConstants.DECRYPTED_FILE_PATH
-								+ fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPRG");
+//		if (osbUtility.osbServiceCallInBound("GFM-230")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLPRG40000120150331001.GPG";
+				List<ProgramActivity> votList = fileUtility.programAktiviti(filePath + fileName);
 				ProgramActivityReqDTO reqDTO = null;
 				PmPrgActivity prgActivity = null;
 
@@ -724,52 +702,40 @@ public class GfmasIntegration {
 					
 					VotFundReqDTO votreqDTO = new VotFundReqDTO();
 					votreqDTO.setVotFundCode(programActivity.getVotCode());
-					VotFundResDTO restDTO = votFundSO
-							.retrieveVotFundByVotCode(votreqDTO);
+					VotFundResDTO restDTO = votFundSO.retrieveVotFundByVotCode(votreqDTO);
 					prgActivity.setPmVotFund(restDTO.getPmVotFund());
 					prgActivity.setPrgActivityCode(programActivity.getCode());
-					prgActivity
-							.setDescription(programActivity.getDescription());
-					prgActivity.setEffDate(new Timestamp(System
-							.currentTimeMillis()));
+					prgActivity.setDescription(programActivity.getDescription());
+					prgActivity.setEffDate(new Timestamp(System.currentTimeMillis()));
 					prgActivity.setCreatedBy(1L);
-					prgActivity.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					prgActivity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					prgActivity.setRecordStatusFlg(1);
 					reqDTO.setPrgActivity(prgActivity);
 					programActivitySO.saveOrUpdatePrgActivity(reqDTO);
 					}
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void projectGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLPRJ");
-		if (osbUtility.osbServiceCallInBound("GFM-240")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<Project> projectList = fileUtility
-						.project(IntegrationConstants.DECRYPTED_FILE_PATH
-								+fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPRJ");
+//		if (osbUtility.osbServiceCallInBound("GFM-240")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLPRJ40000120150331001.GPG";
+				List<Project> projectList = fileUtility.project(filePath+fileName);
 				ProjectSetiaReqDTO reqDTO = null;
-				PmProject pmProject = null;
 
 				for (Project project : projectList) {
 					reqDTO = new ProjectSetiaReqDTO();
-					pmProject = new PmProject();
 					reqDTO.setProjectCode(project.getCode());
 					ProjectSetiaResDTO proResDTO = projectSetiaSO.retrieveValidProjectByProjectCode(reqDTO);							
-					if (project.getCode().equals(
-							proResDTO.getPmProject().getProjectCode())) {
+					if (project.getCode().equals(proResDTO.getPmProject().getProjectCode())) {
 						System.out.println(" Project Duplicate Code");
 					} else {
 					
@@ -779,51 +745,39 @@ public class GfmasIntegration {
 					subSitia.setDescription(project.getDescription());
 					subSitia.setProjectCode(project.getCode());
 					subSitia.setSetiaCode(project.getSetiaCode());
-					if (project.getPembiayaan() != null
-							&& project.getPembiayaan().isEmpty()) {
+					if (project.getPembiayaan() != null	&& project.getPembiayaan().isEmpty()) {
 						ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-						parameterReqDTO.setParameterCode(project
-								.getPembiayaan());
+						parameterReqDTO.setParameterCode(project.getPembiayaan());
 						parameterReqDTO.setParameterType(ParameterTypeConst.FINANCING_TYPE);
-						ParameterResDTO parameterResDTO = parameterSO
-								.retrieveParameterByTypeAndCode(parameterReqDTO);
-						subSitia.setFinancingType(parameterResDTO
-								.getPmParameter());
+						ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+						subSitia.setFinancingType(parameterResDTO.getPmParameter());
 					}
-					subSitia.setEffDate(new Timestamp(System
-							.currentTimeMillis()));
+					subSitia.setEffDate(new Timestamp(System.currentTimeMillis()));
 					subSitia.setRecordStatusFlg(1);
-					subSitia.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					subSitia.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					subSitia.setChangedBy(1L);
 					subSitia.setCreatedBy(1L);
 
 					reqDTO.setSubSetia(subSitia);
-					ProjectSetiaResDTO subresDTO = projectSetiaSO
-							.saveOrUpdateSubSetia(reqDTO);
+					ProjectSetiaResDTO subresDTO = projectSetiaSO.saveOrUpdateSubSetia(reqDTO);
 					subresDTO.setSuccessful(true);
 				}
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void kodAkaunGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLGLC");
-		if (osbUtility.osbServiceCallInBound("GFM-260")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<GlAccount> glAccountList = fileUtility
-						.kodAkaun(IntegrationConstants.DECRYPTED_FILE_PATH
-								+ fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLGLC");
+//		if (osbUtility.osbServiceCallInBound("GFM-260")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLGLC40000120150331001.GPG";
+				List<GlAccount> glAccountList = fileUtility.kodAkaun(filePath + fileName);
 				GlAccountReqDTO reqDTO = null;
 				PmGlAccount glAccount = null;
 				for (GlAccount account : glAccountList) {
@@ -833,77 +787,72 @@ public class GfmasIntegration {
 					reqDTO.setGlAccountCode(account.getCode());
 					GlAccountResDTO glAccountDTO = glAccountSO.retrieveValidGlAccountByglAccountCode(reqDTO);
 							
-					if (account.getCode().equals(
-							glAccountDTO.getGlAccount().getGlAccCode())) {
+					if (account.getCode().equals(glAccountDTO.getGlAccount().getGlAccCode())) {
 						System.out.println("Duplicate Code");
 					} else {
 					glAccount.setGlAccCode(account.getCode());
 					glAccount.setDescription(account.getDescription());
+					
 					if (!account.getPtjCode().equalsIgnoreCase("00")) {
-						PtjGroupReqDTO ptjReqDTO = new PtjGroupReqDTO();
-
+						PtjGroupReqDTO ptjReqDTO = new PtjGroupReqDTO();   
 						ptjReqDTO.setPtjGroupCode(account.getPtjCode());
-						PtjGroupResDTO ptjResDTO = ptgGroupSO
-								.retrievePtjGroupByCode(ptjReqDTO);
+						PtjGroupResDTO ptjResDTO = ptgGroupSO.retrievePtjGroupByCode(ptjReqDTO);
 						PmPtjGroup pmPtjGroup = new PmPtjGroup();
-						pmPtjGroup.setPtjGroupId(ptjResDTO.getPtjGroup().get(0)
-								.getPtjGroupId());
+						pmPtjGroup.setPtjGroupId(ptjResDTO.getPtjGroup().get(0).getPtjGroupId());
 						glAccount.setPmPtjGroup(pmPtjGroup);
+						
+						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+						
+						Long orgProfileId = Long.parseLong(account.getPtjCode());
+						
+						System.out.println("orgProfileId :"+orgProfileId);
+						orgProfileReqDTO.setOrgProfileId(orgProfileId);
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgWithSupplierByProfileId(orgProfileReqDTO);
+						glAccount.setPmOrgProfile(orgProfileResDTO.getPmOrgProfile());
 					}
-					glAccount.setEffDate(new Timestamp(System
-							.currentTimeMillis()));
+				
+					glAccount.setEffDate(new Timestamp(System.currentTimeMillis()));
 					glAccount.setRecordStatusFlg(1);
-					glAccount.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					glAccount.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					glAccount.setChangedBy(1L);
 					glAccount.setCreatedBy(1L);
 					reqDTO.setGlAccount(glAccount);
-					GlAccountResDTO resDTO = glAccountSO
-							.saveOrUpdateGlAccount(reqDTO);
+					GlAccountResDTO resDTO = glAccountSO.saveOrUpdateGlAccount(reqDTO);
 					resDTO.setSuccessful(true);
 					System.out.println("Saved Data into GLAccont");
 					}
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void kumpulanPtjGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLPCG");
-		if (osbUtility.osbServiceCallInBound("GFM-270")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<PtjGroup> glAccountList = fileUtility
-						.kumpulanPTJ(IntegrationConstants.DECRYPTED_FILE_PATH
-								+fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPCG");
+//		if (osbUtility.osbServiceCallInBound("GFM-270")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLPCG40000120150331001.GPG";
+				List<PtjGroup> glAccountList = fileUtility.kumpulanPTJ(filePath	+fileName);
 				PtjGroupReqDTO reqDTO = null;
 				PmPtjGroup ptjGroup = null;
 
 				for (PtjGroup group : glAccountList) {
 					reqDTO = new PtjGroupReqDTO();
 					reqDTO.setPtjGroupCode(group.getCode());
-					PtjGroupResDTO ptjGroupt = ptgGroupSO
-							.retrieveValidPtjGroupByCode(reqDTO);
-					if (group.getCode().equals(
-							ptjGroupt.getPmPtjGroup().getGroupCode())) {
+					PtjGroupResDTO ptjGroupt = ptgGroupSO.retrieveValidPtjGroupByCode(reqDTO);
+					if (group.getCode().equals(	ptjGroupt.getPmPtjGroup().getGroupCode())) {
 						System.out.println("Duplicate Code");
 					} else {
 						ptjGroup = new PmPtjGroup();
 						ptjGroup.setGroupCode(group.getCode());
 						ptjGroup.setGroupName(group.getDescription());
-						ptjGroup.setEffDate(new Timestamp(System
-								.currentTimeMillis()));
+						ptjGroup.setEffDate(new Timestamp(System.currentTimeMillis()));
 						ptjGroup.setRecordStatusFlg(1);
-						ptjGroup.setCreatedDate(new Timestamp(System
-								.currentTimeMillis()));
+						ptjGroup.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 						ptjGroup.setChangedBy(1L);
 						ptjGroup.setCreatedBy(1L);
 						reqDTO.setPmPtjGroup(ptjGroup);
@@ -912,27 +861,22 @@ public class GfmasIntegration {
 
 				}
 
-			}
+//			}
 
-		}
+//		}
 	}
 
 	public void masterDataPtjGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "GLPTJ");
-		if (osbUtility.osbServiceCallInBound("GFM-280")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<OrgProfile> orgProfileList = fileUtility
-						.masterDatePTJ(IntegrationConstants.DECRYPTED_FILE_PATH
-								+ fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "GLPTJ");
+//		if (osbUtility.osbServiceCallInBound("GFM-280")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000GLPTJ40000120150331001.GPG";
+				List<OrgProfile> orgProfileList = fileUtility.masterDatePTJ(filePath + fileName);
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				PmOrgProfile pmOrgProfile = new PmOrgProfile();
 
@@ -941,83 +885,88 @@ public class GfmasIntegration {
 					PmOrgValidity orgValidity = new PmOrgValidity();
 					orgValidity.setOrgCode(orgProfile.getCode());
 					orgValidity.setOrgName(orgProfile.getDescription());
-					orgValidity.setEffDate(new Timestamp(System
-							.currentTimeMillis()));
+					orgValidity.setEffDate(new Timestamp(System.currentTimeMillis()));
 					orgValidity.setRecordStatusFlg(1);
-					orgValidity.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					orgValidity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					orgValidity.setChangedBy(1L);
 					orgValidity.setCreatedBy(1L);
 					orgValidity.setBrandNew(true);
 
 					orgValidity.setPmOrgProfile(pmOrgProfile);
-					pmOrgProfile.setPmOrgValidity(orgValidity);
-					PtjGroupReqDTO prtReqDTO = new PtjGroupReqDTO();
-					prtReqDTO.setPtjGroupCode(orgProfile.getPtjCode());
-					PtjGroupResDTO dto = ptgGroupSO
-							.retrievePtjGroupByCode(prtReqDTO);
+				//	pmOrgProfile.setPmOrgValidity(orgValidity);
 					
-					PmPtjGroup ptjGroup = dto.getPmPtjGroup();
-					pmOrgProfile.setPmPtjGroup(ptjGroup);
+//					PtjGroupReqDTO prtReqDTO = new PtjGroupReqDTO();
+//					prtReqDTO.setPtjGroupCode(orgProfile.getPtjCode());
+//					PtjGroupResDTO dto = ptgGroupSO.retrievePtjGroupByCode(prtReqDTO);
+//					PmPtjGroup ptjGroup = new PmPtjGroup();
+//					ptjGroup = dto.getPmPtjGroup();
+//					
+//					pmOrgProfile.setPmPtjGroup(ptjGroup);  
+					
+					OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+					
+					Long orgProfileId = Long.parseLong(orgProfile.getPtjCode());
+					
+					System.out.println("orgProfileId :"+orgProfileId);
+					orgProfileReqDTO.setOrgProfileId(orgProfileId);
+					OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgWithSupplierByProfileId(orgProfileReqDTO);
+
+					pmOrgProfile.setParentOrgProfile(orgProfileResDTO.getPmOrgProfile());
+					
+					
 					AgOfficeReqDTO agOfficeReqDTO = new AgOfficeReqDTO();
 					AgOfficeReqDTO agCtrOfficeReqDTO = new AgOfficeReqDTO();
-					agCtrOfficeReqDTO.setAgOfficerCode(orgProfile
-							.getCtrOfficerCode());
-					agOfficeReqDTO.setAgOfficerCode(orgProfile
-							.getAgOfficeCode());
-					AgOfficeResDTO agOfficeResDTO = agOfficeSO
-							.retrieveAgOfficerByOfficerCode(agCtrOfficeReqDTO);
-					AgOfficeResDTO agOfficerResDTO = agOfficeSO
-							.retrieveAgOfficeByOfficeCode(agOfficeReqDTO);
-					pmOrgProfile.setPmAgOffice(agOfficeResDTO.getAgOffice());
-					pmOrgProfile.setPmAgCtrlOfficer(agOfficerResDTO.getAgControlOfficer());
+					agCtrOfficeReqDTO.setAgOfficerCode(orgProfile.getCtrOfficerCode());
+					agOfficeReqDTO.setAgOfficerCode(orgProfile.getAgOfficeCode());
+					AgOfficeResDTO agOfficers = agOfficeSO.retrieveAgOfficerByOfficerCode(agCtrOfficeReqDTO);
+					AgOfficeResDTO agOfficee = agOfficeSO.retrieveAgOfficeByOfficeCode(agOfficeReqDTO);
+
+					List<PmAgCtrlOfficer> agOfficer = agOfficers.getAgControlOfficerList();
+					List<PmAgOffice> agOffice = agOfficee.getAgOfficeList();
+
+					// System.out.println("AgOfficerID:"+
+					// agOfficer.get(0).getAgCtrlOfficerId());
+					// System.out.println("AgOfficeid"+
+					// agOffice.get(0).getOfficeName());
+					// agOfficer = agOfficers.getAgControlOfficer();
+					// System.out.println("AgOfficerID :::"+agOfficers.getAgControlOfficer().getAgCtrlOfficerId());
+					// orgProfile.setPmAgCtrlOfficer(agOfficer);
+					// orgProfile.setPmAgOffice(agOffice);
 
 					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-					parameterReqDTO
-							.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
-					parameterReqDTO
-							.setParameterCode(ParameterConst.ORG_TYPE_PTJ);
-					ParameterResDTO parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
+					parameterReqDTO.setParameterType(ParameterTypeConst.ORGANISATION_TYPES);
+					parameterReqDTO.setParameterCode(ParameterConst.ORG_TYPE_PTJ);
+					ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 
-					pmOrgProfile.setOrgTypeCode(parameterResDTO
-							.getPmParameter());
+					pmOrgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
 					pmOrgProfile.setRecordStatusFlg(1);
-					pmOrgProfile.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					pmOrgProfile.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					pmOrgProfile.setChangedBy(1L);
 					pmOrgProfile.setCreatedBy(1L);
 					pmOrgProfile.setBrandNew(true);
 					reqDTO.setPmOrgProfile(pmOrgProfile);
-					OrgProfileResDTO resDTO = orgProfileSO
-							.saveOrUpdateOrgProfile(reqDTO);
+					OrgProfileResDTO resDTO = orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
 					resDTO.setSuccessful(true);
 				}
-			}
-		}
+//			}
+//		}
 	}
 
 	public void kodBankGfmasInbound() {
 
-		String fileName = sftpUtility.findFileNameInDirectory(
-				IntegrationConstants.GMAS_DOWNLOAD, "CMBNK");
-		if (osbUtility.osbServiceCallInBound("GFM-360")) {
-			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH
-					+ fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,
-						IntegrationConstants.GMAS_ARCHIVE + fileName);
-				Encryption encryption = new Encryption();
-				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH
-						+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH
-						+ fileName);
-				List<BankAccountInformation> bankList = fileUtility
-						.kodBank(IntegrationConstants.DECRYPTED_FILE_PATH
-								+ fileName);
+//		String fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "CMBNK");
+//		if (osbUtility.osbServiceCallInBound("GFM-360")) {
+//			if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+//				sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+//				Encryption encryption = new Encryption();
+//				encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH	+ fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+				String filePath = "C:/Integration/Download/";
+				String fileName = "1000CMBNK40000120150331001.GPG";
+				List<BankAccountInformation> bankList = fileUtility.kodBank(filePath + fileName);
 
 				for (BankAccountInformation bank : bankList) {
 					FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-					PmCountry defaultCountry = PmCommonUtil
-							.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+					PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 
 					PmFinancialOrg financialOrg = new PmFinancialOrg();
 					financialOrg.setFinOrgName(bank.getBankName());
@@ -1025,40 +974,32 @@ public class GfmasIntegration {
 					List<PmFinancialSvc> financialServiceList = new ArrayList<PmFinancialSvc>();
 					PmFinancialSvc financialService = new PmFinancialSvc();
 					financialService.setBankCode(bank.getSwiftCode());
-					IParameterSO parameterSO = (IParameterSO) BusinessDelegate
-							.getInstance().getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IParameterSO.class);
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 					ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 					parameterReqDTO.setParameterType(ParameterTypeConst.BANK_SERVICES);
-					parameterReqDTO
-							.setParameterCode(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
-					ParameterResDTO parameterResDTO = parameterSO
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
-					financialService.setServiceTypeCode(parameterResDTO
-							.getPmParameter());
+					parameterReqDTO.setParameterCode(ParameterConst.BANK_SERVICES_PAYMENT_BANK);
+					ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+					financialService.setServiceTypeCode(parameterResDTO.getPmParameter());
 					financialService.setRecordStatusFlg(1);
-					financialService.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					financialService.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					financialService.setChangedBy(1L);
 					financialService.setCreatedBy(1L);
 					financialService.setBrandNew(true);
 					financialServiceList.add(financialService);
 					financialOrg.setRecordStatusFlg(1);
-					financialOrg.setCreatedDate(new Timestamp(System
-							.currentTimeMillis()));
+					financialOrg.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					financialOrg.setChangedBy(1L);
 					financialOrg.setCreatedBy(1L);
 					financialOrg.setBrandNew(true);
 					financialOrg.setPmFinancialSvcs(financialServiceList);
 					financialService.setPmFinancialOrg(financialOrg);
 					reqDTO.setPmFinancialOrg(financialOrg);
-					FinancialOrgResDTO resDTO = financialOrgSO
-							.saveOrUpdateFinancialOrg(reqDTO);
+					FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrg(reqDTO);
 					resDTO.setSuccessful(true);
 				}
-			}
-		}
+//			}
+//		}
 	}
 	public void paymentGfmasInbound() {
 
@@ -1071,7 +1012,7 @@ public class GfmasIntegration {
 						IntegrationConstants.ENCRYPTED_FILE_PATH,
 						IntegrationConstants.DECRYPTED_FILE_PATH);
 				List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo(IntegrationConstants.FILE_PATH + fileName);
-//				 List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo("C:/Integration/Encryption/decrypt/1004AP51140000120150311003.GPG");
+//				List<PaymentInfo> paymentInfoList = fileUtility.paymentInfo("C:/Integration/Encryption/decrypt/1004AP51140000120150311003.GPG");
 				FLOsbReqDTO reqDTO = null;
 
 				for (PaymentInfo bank : paymentInfoList) {
@@ -1108,6 +1049,66 @@ public class GfmasIntegration {
 			System.out.println("un successful...");
 		}
 	
+		
+	}
+	
+	// to find entity code
+	
+	public String getEntityType(String code) {
+
+		String entityType = null;
+
+		if (code.equalsIgnoreCase(SupplierBusinessCode.A.value())) {
+			entityType = SupplierBusinessTypeCodes.A.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.B.value())) {
+			entityType = SupplierBusinessTypeCodes.B.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.C.value())) {
+			entityType = SupplierBusinessTypeCodes.C.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.D.value())) {
+			entityType = SupplierBusinessTypeCodes.D.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.E.value())) {
+			entityType = SupplierBusinessTypeCodes.E.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.F.value())) {
+			entityType = SupplierBusinessTypeCodes.F.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.G.value())) {
+			entityType = SupplierBusinessTypeCodes.G.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.H.value())) {
+			entityType = SupplierBusinessTypeCodes.H.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.I.value())) {
+			entityType = SupplierBusinessTypeCodes.I.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.J.value())) {
+			entityType = SupplierBusinessTypeCodes.J.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.K.value())) {
+			entityType = SupplierBusinessTypeCodes.K.value();
+		} else if (code.equalsIgnoreCase(SupplierBusinessCode.L.value())) {
+			entityType = SupplierBusinessTypeCodes.L.value();
+		}else if (code.equalsIgnoreCase(SupplierBusinessCode.M.value())) {
+			entityType = SupplierBusinessTypeCodes.M.value();
+		}else if (code.equalsIgnoreCase(SupplierBusinessCode.N.value())) {
+			entityType = SupplierBusinessTypeCodes.N.value();
+		}else if (code.equalsIgnoreCase(SupplierBusinessCode.O.value())) {
+			entityType = SupplierBusinessTypeCodes.O.value();
+		}else if (code.equalsIgnoreCase(SupplierBusinessCode.P.value())) {
+			entityType = SupplierBusinessTypeCodes.P.value();
+		}else{
+			entityType = SupplierBusinessTypeCodes.B.value();
+		}
+			
+
+		return entityType;
+	}
+	
+	
+	// E - Teriman Integration  
+	
+	
+	public void billingInformationGfmasOutbound() {
+
+		
+	}
+	
+	public void receiptInformationGfmasOutbound() {
+
 		
 	}
 }
