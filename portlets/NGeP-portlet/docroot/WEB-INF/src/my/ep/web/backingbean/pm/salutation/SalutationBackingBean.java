@@ -98,7 +98,7 @@ public class SalutationBackingBean extends
 	 */
 	public void resetSalSearch() {
 		debugLogger("resetSalSearch");
-		
+		this.getManagedBean().setLazy(false);
         this.getManagedBean().setSalutationCodes(new String());
         this.getManagedBean().setSalutationNames(new String());
         this.getManagedBean().setStatus(null);
