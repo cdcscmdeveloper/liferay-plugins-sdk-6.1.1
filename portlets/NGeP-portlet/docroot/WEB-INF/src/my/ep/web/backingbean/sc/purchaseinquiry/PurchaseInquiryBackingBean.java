@@ -175,7 +175,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     	scPrInquiry.setWorkflowStatuses(null);
 
     	scPrInquiry.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-    	scPrInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
+    	scPrInquiry.setDayToResponse(ParameterConst.DEFAULT_RESP_DAYS); // by default days
     	scPrInquiry.setDateToResponse(calcDayToResponse(scPrInquiry));
     	scPrInquiry.setPrInquiryNo(prInquirySO.generatePrInquiryNo());
 
